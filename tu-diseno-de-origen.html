@@ -506,6 +506,8 @@ async function generarDiagnostico(nombre, sexo, fechaNice, hora, lugar, edad, ca
 
   const systemPrompt = `Eres una experta en psicología, astrología y neurociencia. Generas diagnósticos de autoconocimiento muy personalizados basados en la carta natal.
 
+IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresiones latinoamericanas. Usa tú, no vos.
+
 ESTILO DE ESCRITURA:
 - Habla como una persona de confianza, directo y cercano
 - Lenguaje sencillo, que lo entienda cualquier persona
@@ -1275,6 +1277,7 @@ function descargarPDF() {
       doc.text(fx('Prohibida su reproduccion total o parcial sin autorizacion expresa.'), W/2, H - 30, { align: 'center' });
       doc.text(fx('Operado por Pura Group LLC'), W/2, H - 24, { align: 'center' });
 
+      var fileName = 'TuDisenoDeOrigen_' + fx(nombre).replace(/\s+/g, '_') + '.pdf';
       doc.save(fileName);
 
     } catch(e) {
