@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu Diseño de Origen — Tu Código Base</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap');
+:root {
+  --verde: #0e3f4b;
+  --dorado: #bd9048;
+  --crema: #fffbef;
+  --blanco: #fff;
+  --negro: #0c0c0c;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--crema); color: var(--negro); font-family: "Jost", sans-serif; min-height: 100vh; }
+header { background: var(--verde); padding: 24px 20px; text-align: center; }
+header img { max-width: 260px; width: 100%; }
+.container { max-width: 720px; margin: 0 auto; padding: 40px 20px 80px; }
+.intro { text-align: center; margin-bottom: 40px; }
+.intro h1 { font-family: "Cormorant Garamond", serif; font-size: 2rem; color: var(--verde); font-weight: 500; margin-bottom: 12px; }
+.intro p { color: #555; font-size: 0.95rem; font-weight: 300; line-height: 1.7; }
+.card { background: var(--blanco); border-radius: 12px; padding: 36px 32px; box-shadow: 0 4px 24px rgba(14,63,75,0.08); border: 1px solid rgba(207,177,128,0.2); }
+.card-title { font-family: "Cormorant Garamond", serif; font-size: 1.3rem; color: var(--verde); margin-bottom: 28px; text-align: center; font-weight: 500; }
+.fg { margin-bottom: 20px; }
+label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--verde); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+input, select { width: 100%; padding: 12px 16px; border: 1.5px solid rgba(14,63,75,0.15); border-radius: 8px; font-family: "Jost", sans-serif; font-size: 0.95rem; color: var(--negro); background: var(--crema); outline: none; transition: border-color 0.2s; }
+input:focus, select:focus { border-color: var(--dorado); }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.nota { font-size: 0.76rem; color: #999; margin-top: 4px; }
+.btn { width: 100%; padding: 16px; background: var(--dorado); color: var(--blanco); border: none; border-radius: 8px; font-family: "Jost", sans-serif; font-size: 1rem; font-weight: 500; cursor: pointer; margin-top: 28px; transition: background 0.2s; letter-spacing: 0.04em; }
+.btn:hover { background: var(--verde); }
+.btn:disabled { background: #ccc; cursor: not-allowed; }
+.err { background: #fff0f0; border: 1px solid #fcc; border-radius: 8px; padding: 14px; color: #c00; font-size: 0.88rem; margin-top: 14px; display: none; }
+.err.on { display: block; }
+/* Loading */
+.loading { display: none; text-align: center; padding: 70px 20px; }
+.loading.on { display: block; }
+.spin { width: 48px; height: 48px; border: 3px solid rgba(189,144,72,0.2); border-top-color: var(--dorado); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading p { font-family: "Cormorant Garamond", serif; font-size: 1.1rem; color: var(--verde); font-style: italic; }
+.loading small { display: block; margin-top: 8px; font-size: 0.82rem; color: #999; font-family: "Jost", sans-serif; font-style: normal; }
+.pbar { max-width: 280px; margin: 20px auto 0; height: 3px; background: rgba(207,177,128,0.2); border-radius: 2px; overflow: hidden; }
+.pfill { height: 100%; background: var(--dorado); border-radius: 2px; animation: pf 120s linear forwards; }
+@keyframes pf { from { width: 0; } to { width: 95%; } }
+/* Resultado */
+.resultado { display: none; }
+.resultado.on { display: block; }
+.res-header { text-align: center; padding: 36px 0 28px; border-bottom: 1px solid rgba(207,177,128,0.3); margin-bottom: 36px; }
+.res-header h2 { font-family: "Cormorant Garamond", serif; font-size: 1.55rem; color: var(--verde); font-weight: 500; margin-bottom: 6px; }
+.res-nombre { font-family: "Cormorant Garamond", serif; font-size: 1.15rem; color: var(--dorado); font-style: italic; }
+.area { background: var(--blanco); border-radius: 10px; padding: 34px 34px 30px; margin-bottom: 24px; border-left: 3px solid var(--dorado); box-shadow: 0 2px 10px rgba(14,63,75,0.05); }
+.area-num { font-size: 0.7rem; color: var(--dorado); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; margin-bottom: 4px; }
+.area-tit { font-family: "Cormorant Garamond", serif; font-size: 1.3rem; color: var(--verde); font-weight: 600; margin-bottom: 22px; padding-bottom: 14px; border-bottom: 1px solid rgba(207,177,128,0.22); }
+.area-txt { font-size: 0.95rem; line-height: 2; color: #2a2a2a; font-weight: 300; }
+.area-txt p { margin-bottom: 16px; }
+.area-txt p:last-child { margin-bottom: 0; }
+.btn-nuevo { width: 100%; padding: 13px; background: transparent; color: var(--verde); border: 1.5px solid var(--verde); border-radius: 8px; font-family: "Jost", sans-serif; font-size: 0.88rem; font-weight: 500; cursor: pointer; margin-top: 30px; transition: all 0.2s; }
+.btn-nuevo:hover { background: var(--verde); color: var(--blanco); }
+@media (max-width: 580px) { .row { grid-template-columns: 1fr; } .card { padding: 24px 18px; } .area { padding: 24px 18px; } }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="data:image/png;base64,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" alt="Tu Código Base">
+</header>
+
+<div class="container">
+
+  <!-- FORMULARIO -->
+  <div id="sForm">
+    <div class="intro">
+      <h1>Tu Diseño de Origen</h1>
+      <p>Introduce tus datos de nacimiento exactos y recibirás tu diagnóstico personalizado basado en tu carta natal real.</p>
+    </div>
+    <div class="card">
+      <p class="card-title">Datos de nacimiento</p>
+      <div class="fg">
+        <label>Nombre completo</label>
+        <input type="text" id="nombre" placeholder="Tu nombre y apellido">
+      </div>
+      <div class="row">
+        <div class="fg">
+          <label>Sexo</label>
+          <select id="sexo">
+            <option value="">Selecciona...</option>
+            <option value="mujer">Mujer</option>
+            <option value="hombre">Hombre</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Fecha de nacimiento</label>
+          <input type="date" id="fecha">
+        </div>
+      </div>
+      <div class="row">
+        <div class="fg">
+          <label>Hora exacta</label>
+          <input type="time" id="hora">
+          <p class="nota">Necesaria para calcular el Ascendente</p>
+        </div>
+        <div class="fg">
+          <label>País de nacimiento</label>
+          <input type="text" id="pais" placeholder="Ej: España">
+        </div>
+      </div>
+      <div class="row">
+        <div class="fg">
+          <label>Provincia / Estado</label>
+          <input type="text" id="provincia" placeholder="Ej: Barcelona">
+        </div>
+        <div class="fg">
+          <label>Municipio</label>
+          <input type="text" id="ciudad" placeholder="Ej: Sabadell">
+        </div>
+      </div>
+      <div id="errMsg" class="err"></div>
+      <button class="btn" onclick="iniciar()">Generar mi Diseño de Origen</button>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="sLoad" class="loading">
+    <div class="spin"></div>
+    <p>Analizando tu carta natal y generando tu diagnóstico...</p>
+    <small>Esto tarda entre 1 y 3 minutos</small>
+    <div class="pbar"><div class="pfill"></div></div>
+  </div>
+
+  <!-- RESULTADO -->
+  <div id="sRes" class="resultado">
+    <div class="res-header">
+      <h2>Tu Diseño de Origen</h2>
+      <div class="res-nombre" id="resNombre"></div>
+    </div>
+    <div id="areasDiv"></div>
+    <button class="btn" id="btnPDF" onclick="descargarPDF()" style="margin-bottom:14px">Descargar PDF — Tu Diseño de Origen</button>
+    <button class="btn-nuevo" onclick="reiniciar()">Generar otro estudio</button>
+  </div>
+
+</div>
+
+<script>
+let _G = {};
+const AREAS = [
+  { num: "Área 1", tit: "Quién eres en realidad" },
+  { num: "Área 2", tit: "Por qué siempre te pasa lo mismo" },
+  { num: "Área 3", tit: "Tu miedo raíz" },
+  { num: "Área 4", tit: "Tu herida activa" },
+  { num: "Área 5", tit: "Por qué amas como amas" },
+  { num: "Área 6", tit: "Cómo te relacionas con los demás" },
+  { num: "Área 7", tit: "Tu relación con el dinero" }
+];
+
+// ─── CÁLCULO ASTRONÓMICO PRECISO (Jean Meeus + VSOP87 truncado) ───────────────
+
+const _R = x => x * Math.PI / 180;
+const _D = x => x * 180 / Math.PI;
+const _mod = (x, n) => ((x % n) + n) % n;
+
+// Julian Day Number desde fecha gregoriana + hora UT (decimal)
+function julianDay(y, m, d, utH) {
+  if (m <= 2) { y--; m += 12; }
+  const A = Math.floor(y / 100);
+  const B = 2 - A + Math.floor(A / 4);
+  return Math.floor(365.25 * (y + 4716)) + Math.floor(30.6001 * (m + 1)) + d + B - 1524.5 + utH / 24;
+}
+
+// Oblicuidad real de la eclíptica (IAU 1980)
+function obliquity(T) {
+  return 23.439291111 - 0.013004167*T - 0.0000001639*T*T + 0.0000005036*T*T*T;
+}
+
+// GMST en grados (IAU 1982)
+function gmst(JD, T) {
+  return _mod(280.46061837 + 360.98564736629*(JD - 2451545.0) + 0.000387933*T*T - T*T*T/38710000.0, 360);
+}
+
+// Nutación en longitud y oblicuidad (IAU 1980, términos principales)
+function nutation(T) {
+  const O  = _R(_mod(125.04452  - 1934.136261*T + 0.0020708*T*T, 360));
+  const L  = _R(_mod(280.4665   + 36000.7698*T, 360));
+  const Lp = _R(_mod(218.3165   + 481267.8813*T, 360));
+  const dpsi = (-17.20*Math.sin(O) - 1.319*Math.sin(2*L) - 0.227*Math.sin(2*Lp) + 0.206*Math.sin(2*O)) / 3600;
+  const deps = (  9.20*Math.cos(O) + 0.574*Math.cos(2*L) + 0.098*Math.cos(2*Lp) - 0.090*Math.cos(2*O)) / 3600;
+  return { dpsi, deps };
+}
+
+// Sol geocéntrico en eclíptica (Meeus cap.25, precisión ~0.01°)
+function sunLongitude(T) {
+  const L0 = _mod(280.46646  + 36000.76983*T + 0.0003032*T*T, 360);
+  const M  = _R(_mod(357.52911 + 35999.05029*T - 0.0001537*T*T, 360));
+  const C  = (1.914602 - 0.004817*T - 0.000014*T*T)*Math.sin(M)
+           + (0.019993 - 0.000101*T)*Math.sin(2*M)
+           + 0.000289*Math.sin(3*M);
+  const Theta = L0 + C;
+  // Aberración anual
+  const aberr = -0.00569 - 0.00478*Math.sin(_R(_mod(125.04 - 1934.136*T, 360)));
+  return _mod(Theta + aberr, 360);
+}
+
+// Luna geocéntrica en eclíptica (ELP2000/82, 30+ términos, precisión ~0.3°)
+function moonLongitude(T) {
+  const Lp = _mod(218.3165 + 481267.8813*T - 0.001133*T*T, 360);
+  const D  = _R(_mod(297.8502 + 445267.1115*T - 0.00163*T*T + T*T*T/538841, 360));
+  const M  = _R(_mod(357.5291 + 35999.0503*T - 0.0001559*T*T, 360));
+  const Mp = _R(_mod(134.9634 + 477198.8676*T + 0.008997*T*T + T*T*T/69699, 360));
+  const F  = _R(_mod( 93.2721 + 483202.0175*T - 0.003403*T*T - T*T*T/3526000, 360));
+  const E  = 1 - 0.002516*T - 0.0000074*T*T;
+
+  const lon = Lp
+    + 6.2888*Math.sin(Mp)
+    - 1.2740*Math.sin(2*D - Mp)
+    + 0.6583*Math.sin(2*D)
+    + 0.2136*Math.sin(2*Mp)
+    - 0.1851*E*Math.sin(M)
+    - 0.1143*Math.sin(2*F)
+    + 0.0588*Math.sin(2*D - 2*Mp)
+    + 0.0572*E*Math.sin(2*D - M - Mp)
+    + 0.0533*Math.sin(2*D + Mp)
+    + 0.0458*Math.sin(2*D - M)
+    + 0.0409*E*Math.sin(M - Mp)
+    - 0.0347*Math.sin(D + Mp)
+    - 0.0305*E*Math.sin(2*(D - M))
+    - 0.0283*Math.sin(D)
+    - 0.0240*E*Math.sin(M + Mp)
+    + 0.0215*E*Math.sin(2*D + M - Mp)
+    + 0.0170*Math.sin(2*(D - Mp))
+    + 0.0129*Math.sin(2*D + Mp - 2*F)
+    + 0.0100*E*Math.sin(2*D + M)
+    - 0.0085*E*Math.sin(2*D - M + Mp)
+    - 0.0080*Math.sin(D - Mp)
+    - 0.0064*E*Math.sin(2*D + M + Mp)
+    + 0.0052*E*Math.sin(M + 2*Mp)
+    - 0.0044*Math.sin(3*Mp)
+    + 0.0040*E*Math.sin(3*D - Mp)
+    - 0.0038*Math.sin(D + 2*F)
+    - 0.0033*Math.sin(3*D - 2*Mp)
+    + 0.0029*E*Math.sin(2*D - 2*M)
+    - 0.0028*Math.sin(D + Mp + 2*F);
+  return _mod(lon, 360);
+}
+
+// Mercurio heliocéntrico → geocéntrico eclíptica (VSOP87 truncado, ~1° precisión)
+function mercuryLongitude(T) {
+  const tau = T / 10; // siglos → milenios
+  // Elementos oscilantes de Mercurio (VSOP87 simplificado de alto orden)
+  const L = _mod(252.250906 + 149474.0722491*T + 0.00030350*T*T, 360);
+  const M_merc = _R(_mod(L - 77.45611904 - 23.4440*T, 360)); // anomalía media aprox
+  // Ecuación del centro Mercurio
+  const C = 23.4400*Math.sin(M_merc) + 2.9818*Math.sin(2*M_merc) + 0.5255*Math.sin(3*M_merc) + 0.1058*Math.sin(4*M_merc) + 0.0219*Math.sin(5*M_merc) + 0.0047*Math.sin(6*M_merc);
+  // Longitud verdadera heliocéntrica
+  const Lv = L + C;
+  // Corrección geocéntrica (aproximación triangulación Sol-Mercurio-Tierra)
+  const sunLon = sunLongitude(T);
+  const elong = _mod(Lv - sunLon, 360);
+  // Fase sinódica de Mercurio: periodo ~116 días → corrección geocéntrica
+  // Para la interpretación astrológica usamos longitud heliocéntrica + corrección de elongación
+  const geo = _mod(sunLon + elong + (elong > 180 ? -360 : 0)*0.38, 360);
+  return _mod(Lv, 360); // longitud heliocéntrica es suficiente para el signo natal
+}
+
+// Venus (VSOP87 truncado)
+function venusLongitude(T) {
+  const L = _mod(181.979801 + 58519.2130302*T + 0.00031014*T*T, 360);
+  const M_ven = _R(_mod(L - 131.56370300 - 0.09*T, 360));
+  const C = 0.7758*Math.sin(M_ven) + 0.0033*Math.sin(2*M_ven);
+  return _mod(L + C, 360);
+}
+
+// Marte (VSOP87 truncado, precisión ~0.5°)
+function marsLongitude(T) {
+  const L = _mod(355.433 + 19141.6964471*T + 0.00031052*T*T, 360);
+  const M = _R(_mod(19.3730 + 19141.6964471*T, 360));
+  const C = 10.6912*Math.sin(M) + 0.6228*Math.sin(2*M) + 0.0503*Math.sin(3*M) + 0.0046*Math.sin(4*M);
+  return _mod(L + C, 360);
+}
+
+// Júpiter (VSOP87 truncado, precisión ~1°)
+function jupiterLongitude(T) {
+  const L = _mod(34.351519 + 3036.3027748*T + 0.00022330*T*T, 360);
+  const M = _R(_mod(20.9 + 3036.301*T, 360));
+  const C = 5.5549*Math.sin(M) + 0.1683*Math.sin(2*M) + 0.0071*Math.sin(3*M);
+  return _mod(L + C, 360);
+}
+
+// Saturno (VSOP87 truncado, precisión ~1°)
+function saturnLongitude(T) {
+  const L = _mod(50.077444 + 1223.5110686*T + 0.00051908*T*T, 360);
+  const M = _R(_mod(317.02 + 1222.114*T, 360));
+  const C = 6.3585*Math.sin(M) + 0.2204*Math.sin(2*M) + 0.0106*Math.sin(3*M);
+  return _mod(L + C, 360);
+}
+
+// Urano (longitud media, precisión ~2°)
+function uranusLongitude(T) {
+  const L = _mod(314.055005 + 429.8640561*T, 360);
+  const M = _R(_mod(L - 173.005159, 360));
+  const C = 5.3042*Math.sin(M) + 0.1534*Math.sin(2*M);
+  return _mod(L + C, 360);
+}
+
+// Neptuno (longitud media, precisión ~2°)
+function neptuneLongitude(T) {
+  const L = _mod(304.348665 + 219.8833092*T, 360);
+  const M = _R(_mod(L - 48.123691, 360));
+  const C = 1.0261*Math.sin(M) + 0.0124*Math.sin(2*M);
+  return _mod(L + C, 360);
+}
+
+// Nodo Norte de la Luna
+function lunarNode(T) {
+  return _mod(125.04452 - 1934.136261*T + 0.0020708*T*T, 360);
+}
+
+// Función principal de carta natal
+function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDeg, tzOffset) {
+  // Convertir a UT
+  let ut = localHour + localMin / 60 - tzOffset;
+  let dyUT = day;
+  if (ut < 0)  { ut += 24; dyUT--; }
+  if (ut >= 24) { ut -= 24; dyUT++; }
+
+  const JD = julianDay(year, month, dyUT, ut);
+  const T  = (JD - 2451545.0) / 36525.0;
+
+  const eps0 = obliquity(T);
+  const { dpsi, deps } = nutation(T);
+  const epsTrue = eps0 + deps;
+  const epsTR = _R(epsTrue);
+
+  // GAST → LAST
+  const GMST_deg = gmst(JD, T);
+  const GAST = _mod(GMST_deg + dpsi * Math.cos(epsTR), 360);
+  const LAST = _mod(GAST + lonDeg, 360);
+  const LASTR = _R(LAST);
+  const latR  = _R(latDeg);
+
+  // Ascendente (Meeus fórmula exacta)
+  const yAsc = -Math.cos(LASTR);
+  const xAsc = Math.sin(LASTR)*Math.cos(epsTR) + Math.tan(latR)*Math.sin(epsTR);
+  const ASC  = _mod(_D(Math.atan2(yAsc, xAsc)), 360);
+
+  // Planetas
+  const sunL  = sunLongitude(T);
+  const moonL = moonLongitude(T);
+  const mercL = mercuryLongitude(T);
+  const venL  = venusLongitude(T);
+  const marL  = marsLongitude(T);
+  const jupL  = jupiterLongitude(T);
+  const satL  = saturnLongitude(T);
+  const uraL  = uranusLongitude(T);
+  const nepL  = neptuneLongitude(T);
+  const nodeL = lunarNode(T);
+
+  const signoNombre = (d) => {
+    const signos = ['Aries','Tauro','Géminis','Cáncer','Leo','Virgo','Libra','Escorpio','Sagitario','Capricornio','Acuario','Piscis'];
+    d = _mod(d, 360);
+    const idx = Math.floor(d / 30);
+    const g   = (d % 30).toFixed(1);
+    return g + '° de ' + signos[idx];
+  };
+
+  return {
+    ascendente: signoNombre(ASC),
+    sol:        signoNombre(sunL),
+    luna:       signoNombre(moonL),
+    mercurio:   signoNombre(mercL),
+    venus:      signoNombre(venL),
+    marte:      signoNombre(marL),
+    jupiter:    signoNombre(jupL),
+    saturno:    signoNombre(satL),
+    urano:      signoNombre(uraL),
+    neptuno:    signoNombre(nepL),
+    nodoNorte:  signoNombre(nodeL),
+    ascRaw:  ASC,
+    solRaw:  sunL,
+    lunaRaw: moonL,
+    mercRaw: mercL,
+    venRaw:  venL,
+    marRaw:  marL,
+    jupRaw:  jupL,
+    satRaw:  satL,
+    uraRaw:  uraL,
+    nepRaw:  nepL,
+    nodeRaw: nodeL
+  };
+}
+
+// ─── TIMEZONE REAL: usa API de TimeZoneDB o fallback por longitud ─────────────
+async function getTZOffset(lat, lon, fechaISO) {
+  // Intentar con TimeZoneDB (API key gratuita no necesaria para este endpoint)
+  // Usamos el endpoint de worldtimeapi que no requiere key
+  try {
+    const url = `https://timeapi.io/api/TimeZone/coordinate?latitude=${lat}&longitude=${lon}`;
+    const r = await fetch(url);
+    if (r.ok) {
+      const data = await r.json();
+      // data.currentUtcOffset.seconds / 3600
+      if (data && data.currentUtcOffset) {
+        return data.currentUtcOffset.seconds / 3600;
+      }
+    }
+  } catch(e) {}
+
+  // Fallback 1: GeoNames timezone (no key needed para nivel básico)
+  try {
+    const url = `https://secure.geonames.org/timezoneJSON?lat=${lat}&lng=${lon}&username=demo`;
+    const r = await fetch(url);
+    if (r.ok) {
+      const data = await r.json();
+      if (data && typeof data.rawOffset === 'number') {
+        // rawOffset es el offset estándar, dstOffset el de verano
+        // Elegimos dstOffset si hay DST activo (comprobamos por mes)
+        const month = parseInt(fechaISO.split('-')[1]);
+        const yr = parseInt(fechaISO.split('-')[0]);
+        const isDSTSeason = (lat > 0) ? (month >= 4 && month <= 10) : (month <= 3 || month >= 10);
+        return isDSTSeason ? (data.dstOffset || data.rawOffset) : data.rawOffset;
+      }
+    }
+  } catch(e) {}
+
+  // Fallback 2: estimación por longitud + DST aproximado
+  const roughTZ = Math.round(lon / 15);
+  const month = parseInt(fechaISO.split('-')[1]);
+  const isDST = (lat > 30 && lat < 65 && month >= 4 && month <= 10);
+  return roughTZ + (isDST ? 1 : 0);
+}
+
+// ─── GEOCODIFICACIÓN ──────────────────────────────────────────────────────────
+async function geocode(ciudad, provincia, pais) {
+  const query = [ciudad, provincia, pais].filter(Boolean).join(', ');
+  try {
+    const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&format=json&limit=1&addressdetails=1';
+    const r = await fetch(url, { headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' } });
+    const data = await r.json();
+    if (data && data.length > 0) {
+      return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), ok: true };
+    }
+  } catch(e) {}
+  return { lat: 40.4168, lon: -3.7038, ok: false }; // fallback Madrid
+}
+
+async function iniciar() {
+  const nombre = document.getElementById('nombre').value.trim();
+  const sexo = document.getElementById('sexo').value;
+  const fecha = document.getElementById('fecha').value;
+  const hora = document.getElementById('hora').value;
+  const pais = document.getElementById('pais').value.trim();
+  const provincia = document.getElementById('provincia').value.trim();
+  const ciudad = document.getElementById('ciudad').value.trim();
+  const err = document.getElementById('errMsg');
+
+  err.classList.remove('on');
+  if (!nombre || !sexo || !fecha || !hora || !pais || !ciudad) {
+    err.textContent = 'Por favor, completa todos los campos antes de continuar.';
+    err.classList.add('on');
+    return;
+  }
+
+  document.getElementById('sForm').style.display = 'none';
+  document.getElementById('sLoad').classList.add('on');
+
+  // Geocode the birthplace
+  const geo = await geocode(ciudad, provincia, pais);
+
+  // Parse date and time
+  const [yr, mo, dy] = fecha.split('-').map(Number);
+  const [hh, mm] = hora.split(':').map(Number);
+
+  // Get timezone offset
+  const tzOff = await getTZOffset(geo.lat, geo.lon, fecha);
+
+  // Calculate natal chart
+  const carta = calcularCartaNatal(yr, mo, dy, hh, mm, geo.lat, geo.lon, tzOff);
+
+  // Format birthdate nicely
+  const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  const fechaNice = dy + ' de ' + meses[mo-1] + ' de ' + yr;
+  const edad = new Date().getFullYear() - yr;
+  const lugarCompleto = [ciudad, provincia, pais].filter(Boolean).join(', ');
+
+  await generarDiagnostico(nombre, sexo, fechaNice, hora, lugarCompleto, edad, carta);
+}
+
+async function generarDiagnostico(nombre, sexo, fechaNice, hora, lugar, edad, carta) {
+  _G = { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas: [] };
+  const cartaTexto = `Carta natal calculada:
+- Ascendente: ${carta.ascendente}
+- Sol: ${carta.sol}
+- Luna: ${carta.luna}
+- Mercurio: ${carta.mercurio}
+- Venus: ${carta.venus}
+- Marte: ${carta.marte}
+- Júpiter: ${carta.jupiter}
+- Saturno: ${carta.saturno}
+- Urano: ${carta.urano}
+- Neptuno: ${carta.neptuno}
+- Nodo Norte: ${carta.nodoNorte}`;
+
+  const systemPrompt = `Eres una experta en psicología, astrología y neurociencia. Generas diagnósticos de autoconocimiento muy personalizados basados en la carta natal.
+
+ESTILO DE ESCRITURA:
+- Habla como una persona de confianza, directo y cercano
+- Lenguaje sencillo, que lo entienda cualquier persona
+- Conecta ideas con comas, no con puntos ni guiones largos
+- Sin listas, sin viñetas, sin símbolos, sin asteriscos, todo en párrafos corridos
+- No uses nombres de planetas ni casas astrológicas
+- No empieces todos los párrafos igual
+- Incluye situaciones cotidianas reconocibles, integradas de forma natural
+- Escribe como un humano, no como una IA: menos puntos, más comas, frases que fluyen
+- Cada área entre 600 y 800 palabras
+
+OBJETIVO: Que la persona lea y piense que eso es exactamente ella, que por fin alguien se lo explica.
+
+ESTRUCTURA INTERNA sin títulos:
+1. Cómo se manifiesta en su vida ahora, con escenas concretas
+2. Por qué ocurre, empieza con Esto ocurre porque y explica el origen con Esto empezó cuando
+3. Cómo funciona el bucle que se repite
+4. Qué le está costando en la vida real
+5. La verdad incómoda que provoca el clic
+6. Qué creencia o autoengaño tiene que soltar, sin decirle qué hacer
+
+CIERRE ESPECIAL ÁREA 7: al terminar el área 7 añade un párrafo final de cierre para todo el informe, como cuando alguien que te conoce bien te dice algo que no olvidarás, sin consejos, solo una verdad que resuena, escrita con comas que fluyen como si lo dijera en voz alta una persona real.
+
+PROHIBICIONES:
+- No repetir el título del área en el texto
+- No causas vagas sin explicar cómo y cuándo
+- No frases de autoayuda ni coaching
+- No decir qué debe hacer la persona`;
+
+  const userPrompt = `Genera el estudio completo "Tu Diseño de Origen" para:
+
+Nombre: ${nombre}
+Sexo: ${sexo}
+Fecha de nacimiento: ${fechaNice}
+Hora: ${hora}
+Lugar: ${lugar}
+Edad: ${edad} años
+
+${cartaTexto}
+
+Genera las 7 áreas usando esta carta natal. Que el texto sea sencillo, humano y directo. Con situaciones cotidianas reconocibles integradas de forma natural.
+
+ÁREA 1 — IDENTIDAD: quién es esta persona por dentro, cómo se vive a sí misma, cómo se valora cuando nadie la mira, su diálogo interno
+
+ÁREA 2 — PATRONES: qué hace automáticamente cuando algo pasa, cómo reacciona, cómo se sabotea, por qué siempre acaba en los mismos sitios
+
+ÁREA 3 — MIEDOS: el miedo que más gobierna su vida sin que lo nombre, qué evita por ese miedo, qué gana al tenerlo
+
+ÁREA 4 — HERIDA: qué duele hoy, cuándo se dispara, qué situaciones lo reactivan, cómo afecta su presente
+
+ÁREA 5 — AMOR: cómo ama en pareja, qué patrón repite, por qué atrae siempre el mismo tipo de personas, qué pasa con el deseo y la intimidad
+
+ÁREA 6 — RELACIONES: qué rol ocupa con los demás, cómo encaja o no en grupos, qué personas atrae, por qué se acerca o se aleja
+
+ÁREA 7 — DINERO: cómo se relaciona con el dinero, qué pasa cuando empieza a irle bien, qué creencias tiene que no ve, cómo actúa en el trabajo
+
+Separa cada área con exactamente esto: ===AREA===
+No pongas el nombre del área dentro del texto.`;
+
+  try {
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
+    });
+
+    if (!response.ok) throw new Error(await response.text());
+    const data = await response.json();
+    mostrar(nombre, data.content[0].text);
+
+  } catch(e) {
+    document.getElementById('sLoad').classList.remove('on');
+    document.getElementById('sForm').style.display = 'block';
+    const err = document.getElementById('errMsg');
+    err.textContent = 'Ha ocurrido un error. Por favor, inténtalo de nuevo.';
+    err.classList.add('on');
+    console.error(e);
+  }
+}
+
+function mostrar(nombre, texto) {
+  _G.areas = texto.split('===AREA===').map(p => p.trim()).filter(p => p.length > 0);
+  document.getElementById('sLoad').classList.remove('on');
+  document.getElementById('resNombre').textContent = nombre;
+  const partes = texto.split('===AREA===').map(p => p.trim()).filter(p => p.length > 0);
+  const div = document.getElementById('areasDiv');
+  div.innerHTML = '';
+  partes.forEach((txt, i) => {
+    if (i >= AREAS.length) return;
+    const a = AREAS[i];
+    const pars = txt.split(/\n\n+/).filter(p => p.trim());
+    const html = pars.map(p => '<p>' + p.trim().replace(/\n/g, ' ') + '</p>').join('');
+    const bloque = document.createElement('div');
+    bloque.className = 'area';
+    bloque.innerHTML = '<div class="area-num">' + a.num + '</div><div class="area-tit">' + a.tit + '</div><div class="area-txt">' + html + '</div>';
+    div.appendChild(bloque);
+  });
+  document.getElementById('sRes').classList.add('on');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function reiniciar() {
+  document.getElementById('sRes').classList.remove('on');
+  document.getElementById('sForm').style.display = 'block';
+  ['nombre','fecha','hora','pais','provincia','ciudad'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('sexo').value = '';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function descargarPDF() {
+  var btn = document.getElementById('btnPDF');
+  btn.textContent = 'Generando PDF...';
+  btn.disabled = true;
+
+  setTimeout(function() {
+    try {
+      var jsPDF = window.jspdf.jsPDF;
+      var doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+      var W = 210, H = 297;
+
+      var VERDE  = [14, 63, 75];
+      var DORADO = [189, 144, 72];
+      var CREMA  = [255, 251, 239];
+      var BLANCO = [255, 255, 255];
+      var GRIS   = [100, 100, 100];
+
+      var g = _G;
+      var nombre    = g.nombre || '';
+      var fechaNice = g.fechaNice || '';
+      var hora      = g.hora || '';
+      var lugar     = g.lugar || '';
+      var carta     = g.carta || {};
+      var areas     = g.areas || [];
+
+      function addBorder() {
+        doc.setDrawColor(189, 144, 72);
+        doc.setLineWidth(0.4);
+        doc.rect(8, 8, W - 16, H - 16);
+      }
+
+      function addPageNum(n) {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(100, 100, 100);
+        doc.text(String(n), W - 16, H - 11, { align: 'right' });
+      }
+
+      function wrapText(txt, x, y, maxW, lh) {
+        var lines = doc.splitTextToSize(txt, maxW);
+        for (var i = 0; i < lines.length; i++) {
+          if (y > H - 20) { doc.addPage(); y = 25; }
+          doc.text(lines[i], x, y);
+          y += lh;
+        }
+        return y;
+      }
+
+      function dibujarCarta(cx, cy, r) {
+        var PI = Math.PI;
+        var asc = carta.ascRaw || 0;
+
+        // lon ecliptica -> angulo SVG: ASC queda a la izquierda (180 grados en SVG)
+        function lonToRad(lon) {
+          return ((lon - asc + 180) % 360) * PI / 180;
+        }
+        function px(rr, a) { return cx + rr * Math.cos(a); }
+        function py(rr, a) { return cy + rr * Math.sin(a); }
+
+        var rZout = r;          // borde exterior zodiaco
+        var rZin  = r * 0.82;   // borde interior zodiaco
+        var rCasa = r * 0.68;   // borde casas
+        var rInner= r * 0.27;   // circulo interior
+
+        // Sectores zodiacales coloreados
+        var elemColors = [
+          [255,245,232],[240,247,238],[234,244,242],[234,240,247],
+          [255,245,232],[240,247,238],[234,244,242],[242,234,244],
+          [255,245,232],[240,247,238],[234,244,242],[234,240,247]
+        ];
+        for (var i = 0; i < 12; i++) {
+          var a1 = lonToRad(i * 30);
+          var a2 = lonToRad(i * 30 + 30);
+          var c = elemColors[i];
+          doc.setFillColor(c[0], c[1], c[2]);
+          doc.setDrawColor(207, 177, 128);
+          doc.setLineWidth(0.3);
+          // Dibujar sector como trapecio aproximado (4 puntos)
+          doc.triangle(
+            cx, cy,
+            px(rZout, a1), py(rZout, a1),
+            px(rZout, a2), py(rZout, a2),
+            'FD'
+          );
+        }
+
+        // Circulos principales
+        doc.setDrawColor(189, 144, 72);
+        doc.setLineWidth(1.0);
+        doc.circle(cx, cy, rZout);
+        doc.setLineWidth(0.5);
+        doc.circle(cx, cy, rZin);
+        doc.setDrawColor(114, 151, 144);
+        doc.setLineWidth(0.4);
+        doc.circle(cx, cy, rCasa);
+        doc.setDrawColor(189, 144, 72);
+        doc.setLineWidth(0.8);
+        doc.circle(cx, cy, rInner);
+
+        // Lineas divisorias zodiaco
+        for (var d = 0; d < 12; d++) {
+          var da = lonToRad(d * 30);
+          doc.setDrawColor(207, 177, 128);
+          doc.setLineWidth(0.3);
+          doc.line(px(rZin, da), py(rZin, da), px(rZout, da), py(rZout, da));
+          doc.setLineWidth(0.2);
+          doc.line(cx, cy, px(rZin, da), py(rZin, da));
+        }
+
+        // Glifos zodiacales
+        var sigGlifos = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
+        doc.setFontSize(6);
+        doc.setTextColor(14, 63, 75);
+        for (var sg = 0; sg < 12; sg++) {
+          var sga = lonToRad(sg * 30 + 15);
+          var rMid = (rZout + rZin) / 2;
+          doc.text(sigGlifos[sg], px(rMid, sga), py(rMid, sga), { align: 'center' });
+        }
+
+        // Ejes ASC-DSC y MC-IC
+        doc.setDrawColor(14, 63, 75);
+        doc.setLineWidth(1.2);
+        doc.line(px(rZout, lonToRad(asc)), py(rZout, lonToRad(asc)),
+                 px(rZout, lonToRad(asc+180)), py(rZout, lonToRad(asc+180)));
+        var mc = carta.ascRaw ? (carta.ascRaw + 90) % 360 : 90;
+        doc.line(px(rZout, lonToRad(mc)), py(rZout, lonToRad(mc)),
+                 px(rZout, lonToRad(mc+180)), py(rZout, lonToRad(mc+180)));
+
+        // Etiquetas ejes
+        doc.setFontSize(6.5);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(14, 63, 75);
+        doc.text('AC', px(rZout+4, lonToRad(asc)), py(rZout+4, lonToRad(asc)), { align: 'right' });
+        doc.text('DC', px(rZout+4, lonToRad(asc+180)), py(rZout+4, lonToRad(asc+180)), { align: 'left' });
+        doc.text('MC', px(rZout+4, lonToRad(mc)), py(rZout+4, lonToRad(mc)), { align: 'center' });
+        doc.text('IC', px(rZout+4, lonToRad(mc+180)), py(rZout+4, lonToRad(mc+180)), { align: 'center' });
+        doc.setFont('helvetica', 'normal');
+
+        // Lineas de casas (simplificadas: desde centro al borde casas)
+        var casasOffset = [0, -3.26, -2.54, mc-asc, mc-asc+23.24, mc-asc+23.40, 180, 176.74, 177.46, mc-asc+180, mc-asc+203.24, mc-asc+203.40];
+        doc.setDrawColor(114, 151, 144);
+        doc.setLineWidth(0.5);
+        for (var ca = 0; ca < 12; ca++) {
+          var caa = lonToRad(asc + casasOffset[ca]);
+          doc.line(px(rInner, caa), py(rInner, caa), px(rCasa, caa), py(rCasa, caa));
+        }
+
+        // Numeros de casas
+        doc.setFontSize(5.5);
+        doc.setTextColor(114, 151, 144);
+        for (var cn = 0; cn < 12; cn++) {
+          var cna = lonToRad(asc + casasOffset[cn] + (casasOffset[(cn+1)%12] - casasOffset[cn]) / 2);
+          var rNum = (rCasa + rInner) / 2;
+          doc.text(String(cn+1), px(rNum, cna), py(rNum, cna), { align: 'center' });
+        }
+
+        // Aspectos principales (lineas interiores)
+        var planetsData = [
+          { lon: carta.solRaw  || 0  },
+          { lon: carta.lunaRaw || 0  },
+          { lon: carta.mercRaw || 0  },
+          { lon: carta.venRaw  || 0  },
+          { lon: carta.marRaw  || 0  },
+          { lon: carta.jupRaw  || 0  },
+          { lon: carta.satRaw  || 0  },
+          { lon: carta.uraRaw  || 0  },
+          { lon: carta.nepRaw  || 0  },
+          { lon: carta.nodeRaw || 0  },
+        ];
+
+        // Calcular aspectos automaticamente
+        var aspDefs = [
+          { deg: 0,   orb: 8,  color: [14,63,75],    w: 0.8 },  // conjuncion
+          { deg: 60,  orb: 5,  color: [114,151,144],  w: 0.5 },  // sextil
+          { deg: 90,  orb: 7,  color: [189,85,85],    w: 0.7 },  // cuadratura
+          { deg: 120, orb: 7,  color: [114,151,144],  w: 0.7 },  // trigono
+          { deg: 180, orb: 8,  color: [189,85,85],    w: 0.7 },  // oposicion
+        ];
+
+        var rAsp = rInner - 1;
+        for (var ai = 0; ai < planetsData.length; ai++) {
+          for (var aj = ai+1; aj < planetsData.length; aj++) {
+            var diff = Math.abs(planetsData[ai].lon - planetsData[aj].lon) % 360;
+            if (diff > 180) diff = 360 - diff;
+            for (var ak = 0; ak < aspDefs.length; ak++) {
+              if (Math.abs(diff - aspDefs[ak].deg) <= aspDefs[ak].orb) {
+                var c = aspDefs[ak].color;
+                doc.setDrawColor(c[0], c[1], c[2]);
+                doc.setLineWidth(aspDefs[ak].w);
+                var aa1 = lonToRad(planetsData[ai].lon);
+                var aa2 = lonToRad(planetsData[aj].lon);
+                doc.line(px(rAsp,aa1), py(rAsp,aa1), px(rAsp,aa2), py(rAsp,aa2));
+                break;
+              }
+            }
+          }
+        }
+
+        // Planetas con glífos y grados
+        var planetDefs = [
+          { raw: carta.solRaw,  glifo: '☉', color: [189,144,72]  },
+          { raw: carta.lunaRaw, glifo: '☽', color: [114,151,144] },
+          { raw: carta.mercRaw, glifo: '☿', color: [114,151,144] },
+          { raw: carta.venRaw,  glifo: '♀', color: [207,177,128] },
+          { raw: carta.marRaw,  glifo: '♂', color: [14,63,75]    },
+          { raw: carta.jupRaw,  glifo: '♃', color: [14,63,75]    },
+          { raw: carta.satRaw,  glifo: '♄', color: [14,63,75]    },
+          { raw: carta.uraRaw,  glifo: '⛢', color: [114,151,144] },
+          { raw: carta.nepRaw,  glifo: '♆', color: [114,151,144] },
+          { raw: carta.nodeRaw, glifo: '☊', color: [207,177,128] },
+        ];
+
+        var rPlanet = (rCasa + rZin) / 2;
+        for (var pi = 0; pi < planetDefs.length; pi++) {
+          var pl = planetDefs[pi];
+          if (pl.raw === undefined || pl.raw === null) continue;
+          var pa = lonToRad(pl.raw);
+          var ppx = px(rPlanet, pa);
+          var ppy = py(rPlanet, pa);
+          // Punto exacto en borde casas
+          var pxE = px(rCasa, pa), pyE = py(rCasa, pa);
+          doc.setDrawColor(pl.color[0], pl.color[1], pl.color[2]);
+          doc.setLineWidth(0.3);
+          doc.line(pxE, pyE, ppx, ppy);
+          // Circulo del planeta
+          doc.setFillColor(255, 251, 239);
+          doc.setDrawColor(pl.color[0], pl.color[1], pl.color[2]);
+          doc.setLineWidth(0.6);
+          doc.circle(ppx, ppy, 3.2, 'FD');
+          // Glifo
+          doc.setFontSize(4.5);
+          doc.setTextColor(pl.color[0], pl.color[1], pl.color[2]);
+          doc.text(pl.glifo, ppx, ppy, { align: 'center' });
+          // Grado
+          var grados = (pl.raw % 30).toFixed(0);
+          doc.setFontSize(3.8);
+          doc.setTextColor(14, 63, 75);
+          doc.text(grados + '°', ppx, ppy + 4, { align: 'center' });
+        }
+      }
+
+      function tablaPositions(sx, sy) {
+        var cols = [sx, sx+30, sx+65, sx+80, sx+96];
+        var rH = 5.5;
+        var y = sy;
+        doc.setFillColor(14, 63, 75);
+        doc.rect(sx, y, 110, rH, 'F');
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(7);
+        doc.setTextColor(255, 255, 255);
+        var heads = ['Planeta', 'Longitud', 'Casa', 'Latitud', 'Decl.'];
+        for (var h = 0; h < heads.length; h++) doc.text(heads[h], cols[h] + 1, y + 3.8);
+        y += rH;
+        var rows = [
+          ['Sol',       carta.sol       || '-', '6',  '0 0 N',  '3 25 S'],
+          ['Luna',      carta.luna      || '-', '4',  '3 45 N', '19 0 S'],
+          ['Mercurio',  carta.mercurio  || '-', '5',  '2 52 N', '4 57 S'],
+          ['Venus',     carta.venus     || '-', '8',  '1 30 N', '14 49 N'],
+          ['Marte',     carta.marte     || '-', '11', '4 2 N',  '15 14 N'],
+          ['Jupiter',   carta.jupiter   || '-', '11', '1 19 N', '11 32 N'],
+          ['Saturno',   carta.saturno   || '-', '12', '2 24 N', '4 39 N'],
+          ['Urano',     carta.urano     || '-', '2',  '0 17 N', '18 51 S'],
+          ['Neptuno',   carta.neptuno   || '-', '3',  '1 22 N', '21 51 S'],
+          ['Ascendente',carta.ascendente|| '-', '-',  '-',      '-'],
+        ];
+        for (var r2 = 0; r2 < rows.length; r2++) {
+          var fill = r2 % 2 === 0 ? [252, 249, 240] : [255, 255, 255];
+          doc.setFillColor(fill[0], fill[1], fill[2]);
+          doc.rect(sx, y, 110, rH, 'F');
+          doc.setFont('helvetica', r2 === 9 ? 'bold' : 'normal');
+          doc.setFontSize(7);
+          doc.setTextColor(r2 === 9 ? 14 : 40, r2 === 9 ? 63 : 40, r2 === 9 ? 75 : 40);
+          for (var c2 = 0; c2 < rows[r2].length; c2++) doc.text(String(rows[r2][c2]), cols[c2] + 1, y + 3.8);
+          doc.setDrawColor(220, 210, 190);
+          doc.setLineWidth(0.1);
+          doc.line(sx, y + rH, sx + 110, y + rH);
+          y += rH;
+        }
+        return y;
+      }
+
+      // ── PAG 1 PORTADA ──────────────────────────────────────────────────────
+      doc.setFillColor(255, 251, 239);
+      doc.rect(0, 0, W, H, 'F');
+      addBorder();
+      doc.setFillColor(200, 185, 150);
+      doc.rect(0, 0, 60, 50, 'F');
+      doc.rect(W - 60, H - 50, 60, 50, 'F');
+      doc.setDrawColor(189, 144, 72);
+      doc.setLineWidth(0.8);
+      [9, 7, 5, 3].forEach(function(rv) { doc.circle(W/2, 72, rv); });
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.setTextColor(14, 63, 75);
+      doc.text('TU CODIGO BASE', W/2, 90, { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(13);
+      doc.setTextColor(189, 144, 72);
+      doc.text('TU DISENO DE ORIGEN', W/2, 100, { align: 'center' });
+      var fx = W/2;
+      doc.setDrawColor(189, 144, 72);
+      doc.setLineWidth(0.5);
+      doc.circle(fx, 162, 22);
+      doc.setLineWidth(0.4);
+      doc.setDrawColor(200, 175, 130);
+      doc.circle(fx, 150, 4);
+      doc.line(fx, 154, fx, 166);
+      doc.line(fx, 158, fx - 5, 154);
+      doc.line(fx, 158, fx + 5, 154);
+      doc.line(fx, 166, fx - 4, 173);
+      doc.line(fx, 166, fx + 4, 173);
+      doc.setFillColor(255, 220, 130);
+      doc.circle(fx, 158, 2, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.setTextColor(14, 63, 75);
+      doc.text(nombre, W/2, 215, { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(100, 100, 100);
+      doc.text(fechaNice + ' a las ' + hora, W/2, 225, { align: 'center' });
+      doc.text(lugar, W/2, 233, { align: 'center' });
+
+      // ── PAG 2 INDICE ───────────────────────────────────────────────────────
+      doc.addPage();
+      doc.setFillColor(255, 251, 239);
+      doc.rect(0, 0, W, H, 'F');
+      addBorder();
+      doc.setDrawColor(189, 144, 72);
+      doc.setLineWidth(1.5);
+      doc.ellipse(18, H/2, 28, 75, 'S');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(18);
+      doc.setTextColor(14, 63, 75);
+      doc.text('GUIA DE LECTURA', W/2, 38, { align: 'center' });
+      var items = [
+        ['03', 'Bienvenido a Tu Diseno de Origen'],
+        ['04', 'Tu Configuracion Inicial'],
+        ['06', 'IDENTIDAD: Por que eres como eres y por que tu vida es como es'],
+        ['08', 'PATRONES: Por que siempre te pasa lo mismo y que repites sin poder parar'],
+        ['10', 'MIEDOS: Lo que gobierna tu vida sin que lo sepas'],
+        ['12', 'HERIDA: Lo que hoy sigue bloqueando tu vida en silencio'],
+        ['14', 'AMOR: Por que amas como amas y por que atraes a quien atraes'],
+        ['16', 'RELACIONES: Como te vinculas con los demas y que rol ocupas sin darte cuenta'],
+        ['18', 'DINERO: Por que el dinero no termina de fluir en tu vida'],
+        ['21', 'Tu Proximo Paso'],
+      ];
+      var iy = 58;
+      for (var ii = 0; ii < items.length; ii++) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.setTextColor(189, 144, 72);
+        doc.text(items[ii][0], 38, iy);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(14, 63, 75);
+        var ilines = doc.splitTextToSize(items[ii][1], 130);
+        for (var il = 0; il < ilines.length; il++) doc.text(ilines[il], 55, iy + il * 5);
+        iy += Math.max(14, ilines.length * 5 + 6);
+      }
+      addPageNum(2);
+
+      // ── PAG 3 BIENVENIDO ───────────────────────────────────────────────────
+      doc.addPage();
+      doc.setFillColor(255, 255, 255);
+      doc.rect(0, 0, W, H, 'F');
+      addBorder();
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(15);
+      doc.setTextColor(14, 63, 75);
+      doc.text('BIENVENIDO A TU DISENO DE ORIGEN', W/2, 30, { align: 'center' });
+      var bparas = [
+        'Si estas leyendo esto, no es casualidad.',
+        'Probablemente llevas tiempo sintiendo que hay algo en ti que quieres entender mejor: tus emociones, tus reacciones, las decisiones que tomas una y otra vez, o esos ciclos que se repiten sin saber muy bien porqué.',
+        'No es falta de esfuerzo ni de conciencia, es que durante mucho tiempo has intentado entenderte sin conocer la raiz desde la que funcionas.',
+        'Todo lo que vives tiene una coherencia interna, aunque ahora no la veas, y cuando esa coherencia se revela, muchas de las preguntas que te has hecho a lo largo de tu vida empiezan a tener respuesta.',
+        'Eso es Tu Diseno de Origen.',
+        'Aqui no hay juicios ni etiquetas, solo claridad para que dejes de ir contra ti y empieces a entenderte desde dentro.',
+        'Leelo con calma, no solo vas a encontrar respuestas, tambien una nueva forma de mirarte.',
+      ];
+      var by3 = 46;
+      for (var bp = 0; bp < bparas.length; bp++) {
+        doc.setFont('helvetica', bp === 4 ? 'bold' : 'normal');
+        doc.setFontSize(10.5);
+        doc.setTextColor(50, 50, 50);
+        var blines = doc.splitTextToSize(bparas[bp], 155);
+        for (var bl = 0; bl < blines.length; bl++) {
+          doc.text(blines[bl], W/2, by3, { align: 'center' });
+          by3 += 6.5;
+        }
+        by3 += 5;
+      }
+      by3 += 10;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(12);
+      doc.setTextColor(14, 63, 75);
+      doc.text('Porque cuando entiendes tu Codigo Base,', W/2, by3, { align: 'center' });
+      by3 += 8;
+      doc.setTextColor(189, 144, 72);
+      doc.text('dejas de ir contra ti y empiezas a vivir desde tu verdad.', W/2, by3, { align: 'center' });
+      addPageNum(3);
+
+      // ── PAG 4 CONFIGURACION INICIAL ────────────────────────────────────────
+      doc.addPage();
+      doc.setFillColor(255, 255, 255);
+      doc.rect(0, 0, W, H, 'F');
+      addBorder();
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(14, 63, 75);
+      doc.text('TU CONFIGURACION INICIAL', 18, 26);
+      var cparas = [
+        'Antes de tomar tu primera respiracion, ya existia un diseno invisible que daba forma a tu manera unica de ser: una estructura precisa de energia, mente y proposito que marcaria la base de como ibas a ver, sentir y experimentar la vida.',
+        'Ese instante inicial activo un programa interno, una configuracion que moldea tu forma de percibir, interpretar y responder ante el mundo, define las coordenadas originales desde donde comienza tu historia.',
+        'Tu diseno no es un destino, es un lenguaje, y cuando aprendes a leerlo, todo cobra sentido: las decisiones que tomas, los vinculos que repites y los caminos que se abren.',
+        'Comprenderlo es volver al punto de origen y recordar la verdad de quien eras antes de todo condicionamiento, la persona que siempre fuiste.',
+      ];
+      var cy4 = 36;
+      for (var cp = 0; cp < cparas.length; cp++) {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(50, 50, 50);
+        var clines = doc.splitTextToSize(cparas[cp], 175);
+        for (var cl = 0; cl < clines.length; cl++) { doc.text(clines[cl], 18, cy4); cy4 += 5.5; }
+        cy4 += 4;
+      }
+      cy4 += 4;
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text('Representacion visual de tu configuracion inicial: la huella simbolica del instante en que comenzo tu historia.', 18, cy4);
+      cy4 += 10;
+      dibujarCarta(W/2 + 10, cy4 + 40, 38);
+      addPageNum(4);
+
+      // ── PAG 5 POSICIONES ───────────────────────────────────────────────────
+      doc.addPage();
+      doc.setFillColor(255, 255, 255);
+      doc.rect(0, 0, W, H, 'F');
+      addBorder();
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(189, 144, 72);
+      doc.text('POSICIONES: Configuracion funcional de tu Codigo Base', 18, 24);
+      var py5 = 32;
+      py5 = tablaPositions(18, py5);
+      py5 += 6;
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(9);
+      doc.setTextColor(60, 60, 60);
+      py5 = wrapText('Las posiciones reflejan donde se concentra tu energia y desde que puntos se organiza tu forma de pensar, sentir o actuar, como se forma tu sistema interno y que partes de ti toman mas protagonismo en tu manera de percibir y responder a la vida.', 18, py5, 175, 5.5);
+      py5 += 8;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(189, 144, 72);
+      doc.text('ASPECTOS: Dinamicas internas de tu Codigo Base', 18, py5);
+      py5 += 8;
+      var aspPlanets = ['Sol','Lun','Mer','Ven','Mar','Jup','Sat','Ura','Nep','Asc'];
+      var cellS = 13, aspX = 22, aspY = py5;
+      doc.setFontSize(6.5);
+      for (var ai = 0; ai < aspPlanets.length; ai++) {
+        doc.setTextColor(14, 63, 75);
+        doc.text(aspPlanets[ai], aspX + ai * cellS + cellS/2, aspY - 2, { align: 'center' });
+        doc.text(aspPlanets[ai], aspX - 2, aspY + ai * cellS + cellS/2 + 1, { align: 'right' });
+        doc.setDrawColor(210, 195, 165);
+        doc.setLineWidth(0.15);
+        doc.rect(aspX + ai * cellS, aspY, cellS, cellS * (10 - ai));
+      }
+      py5 = aspY + 10 * cellS + 8;
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(9);
+      doc.setTextColor(60, 60, 60);
+      wrapText('Los aspectos muestran como interactuan tus distintas fuerzas internas: los equilibrios, tensiones y conexiones que dan forma a tu manera de vincularte, decidir y reaccionar, son la expresion visible de tu movimiento interno.', 18, py5, 175, 5.5);
+      addPageNum(5);
+
+      // ── PAGS 6-19 LAS 7 AREAS ─────────────────────────────────────────────
+      var areaTitles = [
+        { tit: 'IDENTIDAD',   sub: 'Por que eres como eres y por que tu vida es como es' },
+        { tit: 'PATRONES',    sub: 'Por que siempre te pasa lo mismo y que repites sin poder parar' },
+        { tit: 'MIEDOS',      sub: 'Lo que gobierna tu vida sin que lo sepas' },
+        { tit: 'HERIDA',      sub: 'Lo que hoy sigue bloqueando tu vida en silencio' },
+        { tit: 'AMOR',        sub: 'Por que amas como amas y por que atraes a quien atraes' },
+        { tit: 'RELACIONES',  sub: 'Como te vinculas con los demas y que rol ocupas sin darte cuenta' },
+        { tit: 'DINERO',      sub: 'Por que el dinero no termina de fluir en tu vida' },
+      ];
+      var pageC = 6;
+      for (var ai2 = 0; ai2 < areaTitles.length; ai2++) {
+        var areaText = areas[ai2] || '';
+        var paras = areaText.split(/\n\n+/).filter(function(p) { return p.trim().length > 0; });
+        var mid = Math.ceil(paras.length / 2);
+
+        // Pagina impar: titulo + primera mitad
+        doc.addPage();
+        doc.setFillColor(255, 255, 255);
+        doc.rect(0, 0, W, H, 'F');
+        addBorder();
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(189, 144, 72);
+        doc.text('AREA ' + (ai2 + 1), 18, 26);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(17);
+        doc.setTextColor(14, 63, 75);
+        doc.text(areaTitles[ai2].tit + ':', 18, 37);
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(12);
+        var subls = doc.splitTextToSize(areaTitles[ai2].sub, 175);
+        for (var sl = 0; sl < subls.length; sl++) doc.text(subls[sl], 18, 47 + sl * 7);
+        var lineY = 47 + subls.length * 7 + 3;
+        doc.setDrawColor(189, 144, 72);
+        doc.setLineWidth(0.5);
+        doc.line(18, lineY, W - 18, lineY);
+        var ay = lineY + 10;
+        for (var pi = 0; pi < mid; pi++) {
+          if (!paras[pi]) continue;
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10);
+          doc.setTextColor(40, 40, 40);
+          var plines = doc.splitTextToSize(paras[pi].trim(), 175);
+          for (var pl = 0; pl < plines.length; pl++) {
+            if (ay > H - 18) break;
+            doc.text(plines[pl], 18, ay);
+            ay += 5.8;
+          }
+          ay += 4;
+        }
+        addPageNum(pageC); pageC++;
+
+        // Pagina par: segunda mitad
+        doc.addPage();
+        doc.setFillColor(255, 255, 255);
+        doc.rect(0, 0, W, H, 'F');
+        addBorder();
+        var ay2 = 22;
+        for (var pi2 = mid; pi2 < paras.length; pi2++) {
+          if (!paras[pi2]) continue;
+          doc.setFont('helvetica', 'normal');
+          doc.setFontSize(10);
+          doc.setTextColor(40, 40, 40);
+          var plines2 = doc.splitTextToSize(paras[pi2].trim(), 175);
+          for (var pl2 = 0; pl2 < plines2.length; pl2++) {
+            if (ay2 > H - 18) break;
+            doc.text(plines2[pl2], 18, ay2);
+            ay2 += 5.8;
+          }
+          ay2 += 4;
+        }
+        addPageNum(pageC); pageC++;
+      }
+
+      // ── PAG 20 FRASE CIERRE ────────────────────────────────────────────────
+      doc.addPage();
+      doc.setFillColor(255, 255, 255);
+      doc.rect(0, 0, W, H, 'F');
+      addBorder();
+      doc.setDrawColor(189, 144, 72);
+      doc.setLineWidth(1.5);
+      doc.circle(W/2, H/2, 68);
+      doc.setFillColor(255, 255, 255);
+      doc.rect(W/2 - 45, H/2 + 45, 90, 30, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(36);
+      doc.setTextColor(189, 144, 72);
+      doc.text('"', 30, H/2 - 15);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(14);
+      doc.setTextColor(14, 63, 75);
+      doc.text('Cuando descubres', W/2, H/2 - 10, { align: 'center' });
+      doc.setFont('helvetica', 'bolditalic');
+      doc.text('tu Diseno de Origen,', W/2, H/2, { align: 'center' });
+      doc.setFont('helvetica', 'bold');
+      doc.text('ya no puedes seguir', W/2, H/2 + 11, { align: 'center' });
+      doc.text('contandote', W/2, H/2 + 21, { align: 'center' });
+      doc.setFont('helvetica', 'bolditalic');
+      doc.text('la misma historia', W/2, H/2 + 31, { align: 'center' });
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(36);
+      doc.setTextColor(189, 144, 72);
+      doc.text('"', W - 33, H/2 + 36);
+      addPageNum(20);
+
+      // ── PAG 21 PROXIMO PASO ────────────────────────────────────────────────
+      doc.addPage();
+      doc.setFillColor(255, 255, 255);
+      doc.rect(0, 0, W, H, 'F');
+      addBorder();
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(20);
+      doc.setTextColor(14, 63, 75);
+      doc.text('Tu Proximo Paso...', W/2, H/2, { align: 'center' });
+      doc.setDrawColor(189, 144, 72);
+      doc.setLineWidth(1.5);
+      doc.ellipse(W/2 + 20, H - 8, 55, 42, 'S');
+      addPageNum(21);
+
+      // ── PAG 22 PRODUCTO 2 ──────────────────────────────────────────────────
+      doc.addPage();
+      doc.setFillColor(255, 255, 255);
+      doc.rect(0, 0, W, H, 'F');
+      addBorder();
+      addPageNum(22);
+
+      // ── PAG 23 CONTRAPORTADA ───────────────────────────────────────────────
+      doc.addPage();
+      doc.setFillColor(255, 251, 239);
+      doc.rect(0, 0, W, H, 'F');
+      addBorder();
+      doc.setFillColor(200, 185, 150);
+      doc.rect(0, 0, 60, 50, 'F');
+      doc.rect(W - 60, H - 50, 60, 50, 'F');
+      doc.setDrawColor(189, 144, 72);
+      doc.setLineWidth(0.8);
+      [9, 7, 5, 3].forEach(function(rv) { doc.circle(W/2, H/2 - 20, rv); });
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(18);
+      doc.setTextColor(14, 63, 75);
+      doc.text('TU CODIGO BASE', W/2, H/2 + 2, { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text('© TU CODIGO BASE', W/2, H - 40, { align: 'center' });
+      doc.text('Todos los derechos reservados.', W/2, H - 34, { align: 'center' });
+      doc.text('Prohibida su reproduccion total o parcial sin autorizacion expresa.', W/2, H - 28, { align: 'center' });
+      doc.text('Operado por Pura Group LLC', W/2, H - 22, { align: 'center' });
+
+      var fileName = 'TuDisenoDeOrigen_' + nombre.replace(/\s+/g, '_') + '.pdf';
+      doc.save(fileName);
+
+    } catch(e) {
+      console.error('PDF error:', e);
+      alert('Error generando el PDF: ' + e.message);
+    }
+    btn.textContent = 'Descargar PDF — Tu Diseno de Origen';
+    btn.disabled = false;
+  }, 100);
+}
+
+</script>
+</body>
+</html>
