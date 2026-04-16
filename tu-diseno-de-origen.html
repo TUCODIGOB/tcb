@@ -306,12 +306,7 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
   const yAsc = -Math.cos(LASTR);
   const xAsc = Math.sin(LASTR)*Math.cos(epsTR) + Math.tan(latR)*Math.sin(epsTR);
   const ASC  = _mod(_D(Math.atan2(yAsc, xAsc)) + 180, 360);
-// MC (Medio Cielo)
-  const MC = _mod(_D(Math.atan2(Math.sin(LASTR), Math.cos(LASTR)*Math.cos(epsTR))), 360);
 
-  // Casas (Whole Sign)
-  const ascSignStart = Math.floor(ASC / 30) * 30;
-  const casas = Array.from({length: 12}, (_, i) => _mod(ascSignStart + i * 30, 360));
   // Planetas
   const sunL  = sunLongitude(T);
   const moonL = moonLongitude(T);
@@ -354,9 +349,7 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     satRaw:  satL,
     uraRaw:  uraL,
     nepRaw:  nepL,
-    nodeRaw: nodeL,
-mcRaw:  MC,
-    casas:  casas,
+    nodeRaw: nodeL
   };
 }
 
@@ -545,8 +538,28 @@ No pongas el nombre del área dentro del texto.`;
     });
 
     if (!response.ok) throw new Error(await response.text());
-    const data = await response.json();
-    mostrar(nombre, data.content[0].text);
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = decoder.decode(value, { stream: true });
+      const lines = chunk.split('\n').filter(l => l.trim());
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          try {
+            const parsed = JSON.parse(line.slice(6));
+            if (parsed.done && parsed.fullText) {
+              mostrar(nombre, parsed.fullText);
+              return;
+            }
+          } catch(e) {}
+        }
+      }
+    }
 
   } catch(e) {
     document.getElementById('sLoad').classList.remove('on');
