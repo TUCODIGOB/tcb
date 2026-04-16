@@ -578,8 +578,31 @@ No pongas el nombre del área dentro del texto.`;
     });
 
     if (!response.ok) throw new Error(await response.text());
-    const data = await response.json();
-    mostrar(nombre, data.content[0].text);
+
+const reader = response.body.getReader();
+const decoder = new TextDecoder();
+let textoCompleto = '';
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  const chunk = decoder.decode(value, { stream: true });
+  const lines = chunk.split('\n');
+  for (const line of lines) {
+    if (!line.startsWith('data: ')) continue;
+    const jsonStr = line.slice(6).trim();
+    if (jsonStr === '[DONE]') continue;
+    try {
+      const parsed = JSON.parse(jsonStr);
+      if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
+        textoCompleto += parsed.delta.text;
+      }
+    } catch (_) {}
+  }
+}
+
+if (!textoCompleto) throw new Error('Respuesta vacía');
+mostrar(nombre, textoCompleto);
 
   } catch(e) {
     document.getElementById('sLoad').classList.remove('on');
