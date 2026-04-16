@@ -358,46 +358,28 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
   };
 }
 
-// ─── TIMEZONE REAL: usa API de TimeZoneDB o fallback por longitud ─────────────
+// ─── TIMEZONE HISTÓRICO POR FECHA ────────────────────────────────────────────
 async function getTZOffset(lat, lon, fechaISO) {
-  // Intentar con TimeZoneDB (API key gratuita no necesaria para este endpoint)
-  // Usamos el endpoint de worldtimeapi que no requiere key
   try {
-    const url = `https://timeapi.io/api/TimeZone/coordinate?latitude=${lat}&longitude=${lon}`;
-    const r = await fetch(url);
+    const r = await fetch('/api/timezone', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lat, lon, fechaISO })
+    });
     if (r.ok) {
       const data = await r.json();
-      // data.currentUtcOffset.seconds / 3600
-      if (data && data.currentUtcOffset) {
-        return data.currentUtcOffset.seconds / 3600;
+      if (data && data.offset !== undefined) {
+        return data.offset;
       }
     }
   } catch(e) {}
 
-  // Fallback 1: GeoNames timezone (no key needed para nivel básico)
-  try {
-    const url = `https://secure.geonames.org/timezoneJSON?lat=${lat}&lng=${lon}&username=demo`;
-    const r = await fetch(url);
-    if (r.ok) {
-      const data = await r.json();
-      if (data && typeof data.rawOffset === 'number') {
-        // rawOffset es el offset estándar, dstOffset el de verano
-        // Elegimos dstOffset si hay DST activo (comprobamos por mes)
-        const month = parseInt(fechaISO.split('-')[1]);
-        const yr = parseInt(fechaISO.split('-')[0]);
-        const isDSTSeason = (lat > 0) ? (month >= 4 && month <= 10) : (month <= 3 || month >= 10);
-        return isDSTSeason ? (data.dstOffset || data.rawOffset) : data.rawOffset;
-      }
-    }
-  } catch(e) {}
-
-  // Fallback 2: estimación por longitud + DST aproximado
+  // Fallback: estimación por longitud
   const roughTZ = Math.round(lon / 15);
   const month = parseInt(fechaISO.split('-')[1]);
   const isDST = (lat > 30 && lat < 65 && month >= 4 && month <= 10);
   return roughTZ + (isDST ? 1 : 0);
 }
-
 // ─── GEOCODIFICACIÓN ──────────────────────────────────────────────────────────
 async function geocode(ciudad, provincia, pais) {
   const query = [ciudad, provincia, pais].filter(Boolean).join(', ');
