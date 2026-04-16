@@ -37,8 +37,20 @@ stream: true,
       return res.status(response.status).json({ error });
     }
 
-    const data = await response.json();
-    return res.status(200).json(data);
+    res.setHeader('Content-Type', 'text/event-stream');
+res.setHeader('Cache-Control', 'no-cache');
+res.setHeader('Connection', 'keep-alive');
+
+const reader = response.body.getReader();
+const decoder = new TextDecoder();
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  res.write(decoder.decode(value, { stream: true }));
+}
+
+res.end();
 
   } catch (err) {
     return res.status(500).json({ error: 'Error interno del servidor' });
