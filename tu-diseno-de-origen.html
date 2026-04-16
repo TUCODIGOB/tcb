@@ -247,72 +247,31 @@ function moonLongitude(T) {
   return _mod(lon, 360);
 }
 
-// Mercurio heliocéntrico → geocéntrico eclíptica (VSOP87 truncado, ~1° precisión)
-function mercuryLongitude(T) {
-  const tau = T / 10; // siglos → milenios
-  // Elementos oscilantes de Mercurio (VSOP87 simplificado de alto orden)
-  const L = _mod(252.250906 + 149474.0722491*T + 0.00030350*T*T, 360);
-  const M_merc = _R(_mod(L - 77.45611904 - 23.4440*T, 360)); // anomalía media aprox
-  // Ecuación del centro Mercurio
-  const C = 23.4400*Math.sin(M_merc) + 2.9818*Math.sin(2*M_merc) + 0.5255*Math.sin(3*M_merc) + 0.1058*Math.sin(4*M_merc) + 0.0219*Math.sin(5*M_merc) + 0.0047*Math.sin(6*M_merc);
-  // Longitud verdadera heliocéntrica
-  const Lv = L + C;
-  // Corrección geocéntrica (aproximación triangulación Sol-Mercurio-Tierra)
-  const sunLon = sunLongitude(T);
-  const elong = _mod(Lv - sunLon, 360);
-  // Fase sinódica de Mercurio: periodo ~116 días → corrección geocéntrica
-  // Para la interpretación astrológica usamos longitud heliocéntrica + corrección de elongación
-  const geo = _mod(sunLon + elong + (elong > 180 ? -360 : 0)*0.38, 360);
-  return _mod(Lv, 360); // longitud heliocéntrica es suficiente para el signo natal
+function _earthHelio(T) {
+  const s = sunLongitude(T);
+  const M = _R(_mod(357.52911 + 35999.05029*T, 360));
+  return { lon: _mod(s + 180, 360), r: 1.000001018*(1 - 0.01671*Math.cos(M) - 0.00014*Math.cos(2*M)) };
 }
-
-// Venus (VSOP87 truncado)
-function venusLongitude(T) {
-  const L = _mod(181.979801 + 58519.2130302*T + 0.00031014*T*T, 360);
-  const M_ven = _R(_mod(L - 131.56370300 - 0.09*T, 360));
-  const C = 0.7758*Math.sin(M_ven) + 0.0033*Math.sin(2*M_ven);
-  return _mod(L + C, 360);
+function _rv(a, e, M) { return a*(1-e*e)/(1+e*Math.cos(M)); }
+function _eqC(e, M) { return (2*e-e*e*e/4)*_D(Math.sin(M))+(5/4*e*e)*_D(Math.sin(2*M))+(13/12*e*e*e)*_D(Math.sin(3*M)); }
+function _helioToGeo(lon, r, earth) {
+  const px = r*Math.cos(_R(lon)) - earth.r*Math.cos(_R(earth.lon));
+  const py = r*Math.sin(_R(lon)) - earth.r*Math.sin(_R(earth.lon));
+  return _mod(_D(Math.atan2(py, px)), 360);
 }
-
-// Marte (VSOP87 truncado, precisión ~0.5°)
-function marsLongitude(T) {
-  const L = _mod(355.433 + 19141.6964471*T + 0.00031052*T*T, 360);
-  const M = _R(_mod(19.3730 + 19141.6964471*T, 360));
-  const C = 10.6912*Math.sin(M) + 0.6228*Math.sin(2*M) + 0.0503*Math.sin(3*M) + 0.0046*Math.sin(4*M);
-  return _mod(L + C, 360);
+function _planet(L0,L1,L2,w0,w1,a,e,T) {
+  const L = _mod(L0+L1*T+L2*T*T, 360);
+  const w = _mod(w0+w1*T, 360);
+  const M = _R(_mod(L-w, 360));
+  return { lon: _mod(L+_eqC(e,M), 360), r: _rv(a,e,M) };
 }
-
-// Júpiter (VSOP87 truncado, precisión ~1°)
-function jupiterLongitude(T) {
-  const L = _mod(34.351519 + 3036.3027748*T + 0.00022330*T*T, 360);
-  const M = _R(_mod(20.9 + 3036.301*T, 360));
-  const C = 5.5549*Math.sin(M) + 0.1683*Math.sin(2*M) + 0.0071*Math.sin(3*M);
-  return _mod(L + C, 360);
-}
-
-// Saturno (VSOP87 truncado, precisión ~1°)
-function saturnLongitude(T) {
-  const L = _mod(50.077444 + 1223.5110686*T + 0.00051908*T*T, 360);
-  const M = _R(_mod(317.02 + 1222.114*T, 360));
-  const C = 6.3585*Math.sin(M) + 0.2204*Math.sin(2*M) + 0.0106*Math.sin(3*M);
-  return _mod(L + C, 360);
-}
-
-// Urano (longitud media, precisión ~2°)
-function uranusLongitude(T) {
-  const L = _mod(314.055005 + 429.8640561*T, 360);
-  const M = _R(_mod(L - 173.005159, 360));
-  const C = 5.3042*Math.sin(M) + 0.1534*Math.sin(2*M);
-  return _mod(L + C, 360);
-}
-
-// Neptuno (longitud media, precisión ~2°)
-function neptuneLongitude(T) {
-  const L = _mod(304.348665 + 219.8833092*T, 360);
-  const M = _R(_mod(L - 48.123691, 360));
-  const C = 1.0261*Math.sin(M) + 0.0124*Math.sin(2*M);
-  return _mod(L + C, 360);
-}
+function mercuryLongitude(T) { const e=_earthHelio(T); const p=_planet(252.250906,149474.0722491,0.00030350,77.45611904,0.1593667,0.38709831,0.20563069,T); return _helioToGeo(p.lon,p.r,e); }
+function venusLongitude(T)   { const e=_earthHelio(T); const p=_planet(181.979801,58519.2130302,0.00031014,131.563703,0.0048746,0.72332982,0.00677323,T); return _helioToGeo(p.lon,p.r,e); }
+function marsLongitude(T)    { const e=_earthHelio(T); const p=_planet(355.433275,19141.6964746,0.00031052,336.560357,0.4442616,1.52366231,0.09341233,T); return _helioToGeo(p.lon,p.r,e); }
+function jupiterLongitude(T) { const e=_earthHelio(T); const p=_planet(34.351519,3036.3027748,0.00022330,14.331532,0.3371283,5.20252,0.04849485,T); return _helioToGeo(p.lon,p.r,e); }
+function saturnLongitude(T)  { const e=_earthHelio(T); const p=_planet(50.077444,1223.5110686,0.00051908,93.056787,0.5665496,9.55184,0.05550825,T); return _helioToGeo(p.lon,p.r,e); }
+function uranusLongitude(T)  { const e=_earthHelio(T); const p=_planet(314.055005,429.8640561,0,173.005159,0.0893158,19.21814,0.04629590,T); return _helioToGeo(p.lon,p.r,e); }
+function neptuneLongitude(T) { const e=_earthHelio(T); const p=_planet(304.348665,219.8833092,0,48.120276,0.0291866,30.10957,0.00898809,T); return _helioToGeo(p.lon,p.r,e); }
 
 // Nodo Norte de la Luna
 function lunarNode(T) {
@@ -346,6 +305,12 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
   const yAsc = -Math.cos(LASTR);
   const xAsc = Math.sin(LASTR)*Math.cos(epsTR) + Math.tan(latR)*Math.sin(epsTR);
   const ASC  = _mod(_D(Math.atan2(yAsc, xAsc)) + 180, 360);
+ // Casas Whole Sign (la más precisa de implementar, 0° error por definición)
+  const ascSignIdx = Math.floor(ASC / 30);
+  const casas = [];
+  for (let i = 0; i < 12; i++) {
+    casas.push((ascSignIdx + i) % 12 * 30);
+  }
 
   // Planetas
   const sunL  = sunLongitude(T);
