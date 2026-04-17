@@ -467,20 +467,25 @@ ESTILO DE ESCRITURA:
 - Conecta ideas con comas, no con puntos ni guiones largos
 - Sin listas, sin viñetas, sin símbolos, sin asteriscos, todo en párrafos corridos
 - No uses nombres de planetas ni casas astrológicas
-- No empieces todos los párrafos igual
+- No empieces dos párrafos con la misma estructura. Varía: empieza con una escena, con una pregunta implícita, con un "hay días en que", con "pasa algo curioso", con "lo que ocurre es", con "mira", etc.
 - Incluye situaciones cotidianas reconocibles, integradas de forma natural
 - Escribe como un humano, no como una IA: menos puntos, más comas, frases que fluyen
-- Cada área entre 600 y 800 palabras
+- Cada área entre 600 y 800 palabras dividida en 6 u 8 párrafos cortos de 3 a 5 líneas cada uno. NUNCA un párrafo de más de 6 líneas. El ojo debe descansar.
+- Deja una línea en blanco entre cada párrafo (doble salto de línea)
+
+OBLIGATORIO EN CADA ÁREA: incluye una mini historia o escena real concreta, como un ejemplo vivo de lo que le pasa. Debe ser una situación cotidiana reconocible, contada como si fuera una pequeña película mental. Por ejemplo: "Imagina que estás en una cena con amigos y alguien suelta un comentario sin importancia sobre tu trabajo, y de repente sientes que algo se te enciende dentro, te quedas dándole vueltas toda la noche, aunque sabes que no era nada..." Algo así, una escena visual, donde el lector se vea reflejado. Esa historia debe ocupar al menos uno de los párrafos del área y estar integrada con el resto del texto. Sin avisar de que es un ejemplo, simplemente cuéntala.
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente ella, que por fin alguien se lo explica.
 
-ESTRUCTURA INTERNA sin títulos:
-1. Cómo se manifiesta en su vida ahora, con escenas concretas
-2. Por qué ocurre, empieza con Esto ocurre porque y explica el origen con Esto empezó cuando
-3. Cómo funciona el bucle que se repite
-4. Qué le está costando en la vida real
-5. La verdad incómoda que provoca el clic
-6. Qué creencia o autoengaño tiene que soltar, sin decirle qué hacer
+ESTRUCTURA INTERNA (sin títulos ni numeración visible, intégralo todo de forma fluida):
+Tienes que cubrir estos 6 puntos pero NUNCA empieces los párrafos con las frases de abajo. Son solo guías internas para ti. Varía radicalmente cómo abres cada párrafo.
+- Cómo se manifiesta esto en su vida ahora, con escenas cotidianas concretas
+- Una mini historia o escena reconocible (OBLIGATORIA), integrada de forma fluida
+- El origen: cuándo empezó y por qué
+- Cómo funciona el bucle que se repite una y otra vez
+- Qué le está costando en la vida real
+- Una verdad incómoda que provoca el clic (nunca empieces con "la verdad incomoda es")
+- Qué creencia o autoengaño tiene que soltar (nunca empieces con "tienes que soltar")
 
 CIERRE ESPECIAL ÁREA 7: al terminar el área 7 añade un párrafo final de cierre para todo el informe, como cuando alguien que te conoce bien te dice algo que no olvidarás, sin consejos, solo una verdad que resuena, escrita con comas que fluyen como si lo dijera en voz alta una persona real.
 
@@ -488,7 +493,10 @@ PROHIBICIONES:
 - No repetir el título del área en el texto
 - No causas vagas sin explicar cómo y cuándo
 - No frases de autoayuda ni coaching
-- No decir qué debe hacer la persona`;
+- No decir qué debe hacer la persona
+- PROHIBIDO empezar párrafos con "La verdad incomoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas. Cada párrafo arranca de forma diferente y natural.
+- PROHIBIDO escribir párrafos de más de 5 líneas. Rompe los bloques largos en varios párrafos más cortos.
+- PROHIBIDO omitir la mini historia concreta. Cada área lleva una escena real integrada en el texto.`;
 
   const userPrompt = `Genera el estudio completo "Tu Diseño de Origen" para:
 
@@ -609,13 +617,11 @@ function descargarPDF() {
       function fx(s) {
         if (!s) return '';
         return s
-          .replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u')
-          .replace(/Á/g,'A').replace(/É/g,'E').replace(/Í/g,'I').replace(/Ó/g,'O').replace(/Ú/g,'U')
-          .replace(/ñ/g,'n').replace(/Ñ/g,'N').replace(/ü/g,'u').replace(/Ü/g,'U')
+          .replace(/ã/g,'a').replace(/õ/g,'o').replace(/Ã/g,'A').replace(/Õ/g,'O')
           .replace(/à/g,'a').replace(/è/g,'e').replace(/ì/g,'i').replace(/ò/g,'o').replace(/ù/g,'u')
           .replace(/â/g,'a').replace(/ê/g,'e').replace(/î/g,'i').replace(/ô/g,'o').replace(/û/g,'u')
-          .replace(/ã/g,'a').replace(/õ/g,'o')
-          .replace(/¿/g,'?').replace(/¡/g,'!');
+          .replace(/À/g,'A').replace(/È/g,'E').replace(/Ì/g,'I').replace(/Ò/g,'O').replace(/Ù/g,'U')
+          .replace(/Â/g,'A').replace(/Ê/g,'E').replace(/Î/g,'I').replace(/Ô/g,'O').replace(/Û/g,'U');
       }
       var W = 210, H = 297;
 
@@ -671,7 +677,7 @@ function descargarPDF() {
         var rOut   = r;           // borde exterior
         var rSigno = r * 0.87;    // borde interior banda de signos
         var rCasa  = r * 0.70;    // borde del anillo de planetas
-        var rInner = r * 0.32;    // círculo interior (aspectos)
+        var rInner = r * 0.62;    // círculo interior (aspectos)
 
         // Colores de marca
         var COL_VERDE  = [14, 63, 75];
@@ -1058,10 +1064,10 @@ function descargarPDF() {
 
         // ─── ASPECTOS ────────────────────────────────────────────────────
         var aspDefs = [
-          { deg: 60,  orb: 4, color: [120, 155, 145], w: 0.3 },  // sextil verde suave
-          { deg: 90,  orb: 6, color: [180, 95, 85],   w: 0.4 },  // cuadratura rojo
-          { deg: 120, orb: 6, color: [120, 155, 145], w: 0.4 },  // trígono verde
-          { deg: 180, orb: 8, color: [180, 95, 85],   w: 0.4 }   // oposición rojo
+          { deg: 60,  orb: 4, color: [120, 155, 145], w: 0.2 },  // sextil verde suave
+{ deg: 90,  orb: 6, color: [180, 95, 85],   w: 0.25 }, // cuadratura rojo
+{ deg: 120, orb: 6, color: [120, 155, 145], w: 0.25 }, // trígono verde
+{ deg: 180, orb: 8, color: [180, 95, 85],   w: 0.25 }  // oposición rojo
         ];
         for (var ai = 0; ai < active.length; ai++) {
           for (var aj = ai + 1; aj < active.length; aj++) {
@@ -1155,7 +1161,7 @@ function descargarPDF() {
 
       // ── PAG 4 CONFIGURACION INICIAL ────────────────────────────────────────
       doc.addPage();
-      doc.addImage('/images/5-base-pdf.jpg', 'JPEG', 0, 0, W, H);
+      doc.addImage('/images/4-rueda-pdf.jpg', 'JPEG', 0, 0, W, H);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(25);
       doc.setTextColor(14, 63, 75);
@@ -1221,7 +1227,7 @@ function descargarPDF() {
       }
       // Datos astrologicos del usuario
       var cartaR = 48;
-      var cartaCX = W/2, cartaCY = cy4 + cartaR + 20;
+      var cartaCX = W/2, cartaCY = cy4 + cartaR + 8;
       dibujarCarta(cartaCX, cartaCY, cartaR);
       // Datos astrologicos debajo de la rueda
       var textoY = cartaCY + cartaR + 15;
@@ -1281,7 +1287,7 @@ function descargarPDF() {
       doc.setFontSize(11);
       doc.setTextColor(189, 144, 72);
       doc.text(fx('POSICIONES: Configuracion funcional de tu Codigo Base'), 18, 30);
-      var py5 = 60;
+      var py5 = 45;
       py5 = tablaPositions(18, py5);
       py5 += 5;
       doc.setFont('helvetica', 'italic');
@@ -1293,19 +1299,72 @@ function descargarPDF() {
       doc.setFontSize(11);
       doc.setTextColor(189, 144, 72);
       doc.text(fx('ASPECTOS: Dinamicas internas de tu Codigo Base'), 18, py5);
-      py5 += 8;
+      py5 += 15;
       var aspPlanets = ['Sol','Lun','Mer','Ven','Mar','Jup','Sat','Ura','Nep','Asc'];
-      var cellS = 13, aspX = 22, aspY = py5;
+      var aspRaws = [
+        carta.solRaw, carta.lunaRaw, carta.mercRaw, carta.venRaw,
+        carta.marRaw, carta.jupRaw, carta.satRaw, carta.uraRaw,
+        carta.nepRaw, carta.ascRaw
+      ];
+      var aspDefs2 = [
+        { deg: 0,   orb: 8, symbol: '=', color: [120, 120, 120] },
+        { deg: 60,  orb: 4, symbol: 'S', color: [90, 140, 120] },
+        { deg: 90,  orb: 6, symbol: 'C', color: [180, 95, 85] },
+        { deg: 120, orb: 6, symbol: 'T', color: [90, 140, 120] },
+        { deg: 180, orb: 8, symbol: 'O', color: [180, 95, 85] }
+      ];
+      var cellS = 10, aspX = 30, aspY = py5;
+      // Cabecera superior (nombres planetas arriba)
       doc.setFontSize(6.5);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(14, 63, 75);
       for (var ai = 0; ai < aspPlanets.length; ai++) {
-        doc.setTextColor(14, 63, 75);
         doc.text(aspPlanets[ai], aspX + ai * cellS + cellS/2, aspY - 2, { align: 'center' });
-        doc.text(aspPlanets[ai], aspX - 2, aspY + ai * cellS + cellS/2 + 1, { align: 'right' });
-        doc.setDrawColor(210, 195, 165);
-        doc.setLineWidth(0.15);
-        doc.rect(aspX + ai * cellS, aspY, cellS, cellS * (10 - ai));
       }
-      py5 = aspY + 10 * cellS + 8;
+      // Dibujar triangulo inferior
+      for (var row = 0; row < aspPlanets.length; row++) {
+        // nombre planeta a la izquierda
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(14, 63, 75);
+        doc.text(aspPlanets[row], aspX - 2, aspY + row * cellS + cellS/2 + 1.5, { align: 'right' });
+        for (var col = 0; col <= row; col++) {
+          var cx1 = aspX + col * cellS;
+          var cy1 = aspY + row * cellS;
+          // borde celda
+          doc.setDrawColor(210, 195, 165);
+          doc.setLineWidth(0.15);
+          doc.rect(cx1, cy1, cellS, cellS);
+          // si no es la diagonal, calcular aspecto
+          if (col < row) {
+            var diffA = Math.abs(aspRaws[row] - aspRaws[col]) % 360;
+            if (diffA > 180) diffA = 360 - diffA;
+            for (var ak2 = 0; ak2 < aspDefs2.length; ak2++) {
+              if (Math.abs(diffA - aspDefs2[ak2].deg) <= aspDefs2[ak2].orb) {
+                var col2 = aspDefs2[ak2].color;
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(8);
+                doc.setTextColor(col2[0], col2[1], col2[2]);
+                doc.text(aspDefs2[ak2].symbol, cx1 + cellS/2, cy1 + cellS/2 + 1.5, { align: 'center' });
+                doc.setFontSize(6.5);
+                break;
+              }
+            }
+          } else {
+            // diagonal sombreada
+            doc.setFillColor(245, 238, 225);
+            doc.rect(cx1, cy1, cellS, cellS, 'F');
+            doc.setDrawColor(210, 195, 165);
+            doc.rect(cx1, cy1, cellS, cellS);
+          }
+        }
+      }
+      py5 = aspY + aspPlanets.length * cellS + 6;
+      // Leyenda
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7);
+      doc.setTextColor(100, 100, 100);
+      doc.text('T = Trigono   C = Cuadratura   S = Sextil   O = Oposicion   = = Conjuncion', W/2, py5, { align: 'center' });
+      py5 += 6;
       doc.setFont('helvetica', 'italic');
       doc.setFontSize(9);
       doc.setTextColor(60, 60, 60);
@@ -1384,7 +1443,7 @@ function descargarPDF() {
               doc.setFont('helvetica', 'normal');
               doc.setFontSize(12);
               doc.setTextColor(40, 40, 40);
-              ay = 20;
+              ay = 30;
             }
             doc.text(fx(plines[pl]), 18, ay);
             ay += 7;
