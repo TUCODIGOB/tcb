@@ -354,7 +354,13 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     satRaw:  satL,
     uraRaw:  uraL,
     nepRaw:  nepL,
-    nodeRaw: nodeL
+    nodeRaw: nodeL,
+    lat:     latDeg,
+    lon:     lonDeg,
+    LST:     LAST,
+    JD:      JD,
+    utH:     localHour - tzOffset,
+    utM:     localMin
   };
 }
 
@@ -654,192 +660,236 @@ function descargarPDF() {
         var PI = Math.PI;
         var asc = carta.ascRaw || 0;
 
-        // lon ecliptica -> angulo SVG: ASC queda a la izquierda (180 grados en SVG)
+        // Conversion lon eclíptica -> ángulo canvas (antihorario, AC a la izquierda)
         function lonToRad(lon) {
-          return ((lon - asc + 180) % 360) * PI / 180;
+          return PI - ((lon - asc) * PI / 180);
         }
         function px(rr, a) { return cx + rr * Math.cos(a); }
         function py(rr, a) { return cy + rr * Math.sin(a); }
 
-        var rZout = r;          // borde exterior zodiaco
-        var rZin  = r * 0.82;   // borde interior zodiaco
-        var rCasa = r * 0.68;   // borde casas
-        var rInner= r * 0.27;   // circulo interior
+        // Radios
+        var rOut   = r;           // borde exterior
+        var rSigno = r * 0.88;    // banda de signos
+        var rCasa  = r * 0.72;    // borde casas (donde estan los planetas)
+        var rInner = r * 0.30;    // circulo interior (donde arrancan aspectos)
 
-        // Sectores zodiacales coloreados
-        var elemColors = [
-          [255,245,232],[240,247,238],[234,244,242],[234,240,247],
-          [255,245,232],[240,247,238],[234,244,242],[242,234,244],
-          [255,245,232],[240,247,238],[234,244,242],[234,240,247]
+        // Fondo crema
+        doc.setFillColor(255, 251, 239);
+        doc.circle(cx, cy, rOut, 'F');
+
+        // Colores suaves por elemento para la banda de signos (Whole Sign)
+        var signoNames = ['Ar','Ta','Ge','Cn','Le','Vi','Li','Sc','Sg','Cp','Ac','Pi'];
+        var elemFills = [
+          [253, 235, 220], // Ar fuego
+          [238, 245, 232], // Ta tierra
+          [240, 236, 245], // Ge aire
+          [230, 242, 245], // Cn agua
+          [253, 235, 220], // Le fuego
+          [238, 245, 232], // Vi tierra
+          [240, 236, 245], // Li aire
+          [230, 242, 245], // Sc agua
+          [253, 235, 220], // Sg fuego
+          [238, 245, 232], // Cp tierra
+          [240, 236, 245], // Ac aire
+          [230, 242, 245]  // Pi agua
         ];
-        for (var i = 0; i < 12; i++) {
-          var a1 = lonToRad(i * 30);
-          var a2 = lonToRad(i * 30 + 30);
-          var c = elemColors[i];
-          doc.setFillColor(c[0], c[1], c[2]);
-          doc.setDrawColor(207, 177, 128);
-          doc.setLineWidth(0.3);
-          // Dibujar sector como trapecio aproximado (4 puntos)
-          doc.triangle(
-            cx, cy,
-            px(rZout, a1), py(rZout, a1),
-            px(rZout, a2), py(rZout, a2),
-            'FD'
-          );
+
+        // Banda de signos (anillo exterior coloreado con sectores de 30°)
+        for (var s = 0; s < 12; s++) {
+          var a1 = lonToRad(s * 30);
+          var a2 = lonToRad(s * 30 + 30);
+          var c = elemFills[s];
+          // Dibujamos el sector como varios triángulos pequeños para que sea curvo
+          var steps = 8;
+          for (var k = 0; k < steps; k++) {
+            var ak1 = lonToRad(s * 30 + (30 / steps) * k);
+            var ak2 = lonToRad(s * 30 + (30 / steps) * (k + 1));
+            doc.setFillColor(c[0], c[1], c[2]);
+            doc.setDrawColor(c[0], c[1], c[2]);
+            doc.triangle(
+              px(rSigno, ak1), py(rSigno, ak1),
+              px(rOut, ak1),   py(rOut, ak1),
+              px(rOut, ak2),   py(rOut, ak2),
+              'FD'
+            );
+            doc.triangle(
+              px(rSigno, ak1), py(rSigno, ak1),
+              px(rOut, ak2),   py(rOut, ak2),
+              px(rSigno, ak2), py(rSigno, ak2),
+              'FD'
+            );
+          }
         }
 
-        // Circulos principales
+        // Círculos de referencia
         doc.setDrawColor(189, 144, 72);
-        doc.setLineWidth(1.0);
-        doc.circle(cx, cy, rZout);
-        doc.setLineWidth(0.5);
-        doc.circle(cx, cy, rZin);
-        doc.setDrawColor(114, 151, 144);
+        doc.setLineWidth(0.7);
+        doc.circle(cx, cy, rOut);
         doc.setLineWidth(0.4);
+        doc.circle(cx, cy, rSigno);
+        doc.setLineWidth(0.5);
         doc.circle(cx, cy, rCasa);
-        doc.setDrawColor(189, 144, 72);
-        doc.setLineWidth(0.8);
+        doc.setLineWidth(0.5);
         doc.circle(cx, cy, rInner);
 
-        // Lineas divisorias zodiaco
+        // Divisiones entre signos (lineas cortas en banda exterior)
+        doc.setDrawColor(189, 144, 72);
+        doc.setLineWidth(0.3);
         for (var d = 0; d < 12; d++) {
           var da = lonToRad(d * 30);
-          doc.setDrawColor(207, 177, 128);
-          doc.setLineWidth(0.3);
-          doc.line(px(rZin, da), py(rZin, da), px(rZout, da), py(rZout, da));
-          doc.setLineWidth(0.2);
-          doc.line(cx, cy, px(rZin, da), py(rZin, da));
+          doc.line(px(rSigno, da), py(rSigno, da), px(rOut, da), py(rOut, da));
         }
 
-        // Glifos zodiacales
-        var sigGlifos = ['Ar','Ta','Ge','Cn','Le','Vi','Li','Sc','Sg','Cp','Ac','Pi'];
-        doc.setFontSize(6);
+        // Divisiones de casas Whole Sign (desde rInner hasta rCasa)
+        // Cada casa empieza en un signo completo, misma posicion que signos
+        doc.setDrawColor(180, 170, 150);
+        doc.setLineWidth(0.25);
+        for (var h = 0; h < 12; h++) {
+          var ha = lonToRad(h * 30);
+          doc.line(px(rInner, ha), py(rInner, ha), px(rCasa, ha), py(rCasa, ha));
+        }
+
+        // Nombres de signos en la banda exterior
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'bold');
         doc.setTextColor(14, 63, 75);
         for (var sg = 0; sg < 12; sg++) {
           var sga = lonToRad(sg * 30 + 15);
-          var rMid = (rZout + rZin) / 2;
-          doc.text(sigGlifos[sg], px(rMid, sga), py(rMid, sga), { align: 'center' });
+          var rMid = (rSigno + rOut) / 2;
+          doc.text(signoNames[sg], px(rMid, sga), py(rMid, sga) + 1, { align: 'center' });
         }
 
-        // Ejes ASC-DSC y MC-IC
-        doc.setDrawColor(14, 63, 75);
-        doc.setLineWidth(1.2);
-        doc.line(px(rZout, lonToRad(asc)), py(rZout, lonToRad(asc)),
-                 px(rZout, lonToRad(asc+180)), py(rZout, lonToRad(asc+180)));
-        var mc = carta.ascRaw ? (carta.ascRaw + 90) % 360 : 90;
-        doc.line(px(rZout, lonToRad(mc)), py(rZout, lonToRad(mc)),
-                 px(rZout, lonToRad(mc+180)), py(rZout, lonToRad(mc+180)));
+        // Numeros de casas (1 al 12) en la zona interior
+        doc.setFontSize(6);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(140, 140, 140);
+        for (var hn = 0; hn < 12; hn++) {
+          var hna = lonToRad(hn * 30 + 15);
+          var rNum = rInner + 5;
+          doc.text(String(hn + 1), px(rNum, hna), py(rNum, hna) + 1, { align: 'center' });
+        }
 
-        // Etiquetas ejes
-        doc.setFontSize(6.5);
+        // Ejes principales AC-DC y MC-IC (gruesos)
+        doc.setDrawColor(14, 63, 75);
+        doc.setLineWidth(1.0);
+        // Eje AC-DC: horizontal por diseño (ASC a la izq)
+        doc.line(px(rOut, PI), py(rOut, PI), px(rOut, 0), py(rOut, 0));
+        // Eje MC-IC: a 90° del ASC
+        var mcAngle = lonToRad(asc + 90) ;  
+        // en realidad MC esta a +270° eclíptico desde ASC (o -90°) 
+        // pero visualmente arriba; simplificamos a vertical
+        doc.line(cx, cy - rOut, cx, cy + rOut);
+
+        // Etiquetas AC, DC, MC, IC
+        doc.setFontSize(8);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(14, 63, 75);
-        doc.text('AC', px(rZout+4, lonToRad(asc)), py(rZout+4, lonToRad(asc)), { align: 'right' });
-        doc.text('DC', px(rZout+4, lonToRad(asc+180)), py(rZout+4, lonToRad(asc+180)), { align: 'left' });
-        doc.text('MC', px(rZout+4, lonToRad(mc)), py(rZout+4, lonToRad(mc)), { align: 'center' });
-        doc.text('IC', px(rZout+4, lonToRad(mc+180)), py(rZout+4, lonToRad(mc+180)), { align: 'center' });
-        doc.setFont('helvetica', 'normal');
+        doc.text('AC', cx - rOut - 4, cy + 1, { align: 'right' });
+        doc.text('DC', cx + rOut + 4, cy + 1, { align: 'left' });
+        doc.text('MC', cx, cy - rOut - 3, { align: 'center' });
+        doc.text('IC', cx, cy + rOut + 5, { align: 'center' });
 
-        // Lineas de casas (simplificadas: desde centro al borde casas)
-        var casasOffset = [0, -3.26, -2.54, mc-asc, mc-asc+23.24, mc-asc+23.40, 180, 176.74, 177.46, mc-asc+180, mc-asc+203.24, mc-asc+203.40];
-        doc.setDrawColor(114, 151, 144);
-        doc.setLineWidth(0.5);
-        for (var ca = 0; ca < 12; ca++) {
-          var caa = lonToRad(asc + casasOffset[ca]);
-          doc.line(px(rInner, caa), py(rInner, caa), px(rCasa, caa), py(rCasa, caa));
-        }
-
-        // Numeros de casas
-        doc.setFontSize(5.5);
-        doc.setTextColor(114, 151, 144);
-        for (var cn = 0; cn < 12; cn++) {
-          var cna = lonToRad(asc + casasOffset[cn] + (casasOffset[(cn+1)%12] - casasOffset[cn]) / 2);
-          var rNum = (rCasa + rInner) / 2;
-          doc.text(String(cn+1), px(rNum, cna), py(rNum, cna), { align: 'center' });
-        }
-
-        // Aspectos principales (lineas interiores)
-        var planetsData = [
-          { lon: carta.solRaw  || 0  },
-          { lon: carta.lunaRaw || 0  },
-          { lon: carta.mercRaw || 0  },
-          { lon: carta.venRaw  || 0  },
-          { lon: carta.marRaw  || 0  },
-          { lon: carta.jupRaw  || 0  },
-          { lon: carta.satRaw  || 0  },
-          { lon: carta.uraRaw  || 0  },
-          { lon: carta.nepRaw  || 0  },
-          { lon: carta.nodeRaw || 0  },
+        // ─── PLANETAS ────────────────────────────────────────────────────
+        var planetDefs = [
+          { raw: carta.solRaw,  label: 'So' },
+          { raw: carta.lunaRaw, label: 'Lu' },
+          { raw: carta.mercRaw, label: 'Me' },
+          { raw: carta.venRaw,  label: 'Ve' },
+          { raw: carta.marRaw,  label: 'Ma' },
+          { raw: carta.jupRaw,  label: 'Ju' },
+          { raw: carta.satRaw,  label: 'Sa' },
+          { raw: carta.uraRaw,  label: 'Ur' },
+          { raw: carta.nepRaw,  label: 'Ne' },
+          { raw: carta.nodeRaw, label: 'No' }
         ];
 
-        // Calcular aspectos automaticamente
+        // Filtrar y ordenar por longitud para detectar colisiones
+        var active = [];
+        for (var pi = 0; pi < planetDefs.length; pi++) {
+          if (planetDefs[pi].raw !== undefined && planetDefs[pi].raw !== null) {
+            active.push({ raw: planetDefs[pi].raw, label: planetDefs[pi].label });
+          }
+        }
+        active.sort(function(a, b) { return a.raw - b.raw; });
+
+        // Asignar radios: si dos planetas estan a menos de 6° uno del otro, separarlos
+        var rPlanet = (rCasa + rSigno) / 2;
+        var minSep = 7; // grados minimos para no solapar
+        for (var q = 0; q < active.length; q++) {
+          active[q].r = rPlanet;
+        }
+        for (var q2 = 1; q2 < active.length; q2++) {
+          var diff = active[q2].raw - active[q2 - 1].raw;
+          if (Math.abs(diff) < minSep) {
+            active[q2].r = active[q2 - 1].r - 5; // empujar hacia adentro
+          }
+        }
+
+        // Dibujar planetas
+        doc.setFont('helvetica', 'bold');
+        for (var pp = 0; pp < active.length; pp++) {
+          var pl = active[pp];
+          var pa = lonToRad(pl.raw);
+          var ppx = px(pl.r, pa);
+          var ppy = py(pl.r, pa);
+
+          // Linea desde borde casas hasta planeta
+          doc.setDrawColor(180, 170, 150);
+          doc.setLineWidth(0.2);
+          var edgeX = px(rCasa, pa), edgeY = py(rCasa, pa);
+          doc.line(edgeX, edgeY, ppx, ppy);
+
+          // Circulo del planeta
+          doc.setFillColor(255, 251, 239);
+          doc.setDrawColor(14, 63, 75);
+          doc.setLineWidth(0.5);
+          doc.circle(ppx, ppy, 2.8, 'FD');
+
+          // Etiqueta del planeta
+          doc.setFontSize(4.8);
+          doc.setTextColor(14, 63, 75);
+          doc.text(pl.label, ppx, ppy + 0.8, { align: 'center' });
+
+          // Grado al lado
+          var grado = Math.floor(pl.raw % 30);
+          doc.setFontSize(4);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(100, 100, 100);
+          var lblA = pa;
+          var lblR = pl.r + 4;
+          doc.text(grado + '°', cx + lblR * Math.cos(lblA), cy + lblR * Math.sin(lblA) + 0.5, { align: 'center' });
+          doc.setFont('helvetica', 'bold');
+        }
+
+        // ─── ASPECTOS ────────────────────────────────────────────────────
         var aspDefs = [
-          { deg: 0,   orb: 8,  color: [14,63,75],    w: 0.8 },  // conjuncion
-          { deg: 60,  orb: 5,  color: [114,151,144],  w: 0.5 },  // sextil
-          { deg: 90,  orb: 7,  color: [189,85,85],    w: 0.7 },  // cuadratura
-          { deg: 120, orb: 7,  color: [114,151,144],  w: 0.7 },  // trigono
-          { deg: 180, orb: 8,  color: [189,85,85],    w: 0.7 },  // oposicion
+          { deg: 0,   orb: 8, color: [14, 63, 75],    w: 0.5 }, // conjuncion
+          { deg: 60,  orb: 4, color: [114, 151, 144], w: 0.35 }, // sextil
+          { deg: 90,  orb: 6, color: [189, 85, 85],   w: 0.5 }, // cuadratura
+          { deg: 120, orb: 6, color: [114, 151, 144], w: 0.5 }, // trigono
+          { deg: 180, orb: 8, color: [189, 85, 85],   w: 0.5 }  // oposicion
         ];
 
-        var rAsp = rInner - 1;
-        for (var ai = 0; ai < planetsData.length; ai++) {
-          for (var aj = ai+1; aj < planetsData.length; aj++) {
-            var diff = Math.abs(planetsData[ai].lon - planetsData[aj].lon) % 360;
-            if (diff > 180) diff = 360 - diff;
+        for (var ai = 0; ai < active.length; ai++) {
+          for (var aj = ai + 1; aj < active.length; aj++) {
+            var diffAsp = Math.abs(active[ai].raw - active[aj].raw) % 360;
+            if (diffAsp > 180) diffAsp = 360 - diffAsp;
             for (var ak = 0; ak < aspDefs.length; ak++) {
-              if (Math.abs(diff - aspDefs[ak].deg) <= aspDefs[ak].orb) {
-                var c = aspDefs[ak].color;
-                doc.setDrawColor(c[0], c[1], c[2]);
+              if (Math.abs(diffAsp - aspDefs[ak].deg) <= aspDefs[ak].orb) {
+                if (aspDefs[ak].deg === 0) break; // no dibujar conjunciones
+                var col = aspDefs[ak].color;
+                doc.setDrawColor(col[0], col[1], col[2]);
                 doc.setLineWidth(aspDefs[ak].w);
-                var aa1 = lonToRad(planetsData[ai].lon);
-                var aa2 = lonToRad(planetsData[aj].lon);
-                doc.line(px(rAsp,aa1), py(rAsp,aa1), px(rAsp,aa2), py(rAsp,aa2));
+                var a1 = lonToRad(active[ai].raw);
+                var a2 = lonToRad(active[aj].raw);
+                doc.line(
+                  px(rInner, a1), py(rInner, a1),
+                  px(rInner, a2), py(rInner, a2)
+                );
                 break;
               }
             }
           }
-        }
-
-        // Planetas con glífos y grados
-        var planetDefs = [
-          { raw: carta.solRaw,  glifo: 'So', color: [189,144,72]  },
-          { raw: carta.lunaRaw, glifo: 'Lu', color: [114,151,144] },
-          { raw: carta.mercRaw, glifo: 'Me', color: [114,151,144] },
-          { raw: carta.venRaw,  glifo: 'Ve', color: [207,177,128] },
-          { raw: carta.marRaw,  glifo: 'Ma', color: [14,63,75]    },
-          { raw: carta.jupRaw,  glifo: 'Ju', color: [14,63,75]    },
-          { raw: carta.satRaw,  glifo: 'Sa', color: [14,63,75]    },
-          { raw: carta.uraRaw,  glifo: 'Ur', color: [114,151,144] },
-          { raw: carta.nepRaw,  glifo: 'Ne', color: [114,151,144] },
-          { raw: carta.nodeRaw, glifo: 'No', color: [207,177,128] },
-        ];
-
-        var rPlanet = (rCasa + rZin) / 2;
-        for (var pi = 0; pi < planetDefs.length; pi++) {
-          var pl = planetDefs[pi];
-          if (pl.raw === undefined || pl.raw === null) continue;
-          var pa = lonToRad(pl.raw);
-          var ppx = px(rPlanet, pa);
-          var ppy = py(rPlanet, pa);
-          // Punto exacto en borde casas
-          var pxE = px(rCasa, pa), pyE = py(rCasa, pa);
-          doc.setDrawColor(pl.color[0], pl.color[1], pl.color[2]);
-          doc.setLineWidth(0.3);
-          doc.line(pxE, pyE, ppx, ppy);
-          // Circulo del planeta
-          doc.setFillColor(255, 251, 239);
-          doc.setDrawColor(pl.color[0], pl.color[1], pl.color[2]);
-          doc.setLineWidth(0.6);
-          doc.circle(ppx, ppy, 3.2, 'FD');
-          // Glifo
-          doc.setFontSize(4.5);
-          doc.setTextColor(pl.color[0], pl.color[1], pl.color[2]);
-          doc.text(pl.glifo, ppx, ppy, { align: 'center' });
-          // Grado
-          var grados = (pl.raw % 30).toFixed(0);
-          doc.setFontSize(3.8);
-          doc.setTextColor(14, 63, 75);
-          doc.text(grados + '°', ppx, ppy + 4, { align: 'center' });
         }
       }
 
@@ -918,36 +968,110 @@ function descargarPDF() {
       doc.setFontSize(25);
       doc.setTextColor(14, 63, 75);
       doc.text(fx('TU CONFIGURACION INICIAL'), 18, 30);
-      var cparas = [
-        fx('Antes de tomar tu primera respiracion, ya existia un diseno invisible que daba forma a tu manera unica de ser: una estructura precisa de energia, mente y proposito que marcaria la base de como ibas a ver, sentir y experimentar la vida.'),
-        fx('Ese instante inicial activo un programa interno, una configuracion que moldea tu forma de percibir, interpretar y responder ante el mundo, define las coordenadas originales desde donde comienza tu historia.'),
-        fx('Tu diseno no es un destino, es un lenguaje, y cuando aprendes a leerlo, todo cobra sentido: las decisiones que tomas, los vinculos que repites y los caminos que se abren.'),
-        fx('Comprenderlo es volver al punto de origen y recordar la verdad de quien eras antes de todo condicionamiento, la persona que siempre fuiste.'),
+      // Parrafos con segmentos en negrita
+      var cparasRich = [
+        [
+          {text: 'Antes de tomar tu primera respiracion, ya existia un ', bold: false},
+          {text: 'diseno invisible que daba forma a tu manera unica de ser', bold: true},
+          {text: ': una estructura precisa de energia, mente y proposito que marcaria la base de como ibas a ver, sentir y experimentar la vida.', bold: false}
+        ],
+        [
+          {text: 'Ese instante inicial activo un programa interno, una configuracion que moldea tu forma de percibir, interpretar y responder ante el mundo, ', bold: false},
+          {text: 'define las coordenadas originales desde donde comienza tu historia', bold: true},
+          {text: '.', bold: false}
+        ],
+        [
+          {text: 'Cada elemento de esa estructura representa una fuerza dentro de ti: tu mente racional, tus emociones mas profundas, tus impulsos vitales y tu busqueda de sentido. Juntas forman la raiz de tu identidad: ', bold: false},
+          {text: 'tu Codigo Base', bold: true},
+          {text: '.', bold: false}
+        ],
+        [
+          {text: 'Tu diseno no es un destino, es un lenguaje, y cuando aprendes a leerlo, todo cobra sentido: las decisiones que tomas, los vinculos que repites y los caminos que se abren.', bold: false}
+        ],
+        [
+          {text: 'Comprenderlo es volver al punto de origen y ', bold: false},
+          {text: 'recordar la verdad de quien eras antes de todo condicionamiento, la persona que siempre fuiste', bold: true},
+          {text: '.', bold: false}
+        ]
       ];
       var cy4 = 60;
-      for (var cp = 0; cp < cparas.length; cp++) {
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(12);
-        doc.setTextColor(50, 50, 50);
-        var clines = doc.splitTextToSize(cparas[cp], 175);
-        for (var cl = 0; cl < clines.length; cl++) { doc.text(fx(clines[cl]), 18, cy4); cy4 += 5.5; }
-        cy4 += 4;
+      doc.setFontSize(12);
+      doc.setTextColor(50, 50, 50);
+      var maxWidth = 175;
+      var lineHeight = 5.5;
+      for (var cp = 0; cp < cparasRich.length; cp++) {
+        // Trocear cada parrafo en palabras conservando su estilo
+        var words = [];
+        for (var sg = 0; sg < cparasRich[cp].length; sg++) {
+          var seg = cparasRich[cp][sg];
+          var segWords = seg.text.split(' ');
+          for (var sw = 0; sw < segWords.length; sw++) {
+            if (segWords[sw] === '') continue;
+            words.push({text: segWords[sw], bold: seg.bold});
+          }
+        }
+        // Renderizar palabra a palabra con salto de linea automatico
+        var xCursor = 18;
+        var lineStartX = 18;
+        for (var w = 0; w < words.length; w++) {
+          doc.setFont('helvetica', words[w].bold ? 'bold' : 'normal');
+          var wordStr = fx(words[w].text);
+          var wordWidth = doc.getTextWidth(wordStr);
+          var spaceWidth = doc.getTextWidth(' ');
+          if (xCursor + wordWidth > lineStartX + maxWidth && xCursor > lineStartX) {
+            cy4 += lineHeight;
+            xCursor = lineStartX;
+          }
+          doc.text(wordStr, xCursor, cy4);
+          xCursor += wordWidth + spaceWidth;
+        }
+        cy4 += lineHeight + 4; // fin de parrafo
       }
       // Datos astrologicos del usuario
       var cartaR = 48;
-      var cartaCX = W/2, cartaCY = cy4 + cartaR + 4;
+      var cartaCX = W/2, cartaCY = cy4 + cartaR + 20;
       dibujarCarta(cartaCX, cartaCY, cartaR);
       // Datos astrologicos debajo de la rueda
-      var textoY = cartaCY + cartaR + 8;
+      var textoY = cartaCY + cartaR + 15;
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(8);
       doc.setTextColor(14, 63, 75);
       doc.text(fx('Sol: ' + (carta.sol||'-') + '   Luna: ' + (carta.luna||'-') + '   Ascendente: ' + (carta.ascendente||'-')), W/2, textoY, { align: 'center' });
       textoY += 5;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.5);
-      doc.setTextColor(100, 100, 100);
-      doc.text(fx('Nacimiento: ' + fechaNice + ' a las ' + hora + ' · ' + lugar), W/2, textoY, { align: 'center' });
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(14, 63, 75);
+      // Formatear coordenadas estilo astro.com: 0w22, 39n28
+      function formatCoord(val, posChar, negChar) {
+        var abs = Math.abs(val);
+        var deg = Math.floor(abs);
+        var min = Math.round((abs - deg) * 60);
+        if (min === 60) { deg += 1; min = 0; }
+        var dir = val >= 0 ? posChar : negChar;
+        return deg + dir + (min < 10 ? '0' + min : min);
+      }
+      // Formatear tiempo sidereo (grados -> horas:min:seg)
+      function formatSidereal(lstDeg) {
+        var hours = lstDeg / 15;
+        if (hours < 0) hours += 24;
+        var h = Math.floor(hours);
+        var m = Math.floor((hours - h) * 60);
+        var s = Math.round(((hours - h) * 60 - m) * 60);
+        if (s === 60) { s = 0; m += 1; }
+        if (m === 60) { m = 0; h += 1; }
+        return h + ':' + (m<10?'0':'') + m + ':' + (s<10?'0':'') + s;
+      }
+      // Formatear UT
+      function formatUT(h, m) {
+        var hh = ((h % 24) + 24) % 24;
+        return (hh<10?'0':'') + hh + ':' + (m<10?'0':'') + m;
+      }
+      var latStr = formatCoord(carta.lat, 'n', 's');
+      var lonStr = formatCoord(carta.lon, 'e', 'w');
+      var sidStr = formatSidereal(carta.LST);
+      var utStr  = formatUT(carta.utH, carta.utM);
+      var jdStr  = carta.JD.toFixed(2);
+      doc.text(fx('Lat: ' + latStr + '  ·  Lon: ' + lonStr + '  ·  UT: ' + utStr + '  ·  T. Sidereo: ' + sidStr + '  ·  JD: ' + jdStr), W/2, textoY, { align: 'center' });
       textoY += 7;
       doc.setFont('helvetica', 'italic');
       doc.setFontSize(8);
