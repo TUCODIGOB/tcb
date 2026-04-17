@@ -921,14 +921,14 @@ function descargarPDF() {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(25);
       doc.setTextColor(14, 63, 75);
-      doc.text(fx('TU CONFIGURACION INICIAL'), 18, 24);
+      doc.text(fx('TU CONFIGURACION INICIAL'), 18, 30);
       var cparas = [
         fx('Antes de tomar tu primera respiracion, ya existia un diseno invisible que daba forma a tu manera unica de ser: una estructura precisa de energia, mente y proposito que marcaria la base de como ibas a ver, sentir y experimentar la vida.'),
         fx('Ese instante inicial activo un programa interno, una configuracion que moldea tu forma de percibir, interpretar y responder ante el mundo, define las coordenadas originales desde donde comienza tu historia.'),
         fx('Tu diseno no es un destino, es un lenguaje, y cuando aprendes a leerlo, todo cobra sentido: las decisiones que tomas, los vinculos que repites y los caminos que se abren.'),
         fx('Comprenderlo es volver al punto de origen y recordar la verdad de quien eras antes de todo condicionamiento, la persona que siempre fuiste.'),
       ];
-      var cy4 = 34;
+      var cy4 = 60;
       for (var cp = 0; cp < cparas.length; cp++) {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
@@ -974,8 +974,8 @@ function descargarPDF() {
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.setTextColor(189, 144, 72);
-      doc.text(fx('POSICIONES: Configuracion funcional de tu Codigo Base'), 18, 22);
-      var py5 = 30;
+      doc.text(fx('POSICIONES: Configuracion funcional de tu Codigo Base'), 18, 30);
+      var py5 = 60;
       py5 = tablaPositions(18, py5);
       py5 += 5;
       doc.setFont('helvetica', 'italic');
@@ -1055,20 +1055,20 @@ function descargarPDF() {
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(25);
         doc.setTextColor(189, 144, 72);
-        doc.text(fx('AREA ' + (ai2 + 1) + ' | ' + areaTitles[ai2].tit), 18, 28);
+       doc.text(fx('AREA ' + (ai2 + 1) + ' | ' + areaTitles[ai2].tit), 18, 30);
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(18);
         doc.setTextColor(14, 63, 75);
         var subls = doc.splitTextToSize(areaTitles[ai2].sub, 175);
-        for (var sl = 0; sl < subls.length; sl++) doc.text(fx(subls[sl]), 18, 42 + sl * 7);
+        for (var sl = 0; sl < subls.length; sl++) doc.text(fx(subls[sl]), 18, 40 + sl * 7);
 
-        var lineY = 44 + subls.length * 6.5 + 3;
+        var lineY = 50 + subls.length * 7 + 3;
         doc.setDrawColor(189, 144, 72);
         doc.setLineWidth(0.5);
         doc.line(18, lineY, W - 18, lineY);
 
-        var ay = lineY + 10;
+        var ay = 60;
         var areaPageCount = 1; // estamos en pag 1 del area
 
         for (var pi = 0; pi < paras.length; pi++) {
