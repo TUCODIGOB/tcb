@@ -1395,11 +1395,10 @@ function descargarPDF() {
           doc.line(x - sz*0.3, y - sz*0.55, x + sz*0.3, y - sz*0.55);
           doc.line(x + sz*0.3, y - sz*0.55, x + sz*0.5, y - sz*0.3);
         } else if (tipo === 'asc') {
-          // AC estilizado: letras AC
-          doc.setFont('helvetica', 'bold');
-          doc.setFontSize(sz*3.5);
-          doc.setTextColor(14, 63, 75);
-          doc.text('AC', x, y + sz*0.3, { align: 'center' });
+          // Flecha horizontal (simbolo del ascendente)
+          doc.line(x - sz*0.6, y, x + sz*0.4, y);
+          doc.line(x + sz*0.4, y, x + sz*0.2, y - sz*0.25);
+          doc.line(x + sz*0.4, y, x + sz*0.2, y + sz*0.25);
         }
       }
       var cellS = 10, aspX = 30, aspY = py5;
