@@ -913,11 +913,7 @@ function descargarPDF() {
 
       // ── PAG 4 CONFIGURACION INICIAL ────────────────────────────────────────
       doc.addPage();
-      doc.setFillColor(255, 255, 255);
-      doc.rect(0, 0, W, H, 'F');
-      doc.setDrawColor(207, 177, 128);
-      doc.setLineWidth(0.5);
-      doc.rect(6, 6, W-12, H-12);
+      doc.addImage('/images/5-base-pdf.jpg', 'JPEG', 0, 0, W, H);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(25);
       doc.setTextColor(14, 63, 75);
@@ -931,30 +927,28 @@ function descargarPDF() {
       var cy4 = 60;
       for (var cp = 0; cp < cparas.length; cp++) {
         doc.setFont('helvetica', 'normal');
-        doc.setFontSize(10);
+        doc.setFontSize(12);
         doc.setTextColor(50, 50, 50);
         var clines = doc.splitTextToSize(cparas[cp], 175);
         for (var cl = 0; cl < clines.length; cl++) { doc.text(fx(clines[cl]), 18, cy4); cy4 += 5.5; }
         cy4 += 4;
       }
       // Datos astrologicos del usuario
-      cy4 += 2;
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(14, 63, 75);
-      doc.text(fx('Sol: ' + (carta.sol||'-') + '   Luna: ' + (carta.luna||'-') + '   Ascendente: ' + (carta.ascendente||'-')), 18, cy4);
-      cy4 += 5;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(7.5);
-      doc.setTextColor(100, 100, 100);
-      doc.text(fx('Nacimiento: ' + fechaNice + ' a las ' + hora + ' · ' + lugar), 18, cy4);
-      cy4 += 8;
-      // Carta astral centrada y grande
       var cartaR = 48;
       var cartaCX = W/2, cartaCY = cy4 + cartaR + 4;
       dibujarCarta(cartaCX, cartaCY, cartaR);
-      // Texto bajo la carta
+      // Datos astrologicos debajo de la rueda
       var textoY = cartaCY + cartaR + 8;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(14, 63, 75);
+      doc.text(fx('Sol: ' + (carta.sol||'-') + '   Luna: ' + (carta.luna||'-') + '   Ascendente: ' + (carta.ascendente||'-')), W/2, textoY, { align: 'center' });
+      textoY += 5;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(7.5);
+      doc.setTextColor(100, 100, 100);
+      doc.text(fx('Nacimiento: ' + fechaNice + ' a las ' + hora + ' · ' + lugar), W/2, textoY, { align: 'center' });
+      textoY += 7;
       doc.setFont('helvetica', 'italic');
       doc.setFontSize(8);
       doc.setTextColor(100, 100, 100);
@@ -966,11 +960,7 @@ function descargarPDF() {
 
       // ── PAG 5 POSICIONES ───────────────────────────────────────────────────
       doc.addPage();
-      doc.setFillColor(255, 255, 255);
-      doc.rect(0, 0, W, H, 'F');
-      doc.setDrawColor(207, 177, 128);
-      doc.setLineWidth(0.5);
-      doc.rect(6, 6, W-12, H-12);
+      doc.addImage('/images/5-base-pdf.jpg', 'JPEG', 0, 0, W, H);
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(11);
       doc.setTextColor(189, 144, 72);
@@ -1046,28 +1036,20 @@ function descargarPDF() {
 
         // Pagina 1 del area: titulo + texto fluye a pag 2
         doc.addPage();
-        doc.setFillColor(255, 255, 255);
-        doc.rect(0, 0, W, H, 'F');
-        doc.setDrawColor(207, 177, 128);
-        doc.setLineWidth(0.5);
-        doc.rect(6, 6, W-12, H-12);
+        doc.addImage('/images/5-base-pdf.jpg', 'JPEG', 0, 0, W, H);
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(25);
-        doc.setTextColor(189, 144, 72);
-       doc.text(fx('AREA ' + (ai2 + 1) + ' | ' + areaTitles[ai2].tit), 18, 30);
+        doc.setTextColor(14, 63, 75);
+        doc.text(fx('AREA ' + (ai2 + 1) + ' | ' + areaTitles[ai2].tit), 18, 30);
 
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(18);
-        doc.setTextColor(14, 63, 75);
+        doc.setTextColor(189, 144, 72);
         var subls = doc.splitTextToSize(areaTitles[ai2].sub, 175);
         for (var sl = 0; sl < subls.length; sl++) doc.text(fx(subls[sl]), 18, 40 + sl * 7);
 
-        var lineY = 50 + subls.length * 7 + 3;
-        doc.setDrawColor(189, 144, 72);
-        doc.setLineWidth(0.5);
-        doc.line(18, lineY, W - 18, lineY);
-
+        
         var ay = 60;
         var areaPageCount = 1; // estamos en pag 1 del area
 
@@ -1082,11 +1064,10 @@ function descargarPDF() {
               addPageNum(pageC); pageC++;
               areaPageCount++;
               doc.addPage();
-              doc.setFillColor(255, 255, 255);
-              doc.rect(0, 0, W, H, 'F');
-              doc.setDrawColor(207, 177, 128);
-              doc.setLineWidth(0.5);
-              doc.rect(6, 6, W-12, H-12);
+              doc.addImage('/images/5-base-pdf.jpg', 'JPEG', 0, 0, W, H);
+              doc.setFont('helvetica', 'normal');
+              doc.setFontSize(12);
+              doc.setTextColor(40, 40, 40);
               ay = 20;
             }
             doc.text(fx(plines[pl]), 18, ay);
@@ -1096,14 +1077,10 @@ function descargarPDF() {
         }
 
         // Si el area solo ocupo 1 pagina, agregar pagina 2 vacia
-        if (areaPageCount < 2) {
+          if (areaPageCount < 2) {
           addPageNum(pageC); pageC++;
           doc.addPage();
-          doc.setFillColor(255, 255, 255);
-          doc.rect(0, 0, W, H, 'F');
-          doc.setDrawColor(207, 177, 128);
-          doc.setLineWidth(0.5);
-          doc.rect(6, 6, W-12, H-12);
+          doc.addImage('/images/5-base-pdf.jpg', 'JPEG', 0, 0, W, H);
         }
         addPageNum(pageC); pageC++;
       }
