@@ -637,7 +637,7 @@ function descargarPDF() {
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(9);
         doc.setTextColor(100, 100, 100);
-        doc.text(String(n), W - 16, H - 11, { align: 'right' });
+        doc.text(String(n), W - 16, H - 16, { align: 'right' });
       }
 
       function wrapText(txt, x, y, maxW, lh) {
@@ -919,7 +919,7 @@ function descargarPDF() {
       doc.setLineWidth(0.5);
       doc.rect(6, 6, W-12, H-12);
       doc.setFont('helvetica', 'bold');
-      doc.setFontSize(14);
+      doc.setFontSize(25);
       doc.setTextColor(14, 63, 75);
       doc.text(fx('TU CONFIGURACION INICIAL'), 18, 24);
       var cparas = [
@@ -1053,20 +1053,15 @@ function descargarPDF() {
         doc.rect(6, 6, W-12, H-12);
 
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
+        doc.setFontSize(25);
         doc.setTextColor(189, 144, 72);
-        doc.text(fx('AREA ' + (ai2 + 1)), 18, 24);
+        doc.text(fx('AREA ' + (ai2 + 1) + ' | ' + areaTitles[ai2].tit), 18, 28);
 
         doc.setFont('helvetica', 'bold');
-        doc.setFontSize(16);
-        doc.setTextColor(14, 63, 75);
-        doc.text(areaTitles[ai2].tit + ':', 18, 34);
-
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(11);
+        doc.setFontSize(18);
         doc.setTextColor(14, 63, 75);
         var subls = doc.splitTextToSize(areaTitles[ai2].sub, 175);
-        for (var sl = 0; sl < subls.length; sl++) doc.text(fx(subls[sl]), 18, 44 + sl * 6.5);
+        for (var sl = 0; sl < subls.length; sl++) doc.text(fx(subls[sl]), 18, 42 + sl * 7);
 
         var lineY = 44 + subls.length * 6.5 + 3;
         doc.setDrawColor(189, 144, 72);
@@ -1079,7 +1074,7 @@ function descargarPDF() {
         for (var pi = 0; pi < paras.length; pi++) {
           if (!paras[pi]) continue;
           doc.setFont('helvetica', 'normal');
-          doc.setFontSize(9.5);
+          doc.setFontSize(12);
           doc.setTextColor(40, 40, 40);
           var plines = doc.splitTextToSize(fx(paras[pi].trim()), 175);
           for (var pl = 0; pl < plines.length; pl++) {
@@ -1095,7 +1090,7 @@ function descargarPDF() {
               ay = 20;
             }
             doc.text(fx(plines[pl]), 18, ay);
-            ay += 5.5;
+            ay += 7;
           }
           ay += 4; // espacio entre parrafos
         }
