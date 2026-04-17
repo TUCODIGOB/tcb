@@ -667,45 +667,47 @@ function descargarPDF() {
         function px(rr, a) { return cx + rr * Math.cos(a); }
         function py(rr, a) { return cy + rr * Math.sin(a); }
 
-        // Radios
+        // Radios de los anillos
         var rOut   = r;           // borde exterior
-        var rSigno = r * 0.88;    // banda de signos
-        var rCasa  = r * 0.72;    // borde casas (donde estan los planetas)
-        var rInner = r * 0.30;    // circulo interior (donde arrancan aspectos)
+        var rSigno = r * 0.87;    // borde interior banda de signos
+        var rCasa  = r * 0.70;    // borde del anillo de planetas
+        var rInner = r * 0.32;    // círculo interior (aspectos)
 
-        // Fondo crema
-        doc.setFillColor(255, 251, 239);
+        // Colores de marca
+        var COL_VERDE  = [14, 63, 75];
+        var COL_DORADO = [189, 144, 72];
+        var COL_CREMA  = [255, 251, 239];
+        var COL_GRIS   = [140, 140, 140];
+
+        // Fondo crema general
+        doc.setFillColor(COL_CREMA[0], COL_CREMA[1], COL_CREMA[2]);
         doc.circle(cx, cy, rOut, 'F');
 
-        // Colores suaves por elemento para la banda de signos (Whole Sign)
-        var signoNames = ['Ar','Ta','Ge','Cn','Le','Vi','Li','Sc','Sg','Cp','Ac','Pi'];
+        // Colores suaves por elemento (fuego, tierra, aire, agua)
         var elemFills = [
           [253, 235, 220], // Ar fuego
           [238, 245, 232], // Ta tierra
-          [240, 236, 245], // Ge aire
+          [245, 240, 230], // Ge aire
           [230, 242, 245], // Cn agua
           [253, 235, 220], // Le fuego
           [238, 245, 232], // Vi tierra
-          [240, 236, 245], // Li aire
+          [245, 240, 230], // Li aire
           [230, 242, 245], // Sc agua
           [253, 235, 220], // Sg fuego
           [238, 245, 232], // Cp tierra
-          [240, 236, 245], // Ac aire
+          [245, 240, 230], // Ac aire
           [230, 242, 245]  // Pi agua
         ];
 
-        // Banda de signos (anillo exterior coloreado con sectores de 30°)
+        // Banda de signos coloreada (sectores de 30°)
         for (var s = 0; s < 12; s++) {
-          var a1 = lonToRad(s * 30);
-          var a2 = lonToRad(s * 30 + 30);
           var c = elemFills[s];
-          // Dibujamos el sector como varios triángulos pequeños para que sea curvo
-          var steps = 8;
+          doc.setFillColor(c[0], c[1], c[2]);
+          doc.setDrawColor(c[0], c[1], c[2]);
+          var steps = 10;
           for (var k = 0; k < steps; k++) {
             var ak1 = lonToRad(s * 30 + (30 / steps) * k);
             var ak2 = lonToRad(s * 30 + (30 / steps) * (k + 1));
-            doc.setFillColor(c[0], c[1], c[2]);
-            doc.setDrawColor(c[0], c[1], c[2]);
             doc.triangle(
               px(rSigno, ak1), py(rSigno, ak1),
               px(rOut, ak1),   py(rOut, ak1),
@@ -721,162 +723,352 @@ function descargarPDF() {
           }
         }
 
-        // Círculos de referencia
-        doc.setDrawColor(189, 144, 72);
-        doc.setLineWidth(0.7);
+        // Círculos principales
+        doc.setDrawColor(COL_DORADO[0], COL_DORADO[1], COL_DORADO[2]);
+        doc.setLineWidth(0.5);
         doc.circle(cx, cy, rOut);
-        doc.setLineWidth(0.4);
+        doc.setLineWidth(0.25);
         doc.circle(cx, cy, rSigno);
-        doc.setLineWidth(0.5);
+        doc.setLineWidth(0.3);
         doc.circle(cx, cy, rCasa);
-        doc.setLineWidth(0.5);
+        doc.setLineWidth(0.25);
         doc.circle(cx, cy, rInner);
 
-        // Divisiones entre signos (lineas cortas en banda exterior)
-        doc.setDrawColor(189, 144, 72);
+        // Marcas de grados cada 5° en el borde exterior
+        doc.setDrawColor(COL_DORADO[0], COL_DORADO[1], COL_DORADO[2]);
+        doc.setLineWidth(0.15);
+        for (var gm = 0; gm < 72; gm++) {
+          var gma = lonToRad(gm * 5);
+          var rMark1 = rOut;
+          var rMark2 = (gm % 6 === 0) ? rOut - 2.5 : rOut - 1.2;
+          doc.line(px(rMark1, gma), py(rMark1, gma), px(rMark2, gma), py(rMark2, gma));
+        }
+
+        // Divisiones entre signos
+        doc.setDrawColor(COL_DORADO[0], COL_DORADO[1], COL_DORADO[2]);
         doc.setLineWidth(0.3);
         for (var d = 0; d < 12; d++) {
           var da = lonToRad(d * 30);
           doc.line(px(rSigno, da), py(rSigno, da), px(rOut, da), py(rOut, da));
         }
 
-        // Divisiones de casas Whole Sign (desde rInner hasta rCasa)
-        // Cada casa empieza en un signo completo, misma posicion que signos
-        doc.setDrawColor(180, 170, 150);
-        doc.setLineWidth(0.25);
+        // Divisiones de casas
+        doc.setDrawColor(180, 160, 130);
+        doc.setLineWidth(0.2);
         for (var h = 0; h < 12; h++) {
           var ha = lonToRad(h * 30);
           doc.line(px(rInner, ha), py(rInner, ha), px(rCasa, ha), py(rCasa, ha));
         }
 
-        // Nombres de signos en la banda exterior
-        doc.setFontSize(7);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(14, 63, 75);
+        // ─── DIBUJAR SÍMBOLOS DE SIGNOS (vectoriales) ────────────────────
+        // Cada signo se dibuja en el centro de su sector (s*30 + 15°)
+        // con un tamaño proporcional al radio
+        function dibujarSigno(idx, centerX, centerY, size) {
+          doc.setDrawColor(COL_VERDE[0], COL_VERDE[1], COL_VERDE[2]);
+          doc.setLineWidth(0.5);
+          var sz = size;
+          var x = centerX, y = centerY;
+
+          if (idx === 0) {
+            // Aries: dos curvas que forman cuernos
+            doc.line(x - sz*0.7, y + sz*0.5, x, y - sz*0.3);
+            doc.line(x, y - sz*0.3, x + sz*0.7, y + sz*0.5);
+            doc.line(x - sz*0.7, y + sz*0.5, x - sz*0.5, y + sz*0.1);
+            doc.line(x + sz*0.7, y + sz*0.5, x + sz*0.5, y + sz*0.1);
+          } else if (idx === 1) {
+            // Tauro: círculo con cuernos
+            doc.circle(x, y + sz*0.25, sz*0.35);
+            doc.line(x - sz*0.5, y - sz*0.1, x - sz*0.7, y - sz*0.5);
+            doc.line(x + sz*0.5, y - sz*0.1, x + sz*0.7, y - sz*0.5);
+          } else if (idx === 2) {
+            // Géminis: dos líneas verticales con barras arriba y abajo
+            doc.line(x - sz*0.3, y - sz*0.5, x - sz*0.3, y + sz*0.5);
+            doc.line(x + sz*0.3, y - sz*0.5, x + sz*0.3, y + sz*0.5);
+            doc.line(x - sz*0.5, y - sz*0.5, x + sz*0.5, y - sz*0.5);
+            doc.line(x - sz*0.5, y + sz*0.5, x + sz*0.5, y + sz*0.5);
+          } else if (idx === 3) {
+            // Cáncer: dos círculos pequeños
+            doc.circle(x - sz*0.35, y - sz*0.15, sz*0.18, 'F');
+            doc.circle(x + sz*0.35, y + sz*0.15, sz*0.18, 'F');
+            // líneas curvas que los conectan
+            doc.line(x - sz*0.35, y - sz*0.35, x + sz*0.4, y - sz*0.25);
+            doc.line(x + sz*0.35, y + sz*0.35, x - sz*0.4, y + sz*0.25);
+          } else if (idx === 4) {
+            // Leo: círculo + cola en curva
+            doc.circle(x - sz*0.15, y + sz*0.1, sz*0.3);
+            doc.line(x + sz*0.1, y - sz*0.1, x + sz*0.4, y - sz*0.4);
+            doc.line(x + sz*0.4, y - sz*0.4, x + sz*0.6, y - sz*0.2);
+            doc.line(x + sz*0.6, y - sz*0.2, x + sz*0.5, y + sz*0.1);
+          } else if (idx === 5) {
+            // Virgo: tres líneas verticales + curva final (M con curva)
+            doc.line(x - sz*0.5, y - sz*0.4, x - sz*0.5, y + sz*0.5);
+            doc.line(x - sz*0.2, y - sz*0.4, x - sz*0.2, y + sz*0.5);
+            doc.line(x + sz*0.1, y - sz*0.4, x + sz*0.1, y + sz*0.5);
+            doc.line(x - sz*0.5, y - sz*0.4, x - sz*0.35, y - sz*0.2);
+            doc.line(x - sz*0.35, y - sz*0.2, x - sz*0.2, y - sz*0.4);
+            doc.line(x - sz*0.2, y - sz*0.4, x - sz*0.05, y - sz*0.2);
+            doc.line(x - sz*0.05, y - sz*0.2, x + sz*0.1, y - sz*0.4);
+            // cola curvada de la Virgo (simplificada como líneas)
+            doc.line(x + sz*0.1, y + sz*0.3, x + sz*0.35, y + sz*0.5);
+            doc.line(x + sz*0.35, y + sz*0.5, x + sz*0.25, y + sz*0.25);
+          } else if (idx === 6) {
+            // Libra: línea horizontal inferior + arco arriba (simplificado con líneas)
+            doc.line(x - sz*0.55, y + sz*0.35, x + sz*0.55, y + sz*0.35);
+            // arco con líneas rectas
+            doc.line(x - sz*0.5, y, x - sz*0.3, y - sz*0.25);
+            doc.line(x - sz*0.3, y - sz*0.25, x + sz*0.3, y - sz*0.25);
+            doc.line(x + sz*0.3, y - sz*0.25, x + sz*0.5, y);
+            doc.line(x - sz*0.5, y, x - sz*0.5, y + sz*0.1);
+            doc.line(x + sz*0.5, y, x + sz*0.5, y + sz*0.1);
+            doc.line(x - sz*0.5, y + sz*0.1, x - sz*0.55, y + sz*0.15);
+            doc.line(x + sz*0.5, y + sz*0.1, x + sz*0.55, y + sz*0.15);
+          } else if (idx === 7) {
+            // Escorpio: M con flecha
+            doc.line(x - sz*0.55, y + sz*0.4, x - sz*0.55, y - sz*0.3);
+            doc.line(x - sz*0.55, y - sz*0.3, x - sz*0.3, y - sz*0.3);
+            doc.line(x - sz*0.3, y - sz*0.3, x - sz*0.3, y + sz*0.4);
+            doc.line(x - sz*0.3, y + sz*0.4, x - sz*0.05, y + sz*0.4);
+            doc.line(x - sz*0.05, y + sz*0.4, x - sz*0.05, y - sz*0.3);
+            doc.line(x - sz*0.05, y - sz*0.3, x + sz*0.25, y - sz*0.3);
+            doc.line(x + sz*0.25, y - sz*0.3, x + sz*0.25, y + sz*0.5);
+            // flecha
+            doc.line(x + sz*0.25, y + sz*0.5, x + sz*0.55, y + sz*0.25);
+            doc.line(x + sz*0.55, y + sz*0.25, x + sz*0.4, y + sz*0.2);
+            doc.line(x + sz*0.55, y + sz*0.25, x + sz*0.5, y + sz*0.4);
+          } else if (idx === 8) {
+            // Sagitario: flecha diagonal
+            doc.line(x - sz*0.5, y + sz*0.5, x + sz*0.5, y - sz*0.5);
+            // punta de flecha
+            doc.line(x + sz*0.5, y - sz*0.5, x + sz*0.2, y - sz*0.45);
+            doc.line(x + sz*0.5, y - sz*0.5, x + sz*0.45, y - sz*0.2);
+            // travesaño pequeño
+            doc.line(x - sz*0.1, y + sz*0.1, x + sz*0.15, y - sz*0.2);
+          } else if (idx === 9) {
+            // Capricornio: V con cola en círculo
+            doc.line(x - sz*0.5, y - sz*0.3, x - sz*0.2, y + sz*0.3);
+            doc.line(x - sz*0.2, y + sz*0.3, x + sz*0.1, y - sz*0.3);
+            doc.line(x + sz*0.1, y - sz*0.3, x + sz*0.1, y + sz*0.2);
+            // círculo al final
+            doc.circle(x + sz*0.3, y + sz*0.3, sz*0.22);
+            doc.line(x + sz*0.1, y + sz*0.2, x + sz*0.15, y + sz*0.35);
+          } else if (idx === 10) {
+            // Acuario: dos líneas onduladas paralelas
+            for (var wv = 0; wv < 2; wv++) {
+              var yOff = wv === 0 ? -sz*0.15 : sz*0.2;
+              doc.line(x - sz*0.5, yOff + y, x - sz*0.3, yOff + y - sz*0.15);
+              doc.line(x - sz*0.3, yOff + y - sz*0.15, x - sz*0.1, yOff + y);
+              doc.line(x - sz*0.1, yOff + y, x + sz*0.1, yOff + y - sz*0.15);
+              doc.line(x + sz*0.1, yOff + y - sz*0.15, x + sz*0.3, yOff + y);
+              doc.line(x + sz*0.3, yOff + y, x + sz*0.5, yOff + y - sz*0.15);
+            }
+          } else if (idx === 11) {
+            // Piscis: dos curvas opuestas unidas por barra horizontal
+            // izquierda
+            doc.line(x - sz*0.5, y - sz*0.4, x - sz*0.35, y - sz*0.1);
+            doc.line(x - sz*0.35, y - sz*0.1, x - sz*0.35, y + sz*0.1);
+            doc.line(x - sz*0.35, y + sz*0.1, x - sz*0.5, y + sz*0.4);
+            // derecha
+            doc.line(x + sz*0.5, y - sz*0.4, x + sz*0.35, y - sz*0.1);
+            doc.line(x + sz*0.35, y - sz*0.1, x + sz*0.35, y + sz*0.1);
+            doc.line(x + sz*0.35, y + sz*0.1, x + sz*0.5, y + sz*0.4);
+            // barra central
+            doc.line(x - sz*0.35, y, x + sz*0.35, y);
+          }
+        }
+
+        // Dibujar los 12 signos en la banda exterior
+        var sgSize = (rOut - rSigno) * 0.42;
         for (var sg = 0; sg < 12; sg++) {
           var sga = lonToRad(sg * 30 + 15);
           var rMid = (rSigno + rOut) / 2;
-          doc.text(signoNames[sg], px(rMid, sga), py(rMid, sga) + 1, { align: 'center' });
+          var scx = px(rMid, sga);
+          var scy = py(rMid, sga);
+          dibujarSigno(sg, scx, scy, sgSize);
         }
 
-        // Numeros de casas (1 al 12) en la zona interior
-        doc.setFontSize(6);
-        doc.setFont('helvetica', 'normal');
-        doc.setTextColor(140, 140, 140);
-        for (var hn = 0; hn < 12; hn++) {
-          var hna = lonToRad(hn * 30 + 15);
-          var rNum = rInner + 5;
-          doc.text(String(hn + 1), px(rNum, hna), py(rNum, hna) + 1, { align: 'center' });
-        }
-
-        // Ejes principales AC-DC y MC-IC (gruesos)
-        doc.setDrawColor(14, 63, 75);
-        doc.setLineWidth(1.0);
-        // Eje AC-DC: horizontal por diseño (ASC a la izq)
+        // Ejes principales AC-DC (gruesos)
+        doc.setDrawColor(COL_VERDE[0], COL_VERDE[1], COL_VERDE[2]);
+        doc.setLineWidth(0.9);
         doc.line(px(rOut, PI), py(rOut, PI), px(rOut, 0), py(rOut, 0));
-        // Eje MC-IC: a 90° del ASC
-        var mcAngle = lonToRad(asc + 90) ;  
-        // en realidad MC esta a +270° eclíptico desde ASC (o -90°) 
-        // pero visualmente arriba; simplificamos a vertical
+        // Eje MC-IC vertical
         doc.line(cx, cy - rOut, cx, cy + rOut);
 
-        // Etiquetas AC, DC, MC, IC
-        doc.setFontSize(8);
+        // Etiquetas AC, DC, MC, IC (fuera del círculo)
         doc.setFont('helvetica', 'bold');
-        doc.setTextColor(14, 63, 75);
+        doc.setFontSize(8);
+        doc.setTextColor(COL_VERDE[0], COL_VERDE[1], COL_VERDE[2]);
         doc.text('AC', cx - rOut - 4, cy + 1, { align: 'right' });
         doc.text('DC', cx + rOut + 4, cy + 1, { align: 'left' });
         doc.text('MC', cx, cy - rOut - 3, { align: 'center' });
         doc.text('IC', cx, cy + rOut + 5, { align: 'center' });
 
+        // Números de casas (discretos, en gris)
+        doc.setFontSize(6);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(COL_GRIS[0], COL_GRIS[1], COL_GRIS[2]);
+        for (var hn = 0; hn < 12; hn++) {
+          var hna = lonToRad(hn * 30 + 15);
+          var rNum = rInner + 4;
+          doc.text(String(hn + 1), px(rNum, hna), py(rNum, hna) + 1, { align: 'center' });
+        }
+
+        // ─── DIBUJAR SÍMBOLOS DE PLANETAS (vectoriales) ──────────────────
+        function dibujarPlaneta(tipo, centerX, centerY, size) {
+          doc.setDrawColor(COL_VERDE[0], COL_VERDE[1], COL_VERDE[2]);
+          doc.setLineWidth(0.45);
+          var sz = size;
+          var x = centerX, y = centerY;
+
+          if (tipo === 'sol') {
+            // círculo con punto central
+            doc.circle(x, y, sz*0.55);
+            doc.setFillColor(COL_VERDE[0], COL_VERDE[1], COL_VERDE[2]);
+            doc.circle(x, y, sz*0.1, 'F');
+          } else if (tipo === 'luna') {
+            // creciente: círculo lleno crema con otro crema desplazado
+            doc.setFillColor(COL_VERDE[0], COL_VERDE[1], COL_VERDE[2]);
+            doc.circle(x - sz*0.1, y, sz*0.55, 'F');
+            doc.setFillColor(COL_CREMA[0], COL_CREMA[1], COL_CREMA[2]);
+            doc.circle(x + sz*0.15, y, sz*0.5, 'F');
+          } else if (tipo === 'mercurio') {
+            // cuernos arriba, círculo, cruz abajo
+            doc.line(x - sz*0.3, y - sz*0.7, x - sz*0.15, y - sz*0.5);
+            doc.line(x + sz*0.3, y - sz*0.7, x + sz*0.15, y - sz*0.5);
+            doc.circle(x, y - sz*0.05, sz*0.3);
+            doc.line(x, y + sz*0.25, x, y + sz*0.7);
+            doc.line(x - sz*0.25, y + sz*0.5, x + sz*0.25, y + sz*0.5);
+          } else if (tipo === 'venus') {
+            // círculo con cruz abajo
+            doc.circle(x, y - sz*0.2, sz*0.35);
+            doc.line(x, y + sz*0.15, x, y + sz*0.7);
+            doc.line(x - sz*0.25, y + sz*0.45, x + sz*0.25, y + sz*0.45);
+          } else if (tipo === 'marte') {
+            // círculo con flecha arriba-derecha
+            doc.circle(x - sz*0.1, y + sz*0.15, sz*0.35);
+            doc.line(x + sz*0.15, y - sz*0.1, x + sz*0.5, y - sz*0.45);
+            // punta flecha
+            doc.line(x + sz*0.5, y - sz*0.45, x + sz*0.25, y - sz*0.45);
+            doc.line(x + sz*0.5, y - sz*0.45, x + sz*0.5, y - sz*0.2);
+          } else if (tipo === 'jupiter') {
+            // número 4 estilizado
+            doc.line(x - sz*0.5, y - sz*0.15, x + sz*0.1, y - sz*0.15);
+            doc.line(x - sz*0.25, y - sz*0.4, x - sz*0.25, y + sz*0.55);
+            // curva arriba derecha
+            doc.line(x + sz*0.1, y - sz*0.15, x + sz*0.35, y - sz*0.4);
+            doc.line(x + sz*0.35, y - sz*0.4, x + sz*0.35, y - sz*0.15);
+            doc.line(x + sz*0.35, y - sz*0.15, x + sz*0.45, y);
+          } else if (tipo === 'saturno') {
+            // h con cola (parece una h con curva)
+            doc.line(x - sz*0.25, y - sz*0.5, x - sz*0.25, y + sz*0.4);
+            doc.line(x - sz*0.5, y - sz*0.3, x, y - sz*0.3);
+            // curva inferior derecha (guadaña)
+            doc.line(x - sz*0.25, y + sz*0.4, x + sz*0.1, y + sz*0.55);
+            doc.line(x + sz*0.1, y + sz*0.55, x + sz*0.3, y + sz*0.4);
+            doc.line(x + sz*0.3, y + sz*0.4, x + sz*0.3, y + sz*0.1);
+          } else if (tipo === 'urano') {
+            // H con círculo debajo
+            doc.line(x - sz*0.35, y - sz*0.5, x - sz*0.35, y + sz*0.15);
+            doc.line(x + sz*0.35, y - sz*0.5, x + sz*0.35, y + sz*0.15);
+            doc.line(x - sz*0.35, y - sz*0.15, x + sz*0.35, y - sz*0.15);
+            doc.line(x, y + sz*0.15, x, y + sz*0.35);
+            doc.circle(x, y + sz*0.5, sz*0.15);
+          } else if (tipo === 'neptuno') {
+            // tridente
+            doc.line(x - sz*0.5, y - sz*0.3, x - sz*0.35, y + sz*0.2);
+            doc.line(x + sz*0.5, y - sz*0.3, x + sz*0.35, y + sz*0.2);
+            doc.line(x, y - sz*0.3, x, y + sz*0.4);
+            // barra horizontal del tridente
+            doc.line(x - sz*0.5, y - sz*0.3, x + sz*0.5, y - sz*0.3);
+            // base
+            doc.line(x - sz*0.25, y + sz*0.4, x + sz*0.25, y + sz*0.4);
+            // curva superior (tipo U invertida)
+            doc.line(x - sz*0.5, y - sz*0.3, x - sz*0.3, y - sz*0.55);
+            doc.line(x - sz*0.3, y - sz*0.55, x + sz*0.3, y - sz*0.55);
+            doc.line(x + sz*0.3, y - sz*0.55, x + sz*0.5, y - sz*0.3);
+          } else if (tipo === 'nodo') {
+            // Omega / herradura invertida (Nodo Norte)
+            doc.line(x - sz*0.4, y + sz*0.4, x - sz*0.4, y - sz*0.2);
+            doc.line(x - sz*0.4, y - sz*0.2, x - sz*0.15, y - sz*0.45);
+            doc.line(x - sz*0.15, y - sz*0.45, x + sz*0.15, y - sz*0.45);
+            doc.line(x + sz*0.15, y - sz*0.45, x + sz*0.4, y - sz*0.2);
+            doc.line(x + sz*0.4, y - sz*0.2, x + sz*0.4, y + sz*0.4);
+            // puntas abiertas abajo
+            doc.line(x - sz*0.4, y + sz*0.4, x - sz*0.55, y + sz*0.5);
+            doc.line(x + sz*0.4, y + sz*0.4, x + sz*0.55, y + sz*0.5);
+          }
+        }
+
         // ─── PLANETAS ────────────────────────────────────────────────────
         var planetDefs = [
-          { raw: carta.solRaw,  label: 'So' },
-          { raw: carta.lunaRaw, label: 'Lu' },
-          { raw: carta.mercRaw, label: 'Me' },
-          { raw: carta.venRaw,  label: 'Ve' },
-          { raw: carta.marRaw,  label: 'Ma' },
-          { raw: carta.jupRaw,  label: 'Ju' },
-          { raw: carta.satRaw,  label: 'Sa' },
-          { raw: carta.uraRaw,  label: 'Ur' },
-          { raw: carta.nepRaw,  label: 'Ne' },
-          { raw: carta.nodeRaw, label: 'No' }
+          { raw: carta.solRaw,  tipo: 'sol' },
+          { raw: carta.lunaRaw, tipo: 'luna' },
+          { raw: carta.mercRaw, tipo: 'mercurio' },
+          { raw: carta.venRaw,  tipo: 'venus' },
+          { raw: carta.marRaw,  tipo: 'marte' },
+          { raw: carta.jupRaw,  tipo: 'jupiter' },
+          { raw: carta.satRaw,  tipo: 'saturno' },
+          { raw: carta.uraRaw,  tipo: 'urano' },
+          { raw: carta.nepRaw,  tipo: 'neptuno' },
+          { raw: carta.nodeRaw, tipo: 'nodo' }
         ];
 
-        // Filtrar y ordenar por longitud para detectar colisiones
         var active = [];
         for (var pi = 0; pi < planetDefs.length; pi++) {
           if (planetDefs[pi].raw !== undefined && planetDefs[pi].raw !== null) {
-            active.push({ raw: planetDefs[pi].raw, label: planetDefs[pi].label });
+            active.push({ raw: planetDefs[pi].raw, tipo: planetDefs[pi].tipo });
           }
         }
         active.sort(function(a, b) { return a.raw - b.raw; });
 
-        // Asignar radios: si dos planetas estan a menos de 6° uno del otro, separarlos
-        var rPlanet = (rCasa + rSigno) / 2;
-        var minSep = 7; // grados minimos para no solapar
-        for (var q = 0; q < active.length; q++) {
-          active[q].r = rPlanet;
-        }
+        // Anti-colisión: si dos planetas están a menos de 7° uno de otro, se empuja hacia dentro
+        var rPlanet = (rCasa + rSigno) / 2 - 1;
+        var minSep = 7;
+        for (var q = 0; q < active.length; q++) active[q].r = rPlanet;
         for (var q2 = 1; q2 < active.length; q2++) {
-          var diff = active[q2].raw - active[q2 - 1].raw;
-          if (Math.abs(diff) < minSep) {
-            active[q2].r = active[q2 - 1].r - 5; // empujar hacia adentro
+          var diff = Math.abs(active[q2].raw - active[q2 - 1].raw);
+          if (diff < minSep) {
+            active[q2].r = active[q2 - 1].r - 4.5;
           }
         }
 
-        // Dibujar planetas
-        doc.setFont('helvetica', 'bold');
+        var plSize = (rSigno - rCasa) * 0.38;
+        // Dibujar cada planeta con su símbolo vectorial
         for (var pp = 0; pp < active.length; pp++) {
           var pl = active[pp];
           var pa = lonToRad(pl.raw);
           var ppx = px(pl.r, pa);
           var ppy = py(pl.r, pa);
 
-          // Linea desde borde casas hasta planeta
-          doc.setDrawColor(180, 170, 150);
-          doc.setLineWidth(0.2);
-          var edgeX = px(rCasa, pa), edgeY = py(rCasa, pa);
-          doc.line(edgeX, edgeY, ppx, ppy);
+          // Línea guía desde el anillo de casas hasta el planeta
+          doc.setDrawColor(180, 160, 130);
+          doc.setLineWidth(0.15);
+          doc.line(px(rCasa, pa), py(rCasa, pa), ppx, ppy);
 
-          // Circulo del planeta
-          doc.setFillColor(255, 251, 239);
-          doc.setDrawColor(14, 63, 75);
-          doc.setLineWidth(0.5);
-          doc.circle(ppx, ppy, 2.8, 'FD');
+          // Símbolo del planeta (sin círculo de fondo, limpio)
+          dibujarPlaneta(pl.tipo, ppx, ppy, plSize);
 
-          // Etiqueta del planeta
-          doc.setFontSize(4.8);
-          doc.setTextColor(14, 63, 75);
-          doc.text(pl.label, ppx, ppy + 0.8, { align: 'center' });
-
-          // Grado al lado
+          // Grado al lado del planeta
           var grado = Math.floor(pl.raw % 30);
-          doc.setFontSize(4);
+          doc.setFontSize(4.5);
           doc.setFont('helvetica', 'normal');
-          doc.setTextColor(100, 100, 100);
-          var lblA = pa;
-          var lblR = pl.r + 4;
-          doc.text(grado + '°', cx + lblR * Math.cos(lblA), cy + lblR * Math.sin(lblA) + 0.5, { align: 'center' });
-          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(COL_GRIS[0], COL_GRIS[1], COL_GRIS[2]);
+          var lblR = pl.r - plSize - 2;
+          doc.text(grado + '°', cx + lblR * Math.cos(pa), cy + lblR * Math.sin(pa) + 0.5, { align: 'center' });
         }
 
         // ─── ASPECTOS ────────────────────────────────────────────────────
         var aspDefs = [
-          { deg: 0,   orb: 8, color: [14, 63, 75],    w: 0.5 }, // conjuncion
-          { deg: 60,  orb: 4, color: [114, 151, 144], w: 0.35 }, // sextil
-          { deg: 90,  orb: 6, color: [189, 85, 85],   w: 0.5 }, // cuadratura
-          { deg: 120, orb: 6, color: [114, 151, 144], w: 0.5 }, // trigono
-          { deg: 180, orb: 8, color: [189, 85, 85],   w: 0.5 }  // oposicion
+          { deg: 60,  orb: 4, color: [120, 155, 145], w: 0.3 },  // sextil verde suave
+          { deg: 90,  orb: 6, color: [180, 95, 85],   w: 0.4 },  // cuadratura rojo
+          { deg: 120, orb: 6, color: [120, 155, 145], w: 0.4 },  // trígono verde
+          { deg: 180, orb: 8, color: [180, 95, 85],   w: 0.4 }   // oposición rojo
         ];
-
         for (var ai = 0; ai < active.length; ai++) {
           for (var aj = ai + 1; aj < active.length; aj++) {
             var diffAsp = Math.abs(active[ai].raw - active[aj].raw) % 360;
             if (diffAsp > 180) diffAsp = 360 - diffAsp;
             for (var ak = 0; ak < aspDefs.length; ak++) {
               if (Math.abs(diffAsp - aspDefs[ak].deg) <= aspDefs[ak].orb) {
-                if (aspDefs[ak].deg === 0) break; // no dibujar conjunciones
                 var col = aspDefs[ak].color;
                 doc.setDrawColor(col[0], col[1], col[2]);
                 doc.setLineWidth(aspDefs[ak].w);
