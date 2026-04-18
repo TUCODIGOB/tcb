@@ -125,10 +125,10 @@
     }
     .nav-inner {
       display: flex; align-items: center; justify-content: space-between;
-      padding-block: .4rem;
+      padding-block: .2rem;
     }
     .nav-logo img {
-      height: 80px;
+      height: 60px;
       width: auto;
     }
     .nav-cta {
@@ -685,8 +685,9 @@
     }
     @media (max-width: 600px) {
       section { padding-block: 3.5rem; }
-.nav-inner { flex-direction: column; gap: .6rem; padding-block: .6rem; }
-      .nav-cta { width: 100%; text-align: center; font-size: .8rem; padding: .6rem; }
+.nav.scrolled .nav-logo { display: none; }
+      .nav.scrolled .nav-inner { justify-content: flex-end; }
+.nav-logo img { height: 80px; }
       .areas-grid { grid-template-columns: 1fr; }
       .reviews-grid { grid-template-columns: 1fr 1fr; }
       .price-card { padding: 1.8rem 1.4rem; }
@@ -1000,7 +1001,19 @@
       </p>
     </div>
   </footer>
-
+<script>
+    (function(){
+      const nav = document.querySelector('.nav');
+      if (!nav) return;
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      });
+    })();
+  </script>
   <!-- ════════════ JS ════════════ -->
   <script>
     // Scroll reveal
