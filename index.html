@@ -60,7 +60,74 @@
     }
     img { display: block; max-width: 100%; }
     a { color: inherit; text-decoration: none; }
+a { color: inherit; text-decoration: none; }
 
+    /* ══════════════════════════════════════════════
+       COUNTDOWN BAR (top sticky)
+    ══════════════════════════════════════════════ */
+    .countdown-bar {
+      background: var(--teal-deep);
+      color: var(--cream);
+      border-bottom: 1px solid rgba(207,177,128,.25);
+      transition: transform .35s ease;
+      position: relative;
+      z-index: 99;
+    }
+    .countdown-bar.hidden {
+      transform: translateY(-100%);
+      position: absolute;
+      width: 100%;
+    }
+    .countdown-bar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      padding-block: .55rem;
+      flex-wrap: wrap;
+    }
+    .countdown-bar-text {
+      font-size: .78rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+    .countdown {
+      display: flex;
+      gap: .35rem;
+    }
+    .countdown-box {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(207,177,128,.25);
+      border-radius: var(--r-sm);
+      padding: .25rem .5rem;
+      display: flex;
+      align-items: baseline;
+      gap: .15rem;
+      min-width: 42px;
+      justify-content: center;
+    }
+    .countdown-num {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+    .countdown-label {
+      font-size: .65rem;
+      color: rgba(207,177,128,.7);
+      text-transform: uppercase;
+    }
+    @media (max-width: 600px) {
+      .countdown-bar-inner { gap: .7rem; padding-block: .45rem; }
+      .countdown-bar-text { font-size: .7rem; letter-spacing: .08em; }
+      .countdown-box { padding: .2rem .35rem; min-width: 36px; }
+      .countdown-num { font-size: .9rem; }
+    }
+
+    
     /* ─── UTILITIES ──────────────────────────────── */
     .container { width: min(1100px, 92vw); margin-inline: auto; }
     .text-center { text-align: center; }
@@ -510,23 +577,27 @@ display: block;
       padding: 2.5rem 2.5rem 2rem;
       position: relative;
     }
+.price-wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
 .price-old {
   font-family: var(--font-display);
-  font-size: 1.8rem;
-  color: var(--teal-mid);
-  opacity: .6;
-  margin-bottom: .2rem;
+  font-size: 2.6rem;
+  color: var(--cream);
+  opacity: .5;
 }
-.price-old s { text-decoration: line-through; 
+.price-old s { text-decoration: line-through; }
+.price-tag {
+  font-family: var(--font-display);
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  line-height: 1;
 }
-    .price-tag {
-      font-family: var(--font-display);
-      font-size: 3.5rem;
-      font-weight: 700;
-      color: var(--gold-light);
-      line-height: 1;
-      margin-bottom: .3rem;
-    }
 .currency {
   font-size: .65em;
   font-weight: 600;
@@ -547,6 +618,7 @@ display: block;
   opacity: .7;
   letter-spacing: .08em;
 }
+
     .features-list {
       list-style: none;
       text-align: left;
@@ -733,6 +805,19 @@ h2 { font-size: 2.5rem; }
 </head>
 <body>
 
+  <!-- ════════════ COUNTDOWN BAR ════════════ -->
+  <div class="countdown-bar" id="countdownBar">
+    <div class="container countdown-bar-inner">
+      <span class="countdown-bar-text">✦ Oferta por tiempo limitado ✦</span>
+      <div class="countdown">
+        <div class="countdown-box"><span class="countdown-num" data-unit="days">07</span><span class="countdown-label">d</span></div>
+        <div class="countdown-box"><span class="countdown-num" data-unit="hours">00</span><span class="countdown-label">h</span></div>
+        <div class="countdown-box"><span class="countdown-num" data-unit="minutes">00</span><span class="countdown-label">m</span></div>
+        <div class="countdown-box"><span class="countdown-num" data-unit="seconds">00</span><span class="countdown-label">s</span></div>
+      </div>
+    </div>
+  </div>
+
   <!-- ════════════ NAV ════════════ -->
   <nav class="nav">
     <div class="container nav-inner">
@@ -856,8 +941,7 @@ h2 { font-size: 2.5rem; }
 
       <div class="how-cta-wrap reveal">
         <a href="tu-diseno-de-origen.html" class="btn-cta">
-          Sí, quiero descifrarlo
-          <span class="btn-badge">🔒 Pago seguro · Precio de lanzamiento</span>
+          Quiero el mío
         </a>
       </div>
 
@@ -883,7 +967,7 @@ h2 { font-size: 2.5rem; }
     <div class="container text-center">
       
       <h2 class="reveal">Más de 200 personas ya tienen el suyo</h2>
-      <p class="testimonials-subtitle reveal">Estas son algunas de sus reacciones reales</p>
+      <p class="testimonials-subtitle reveal">Esto es lo que nos cuentan...</p>
 
       <div class="reviews-grid">
         <img src="images/2-claridad-emocional-y-crecimiento-personal-tu-codigo-base-resena-1.png" alt="Reseña de Irene — España" class="review-img reveal reveal-delay-1" />
@@ -905,9 +989,11 @@ h2 { font-size: 2.5rem; }
         Un estudio de <strong>alta precisión</strong> calculado a partir de la configuración exacta de tu carta natal.</p>
 
       <div class="price-card reveal">
-        <div class="price-old"><s>47<span class="currency">€</span></s></div>
-<div class="price-tag">27<span class="currency">€</span></div>
-<p class="price-launch">✦ Precio de lanzamiento para las primeras 100 personas ✦<br><span class="price-launch-after">Después 47€</span></p>
+        <div class="price-wrap">
+  <div class="price-old"><s>47<span class="currency">€</span></s></div>
+  <div class="price-tag">27<span class="currency">€</span></div>
+</div>
+<p class="price-launch">✦ Oferta por tiempo limitado ✦<br><span class="price-launch-after">Después 47€</span></p>
 
         <ul class="features-list">
           <li><span class="check">✅</span> 7 áreas clave de tu vida analizadas en profundidad</li>
@@ -1029,6 +1115,74 @@ h2 { font-size: 2.5rem; }
       setTimeout(() => el.classList.add('visible'), 80);
     });
   </script>
+// Mark hero elements visible immediately
+    document.querySelectorAll('.hero .reveal').forEach(el => {
+      setTimeout(() => el.classList.add('visible'), 80);
+    });
+  </script>
 
+  <!-- ════════════ COUNTDOWN + HIDE ON SCROLL ════════════ -->
+  <script>
+    (function(){
+      const COUNTDOWN_DAYS = 7;
+      const STORAGE_KEY = 'tucodigobase_countdown_end';
+
+      function getEndTime() {
+        let end = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+        const now = Date.now();
+        if (!end || end <= now) {
+          end = now + COUNTDOWN_DAYS * 24 * 60 * 60 * 1000;
+          localStorage.setItem(STORAGE_KEY, end);
+        }
+        return end;
+      }
+
+      function updateCountdown() {
+        const end = getEndTime();
+        const now = Date.now();
+        let diff = Math.max(0, end - now);
+
+        if (diff === 0) {
+          localStorage.removeItem(STORAGE_KEY);
+          return updateCountdown();
+        }
+
+        const days = Math.floor(diff / 86400000);
+        diff -= days * 86400000;
+        const hours = Math.floor(diff / 3600000);
+        diff -= hours * 3600000;
+        const minutes = Math.floor(diff / 60000);
+        diff -= minutes * 60000;
+        const seconds = Math.floor(diff / 1000);
+
+        const pad = n => String(n).padStart(2, '0');
+        const set = (unit, val) => {
+          const el = document.querySelector(`[data-unit="${unit}"]`);
+          if (el) el.textContent = pad(val);
+        };
+        set('days', days);
+        set('hours', hours);
+        set('minutes', minutes);
+        set('seconds', seconds);
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+
+      // Hide bar on scroll
+      const bar = document.getElementById('countdownBar');
+      if (bar) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 80) {
+            bar.classList.add('hidden');
+          } else {
+            bar.classList.remove('hidden');
+          }
+        });
+      }
+    })();
+  </script>
+
+</body>
 </body>
 </html>
