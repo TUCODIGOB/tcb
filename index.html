@@ -158,7 +158,7 @@
     }
     .hero-inner {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1.5fr 1fr;
       gap: 4rem;
       align-items: center;
     }
@@ -171,6 +171,7 @@
       margin-bottom: 1.2rem;
     }
     .hero h1 { color: var(--teal-deep); margin-bottom: 1.5rem; }
+.hero-h1 { text-align: left; margin-bottom: 2.5rem; }
     .hero h1 em { font-style: italic; color: var(--gold-deep); }
     .hero-sub {
       font-size: 1.05rem;
@@ -229,10 +230,10 @@
     /* Hero image side */
     .hero-visual {
       position: relative;
-      display: flex; justify-content: center;
+      display: flex; justify-content: flex-end;
     }
     .hero-img-wrap {
-      width: 380px; height: 460px;
+      width: 380px; height: 560px;
       border-radius: var(--r-lg);
       overflow: hidden;
       box-shadow: 0 20px 60px rgba(14,63,75,.18);
@@ -676,7 +677,7 @@
     @media (max-width: 860px) {
       .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
       .hero-visual { order: -1; }
-      .hero-img-wrap { width: 100%; max-width: 400px; height: 320px; margin-inline: auto; }
+      .hero-img-wrap { width: 100%; max-width: 400px; height: 440px; margin-inline: auto; }
       .hero-float-badge { left: 0; bottom: -20px; }
       .hero-cta-wrap { align-items: center; }
       .hero h1, .hero-sub { text-align: center; }
@@ -685,8 +686,10 @@
     }
     @media (max-width: 600px) {
       section { padding-block: 3.5rem; }
+.hero h1, .hero-h1 { font-size: 2.2rem; }
+      .hero-testimonial-overlay { font-size: 1.05rem; }
       .nav-inner { flex-direction: column; gap: .6rem; padding-block: .6rem; }
-      .nav-cta { width: 100%; text-align: center; font-size: .8rem; padding: .6rem; }
+      .nav-cta { width: 100%; text-align: center; font-size: 1.1rem; padding: .6rem; }
       .nav-logo img { height: 80px; }
       .nav.scrolled .nav-inner { padding-block: .4rem; }
       .nav.scrolled .nav-logo { display: none; }
@@ -719,17 +722,18 @@
 
   <!-- ════════════ HERO ════════════ -->
   <section class="hero">
+    <div class="container">
+      <h1 class="hero-h1">¿Y si por fin pudieras entender por qué tu vida es <em>como es</em>?</h1>
+    </div>
     <div class="container hero-inner">
 
       <!-- Copy -->
       <div>
-        
-        <h1>¿Y si por fin pudieras entender por qué tu vida es <em>como es</em>?</h1>
         <p class="hero-sub">
           Lees, haces cursos, vas a terapia… y algo sigue sin cambiar.<br>
-          Las mismas relaciones. Las mismas decisiones. Los mismos resultados.<br><br>
+          Las mismas relaciones, las mismas decisiones, los mismos resultados...<br><br>
           <strong>No es culpa tuya.</strong> Hay una programación que se formó en ti al nacer
-          y que dirige tu vida sin que lo sepas. Y hasta que no la descubras, nada cambiará de verdad.
+          y que dirige tu vida sin que lo sepas.<br>Y hasta que no la descubras, nada cambiará de verdad.
         </p>
 <p class="hero-product-line">Tu Diseño de Origen es un estudio 100% personalizado y único que descifra tu programación interior a partir de tu carta natal real.</p>
         <div class="hero-cta-wrap">
@@ -746,7 +750,7 @@
           <!-- Sustituir src por la foto real de la mujer cuando la tengas -->
           <img src="images/hero-mujer-reflexiva.jpg" alt="Fátima — Tu Diseño de Origen" class="hero-img" />
           <blockquote class="hero-testimonial-overlay">
-            "Jamás nadie me había descrito con tanta precisión. Es como si me conocieran de toda la vida."
+            "...jamás nadie me había descrito con tanta precisión, es como si me conocieran de toda la vida."
             <cite>— Fátima, España</cite>
           </blockquote>
         </div>        
