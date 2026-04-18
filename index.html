@@ -526,7 +526,34 @@ display: block;
       height: auto;
       display: block;
     }
-
+/* ══════════════════════════════════════════════
+       BRIDGE (cierre emocional antes del precio)
+    ══════════════════════════════════════════════ */
+    .bridge {
+      background: var(--cream);
+      padding-block: 4rem;
+      text-align: center;
+    }
+    .bridge p {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+      color: var(--teal-deep);
+      max-width: 720px;
+      margin-inline: auto;
+      line-height: 1.4;
+    }
+    .bridge p strong {
+      color: var(--gold-deep);
+      font-style: normal;
+      font-weight: 700;
+    }
+<!-- ════════════ BRIDGE ════════════ -->
+  <section class="bridge">
+    <div class="container">
+      <p class="reveal">No necesitas otro libro, otro curso, otra terapia… Necesitas entender <strong>tu programación interna</strong>.</p>
+    </div>
+  </section>
     /* ══════════════════════════════════════════════
        PRICE & FINAL CTA
     ══════════════════════════════════════════════ */
@@ -1007,8 +1034,7 @@ h2 { font-size: 2.5rem; }
           <li><span class="check">✅</span> Las 7 áreas clave de tu vida analizadas en profundidad</li>
           <li><span class="check">✅</span> Informe de 23 páginas en PDF</li>
 <li><span class="check">✅</span> Listo en minutos, descarga inmediata</li>
-          <li><span class="check">✅</span> 100% personalizado: único e irrepetible</li>
-          <li><span class="check">✅</span> No es un horóscopo, es un informe real, profundo y solo tuyo.</li>
+          <li><span class="check">✅</span> 100% personalizado: único e irrepetible</li>          
         </ul>
 
         <a href="tu-diseno-de-origen.html" class="btn-cta" style="width:100%; text-align:center; display:block;">
