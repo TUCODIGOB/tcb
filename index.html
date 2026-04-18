@@ -332,11 +332,11 @@ font-weight: 600;
     }
     .areas-grid {
       display: grid;
-      grid-template-columns: repeat(6, 1fr);
+      grid-template-columns: 1fr;
       gap: 1.25rem;
+      max-width: 620px;
+      margin-inline: auto;
     }
-    .areas-grid .area-card:nth-child(-n+4) { grid-column: span 3; }
-    .areas-grid .area-card:nth-child(n+5) { grid-column: span 2; }
     .area-card {
       background: rgba(255,255,255,.05);
       border: 1px solid rgba(207,177,128,.2);
@@ -403,8 +403,8 @@ display: block;
       margin: 0 auto 1.2rem;
       box-shadow: 0 4px 16px rgba(189,144,72,.35);
     }
-    .step h3 { color: var(--teal-deep); margin-bottom: .5rem; font-size: 1.5rem; }
-    .step p { font-size: .9rem; color: #555; }
+    .step h3 { color: var(--teal-deep); margin-bottom: .5rem; font-size: 1.2rem; }
+    .step p { font-size: .8rem; color: #555; }
 
     /* Arrow between steps */
     .steps-connector {
@@ -688,6 +688,9 @@ display: block;
       .steps { grid-template-columns: 1fr; }
     }
     @media (max-width: 600px) {
+.step h3 { font-size: 1.2rem; }
+.step p { font-size: 0.9rem; }
+
       section { padding-block: 3.5rem; }
 .btn-cta { width: 100%; font-size: 1.1rem; padding: 1.1rem 1rem; }
 .btn-cta-sub { font-size: .95rem; }
@@ -706,7 +709,6 @@ h2 { font-size: 2.5rem; }
       .nav.scrolled .nav-logo { display: none; }
       
       .areas-grid { grid-template-columns: 1fr; }
-.areas-grid .area-card { grid-column: auto; }
 .area-title { font-size: 1.5rem; }
       .area-card p { font-size: 1.1rem; }
       
