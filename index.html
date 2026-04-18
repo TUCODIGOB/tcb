@@ -527,6 +527,12 @@ display: block;
       line-height: 1;
       margin-bottom: .3rem;
     }
+.currency {
+  font-size: .65em;
+  font-weight: 600;
+  vertical-align: .15em;
+  margin-left: .05em;
+}
     .price-launch {
       font-size: .8rem;
       letter-spacing: .12em;
@@ -534,6 +540,13 @@ display: block;
       color: rgba(207,177,128,.7);
       margin-bottom: 2rem;
     }
+.price-launch-after {
+  display: inline-block;
+  margin-top: .4rem;
+  font-size: .7rem;
+  opacity: .7;
+  letter-spacing: .08em;
+}
     .features-list {
       list-style: none;
       text-align: left;
@@ -563,6 +576,7 @@ display: block;
        FAQ
     ══════════════════════════════════════════════ */
     .faq { background: var(--cream); }
+.faq-list { text-align: left; }
     .faq h2 { color: var(--teal-deep); margin-bottom: .5rem; }
     .faq-intro { color: #666; font-size: .95rem; margin-top: 1.8rem; margin-bottom: 2.5rem; }
     .faq-list {
@@ -685,7 +699,7 @@ display: block;
 .step h3 { font-size: 1.5rem; }
 .step p { font-size: 1rem; }
 .step-num { font-size: 2rem; }
-.testimonials-subtitle { font-size: 1.1; }
+.testimonials-subtitle { font-size: 1.1rem; }
 .price-cta-subtitle { font-size: 1.1rem; }
 .faq-intro { font-size: 1.1rem; }
       section { padding-block: 3.5rem; }
@@ -888,25 +902,25 @@ h2 { font-size: 2.5rem; }
       
       <h2 class="reveal">Tu Diseño de Origen</h2>
       <p class="price-cta-subtitle reveal">Diagnóstico 100% personalizado y único.<br>
-        Un estudio de alta precisión basado en la configuración exacta de tu carta natal.</p>
+        Un estudio de <strong>alta precisión</strong> calculado a partir de la configuración exacta de tu carta natal.</p>
 
       <div class="price-card reveal">
-        <div class="price-old"><s>47€</s></div>
-<div class="price-tag">27€</div>
-<p class="price-launch">✦ Oferta de lanzamiento · Solo para las primeras 100 personas ✦</p>
+        <div class="price-old"><s>47<span class="currency">€</span></s></div>
+<div class="price-tag">27<span class="currency">€</span></div>
+<p class="price-launch">✦ Precio de lanzamiento para las primeras 100 personas ✦<br><span class="price-launch-after">Después 47€</span></p>
 
         <ul class="features-list">
           <li><span class="check">✅</span> 7 áreas clave de tu vida analizadas en profundidad</li>
-          <li><span class="check">✅</span> Informe completo en PDF — entrega inmediata</li>
+          <li><span class="check">✅</span> Informe de 23 páginas en PDF</li>
+<li><span class="check">✅</span> Listo en minutos, descarga inmediata</li>
           <li><span class="check">✅</span> 100% personalizado: único e irrepetible</li>
-          <li><span class="check">✅</span> No es un horóscopo. Es un informe real, profundo y solo tuyo.</li>
+          <li><span class="check">✅</span> No es un horóscopo, es un informe real, profundo y solo tuyo.</li>
         </ul>
 
         <a href="tu-diseno-de-origen.html" class="btn-cta" style="width:100%; text-align:center; display:block;">
           Lo quiero ahora
-          <span class="btn-badge">🔒 Pago seguro · Precio de lanzamiento · Entrega inmediata</span>
         </a>
-        <p class="secure-note">Pago 100% seguro. Procesado con cifrado SSL.</p>
+        <p class="secure-note">🔒 Pago 100% seguro con Stripe</p>
       </div>
     </div>
   </section>
@@ -916,42 +930,37 @@ h2 { font-size: 2.5rem; }
     <div class="container text-center">
       
       <h2 class="reveal">¿Tienes alguna duda?</h2>
-      <p class="faq-intro reveal">Aquí están las respuestas más frecuentes</p>
+      <p class="faq-intro reveal">Aquí están las preguntas más frecuentes</p>
 
       <div class="faq-list">
 
         <details class="reveal">
           <summary>¿Qué voy a recibir exactamente? <span class="faq-arrow">+</span></summary>
           <div class="faq-body">
-            Un informe 100% personalizado en PDF con las 7 áreas clave de tu vida analizadas en profundidad.
-            Basado en tu carta natal real, único e irrepetible. Lo descargas al momento, nada más completar el pago.
+            Un informe <strong>de 23 páginas en PDF, 100% personalizado</strong>, con las 7 áreas clave de tu vida analizadas en profundidad. Calculado a partir de tu carta natal real, único e irrepetible. En unos minutos lo tienes listo para descargar.
           </div>
         </details>
 
         <details class="reveal reveal-delay-1">
           <summary>¿Qué datos necesito? <span class="faq-arrow">+</span></summary>
           <div class="faq-body">
-            Tu nombre, sexo, fecha, hora y lugar de nacimiento exactos. Son los datos necesarios para
-            calcular tu carta natal real y generar tu Diseño de Origen.
+            Tu nombre, sexo, fecha, hora y lugar de nacimiento. Con eso calculamos tu <strong>carta natal real</strong> y desciframos tu Diseño de Origen.
           </div>
         </details>
 
         <details class="reveal reveal-delay-2">
           <summary>¿Y si no sé mi hora exacta de nacimiento? <span class="faq-arrow">+</span></summary>
           <div class="faq-body">
-            La hora exacta nos permite afinar mucho el resultado. Consulta a familiares o solicita tu
-            Certificado de Nacimiento (es gratuito y rápido).<br><br>
-            🇪🇸 <strong>España:</strong> <a href="https://sede.mjusticia.gob.es/es/tramites/certificado-nacimiento" target="_blank" rel="noopener">sede.mjusticia.gob.es</a><br>
-            🌍 <strong>Fuera de España:</strong> consulta el Registro Civil oficial de tu país.
+            La hora exacta nos permite afinar mucho el resultado. Si no la recuerdas, consulta a familiares o solicita tu Certificado de Nacimiento (es gratuito y rápido).<br><br>
+            • <strong>España:</strong> <a href="https://sede.mjusticia.gob.es/es/tramites/certificado-nacimiento" target="_blank" rel="noopener">sede.mjusticia.gob.es</a><br>
+            • <strong>Fuera de España:</strong> consulta el Registro Civil oficial de tu país.
           </div>
         </details>
 
         <details class="reveal reveal-delay-3">
           <summary>¿Es un horóscopo? <span class="faq-arrow">+</span></summary>
           <div class="faq-body">
-            No. Un horóscopo es una predicción general. Tu Diseño de Origen es un estudio técnico y
-            profundo basado en tu configuración natal única. No adivinamos el futuro: desciframos tu
-            estructura interna con una precisión que nunca antes has obtenido.
+            No, un horóscopo es una lectura genérica. Tu Diseño de Origen es un estudio técnico y profundo calculado a partir de tu carta natal real. No adivinamos el futuro: <strong>desciframos tu estructura interna</strong> con una precisión que nunca antes has obtenido.
           </div>
         </details>
 
