@@ -68,7 +68,7 @@
 
     /* ─── TYPOGRAPHY ─────────────────────────────── */
     h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.2; }
-    h1 { font-size: clamp(2rem, 5vw, 3.4rem); font-weight: 700; }
+    h1 { font-size: clamp(2rem, 5vw, 2.4rem); font-weight: 700; }
     h2 { font-size: clamp(1.6rem, 3.5vw, 2.5rem); font-weight: 700; }
     h3 { font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 600; }
     h4 { font-size: 1.1rem; font-weight: 600; }
@@ -77,6 +77,7 @@
     /* ─── CTA BUTTON ─────────────────────────────── */
     .btn-cta {
       display: inline-block;
+text-align: center;
       background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
       color: var(--white);
       font-family: var(--font-body);
@@ -174,23 +175,22 @@
 
     .hero h1 em { font-style: italic; color: var(--gold-deep); }
     .hero-sub {
-      font-size: 1.05rem;
+      font-size: 0.9rem;
       color: #3a3a3a;
       margin-bottom: 2rem;
-      max-width: 52ch;
+      max-width: none;
     }
     .hero-sub strong { color: var(--teal-deep); font-weight: 600; }
 .hero-product-line {
-      font-family: var(--font-display);
+      font-family: var(--font-body);
       font-style: italic;
-      font-size: 1.15rem;
+      font-size: 0.9rem;
       color: var(--teal-deep);
       background: linear-gradient(90deg, rgba(189,144,72,.12), rgba(189,144,72,.04));
-      border-left: 3px solid var(--gold-deep);
       padding: .9rem 1.1rem;
       margin-bottom: 1.5rem;
       line-height: 1.5;
-      border-radius: 0 var(--r-sm) var(--r-sm) 0;
+      border-radius: var(--r-sm);
     }
     .hero-cta-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: .6rem; }
 .hero-cta-note {
@@ -686,6 +686,7 @@
     }
     @media (max-width: 600px) {
       section { padding-block: 3.5rem; }
+.btn-cta { padding: .9rem 1rem; font-size: .95rem; }
 .hero h1 { font-size: 2.2rem; }
       .hero-testimonial-overlay { font-size: 1.05rem; }
       .nav-inner { flex-direction: column; gap: .6rem; padding-block: .6rem; }
@@ -730,8 +731,8 @@
         <p class="hero-sub">
           Lees, haces cursos, vas a terapia… y algo sigue sin cambiar.<br>
           Las mismas relaciones, las mismas decisiones, los mismos resultados...<br><br>
-          <strong>No es culpa tuya.</strong> Hay una programación que se formó en ti al nacer
-          y que dirige tu vida sin que lo sepas.<br>Y hasta que no la descubras, nada cambiará de verdad.
+          <strong>No es culpa tuya,</strong> hay una programación que se formó en ti al nacer
+          y que dirige tu vida sin que lo sepas. Y hasta que no la descubras, nada cambiará de verdad.
         </p>
 <p class="hero-product-line">Tu Diseño de Origen es un estudio 100% personalizado y único que descifra tu programación interior a partir de tu carta natal real.</p>
         <div class="hero-cta-wrap">
