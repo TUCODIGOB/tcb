@@ -183,7 +183,7 @@ text-align: center;
     .hero-sub strong { color: var(--teal-deep); font-weight: 600; }
 .hero-product-line {
       font-family: var(--font-body);
-      font-style: normal;
+      font-style: italic;
       font-size: 0.9rem;
       color: var(--teal-deep);
       background: linear-gradient(90deg, rgba(189,144,72,.12), rgba(189,144,72,.04));
@@ -347,7 +347,7 @@ display: block;
       font-family: var(--font-display);
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--gold-deep);
+      color: var(--gold-light);
       margin-bottom: .5rem;
     }
     
@@ -688,12 +688,14 @@ display: block;
     @media (max-width: 600px) {
       section { padding-block: 3.5rem; }
 .btn-cta { width: 100%; font-size: 1.1rem; padding: 1.1rem 1rem; }
-.hero h1 { font-size: 3rem; }
+.btn-cta-sub { font-size: .95rem; }
+.hero h1 { font-size: 2.5rem; margin-bottom: 1.5rem; }       
+.hero-sub { margin-bottom: 2rem; }
 .how-subtitle { font-size: 1rem; }
 h2 { font-size: 2.5rem; }
 .hero-sub { font-size: 1.1rem; }
       .hero-product-line { font-size: 1.2rem; }
-      .hero-testimonial-overlay { font-size: 1.1rem; font-weight: 500; }
+      .hero-testimonial-overlay { font-size: 1.1rem; font-weight: 600; }
 .hero-testimonial-overlay cite { font-size: .95rem; }
       .nav-inner { flex-direction: column; gap: .6rem; padding-block: .6rem; }
       .nav-cta { width: 100%; text-align: center; font-size: 1.1rem; padding: .6rem; }
@@ -702,6 +704,9 @@ h2 { font-size: 2.5rem; }
       .nav.scrolled .nav-logo { display: none; }
       
       .areas-grid { grid-template-columns: 1fr; }
+.area-card h3 { font-size: 1.3rem; }
+      .area-card p { font-size: 1.2rem; }
+      
       .reviews-grid { grid-template-columns: 1fr 1fr; }
       .price-card { padding: 1.8rem 1.4rem; }
     }
