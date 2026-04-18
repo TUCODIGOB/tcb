@@ -461,25 +461,17 @@ display: block;
       font-size: .95rem;
       margin-bottom: 2.5rem;
     }
-    /* Placeholder grid for review screenshots */
+    /* Reviews grid — WhatsApp screenshots */
     .reviews-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1.25rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
     }
-    .review-placeholder {
-      background: var(--white);
-      border-radius: var(--r-md);
-      border: 1px dashed rgba(189,144,72,.4);
-      height: 200px;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: .5rem;
-      color: #aaa;
-      font-size: .85rem;
-      box-shadow: 0 4px 18px rgba(0,0,0,.05);
+    .review-img {
+      width: 100%;
+      height: auto;
+      display: block;
     }
-    .review-placeholder svg { opacity: .3; }
 
     /* ══════════════════════════════════════════════
        PRICE & FINAL CTA
@@ -779,36 +771,36 @@ h2 { font-size: 2.5rem; }
     <div class="container text-center">
       
       <h2 class="reveal">¿Qué descubrirás?</h2>
-      <p class="areas-subtitle reveal">Las 7 áreas clave que dirigen tu vida y que nunca nadie te ha explicado así</p>
+      <p class="areas-subtitle reveal">Las <strong>7 áreas clave</strong> que dirigen tu vida y que nunca nadie te ha explicado así</p>
 
       <div class="areas-grid">
         <div class="area-card reveal reveal-delay-1">
           <h3 class="area-title"><span class="area-num">1</span> Identidad</h3>
-          <p>Por qué eres como eres y por qué tu vida es como es.</p>
+          <p>Por qué eres como eres y por qué tu vida es como es</p>
         </div>
         <div class="area-card reveal reveal-delay-2">
           <h3 class="area-title"><span class="area-num">2</span> Patrones</h3>
-          <p>Por qué siempre te pasa lo mismo y qué repites sin poder parar.</p>
+          <p>Por qué siempre te pasa lo mismo y qué repites sin poder parar</p>
         </div>
         <div class="area-card reveal reveal-delay-3">
           <h3 class="area-title"><span class="area-num">3</span> Miedos</h3>
-          <p>Lo que gobierna tu vida sin que lo sepas.</p>
+          <p>Lo que gobierna tu vida sin que lo sepas</p>
         </div>
         <div class="area-card reveal reveal-delay-4">
           <h3 class="area-title"><span class="area-num">4</span> Herida</h3>
-          <p>Lo que hoy sigue bloqueando tu vida en silencio.</p>
+          <p>Lo que hoy sigue bloqueando tu vida en silencio</p>
         </div>
         <div class="area-card reveal reveal-delay-5">
           <h3 class="area-title"><span class="area-num">5</span> Amor</h3>
-          <p>Por qué amas como amas y por qué atraes a quien atraes.</p>
+          <p>Por qué amas como amas y por qué atraes a quien atraes</p>
         </div>
         <div class="area-card reveal reveal-delay-6">
           <h3 class="area-title"><span class="area-num">6</span> Relaciones</h3>
-          <p>Cómo te vinculas con los demás y qué rol ocupas sin darte cuenta.</p>
+          <p>Cómo te vinculas con los demás y qué rol ocupas sin darte cuenta</p>
         </div>
         <div class="area-card reveal">
           <h3 class="area-title"><span class="area-num">7</span> Dinero</h3>
-          <p>Por qué el dinero no termina de fluir en tu vida.</p>
+          <p>Por qué el dinero no termina de fluir en tu vida</p>
         </div>
       </div>
     </div>
@@ -827,19 +819,19 @@ h2 { font-size: 2.5rem; }
 
       <div class="steps">
         <div class="step reveal reveal-delay-1">
-          <div class="step-num">①</div>
+          <div class="step-num">1</div>
           <h3>Introduce tus datos</h3>
-          <p>Nombre, sexo, fecha, hora y lugar exactos de nacimiento. Eso es todo lo que necesitamos.</p>
+          <p>Para calcular tu <strong>carta natal real</strong> necesitamos: nombre, sexo, fecha, hora y lugar de nacimiento</p>
         </div>
         <div class="step reveal reveal-delay-2">
-          <div class="step-num">②</div>
+          <div class="step-num">2</div>
           <h3>Analizamos tu carta natal</h3>
-          <p>Nuestro sistema analiza tu configuración exacta y genera tu Diseño de Origen único e irrepetible.</p>
+          <p>Nuestro sistema analiza tu configuración exacta y genera tu <strong>Diseño de Origen personalizado</strong></p>
         </div>
         <div class="step reveal reveal-delay-3">
-          <div class="step-num">③</div>
+          <div class="step-num">3</div>
           <h3>Recíbelo en minutos</h3>
-          <p>Un PDF completo con las 7 áreas de tu vida analizadas en profundidad. Lo descargas al momento.</p>
+          <p>Un <strong>PDF de 23 páginas</strong> con las 7 áreas de tu vida analizadas en profundidad. Lo descargas al momento</p>
         </div>
       </div>
 
@@ -875,23 +867,12 @@ h2 { font-size: 2.5rem; }
       <p class="testimonials-subtitle reveal">Estas son algunas de sus reacciones reales</p>
 
       <div class="reviews-grid">
-        <!-- Sustituir estos bloques por las capturas de WhatsApp reales -->
-        <div class="review-placeholder reveal reveal-delay-1">
-          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <small>Reseña / captura<br/>WhatsApp 1</small>
-        </div>
-        <div class="review-placeholder reveal reveal-delay-2">
-          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <small>Reseña / captura<br/>WhatsApp 2</small>
-        </div>
-        <div class="review-placeholder reveal reveal-delay-3">
-          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <small>Reseña / captura<br/>WhatsApp 3</small>
-        </div>
-        <div class="review-placeholder reveal reveal-delay-4">
-          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          <small>Reseña / captura<br/>WhatsApp 4</small>
-        </div>
+        <img src="images/2-claridad-emocional-y-crecimiento-personal-tu-codigo-base-resena-1.png" alt="Reseña de Irene — España" class="review-img reveal reveal-delay-1" />
+        <img src="images/3-autoconocimiento-personal-profundo-tu-codigo-base-resena-1.png" alt="Reseña de Salma — Argentina" class="review-img reveal reveal-delay-2" />
+        <img src="images/5-bloqueo-dinero-y-trabajo-tu-codigo-base-resena-1.png" alt="Reseña de Cati — Portugal" class="review-img reveal reveal-delay-3" />
+        <img src="images/1-dudas-sobre-terapias-y-autoconocimiento-tu-codigo-base-resena-1.png" alt="Reseña de Samuel — España" class="review-img reveal reveal-delay-4" />
+        <img src="images/8-descubrir-quien-soy-autoconocimiento-tu-codigo-base-resena-renacce-1.png" alt="Reseña de Mónica — España" class="review-img reveal reveal-delay-5" />
+        <img src="images/6-alivio-emocional-y-gratitud-tu-codigo-base-resena-1.png" alt="Reseña de María del Pilar — España" class="review-img reveal reveal-delay-6" />
       </div>
     </div>
   </section>
