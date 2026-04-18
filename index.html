@@ -60,7 +60,7 @@
     }
     img { display: block; max-width: 100%; }
     a { color: inherit; text-decoration: none; }
-a { color: inherit; text-decoration: none; }
+
 
     /* ══════════════════════════════════════════════
        COUNTDOWN BAR (top sticky)
@@ -310,22 +310,7 @@ text-align: center;
       box-shadow: 0 20px 60px rgba(14,63,75,.18);
       position: relative;
     }
-    /* Placeholder image — replace with real photo */
-    .hero-img-placeholder {
-      width: 100%; height: 100%;
-      background: linear-gradient(160deg, #d4c0a0 0%, #b8986a 50%, #8a7050 100%);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      color: rgba(255,255,255,.7);
-      font-size: .85rem;
-      text-align: center;
-      padding: 2rem;
-    }
-    .hero-img-placeholder span {
-      font-family: var(--font-display);
-      font-size: 1.1rem;
-      color: rgba(255,255,255,.5);
-    }
+    
 .hero-img {
       width: 100%;
       height: 100%;
@@ -618,7 +603,10 @@ display: block;
   opacity: .7;
   letter-spacing: .08em;
 }
-
+.price-countdown {
+  justify-content: center;
+  margin-bottom: 2rem;
+}
     .features-list {
       list-style: none;
       text-align: left;
@@ -994,7 +982,12 @@ h2 { font-size: 2.5rem; }
   <div class="price-tag">27<span class="currency">€</span></div>
 </div>
 <p class="price-launch">✦ Oferta por tiempo limitado ✦<br><span class="price-launch-after">Después 47€</span></p>
-
+<div class="countdown price-countdown">
+  <div class="countdown-box"><span class="countdown-num" data-unit="days">07</span><span class="countdown-label">d</span></div>
+  <div class="countdown-box"><span class="countdown-num" data-unit="hours">00</span><span class="countdown-label">h</span></div>
+  <div class="countdown-box"><span class="countdown-num" data-unit="minutes">00</span><span class="countdown-label">m</span></div>
+  <div class="countdown-box"><span class="countdown-num" data-unit="seconds">00</span><span class="countdown-label">s</span></div>
+</div>
         <ul class="features-list">
           <li><span class="check">✅</span> 7 áreas clave de tu vida analizadas en profundidad</li>
           <li><span class="check">✅</span> Informe de 23 páginas en PDF</li>
