@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO & OG -->
+  <title>Aviso Legal — Tu Código Base</title>
+  <meta name="description" content="Aviso legal de Tu Código Base. Información sobre el titular del sitio, propiedad intelectual, responsabilidad del usuario y condiciones de uso." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tucodigobase.com/aviso-legal" />
+  <meta property="og:title" content="Aviso Legal — Tu Código Base" />
+  <meta property="og:description" content="Aviso legal de Tu Código Base. Información sobre el titular del sitio y condiciones de uso." />
+  <meta property="og:image" content="images/2-logo-google-tu-codigo-base-carta-natal-astral.webp" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/1-favicon-tu-codigo-base-carta-natal-astral.png" />
+  <link rel="shortcut icon" href="images/1-favicon-tu-codigo-base-carta-natal-astral.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─────────────────────────────────── */
+    :root {
+      --teal-deep:   #0e3f4b;
+      --teal-mid:    #729790;
+      --gold-deep:   #bd9048;
+      --gold-light:  #cfb180;
+      --cream:       #fffbef;
+      --white:       #ffffff;
+      --ink:         #0c0c0c;
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Open Sans', sans-serif;
+
+      --r-sm: 6px;
+      --r-md: 12px;
+      --r-lg: 24px;
+    }
+
+    /* ─── RESET ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── UTILITIES ──────────────────────────────── */
+    .container { width: min(1100px, 92vw); margin-inline: auto; }
+    .text-center { text-align: center; }
+
+    /* ══════════════════════════════════════════════
+       NAV (igual que index)
+    ══════════════════════════════════════════════ */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,251,239,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(189,144,72,.2);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-block: .2rem;
+    }
+    .nav-logo img {
+      height: 70px;
+      width: auto;
+    }
+    .nav-cta {
+      background: var(--gold-deep);
+      color: var(--white);
+      font-size: .82rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .55rem 1.2rem;
+      border-radius: var(--r-sm);
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--gold-light); }
+
+    /* ══════════════════════════════════════════════
+       LEGAL PAGE
+    ══════════════════════════════════════════════ */
+    .legal {
+      padding-block: 4rem 5rem;
+    }
+    .legal-container {
+      width: min(760px, 92vw);
+      margin-inline: auto;
+    }
+    .legal-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      font-weight: 700;
+      color: var(--teal-deep);
+      text-align: center;
+      margin-bottom: 3.5rem;
+      line-height: 1.2;
+    }
+    .legal-title em {
+      font-style: italic;
+      color: var(--gold-deep);
+      font-weight: 700;
+    }
+    .legal-content h2 {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--teal-deep);
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      letter-spacing: .01em;
+    }
+    .legal-content h2:first-child { margin-top: 0; }
+    .legal-content p {
+      font-size: .95rem;
+      color: #2a2a2a;
+      margin-bottom: 1rem;
+      text-align: justify;
+      hyphens: auto;
+    }
+    .legal-content p strong { color: var(--teal-deep); font-weight: 700; }
+    .legal-content ul {
+      margin: .5rem 0 1.2rem 1.5rem;
+      padding-left: .5rem;
+    }
+    .legal-content ul li {
+      font-size: .95rem;
+      color: #2a2a2a;
+      margin-bottom: .5rem;
+      padding-left: .3rem;
+    }
+    .legal-content ul li::marker { color: var(--gold-deep); }
+    .legal-content a {
+      color: var(--gold-deep);
+      text-decoration: underline;
+      font-weight: 500;
+    }
+    .legal-content a:hover { color: var(--teal-deep); }
+
+    /* ══════════════════════════════════════════════
+       FOOTER (igual que index)
+    ══════════════════════════════════════════════ */
+    .footer {
+      background: var(--teal-deep);
+      color: rgba(255,251,239,.6);
+      padding-block: 2.5rem;
+      font-size: .82rem;
+    }
+    .footer-inner {
+      display: flex; flex-direction: column;
+      align-items: center; gap: .9rem;
+      text-align: center;
+    }
+    .footer-email a {
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+    .footer-email a:hover { color: var(--white); }
+    .footer-links {
+      display: flex; flex-wrap: wrap;
+      gap: .3rem .75rem;
+      justify-content: center;
+      align-items: center;
+    }
+    .footer-links a {
+      color: rgba(255,251,239,.65);
+      transition: color .15s;
+    }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-links .sep { opacity: .35; }
+    .footer-copy {
+      color: rgba(255,251,239,.4);
+      font-size: .8rem;
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 600px) {
+      .legal { padding-block: 2.5rem 3.5rem; }
+      .legal-title { margin-bottom: 2.5rem; }
+      .legal-content p { text-align: left; }
+      .nav-logo img { height: 56px; }
+      .nav-cta { font-size: .72rem; padding: .5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════ NAV ════════════ -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo" aria-label="Tu Código Base — Inicio">
+        <img src="images/3-logo-web-tu-codigo-base-carta-natal-astral-1.png"
+             alt="Tu Código Base — Tu carta natal descifrada"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
+        <span style="display:none; font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--teal-deep); letter-spacing:.02em;">
+          TU CÓDIGO BASE
+        </span>
+      </a>
+      <a href="tu-diseno-de-origen.html" class="nav-cta">Quiero el mío</a>
+    </div>
+  </nav>
+
+  <!-- ════════════ LEGAL CONTENT ════════════ -->
+  <section class="legal">
+    <div class="legal-container">
+
+      <h1 class="legal-title">Aviso <em>legal</em></h1>
+
+      <div class="legal-content">
+
+        <h2>1. Objeto del sitio:</h2>
+        <p>El propósito de este sitio web es informar sobre los productos y servicios digitales ofrecidos bajo la marca <strong>Tu Código Base</strong>, así como facilitar su contratación, descarga o acceso online. El acceso y uso del sitio implican la aceptación plena de este Aviso Legal, la Política de Privacidad, la Política de Cookies y los Términos y Condiciones de Compra o Uso.</p>
+
+        <h2>2. Propiedad intelectual:</h2>
+        <p>Todo el contenido de este sitio (textos, imágenes, gráficos, logotipos, iconos, diseño, estructura y demás elementos) pertenece a PURA GROUP LLC o a sus legítimos titulares, y está protegido por las leyes internacionales de propiedad intelectual e industrial. No se autoriza su reproducción, distribución o modificación sin permiso previo por escrito.</p>
+        <p>El uso no autorizado por escrito, dará lugar a las acciones legales correspondientes.</p>
+
+        <h2>3. Responsabilidad del usuario:</h2>
+        <p>El usuario se compromete a utilizar este sitio web de manera lícita, ética y responsable.</p>
+        <p>Queda prohibido el uso del contenido con fines ilícitos o comerciales no autorizados, así como cualquier uso que pueda dañar la imagen, los sistemas o los derechos de <strong>Tu Código Base</strong>, PURA GROUP LLC o terceros.</p>
+
+        <h2>4. Enlaces externos:</h2>
+        <p>Este sitio puede incluir enlaces a páginas de terceros, PURA GROUP LLC no asume responsabilidad alguna por los contenidos, políticas o prácticas de dichos sitios externos, ni por los daños que pudieran derivarse de su uso.</p>
+
+        <h2>5. Limitación de responsabilidad:</h2>
+        <p>Los productos y servicios ofrecidos por <strong>Tu Código Base</strong> están diseñados para ofrecer claridad, comprensión y herramientas de autoconocimiento personal. No sustituyen ningún tipo de proceso médico, psicológico o terapéutico, ni garantizan resultados concretos, ya que cada persona es responsable de su propio proceso y decisiones.</p>
+        <p>PURA GROUP LLC actúa con la máxima diligencia para mantener la calidad, seguridad y actualización de los contenidos, pero no puede garantizar la ausencia total de errores técnicos o interpretativos, ni hacerse responsable del uso que cada usuario haga de la información.</p>
+        <p>El uso del sitio web y de los materiales disponibles es voluntario y bajo la propia responsabilidad del usuario. En ningún caso el uso de esta web podrá considerarse causa directa o indirecta de perjuicios personales, emocionales o económicos.</p>
+
+        <h2>6. Testimonios, reseñas y material audiovisual:</h2>
+        <p>Los usuarios que envíen voluntariamente testimonios, reseñas, textos, fotografías o vídeos a <strong>Tu Código Base</strong> autorizan expresamente a PURA GROUP LLC a reproducir, publicar y difundir dicho material en su sitio web, redes sociales u otros materiales de comunicación de la marca.</p>
+        <p>El envío de dicho material implica que el usuario lo hace de forma voluntaria y consciente.</p>
+
+        <h2>7. Titular del sitio y contacto:</h2>
+        <p>Este sitio web <strong>Tu Código Base</strong> es propiedad y está operado por PURA GROUP LLC, entidad registrada en 5830 E 2nd St Ste 7000 #23371 Casper (Wyoming) 82609 en Estados Unidos.</p>
+        <p>La marca <strong>Tu Código Base</strong> opera como línea de productos y servicios digitales gestionados por PURA GROUP LLC.</p>
+        <p>Para cualquier consulta relacionada con <strong>Tu Código Base</strong>, puedes contactar enviando un correo electrónico a <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ FOOTER ════════════ -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="footer-email">
+        <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>
+      </p>
+      <nav class="footer-links" aria-label="Legal">
+        <a href="/aviso-legal">Aviso legal</a>
+        <span class="sep">|</span>
+        <a href="/politica-de-privacidad">Política de privacidad</a>
+        <span class="sep">|</span>
+        <a href="/politica-de-cookies">Política de cookies</a>
+        <span class="sep">|</span>
+        <a href="/terminos-y-condiciones">Términos y condiciones</a>
+      </nav>
+      <p class="footer-copy">
+        © 2026 TU CÓDIGO BASE. Todos los derechos reservados.<br>
+        Operado por Pura Group LLC
+      </p>
+    </div>
+  </footer>
+
+  <!-- ════════════ NAV SCROLL ════════════ -->
+  <script>
+    (function(){
+      const nav = document.querySelector('.nav');
+      if (!nav) return;
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>

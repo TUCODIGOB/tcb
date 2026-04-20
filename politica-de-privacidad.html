@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO & OG -->
+  <title>Política de Privacidad — Tu Código Base</title>
+  <meta name="description" content="Política de privacidad de Tu Código Base. Conoce cómo tratamos tus datos personales, la base legal del tratamiento y tus derechos como usuario." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tucodigobase.com/politica-de-privacidad" />
+  <meta property="og:title" content="Política de Privacidad — Tu Código Base" />
+  <meta property="og:description" content="Política de privacidad de Tu Código Base. Información sobre el tratamiento de datos personales." />
+  <meta property="og:image" content="images/2-logo-google-tu-codigo-base-carta-natal-astral.webp" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/1-favicon-tu-codigo-base-carta-natal-astral.png" />
+  <link rel="shortcut icon" href="images/1-favicon-tu-codigo-base-carta-natal-astral.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─────────────────────────────────── */
+    :root {
+      --teal-deep:   #0e3f4b;
+      --teal-mid:    #729790;
+      --gold-deep:   #bd9048;
+      --gold-light:  #cfb180;
+      --cream:       #fffbef;
+      --white:       #ffffff;
+      --ink:         #0c0c0c;
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Open Sans', sans-serif;
+
+      --r-sm: 6px;
+      --r-md: 12px;
+      --r-lg: 24px;
+    }
+
+    /* ─── RESET ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── UTILITIES ──────────────────────────────── */
+    .container { width: min(1100px, 92vw); margin-inline: auto; }
+    .text-center { text-align: center; }
+
+    /* ══════════════════════════════════════════════
+       NAV (igual que index)
+    ══════════════════════════════════════════════ */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,251,239,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(189,144,72,.2);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-block: .2rem;
+    }
+    .nav-logo img {
+      height: 70px;
+      width: auto;
+    }
+    .nav-cta {
+      background: var(--gold-deep);
+      color: var(--white);
+      font-size: .82rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .55rem 1.2rem;
+      border-radius: var(--r-sm);
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--gold-light); }
+
+    /* ══════════════════════════════════════════════
+       LEGAL PAGE
+    ══════════════════════════════════════════════ */
+    .legal {
+      padding-block: 4rem 5rem;
+    }
+    .legal-container {
+      width: min(760px, 92vw);
+      margin-inline: auto;
+    }
+    .legal-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      font-weight: 700;
+      color: var(--teal-deep);
+      text-align: center;
+      margin-bottom: 3.5rem;
+      line-height: 1.2;
+    }
+    .legal-title em {
+      font-style: italic;
+      color: var(--gold-deep);
+      font-weight: 700;
+    }
+    .legal-content h2 {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--teal-deep);
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      letter-spacing: .01em;
+    }
+    .legal-content h2:first-child { margin-top: 0; }
+    .legal-content p {
+      font-size: .95rem;
+      color: #2a2a2a;
+      margin-bottom: 1rem;
+      text-align: justify;
+      hyphens: auto;
+    }
+    .legal-content p strong { color: var(--teal-deep); font-weight: 700; }
+    .legal-content ul {
+      margin: .5rem 0 1.2rem 1.5rem;
+      padding-left: .5rem;
+    }
+    .legal-content ul li {
+      font-size: .95rem;
+      color: #2a2a2a;
+      margin-bottom: .5rem;
+      padding-left: .3rem;
+    }
+    .legal-content ul li::marker { color: var(--gold-deep); }
+    .legal-content a {
+      color: var(--gold-deep);
+      text-decoration: underline;
+      font-weight: 500;
+    }
+    .legal-content a:hover { color: var(--teal-deep); }
+
+    /* ══════════════════════════════════════════════
+       FOOTER (igual que index)
+    ══════════════════════════════════════════════ */
+    .footer {
+      background: var(--teal-deep);
+      color: rgba(255,251,239,.6);
+      padding-block: 2.5rem;
+      font-size: .82rem;
+    }
+    .footer-inner {
+      display: flex; flex-direction: column;
+      align-items: center; gap: .9rem;
+      text-align: center;
+    }
+    .footer-email a {
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+    .footer-email a:hover { color: var(--white); }
+    .footer-links {
+      display: flex; flex-wrap: wrap;
+      gap: .3rem .75rem;
+      justify-content: center;
+      align-items: center;
+    }
+    .footer-links a {
+      color: rgba(255,251,239,.65);
+      transition: color .15s;
+    }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-links .sep { opacity: .35; }
+    .footer-copy {
+      color: rgba(255,251,239,.4);
+      font-size: .8rem;
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 600px) {
+      .legal { padding-block: 2.5rem 3.5rem; }
+      .legal-title { margin-bottom: 2.5rem; }
+      .legal-content p { text-align: left; }
+      .nav-logo img { height: 56px; }
+      .nav-cta { font-size: .72rem; padding: .5rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════ NAV ════════════ -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo" aria-label="Tu Código Base — Inicio">
+        <img src="images/3-logo-web-tu-codigo-base-carta-natal-astral-1.png"
+             alt="Tu Código Base — Tu carta natal descifrada"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
+        <span style="display:none; font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--teal-deep); letter-spacing:.02em;">
+          TU CÓDIGO BASE
+        </span>
+      </a>
+      <a href="tu-diseno-de-origen.html" class="nav-cta">Quiero el mío</a>
+    </div>
+  </nav>
+
+  <!-- ════════════ LEGAL CONTENT ════════════ -->
+  <section class="legal">
+    <div class="legal-container">
+
+      <h1 class="legal-title">Política de <em>privacidad</em></h1>
+
+      <div class="legal-content">
+
+        <h2>1. Finalidad y responsable del tratamiento:</h2>
+        <p>En <strong>Tu Código Base</strong> tratamos los datos personales que los usuarios facilitan al comprar un producto, rellenar un formulario o contactar a través de <strong>tucodigobase.com</strong>. Puedes escribirnos para cualquier asunto relacionado con tus datos a <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>.</p>
+        <p>El responsable del tratamiento de los datos es PURA GROUP LLC, entidad titular de la marca <strong>Tu Código Base</strong>.</p>
+
+        <h2>2. Datos que se recopilan:</h2>
+        <p>Recopilamos únicamente la información necesaria para ofrecer nuestros productos y servicios digitales, que puede incluir:</p>
+        <ul>
+          <li>Nombre y apellidos.</li>
+          <li>Correo electrónico y teléfono.</li>
+          <li>Datos necesarios para determinados productos.</li>
+          <li>Datos técnicos del dispositivo o navegación (IP, cookies, navegador, país).</li>
+        </ul>
+        <p><strong>Tu Código Base</strong> no solicita datos sensibles, el usuario decide libremente qué información compartir.</p>
+
+        <h2>3. Uso de los datos:</h2>
+        <p>Utilizamos los datos personales exclusivamente para:</p>
+        <ul>
+          <li>Gestionar compras, facturación y entrega de productos digitales.</li>
+          <li>Dar soporte o respuesta a consultas.</li>
+          <li>Informar sobre actualizaciones o nuevos productos relacionados con <strong>Tu Código Base</strong>.</li>
+          <li>Cumplir con obligaciones fiscales o legales.</li>
+          <li>Mejorar la experiencia de navegación y seguridad del sitio.</li>
+        </ul>
+        <p><strong>Tu Código Base</strong> no vende ni comparte datos personales con terceros ajenos a la marca. En caso de requerirse soporte técnico o facturación a través de herramientas externas (como pasarelas de pago o plataformas de email), <strong>Tu Código Base</strong> garantiza que dichos proveedores cumplen con estándares internacionales de seguridad y confidencialidad.</p>
+
+        <h2>4. Base legal:</h2>
+        <p>El tratamiento de los datos se realiza de forma legítima porque:</p>
+        <ul>
+          <li>El usuario acepta esta Política de Privacidad al enviar sus datos o completar una compra mediante acción afirmativa.</li>
+          <li>Existe obligación legal de conservar cierta información con fines fiscales o administrativos.</li>
+        </ul>
+        <p>Se aplica el interés legítimo de <strong>Tu Código Base</strong> en mantener la seguridad del sitio y ofrecer un servicio de calidad.</p>
+
+        <h2>5. Conservación de los datos:</h2>
+        <p>Los datos se mantienen solo el tiempo necesario para cumplir su finalidad. Ciertos datos se conservarán durante el plazo exigido por ley para fines fiscales o administrativos. El usuario puede solicitar en cualquier momento la eliminación o modificación de sus datos.</p>
+
+        <h2>6. Seguridad y confidencialidad:</h2>
+        <p><strong>Tu Código Base</strong> adopta medidas técnicas y organizativas razonables para proteger los datos personales frente a accesos no autorizados, pérdida o alteración. Aun así, ningún sistema es totalmente invulnerable; el usuario acepta usar el sitio de forma responsable.</p>
+
+        <h2>7. Transferencia internacional de datos:</h2>
+        <p><strong>Tu Código Base</strong> forma parte de PURA GROUP LLC, registrada en Wyoming (Estados Unidos). El tratamiento de los datos personales se realiza conforme a la normativa europea de protección de datos (RGPD), aplicando las medidas de seguridad y confidencialidad legalmente exigidas.</p>
+
+        <h2>8. Derechos del usuario:</h2>
+        <p>En cualquier momento, el usuario puede solicitar:</p>
+        <ul>
+          <li>Acceder a sus datos personales.</li>
+          <li>Modificarlos o actualizarlos.</li>
+          <li>Eliminar su información.</li>
+          <li>Limitar u oponerse a su tratamiento.</li>
+          <li>Retirar el consentimiento en cualquier momento.</li>
+        </ul>
+        <p>Solo es necesario enviar un correo a <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>, indicando la solicitud. Las peticiones se atenderán en el menor plazo posible.</p>
+
+        <h2>9. Enlaces externos:</h2>
+        <p>Este sitio puede contener enlaces a otras páginas web, <strong>Tu Código Base</strong> no se hace responsable de las políticas de privacidad o prácticas de dichos sitios externos. Se recomienda revisar sus políticas antes de proporcionar datos personales.</p>
+
+        <h2>10. Cambios en la política:</h2>
+        <p><strong>Tu Código Base</strong> se reserva el derecho a modificar la presente Política de Privacidad en cualquier momento. Las actualizaciones se publicarán en esta misma página y serán aplicables desde su fecha de publicación.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ FOOTER ════════════ -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="footer-email">
+        <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>
+      </p>
+      <nav class="footer-links" aria-label="Legal">
+        <a href="/aviso-legal">Aviso legal</a>
+        <span class="sep">|</span>
+        <a href="/politica-de-privacidad">Política de privacidad</a>
+        <span class="sep">|</span>
+        <a href="/politica-de-cookies">Política de cookies</a>
+        <span class="sep">|</span>
+        <a href="/terminos-y-condiciones">Términos y condiciones</a>
+      </nav>
+      <p class="footer-copy">
+        © 2026 TU CÓDIGO BASE. Todos los derechos reservados.<br>
+        Operado por Pura Group LLC
+      </p>
+    </div>
+  </footer>
+
+  <!-- ════════════ NAV SCROLL ════════════ -->
+  <script>
+    (function(){
+      const nav = document.querySelector('.nav');
+      if (!nav) return;
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
