@@ -473,32 +473,22 @@ display: block;
       font-family: var(--font-display);
       font-size: 1.1rem;
       color: var(--teal-deep);
-      margin-bottom: 1.5rem;
+      margin-bottom: 0.8rem;
       font-style: italic;
     }
-    .mockup-placeholder {
-      max-width: 700px;
+    .mockup-video {
+      display: block;
+      width: 33%;
+      max-width: 380px;
       margin-inline: auto;
-      background: linear-gradient(135deg, #e8e0d0, #d5c9b5);
       border-radius: var(--r-lg);
-      height: 340px;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: .75rem;
-      color: #888;
-      font-size: .9rem;
-      border: 1px dashed #c5b99a;
       box-shadow: 0 12px 40px rgba(0,0,0,.1);
     }
-    .mockup-placeholder svg { opacity: .4; }
-    .mockup-placeholder span {
-      font-family: var(--font-display);
-      font-size: 1rem;
-      color: #a89070;
-      font-style: italic;
+    @media (max-width: 600px) {
+      .mockup-video { width: 100%; max-width: 100%; }
     }
 
-    .how-cta-wrap { text-align: center; margin-top: 2.5rem; }
+    .how-cta-wrap { text-align: center; margin-top: 1.5rem; }
 
     /* ══════════════════════════════════════════════
        TESTIMONIALS
