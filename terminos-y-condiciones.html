@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO & OG -->
+  <title>Términos y Condiciones — Tu Código Base</title>
+  <meta name="description" content="Términos y condiciones de Tu Código Base. Proceso de compra, métodos de pago, entrega de productos digitales, política de devoluciones y uso correcto del sitio." />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tucodigobase.com/terminos-y-condiciones" />
+  <meta property="og:title" content="Términos y Condiciones — Tu Código Base" />
+  <meta property="og:description" content="Términos y condiciones de contratación, entrega de productos digitales y política de devoluciones de Tu Código Base." />
+  <meta property="og:image" content="https://tucodigobase.com/images/2-logo-google-tu-codigo-base-carta-natal-astral.webp" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:image" content="https://tucodigobase.com/images/2-logo-google-tu-codigo-base-carta-natal-astral.webp" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/1-favicon-tu-codigo-base-carta-natal-astral.png" />
+  <link rel="shortcut icon" href="images/1-favicon-tu-codigo-base-carta-natal-astral.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─────────────────────────────────── */
+    :root {
+      --teal-deep:   #0e3f4b;
+      --teal-mid:    #729790;
+      --gold-deep:   #bd9048;
+      --gold-light:  #cfb180;
+      --cream:       #fffbef;
+      --white:       #ffffff;
+      --ink:         #0c0c0c;
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Open Sans', sans-serif;
+
+      --r-sm: 6px;
+      --r-md: 12px;
+      --r-lg: 24px;
+    }
+
+    /* ─── RESET ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    /* ─── UTILITIES ──────────────────────────────── */
+    .container { width: min(1100px, 92vw); margin-inline: auto; }
+    .text-center { text-align: center; }
+
+    /* ══════════════════════════════════════════════
+       NAV — LEGAL (solo logo, sin botón)
+    ══════════════════════════════════════════════ */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,251,239,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(189,144,72,.2);
+    }
+    .nav-inner {
+      display: flex; align-items: center;
+      padding-block: .2rem;
+    }
+    .nav-logo img {
+      height: 70px;
+      width: auto;
+    }
+
+    /* ══════════════════════════════════════════════
+       LEGAL PAGE
+    ══════════════════════════════════════════════ */
+    .legal {
+      padding-block: 4rem 5rem;
+    }
+    .legal-container {
+      width: min(760px, 92vw);
+      margin-inline: auto;
+    }
+    .legal-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 5vw, 3rem);
+      font-weight: 700;
+      color: var(--teal-deep);
+      text-align: center;
+      margin-bottom: 3.5rem;
+      line-height: 1.2;
+    }
+    .legal-title em {
+      font-style: italic;
+      color: var(--gold-deep);
+      font-weight: 700;
+    }
+    .legal-content h2 {
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--teal-deep);
+      margin-top: 2.2rem;
+      margin-bottom: 1rem;
+      letter-spacing: .01em;
+    }
+    .legal-content h2:first-child { margin-top: 0; }
+    .legal-content p {
+      font-size: .95rem;
+      color: #2a2a2a;
+      margin-bottom: 1rem;
+      text-align: justify;
+      hyphens: auto;
+    }
+    .legal-content p strong { color: var(--teal-deep); font-weight: 700; }
+    .legal-content ul {
+      margin: .5rem 0 1.2rem 1.5rem;
+      padding-left: .5rem;
+    }
+    .legal-content ul li {
+      font-size: .95rem;
+      color: #2a2a2a;
+      margin-bottom: .5rem;
+      padding-left: .3rem;
+    }
+    .legal-content ul li::marker { color: var(--gold-deep); }
+    .legal-content a {
+      color: var(--gold-deep);
+      text-decoration: underline;
+      font-weight: 500;
+    }
+    .legal-content a:hover { color: var(--teal-deep); }
+
+    /* ══════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════ */
+    .footer {
+      background: var(--teal-deep);
+      color: rgba(255,251,239,.6);
+      padding-block: 2.5rem;
+      font-size: .82rem;
+    }
+    .footer-inner {
+      display: flex; flex-direction: column;
+      align-items: center; gap: .9rem;
+      text-align: center;
+    }
+    .footer-email a {
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+    .footer-email a:hover { color: var(--white); }
+    .footer-links {
+      display: flex; flex-wrap: wrap;
+      gap: .3rem .75rem;
+      justify-content: center;
+      align-items: center;
+    }
+    .footer-links a {
+      color: rgba(255,251,239,.65);
+      transition: color .15s;
+    }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-links .sep { opacity: .35; }
+    .footer-copy {
+      color: rgba(255,251,239,.4);
+      font-size: .8rem;
+    }
+
+    /* ══════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════ */
+    @media (max-width: 600px) {
+      section { padding-block: 3.5rem; }
+
+      /* NAV móvil — logo centrado, sin esconderse al scroll */
+      .nav-inner { justify-content: center; padding-block: .5rem; }
+      .nav-logo img { height: 80px; }
+
+      /* Legal móvil */
+      .legal { padding-block: 2.5rem 3.5rem; }
+      .legal-title { margin-bottom: 2.5rem; }
+      .legal-content p { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════ NAV ════════════ -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo" aria-label="Tu Código Base — Inicio">
+        <img src="images/3-logo-web-tu-codigo-base-carta-natal-astral-1.png"
+             alt="Tu Código Base — Tu carta natal descifrada"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
+        <span style="display:none; font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--teal-deep); letter-spacing:.02em;">
+          TU CÓDIGO BASE
+        </span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- ════════════ LEGAL CONTENT ════════════ -->
+  <section class="legal">
+    <div class="legal-container">
+
+      <h1 class="legal-title">Términos y <em>Condiciones</em></h1>
+
+      <div class="legal-content">
+
+        <p>Estos Términos y Condiciones regulan el acceso, navegación y uso del sitio web <strong>tucodigobase.com</strong>, así como la contratación de productos o servicios digitales ofrecidos bajo la marca <strong>Tu Código Base</strong>, propiedad de PURA GROUP LLC.</p>
+        <p>Al acceder o realizar una compra en este sitio web, el usuario acepta plenamente las condiciones aquí descritas.</p>
+
+        <h2>1. Objeto:</h2>
+        <p>El presente documento establece las condiciones generales que regulan la venta y el uso de los productos digitales ofrecidos por <strong>Tu Código Base</strong>, incluyendo materiales descargables, informes personalizados, sesiones, aplicaciones o cualquier contenido digital similar.</p>
+        <p>Al realizar una compra o utilizar este sitio, el usuario reconoce haber leído, comprendido y aceptado estos Términos y Condiciones.</p>
+
+        <h2>2. Naturaleza de los productos:</h2>
+        <p>Los productos y servicios ofrecidos en <strong>tucodigobase.com</strong> son principalmente digitales y/o personalizado, elaborados de manera individual para cada cliente y entregados mediante medios electrónicos (correo electrónico o acceso online).</p>
+        <p>No obstante, algunos productos podrán contar con versiones físicas o impresas que serán gestionadas y enviadas directamente por empresas colaboradoras o proveedores externos de impresión y logística. En tales casos, <strong>Tu Código Base</strong> podrá actuar como intermediario en la tramitación del pedido, mientras que la producción, la gestión logística y los plazos de entrega dependerán directamente de dichos proveedores externos.</p>
+
+        <h2>3. Proceso de compra:</h2>
+        <p>1. El usuario seleccionará el producto deseado y completará el proceso de pago mediante las plataformas disponibles.</p>
+        <p>2. Una vez confirmado el pago, y en los casos en los que sea necesario, recibidos los datos solicitados al usuario, <strong>Tu Código Base</strong> iniciará la preparación del producto.</p>
+        <p>3. Los plazos y el método de entrega serán los indicados en la página específica de cada producto y se notificará por correo electrónico.</p>
+        <p>4. La compra se considera válida y efectiva desde el momento de la confirmación del pago, independientemente de que el usuario facilite o no posteriormente los datos necesarios para la elaboración del producto.</p>
+
+        <h2>4. Métodos de pago:</h2>
+        <p>Los pagos se realizan a través de plataformas seguras de terceros, como Stripe o PayPal, que permiten el uso de tarjetas Visa, Mastercard, American Express, Discover, así como pagos directos a través de cuentas PayPal verificadas.</p>
+        <p><strong>tucodigobase.com</strong> no almacena ni tiene acceso a los datos bancarios ni de tarjetas del usuario. Toda la información de pago se gestiona de forma cifrada y segura en los servidores de los proveedores de pago.</p>
+
+        <h2>5. Entrega de los productos digitales:</h2>
+        <p>La entrega de los productos digitales se realizará dentro del plazo indicado en la página de cada producto.</p>
+        <p>En los productos que requieren información previa del usuario, el plazo de entrega comenzará a contar desde el momento en que el usuario facilite correctamente todos los datos solicitados.</p>
+        <p>En los productos que no se requiera información adicional, el plazo comenzará a contar desde la confirmación del pago.</p>
+        <p>La entrega se efectuará por medios electrónicos (email o acceso online), según se indique en cada caso.</p>
+
+        <h2>6. Política de devoluciones y reembolsos:</h2>
+        <p>Dado que los productos y servicios ofrecidos en <strong>Tu Código Base</strong> pueden ser digitales y personalizados, no se admiten devoluciones ni reembolsos una vez confirmado el pago, de conformidad con la normativa aplicable a contenidos digitales y servicios personalizados.</p>
+        <p>En el caso de productos digitales personalizados, el usuario entiende y acepta que:</p>
+        <ul>
+          <li>La compra queda confirmada desde el momento de pago.</li>
+          <li>La falta de envío de los datos necesarios por parte del usuario no dará derecho a devolución ni reembolso.</li>
+          <li>El producto se considerará correctamente entregado cuando el contenido haya sido enviado al correo electrónico facilitado por el usuario o puesto a su disposición mediante el sistema indicado en la página de compra.</li>
+        </ul>
+        <p>Las incidencias técnicas relacionadas con el acceso al contenido deberán comunicarse para su resolución y no constituirán causa automática de reembolso.</p>
+        <p>Solo se contemplarán reembolsos en los siguientes casos excepcionales:</p>
+        <ul>
+          <li>Error técnico atribuible a <strong>Tu Código Base</strong> que imposibilite de forma permanente la entrega del contenido adquirido.</li>
+          <li>Doble cobro o fallo en la transacción debidamente confirmado por la pasarela de pago.</li>
+        </ul>
+        <p>No se considerarán causa de reembolso los cambios de opinión, la falta de envío de la información necesaria por parte del usuario, problemas técnicos ajenos a <strong>Tu Código Base</strong>, ni la percepción subjetiva del contenido recibido.</p>
+        <p>Las solicitudes de revisión deberán enviarse a <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a> en un plazo máximo de <strong>7 días naturales</strong> desde la fecha de compra, indicando el motivo de la solicitud y los datos de la transacción.</p>
+
+        <h2>7. Propiedad intelectual:</h2>
+        <p>Todos los contenidos, textos, diseños, materiales descargables, vídeos, audios y herramientas disponibles en <strong>tucodigobase.com</strong> son propiedad de PURA GROUP LLC o de sus legítimos titulares, y están protegidos por las leyes internacionales de propiedad intelectual.</p>
+        <p>Queda estrictamente prohibida su reproducción, distribución, transformación o uso comercial sin autorización expresa y por escrito.</p>
+
+        <h2>8. Uso correcto del sitio web:</h2>
+        <p>El usuario se compromete a utilizar este sitio web y sus productos de manera lícita, ética y responsable.</p>
+        <p>Queda prohibido:</p>
+        <ul>
+          <li>Utilizar el contenido con fines ilícitos, comerciales o fraudulentos.</li>
+          <li>Compartir, revender o redistribuir los productos adquiridos.</li>
+          <li>Alterar, copiar o manipular el contenido digital entregado.</li>
+          <li>Introducir virus, malware o ejecutar ataques informáticos.</li>
+        </ul>
+        <p><strong>Tu Código Base</strong> se reserva el derecho de suspender o cancelar el acceso a cualquier usuario que incumpla estas condiciones, sin derecho a reembolso.</p>
+
+        <h2>9. Responsabilidad:</h2>
+        <p>Los productos y servicios ofrecidos por <strong>Tu Código Base</strong> están diseñados para ofrecer claridad, autoconocimiento y desarrollo personal. No sustituyen ningún tipo de diagnóstico o tratamiento médico, psicológico o psiquiátrico, ni garantizan resultados concretos, ya que cada persona es responsable de su propio proceso y decisiones.</p>
+        <p>PURA GROUP LLC actúa con la máxima diligencia para mantener la calidad, seguridad y actualización de los contenidos, pero no puede garantizar la ausencia total de errores técnicos o interpretativos, ni asumir responsabilidad por el uso que cada usuario haga de la información.</p>
+
+        <h2>10. Legislación aplicable:</h2>
+        <p>El uso de este sitio web y la contratación de productos digitales se rigen por la normativa internacional de comercio electrónico y por las leyes vigentes en el país de constitución de PURA GROUP LLC.</p>
+        <p><strong>Tu Código Base</strong> actúa conforme a los estándares internacionales de transparencia, protección de datos y consumo digital aplicables en los países donde opera.</p>
+
+        <h2>11. Contacto:</h2>
+        <p>Para cualquier duda, incidencia o solicitud relacionada con estos Términos y Condiciones, puedes escribir a <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>.</p>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ FOOTER ════════════ -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="footer-email">
+        <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>
+      </p>
+      <nav class="footer-links" aria-label="Legal">
+        <a href="/aviso-legal">Aviso legal</a>
+        <span class="sep">|</span>
+        <a href="/politica-de-privacidad">Política de privacidad</a>
+        <span class="sep">|</span>
+        <a href="/politica-de-cookies">Política de cookies</a>
+        <span class="sep">|</span>
+        <a href="/terminos-y-condiciones">Términos y condiciones</a>
+      </nav>
+      <p class="footer-copy">
+        © 2026 TU CÓDIGO BASE. Todos los derechos reservados.<br>
+        Operado por Pura Group LLC
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
