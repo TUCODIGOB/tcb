@@ -1556,11 +1556,7 @@ function descargarPDF() {
 
       // ── PAG 22 PRODUCTO 2 ──────────────────────────────────────────────────
       doc.addPage();
-      doc.setFillColor(255, 255, 255);
-      doc.rect(0, 0, W, H, 'F');
-      doc.setDrawColor(207, 177, 128);
-      doc.setLineWidth(0.5);
-      doc.rect(6, 6, W-12, H-12);
+      doc.addImage('/images/8a-proximo-paso-pdf.jpg', 'JPEG', 0, 0, W, H);
       addPageNum(22);
 
       // ── PAG 23 CONTRAPORTADA ───────────────────────────────────────────────
