@@ -2075,7 +2075,23 @@ function descargarPDF() {
 
       var fileName = 'TuDisenoDeOrigen_' + fx(nombre).replace(/\s+/g, '_') + '.pdf';
       doc.save(fileName);
-
+// Subir PDF a Vercel Blob + enviar email al cliente
+      try {
+        var pdfBase64 = doc.output('datauristring');
+        var urlParams = new URLSearchParams(window.location.search);
+        var sessionId = urlParams.get('session_id');
+        fetch('/api/save-pdf', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            session_id: sessionId,
+            pdfBase64: pdfBase64,
+            nombre: nombre
+          })
+        }).catch(function(err) { console.warn('save-pdf falló:', err); });
+      } catch(saveErr) {
+        console.warn('No se pudo subir el PDF al servidor:', saveErr);
+      }
     } catch(e) {
       console.error('PDF error:', e);
       alert('Error generando el PDF: ' + e.message);
