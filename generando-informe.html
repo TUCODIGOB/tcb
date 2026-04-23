@@ -380,13 +380,47 @@ function showError(msg) {
     return;
   }
 
-  // 3. Verificar que el session_id sea válido y el pago esté confirmado
-  // TODO (próximo paso): llamar a /api/verify-payment con el session_id
-  // Por ahora, asumimos que si llegó con session_id de Stripe, es válido
-  // En la siguiente fase del proyecto implementaremos la verificación real con webhook
-  
-  // Simulamos una pequeña espera para que la pantalla de verificación sea visible
-  await new Promise(r => setTimeout(r, 1200));
+  // 3. Verificar el pago con Stripe a través de nuestra API
+  let verificado = null;
+  try {
+    const resp = await fetch('/api/verify-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId }),
+    });
+    verificado = await resp.json().catch(() => ({ ok: false }));
+    if (!resp.ok || !verificado.ok) {
+      showError('No hemos podido verificar tu pago. Si acabas de pagar, espera unos segundos y recarga esta página. Si el problema persiste, escríbenos a hola@tucodigobase.com');
+      return;
+    }
+  } catch(e) {
+    showError('No hemos podido verificar tu pago. Por favor recarga la página o escríbenos a hola@tucodigobase.com');
+    return;
+  }
+
+  // Si localStorage no tiene datos, usamos los metadata de Stripe como fallback
+  if ((!pedido || !pedido.nombre || !pedido.fecha || !pedido.hora) && verificado.metadata) {
+    const m = verificado.metadata;
+    if (m.nombre && m.fecha && m.hora) {
+      pedido = {
+        nombre: m.nombre,
+        sexo: m.sexo,
+        fecha: m.fecha,
+        hora: m.hora,
+        municipio: m.municipio,
+        provincia: m.provincia,
+        pais: m.pais,
+        email: verificado.email,
+        telefonoCompleto: m.telefono,
+        edadCalculada: parseInt(m.edad) || 0,
+      };
+    }
+  }
+
+  if (!pedido || !pedido.nombre || !pedido.fecha || !pedido.hora) {
+    showError('No encontramos los datos de tu pedido. Por favor escríbenos a hola@tucodigobase.com y te enviaremos el informe manualmente.');
+    return;
+  }
 
   // 4. Pasar a pantalla de generación
   showScreen('screenGenerate');
