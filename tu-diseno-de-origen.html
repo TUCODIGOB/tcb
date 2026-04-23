@@ -565,13 +565,6 @@
   </footer>
 
   <script>
-    // ═════════════════════════════════════════════════════════
-    // CONFIGURACIÓN
-    // ═════════════════════════════════════════════════════════
-    // URL del Payment Link de Stripe (MODO TEST)
-    const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_00weV59hu5kqghU9K4f3a00';
-    // ═════════════════════════════════════════════════════════
-
     // Tooltip tap en móvil
     const helpHora = document.getElementById('helpHora');
     helpHora.addEventListener('click', (e) => {
@@ -712,10 +705,33 @@
 
       btn.textContent = 'Redirigiendo al pago seguro...';
 
-      // Redirigimos a Stripe
-      // Pasamos el email prellenado a Stripe con el parámetro prefilled_email
-      const stripeUrl = STRIPE_PAYMENT_LINK + '?prefilled_email=' + encodeURIComponent(datos.email);
-      window.location.href = stripeUrl;
+      // Llamamos a nuestra API que crea la sesión de Stripe con los datos del formulario
+      try {
+        const resp = await fetch('/api/create-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(datos),
+        });
+
+        if (!resp.ok) {
+          const errData = await resp.json().catch(() => ({}));
+          throw new Error(errData.error || 'No se pudo iniciar el pago');
+        }
+
+        const { url } = await resp.json();
+        if (!url) throw new Error('Respuesta inválida del servidor');
+
+        // Redirigimos al cliente a Stripe
+        window.location.href = url;
+      } catch (err) {
+        console.error('Error create-checkout:', err);
+        const banner = document.getElementById('errorBanner');
+        banner.textContent = 'No hemos podido iniciar el pago. Por favor inténtalo de nuevo en unos segundos. Si el problema persiste, escríbenos a hola@tucodigobase.com';
+        banner.classList.add('show');
+        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        btn.disabled = false;
+        btn.textContent = 'Pagar y generar mi informe';
+      }
     });
 
     function calcularEdad(fechaISO) {
