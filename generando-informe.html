@@ -317,6 +317,9 @@
         <h1>Tu informe <em>está listo</em></h1>
         <p id="readyNombre" style="font-family: var(--font-display); font-size: 1.2rem; color: var(--gold-deep); font-style: italic; margin-bottom: 1.5rem; text-transform: uppercase;"></p>
         <button class="btn-download" id="btnPDF" onclick="descargarPDF()">⬇ Descargar mi PDF</button>
+<p style="margin-top: 1rem; font-size: .9rem; color: #666; text-align: center;">
+  También te lo hemos enviado por email, revisa tu carpeta de spam si no lo ves.
+</p>
         <div class="info-box">
           <strong>¿Tienes algún problema con la descarga?</strong><br>
           Escríbenos a <a href="mailto:hola@tucodigobase.com" style="color: var(--gold-deep);">hola@tucodigobase.com</a> indicando tu nombre, número de teléfono y email de compra, contactaremos contigo.
@@ -330,14 +333,14 @@
 <section id="screenError" class="screen">
   <div class="container">
     <div class="screen-inner">
-      <h1>No hemos podido <em>verificar</em> tu acceso</h1>
+      <h1>No hemos podido verificar tu acceso</h1>
       <p id="errorMsg">Parece que llegaste a esta página sin completar el pago.</p>
       <div class="error-box">
-        <strong>¿Acabas de realizar el pago?</strong><br><br>
-        Si has pagado correctamente y estás viendo este mensaje, por favor escríbenos a <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a> con tu nombre y el email que usaste para pagar. Te generaremos el informe manualmente.
-        <br><br>
         <strong>¿Aún no has pagado?</strong><br>
         <a href="/tu-diseno-de-origen">Vuelve al formulario de compra →</a>
+        <br><br>
+        <strong>¿Acabas de realizar el pago?</strong><br><br>
+        Si has pagado correctamente y estás viendo este mensaje, por favor escríbenos a <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a> con tu nombre, tu número de teléfono y el email que usaste para pagar, contactaremos contigo.
       </div>
     </div>
   </div>
@@ -388,7 +391,7 @@ function showError(msg) {
 
   if (!sessionId) {
     // Sin session_id → pantalla de error
-    showError('Parece que llegaste a esta página sin completar el pago. Por favor vuelve al formulario.');
+    showError('Parece que llegaste a esta página sin completar el pago, por favor vuelve al formulario.');
     return;
   }
 
