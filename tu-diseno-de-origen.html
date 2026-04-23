@@ -501,7 +501,7 @@
               </select>
               <input type="tel" id="telefono" name="telefono" placeholder="Número de teléfono" autocomplete="tel" required>
             </div>
-            <div class="field-error" id="err-telefono">Introduce un número de teléfono válido.</div>
+            <div class="field-error" id="err-telefono">Introduce un número de teléfono válido para el país seleccionado.</div>
           </div>
 
           <div class="field-row">
@@ -707,9 +707,39 @@
     function validarEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
-    function validarTelefono(tel) {
+    // Longitudes válidas de teléfono por prefijo (dígitos sin prefijo)
+    const TELEFONO_LONGITUDES = {
+      '+34': [9],        // España
+      '+52': [10],       // México
+      '+54': [10],       // Argentina
+      '+56': [9],        // Chile
+      '+57': [10],       // Colombia
+      '+58': [10],       // Venezuela
+      '+51': [9],        // Perú
+      '+593': [9],       // Ecuador
+      '+598': [8, 9],    // Uruguay
+      '+595': [9],       // Paraguay
+      '+591': [8],       // Bolivia
+      '+502': [8],       // Guatemala
+      '+503': [8],       // El Salvador
+      '+504': [8],       // Honduras
+      '+505': [8],       // Nicaragua
+      '+506': [8],       // Costa Rica
+      '+507': [7, 8],    // Panamá
+      '+1':   [10],      // USA/Canadá
+      '+33':  [9],       // Francia
+      '+44':  [10, 11],  // Reino Unido
+      '+49':  [10, 11],  // Alemania
+      '+351': [9],       // Portugal
+      '+39':  [9, 10],   // Italia
+    };
+
+    function validarTelefono(tel, prefijo) {
       const limpio = tel.replace(/[\s\-()]/g, '');
-      return /^\d{6,15}$/.test(limpio);
+      if (!/^\d+$/.test(limpio)) return false;
+      const longitudes = TELEFONO_LONGITUDES[prefijo];
+      if (!longitudes) return limpio.length >= 7 && limpio.length <= 15;
+      return longitudes.includes(limpio.length);
     }
 
     // Validar lugar con Nominatim (OpenStreetMap) — gratis
@@ -765,7 +795,7 @@
       if (!datos.pais) { showError('pais'); valido = false; }
       if (!validarEmail(datos.email)) { showError('email'); valido = false; }
       if (datos.email !== datos.email2 || !datos.email2) { showError('email2'); valido = false; }
-      if (!validarTelefono(datos.telefono)) { showError('telefono'); valido = false; }
+      if (!validarTelefono(datos.telefono, datos.prefijo)) { showError('telefono'); valido = false; }
       if (!datos.politica) {
         document.getElementById('politicaField').classList.add('error');
         valido = false;
