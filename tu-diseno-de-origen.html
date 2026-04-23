@@ -79,8 +79,7 @@
       line-height: 1.2;
       margin-bottom: 1rem;
     }
-    .hero h1 em {
-      font-style: italic;
+    .hero h1 {
       color: var(--gold-deep);
     }
     .hero p {
@@ -136,6 +135,26 @@
       text-transform: uppercase;
       letter-spacing: .06em;
       margin-bottom: .4rem;
+    }
+.date-selects {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr 1fr;
+      gap: 0.5rem;
+    }
+    .date-selects select {
+      width: 100%;
+      padding: 0.9rem 0.6rem;
+      border: 1.5px solid rgba(189,144,72,.4);
+      border-radius: var(--r-sm);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      background: var(--white);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .date-selects select:focus {
+      outline: none;
+      border-color: var(--gold-deep);
     }
     .field input,
     .field select {
@@ -397,8 +416,8 @@
   <!-- HERO -->
   <section class="hero">
     <div class="container">
-      <h1>Completa tus <em>datos</em></h1>
-      <p>Rellena con precisión los datos de tu nacimiento. Cuanto más exactos sean, más preciso será tu Diseño de Origen.</p>
+      <h1 class="form-title">Completa tus datos</h1>
+      
     </div>
   </section>
 
@@ -406,88 +425,30 @@
   <section class="form-wrap">
     <div class="container">
       <div class="form-card">
-        <h2>Datos de nacimiento</h2>
-        <p class="subtitle">Todos los campos son obligatorios</p>
+        
 
         <form id="formDatos" novalidate>
 
           <div class="field">
-            <label for="nombre">Nombre completo</label>
+            <label for="nombre">Nombre completo *</label>
             <input type="text" id="nombre" name="nombre" placeholder="Tu nombre y apellidos" autocomplete="name" required>
-            <div class="field-error" id="err-nombre">Por favor, escribe tu nombre completo.</div>
-          </div>
-
-          <div class="field-row">
-            <div class="field">
-              <label for="sexo">Sexo</label>
-              <select id="sexo" name="sexo" required>
-                <option value="">Selecciona...</option>
-                <option value="mujer">Mujer</option>
-                <option value="hombre">Hombre</option>
-                <option value="otro">Otro</option>
-              </select>
-              <div class="field-error" id="err-sexo">Selecciona una opción.</div>
-            </div>
-
-            <div class="field">
-              <label for="fecha">Fecha de nacimiento</label>
-              <input type="date" id="fecha" name="fecha" required>
-              <div class="field-error" id="err-fecha">Introduce una fecha válida.</div>
-            </div>
-          </div>
-
-          <div class="field-row">
-            <div class="field">
-              <label for="hora">
-                Hora de nacimiento
-                <span class="help-icon" tabindex="0" id="helpHora">
-                  ?
-                  <span class="tooltip">
-                    La hora exacta es clave para tu carta natal. Si no la recuerdas, consulta con familiares o pide tu Certificado de Nacimiento (es gratuito).<br><br>
-                    <strong>España:</strong> <a href="https://sede.mjusticia.gob.es/es/tramites/certificado-nacimiento" target="_blank" rel="noopener">sede.mjusticia.gob.es</a><br>
-                    <strong>Fuera de España:</strong> consulta el Registro Civil oficial de tu país.
-                  </span>
-                </span>
-              </label>
-              <input type="time" id="hora" name="hora" required>
-              <div class="field-error" id="err-hora">Introduce una hora válida.</div>
-            </div>
-
-            <div class="field">
-              <label for="municipio">Municipio</label>
-              <input type="text" id="municipio" name="municipio" placeholder="Ej: Sabadell" autocomplete="address-level2" required>
-              <div class="field-error" id="err-municipio">Escribe el municipio de nacimiento.</div>
-            </div>
-          </div>
-
-          <div class="field-row">
-            <div class="field">
-              <label for="provincia">Provincia / Estado</label>
-              <input type="text" id="provincia" name="provincia" placeholder="Ej: Barcelona" autocomplete="address-level1" required>
-              <div class="field-error" id="err-provincia">Escribe la provincia o estado.</div>
-            </div>
-
-            <div class="field">
-              <label for="pais">País</label>
-              <input type="text" id="pais" name="pais" placeholder="Ej: España" autocomplete="country-name" required>
-              <div class="field-error" id="err-pais">Escribe el país.</div>
-            </div>
+            <div class="field-error" id="err-nombre">Por favor, introduce tu nombre completo.</div>
           </div>
 
           <div class="field">
-            <label for="email">Email</label>
+            <label for="email">Email *</label>
             <input type="email" id="email" name="email" placeholder="tu@email.com" autocomplete="email" required>
-            <div class="field-error" id="err-email">Introduce un email válido.</div>
+            <div class="field-error" id="err-email">Por favor, introduce un email válido.</div>
           </div>
 
           <div class="field">
-            <label for="email2">Confirma tu email</label>
+            <label for="email2">Confirma tu email *</label>
             <input type="email" id="email2" name="email2" placeholder="Repite tu email" autocomplete="off" onpaste="return false;" ondrop="return false;" oncopy="return false;" required>
             <div class="field-error" id="err-email2">Los emails no coinciden. Escribe tu email manualmente.</div>
           </div>
 
           <div class="field">
-            <label for="telefono">Teléfono</label>
+            <label for="telefono">Teléfono *</label>
             <div class="phone-group">
               <select id="prefijo" name="prefijo" required>
                 <option value="+34">🇪🇸 +34</option>
@@ -514,9 +475,84 @@
                 <option value="+351">🇵🇹 +351</option>
                 <option value="+39">🇮🇹 +39</option>
               </select>
-              <input type="tel" id="telefono" name="telefono" placeholder="Tu número" autocomplete="tel" required>
+              <input type="tel" id="telefono" name="telefono" placeholder="Número de teléfono" autocomplete="tel" required>
             </div>
-            <div class="field-error" id="err-telefono">Introduce un teléfono válido.</div>
+            <div class="field-error" id="err-telefono">Introduce un número de teléfono válido.</div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="sexo">Sexo *</label>
+              <select id="sexo" name="sexo" required>
+                <option value="">Selecciona</option>
+                <option value="mujer">Mujer</option>
+                <option value="hombre">Hombre</option>
+                <option value="otro">Otro</option>
+              </select>
+              <div class="field-error" id="err-sexo">Por favor, selecciona una opción.</div>
+            </div>
+
+            <div class="field">
+              <label for="fecha">Fecha de nacimiento *</label>
+              <div class="date-selects">
+                <select id="fecha-dia" required><option value="">Día</option></select>
+                <select id="fecha-mes" required>
+                  <option value="">Mes</option>
+                  <option value="01">Enero</option>
+                  <option value="02">Febrero</option>
+                  <option value="03">Marzo</option>
+                  <option value="04">Abril</option>
+                  <option value="05">Mayo</option>
+                  <option value="06">Junio</option>
+                  <option value="07">Julio</option>
+                  <option value="08">Agosto</option>
+                  <option value="09">Septiembre</option>
+                  <option value="10">Octubre</option>
+                  <option value="11">Noviembre</option>
+                  <option value="12">Diciembre</option>
+                </select>
+                <select id="fecha-anio" required><option value="">Año</option></select>
+              </div>
+              <input type="hidden" id="fecha" name="fecha">
+              <div class="field-error" id="err-fecha">Por favor, introduce una fecha válida.</div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="hora">
+                Hora de nacimiento *
+                <span class="help-icon">?
+                  <span class="tooltip">Si no conoces la hora exacta, pide tu Certificado Literal de Nacimiento en el Registro Civil donde naciste. Es gratuito y rápido de pedir online.</span>
+                </span>
+              </label>
+              <div class="date-selects">
+                <select id="hora-h" required><option value="">Hora</option></select>
+                <select id="hora-m" required><option value="">Minuto</option></select>
+              </div>
+              <input type="hidden" id="hora" name="hora">
+              <div class="field-error" id="err-hora">Por favor, introduce una hora.</div>
+            </div>
+
+            <div class="field">
+              <label for="municipio">Municipio *</label>
+              <input type="text" id="municipio" name="municipio" placeholder="Ej: Madrid" required>
+              <div class="field-error" id="err-municipio">Por favor, introduce tu municipio de nacimiento.</div>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="provincia">Provincia / Estado *</label>
+              <input type="text" id="provincia" name="provincia" placeholder="Ej: Madrid" required>
+              <div class="field-error" id="err-provincia">Por favor, introduce tu provincia o estado.</div>
+            </div>
+
+            <div class="field">
+              <label for="pais">País *</label>
+              <input type="text" id="pais" name="pais" placeholder="Ej: España" required>
+              <div class="field-error" id="err-pais">Por favor, introduce tu país.</div>
+            </div>
           </div>
 
           <div class="checkbox-field" id="politicaField">
@@ -524,11 +560,6 @@
             <label for="politica">
               He leído y acepto la <a href="/politica-de-privacidad" target="_blank">Política de Privacidad</a> y los <a href="/terminos-y-condiciones" target="_blank">Términos y Condiciones</a>.
             </label>
-          </div>
-
-          <div class="price-info">
-            <span class="price">27€</span>
-            <span class="price-label">Pago único · Entrega inmediata tras el pago</span>
           </div>
 
           <button type="submit" class="btn-pay" id="btnPay">Pagar y generar mi informe</button>
@@ -565,6 +596,55 @@
   </footer>
 
   <script>
+// Rellenar desplegables de fecha y hora
+    (function() {
+      const dia = document.getElementById('fecha-dia');
+      for (let i = 1; i <= 31; i++) {
+        const o = document.createElement('option');
+        o.value = String(i).padStart(2, '0');
+        o.textContent = i;
+        dia.appendChild(o);
+      }
+      const anio = document.getElementById('fecha-anio');
+      const anioActual = new Date().getFullYear();
+      for (let i = anioActual; i >= 1925; i--) {
+        const o = document.createElement('option');
+        o.value = String(i);
+        o.textContent = i;
+        anio.appendChild(o);
+      }
+      const horaH = document.getElementById('hora-h');
+      for (let i = 0; i < 24; i++) {
+        const o = document.createElement('option');
+        o.value = String(i).padStart(2, '0');
+        o.textContent = String(i).padStart(2, '0');
+        horaH.appendChild(o);
+      }
+      const horaM = document.getElementById('hora-m');
+      for (let i = 0; i < 60; i++) {
+        const o = document.createElement('option');
+        o.value = String(i).padStart(2, '0');
+        o.textContent = String(i).padStart(2, '0');
+        horaM.appendChild(o);
+      }
+      function actualizarFecha() {
+        const d = document.getElementById('fecha-dia').value;
+        const m = document.getElementById('fecha-mes').value;
+        const y = document.getElementById('fecha-anio').value;
+        document.getElementById('fecha').value = (d && m && y) ? y + '-' + m + '-' + d : '';
+      }
+      function actualizarHora() {
+        const h = document.getElementById('hora-h').value;
+        const m = document.getElementById('hora-m').value;
+        document.getElementById('hora').value = (h && m) ? h + ':' + m : '';
+      }
+      ['fecha-dia','fecha-mes','fecha-anio'].forEach(id => {
+        document.getElementById(id).addEventListener('change', actualizarFecha);
+      });
+      ['hora-h','hora-m'].forEach(id => {
+        document.getElementById(id).addEventListener('change', actualizarHora);
+      });
+    })();
     // Tooltip tap en móvil
     const helpHora = document.getElementById('helpHora');
     helpHora.addEventListener('click', (e) => {
