@@ -116,6 +116,7 @@ async function guardarContactoBrevo(datos) {
   const body = {
     email: datos.email,
     attributes,
+    listIds: [3], // Lista "Tu Diseño de Origen" en Brevo
     updateEnabled: true, // si ya existe, actualiza
   };
 
