@@ -482,8 +482,8 @@
 
           <div class="field">
             <label for="email2">Confirma tu email</label>
-            <input type="email" id="email2" name="email2" placeholder="Repite tu email" autocomplete="email" required>
-            <div class="field-error" id="err-email2">Los emails no coinciden.</div>
+            <input type="email" id="email2" name="email2" placeholder="Repite tu email" autocomplete="off" onpaste="return false;" ondrop="return false;" oncopy="return false;" required>
+            <div class="field-error" id="err-email2">Los emails no coinciden. Escribe tu email manualmente.</div>
           </div>
 
           <div class="field">
@@ -610,8 +610,25 @@
       return /^\d{6,15}$/.test(limpio);
     }
 
+    // Validar lugar con Nominatim (OpenStreetMap) — gratis
+    async function validarLugar(municipio, provincia, pais) {
+      const query = [municipio, provincia, pais].filter(Boolean).join(', ');
+      try {
+        const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&format=json&limit=1&addressdetails=1';
+        const r = await fetch(url, { headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' } });
+        const data = await r.json();
+        if (data && data.length > 0) {
+          return { ok: true, lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+        }
+        return { ok: false };
+      } catch(e) {
+        // Si el servicio no responde, dejamos pasar (no penalizar por fallo externo)
+        return { ok: true, lat: 0, lon: 0, skipped: true };
+      }
+    }
+
     // Submit
-    document.getElementById('formDatos').addEventListener('submit', function(e) {
+    document.getElementById('formDatos').addEventListener('submit', async function(e) {
       e.preventDefault();
       clearAllErrors();
 
@@ -661,6 +678,27 @@
         return;
       }
 
+      // VALIDACIÓN DEL LUGAR antes de pagar
+      const btn = document.getElementById('btnPay');
+      btn.disabled = true;
+      btn.textContent = 'Verificando lugar de nacimiento...';
+
+      const lugarOk = await validarLugar(datos.municipio, datos.provincia, datos.pais);
+
+      if (!lugarOk.ok) {
+        // El lugar no se encontró → marcar los 3 campos en rojo
+        showError('municipio');
+        showError('provincia');
+        showError('pais');
+        const banner = document.getElementById('errorBanner');
+        banner.textContent = 'No hemos encontrado el lugar de nacimiento que has escrito. Por favor revisa el municipio, la provincia y el país (sin abreviaturas) antes de continuar.';
+        banner.classList.add('show');
+        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        btn.disabled = false;
+        btn.textContent = 'Pagar y generar mi informe';
+        return;
+      }
+
       // Todo válido → guardamos datos en localStorage y redirigimos a Stripe
       datos.telefonoCompleto = datos.prefijo + ' ' + datos.telefono;
       datos.edadCalculada = calcularEdad(datos.fecha);
@@ -672,9 +710,6 @@
         // Si falla localStorage, seguimos igual (el webhook de Stripe recogerá los datos vía email)
       }
 
-      // Bloqueamos el botón para evitar doble click
-      const btn = document.getElementById('btnPay');
-      btn.disabled = true;
       btn.textContent = 'Redirigiendo al pago seguro...';
 
       // Redirigimos a Stripe
