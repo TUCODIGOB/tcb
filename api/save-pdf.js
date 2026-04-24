@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { session_id, pdfBase64, nombre } = req.body;
+    const { session_id, pdfBase64, nombre, sexo } = req.body;
 
     if (!session_id || !pdfBase64) {
       return res.status(400).json({ error: 'Faltan datos' });
@@ -66,7 +66,8 @@ export default async function handler(req, res) {
 
     // 5. Enviar email al cliente
     try {
-      await enviarEmailCliente(email, nombreCliente, pdfUrl);
+      const sexoCliente = (sexo || session.metadata?.sexo || '').toString();
+      await enviarEmailCliente(email, nombreCliente, pdfUrl, sexoCliente);
     } catch (err) {
       console.error('Error enviando email cliente:', err);
       // Avisamos al admin
@@ -117,59 +118,84 @@ async function actualizarContactoBrevo(email, pdfUrl) {
 // ═════════════════════════════════════════════════════════════════
 // ENVIAR EMAIL AL CLIENTE CON EL LINK DEL PDF
 // ═════════════════════════════════════════════════════════════════
-async function enviarEmailCliente(email, nombre, pdfUrl) {
+async function enviarEmailCliente(email, nombre, pdfUrl, sexo) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
 
+  // Género para el texto del email
+  let deLos;
+  if (sexo === 'mujer') deLos = 'de las primeras';
+  else if (sexo === 'hombre') deLos = 'de los primeros';
+  else deLos = 'de los/as primeros/as';
+
   const html = `<!DOCTYPE html>
-<html>
-<head><meta charset="UTF-8"></head>
-<body style="margin:0;padding:0;background:#fffbef;font-family:Arial,Helvetica,sans-serif;color:#0c0c0c;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#fffbef;padding:40px 20px;">
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu Diseño de Origen</title>
+</head>
+<body style="margin:0;padding:0;background:#fffbef;font-family:Arial,Helvetica,sans-serif;color:#0c0c0c;-webkit-text-size-adjust:100%;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fffbef;padding:24px 12px;">
     <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:12px;box-shadow:0 4px 24px rgba(14,63,75,0.08);">
-        <tr><td style="padding:32px 40px 0 40px;text-align:center;">
-          <h1 style="font-family:Georgia,'Playfair Display',serif;color:#0e3f4b;font-size:28px;margin:0 0 8px 0;font-weight:700;">TU CÓDIGO BASE</h1>
-          <p style="color:#bd9048;font-size:13px;letter-spacing:3px;margin:0 0 32px 0;text-transform:uppercase;">Tu Diseño de Origen</p>
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;box-shadow:0 4px 24px rgba(14,63,75,0.08);overflow:hidden;">
+        <!-- CABECERO CON LOGO Y TÍTULO -->
+        <tr><td style="padding:32px 24px 16px 24px;text-align:center;background:#ffffff;">
+          <img src="https://tcb-iota.vercel.app/images/3-logo-email-tu-codigo-base-carta-natal-astral.png" alt="Tu Código Base" width="180" style="display:block;margin:0 auto 16px auto;max-width:180px;height:auto;border:0;">
+          <h1 style="font-family:Georgia,'Playfair Display',serif;color:#bd9048;font-size:32px;line-height:1.2;margin:0;font-weight:700;letter-spacing:0.5px;">
+            Tu Diseño de Origen
+          </h1>
         </td></tr>
-        <tr><td style="padding:0 40px;">
-          <h2 style="font-family:Georgia,'Playfair Display',serif;color:#0e3f4b;font-size:22px;margin:0 0 20px 0;font-weight:400;">
-            Hola <span style="color:#bd9048;font-style:italic;">${escapeHtml(nombre)}</span>,
-          </h2>
-          <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 16px 0;">
-            Gracias por confiar en nosotros ✨
+
+        <!-- CONTENIDO -->
+        <tr><td style="padding:32px 28px 16px 28px;">
+          <p style="font-size:17px;line-height:1.6;color:#0c0c0c;margin:0 0 20px 0;">
+            Hola <strong>${escapeHtml(nombre)}</strong>,
           </p>
-          <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 16px 0;">
-            Ya tienes <strong>Tu Diseño de Origen</strong> descargado, pero te dejamos aquí una copia de respaldo por si alguna vez lo necesitas.
+          <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 14px 0;">
+            Gracias por confiar en nosotros.
           </p>
-          <div style="text-align:center;margin:32px 0;">
-            <a href="${pdfUrl}" style="display:inline-block;background:linear-gradient(135deg,#bd9048,#cfb180);color:#ffffff;text-decoration:none;padding:16px 32px;border-radius:6px;font-size:16px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;box-shadow:0 4px 16px rgba(189,144,72,0.3);">
-              ⬇ Descargar mi Diseño de Origen
-            </a>
-          </div>
-          <p style="font-size:14px;line-height:1.6;color:#888;text-align:center;margin:0 0 32px 0;font-style:italic;">
-            Este enlace estará disponible durante 7 días.
+          <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 28px 0;">
+            Ya tienes <strong>Tu Diseño de Origen</strong> descargado, pero te dejamos aquí una copia de respaldo por si quieres guardarla de nuevo.
           </p>
-          <div style="background:#fffbef;border-left:3px solid #bd9048;padding:20px;border-radius:6px;margin:24px 0;">
-            <p style="font-size:15px;line-height:1.6;color:#333;margin:0 0 12px 0;">
-              <strong>Un consejo:</strong> cuando lo leas, no lo hagas con prisa. Busca un momento tranquilo. Lo que vas a descubrir no es información, es una forma nueva de entenderte.
+
+          <!-- BOTÓN -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+            <tr><td align="center" style="padding:8px 0 24px 0;">
+              <a href="${pdfUrl}" style="display:inline-block;background:#bd9048;color:#ffffff;text-decoration:none;padding:16px 34px;border-radius:6px;font-size:16px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;font-family:Arial,Helvetica,sans-serif;">
+                📎 Descargar mi Diseño de Origen
+              </a>
+            </td></tr>
+          </table>
+
+          <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 24px 0;">
+            <strong>Importante:</strong> este enlace estará disponible solo durante <strong>7 días</strong>. Pasado ese tiempo, la descarga dejará de estar activa, así que te recomendamos guardar el archivo cuanto antes.
+          </p>
+
+          <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 14px 0;">
+            <strong>Un consejo:</strong> cuando lo leas, no lo hagas con prisa. Busca un momento tranquilo. Lo que vas a descubrir no es información, es una forma nueva de entenderte.
+          </p>
+          <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 24px 0;">
+            Algunas áreas te van a resonar al instante, otras necesitarán que las releas, pero todas ellas tienen algo importante que decirte.
+          </p>
+
+          <div style="background:#f5f1e6;padding:14px 18px;border-radius:6px;margin:0 0 28px 0;">
+            <p style="font-size:14px;line-height:1.6;color:#555;margin:0;">
+              📌 Guarda esta dirección <strong>(hola@tucodigobase.com)</strong> en tus contactos. Así, cuando <strong>Tu Nueva Versión</strong> esté lista, serás ${deLos} en enterarte y no queremos que se pierda en spam.
             </p>
-            <p style="font-size:15px;line-height:1.6;color:#333;margin:0;">
-              Algunas áreas te van a resonar al instante, otras necesitarán que las releas, pero todas ellas tienen algo importante que decirte.
-            </p>
           </div>
-          <p style="font-size:14px;line-height:1.6;color:#666;margin:24px 0;">
-            📌 Guarda esta dirección (<strong>hola@tucodigobase.com</strong>) en tus contactos. Así, cuando <em>Tu Nueva Versión</em> esté lista, serás de los/as primeros/as en enterarte y no queremos que se pierda en spam.
-          </p>
-          <p style="font-size:16px;line-height:1.6;color:#333;margin:32px 0 8px 0;">
+
+          <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 6px 0;">
             Un abrazo,
           </p>
-          <p style="font-size:16px;line-height:1.6;color:#0e3f4b;margin:0 0 40px 0;font-weight:600;">
+          <p style="font-size:16px;line-height:1.6;color:#0e3f4b;margin:0 0 32px 0;font-weight:600;">
             El equipo de Tu Código Base
           </p>
         </td></tr>
-        <tr><td style="background:#0e3f4b;padding:24px 40px;text-align:center;border-radius:0 0 12px 12px;">
-          <p style="color:#cfb180;font-size:13px;margin:0 0 8px 0;">
+
+        <!-- FOOTER -->
+        <tr><td style="background:#0e3f4b;padding:20px 24px;text-align:center;">
+          <p style="color:#cfb180;font-size:13px;margin:0 0 6px 0;">
             <a href="mailto:hola@tucodigobase.com" style="color:#cfb180;text-decoration:none;">hola@tucodigobase.com</a>
           </p>
           <p style="color:rgba(255,251,239,0.5);font-size:11px;margin:0;">
@@ -185,7 +211,7 @@ async function enviarEmailCliente(email, nombre, pdfUrl) {
   const body = {
     sender: { email: 'hola@tucodigobase.com', name: 'Tu Código Base' },
     to: [{ email, name: nombre }],
-    subject: 'Tu Diseño de Origen (por si lo necesitas de nuevo) ✨',
+    subject: 'Tu Diseño de Origen (disponible durante 7 días) ✨',
     htmlContent: html,
   };
 
