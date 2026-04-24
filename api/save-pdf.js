@@ -41,7 +41,12 @@ const lugarCliente = (lugar || session.metadata?.municipio || '').toString();
 const edadCliente = String(edad || session.metadata?.edad || '');
 
     // 2. Limpiar base64 (quitar prefijo data:application/pdf;base64, si viene)
-    const base64Data = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
+    let base64Data = String(pdfBase64);
+const comma = base64Data.indexOf(',');
+if (base64Data.startsWith('data:') && comma > -1) {
+  base64Data = base64Data.substring(comma + 1);
+}
+base64Data = base64Data.replace(/[\r\n\t\s]/g, '');
 
     // Nombre del archivo adjunto
     const nombreArchivo = `TuDisenoDeOrigen_${nombreCliente.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
