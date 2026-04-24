@@ -92,14 +92,22 @@ async function actualizarContactoBrevo(email, { fechaCliente, horaCliente, lugar
   if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
 
   const attributes = {
-    ESTADO_INFORME: 'entregado',
-    SEXO: sexoCliente || '',
-    HORA_NAC: horaCliente || '',
-    LUGAR_NAC: lugarCliente || '',
-  };
+  ESTADO_INFORME: 'entregado',
+  NOMBRE: nombreCliente || '',
+  SEXO: sexoCliente || '',
+  HORA_NAC: horaCliente || '',
+  LUGAR_NAC: lugarCliente || '',
+};
 
-  if (fechaCliente) attributes.FECHA_NAC = fechaCliente;
-  if (edadCliente) attributes.EDAD = parseInt(edadCliente);
+if (edadCliente) attributes.EDAD = parseInt(edadCliente);
+
+if (fechaCliente) {
+  const meses = { 'enero':'01','febrero':'02','marzo':'03','abril':'04','mayo':'05','junio':'06','julio':'07','agosto':'08','septiembre':'09','octubre':'10','noviembre':'11','diciembre':'12' };
+  const partes = fechaCliente.match(/(\d+) de (\w+) de (\d+)/);
+  if (partes) {
+    attributes.FECHA_NAC = `${partes[3]}-${meses[partes[2]]}-${partes[1].padStart(2,'0')}`;
+  }
+}
 
   const resp = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
     method: 'PUT',
