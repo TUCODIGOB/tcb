@@ -1,15 +1,13 @@
 // ═════════════════════════════════════════════════════════════════
 // /api/save-pdf.js
-// Recibe el PDF desde el navegador, lo sube a Vercel Blob (7 días),
-// actualiza el contacto en Brevo con el link del PDF, y envía email.
+// Envía el PDF al cliente por email como ARCHIVO ADJUNTO.
+// Sin Vercel Blob, sin links externos.
 // ═════════════════════════════════════════════════════════════════
 
-import { put } from '@vercel/blob';
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Tamaño máximo 10MB (aprox)
 export const config = {
   api: {
     bodyParser: { sizeLimit: '10mb' },
@@ -36,65 +34,52 @@ export default async function handler(req, res) {
 
     const email = session.customer_email;
     const nombreCliente = (nombre || session.metadata?.nombre || 'Cliente').toString();
+    const sexoCliente = (sexo || session.metadata?.sexo || '').toString();
 
-    // 2. Convertir base64 a Buffer
+    // 2. Limpiar base64 (quitar prefijo data:application/pdf;base64, si viene)
     const base64Data = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
-    const pdfBuffer = Buffer.from(base64Data, 'base64');
 
-    // 3. Subir a Vercel Blob (PRIVADO)
-    const filename = `informes/${session_id}.pdf`;
+    // Nombre del archivo adjunto
+    const nombreArchivo = `TuDisenoDeOrigen_${nombreCliente.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
 
-    await put(filename, pdfBuffer, {
-      access: 'public',
-      contentType: 'application/pdf',
-      allowOverwrite: true,
-    });
-
-    // La URL pública del PDF pasa por nuestro endpoint de descarga
-    // (verifica session_id, pago y caducidad de 7 días)
-    const origin = (req.headers.origin || req.headers.referer || 'https://tcb-iota.vercel.app').replace(/\/$/, '');
-    const host = origin.startsWith('http') ? origin.split('/').slice(0, 3).join('/') : 'https://tcb-iota.vercel.app';
-    const pdfUrl = `${host}/api/download-pdf?session_id=${encodeURIComponent(session_id)}`;
-
-    // 4. Actualizar contacto en Brevo con la URL del PDF
+    // 3. Enviar email al cliente con el PDF adjunto
     try {
-      await actualizarContactoBrevo(email, pdfUrl);
-    } catch (err) {
-      console.error('Error actualizando Brevo:', err);
-      // No detenemos el flujo, el PDF ya está subido
-    }
-
-    // 5. Enviar email al cliente
-    try {
-      const sexoCliente = (sexo || session.metadata?.sexo || '').toString();
-      await enviarEmailCliente(email, nombreCliente, pdfUrl, sexoCliente);
+      await enviarEmailCliente(email, nombreCliente, sexoCliente, base64Data, nombreArchivo);
     } catch (err) {
       console.error('Error enviando email cliente:', err);
-      // Avisamos al admin
+      // Avisar al admin para envío manual
       await enviarEmailAdmin({
         asunto: `⚠️ URGENTE — Fallo enviando email de entrega — ${nombreCliente}`,
-        mensaje: `Cliente: ${email}\nNombre: ${nombreCliente}\nPDF: ${pdfUrl}\nError: ${err.message}\n\nRevisa y envíalo manualmente.`,
+        mensaje: `Cliente: ${email}\nNombre: ${nombreCliente}\nSession: ${session_id}\nError: ${err.message}\n\nRevisa y envíalo manualmente.`,
       }).catch(e => console.error('Tampoco se pudo avisar admin:', e));
+      return res.status(500).json({ error: 'No se pudo enviar el email' });
     }
 
-    return res.status(200).json({ ok: true, url: pdfUrl });
+    // 4. Actualizar contacto en Brevo con estado "entregado"
+    try {
+      await actualizarContactoBrevo(email);
+    } catch (err) {
+      console.error('Error actualizando Brevo:', err);
+      // No detenemos el flujo, el email ya se envió
+    }
+
+    return res.status(200).json({ ok: true });
 
   } catch (error) {
     console.error('Error save-pdf:', error);
-    return res.status(500).json({ error: 'No se pudo guardar el PDF' });
+    return res.status(500).json({ error: 'Error procesando el PDF' });
   }
 }
 
 // ═════════════════════════════════════════════════════════════════
-// ACTUALIZAR CONTACTO EN BREVO (añadir URL_PDF)
+// ACTUALIZAR CONTACTO EN BREVO (marcar informe como entregado)
 // ═════════════════════════════════════════════════════════════════
-async function actualizarContactoBrevo(email, pdfUrl) {
+async function actualizarContactoBrevo(email) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
 
   const body = {
     attributes: {
-      URL_PDF: pdfUrl,
       ESTADO_INFORME: 'entregado',
     },
   };
@@ -116,9 +101,9 @@ async function actualizarContactoBrevo(email, pdfUrl) {
 }
 
 // ═════════════════════════════════════════════════════════════════
-// ENVIAR EMAIL AL CLIENTE CON EL LINK DEL PDF
+// ENVIAR EMAIL AL CLIENTE CON PDF ADJUNTO
 // ═════════════════════════════════════════════════════════════════
-async function enviarEmailCliente(email, nombre, pdfUrl, sexo) {
+async function enviarEmailCliente(email, nombre, sexo, pdfBase64, nombreArchivo) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
 
@@ -156,20 +141,7 @@ async function enviarEmailCliente(email, nombre, pdfUrl, sexo) {
             Gracias por confiar en nosotros.
           </p>
           <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 28px 0;">
-            Ya tienes <strong>Tu Diseño de Origen</strong> descargado, pero te dejamos aquí una copia de respaldo por si quieres guardarla de nuevo.
-          </p>
-
-          <!-- BOTÓN -->
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-            <tr><td align="center" style="padding:8px 0 24px 0;">
-              <a href="${pdfUrl}" style="display:inline-block;background:#bd9048;color:#ffffff;text-decoration:none;padding:16px 34px;border-radius:6px;font-size:16px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;font-family:Arial,Helvetica,sans-serif;">
-                📎 Descargar mi Diseño de Origen
-              </a>
-            </td></tr>
-          </table>
-
-          <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 24px 0;">
-            <strong>Importante:</strong> este enlace estará disponible solo durante <strong>7 días</strong>. Pasado ese tiempo, la descarga dejará de estar activa, así que te recomendamos guardar el archivo cuanto antes.
+            Ya tienes <strong>Tu Diseño de Origen</strong> descargado, pero te dejamos aquí una copia de respaldo en formato PDF adjunto a este email, por si quieres guardarla.
           </p>
 
           <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 14px 0;">
@@ -211,8 +183,14 @@ async function enviarEmailCliente(email, nombre, pdfUrl, sexo) {
   const body = {
     sender: { email: 'hola@tucodigobase.com', name: 'Tu Código Base' },
     to: [{ email, name: nombre }],
-    subject: 'Tu Diseño de Origen (disponible durante 7 días) ✨',
+    subject: 'Tu Diseño de Origen ✨',
     htmlContent: html,
+    attachment: [
+      {
+        name: nombreArchivo,
+        content: pdfBase64,
+      },
+    ],
   };
 
   const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
