@@ -41,18 +41,20 @@ export default async function handler(req, res) {
     const base64Data = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
     const pdfBuffer = Buffer.from(base64Data, 'base64');
 
-    // 3. Subir a Vercel Blob
-    // El nombre del archivo incluye el session_id para evitar colisiones
+    // 3. Subir a Vercel Blob (PRIVADO)
     const filename = `informes/${session_id}.pdf`;
 
-    const blob = await put(filename, pdfBuffer, {
-      access: 'public',
+    await put(filename, pdfBuffer, {
+      access: 'private',
       contentType: 'application/pdf',
-      addRandomSuffix: false,
       allowOverwrite: true,
     });
 
-    const pdfUrl = blob.url;
+    // La URL pública del PDF pasa por nuestro endpoint de descarga
+    // (verifica session_id, pago y caducidad de 7 días)
+    const origin = (req.headers.origin || req.headers.referer || 'https://tcb-iota.vercel.app').replace(/\/$/, '');
+    const host = origin.startsWith('http') ? origin.split('/').slice(0, 3).join('/') : 'https://tcb-iota.vercel.app';
+    const pdfUrl = `${host}/api/download-pdf?session_id=${encodeURIComponent(session_id)}`;
 
     // 4. Actualizar contacto en Brevo con la URL del PDF
     try {
