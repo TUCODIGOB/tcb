@@ -71,7 +71,7 @@ export default async function handler(req, res) {
 
     // 4. Actualizar contacto en Brevo
     try {
-      await actualizarContactoBrevo(email, { fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente });
+      await actualizarContactoBrevo(email, { nombreCliente, fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente });
     } catch (err) {
       console.error('[save-pdf] Error actualizando Brevo:', err.message);
     }
@@ -87,7 +87,7 @@ export default async function handler(req, res) {
 // ═════════════════════════════════════════════════════════════════
 // ACTUALIZAR CONTACTO EN BREVO
 // ═════════════════════════════════════════════════════════════════
-async function actualizarContactoBrevo(email, { fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente } = {}) {
+async function actualizarContactoBrevo(email, { nombreCliente, fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente } = {}) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
 
