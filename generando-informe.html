@@ -2082,11 +2082,15 @@ function descargarPDF() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            session_id: sessionId,
-            pdfBase64: pdfBase64,
-            nombre: nombre,
-            sexo: (_G && _G.sexo) || ''
-          })
+  session_id: sessionId,
+  pdfBase64: pdfBase64,
+  nombre: nombre,
+  sexo: (_G && _G.sexo) || '',
+  fecha: (_G && _G.fechaNice) || '',
+  hora: (_G && _G.hora) || '',
+  lugar: (_G && _G.lugar) || '',
+  edad: (_G && _G.edad) || ''
+})
         }).catch(function(err) { console.warn('save-pdf falló:', err); });
       } catch(saveErr) {
         console.warn('No se pudo subir el PDF al servidor:', saveErr);
