@@ -5,6 +5,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
+import { head, put } from '@vercel/blob';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -34,6 +35,11 @@ export default async function handler(req, res) {
 
     // Devolver los metadata (datos del formulario) para que generando-informe
     // los use para generar el PDF (aunque el usuario haya borrado localStorage)
+    try {
+      await head(`usado/${session_id}`);
+      return res.status(403).json({ ok: false, error: 'Este informe ya fue descargado.' });
+    } catch(e) {}
+
     return res.status(200).json({
       ok: true,
       email: session.customer_email,
