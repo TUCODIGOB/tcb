@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     const filename = `informes/${session_id}.pdf`;
 
     await put(filename, pdfBuffer, {
-      access: 'private',
+      access: 'public',
       contentType: 'application/pdf',
       allowOverwrite: true,
     });
