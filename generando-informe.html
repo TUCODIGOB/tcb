@@ -2086,7 +2086,8 @@ function descargarPDF() {
           body: JSON.stringify({
             session_id: sessionId,
             pdfBase64: pdfBase64,
-            nombre: nombre
+            nombre: nombre,
+            sexo: (_G && _G.sexo) || ''
           })
         }).catch(function(err) { console.warn('save-pdf falló:', err); });
       } catch(saveErr) {
