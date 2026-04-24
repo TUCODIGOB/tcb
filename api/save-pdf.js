@@ -4,7 +4,6 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
-import { put } from '@vercel/blob';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -75,12 +74,6 @@ export default async function handler(req, res) {
       await actualizarContactoBrevo(email, { nombreCliente, fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente });
     } catch (err) {
       console.error('[save-pdf] Error actualizando Brevo:', err.message);
-    }
-
-    try {
-      await put(`usado/${session_id}`, 'usado', { access: 'public', allowOverwrite: true });
-    } catch(e) {
-      console.error('[save-pdf] Error marcando sesión:', e.message);
     }
 
     return res.status(200).json({ ok: true });
@@ -266,3 +259,4 @@ async function enviarEmailAdmin({ asunto, mensaje }) {
     body: JSON.stringify(body),
   });
 }
+
