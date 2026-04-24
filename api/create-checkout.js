@@ -37,7 +37,7 @@ export default async function handler(req, res) {
             currency: 'eur',
             product_data: {
               name: 'Tu Diseño de Origen',
-              description: 'Estudio 100% personalizado calculado desde tu carta natal real',
+              description: 'Pago único · Entrega inmediata tras el pago',
             },
             unit_amount: PRECIO_CENTIMOS,
           },
