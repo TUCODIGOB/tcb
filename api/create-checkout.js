@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     }
 
     // Construir origen dinámico (para redirecciones)
-    const origin = req.headers.origin || 'https://tcb-iota.vercel.app';
+    const origin = req.headers.origin || 'https://tucodigobase.com';
 
     // Crear sesión de Stripe Checkout
     const session = await stripe.checkout.sessions.create({
