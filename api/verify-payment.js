@@ -5,7 +5,6 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
-import { head, put } from '@vercel/blob';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -35,14 +34,34 @@ export default async function handler(req, res) {
 
     // Devolver los metadata (datos del formulario) para que generando-informe
     // los use para generar el PDF (aunque el usuario haya borrado localStorage)
+    const email = session.customer_email;
+    const BREVO_API_KEY = process.env.BREVO_API_KEY;
+
+    // Comprobar si ya fue procesado
     try {
-      await head(`usado/${session_id}`);
-      return res.status(403).json({ ok: false, error: 'Este informe ya fue descargado.' });
+      const brevoResp = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+        headers: { 'accept': 'application/json', 'api-key': BREVO_API_KEY },
+      });
+      if (brevoResp.ok) {
+        const contacto = await brevoResp.json();
+        if (contacto.attributes?.P1_COMPRADO === 'si') {
+          return res.status(403).json({ ok: false, error: 'Este informe ya fue generado.' });
+        }
+      }
+    } catch(e) {}
+
+    // Marcar inmediatamente como usado
+    try {
+      await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+        method: 'PUT',
+        headers: { 'accept': 'application/json', 'content-type': 'application/json', 'api-key': BREVO_API_KEY },
+        body: JSON.stringify({ attributes: { P1_COMPRADO: 'si' } }),
+      });
     } catch(e) {}
 
     return res.status(200).json({
       ok: true,
-      email: session.customer_email,
+      email,
       metadata: session.metadata || {},
     });
 
