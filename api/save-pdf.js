@@ -1,6 +1,7 @@
 // ═════════════════════════════════════════════════════════════════
 // /api/save-pdf.js
-// Envía el PDF al cliente por email como ARCHIVO ADJUNTO (vía Brevo).
+// Envía el PDF al cliente por email como ARCHIVO ADJUNTO.
+// Sin Vercel Blob, sin links externos.
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
@@ -19,7 +20,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { session_id, pdfBase64, nombre, sexo } = req.body;
+    const { session_id, pdfBase64, nombre, sexo, fecha, hora, lugar, edad } = req.body;
 
     if (!session_id || !pdfBase64) {
       return res.status(400).json({ error: 'Faltan datos' });
@@ -34,70 +35,63 @@ export default async function handler(req, res) {
     const email = session.customer_email;
     const nombreCliente = (nombre || session.metadata?.nombre || 'Cliente').toString();
     const sexoCliente = (sexo || session.metadata?.sexo || '').toString();
+const fechaCliente = (fecha || session.metadata?.fecha || '').toString();
+const horaCliente = (hora || session.metadata?.hora || '').toString();
+const lugarCliente = (lugar || session.metadata?.municipio || '').toString();
+const edadCliente = String(edad || session.metadata?.edad || '');
 
-    // 2. Limpiar base64: quitar prefijo data URI + TODO tipo de espacio/salto de línea
-    let base64Limpio = String(pdfBase64);
-    // Quitar prefijo tipo "data:application/pdf;base64," o "data:application/pdf;filename=foo.pdf;base64,"
-    const comma = base64Limpio.indexOf(',');
-    if (base64Limpio.startsWith('data:') && comma > -1) {
-      base64Limpio = base64Limpio.substring(comma + 1);
-    }
-    // Quitar cualquier espacio, salto de línea o tabulador
-    base64Limpio = base64Limpio.replace(/[\r\n\t\s]/g, '');
-
-    console.log(`[save-pdf] Enviando email a ${email}, tamaño base64: ${base64Limpio.length} chars`);
+    // 2. Limpiar base64 (quitar prefijo data:application/pdf;base64, si viene)
+    const base64Data = pdfBase64.replace(/^data:application\/pdf;base64,/, '');
 
     // Nombre del archivo adjunto
     const nombreArchivo = `TuDisenoDeOrigen_${nombreCliente.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
 
     // 3. Enviar email al cliente con el PDF adjunto
     try {
-      await enviarEmailCliente({
-        email,
-        nombre: nombreCliente,
-        sexo: sexoCliente,
-        pdfContent: base64Limpio,
-        nombreArchivo,
-      });
-      console.log(`[save-pdf] ✅ Email enviado correctamente a ${email}`);
+      await enviarEmailCliente(email, nombreCliente, sexoCliente, base64Data, nombreArchivo);
     } catch (err) {
-      console.error('[save-pdf] ❌ Error enviando email:', err.message);
+      console.error('Error enviando email cliente:', err);
       // Avisar al admin para envío manual
       await enviarEmailAdmin({
         asunto: `⚠️ URGENTE — Fallo enviando email de entrega — ${nombreCliente}`,
         mensaje: `Cliente: ${email}\nNombre: ${nombreCliente}\nSession: ${session_id}\nError: ${err.message}\n\nRevisa y envíalo manualmente.`,
       }).catch(e => console.error('Tampoco se pudo avisar admin:', e));
-      return res.status(500).json({ error: 'No se pudo enviar el email', detalle: err.message });
+      return res.status(500).json({ error: 'No se pudo enviar el email' });
     }
 
     // 4. Actualizar contacto en Brevo con estado "entregado"
     try {
-      await actualizarContactoBrevo(email);
+      await actualizarContactoBrevo(email, { fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente });
     } catch (err) {
-      console.error('[save-pdf] Error actualizando Brevo:', err.message);
+      console.error('Error actualizando Brevo:', err);
       // No detenemos el flujo, el email ya se envió
     }
 
     return res.status(200).json({ ok: true });
 
   } catch (error) {
-    console.error('[save-pdf] Error general:', error);
-    return res.status(500).json({ error: 'Error procesando el PDF', detalle: error.message });
+    console.error('Error save-pdf:', error);
+    return res.status(500).json({ error: 'Error procesando el PDF' });
   }
 }
 
 // ═════════════════════════════════════════════════════════════════
 // ACTUALIZAR CONTACTO EN BREVO (marcar informe como entregado)
 // ═════════════════════════════════════════════════════════════════
-async function actualizarContactoBrevo(email) {
+async function actualizarContactoBrevo(email, { fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente } = {}) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
 
   const body = {
-    attributes: {
-      ESTADO_INFORME: 'entregado',
-    },
-  };
+  attributes: {
+    ESTADO_INFORME: 'entregado',
+    SEXO: sexoCliente,
+    FECHA_NAC: fechaCliente,
+    HORA_NAC: horaCliente,
+    LUGAR_NAC: lugarCliente,
+    EDAD: edadCliente ? parseInt(edadCliente) : undefined,
+  },
+};
 
   const resp = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
     method: 'PUT',
@@ -118,7 +112,7 @@ async function actualizarContactoBrevo(email) {
 // ═════════════════════════════════════════════════════════════════
 // ENVIAR EMAIL AL CLIENTE CON PDF ADJUNTO
 // ═════════════════════════════════════════════════════════════════
-async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchivo }) {
+async function enviarEmailCliente(email, nombre, sexo, pdfBase64, nombreArchivo) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
 
@@ -139,12 +133,15 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#fffbef;padding:24px 12px;">
     <tr><td align="center">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;box-shadow:0 4px 24px rgba(14,63,75,0.08);overflow:hidden;">
+        <!-- CABECERO CON LOGO Y TÍTULO -->
         <tr><td style="padding:32px 24px 16px 24px;text-align:center;background:#ffffff;">
           <img src="https://tcb-iota.vercel.app/images/3-logo-email-tu-codigo-base-carta-natal-astral.png" alt="Tu Código Base" width="180" style="display:block;margin:0 auto 16px auto;max-width:180px;height:auto;border:0;">
           <h1 style="font-family:Georgia,'Playfair Display',serif;color:#bd9048;font-size:32px;line-height:1.2;margin:0;font-weight:700;letter-spacing:0.5px;">
             Tu Diseño de Origen
           </h1>
         </td></tr>
+
+        <!-- CONTENIDO -->
         <tr><td style="padding:32px 28px 16px 28px;">
           <p style="font-size:17px;line-height:1.6;color:#0c0c0c;margin:0 0 20px 0;">
             Hola <strong>${escapeHtml(nombre)}</strong>,
@@ -155,17 +152,20 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
           <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 28px 0;">
             Ya tienes <strong>Tu Diseño de Origen</strong> descargado, pero te dejamos aquí una copia de respaldo en formato PDF adjunto a este email, por si quieres guardarla.
           </p>
+
           <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 14px 0;">
             <strong>Un consejo:</strong> cuando lo leas, no lo hagas con prisa. Busca un momento tranquilo. Lo que vas a descubrir no es información, es una forma nueva de entenderte.
           </p>
           <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 24px 0;">
             Algunas áreas te van a resonar al instante, otras necesitarán que las releas, pero todas ellas tienen algo importante que decirte.
           </p>
+
           <div style="background:#f5f1e6;padding:14px 18px;border-radius:6px;margin:0 0 28px 0;">
             <p style="font-size:14px;line-height:1.6;color:#555;margin:0;">
-              📌 Guarda esta dirección <strong>(hola@tucodigobase.com)</strong> en tus contactos. Así, cuando <strong>Tu Nueva Versión</strong> esté lista, serás ${deLos} en enterarte y no queremos que se pierda en spam.
+              📌 Guarda esta dirección <strong>(hola@tucodigobase.com)</strong> en tus contactos. Así, cuando <strong>Tu Nueva Versión</strong> esté lista, serás ${deLos} en enterarte. Es el siguiente paso: <strong>lo que tienes que hacer exactamente para vivir la vida que quieres.</strong> Y no queremos que se pierda en spam.
             </p>
           </div>
+
           <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 6px 0;">
             Un abrazo,
           </p>
@@ -173,6 +173,8 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
             El equipo de Tu Código Base
           </p>
         </td></tr>
+
+        <!-- FOOTER -->
         <tr><td style="background:#0e3f4b;padding:20px 24px;text-align:center;">
           <p style="color:#cfb180;font-size:13px;margin:0 0 6px 0;">
             <a href="mailto:hola@tucodigobase.com" style="color:#cfb180;text-decoration:none;">hola@tucodigobase.com</a>
@@ -187,7 +189,7 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
 </body>
 </html>`;
 
-  const requestBody = {
+  const body = {
     sender: { email: 'hola@tucodigobase.com', name: 'Tu Código Base' },
     to: [{ email, name: nombre }],
     subject: 'Tu Diseño de Origen ✨',
@@ -195,7 +197,7 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
     attachment: [
       {
         name: nombreArchivo,
-        content: pdfContent,
+        content: pdfBase64,
       },
     ],
   };
@@ -207,7 +209,7 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
       'content-type': 'application/json',
       'api-key': BREVO_API_KEY,
     },
-    body: JSON.stringify(requestBody),
+    body: JSON.stringify(body),
   });
 
   if (!resp.ok) {
