@@ -186,6 +186,9 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
           <p style="color:#cfb180;font-size:13px;margin:0 0 6px 0;">
             <a href="mailto:hola@tucodigobase.com" style="color:#cfb180;text-decoration:none;">hola@tucodigobase.com</a>
           </p>
+          <p style="color:#cfb180;font-size:12px;margin:6px 0 0 0;">
+            <a href="https://www.tucodigobase.com" style="color:#cfb180;text-decoration:none;">www.tucodigobase.com</a>
+          </p>
           <p style="color:rgba(255,251,239,0.5);font-size:11px;margin:0;">
             © 2026 TU CÓDIGO BASE · Operado por Pura Group LLC
           </p>
