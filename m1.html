@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO & OG -->
+  <title>¿Sabes por qué eres como eres y por qué tu vida es así? ✨</title>
+<meta name="description" content="Tu Diseño de Origen es un estudio 100% personalizado que revela tu programación interior a partir de tu carta natal. Entrega inmediata. Tu Código Base" />
+<meta name="keywords" content="carta natal, carta astral, tu código base, diseño de origen, autoconocimiento, astrología, programación interior, psicología" />
+
+  <!-- Open Graph (imagen compartida en Google y redes) -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tucodigobase.com/m1" />
+  <meta property="og:title" content="¿Sabes por qué eres como eres y por qué tu vida es así? ✨" />
+  <meta property="og:description" content="Tu Diseño de Origen es un estudio 100% personalizado que revela tu programación interior a partir de tu carta natal. Entrega inmediata. Tu Código Base" />
+  <meta property="og:image" content="https://www.tucodigobase.com/images/2-logo-google-tu-codigo-base-carta-natal-astral.webp" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:image" content="https://www.tucodigobase.com/images/2-logo-google-tu-codigo-base-carta-natal-astral.webp" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/1-favicon-tu-codigo-base-carta-natal-astral.png" />
+  <link rel="shortcut icon" href="images/1-favicon-tu-codigo-base-carta-natal-astral.png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
+
+  <style>
+    /* ─── TOKENS ─────────────────────────────────── */
+    :root {
+      --teal-deep:   #0e3f4b;
+      --teal-mid:    #729790;
+      --gold-deep:   #bd9048;
+      --gold-light:  #cfb180;
+      --cream:       #fffbef;
+      --white:       #ffffff;
+      --ink:         #0c0c0c;
+      --gold-glow:   rgba(189,144,72,.18);
+      --gold-glow2:  rgba(207,177,128,.10);
+
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Open Sans', sans-serif;
+
+      --r-sm: 6px;
+      --r-md: 12px;
+      --r-lg: 24px;
+    }
+
+    /* ─── RESET ──────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+
+    /* ══════════════════════════════════════════════
+       COUNTDOWN BAR (top sticky)
+    ══════════════════════════════════════════════ */
+    .countdown-bar {
+      background: var(--teal-deep);
+      color: var(--cream);
+      border-bottom: 1px solid rgba(207,177,128,.25);
+      transition: transform .35s ease;
+      position: relative;
+      z-index: 99;
+    }
+    .countdown-bar.hidden {
+      transform: translateY(-100%);
+      position: absolute;
+      width: 100%;
+    }
+    .countdown-bar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      padding-block: .55rem;
+      flex-wrap: wrap;
+    }
+    .countdown-bar-text {
+      font-size: .78rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      font-weight: 600;
+    }
+    .countdown {
+      display: flex;
+      gap: .35rem;
+    }
+    .countdown-box {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(207,177,128,.25);
+  border-radius: var(--r-sm);
+  padding: .35rem .5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .1rem;
+  min-width: 42px;
+  justify-content: center;
+}
+    .countdown-num {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+    .countdown-label {
+      font-size: .65rem;
+      color: rgba(207,177,128,.7);
+      text-transform: uppercase;
+    }
+    @media (max-width: 600px) {
+      .countdown-bar-inner { gap: .7rem; padding-block: .45rem; }
+      .countdown-bar-text { font-size: .7rem; letter-spacing: .08em; }
+      .countdown-box { padding: .2rem .35rem; min-width: 36px; }
+      .countdown-num { font-size: .9rem; }
+    }
+
+    
+    /* ─── UTILITIES ──────────────────────────────── */
+    .container { width: min(1100px, 92vw); margin-inline: auto; }
+    .text-center { text-align: center; }
+    .sr-only { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0); }
+
+    /* ─── TYPOGRAPHY ─────────────────────────────── */
+    h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.2; }
+    h1 { font-size: clamp(2rem, 5vw, 2.4rem); font-weight: 700; }
+    h2 { font-size: clamp(1.6rem, 3.5vw, 2.5rem); font-weight: 700; }
+    h3 { font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 600; }
+    h4 { font-size: 1.1rem; font-weight: 600; }
+    p  { font-size: clamp(.95rem, 1.5vw, 1.05rem); }
+
+    /* ─── CTA BUTTON ─────────────────────────────── */
+    .btn-cta {
+      display: inline-block;
+text-align: center;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 1rem 2.2rem;
+      border-radius: var(--r-sm);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 28px rgba(189,144,72,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(189,144,72,.5); }
+    .btn-cta:active { transform: translateY(0); }
+    .btn-badge {
+      display: block;
+      font-size: .75rem;
+      font-weight: 400;
+      letter-spacing: .02em;
+      text-transform: none;
+      opacity: .85;
+      margin-top: .25rem;
+    }
+
+    /* ─── SECTION SPACING ────────────────────────── */
+    section { padding-block: 5rem; }
+    .section-label {
+      font-size: .8rem;
+      font-weight: 600;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin-bottom: .75rem;
+    }
+
+    /* ══════════════════════════════════════════════
+       NAV
+    ══════════════════════════════════════════════ */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,251,239,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(189,144,72,.2);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-block: .2rem;
+    }
+    .nav-logo img {
+      height: 70px;
+      width: auto;
+    }
+    .nav-cta {
+      background: var(--gold-deep);
+      color: var(--white);
+      font-size: .82rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .55rem 1.2rem;
+      border-radius: var(--r-sm);
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--gold-light); }
+
+    /* ══════════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════════ */
+    .hero {
+      background:
+        radial-gradient(ellipse 70% 60% at 80% 50%, rgba(207,177,128,.15) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 70% at 10% 80%, rgba(14,63,75,.08) 0%, transparent 60%),
+        var(--cream);
+      padding-block: 2rem 4rem;
+      overflow: hidden;
+    }
+    .hero-inner {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .hero-eyebrow {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--gold-deep);
+      margin-bottom: 1.2rem;
+    }
+    .hero h1 { color: var(--teal-deep); margin-bottom: 1.5rem; }
+
+    .hero h1 em { font-style: italic; color: var(--gold-deep); }
+    .hero-sub {
+      font-size: 0.9rem;
+      color: #3a3a3a;
+      margin-bottom: 2rem;
+      max-width: none;
+    }
+    .hero-sub strong { color: var(--teal-deep); font-weight: 600; }
+.hero-product-line {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: 0.9rem;
+      color: var(--teal-deep);
+      background: linear-gradient(90deg, rgba(189,144,72,.12), rgba(189,144,72,.04));
+      padding: .9rem 1.1rem;
+      margin-bottom: 2.5rem;
+      line-height: 1.5;
+      border-radius: var(--r-sm);
+    }
+    .hero-cta-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: .6rem; }
+.btn-cta-sub {
+      display: block;
+      font-size: .78rem;
+      font-weight: 400;
+      letter-spacing: .04em;
+      text-transform: none;
+      opacity: .9;
+      margin-top: .25rem;
+    }
+    .hero-price-note {
+      font-size: .82rem;
+      color: #777;
+      display: flex; align-items: center; gap: .4rem;
+    }
+    .hero-price-note svg { opacity: .6; }
+
+    /* Testimonial bubble */
+    .hero-testimonial {
+      background: var(--white);
+      border: 1px solid rgba(189,144,72,.25);
+      border-left: 3px solid var(--gold-deep);
+      border-radius: var(--r-md);
+      padding: 1rem 1.2rem;
+      margin-top: 1.8rem;
+      max-width: 440px;
+      font-size: .9rem;
+      color: #444;
+      box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    }
+    .hero-testimonial cite {
+      display: block;
+      font-style: normal;
+      font-size: .8rem;
+      color: var(--gold-deep);
+      font-weight: 600;
+      margin-top: .5rem;
+    }
+
+    /* Hero image side */
+    .hero-visual {
+      position: relative;
+      display: flex; justify-content: flex-end;
+    }
+    .hero-img-wrap {
+      width: 380px; height: 500px;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(14,63,75,.18);
+      position: relative;
+    }
+    
+.hero-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .hero-testimonial-overlay {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 20px;
+      background: rgba(255, 251, 239, .92);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: var(--r-md);
+      padding: 1rem 1.1rem;
+      font-family: var(--font-display);
+      font-style: italic;
+font-weight: 600;
+      font-size: .95rem;
+      color: var(--teal-deep);
+      line-height: 1.45;
+      box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    }
+    .hero-testimonial-overlay cite {
+      display: block;
+      margin-top: .4rem;
+      font-family: var(--font-body);
+      font-style: normal;
+      font-size: .8rem;
+      color: var(--gold-deep);
+      font-weight: 600;
+    }
+    .hero-float-badge {
+      position: absolute;
+      bottom: -16px; left: -24px;
+      background: var(--white);
+      border: 1px solid rgba(189,144,72,.3);
+      border-radius: var(--r-md);
+      padding: .75rem 1.1rem;
+      box-shadow: 0 8px 28px rgba(0,0,0,.1);
+      font-size: .8rem;
+      font-weight: 600;
+      color: var(--teal-deep);
+      white-space: nowrap;
+    }
+    .hero-float-badge span { color: var(--gold-deep); }
+
+    /* ══════════════════════════════════════════════
+       AREAS SECTION
+    ══════════════════════════════════════════════ */
+    .areas {
+      background: var(--teal-deep);
+      color: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    .areas::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 95% 20%, rgba(207,177,128,.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .areas h2 { color: var(--cream); }
+    .areas-subtitle {
+      font-size: 1.05rem;
+      color: var(--gold-light);
+      margin-top: 1.8rem;
+      margin-bottom: 3rem;
+    }
+    .areas-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      max-width: 620px;
+      margin-inline: auto;
+    }
+    .area-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(207,177,128,.2);
+      border-radius: var(--r-md);
+      padding: 1.5rem 1.6rem;
+display: block;
+      transition: background .25s, border-color .25s;
+    }
+.area-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold-deep);
+      margin-bottom: .5rem;
+    }
+    
+    .area-card:hover {
+      background: rgba(207,177,128,.1);
+      border-color: rgba(207,177,128,.5);
+    }
+    
+    .area-card p {
+      font-size: .9rem;
+      color: rgba(255,251,239,.75);
+    }
+
+    /* ══════════════════════════════════════════════
+       HOW IT WORKS
+    ══════════════════════════════════════════════ */
+    .how {
+      background: var(--cream);
+    }
+    .how h2 { color: var(--teal-deep); }
+    .how-subtitle {
+      font-size: 0.85rem;
+      color: #555;
+      max-width: 90ch;
+      margin: 1.8rem auto 3rem;
+    }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .step {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      background: var(--white);
+      border-radius: var(--r-md);
+      border: 1px solid rgba(189,144,72,.15);
+      box-shadow: 0 4px 20px rgba(0,0,0,.04);
+      position: relative;
+    }
+    .step-num {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
+      color: var(--white);
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.2rem;
+      box-shadow: 0 4px 16px rgba(189,144,72,.35);
+    }
+    .step h3 { color: var(--teal-deep); margin-bottom: .5rem; font-size: 1.2rem; }
+    .step p { font-size: .8rem; color: #555; }
+
+    /* Arrow between steps */
+    .steps-connector {
+      display: flex; align-items: center; justify-content: center; gap: 0;
+    }
+
+    /* Mockup area */
+    .how-mockup {
+      margin-top: 2.5rem;
+      text-align: center;
+    }
+    .how-mockup h4 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--teal-deep);
+      margin-bottom: 0.8rem;
+      font-style: italic;
+    }
+    .mockup-video {
+      display: block;
+      width: 45%;
+      max-width: 500px;
+      margin-inline: auto;
+      border-radius: var(--r-lg);
+      box-shadow: 0 12px 40px rgba(0,0,0,.1);
+    }
+    @media (max-width: 600px) {
+      .mockup-video { width: 100%; max-width: 100%; }
+    }
+
+    .how-cta-wrap { text-align: center; margin-top: 1.5rem; }
+
+    /* ══════════════════════════════════════════════
+       TESTIMONIALS
+    ══════════════════════════════════════════════ */
+    .testimonials {
+      background: linear-gradient(180deg, var(--cream) 0%, #f5eedf 100%);
+      border-top: 1px solid rgba(189,144,72,.15);
+      border-bottom: 1px solid rgba(189,144,72,.15);
+    }
+    .testimonials h2 { color: var(--teal-deep); margin-bottom: .5rem; }
+    .testimonials-subtitle {
+      color: var(--gold-deep);
+      font-size: .95rem;
+      margin-top: 1.8rem;
+      margin-bottom: 2.5rem;
+    }
+    /* Reviews grid — WhatsApp screenshots */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+    .review-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    @media (min-width: 768px) {
+      .review-img {
+        width: 85%;
+        margin: 0 auto;
+        border-radius: 8px;
+      }
+      .reviews-grid {
+        gap: 2.5rem;
+      }
+    }
+/* ══════════════════════════════════════════════
+       BRIDGE (cierre emocional antes del precio)
+    ══════════════════════════════════════════════ */
+    .bridge {
+      background: var(--cream);
+      padding-block: 4rem;
+      text-align: center;
+    }
+    .bridge p {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 700;
+      font-size: clamp(1.8rem, 2.5vw, 1.8rem);
+      color: var(--teal-deep);
+      max-width: 720px;
+      margin-inline: auto;
+      line-height: 1.4;
+    }
+    .bridge p strong {
+      color: var(--gold-deep);
+      font-style: italic;
+      font-weight: 700;
+    }
+    /* ══════════════════════════════════════════════
+       PRICE & FINAL CTA
+    ══════════════════════════════════════════════ */
+    .price-cta {
+      background: var(--teal-deep);
+      color: var(--cream);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .price-cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(207,177,128,.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .price-cta h2 {
+      color: var(--cream);
+      font-style: italic;
+      margin-bottom: .5rem;
+    }
+    .price-cta-subtitle {
+      color: var(--gold-light);
+      font-size: 1rem;
+      margin-top: 1.8rem;
+      margin-bottom: 2.5rem;
+    }
+    .price-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(207,177,128,.3);
+      border-radius: var(--r-lg);
+      max-width: 520px;
+      margin-inline: auto;
+      margin-top: 1.5rem;
+      padding: 2.5rem 2.5rem 2rem;
+      position: relative;
+    }
+.price-wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.price-old {
+  font-family: var(--font-body);
+  font-size: 2.6rem;
+  color: var(--cream);
+  opacity: .5;
+}
+.price-old s { text-decoration: line-through; }
+.price-tag {
+  font-family: var(--font-body);
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  line-height: 1;
+}
+.currency {
+  font-size: .65em;
+  font-weight: 600;
+  vertical-align: .15em;
+  margin-left: .05em;
+}
+    .price-launch {
+      font-size: .8rem;
+font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(207,177,128,.7);
+      margin-bottom: 2rem;
+    }
+.price-launch-after {
+  display: inline-block;
+  margin-top: .4rem;
+  font-size: .7rem;
+  opacity: .7;
+  letter-spacing: .08em;
+}
+.price-countdown {
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+.price-countdown .countdown-box {
+  padding: .6rem .9rem;
+  min-width: 60px;
+}
+.price-countdown .countdown-num {
+  font-size: 1.6rem;
+}
+.price-countdown .countdown-label {
+  font-size: .75rem;
+}
+    .features-list {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+    .features-list li {
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding-block: .55rem;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      font-size: .95rem;
+      color: rgba(255,251,239,.88);
+    }
+    .features-list li:last-child { border-bottom: none; }
+    .features-list .check {
+      color: var(--gold-deep);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: .05rem;
+    }
+    .secure-note {
+      font-size: .8rem;
+      color: rgba(207,177,128,.65);
+      margin-top: 1rem;
+    }
+
+    /* ══════════════════════════════════════════════
+       FAQ
+    ══════════════════════════════════════════════ */
+    .faq { background: var(--cream); }
+.faq-list { text-align: left; }
+    .faq h2 { color: var(--teal-deep); margin-bottom: .5rem; }
+    .faq-intro { color: #666; font-size: .95rem; margin-top: 1.8rem; margin-bottom: 2.5rem; }
+    .faq-list {
+      max-width: 780px;
+      margin-inline: auto;
+      display: flex; flex-direction: column; gap: .75rem;
+    }
+    details {
+      background: var(--white);
+      border: 1px solid rgba(189,144,72,.2);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,.04);
+    }
+    details[open] { border-color: rgba(189,144,72,.5); }
+    summary {
+      cursor: pointer;
+      padding: 1.1rem 1.4rem;
+      font-weight: 600;
+      font-size: .98rem;
+      color: var(--teal-deep);
+      list-style: none;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem;
+      user-select: none;
+      transition: background .15s;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover { background: rgba(189,144,72,.05); }
+    .faq-arrow {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: rgba(189,144,72,.15);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold-deep);
+      font-size: .9rem;
+      transition: transform .25s;
+    }
+    details[open] .faq-arrow { transform: rotate(45deg); }
+    .faq-body {
+      padding: 0 1.4rem 1.2rem;
+      font-size: .93rem;
+      color: #444;
+      border-top: 1px solid rgba(189,144,72,.1);
+      padding-top: 1rem;
+    }
+    .faq-body a { color: var(--gold-deep); text-decoration: underline; }
+    .faq-body a:hover { color: var(--teal-deep); }
+
+    /* ══════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════ */
+    .footer {
+      background: var(--teal-deep);
+      color: rgba(255,251,239,.6);
+      padding-block: 2.5rem;
+      font-size: .82rem;
+    }
+    .footer-inner {
+      display: flex; flex-direction: column;
+      align-items: center; gap: .9rem;
+      text-align: center;
+    }
+    .footer-email a {
+      color: var(--gold-light);
+      font-weight: 500;
+    }
+    .footer-email a:hover { color: var(--white); }
+    .footer-links {
+      display: flex; flex-wrap: wrap;
+      gap: .3rem .75rem;
+      justify-content: center;
+      align-items: center;
+    }
+    .footer-links a {
+      color: rgba(255,251,239,.65);
+      transition: color .15s;
+    }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-links .sep { opacity: .35; }
+    .footer-copy {
+      color: rgba(255,251,239,.4);
+      font-size: .8rem;
+    }
+
+    /* ══════════════════════════════════════════════
+       ANIMATIONS (fade + slide on scroll)
+    ══════════════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+    .reveal-delay-4 { transition-delay: .4s; }
+    .reveal-delay-5 { transition-delay: .5s; }
+    .reveal-delay-6 { transition-delay: .6s; }
+
+    /* ══════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════ */
+    @media (max-width: 860px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+      .hero-visual { order: -1; }
+      .hero-img-wrap { width: 100%; max-width: 400px; height: 440px; margin-inline: auto; }
+      .hero-float-badge { left: 0; bottom: -20px; }
+      .hero-cta-wrap { align-items: center; }
+      .hero h1, .hero-sub { text-align: center; }
+      .hero-testimonial { margin-inline: auto; }
+      .steps { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+.step h3 { font-size: 1.5rem; }
+.step p { font-size: 1rem; }
+.step-num { font-size: 2rem; }
+.testimonials-subtitle { font-size: 1.1rem; }
+.price-cta-subtitle { font-size: 1.1rem; }
+.faq-intro { font-size: 1.1rem; }
+.countdown-num { font-size: 1.3rem; }
+.price-old { font-size: 3rem; }
+.price-tag { font-size: 4.5rem; }
+      section { padding-block: 3.5rem; }
+.btn-cta { width: 100%; font-size: 1.1rem; padding: 1.1rem 1rem; }
+.btn-cta-sub { font-size: .95rem; }
+.hero h1 { font-size: 2.7rem; margin-bottom: 2.5rem; }       
+.hero-sub { margin-bottom: 2rem; }
+.how-subtitle { font-size: 1rem; }
+h2 { font-size: 2.5rem; }
+.hero-sub { font-size: 1.1rem; }
+      .hero-product-line { font-size: 1.1rem; text-align: center; margin-bottom: 2.5rem; }
+      .hero-testimonial-overlay { font-size: 1.1rem; font-weight: 600; }
+.hero-testimonial-overlay cite { font-size: .95rem; }
+      .nav-inner { flex-direction: column; gap: .6rem; padding-block: .6rem; }
+      .nav-cta { width: 100%; text-align: center; font-size: 1.1rem; padding: .6rem; }
+      .nav-logo img { height: 80px; }
+      .nav.scrolled .nav-inner { padding-block: .4rem; }
+      .nav.scrolled .nav-logo { display: none; }
+      
+      .areas-grid { grid-template-columns: 1fr; }
+.area-title { font-size: 1.5rem; }
+      .area-card p { font-size: 1.1rem; }
+      .areas-subtitle { font-size: 1.1rem; }
+      .reviews-grid { grid-template-columns: 1fr 1fr; }
+      .price-card { padding: 1.8rem 1.4rem; }
+    }
+    @media (max-width: 400px) {
+      .reviews-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+<!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-21PLHC6B2K"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-21PLHC6B2K');
+  </script>
+
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1729071528498639');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1729071528498639&ev=PageView&noscript=1"/></noscript>
+</head>
+<body>
+
+  <!-- ════════════ COUNTDOWN BAR ════════════ -->
+  <div class="countdown-bar" id="countdownBar">
+    <div class="container countdown-bar-inner">
+      <span class="countdown-bar-text">✦ Oferta por tiempo limitado ✦</span>
+      <div class="countdown">
+        <div class="countdown-box"><span class="countdown-num" data-unit="days">07</span><span class="countdown-label">dias</span></div>
+<div class="countdown-box"><span class="countdown-num" data-unit="hours">00</span><span class="countdown-label">horas</span></div>
+<div class="countdown-box"><span class="countdown-num" data-unit="minutes">00</span><span class="countdown-label">min</span></div>
+<div class="countdown-box"><span class="countdown-num" data-unit="seconds">00</span><span class="countdown-label">seg</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ NAV ════════════ -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="/" class="nav-logo" aria-label="Tu Código Base — Inicio">
+        <img src="images/3-logo-web-tu-codigo-base-carta-natal-astral-1.png"
+             alt="Tu Código Base — Tu carta natal descifrada" width="400" height="182"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
+        <span style="display:none; font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--teal-deep); letter-spacing:.02em;">
+          TU CÓDIGO BASE
+        </span>
+      </a>
+      <a href="tu-diseno-de-origen.html" class="nav-cta">Quiero el mío</a>
+    </div>
+  </nav>
+
+  <!-- ════════════ HERO ════════════ -->
+  <section class="hero">
+    <div class="container hero-inner">
+
+      <!-- Copy -->
+      <div>
+        <h1>¿Sabes por qué eres como eres <em>y por qué tu vida ha acabado siendo así</em>?</h1>
+        <p class="hero-sub">
+  Has leído libros, hecho cursos, has ido a terapia, te esfuerzas, intentas cambiar… y aun así, algo no acaba de encajar.<br><br>
+          <strong>No es culpa tuya,</strong> es que hay una programación que se formó en ti al nacer
+          y que dirige toda tu vida <strong>sin que te des cuenta</strong>. Y hasta que no la descubras, <strong>nada cambiará de verdad</strong>.
+        </p>
+<p class="hero-product-line"><strong>Tu Diseño de Origen es un estudio 100% personalizado y único que revela tu programación interior a partir de tu carta natal.</strong></p>
+        <div class="hero-cta-wrap">
+          <a href="tu-diseno-de-origen.html" class="btn-cta">
+            Quiero mi Diseño de Origen
+            <span class="btn-cta-sub">Recíbelo en minutos</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Visual -->
+      <div class="hero-visual">
+        <div class="hero-img-wrap">
+          <!-- Sustituir src por la foto real de la mujer cuando la tengas -->
+          <img src="images/hero-mujer-reflexiva.webp" alt="Fátima — Tu Diseño de Origen" class="hero-img" width="501" height="800" loading="eager" />
+          <blockquote class="hero-testimonial-overlay">
+            "...jamás nadie me había descrito con tanta precisión, es como si me conocieran de toda la vida."
+            <cite>— Fátima, España</cite>
+          </blockquote>
+        </div>        
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ════════════ QUÉ DESCUBRIRÁS ════════════ -->
+  <section class="areas">
+    <div class="container text-center">
+      
+      <h2 class="reveal">¿Qué descubrirás?</h2>
+      <p class="areas-subtitle reveal">Las <strong>7 áreas clave</strong> que dirigen tu vida y que nunca nadie te ha explicado así</p>
+
+      <div class="areas-grid">
+        <div class="area-card reveal reveal-delay-1">
+          <h3 class="area-title"><span class="area-num">1</span> Identidad</h3>
+          <p>Por qué eres como eres y por qué tu vida es como es</p>
+        </div>
+        <div class="area-card reveal reveal-delay-2">
+          <h3 class="area-title"><span class="area-num">2</span> Patrones</h3>
+          <p>Por qué siempre te pasa lo mismo y qué repites sin poder parar</p>
+        </div>
+        <div class="area-card reveal reveal-delay-3">
+          <h3 class="area-title"><span class="area-num">3</span> Miedos</h3>
+          <p>Lo que gobierna tu vida sin que lo sepas</p>
+        </div>
+        <div class="area-card reveal reveal-delay-4">
+          <h3 class="area-title"><span class="area-num">4</span> Herida</h3>
+          <p>Lo que hoy sigue bloqueando tu vida en silencio</p>
+        </div>
+        <div class="area-card reveal reveal-delay-5">
+          <h3 class="area-title"><span class="area-num">5</span> Amor</h3>
+          <p>Por qué amas como amas y por qué atraes a quien atraes</p>
+        </div>
+        <div class="area-card reveal reveal-delay-6">
+          <h3 class="area-title"><span class="area-num">6</span> Relaciones</h3>
+          <p>Cómo te vinculas con los demás y qué rol ocupas sin darte cuenta</p>
+        </div>
+        <div class="area-card reveal">
+          <h3 class="area-title"><span class="area-num">7</span> Dinero</h3>
+          <p>Por qué el dinero no termina de fluir en tu vida</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ CÓMO FUNCIONA ════════════ -->
+  <section class="how">
+    <div class="container text-center">
+      
+      <h2 class="reveal" style="color:var(--teal-deep);">Así funciona Tu Diseño de Origen</h2>
+      <p class="how-subtitle reveal">
+        El <strong>momento exacto en que naciste</strong> contiene información única sobre ti. Nuestro sistema,
+        desarrollado por expertos en <strong>psicología, neurociencia y astrología aplicada</strong>, analiza
+        tu configuración interior exacta para generar un <strong>diagnóstico profundo e irrepetible</strong>.
+      </p>
+
+      <div class="steps">
+        <div class="step reveal reveal-delay-1">
+          <div class="step-num">1</div>
+          <h3>Introduce tus datos</h3>
+          <p>Para calcular tu <strong>carta natal</strong> necesitamos: nombre, sexo, fecha, hora y lugar de nacimiento</p>
+        </div>
+        <div class="step reveal reveal-delay-2">
+          <div class="step-num">2</div>
+          <h3>Analizamos tu carta natal</h3>
+          <p>Nuestro sistema analiza tu configuración exacta y genera <strong>Tu Diseño de Origen 100% personalizado</strong></p>
+        </div>
+        <div class="step reveal reveal-delay-3">
+          <div class="step-num">3</div>
+          <h3>Recíbelo en minutos</h3>
+          <p>Un <strong>PDF de 23 a 30 páginas</strong> con las 7 áreas de tu vida analizadas en profundidad. <strong>Lo descargas al momento</strong></p>
+        </div>
+      </div>
+
+      <div class="how-cta-wrap reveal">
+        <a href="tu-diseno-de-origen.html" class="btn-cta">
+          Quiero el mío
+        </a>
+      </div>
+
+      <div class="how-mockup reveal">
+        <h4>Mira cómo es por dentro:</h4>
+        <!-- Reemplazar con mockup real de iPad/tablet con páginas del PDF -->
+        <video
+          class="mockup-video"
+          autoplay muted loop playsinline
+          oncontextmenu="return false;"
+          preload="metadata">
+          <source src="videos/video-mockup-tu-diseno-de-origen.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ TESTIMONIOS ════════════ -->
+  <section class="testimonials">
+    <div class="container text-center">
+      
+      <h2 class="reveal">Más de 200 personas ya tienen el suyo</h2>
+      <p class="testimonials-subtitle reveal">Esto es lo que nos cuentan...</p>
+
+      <div class="reviews-grid">
+        <img src="images/2-claridad-emocional-y-crecimiento-personal-tu-codigo-base-resena-1.webp" alt="Reseña de Irene — España" width="600" height="476" class="review-img reveal reveal-delay-1" />
+<img src="images/3-autoconocimiento-personal-profundo-tu-codigo-base-resena-1.webp" alt="Reseña de Salma — Argentina" width="600" height="564" class="review-img reveal reveal-delay-2" />
+<img src="images/5-bloqueo-dinero-y-trabajo-tu-codigo-base-resena-1.webp" alt="Reseña de Cati — Portugal" width="600" height="499" class="review-img reveal reveal-delay-3" />
+<img src="images/1-dudas-sobre-terapias-y-autoconocimiento-tu-codigo-base-resena-1.webp" alt="Reseña de Samuel — España" width="600" height="503" class="review-img reveal reveal-delay-4" />
+<img src="images/8-descubrir-quien-soy-autoconocimiento-tu-codigo-base-resena-renacce-1.webp" alt="Reseña de Mónica — España" width="600" height="502" class="review-img reveal reveal-delay-5" />
+<img src="images/6-alivio-emocional-y-gratitud-tu-codigo-base-resena-1.webp" alt="Reseña de María del Pilar — España" width="600" height="491" class="review-img reveal reveal-delay-6" />
+      </div>
+    </div>
+  </section>
+<!-- ════════════ BRIDGE ════════════ -->
+  <section class="bridge">
+    <div class="container">
+      <p class="reveal">No necesitas otro libro, otro curso, otra terapia… Necesitas entender <strong><em>tu programación interna</em></strong></p>
+    </div>
+  </section>
+  <!-- ════════════ PRECIO & CTA ════════════ -->
+  <section class="price-cta" id="precio">
+    <div class="container text-center">
+      
+      <h2 class="reveal">Tu Diseño de Origen</h2>
+     
+      <div class="price-card reveal">
+<p class="price-launch">✦ Oferta por tiempo limitado ✦</p>
+
+        <div class="countdown price-countdown">
+  <div class="countdown-box"><span class="countdown-num" data-unit="days">07</span><span class="countdown-label">dias</span></div>
+  <div class="countdown-box"><span class="countdown-num" data-unit="hours">00</span><span class="countdown-label">horas</span></div>
+  <div class="countdown-box"><span class="countdown-num" data-unit="minutes">00</span><span class="countdown-label">min</span></div>
+  <div class="countdown-box"><span class="countdown-num" data-unit="seconds">00</span><span class="countdown-label">seg</span></div>
+</div>
+<div class="price-wrap">
+  <div class="price-old"><s>47</s><span class="currency">€</span></div>
+  <div class="price-tag">27<span class="currency">€</span></div>
+</div>
+        <ul class="features-list">
+          <li><span class="check">✅</span> Las 7 áreas clave de tu vida analizadas en profundidad</li>
+          <li><span class="check">✅</span> Informe de 23 a 30 páginas en PDF</li>
+<li><span class="check">✅</span> Listo en minutos, descarga inmediata</li>
+          <li><span class="check">✅</span> 100% personalizado y único</li>          
+        </ul>
+
+        <a href="tu-diseno-de-origen.html" class="btn-cta" style="width:100%; text-align:center; display:block;">
+          Lo quiero ahora
+        </a>
+        <p class="secure-note">🔒 Pago 100% seguro con Stripe</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ FAQ ════════════ -->
+  <section class="faq">
+    <div class="container text-center">
+      
+      <h2 class="reveal">¿Tienes alguna duda?</h2>
+      <p class="faq-intro reveal">Aquí están las preguntas más frecuentes</p>
+
+      <div class="faq-list">
+
+        <details class="reveal">
+          <summary>¿Qué voy a recibir exactamente? <span class="faq-arrow">+</span></summary>
+          <div class="faq-body">
+            Un informe <strong>en PDF de 23 a 30 páginas, 100% personalizado</strong>, con las 7 áreas clave de tu vida analizadas en profundidad. Calculado a partir de tu carta natal, único e irrepetible. En unos minutos lo tienes listo para descargar.
+          </div>
+        </details>
+
+        <details class="reveal reveal-delay-1">
+          <summary>¿Qué datos necesito? <span class="faq-arrow">+</span></summary>
+          <div class="faq-body">
+            Tu nombre, sexo, fecha, hora y lugar de nacimiento. Con eso calculamos tu <strong>carta natal real</strong> y desciframos tu Diseño de Origen.
+          </div>
+        </details>
+
+        <details class="reveal reveal-delay-2">
+          <summary>¿Y si no sé mi hora exacta de nacimiento? <span class="faq-arrow">+</span></summary>
+          <div class="faq-body">
+            La hora exacta nos permite afinar mucho el resultado. Si no la recuerdas, consulta a familiares o solicita tu Certificado de Nacimiento (es gratuito y rápido).<br><br>
+            • <strong>España:</strong> <a href="https://sede.mjusticia.gob.es/tramites/certificado-nacimiento" target="_blank" rel="noopener">sede.mjusticia.gob.es</a><br>
+            • <strong>Fuera de España:</strong> consulta el Registro Civil oficial de tu país.
+          </div>
+        </details>
+
+        <details class="reveal reveal-delay-3">
+          <summary>¿Es un horóscopo? <span class="faq-arrow">+</span></summary>
+          <div class="faq-body">
+            No, Tu Diseño de Origen es un estudio técnico y profundo calculado a partir de tu carta natal real. No adivinamos el futuro: <strong>desciframos tu estructura interna</strong> con una precisión que nunca antes has obtenido.
+          </div>
+        </details>
+
+        <details class="reveal reveal-delay-4">
+          <summary>¿Puedo comprarlo para otra persona? <span class="faq-arrow">+</span></summary>
+          <div class="faq-body">
+            Sí, es un regalo único y original, perfecto para alguien que quiera entenderse a sí mismo,
+            o para ti si quieres entender mejor a alguien importante en tu vida.
+          </div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ FOOTER ════════════ -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="footer-email">
+        <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>
+      </p>
+      <nav class="footer-links" aria-label="Legal">
+        <a href="/aviso-legal">Aviso legal</a>
+        <span class="sep">|</span>
+        <a href="/politica-de-privacidad">Política de privacidad</a>
+        <span class="sep">|</span>
+        <a href="/politica-de-cookies">Política de cookies</a>
+        <span class="sep">|</span>
+        <a href="/terminos-y-condiciones">Términos y condiciones</a>
+      </nav>
+      <p class="footer-copy">
+        © 2026 TU CÓDIGO BASE. Todos los derechos reservados.<br>
+        Operado por Pura Group LLC
+      </p>
+    </div>
+  </footer>
+<script>
+    (function(){
+      const nav = document.querySelector('.nav');
+      if (!nav) return;
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      });
+    })();
+  </script>
+  <!-- ════════════ JS ════════════ -->
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(el => io.observe(el));
+
+    // Mark hero elements visible immediately
+    document.querySelectorAll('.hero .reveal').forEach(el => {
+      setTimeout(() => el.classList.add('visible'), 80);
+    });
+  </script>
+
+
+  <!-- ════════════ COUNTDOWN + HIDE ON SCROLL ════════════ -->
+  <script>
+    (function(){
+      const COUNTDOWN_DAYS = 7;
+      const STORAGE_KEY = 'tucodigobase_countdown_end';
+
+      function getEndTime() {
+        let end = parseInt(localStorage.getItem(STORAGE_KEY), 10);
+        const now = Date.now();
+        if (!end || end <= now) {
+          end = now + COUNTDOWN_DAYS * 24 * 60 * 60 * 1000;
+          localStorage.setItem(STORAGE_KEY, end);
+        }
+        return end;
+      }
+
+      function updateCountdown() {
+        const end = getEndTime();
+        const now = Date.now();
+        let diff = Math.max(0, end - now);
+
+        if (diff === 0) {
+          localStorage.removeItem(STORAGE_KEY);
+          return updateCountdown();
+        }
+
+        const days = Math.floor(diff / 86400000);
+        diff -= days * 86400000;
+        const hours = Math.floor(diff / 3600000);
+        diff -= hours * 3600000;
+        const minutes = Math.floor(diff / 60000);
+        diff -= minutes * 60000;
+        const seconds = Math.floor(diff / 1000);
+
+        const pad = n => String(n).padStart(2, '0');
+const set = (unit, val) => {
+  document.querySelectorAll(`[data-unit="${unit}"]`).forEach(el => {
+    el.textContent = pad(val);
+  });
+};
+        set('days', days);
+        set('hours', hours);
+        set('minutes', minutes);
+        set('seconds', seconds);
+      }
+
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+
+      // Hide bar on scroll
+      const bar = document.getElementById('countdownBar');
+      if (bar) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 80) {
+            bar.classList.add('hidden');
+          } else {
+            bar.classList.remove('hidden');
+          }
+        });
+      }
+    })();
+  </script>
+
+
+</body>
+</html>
