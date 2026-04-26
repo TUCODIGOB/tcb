@@ -881,7 +881,7 @@ async function descargarPDF() {
   btn.textContent = 'Generando PDF...';
   btn.disabled = true;
 
-  setTimeout(function() {
+  setTimeout(async function() {
     try {
       var jsPDF = window.jspdf.jsPDF;
       var doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
