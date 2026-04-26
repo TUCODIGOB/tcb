@@ -31,7 +31,12 @@ export default async function handler(req, res) {
     if (session.payment_status !== 'paid') {
       return res.status(402).json({ ok: false, error: 'El pago no está confirmado' });
     }
-
+if (session.metadata?.usado === 'si') {
+  return res.status(403).json({ ok: false, error: 'Este informe ya fue generado.' });
+}
+await stripe.checkout.sessions.update(session_id, {
+  metadata: { ...session.metadata, usado: 'si' }
+});
     // Devolver los metadata (datos del formulario) para que generando-informe
     // los use para generar el PDF (aunque el usuario haya borrado localStorage)
     const email = session.customer_email;
