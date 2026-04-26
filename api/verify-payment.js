@@ -39,16 +39,23 @@ export default async function handler(req, res) {
 
     // Comprobar si ya fue procesado (Stripe como fuente de verdad)
     const paymentIntentId = session.payment_intent;
-    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-
-    if (paymentIntent.metadata?.informe_generado === 'si') {
-      return res.status(403).json({ ok: false, error: 'Este informe ya fue generado.' });
+    if (paymentIntentId) {
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+      if (paymentIntent.metadata?.informe_generado === 'si') {
+        return res.status(403).json({ ok: false, error: 'Este informe ya fue generado.' });
+      }
+      await stripe.paymentIntents.update(paymentIntentId, {
+        metadata: { informe_generado: 'si' }
+      });
+    } else {
+      // Sin payment_intent, usar metadata de la sesión como bloqueo
+      if (session.metadata?.informe_generado === 'si') {
+        return res.status(403).json({ ok: false, error: 'Este informe ya fue generado.' });
+      }
+      await stripe.checkout.sessions.update(session.id, {
+        metadata: { ...session.metadata, informe_generado: 'si' }
+      });
     }
-
-    // Marcar inmediatamente como usado en Stripe
-    await stripe.paymentIntents.update(paymentIntentId, {
-      metadata: { informe_generado: 'si' }
-    });
 
     return res.status(200).json({
       ok: true,
