@@ -20,31 +20,37 @@ export default async function handler(req, res) {
       return res.status(400).json({ ok: false, error: 'Falta session_id' });
     }
 
-    // Consultar sesión en Stripe
     const session = await stripe.checkout.sessions.retrieve(session_id);
 
     if (!session) {
       return res.status(404).json({ ok: false, error: 'Sesión no encontrada' });
     }
 
-    // Comprobar que el pago está confirmado
     if (session.payment_status !== 'paid') {
       return res.status(402).json({ ok: false, error: 'El pago no está confirmado' });
     }
 
-    // Devolver los metadata (datos del formulario) para que generando-informe
-    // los use para generar el PDF (aunque el usuario haya borrado localStorage)
+    // Bloquear si ya fue generado
+    if (session.metadata?.informe_generado === 'si') {
+      return res.status(403).json({ ok: false, error: 'Este informe ya fue generado.' });
+    }
+
+    // Marcar como usado en Stripe antes de responder
+    await stripe.checkout.sessions.update(session_id, {
+      metadata: { ...session.metadata, informe_generado: 'si' }
+    });
+
     const email = session.customer_email;
     const BREVO_API_KEY = process.env.BREVO_API_KEY;
 
-    // Comprobar si ya fue procesado usando session_id en Brevo
-    const sessionUsada = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
-      headers: { 'accept': 'application/json', 'api-key': BREVO_API_KEY },
-    }).then(r => r.ok ? r.json() : null).catch(() => null);
-
-    if (sessionUsada?.attributes?.STRIPE_SESSION_ID === session_id) {
-      return res.status(403).json({ ok: false, error: 'Este informe ya fue generado.' });
-    }
+    // Actualizar Brevo
+    try {
+      await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+        method: 'PUT',
+        headers: { 'accept': 'application/json', 'content-type': 'application/json', 'api-key': BREVO_API_KEY },
+        body: JSON.stringify({ attributes: { P1_COMPRADO: 'si' } }),
+      });
+    } catch(e) {}
 
     return res.status(200).json({
       ok: true,
