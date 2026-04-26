@@ -888,7 +888,10 @@ async function descargarPDF() {
 const loadFont = async (url) => {
   const res = await fetch(url);
   const buf = await res.arrayBuffer();
-  return new Uint8Array(buf);
+  const bytes = new Uint8Array(buf);
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
 };
 const regular = await loadFont('/fonts/Roboto-Regular.ttf');
 const bold = await loadFont('/fonts/Roboto-Bold.ttf');
