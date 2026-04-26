@@ -90,7 +90,7 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
 - PROHIBIDO escribir párrafos de más de 5 líneas. Parte en 2 si hace falta
 - PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
-- PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea`;
+- PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea`,
         messages: [{
           role: 'user',
           content: `Genera el estudio completo "Tu Diseño de Origen" para:
