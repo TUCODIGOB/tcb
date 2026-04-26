@@ -843,164 +843,9 @@ async function iniciar() {
   const edad = new Date().getFullYear() - yr;
   const lugarCompleto = [ciudad, provincia, pais].filter(Boolean).join(', ');
 
-  await generarDiagnostico(nombre, sexo, fechaNice, hora, lugarCompleto, edad, carta);
+  await generarDiagnosticoSilencioso(nombre, sexo, fechaNice, hora, lugarCompleto, edad, carta);
 }
 
-async function generarDiagnostico(nombre, sexo, fechaNice, hora, lugar, edad, carta) {
-  _G = { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas: [] };
-  const cartaTexto = `Carta natal calculada:
-- Ascendente: ${carta.ascendente}
-- Sol: ${carta.sol}
-- Luna: ${carta.luna}
-- Mercurio: ${carta.mercurio}
-- Venus: ${carta.venus}
-- Marte: ${carta.marte}
-- Júpiter: ${carta.jupiter}
-- Saturno: ${carta.saturno}
-- Urano: ${carta.urano}
-- Neptuno: ${carta.neptuno}
-- Nodo Norte: ${carta.nodoNorte}`;
-
-  const systemPrompt = `Eres una experta en psicología, astrología y neurociencia. Generas diagnósticos de autoconocimiento muy personalizados basados en la carta natal.
-
-IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresiones latinoamericanas. Usa tú, no vos.
-
-ESTILO DE ESCRITURA:
-- Habla como una persona de confianza, directo y cercano
-- Lenguaje sencillo, que lo entienda cualquier persona aunque no haya leído un libro en años
-- Conecta ideas con comas, no con puntos ni guiones largos
-- Sin listas, sin viñetas, sin símbolos, sin asteriscos, todo en párrafos corridos
-- No uses nombres de planetas ni casas astrológicas
-- No empieces dos párrafos con la misma estructura. Varía los arranques
-- Escribe como un humano, no como una IA: menos puntos, más comas, frases que fluyen
-
-REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
-- Cada párrafo tiene entre 2 y 4 frases como máximo
-- Nunca más de 5 líneas por párrafo
-- Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
-- Si un bloque te sale largo, lo partes en 2 o 3 párrafos distintos
-- REGLA CRÍTICA DE LONGITUD: cada área tiene OBLIGATORIAMENTE entre 950 y 1050 palabras repartidas en EXACTAMENTE 10 párrafos (ni 8 ni 9 ni 11, exactamente 10). Antes de responder cuenta mentalmente los párrafos: deben ser 10. Un área con menos de 10 párrafos o menos de 950 palabras es un ERROR GRAVE que rompe el producto final. Si te sale más corto, AMPLÍA con más detalle, más ejemplos, más variaciones de la misma idea, hasta llegar a 10 párrafos de 4-5 líneas cada uno.
-
-OBJETIVO: Que la persona lea y piense que eso es exactamente ella, que por fin alguien se lo explica.
-
-ESCENA REAL OBLIGATORIA EN CADA ÁREA:
-En cada una de las 7 áreas tienes que incluir una escena concreta, específica y visual que el lector reconozca de inmediato como propia. No vale una situación genérica ni tonta. Debe ser una escena tan concreta que el lector diga "joder, esto me pasa literalmente".
-
-Ejemplos de escenas BUENAS (úsalas de inspiración, no las copies):
-- Para MIEDOS: "Llega el domingo por la tarde y ya notas ese peso raro en el pecho pensando en el lunes, haces una lista mental de todo lo que tienes que controlar, no porque haga falta, sino porque si no lo repasas todo cien veces sientes que algo malo va a pasar, y cuando te metes en la cama te pones a revisar el móvil para no pensar."
-- Para AMOR: "Estás con alguien que te gusta de verdad, todo va bien dos meses, y un día esa persona tarda cuatro horas en contestar un mensaje, y sin darte cuenta ya estás construyendo una historia entera en tu cabeza, ya estás pensando que se acabó, que no le importas, que era demasiado bonito, y cuando por fin responde con un simple 'perdona, he estado liado', tu cuerpo se relaja de golpe y te das cuenta de lo agotada que estabas."
-- Para DINERO: "Te ofrecen un trabajo mejor pagado, la propuesta está encima de la mesa, y antes de alegrarte ya estás pensando en todas las razones por las que no vas a poder con él, en todo lo que puede salir mal, en qué van a pensar los demás si fracasas, y acabas diciendo que no, o pidiendo menos de lo que te ofrecían, con una sensación extraña de alivio."
-
-Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas ("cuando te sientes mal, piensas cosas"), obvias ("a veces dudas de ti mismo") o vacías.
-
-La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar de que es un ejemplo.
-
-ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
-Cubre estos puntos pero NUNCA empieces con las frases de abajo. Son guías para ti, no para el texto. Varía radicalmente cómo abres cada párrafo.
-- Cómo se manifiesta en su vida ahora
-- La escena real concreta y visual (OBLIGATORIA)
-- El origen: cuándo empezó y por qué
-- El bucle que se repite
-- Qué le está costando
-- Una verdad incómoda que provoca el clic (nunca empieces con "la verdad incómoda es")
-- Qué creencia o autoengaño tiene que soltar (nunca empieces con "tienes que soltar")
-
-CIERRE DE CADA ÁREA (OBLIGATORIO):
-Cada una de las 7 áreas termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una imagen contundente, una paradoja, una frase corta que golpea. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz.
-
-Ejemplos del tono que busco para los cierres:
-- "Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva años esperándote dentro."
-- "Porque en el fondo lo sabes. Siempre lo has sabido. Solo que mirar para otro lado era más cómodo."
-- "El día que dejes de demostrar, empiezas a existir."
-
-CIERRE ESPECIAL ÁREA 7 (el más importante, cierra todo el informe):
-Después del cierre normal del área 7, añade UN SOLO párrafo final de despedida de todo el estudio, corto y contundente (máximo 2 líneas, entre 20 y 35 palabras). Como cuando alguien que te conoce bien te dice algo al final de una conversación larga y te deja tocado. Sin consejos, sin motivación, solo una verdad que resuena. Breve pero demoledor. IMPORTANTE: el área 7 completa tiene OBLIGATORIAMENTE 10 párrafos y entre 950 y 1050 palabras como las demás áreas, incluyendo todos los puntos, la escena, el cierre del área y el párrafo de despedida. Aplica la misma REGLA CRÍTICA DE LONGITUD que las demás áreas.
-
-PROHIBICIONES ABSOLUTAS:
-- No repetir el título del área en el texto
-- No causas vagas sin explicar cómo y cuándo
-- No frases de autoayuda ni coaching
-- No decir qué debe hacer la persona
-- PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
-- PROHIBIDO escribir párrafos de más de 5 líneas. Parte en 2 si hace falta
-- PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
-- PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea`;
-
-  const userPrompt = `Genera el estudio completo "Tu Diseño de Origen" para:
-
-Nombre: ${nombre}
-Sexo: ${sexo}
-Fecha de nacimiento: ${fechaNice}
-Hora: ${hora}
-Lugar: ${lugar}
-Edad: ${edad} años
-
-${cartaTexto}
-
-Genera las 7 áreas usando esta carta natal. Que el texto sea sencillo, humano y directo. Con situaciones cotidianas reconocibles integradas de forma natural. ANTES de escribir cada área nueva, relee mentalmente cómo empezaste la anterior y empieza de forma completamente distinta — diferente palabra, diferente estructura, diferente ritmo de entrada. Dos áreas que abran igual es un ERROR GRAVE.
-
-ÁREA 1 — IDENTIDAD: quién es esta persona por dentro, cómo se vive a sí misma, cómo se valora cuando nadie la mira, su diálogo interno
-
-ÁREA 2 — PATRONES: qué hace automáticamente cuando algo pasa, cómo reacciona, cómo se sabotea, por qué siempre acaba en los mismos sitios
-
-ÁREA 3 — MIEDOS: el miedo que más gobierna su vida sin que lo nombre, qué evita por ese miedo, qué gana al tenerlo
-
-ÁREA 4 — HERIDA: qué duele hoy, cuándo se dispara, qué situaciones lo reactivan, cómo afecta su presente
-
-ÁREA 5 — AMOR: cómo ama en pareja, qué patrón repite, por qué atrae siempre el mismo tipo de personas, qué pasa con el deseo y la intimidad
-
-ÁREA 6 — RELACIONES: qué rol ocupa con los demás, cómo encaja o no en grupos, qué personas atrae, por qué se acerca o se aleja
-
-ÁREA 7 — DINERO: cómo se relaciona con el dinero, qué pasa cuando empieza a irle bien, qué creencias tiene que no ve, cómo actúa en el trabajo
-
-Separa cada área con exactamente esto: ===AREA===
-No pongas el nombre del área dentro del texto.`;
-
-  try {
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-      nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto
-    })
-    });
-
-    if (!response.ok) throw new Error(await response.text());
-
-const reader = response.body.getReader();
-const decoder = new TextDecoder();
-let textoCompleto = '';
-
-while (true) {
-  const { done, value } = await reader.read();
-  if (done) break;
-  const chunk = decoder.decode(value, { stream: true });
-  const lines = chunk.split('\n');
-  for (const line of lines) {
-    if (!line.startsWith('data: ')) continue;
-    const jsonStr = line.slice(6).trim();
-    if (jsonStr === '[DONE]') continue;
-    try {
-      const parsed = JSON.parse(jsonStr);
-      if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
-        textoCompleto += parsed.delta.text;
-      }
-    } catch (_) {}
-  }
-}
-
-if (!textoCompleto) throw new Error('Respuesta vacía');
-mostrar(nombre, textoCompleto);
-
-  } catch(e) {
-    document.getElementById('sLoad').classList.remove('on');
-    document.getElementById('sForm').style.display = 'block';
-    const err = document.getElementById('errMsg');
-    err.textContent = 'Ha ocurrido un error. Por favor, inténtalo de nuevo.';
-    err.classList.add('on');
-    console.error(e);
-  }
-}
 
 function mostrar(nombre, texto) {
   _G.areas = texto.split('===AREA===').map(p => p.trim()).filter(p => p.length > 0);
@@ -1031,7 +876,7 @@ function reiniciar() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function descargarPDF() {
+async function descargarPDF() {
   var btn = document.getElementById('btnPDF');
   btn.textContent = 'Generando PDF...';
   btn.disabled = true;
@@ -1040,20 +885,22 @@ function descargarPDF() {
     try {
       var jsPDF = window.jspdf.jsPDF;
       var doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
-      // Helper to fix accented characters for helvetica
-      function fx(s) {
-        if (!s) return '';
-        return s
-  .replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u')
-  .replace(/Á/g,'A').replace(/É/g,'E').replace(/Í/g,'I').replace(/Ó/g,'O').replace(/Ú/g,'U')
-  .replace(/ñ/g,'n').replace(/Ñ/g,'N')
-  .replace(/ü/g,'u').replace(/Ü/g,'U')
-  .replace(/ã/g,'a').replace(/õ/g,'o').replace(/Ã/g,'A').replace(/Õ/g,'O')
-  .replace(/à/g,'a').replace(/è/g,'e').replace(/ì/g,'i').replace(/ò/g,'o').replace(/ù/g,'u')
-  .replace(/â/g,'a').replace(/ê/g,'e').replace(/î/g,'i').replace(/ô/g,'o').replace(/û/g,'u')
-  .replace(/À/g,'A').replace(/È/g,'E').replace(/Ì/g,'I').replace(/Ò/g,'O').replace(/Ù/g,'U')
-  .replace(/Â/g,'A').replace(/Ê/g,'E').replace(/Î/g,'I').replace(/Ô/g,'O').replace(/Û/g,'U');
-}
+const loadFont = async (url) => {
+  const res = await fetch(url);
+  const buf = await res.arrayBuffer();
+  return new Uint8Array(buf);
+};
+const regular = await loadFont('/fonts/Roboto-Regular.ttf');
+const bold = await loadFont('/fonts/Roboto-Bold.ttf');
+const italic = await loadFont('/fonts/Roboto-Italic.ttf');
+doc.addFileToVFS('Roboto-Regular.ttf', regular);
+doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal');
+doc.addFileToVFS('Roboto-Bold.ttf', bold);
+doc.addFont('Roboto-Bold.ttf', 'Roboto', 'bold');
+doc.addFileToVFS('Roboto-Italic.ttf', italic);
+doc.addFont('Roboto-Italic.ttf', 'Roboto', 'italic');
+      // Helper to fix accented characters for Roboto
+      function fx(s) { return s || ''; }
       var W = 210, H = 297;
 
       var VERDE  = [14, 63, 75];
@@ -1077,7 +924,7 @@ function descargarPDF() {
       }
 
       function addPageNum(n) {
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('Roboto', 'bold');
         doc.setFontSize(9);
         doc.setTextColor(100, 100, 100);
         doc.text(String(n), W - 16, H - 16, { align: 'right' });
@@ -1331,7 +1178,7 @@ function descargarPDF() {
         doc.line(cx, cy - rOut, cx, cy + rOut);
 
         // Etiquetas AC, DC, MC, IC (fuera del círculo)
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('Roboto', 'bold');
         doc.setFontSize(8);
         doc.setTextColor(COL_VERDE[0], COL_VERDE[1], COL_VERDE[2]);
         doc.text('AC', cx - rOut - 4, cy + 1, { align: 'right' });
@@ -1341,7 +1188,7 @@ function descargarPDF() {
 
         // Números de casas (discretos, en gris)
         doc.setFontSize(6);
-        doc.setFont('helvetica', 'normal');
+        doc.setFont('Roboto', 'normal');
         doc.setTextColor(COL_GRIS[0], COL_GRIS[1], COL_GRIS[2]);
         for (var hn = 0; hn < 12; hn++) {
           var hna = lonToRad(hn * 30 + 15);
@@ -1487,7 +1334,7 @@ function descargarPDF() {
           // Grado al lado del planeta
           var grado = Math.floor(pl.raw % 30);
           doc.setFontSize(4.5);
-          doc.setFont('helvetica', 'normal');
+          doc.setFont('Roboto', 'normal');
           doc.setTextColor(COL_GRIS[0], COL_GRIS[1], COL_GRIS[2]);
           var lblR = pl.r - plSize - 2;
           doc.text(grado + '°', cx + lblR * Math.cos(pa), cy + lblR * Math.sin(pa) + 0.5, { align: 'center' });
@@ -1528,7 +1375,7 @@ function descargarPDF() {
         var y = sy;
         doc.setFillColor(14, 63, 75);
         doc.rect(sx, y, 110, rH, 'F');
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('Roboto', 'bold');
         doc.setFontSize(7);
         doc.setTextColor(255, 255, 255);
         var heads = ['Planeta', 'Longitud', 'Casa', 'Latitud', 'Decl.'];
@@ -1550,7 +1397,7 @@ function descargarPDF() {
           var fill = r2 % 2 === 0 ? [252, 249, 240] : [255, 255, 255];
           doc.setFillColor(fill[0], fill[1], fill[2]);
           doc.rect(sx, y, 110, rH, 'F');
-          doc.setFont('helvetica', r2 === 9 ? 'bold' : 'normal');
+          doc.setFont('Roboto', r2 === 9 ? 'bold' : 'normal');
           doc.setFontSize(7);
           doc.setTextColor(r2 === 9 ? 14 : 40, r2 === 9 ? 63 : 40, r2 === 9 ? 75 : 40);
           for (var c2 = 0; c2 < rows[r2].length; c2++) doc.text(fx(String(rows[r2][c2])), cols[c2] + 1, y + 3.8);
@@ -1565,12 +1412,12 @@ function descargarPDF() {
       // ── PAG 1 PORTADA ──────────────────────────────────────────────────────
       doc.addImage('/images/1-portada-pdf.jpg', 'JPEG', 0, 0, W, H);
       // Nombre en mayúsculas
-      doc.setFont('helvetica', 'bold');
+      doc.setFont('Roboto', 'bold');
       doc.setFontSize(16);
       doc.setTextColor(14, 63, 75);
       doc.text(fx(nombre.toUpperCase()), W/2, 250, { align: 'center' });
       // Fecha y hora
-      doc.setFont('helvetica', 'normal');
+      doc.setFont('Roboto', 'normal');
       doc.setFontSize(11);
       doc.setTextColor(14, 63, 75);
       doc.text(fx(fechaNice + ' a las ' + hora), W/2, 260, { align: 'center' });
@@ -1593,7 +1440,7 @@ function descargarPDF() {
       // ── PAG 4 CONFIGURACION INICIAL ────────────────────────────────────────
       doc.addPage();
       doc.addImage('/images/4-rueda-pdf.jpg', 'JPEG', 0, 0, W, H);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont('Roboto', 'bold');
       doc.setFontSize(25);
       doc.setTextColor(14, 63, 75);
       doc.text(fx('TU CONFIGURACION INICIAL'), 18, 30);
@@ -1643,7 +1490,7 @@ function descargarPDF() {
         var xCursor = 18;
         var lineStartX = 18;
         for (var w = 0; w < words.length; w++) {
-          doc.setFont('helvetica', words[w].bold ? 'bold' : 'normal');
+          doc.setFont('Roboto', words[w].bold ? 'bold' : 'normal');
           var wordStr = fx(words[w].text);
           var wordWidth = doc.getTextWidth(wordStr);
           var spaceWidth = doc.getTextWidth(' ');
@@ -1662,12 +1509,12 @@ function descargarPDF() {
       dibujarCarta(cartaCX, cartaCY, cartaR);
       // Datos astrologicos debajo de la rueda
       var textoY = cartaCY + cartaR + 15;
-      doc.setFont('helvetica', 'bold');
+      doc.setFont('Roboto', 'bold');
       doc.setFontSize(8);
       doc.setTextColor(14, 63, 75);
       doc.text(fx('Sol: ' + (carta.sol||'-') + '   Luna: ' + (carta.luna||'-') + '   Ascendente: ' + (carta.ascendente||'-')), W/2, textoY, { align: 'center' });
       textoY += 5;
-      doc.setFont('helvetica', 'bold');
+      doc.setFont('Roboto', 'bold');
       doc.setFontSize(8);
       doc.setTextColor(14, 63, 75);
       // Formatear coordenadas estilo astro.com: 0w22, 39n28
@@ -1702,7 +1549,7 @@ function descargarPDF() {
       var jdStr  = carta.JD.toFixed(2);
       doc.text(fx('Lat: ' + latStr + '  ·  Lon: ' + lonStr + '  ·  UT: ' + utStr + '  ·  T. Sidereo: ' + sidStr + '  ·  JD: ' + jdStr), W/2, textoY, { align: 'center' });
       textoY += 7;
-      doc.setFont('helvetica', 'italic');
+      doc.setFont('Roboto', 'italic');
       doc.setFontSize(8);
       doc.setTextColor(100, 100, 100);
       var captLines = doc.splitTextToSize(fx('Representacion visual de tu configuracion inicial: la huella simbolica del instante en que comenzo tu historia.'), 155);
@@ -1714,19 +1561,19 @@ function descargarPDF() {
       // ── PAG 5 POSICIONES ───────────────────────────────────────────────────
       doc.addPage();
       doc.addImage('/images/5-base-pdf.jpg', 'JPEG', 0, 0, W, H);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont('Roboto', 'bold');
       doc.setFontSize(11);
       doc.setTextColor(189, 144, 72);
       doc.text(fx('POSICIONES: Configuracion funcional de tu Codigo Base'), 18, 30);
       var py5 = 45;
       py5 = tablaPositions(18, py5);
       py5 += 5;
-      doc.setFont('helvetica', 'italic');
+      doc.setFont('Roboto', 'italic');
       doc.setFontSize(9);
       doc.setTextColor(60, 60, 60);
       py5 = wrapText(fx('Las posiciones reflejan donde se concentra tu energia y desde que puntos se organiza tu forma de pensar, sentir o actuar, como se forma tu sistema interno y que partes de ti toman mas protagonismo en tu manera de percibir y responder a la vida.'), 18, py5, 175, 5.5);
       py5 += 8;
-      doc.setFont('helvetica', 'bold');
+      doc.setFont('Roboto', 'bold');
       doc.setFontSize(11);
       doc.setTextColor(189, 144, 72);
       doc.text(fx('ASPECTOS: Dinamicas internas de tu Codigo Base'), 18, py5);
@@ -1832,7 +1679,7 @@ function descargarPDF() {
             for (var ak2 = 0; ak2 < aspDefs2.length; ak2++) {
               if (Math.abs(diffA - aspDefs2[ak2].deg) <= aspDefs2[ak2].orb) {
                 var col2 = aspDefs2[ak2].color;
-                doc.setFont('helvetica', 'bold');
+                doc.setFont('Roboto', 'bold');
                 doc.setFontSize(8);
                 doc.setTextColor(col2[0], col2[1], col2[2]);
                 doc.text(aspDefs2[ak2].symbol, cx1 + cellS/2, cy1 + cellS/2 + 1.5, { align: 'center' });
@@ -1851,12 +1698,12 @@ function descargarPDF() {
       }
       py5 = aspY + aspPlanets.length * cellS + 6;
       // Leyenda
-      doc.setFont('helvetica', 'normal');
+      doc.setFont('Roboto', 'normal');
       doc.setFontSize(7);
       doc.setTextColor(100, 100, 100);
       doc.text('T = Trigono   C = Cuadratura   S = Sextil   O = Oposicion   = = Conjuncion', W/2, py5, { align: 'center' });
       py5 += 6;
-      doc.setFont('helvetica', 'italic');
+      doc.setFont('Roboto', 'italic');
       doc.setFontSize(9);
       doc.setTextColor(60, 60, 60);
       wrapText(fx('Los aspectos muestran como interactuan tus distintas fuerzas internas: los equilibrios, tensiones y conexiones que dan forma a tu manera de vincularte, decidir y reaccionar, son la expresion visible de tu movimiento interno.'), 18, py5, 175, 5.5);
@@ -1904,12 +1751,12 @@ function descargarPDF() {
         doc.addPage();
         doc.addImage('/images/5-base-pdf.jpg', 'JPEG', 0, 0, W, H);
 
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('Roboto', 'bold');
         doc.setFontSize(25);
         doc.setTextColor(14, 63, 75);
         doc.text(fx('AREA ' + (ai2 + 1) + ' | ' + areaTitles[ai2].tit), 18, 30);
 
-        doc.setFont('helvetica', 'bold');
+        doc.setFont('Roboto', 'bold');
         doc.setFontSize(18);
         doc.setTextColor(189, 144, 72);
         var subls = doc.splitTextToSize(areaTitles[ai2].sub, 175);
@@ -1921,7 +1768,7 @@ function descargarPDF() {
 
         for (var pi = 0; pi < paras.length; pi++) {
           if (!paras[pi]) continue;
-          doc.setFont('helvetica', 'normal');
+          doc.setFont('Roboto', 'normal');
           doc.setFontSize(12);
           doc.setTextColor(40, 40, 40);
           var plines = doc.splitTextToSize(fx(paras[pi].trim()), 175);
@@ -1931,7 +1778,7 @@ function descargarPDF() {
               areaPageCount++;
               doc.addPage();
               doc.addImage('/images/5-base-pdf.jpg', 'JPEG', 0, 0, W, H);
-              doc.setFont('helvetica', 'normal');
+              doc.setFont('Roboto', 'normal');
               doc.setFontSize(12);
               doc.setTextColor(40, 40, 40);
               ay = 60;
