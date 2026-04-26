@@ -37,24 +37,13 @@ export default async function handler(req, res) {
     const email = session.customer_email;
     const BREVO_API_KEY = process.env.BREVO_API_KEY;
 
-    // Comprobar si ya fue procesado (Stripe como fuente de verdad)
-    const paymentIntentId = session.payment_intent;
-    if (paymentIntentId) {
-      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-      if (paymentIntent.metadata?.informe_generado === 'si') {
-        return res.status(403).json({ ok: false, error: 'Este informe ya fue generado.' });
-      }
-      await stripe.paymentIntents.update(paymentIntentId, {
-        metadata: { informe_generado: 'si' }
-      });
-    } else {
-      // Sin payment_intent, usar metadata de la sesión como bloqueo
-      if (session.metadata?.informe_generado === 'si') {
-        return res.status(403).json({ ok: false, error: 'Este informe ya fue generado.' });
-      }
-      await stripe.checkout.sessions.update(session.id, {
-        metadata: { ...session.metadata, informe_generado: 'si' }
-      });
+    // Comprobar si ya fue procesado usando session_id en Brevo
+    const sessionUsada = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+      headers: { 'accept': 'application/json', 'api-key': BREVO_API_KEY },
+    }).then(r => r.ok ? r.json() : null).catch(() => null);
+
+    if (sessionUsada?.attributes?.STRIPE_SESSION_ID === session_id) {
+      return res.status(403).json({ ok: false, error: 'Este informe ya fue generado.' });
     }
 
     return res.status(200).json({
