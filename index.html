@@ -1149,8 +1149,9 @@ h2 { font-size: 2.5rem; }
         } else {
           nav.classList.remove('scrolled');
         }
-      });
+      }, { passive: true });
     })();
+
   </script>
   <!-- ════════════ JS ════════════ -->
   <script>
@@ -1221,18 +1222,7 @@ const set = (unit, val) => {
 
       updateCountdown();
       setInterval(updateCountdown, 1000);
-
-      // Hide bar on scroll
-      const bar = document.getElementById('countdownBar');
-      if (bar) {
-        window.addEventListener('scroll', () => {
-          if (window.scrollY > 80) {
-            bar.classList.add('hidden');
-          } else {
-            bar.classList.remove('hidden');
-          }
-        });
-      }
+      
     })();
   </script>
 
