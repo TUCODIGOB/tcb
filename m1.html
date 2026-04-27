@@ -1141,11 +1141,10 @@ h2 { font-size: 2.5rem; }
 <script>
     (function(){
       const nav = document.querySelector('.nav');
-      const bar = document.getElementById('countdownBar');
+      if (!nav) return;
       window.addEventListener('scroll', () => {
         const y = window.scrollY;
-        if (nav) nav.classList.toggle('scrolled', y > 50);
-        if (bar) bar.classList.toggle('hidden', y > 80);
+        nav.classList.toggle('scrolled', y > 50);
       }, { passive: true });
     })();
   </script>
