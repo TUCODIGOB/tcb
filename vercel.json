@@ -6,5 +6,17 @@
       "memory": 1024,
       "maxDuration": 300
     }
-  }
+  },
+  "redirects": [
+    { "source": "/M1", "destination": "/m1", "permanent": true },
+    { "source": "/M2", "destination": "/m2", "permanent": true },
+    { "source": "/M3", "destination": "/m3", "permanent": true },
+    { "source": "/M4", "destination": "/m4", "permanent": true },
+    { "source": "/M5", "destination": "/m5", "permanent": true },
+    { "source": "/M6", "destination": "/m6", "permanent": true },
+    { "source": "/Aviso-Legal", "destination": "/aviso-legal", "permanent": true },
+    { "source": "/Politica-De-Privacidad", "destination": "/politica-de-privacidad", "permanent": true },
+    { "source": "/Politica-De-Cookies", "destination": "/politica-de-cookies", "permanent": true },
+    { "source": "/Terminos-Y-Condiciones", "destination": "/terminos-y-condiciones", "permanent": true }
+  ]
 }
