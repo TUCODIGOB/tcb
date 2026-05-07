@@ -46,7 +46,6 @@ export default async function handler(req, res) {
       ],
       customer_email: datos.email,
       allow_promotion_codes: true,
-payment_method_collection: 'if_required',
       locale: 'es',
       // Metadata: datos del formulario que el webhook usará
       metadata: {
