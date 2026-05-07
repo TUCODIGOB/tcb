@@ -111,6 +111,10 @@ async function guardarContactoBrevo(datos) {
     STRIPE_SESSION_ID: datos.sessionId || '',
     IMPORTE_PAGADO: datos.importe || '',
     ESTADO_INFORME: 'pendiente',
+NOMBRE: datos.nombre || '',
+    FECHA_NAC: datos.fecha || '',
+    HORA_NAC: datos.hora || '',
+    LUGAR_NAC: [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', '),
   };
 
   const body = {
