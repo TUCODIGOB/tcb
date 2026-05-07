@@ -162,3 +162,4 @@ async function enviarEmailAdmin({ asunto, mensaje }) {
     body: JSON.stringify(body),
   });
 }
+
