@@ -98,24 +98,18 @@ async function guardarContactoBrevo(datos) {
 
   // Atributos personalizados que guardamos en Brevo
   const attributes = {
-    FIRSTNAME: firstName,
-    LASTNAME: lastName,
+    NOMBRE: datos.nombre || '',
+    APELLIDOS: lastName || '',
     SMS: datos.telefono || '',
     SEXO: datos.sexo || '',
-    FECHA_NACIMIENTO: datos.fecha || '',
-    HORA_NACIMIENTO: datos.hora || '',
-    MUNICIPIO: datos.municipio || '',
-    PROVINCIA: datos.provincia || '',
-    PAIS: datos.pais || '',
+    FECHA_NAC: datos.fecha || '',
+    HORA_NAC: datos.hora || '',
+    LUGAR_NAC: [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', '),
     EDAD: datos.edad ? parseInt(datos.edad) : 0,
     STRIPE_SESSION_ID: datos.sessionId || '',
     IMPORTE_PAGADO: datos.importe || '',
     ESTADO_INFORME: 'pendiente',
-NOMBRE: datos.nombre || '',
-    FECHA_NAC: datos.fecha || '',
-    HORA_NAC: datos.hora || '',
-    LUGAR_NAC: [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', '),
-  };
+};
 
   const body = {
     email: datos.email,
