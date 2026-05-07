@@ -62,24 +62,6 @@ export default async function handler(req, res) {
         importe: (session.amount_total / 100).toFixed(2),
       });
       console.log('✅ Contacto guardado en Brevo:', email);
-await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
-  method: 'PUT',
-  headers: {
-    'accept': 'application/json',
-    'content-type': 'application/json',
-    'api-key': process.env.BREVO_API_KEY,
-  },
-  body: JSON.stringify({
-    attributes: {
-      NOMBRE: metadata.nombre || '',
-      SEXO: metadata.sexo || '',
-      FECHA_NAC: metadata.fecha || '',
-      HORA_NAC: metadata.hora || '',
-      LUGAR_NAC: [metadata.municipio, metadata.provincia, metadata.pais].filter(Boolean).join(', '),
-      EDAD: metadata.edad ? parseInt(metadata.edad) : 0,
-    }
-  }),
-}).catch(e => console.error('Error actualizando campos Brevo:', e));
     } catch (err) {
       console.error('❌ Error guardando en Brevo:', err);
       // Avisar al admin por email
