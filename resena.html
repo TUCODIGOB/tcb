@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Comparte tu experiencia · Tu Código Base</title>
-
   <meta name="description" content="Comparte tu experiencia con Tu Diseño de Origen y ayuda a otras personas a dar el paso que tú ya diste." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tucodigobase.com/resena" />
@@ -13,264 +12,91 @@
   <meta property="og:image" content="https://www.tucodigobase.com/images/2-logo-google-tu-codigo-base-carta-natal-astral.webp" />
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:image" content="https://www.tucodigobase.com/images/2-logo-google-tu-codigo-base-carta-natal-astral.webp" />
-
   <link rel="icon" type="image/png" href="images/1-favicon-tu-codigo-base-carta-natal-astral.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
   <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
-
   <style>
     :root {
-      --teal-deep:  #0e3f4b;
-      --teal-mid:   #729790;
-      --gold-deep:  #bd9048;
+      --teal-deep: #0e3f4b;
+      --gold-deep: #bd9048;
       --gold-light: #cfb180;
-      --cream:      #fffbef;
-      --white:      #ffffff;
-      --ink:        #0c0c0c;
+      --cream: #fffbef;
+      --white: #ffffff;
+      --ink: #0c0c0c;
       --font-display: 'Playfair Display', Georgia, serif;
-      --font-body:    'Open Sans', sans-serif;
+      --font-body: 'Open Sans', sans-serif;
       --r-sm: 6px;
       --r-md: 12px;
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-body);
-      background: var(--cream);
-      color: var(--ink);
-      line-height: 1.7;
-      min-height: 100vh;
-    }
+    body { font-family: var(--font-body); background: var(--cream); color: var(--ink); line-height: 1.7; min-height: 100vh; }
     img { display: block; max-width: 100%; }
     a { color: inherit; text-decoration: none; }
 
-    /* NAV — no sticky */
-    .nav {
-      background: rgba(255,251,239,.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(189,144,72,.2);
-      text-align: center;
-      padding-block: .2rem;
-    }
-    .nav-logo img { height: 70px; width: auto; display: inline-block; }
+    .nav { background: rgba(255,251,239,.95); backdrop-filter: blur(12px); text-align: center; padding-block: .2rem; }
+    .nav a img { height: 70px; width: auto; display: inline-block; }
 
-    /* HERO */
-    .hero-resena {
-      background: var(--cream);
-      padding-block: 3rem 2rem;
-      text-align: center;
-    }
-    .hero-resena h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      font-weight: 700;
-      color: var(--teal-deep);
-      line-height: 1.2;
-      margin-bottom: 1rem;
-    }
-    .hero-resena p {
-      font-size: 1.1rem;
-      color: #555;
-      max-width: 500px;
-      margin-inline: auto;
-    }
+    .hero-resena { background: var(--cream); padding-block: 3rem 2rem; text-align: center; }
+    .hero-resena h1 { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 700; color: var(--teal-deep); line-height: 1.2; margin-bottom: 1rem; }
+    .hero-resena p { font-size: 1.1rem; color: #555; max-width: 500px; margin-inline: auto; }
 
-    /* MAIN */
-    .page-wrap {
-      width: min(680px, 92vw);
-      margin-inline: auto;
-      padding-block: 2.5rem 6rem;
-    }
+    .page-wrap { width: min(680px, 92vw); margin-inline: auto; padding-block: 2.5rem 6rem; }
 
-    /* INSTRUCCIONES */
-    .instrucciones {
-      background: var(--white);
-      border: 1px solid rgba(189,144,72,.2);
-      border-left: 4px solid var(--gold-deep);
-      border-radius: var(--r-md);
-      padding: 1.8rem 2rem;
-      margin-bottom: 1.5rem;
-    }
-    /* Web: texto + imagen lado a lado */
-    .instrucciones-inner {
-      display: grid;
-      grid-template-columns: 1fr 125px;
-      gap: 1.5rem;
-      align-items: center;
-    }
-    /* Imagen móvil: solo visible en móvil, dentro de la caja arriba del texto */
-    .instrucciones-img-mobile {
-      display: none;
-      margin-bottom: 1rem;
-    }
-    .instrucciones-img-mobile img {
-      width: 120px;
-      height: auto;
-      border-radius: var(--r-md);
-      margin-inline: auto;
-    }
-    .instrucciones-content h3 {
-      font-family: var(--font-display);
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--teal-deep);
-      margin-bottom: 1.2rem;
-    }
+    .instrucciones { background: var(--white); border: 1px solid rgba(189,144,72,.2); border-left: 4px solid var(--gold-deep); border-radius: var(--r-md); padding: 1.8rem 2rem; margin-bottom: 1.5rem; }
+    .instrucciones-inner { display: grid; grid-template-columns: 1fr 125px; gap: 1.5rem; align-items: center; }
+    .instrucciones-img-mobile { display: none; margin-bottom: 1rem; }
+    .instrucciones-img-mobile img { width: 120px; height: auto; border-radius: var(--r-md); margin-inline: auto; }
+    .instrucciones-content h3 { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--teal-deep); margin-bottom: 1.2rem; }
     .instrucciones ul { list-style: none; display: flex; flex-direction: column; gap: .7rem; }
-    .instrucciones li {
-      font-size: 1rem;
-      color: #444;
-      display: flex;
-      align-items: flex-start;
-      gap: .75rem;
-    }
-    .instrucciones li::before {
-      content: '';
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: var(--gold-deep);
-      flex-shrink: 0;
-      margin-top: .55rem;
-    }
-    .instrucciones-img-desktop img {
-      width: 100%;
-      height: auto;
-      border-radius: var(--r-md);
-    }
+    .instrucciones li { font-size: 1rem; color: #444; display: flex; align-items: flex-start; gap: .75rem; }
+    .instrucciones li::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--gold-deep); flex-shrink: 0; margin-top: .55rem; }
+    .instrucciones-img-desktop img { width: 100%; height: auto; border-radius: var(--r-md); }
 
-    /* PREGUNTAS */
-    .preguntas {
-      background: var(--white);
-      border: 1px solid rgba(189,144,72,.2);
-      border-left: 4px solid var(--gold-deep);
-      border-radius: var(--r-md);
-      padding: 1.8rem 2rem;
-      margin-bottom: 2.5rem;
-    }
-    .preguntas h3 {
-      font-family: var(--font-display);
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--teal-deep);
-      margin-bottom: 1.4rem;
-    }
+    .preguntas { background: var(--white); border: 1px solid rgba(189,144,72,.2); border-left: 4px solid var(--gold-deep); border-radius: var(--r-md); padding: 1.8rem 2rem; margin-bottom: 2.5rem; }
+    .preguntas h3 { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; color: var(--teal-deep); margin-bottom: 1.4rem; }
     .pregunta-item { display: flex; gap: 1rem; margin-bottom: 1rem; }
     .pregunta-item:last-child { margin-bottom: 0; }
-    .pregunta-num {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--gold-deep);
-      flex-shrink: 0;
-      line-height: 1.4;
-    }
+    .pregunta-num { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--gold-deep); flex-shrink: 0; line-height: 1.4; }
     .pregunta-text { font-size: 1rem; color: #333; line-height: 1.6; font-weight: 600; }
 
-    /* FORM */
-    .form-card {
-      background: var(--white);
-      border: 1px solid rgba(189,144,72,.2);
-      border-radius: var(--r-md);
-      padding: 2.2rem;
-      box-shadow: 0 4px 24px rgba(0,0,0,.05);
-    }
+    .form-card { background: var(--white); border: 1px solid rgba(189,144,72,.2); border-radius: var(--r-md); padding: 2.2rem; box-shadow: 0 4px 24px rgba(0,0,0,.05); }
     .form-group { margin-bottom: 1.6rem; }
-    .form-group label {
-      display: block;
-      font-size: .95rem;
-      font-weight: 600;
-      color: var(--teal-deep);
-      margin-bottom: .5rem;
-    }
+    .form-group label { display: block; font-size: .95rem; font-weight: 600; color: var(--teal-deep); margin-bottom: .5rem; }
     .form-hint { font-size: .8rem; color: #888; margin-top: .3rem; }
-    .form-group input[type="text"],
-    .form-group input[type="email"] {
-      width: 100%;
-      padding: .85rem 1rem;
-      border: 1px solid rgba(0,0,0,.15);
-      border-radius: var(--r-sm);
-      font-family: var(--font-body);
-      font-size: 1rem;
-      background: var(--cream);
-      color: var(--ink);
-      transition: border-color .2s;
-      outline: none;
-    }
+    .form-group input[type="text"], .form-group input[type="email"] { width: 100%; padding: .85rem 1rem; border: 1px solid rgba(0,0,0,.15); border-radius: var(--r-sm); font-family: var(--font-body); font-size: 1rem; background: var(--cream); color: var(--ink); transition: border-color .2s; outline: none; }
     .form-group input:focus { border-color: var(--gold-deep); background: var(--white); }
 
-    .upload-area {
-      border: 2px dashed rgba(189,144,72,.4);
-      border-radius: var(--r-md);
-      padding: 2.2rem 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: border-color .2s, background .2s;
-      background: rgba(189,144,72,.03);
-      position: relative;
-    }
+    .upload-area { border: 2px dashed rgba(189,144,72,.4); border-radius: var(--r-md); padding: 2.2rem 1.5rem; text-align: center; cursor: pointer; transition: border-color .2s, background .2s; background: rgba(189,144,72,.03); position: relative; }
     .upload-area:hover { border-color: var(--gold-deep); background: rgba(189,144,72,.07); }
-    .upload-area input[type="file"] {
-      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
-    }
+    .upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
     .upload-icon { font-size: 2.2rem; margin-bottom: .6rem; }
     .upload-text { font-size: 1rem; color: #666; line-height: 1.5; }
     .upload-text strong { color: var(--gold-deep); }
     .upload-filename { margin-top: .8rem; font-size: .9rem; color: var(--teal-deep); font-weight: 600; display: none; }
 
-    .consentimiento {
-      display: flex;
-      align-items: flex-start;
-      gap: .85rem;
-      padding: 1.2rem;
-      background: rgba(14,63,75,.04);
-      border-radius: var(--r-sm);
-      margin-bottom: 1.8rem;
-    }
-    .consentimiento input[type="checkbox"] {
-      width: 16px; height: 16px; flex-shrink: 0; margin-top: .2rem;
-      accent-color: var(--gold-deep); cursor: pointer;
-    }
+    .progress-wrap { display: none; margin-top: 1rem; }
+    .progress-bar { height: 6px; background: rgba(189,144,72,.2); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold-deep), var(--gold-light)); border-radius: 3px; width: 0%; transition: width .3s; }
+    .progress-text { font-size: .85rem; color: var(--teal-deep); margin-top: .5rem; text-align: center; }
+
+    .consentimiento { display: flex; align-items: flex-start; gap: .85rem; padding: 1.2rem; background: rgba(14,63,75,.04); border-radius: var(--r-sm); margin-bottom: 1.8rem; }
+    .consentimiento input[type="checkbox"] { width: 16px; height: 16px; flex-shrink: 0; margin-top: .2rem; accent-color: var(--gold-deep); cursor: pointer; }
     .consentimiento label { font-size: .78rem; color: #777; line-height: 1.6; cursor: pointer; }
     .consentimiento label a { color: var(--gold-deep); text-decoration: underline; }
 
-    .btn-submit {
-      width: 100%;
-      background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
-      color: var(--white);
-      font-family: var(--font-body);
-      font-size: 1.05rem;
-      font-weight: 600;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      padding: 1.1rem 2rem;
-      border-radius: var(--r-sm);
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 6px 28px rgba(189,144,72,.35);
-      transition: transform .2s, box-shadow .2s;
-    }
+    .btn-submit { width: 100%; background: linear-gradient(135deg, var(--gold-deep), var(--gold-light)); color: var(--white); font-family: var(--font-body); font-size: 1.05rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 1.1rem 2rem; border-radius: var(--r-sm); border: none; cursor: pointer; box-shadow: 0 6px 28px rgba(189,144,72,.35); transition: transform .2s, box-shadow .2s; }
     .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(189,144,72,.5); }
     .btn-submit:disabled { opacity: .6; cursor: not-allowed; transform: none; }
 
     .error-msg { display: none; font-size: .85rem; color: #c0392b; margin-top: .4rem; }
 
-    .success-msg {
-      display: none;
-      text-align: center;
-      padding: 3.5rem 2rem;
-      background: var(--white);
-      border: 1px solid rgba(189,144,72,.2);
-      border-radius: var(--r-md);
-      box-shadow: 0 4px 24px rgba(0,0,0,.05);
-    }
-    .success-msg .success-icon { font-size: 3.5rem; margin-bottom: 1rem; }
-    .success-msg h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--teal-deep); margin-bottom: .75rem; }
-    .success-msg p { font-size: 1rem; color: #555; }
+    .success-msg { display: none; text-align: center; padding: 3.5rem 2rem; background: var(--white); border: 1px solid rgba(189,144,72,.2); border-radius: var(--r-md); box-shadow: 0 4px 24px rgba(0,0,0,.05); }
+    .check-icon { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-deep), var(--gold-light)); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--white); font-size: 2rem; font-weight: 700; box-shadow: 0 8px 24px rgba(189,144,72,.3); }
+    .success-msg h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--teal-deep); }
 
-    /* FOOTER */
     .footer { background: var(--teal-deep); color: var(--cream); padding-block: 2.5rem; margin-top: 4rem; }
     .footer-inner { width: min(1100px, 92vw); margin-inline: auto; text-align: center; display: flex; flex-direction: column; gap: .8rem; }
     .footer-email a { color: var(--gold-light); font-size: .95rem; }
@@ -293,9 +119,7 @@
 <body>
 
   <nav class="nav">
-    <a href="/">
-      <img class="nav-logo" src="images/3-logo-web-tu-codigo-base-carta-natal-astral-1.png" alt="Tu Código Base" style="height:70px; width:auto; display:inline-block;" />
-    </a>
+    <a href="/"><img src="images/3-logo-web-tu-codigo-base-carta-natal-astral-1.png" alt="Tu Código Base" /></a>
   </nav>
 
   <section class="hero-resena">
@@ -308,7 +132,6 @@
   <main class="page-wrap">
 
     <div class="instrucciones">
-      <!-- Imagen móvil: dentro de la caja, encima del texto -->
       <div class="instrucciones-img-mobile">
         <img src="images/chica-movil-tu-diseno-de-origen-tu-codigo-base.webp" alt="Cómo grabar tu vídeo" width="120" />
       </div>
@@ -370,6 +193,10 @@
             </div>
             <div class="upload-filename" id="uploadFilename"></div>
           </div>
+          <div class="progress-wrap" id="progressWrap">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="progress-text" id="progressText"></div>
+          </div>
           <span class="error-msg" id="errorVideo">Por favor, sube tu vídeo.</span>
         </div>
 
@@ -381,17 +208,15 @@
         </div>
         <span class="error-msg" id="errorConsentimiento" style="margin-bottom:1rem;">Debes aceptar el consentimiento para continuar.</span>
 
-        <button type="submit" class="btn-submit" id="btnSubmit">
-          Enviar mi testimonio
-        </button>
+        <button type="submit" class="btn-submit" id="btnSubmit">Enviar mi testimonio</button>
 
       </form>
     </div>
 
     <div class="success-msg" id="successMsg">
-  <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#bd9048,#cfb180);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;color:#fff;font-size:2rem;font-weight:700;box-shadow:0 8px 24px rgba(189,144,72,.3);">✓</div>
-  <h2>¡Gracias por compartir tu experiencia!</h2>
-</div>
+      <div class="check-icon">&#10003;</div>
+      <h2>&#161;Gracias por compartir tu experiencia!</h2>
+    </div>
 
   </main>
 
@@ -438,29 +263,95 @@
 
       const btn = document.getElementById('btnSubmit');
       btn.disabled = true;
-      btn.textContent = 'Enviando...';
+      btn.textContent = 'Preparando...';
+
+      const progressWrap = document.getElementById('progressWrap');
+      const progressFill = document.getElementById('progressFill');
+      const progressText = document.getElementById('progressText');
+      progressWrap.style.display = 'block';
 
       try {
-        const fd = new FormData();
-        fd.append('nombre', nombre);
-        fd.append('email', email);
-        fd.append('video', video);
-        fd.append('consentimiento', 'si');
-        fd.append('fecha', new Date().toISOString());
-        fd.append('texto_consentimiento', 'Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto.');
+        // PASO 1: Obtener URL de subida firmada
+        progressText.textContent = 'Preparando subida...';
+        const urlRes = await fetch('/api/get-upload-url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre,
+            email,
+            filename: video.name,
+            mimeType: video.type || 'video/mp4',
+          }),
+        });
 
-        const res = await fetch('/api/submit-resena', { method: 'POST', body: fd });
+        if (!urlRes.ok) throw new Error('Error obteniendo URL');
+        const { uploadUrl, nombreArchivo } = await urlRes.json();
+
+        // PASO 2: Subir vídeo directo a Google Drive con progreso
+        btn.textContent = 'Subiendo vídeo...';
+        progressText.textContent = 'Subiendo vídeo...';
+
+        const driveFileId = await new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open('PUT', uploadUrl);
+          xhr.setRequestHeader('Content-Type', video.type || 'video/mp4');
+
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable) {
+              const pct = Math.round((e.loaded / e.total) * 80);
+              progressFill.style.width = pct + '%';
+              progressText.textContent = 'Subiendo vídeo... ' + pct + '%';
+            }
+          };
+
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                const data = JSON.parse(xhr.responseText);
+                resolve(data.id || 'subido');
+              } catch {
+                resolve('subido');
+              }
+            } else {
+              reject(new Error('Error subiendo a Drive: ' + xhr.status));
+            }
+          };
+          xhr.onerror = () => reject(new Error('Error de red'));
+          xhr.send(video);
+        });
+
+        progressFill.style.width = '90%';
+        progressText.textContent = 'Procesando...';
+        btn.textContent = 'Procesando...';
+
+        // PASO 3: Enviar datos a la API
+        const res = await fetch('/api/submit-resena', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre,
+            email,
+            consentimiento: 'si',
+            fecha: new Date().toISOString(),
+            texto_consentimiento: 'Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto.',
+            driveFileId,
+            nombreArchivo,
+          }),
+        });
 
         if (res.ok) {
+          progressFill.style.width = '100%';
           document.getElementById('formCard').style.display = 'none';
           document.getElementById('successMsg').style.display = 'block';
           window.scrollTo({ top: 0, behavior: 'smooth' });
         } else {
           throw new Error();
         }
-      } catch {
+      } catch (err) {
+        console.error(err);
         btn.disabled = false;
         btn.textContent = 'Enviar mi testimonio';
+        progressWrap.style.display = 'none';
         alert('Ha ocurrido un error. Por favor, inténtalo de nuevo o escríbenos a hola@tucodigobase.com');
       }
     });
