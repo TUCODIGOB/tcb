@@ -74,6 +74,7 @@ async function actualizarBrevo(email, nombre, fecha, textoConsentimiento, videoU
   if (!BREVO_API_KEY) return;
 
   const attributes = {
+    NOMBRE: nombre,
     RESENA_ENVIADA: 'si',
     RESENA_FECHA: fecha || new Date().toISOString(),
     RESENA_CONSENTIMIENTO: textoConsentimiento || 'Autorizado',
