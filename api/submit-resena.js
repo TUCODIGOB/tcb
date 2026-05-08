@@ -1,10 +1,13 @@
 // ═════════════════════════════════════════════════════════════════
 // /api/submit-resena.js
-// Recibe el formulario multipart, hace streaming del vídeo a Drive,
-// actualiza Brevo y envía email al admin.
+// Recibe el formulario multipart con formidable, sube el vídeo a
+// Google Drive, actualiza Brevo y envía email al admin.
 // ═════════════════════════════════════════════════════════════════
 
 import { google } from 'googleapis';
+import { IncomingForm } from 'formidable';
+import fs from 'fs';
+import path from 'path';
 
 export const config = {
   api: {
@@ -20,20 +23,27 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Parsear el formulario multipart con streaming
-    const { fields, fileBuffer, filename, mimeType } = await parseMultipart(req);
+    // 1. Parsear formulario
+    const { fields, files } = await new Promise((resolve, reject) => {
+      const form = new IncomingForm({ keepExtensions: true, maxFileSize: 500 * 1024 * 1024 });
+      form.parse(req, (err, fields, files) => {
+        if (err) reject(err);
+        else resolve({ fields, files });
+      });
+    });
 
-    const nombre = fields.nombre;
-    const email = fields.email;
-    const consentimiento = fields.consentimiento;
-    const fecha = fields.fecha;
-    const textoConsentimiento = fields.texto_consentimiento;
+    const nombre = Array.isArray(fields.nombre) ? fields.nombre[0] : fields.nombre;
+    const email = Array.isArray(fields.email) ? fields.email[0] : fields.email;
+    const consentimiento = Array.isArray(fields.consentimiento) ? fields.consentimiento[0] : fields.consentimiento;
+    const fecha = Array.isArray(fields.fecha) ? fields.fecha[0] : fields.fecha;
+    const textoConsentimiento = Array.isArray(fields.texto_consentimiento) ? fields.texto_consentimiento[0] : fields.texto_consentimiento;
+    const videoFile = Array.isArray(files.video) ? files.video[0] : files.video;
 
-    if (!nombre || !email || !consentimiento || !fileBuffer) {
+    if (!nombre || !email || !consentimiento || !videoFile) {
       return res.status(400).json({ error: 'Faltan datos obligatorios' });
     }
 
-    // Autenticar con Google Drive
+    // 2. Autenticar con Google Drive
     const privateKey = process.env.GOOGLE_DRIVE_PRIVATE_KEY?.replace(/\\n/g, '\n');
     const clientEmail = process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL;
 
@@ -44,15 +54,14 @@ export default async function handler(req, res) {
 
     const drive = google.drive({ version: 'v3', auth });
 
-    // Nombre del archivo
+    // 3. Nombre del archivo
     const nombreSeguro = nombre.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g, '').trim().replace(/\s+/g, '_');
     const emailSeguro = email.replace(/[^a-zA-Z0-9@._-]/g, '');
-    const ext = filename && filename.includes('.') ? '.' + filename.split('.').pop() : '.mp4';
+    const ext = path.extname(videoFile.originalFilename || videoFile.newFilename || '.mp4') || '.mp4';
     const nombreArchivo = `Resena_${nombreSeguro}_${emailSeguro}${ext}`;
 
-    // Subir a Drive
-    const { Readable } = await import('stream');
-    const stream = Readable.from(fileBuffer);
+    // 4. Subir a Drive
+    const fileStream = fs.createReadStream(videoFile.filepath);
 
     const driveRes = await drive.files.create({
       requestBody: {
@@ -60,8 +69,8 @@ export default async function handler(req, res) {
         parents: [DRIVE_FOLDER_ID],
       },
       media: {
-        mimeType: mimeType || 'video/mp4',
-        body: stream,
+        mimeType: videoFile.mimetype || 'video/mp4',
+        body: fileStream,
       },
       fields: 'id',
     });
@@ -69,10 +78,10 @@ export default async function handler(req, res) {
     const driveFileId = driveRes.data.id;
     console.log(`[submit-resena] ✅ Vídeo subido: ${nombreArchivo}`);
 
-    // Actualizar Brevo
+    // 5. Actualizar Brevo
     await actualizarBrevo(email, nombre, fecha, textoConsentimiento, driveFileId);
 
-    // Email admin
+    // 6. Email admin
     await enviarEmailAdmin(nombre, email, fecha, driveFileId, nombreArchivo);
 
     return res.status(200).json({ ok: true });
@@ -81,89 +90,6 @@ export default async function handler(req, res) {
     console.error('[submit-resena] Error:', error);
     return res.status(500).json({ error: 'Error procesando la reseña', detalle: error.message });
   }
-}
-
-// ═══════════════════════════════════════
-// PARSEAR MULTIPART MANUALMENTE
-// ═══════════════════════════════════════
-function parseMultipart(req) {
-  return new Promise((resolve, reject) => {
-    const chunks = [];
-    req.on('data', chunk => chunks.push(chunk));
-    req.on('end', () => {
-      try {
-        const body = Buffer.concat(chunks);
-        const contentType = req.headers['content-type'] || '';
-        const boundaryMatch = contentType.match(/boundary=(.+)$/);
-        if (!boundaryMatch) throw new Error('No boundary found');
-
-        const boundary = '--' + boundaryMatch[1];
-        const parts = splitBuffer(body, Buffer.from('\r\n' + boundary));
-
-        const fields = {};
-        let fileBuffer = null;
-        let filename = null;
-        let mimeType = null;
-
-        for (const part of parts) {
-          if (!part || part.length === 0) continue;
-
-          const headerEnd = indexOfBuffer(part, Buffer.from('\r\n\r\n'));
-          if (headerEnd === -1) continue;
-
-          const headerStr = part.slice(0, headerEnd).toString();
-          const content = part.slice(headerEnd + 4);
-
-          // Quitar trailing \r\n--
-          const trimmed = content.slice(0, content.length - 2);
-
-          const nameMatch = headerStr.match(/name="([^"]+)"/);
-          const filenameMatch = headerStr.match(/filename="([^"]+)"/);
-          const mimeMatch = headerStr.match(/Content-Type:\s*([^\r\n]+)/);
-
-          if (!nameMatch) continue;
-          const fieldName = nameMatch[1];
-
-          if (filenameMatch) {
-            filename = filenameMatch[1];
-            mimeType = mimeMatch ? mimeMatch[1].trim() : 'video/mp4';
-            fileBuffer = trimmed;
-          } else {
-            fields[fieldName] = trimmed.toString().trim();
-          }
-        }
-
-        resolve({ fields, fileBuffer, filename, mimeType });
-      } catch (err) {
-        reject(err);
-      }
-    });
-    req.on('error', reject);
-  });
-}
-
-function splitBuffer(buf, delimiter) {
-  const parts = [];
-  let start = 0;
-  let pos = indexOfBuffer(buf, delimiter);
-  while (pos !== -1) {
-    parts.push(buf.slice(start, pos));
-    start = pos + delimiter.length;
-    pos = indexOfBuffer(buf, delimiter, start);
-  }
-  parts.push(buf.slice(start));
-  return parts;
-}
-
-function indexOfBuffer(buf, search, offset = 0) {
-  for (let i = offset; i <= buf.length - search.length; i++) {
-    let found = true;
-    for (let j = 0; j < search.length; j++) {
-      if (buf[i + j] !== search[j]) { found = false; break; }
-    }
-    if (found) return i;
-  }
-  return -1;
 }
 
 // ═══════════════════════════════════════
