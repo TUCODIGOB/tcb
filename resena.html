@@ -64,7 +64,6 @@
     .form-group input:focus { border-color: var(--gold-deep); background: var(--white); }
     .upload-area { border: 2px dashed rgba(189,144,72,.4); border-radius: var(--r-md); padding: 2.2rem 1.5rem; text-align: center; cursor: pointer; transition: border-color .2s, background .2s; background: rgba(189,144,72,.03); position: relative; }
     .upload-area:hover { border-color: var(--gold-deep); background: rgba(189,144,72,.07); }
-    .upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
     .upload-icon { font-size: 2.2rem; margin-bottom: .6rem; }
     .upload-text { font-size: 1rem; color: #666; line-height: 1.5; }
     .upload-text strong { color: var(--gold-deep); }
@@ -165,8 +164,8 @@
         </div>
         <div class="form-group">
           <label>Tu vídeo *</label>
-          <div class="upload-area" onclick="document.getElementById('video').click()">
-    <input type="file" id="video" name="video" accept="video/*" required style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;" />
+          <input type="file" id="video" name="video" accept="video/*" required style="display:none;" />
+<div class="upload-area" id="uploadArea">
             <div class="upload-icon">🎬</div>
             <div class="upload-text">
               <strong>Toca aquí para subir tu vídeo</strong><br>
@@ -214,19 +213,22 @@
   </footer>
 
   <script>
-    const videoInput = document.getElementById('video');
-['change', 'input'].forEach(function(evt) {
-  videoInput.addEventListener(evt, function() {
-    const file = this.files && this.files[0];
-    if (file) {
-      const fn = document.getElementById('uploadFilename');
-      fn.style.display = 'block';
-      fn.textContent = '✓ ' + file.name;
-    }
-  });
+    document.getElementById('uploadArea').addEventListener('click', function() {
+  document.getElementById('video').click();
 });
 
-    document.getElementById('resenaForm').addEventListener('submit', async function(e) {
+document.getElementById('video').addEventListener('change', function() {
+  const file = this.files && this.files[0];
+  if (file) {
+    const fn = document.getElementById('uploadFilename');
+    fn.style.display = 'block';
+    fn.textContent = '✓ ' + file.name;
+    document.getElementById('uploadArea').style.borderColor = '#bd9048';
+    document.getElementById('uploadArea').style.background = 'rgba(189,144,72,.07)';
+  }
+});
+
+document.getElementById('resenaForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
 
@@ -253,7 +255,6 @@
   progressText.textContent = 'Subiendo vídeo, por favor espera...';
 
   try {
-    // PASO 1: Obtener firma de Cloudinary desde el servidor
     const sigRes = await fetch('/api/submit-resena', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -270,8 +271,6 @@
     if (!sigRes.ok) throw new Error('Error obteniendo firma');
     const { signature, timestamp, publicId, cloudName, apiKey } = await sigRes.json();
 
-    // PASO 2: Subir vídeo directo a Cloudinary desde el navegador
-    progressText.textContent = 'Subiendo vídeo...';
     const cloudinaryForm = new FormData();
     cloudinaryForm.append('file', video);
     cloudinaryForm.append('public_id', publicId);
@@ -297,7 +296,6 @@
           progressFill.style.width = '90%';
           progressText.textContent = 'Procesando...';
 
-          // PASO 3: Notificar al servidor con la URL del vídeo
           await fetch('/api/submit-resena', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -319,6 +317,7 @@
           reject(new Error('Error subiendo a Cloudinary: ' + xhr.status));
         }
       };
+
       xhr.onerror = () => reject(new Error('Error de red'));
       xhr.send(cloudinaryForm);
     });
@@ -334,19 +333,6 @@
     alert('Ha ocurrido un error. Por favor, inténtalo de nuevo o escríbenos a hola@tucodigobase.com');
   }
 });
-
-        document.getElementById('formCard').style.display = 'none';
-        document.getElementById('successMsg').style.display = 'block';
-        
-
-      } catch (err) {
-        console.error(err);
-        btn.disabled = false;
-        btn.textContent = 'Enviar mi testimonio';
-        progressWrap.style.display = 'none';
-        alert('Ha ocurrido un error. Por favor, inténtalo de nuevo o escríbenos a hola@tucodigobase.com');
-      }
-    });
-  </script>
+</script>
 </body>
 </html>
