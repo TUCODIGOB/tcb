@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Comparte tu experiencia · Tu Código Base</title>
 
-  <!-- SEO & OG -->
   <meta name="description" content="Comparte tu experiencia con Tu Diseño de Origen y ayuda a otras personas a dar el paso que tú ya diste." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://tucodigobase.com/resena" />
@@ -48,26 +47,15 @@
     img { display: block; max-width: 100%; }
     a { color: inherit; text-decoration: none; }
 
-    /* NAV — igual que m1 */
+    /* NAV — no sticky */
     .nav {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(255,251,239,.92);
+      background: rgba(255,251,239,.95);
       backdrop-filter: blur(12px);
-    }
-    .nav-inner {
-      width: min(1100px, 92vw);
-      margin-inline: auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border-bottom: 1px solid rgba(189,144,72,.2);
+      text-align: center;
       padding-block: .2rem;
     }
-    .nav-logo img {
-      height: 70px;
-      width: auto;
-    }
+    .nav-logo img { height: 70px; width: auto; display: inline-block; }
 
     /* HERO */
     .hero-resena {
@@ -75,16 +63,6 @@
       padding-block: 3rem 2rem;
       text-align: center;
     }
-
-    /* Foto móvil — solo en móvil, encima del título */
-    .hero-mobile-img {
-      display: none;
-      margin-inline: auto;
-      margin-bottom: 1.5rem;
-      width: 130px;
-    }
-    .hero-mobile-img img { width: 100%; height: auto; border-radius: var(--r-md); }
-
     .hero-resena h1 {
       font-family: var(--font-display);
       font-size: clamp(2rem, 4vw, 2.8rem);
@@ -98,7 +76,6 @@
       color: #555;
       max-width: 500px;
       margin-inline: auto;
-      white-space: nowrap;
     }
 
     /* MAIN */
@@ -108,7 +85,7 @@
       padding-block: 2.5rem 6rem;
     }
 
-    /* INSTRUCCIONES con foto a la derecha */
+    /* INSTRUCCIONES */
     .instrucciones {
       background: var(--white);
       border: 1px solid rgba(189,144,72,.2);
@@ -116,10 +93,24 @@
       border-radius: var(--r-md);
       padding: 1.8rem 2rem;
       margin-bottom: 1.5rem;
+    }
+    /* Web: texto + imagen lado a lado */
+    .instrucciones-inner {
       display: grid;
       grid-template-columns: 1fr 125px;
       gap: 1.5rem;
       align-items: center;
+    }
+    /* Imagen móvil: solo visible en móvil, dentro de la caja arriba del texto */
+    .instrucciones-img-mobile {
+      display: none;
+      margin-bottom: 1rem;
+    }
+    .instrucciones-img-mobile img {
+      width: 120px;
+      height: auto;
+      border-radius: var(--r-md);
+      margin-inline: auto;
     }
     .instrucciones-content h3 {
       font-family: var(--font-display);
@@ -144,7 +135,7 @@
       flex-shrink: 0;
       margin-top: .55rem;
     }
-    .instrucciones-img img {
+    .instrucciones-img-desktop img {
       width: 100%;
       height: auto;
       border-radius: var(--r-md);
@@ -290,10 +281,9 @@
     .footer-copy { font-size: .78rem; color: rgba(255,251,239,.45); line-height: 1.6; }
 
     @media (max-width: 600px) {
-      .hero-mobile-img { display: block; }
-      .hero-resena p { white-space: normal; }
-      .instrucciones { grid-template-columns: 1fr; }
-      .instrucciones-img { display: none; }
+      .instrucciones-inner { grid-template-columns: 1fr; }
+      .instrucciones-img-desktop { display: none; }
+      .instrucciones-img-mobile { display: block; }
       .page-wrap { padding-block: 2rem 4rem; }
       .form-card { padding: 1.5rem; }
       .preguntas, .instrucciones { padding: 1.4rem; }
@@ -303,18 +293,13 @@
 <body>
 
   <nav class="nav">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo">
-        <img src="images/3-logo-web-tu-codigo-base-carta-natal-astral-1.png" alt="Tu Código Base" />
-      </a>
-    </div>
+    <a href="/">
+      <img class="nav-logo" src="images/3-logo-web-tu-codigo-base-carta-natal-astral-1.png" alt="Tu Código Base" style="height:70px; width:auto; display:inline-block;" />
+    </a>
   </nav>
 
   <section class="hero-resena">
     <div style="width: min(680px, 92vw); margin-inline: auto;">
-      <div class="hero-mobile-img">
-        <img src="images/chica-movil-tu-diseno-de-origen-tu-codigo-base.webp" alt="Comparte tu experiencia" width="130" />
-      </div>
       <h1>Comparte tu experiencia</h1>
       <p>Tu testimonio puede ayudar a otras personas a dar el paso que tú ya diste.</p>
     </div>
@@ -323,16 +308,22 @@
   <main class="page-wrap">
 
     <div class="instrucciones">
-      <div class="instrucciones-content">
-        <h3>Cómo grabar tu vídeo</h3>
-        <ul>
-          <li>Graba con el móvil, en vertical</li>
-          <li>Busca buena luz natural</li>
-          <li>Habla con naturalidad, como si se lo contaras a una amiga</li>
-        </ul>
+      <!-- Imagen móvil: dentro de la caja, encima del texto -->
+      <div class="instrucciones-img-mobile">
+        <img src="images/chica-movil-tu-diseno-de-origen-tu-codigo-base.webp" alt="Cómo grabar tu vídeo" width="120" />
       </div>
-      <div class="instrucciones-img">
-        <img src="images/chica-movil-tu-diseno-de-origen-tu-codigo-base.webp" alt="Cómo grabar tu vídeo" width="125" />
+      <div class="instrucciones-inner">
+        <div class="instrucciones-content">
+          <h3>Cómo grabar tu vídeo</h3>
+          <ul>
+            <li>Graba con el móvil, en vertical</li>
+            <li>Busca buena luz natural</li>
+            <li>Habla con naturalidad, como si se lo contaras a una amiga</li>
+          </ul>
+        </div>
+        <div class="instrucciones-img-desktop">
+          <img src="images/chica-movil-tu-diseno-de-origen-tu-codigo-base.webp" alt="Cómo grabar tu vídeo" width="125" />
+        </div>
       </div>
     </div>
 
