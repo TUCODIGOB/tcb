@@ -281,7 +281,6 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
     await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`);
-xhr.timeout = 600000;
       xhr.upload.onprogress = (e) => {
         if (e.lengthComputable) {
           const pct = Math.round((e.loaded / e.total) * 80);
