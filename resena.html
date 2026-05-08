@@ -278,40 +278,56 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
     cloudinaryForm.append('api_key', apiKey);
     cloudinaryForm.append('signature', signature);
 
-    progressFill.style.width = '50%';
-progressText.textContent = 'Subiendo vídeo...';
+    await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`);
+xhr.timeout = 600000;
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 80);
+          progressFill.style.width = pct + '%';
+          progressText.textContent = 'Subiendo vídeo... ' + pct + '%';
+        }
+      };
 
-const cloudRes = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/video/upload`, {
-  method: 'POST',
-  body: cloudinaryForm,
-});
-
-if (!cloudRes.ok) {
-  const errText = await cloudRes.text();
-  throw new Error('Error Cloudinary: ' + cloudRes.status + ' - ' + errText);
+      xhr.onload = async () => {
+        if (xhr.status === 200) {
+          let data;
+try {
+  data = JSON.parse(xhr.responseText);
+} catch(e) {
+  reject(new Error('Respuesta inválida de Cloudinary: ' + xhr.responseText));
+  return;
 }
+          progressFill.style.width = '90%';
+          progressText.textContent = 'Procesando...';
 
-const data = await cloudRes.json();
+          await fetch('/api/submit-resena', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'save',
+              nombre,
+              email,
+              consentimiento: 'si',
+              fecha: new Date().toISOString(),
+              texto_consentimiento: 'Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto.',
+              videoUrl: data.secure_url,
+              publicId,
+            }),
+          });
 
-progressFill.style.width = '90%';
-progressText.textContent = 'Procesando...';
+          progressFill.style.width = '100%';
+          resolve();
+        } else {
+          reject(new Error('Error subiendo a Cloudinary: ' + xhr.status + ' - ' + xhr.responseText));
+        }
+      };
 
-await fetch('/api/submit-resena', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    action: 'save',
-    nombre,
-    email,
-    consentimiento: 'si',
-    fecha: new Date().toISOString(),
-    texto_consentimiento: 'Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto.',
-    videoUrl: data.secure_url,
-    publicId,
-  }),
-});
-
-progressFill.style.width = '100%';
+      xhr.onerror = () => reject(new Error('Error de red'));
+xhr.ontimeout = () => reject(new Error('Error de red'));
+      xhr.send(cloudinaryForm);
+    });
 
     document.getElementById('formCard').style.display = 'none';
     document.getElementById('successMsg').style.display = 'block';
