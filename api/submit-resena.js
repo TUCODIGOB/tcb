@@ -15,7 +15,6 @@ export const config = {
   },
 };
 
-const DRIVE_FOLDER_ID = '1wbHTWATS88-D_xsqm38rkpCizFhmohb2';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -66,7 +65,7 @@ export default async function handler(req, res) {
     const driveRes = await drive.files.create({
       requestBody: {
         name: nombreArchivo,
-        parents: [DRIVE_FOLDER_ID],
+        parents: [],
       },
       media: {
         mimeType: videoFile.mimetype || 'video/mp4',
