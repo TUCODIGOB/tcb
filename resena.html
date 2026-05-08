@@ -223,63 +223,113 @@
     });
 
     document.getElementById('resenaForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+  e.preventDefault();
+  document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
 
-      const nombre = document.getElementById('nombre').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const video = document.getElementById('video').files[0];
-      const consent = document.getElementById('consentimiento').checked;
-      let valid = true;
+  const nombre = document.getElementById('nombre').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const video = document.getElementById('video').files[0];
+  const consent = document.getElementById('consentimiento').checked;
+  let valid = true;
 
-      if (!nombre) { document.getElementById('errorNombre').style.display = 'block'; valid = false; }
-      if (!email || !email.includes('@')) { document.getElementById('errorEmail').style.display = 'block'; valid = false; }
-      if (!video) { document.getElementById('errorVideo').style.display = 'block'; valid = false; }
-      if (!consent) { document.getElementById('errorConsentimiento').style.display = 'block'; valid = false; }
-      if (!valid) return;
+  if (!nombre) { document.getElementById('errorNombre').style.display = 'block'; valid = false; }
+  if (!email || !email.includes('@')) { document.getElementById('errorEmail').style.display = 'block'; valid = false; }
+  if (!video) { document.getElementById('errorVideo').style.display = 'block'; valid = false; }
+  if (!consent) { document.getElementById('errorConsentimiento').style.display = 'block'; valid = false; }
+  if (!valid) return;
 
-      const btn = document.getElementById('btnSubmit');
-      btn.disabled = true;
-      btn.textContent = 'Subiendo vídeo...';
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true;
+  btn.textContent = 'Subiendo vídeo...';
 
-      const progressWrap = document.getElementById('progressWrap');
-      const progressFill = document.getElementById('progressFill');
-      const progressText = document.getElementById('progressText');
-      progressWrap.style.display = 'block';
-      progressText.textContent = 'Subiendo vídeo, por favor espera...';
+  const progressWrap = document.getElementById('progressWrap');
+  const progressFill = document.getElementById('progressFill');
+  const progressText = document.getElementById('progressText');
+  progressWrap.style.display = 'block';
+  progressText.textContent = 'Subiendo vídeo, por favor espera...';
 
-      try {
-        const fd = new FormData();
-        fd.append('nombre', nombre);
-        fd.append('email', email);
-        fd.append('consentimiento', 'si');
-        fd.append('fecha', new Date().toISOString());
-        fd.append('texto_consentimiento', 'Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto.');
-        fd.append('video', video);
+  try {
+    // PASO 1: Obtener firma de Cloudinary desde el servidor
+    const sigRes = await fetch('/api/submit-resena', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'get-signature',
+        nombre,
+        email,
+        consentimiento: 'si',
+        fecha: new Date().toISOString(),
+        texto_consentimiento: 'Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto.',
+      }),
+    });
 
-        await new Promise((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open('POST', '/api/submit-resena');
+    if (!sigRes.ok) throw new Error('Error obteniendo firma');
+    const { signature, timestamp, publicId, cloudName, apiKey } = await sigRes.json();
 
-          xhr.upload.onprogress = (e) => {
-            if (e.lengthComputable) {
-              const pct = Math.round((e.loaded / e.total) * 90);
-              progressFill.style.width = pct + '%';
-              progressText.textContent = 'Subiendo vídeo... ' + pct + '%';
-            }
-          };
+    // PASO 2: Subir vídeo directo a Cloudinary desde el navegador
+    progressText.textContent = 'Subiendo vídeo...';
+    const cloudinaryForm = new FormData();
+    cloudinaryForm.append('file', video);
+    cloudinaryForm.append('public_id', publicId);
+    cloudinaryForm.append('timestamp', timestamp);
+    cloudinaryForm.append('api_key', apiKey);
+    cloudinaryForm.append('signature', signature);
 
-          xhr.onload = () => {
-            if (xhr.status === 200) {
-              progressFill.style.width = '100%';
-              resolve();
-            } else {
-              reject(new Error('Error: ' + xhr.status));
-            }
-          };
-          xhr.onerror = () => reject(new Error('Error de red'));
-          xhr.send(fd);
-        });
+    await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`);
+
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 80);
+          progressFill.style.width = pct + '%';
+          progressText.textContent = 'Subiendo vídeo... ' + pct + '%';
+        }
+      };
+
+      xhr.onload = async () => {
+        if (xhr.status === 200) {
+          const data = JSON.parse(xhr.responseText);
+          progressFill.style.width = '90%';
+          progressText.textContent = 'Procesando...';
+
+          // PASO 3: Notificar al servidor con la URL del vídeo
+          await fetch('/api/submit-resena', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'save',
+              nombre,
+              email,
+              consentimiento: 'si',
+              fecha: new Date().toISOString(),
+              texto_consentimiento: 'Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto.',
+              videoUrl: data.secure_url,
+              publicId,
+            }),
+          });
+
+          progressFill.style.width = '100%';
+          resolve();
+        } else {
+          reject(new Error('Error subiendo a Cloudinary: ' + xhr.status));
+        }
+      };
+      xhr.onerror = () => reject(new Error('Error de red'));
+      xhr.send(cloudinaryForm);
+    });
+
+    document.getElementById('formCard').style.display = 'none';
+    document.getElementById('successMsg').style.display = 'block';
+
+  } catch (err) {
+    console.error(err);
+    btn.disabled = false;
+    btn.textContent = 'Enviar mi testimonio';
+    progressWrap.style.display = 'none';
+    alert('Ha ocurrido un error. Por favor, inténtalo de nuevo o escríbenos a hola@tucodigobase.com');
+  }
+});
 
         document.getElementById('formCard').style.display = 'none';
         document.getElementById('successMsg').style.display = 'block';
