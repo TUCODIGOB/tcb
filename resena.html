@@ -278,66 +278,55 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
     cloudinaryForm.append('api_key', apiKey);
     cloudinaryForm.append('signature', signature);
 
-    const CHUNK_SIZE = 6 * 1024 * 1024; // 6MB por trozo
-const fileSize = video.size;
-const totalChunks = Math.ceil(fileSize / CHUNK_SIZE);
-let uploadedUrl = null;
+    await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`);
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const pct = Math.round((e.loaded / e.total) * 80);
+          progressFill.style.width = pct + '%';
+          progressText.textContent = 'Subiendo vídeo... ' + pct + '%';
+        }
+      };
 
-for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-  const start = chunkIndex * CHUNK_SIZE;
-  const end = Math.min(start + CHUNK_SIZE, fileSize);
-  const chunk = video.slice(start, end);
-
-  const chunkForm = new FormData();
-  chunkForm.append('file', chunk);
-  chunkForm.append('public_id', publicId);
-  chunkForm.append('timestamp', timestamp);
-  chunkForm.append('api_key', apiKey);
-  chunkForm.append('signature', signature);
-
-  const pct = Math.round(((chunkIndex + 1) / totalChunks) * 80);
-  progressFill.style.width = pct + '%';
-  progressText.textContent = 'Subiendo vídeo... ' + pct + '%';
-
-  const chunkRes = await new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`);
-    xhr.setRequestHeader('X-Unique-Upload-Id', publicId);
-    xhr.setRequestHeader('Content-Range', `bytes ${start}-${end - 1}/${fileSize}`);
-    xhr.onload = () => resolve(xhr);
-    xhr.onerror = () => reject(new Error('Error de red'));
-    xhr.send(chunkForm);
-  });
-
-  if (chunkRes.status !== 200 && chunkRes.status !== 206) {
-    throw new Error('Error Cloudinary: ' + chunkRes.status + ' - ' + chunkRes.responseText);
-  }
-
-  if (chunkIndex === totalChunks - 1) {
-    const data = JSON.parse(chunkRes.responseText);
-    uploadedUrl = data.secure_url;
-  }
+      xhr.onload = async () => {
+        if (xhr.status === 200) {
+          let data;
+try {
+  data = JSON.parse(xhr.responseText);
+} catch(e) {
+  reject(new Error('Respuesta inválida de Cloudinary: ' + xhr.responseText));
+  return;
 }
+          progressFill.style.width = '90%';
+          progressText.textContent = 'Procesando...';
 
-progressFill.style.width = '90%';
-progressText.textContent = 'Procesando...';
+          await fetch('/api/submit-resena', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'save',
+              nombre,
+              email,
+              consentimiento: 'si',
+              fecha: new Date().toISOString(),
+              texto_consentimiento: 'Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto.',
+              videoUrl: data.secure_url,
+              publicId,
+            }),
+          });
 
-await fetch('/api/submit-resena', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    action: 'save',
-    nombre,
-    email,
-    consentimiento: 'si',
-    fecha: new Date().toISOString(),
-    texto_consentimiento: 'Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto.',
-    videoUrl: uploadedUrl,
-    publicId,
-  }),
-});
+          progressFill.style.width = '100%';
+          resolve();
+        } else {
+          reject(new Error('Error subiendo a Cloudinary: ' + xhr.status + ' - ' + xhr.responseText));
+        }
+      };
 
-progressFill.style.width = '100%';
+      xhr.onerror = () => reject(new Error('Error de red'));
+xhr.ontimeout = () => reject(new Error('Error de red'));
+      xhr.send(cloudinaryForm);
+    });
 
     document.getElementById('formCard').style.display = 'none';
     document.getElementById('successMsg').style.display = 'block';
