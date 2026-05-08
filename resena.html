@@ -314,7 +314,7 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
           progressFill.style.width = '100%';
           resolve();
         } else {
-          reject(new Error('Error subiendo a Cloudinary: ' + xhr.status));
+          reject(new Error('Error subiendo a Cloudinary: ' + xhr.status + ' - ' + xhr.responseText));
         }
       };
 
