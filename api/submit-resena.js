@@ -1,20 +1,19 @@
 // ═════════════════════════════════════════════════════════════════
 // /api/submit-resena.js
 // Recibe el formulario multipart con formidable, sube el vídeo a
-// Google Drive, actualiza Brevo y envía email al admin.
+// Cloudinary, actualiza Brevo y envía email al admin.
 // ═════════════════════════════════════════════════════════════════
 
-import { google } from 'googleapis';
 import { IncomingForm } from 'formidable';
 import fs from 'fs';
 import path from 'path';
+import crypto from 'crypto';
 
 export const config = {
   api: {
     bodyParser: false,
   },
 };
-
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -42,46 +41,52 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Faltan datos obligatorios' });
     }
 
-    // 2. Autenticar con Google Drive
-    const privateKey = process.env.GOOGLE_DRIVE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-    const clientEmail = process.env.GOOGLE_DRIVE_SERVICE_ACCOUNT_EMAIL;
-
-    const auth = new google.auth.GoogleAuth({
-      credentials: { client_email: clientEmail, private_key: privateKey },
-      scopes: ['https://www.googleapis.com/auth/drive'],
-    });
-
-    const drive = google.drive({ version: 'v3', auth });
-
-    // 3. Nombre del archivo
+    // 2. Nombre del archivo
     const nombreSeguro = nombre.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g, '').trim().replace(/\s+/g, '_');
-    const emailSeguro = email.replace(/[^a-zA-Z0-9@._-]/g, '');
+    const emailSeguro = email.replace(/[^a-zA-Z0-9@._-]/g, '').replace('@', '_at_');
+    const publicId = `resenas/Resena_${nombreSeguro}_${emailSeguro}`;
+
+    // 3. Subir a Cloudinary via API REST (sin SDK)
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+    const timestamp = Math.floor(Date.now() / 1000);
+    const signature = crypto
+      .createHash('sha1')
+      .update(`public_id=${publicId}&resource_type=video&timestamp=${timestamp}${apiSecret}`)
+      .digest('hex');
+
+    const formData = new FormData();
+    const fileBuffer = fs.readFileSync(videoFile.filepath);
+    const blob = new Blob([fileBuffer], { type: videoFile.mimetype || 'video/mp4' });
     const ext = path.extname(videoFile.originalFilename || videoFile.newFilename || '.mp4') || '.mp4';
-    const nombreArchivo = `Resena_${nombreSeguro}_${emailSeguro}${ext}`;
+    formData.append('file', blob, `video${ext}`);
+    formData.append('public_id', publicId);
+    formData.append('timestamp', timestamp.toString());
+    formData.append('api_key', apiKey);
+    formData.append('signature', signature);
+    formData.append('resource_type', 'video');
 
-    // 4. Subir a Drive
-    const fileStream = fs.createReadStream(videoFile.filepath);
+    const cloudinaryRes = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`,
+      { method: 'POST', body: formData }
+    );
 
-    const driveRes = await drive.files.create({
-      requestBody: {
-        name: nombreArchivo,
-        parents: [],
-      },
-      media: {
-        mimeType: videoFile.mimetype || 'video/mp4',
-        body: fileStream,
-      },
-      fields: 'id',
-    });
+    if (!cloudinaryRes.ok) {
+      const err = await cloudinaryRes.text();
+      throw new Error(`Cloudinary error: ${err}`);
+    }
 
-    const driveFileId = driveRes.data.id;
-    console.log(`[submit-resena] ✅ Vídeo subido: ${nombreArchivo}`);
+    const cloudinaryData = await cloudinaryRes.json();
+    const videoUrl = cloudinaryData.secure_url;
+    console.log(`[submit-resena] ✅ Vídeo subido a Cloudinary: ${videoUrl}`);
 
-    // 5. Actualizar Brevo
-    await actualizarBrevo(email, nombre, fecha, textoConsentimiento, driveFileId);
+    // 4. Actualizar Brevo
+    await actualizarBrevo(email, nombre, fecha, textoConsentimiento, videoUrl);
 
-    // 6. Email admin
-    await enviarEmailAdmin(nombre, email, fecha, driveFileId, nombreArchivo);
+    // 5. Email admin
+    await enviarEmailAdmin(nombre, email, fecha, videoUrl, `Resena_${nombreSeguro}_${emailSeguro}`);
 
     return res.status(200).json({ ok: true });
 
@@ -94,7 +99,7 @@ export default async function handler(req, res) {
 // ═══════════════════════════════════════
 // ACTUALIZAR BREVO
 // ═══════════════════════════════════════
-async function actualizarBrevo(email, nombre, fecha, textoConsentimiento, driveFileId) {
+async function actualizarBrevo(email, nombre, fecha, textoConsentimiento, videoUrl) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) return;
 
@@ -102,7 +107,7 @@ async function actualizarBrevo(email, nombre, fecha, textoConsentimiento, driveF
     RESENA_ENVIADA: 'si',
     RESENA_FECHA: fecha || new Date().toISOString(),
     RESENA_CONSENTIMIENTO: textoConsentimiento || 'Autorizado',
-    RESENA_DRIVE_ID: driveFileId || '',
+    RESENA_DRIVE_ID: videoUrl || '',
   };
 
   const resp = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
@@ -125,11 +130,10 @@ async function actualizarBrevo(email, nombre, fecha, textoConsentimiento, driveF
 // ═══════════════════════════════════════
 // EMAIL ADMIN
 // ═══════════════════════════════════════
-async function enviarEmailAdmin(nombre, email, fecha, driveFileId, nombreArchivo) {
+async function enviarEmailAdmin(nombre, email, fecha, videoUrl, nombreArchivo) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) return;
 
-  const driveLink = `https://drive.google.com/file/d/${driveFileId}/view`;
   const fechaFormateada = fecha ? new Date(fecha).toLocaleString('es-ES') : new Date().toLocaleString('es-ES');
 
   const body = {
@@ -147,8 +151,8 @@ async function enviarEmailAdmin(nombre, email, fecha, driveFileId, nombreArchivo
           <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Consentimiento:</td><td style="padding:8px 0;color:#333;">✅ Firmado</td></tr>
         </table>
         <div style="margin-top:24px;">
-          <a href="${driveLink}" style="background:#bd9048;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block;">
-            🎬 Ver vídeo en Drive
+          <a href="${videoUrl}" style="background:#bd9048;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600;display:inline-block;">
+            🎬 Ver vídeo
           </a>
         </div>
         <p style="margin-top:20px;font-size:12px;color:#999;">
