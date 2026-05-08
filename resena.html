@@ -183,7 +183,7 @@
         <div class="consentimiento">
           <input type="checkbox" id="consentimiento" name="consentimiento" required />
           <label for="consentimiento">
-            Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto. Puedo retirar este consentimiento escribiendo a <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>
+            Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto.</a>
           </label>
         </div>
         <span class="error-msg" id="errorConsentimiento" style="margin-bottom:1rem;">Debes aceptar el consentimiento para continuar.</span>
@@ -337,7 +337,7 @@ xhr.ontimeout = () => reject(new Error('Error de red'));
     btn.disabled = false;
     btn.textContent = 'Enviar mi testimonio';
     progressWrap.style.display = 'none';
-    alert('Ha ocurrido un error. Por favor, inténtalo de nuevo o escríbenos a hola@tucodigobase.com');
+    alert('Error al subir. Comprueba tu conexión a internet y que el vídeo no supere 100MB.');
   }
 });
 </script>
