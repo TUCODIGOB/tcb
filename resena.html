@@ -165,8 +165,8 @@
         </div>
         <div class="form-group">
           <label>Tu vídeo *</label>
-          <div class="upload-area">
-            <input type="file" id="video" name="video" accept="video/*" required />
+          <div class="upload-area" onclick="document.getElementById('video').click()">
+    <input type="file" id="video" name="video" accept="video/*" required style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;" />
             <div class="upload-icon">🎬</div>
             <div class="upload-text">
               <strong>Toca aquí para subir tu vídeo</strong><br>
