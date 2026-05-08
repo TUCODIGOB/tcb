@@ -1,19 +1,11 @@
 // ═════════════════════════════════════════════════════════════════
 // /api/submit-resena.js
-// Recibe el formulario multipart con formidable, sube el vídeo a
-// Cloudinary, actualiza Brevo y envía email al admin.
+// Dos acciones:
+// 1. get-signature: genera firma para subida directa a Cloudinary
+// 2. save: recibe URL del vídeo ya subido, guarda en Brevo y email
 // ═════════════════════════════════════════════════════════════════
 
-import { IncomingForm } from 'formidable';
-import fs from 'fs';
-import path from 'path';
 import crypto from 'crypto';
-
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -21,74 +13,52 @@ export default async function handler(req, res) {
   }
 
   try {
-    // 1. Parsear formulario
-    const { fields, files } = await new Promise((resolve, reject) => {
-      const form = new IncomingForm({ keepExtensions: true, maxFileSize: 500 * 1024 * 1024 });
-      form.parse(req, (err, fields, files) => {
-        if (err) reject(err);
-        else resolve({ fields, files });
-      });
-    });
+    const body = req.body;
+    const { action, nombre, email, consentimiento, fecha, texto_consentimiento } = body;
 
-    const nombre = Array.isArray(fields.nombre) ? fields.nombre[0] : fields.nombre;
-    const email = Array.isArray(fields.email) ? fields.email[0] : fields.email;
-    const consentimiento = Array.isArray(fields.consentimiento) ? fields.consentimiento[0] : fields.consentimiento;
-    const fecha = Array.isArray(fields.fecha) ? fields.fecha[0] : fields.fecha;
-    const textoConsentimiento = Array.isArray(fields.texto_consentimiento) ? fields.texto_consentimiento[0] : fields.texto_consentimiento;
-    const videoFile = Array.isArray(files.video) ? files.video[0] : files.video;
-
-    if (!nombre || !email || !consentimiento || !videoFile) {
+    if (!nombre || !email || !consentimiento) {
       return res.status(400).json({ error: 'Faltan datos obligatorios' });
     }
 
-    // 2. Nombre del archivo
-    const nombreSeguro = nombre.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g, '').trim().replace(/\s+/g, '_');
-    const emailSeguro = email.replace(/[^a-zA-Z0-9@._-]/g, '').replace('@', '_at_');
-    const publicId = `resenas/Resena_${nombreSeguro}_${emailSeguro}`;
+    // ═══════════════════════════════════════
+    // ACCIÓN 1: Generar firma para Cloudinary
+    // ═══════════════════════════════════════
+    if (action === 'get-signature') {
+      const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+      const apiKey = process.env.CLOUDINARY_API_KEY;
+      const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
-    // 3. Subir a Cloudinary via API REST (sin SDK)
-    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-    const apiKey = process.env.CLOUDINARY_API_KEY;
-    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+      const timestamp = Math.floor(Date.now() / 1000);
 
-    const timestamp = Math.floor(Date.now() / 1000);
-    const signature = crypto
-  .createHash('sha1')
-  .update(`public_id=${publicId}&timestamp=${timestamp}${apiSecret}`)
-  .digest('hex');
+      const nombreSeguro = nombre.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g, '').trim().replace(/\s+/g, '_');
+      const emailSeguro = email.replace(/[^a-zA-Z0-9@._-]/g, '').replace('@', '_at_');
+      const publicId = `resenas/Resena_${nombreSeguro}_${emailSeguro}_${timestamp}`;
 
-    const formData = new FormData();
-    const fileBuffer = fs.readFileSync(videoFile.filepath);
-    const blob = new Blob([fileBuffer], { type: videoFile.mimetype || 'video/mp4' });
-    const ext = path.extname(videoFile.originalFilename || videoFile.newFilename || '.mp4') || '.mp4';
-    formData.append('file', blob, `video${ext}`);
-    formData.append('public_id', publicId);
-    formData.append('timestamp', timestamp.toString());
-    formData.append('api_key', apiKey);
-    formData.append('signature', signature);
-    formData.append('resource_type', 'video');
+      const signature = crypto
+        .createHash('sha1')
+        .update(`public_id=${publicId}&timestamp=${timestamp}${apiSecret}`)
+        .digest('hex');
 
-    const cloudinaryRes = await fetch(
-      `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`,
-      { method: 'POST', body: formData }
-    );
-
-    if (!cloudinaryRes.ok) {
-      const err = await cloudinaryRes.text();
-      throw new Error(`Cloudinary error: ${err}`);
+      return res.status(200).json({ signature, timestamp, publicId, cloudName, apiKey });
     }
 
-    const cloudinaryData = await cloudinaryRes.json();
-    const videoUrl = cloudinaryData.secure_url;
-    console.log(`[submit-resena] ✅ Vídeo subido a Cloudinary: ${videoUrl}`);
+    // ═══════════════════════════════════════
+    // ACCIÓN 2: Guardar datos tras subida
+    // ═══════════════════════════════════════
+    if (action === 'save') {
+      const { videoUrl, publicId } = body;
 
-    // 4. Actualizar Brevo
-    await actualizarBrevo(email, nombre, fecha, textoConsentimiento, videoUrl);
+      if (!videoUrl) {
+        return res.status(400).json({ error: 'Falta la URL del vídeo' });
+      }
 
-    // 5. Email admin
-    await enviarEmailAdmin(nombre, email, fecha, videoUrl, `Resena_${nombreSeguro}_${emailSeguro}`);
+      await actualizarBrevo(email, nombre, fecha, texto_consentimiento, videoUrl);
+      await enviarEmailAdmin(nombre, email, fecha, videoUrl, publicId || 'video');
 
-    return res.status(200).json({ ok: true });
+      return res.status(200).json({ ok: true });
+    }
+
+    return res.status(400).json({ error: 'Acción no válida' });
 
   } catch (error) {
     console.error('[submit-resena] Error:', error);
@@ -130,7 +100,7 @@ async function actualizarBrevo(email, nombre, fecha, textoConsentimiento, videoU
 // ═══════════════════════════════════════
 // EMAIL ADMIN
 // ═══════════════════════════════════════
-async function enviarEmailAdmin(nombre, email, fecha, videoUrl, nombreArchivo) {
+async function enviarEmailAdmin(nombre, email, fecha, videoUrl, publicId) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) return;
 
@@ -146,7 +116,7 @@ async function enviarEmailAdmin(nombre, email, fecha, videoUrl, nombreArchivo) {
         <table style="width:100%;border-collapse:collapse;">
           <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;width:160px;">Nombre:</td><td style="padding:8px 0;color:#333;">${nombre}</td></tr>
           <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Email:</td><td style="padding:8px 0;color:#333;">${email}</td></tr>
-          <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Archivo:</td><td style="padding:8px 0;color:#333;">${nombreArchivo}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Archivo:</td><td style="padding:8px 0;color:#333;">${publicId}</td></tr>
           <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Fecha:</td><td style="padding:8px 0;color:#333;">${fechaFormateada}</td></tr>
           <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Consentimiento:</td><td style="padding:8px 0;color:#333;">✅ Firmado</td></tr>
         </table>
