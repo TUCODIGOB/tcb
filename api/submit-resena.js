@@ -53,9 +53,9 @@ export default async function handler(req, res) {
 
     const timestamp = Math.floor(Date.now() / 1000);
     const signature = crypto
-      .createHash('sha1')
-      .update(`public_id=${publicId}&resource_type=video&timestamp=${timestamp}${apiSecret}`)
-      .digest('hex');
+  .createHash('sha1')
+  .update(`public_id=${publicId}&timestamp=${timestamp}${apiSecret}`)
+  .digest('hex');
 
     const formData = new FormData();
     const fileBuffer = fs.readFileSync(videoFile.filepath);
