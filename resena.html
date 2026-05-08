@@ -100,7 +100,6 @@
       .preguntas, .instrucciones { padding: 1.4rem; }
     }
   </style>
-  <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
 </head>
 <body>
   <nav class="nav">
@@ -253,23 +252,7 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
   const progressFill = document.getElementById('progressFill');
   const progressText = document.getElementById('progressText');
   progressWrap.style.display = 'block';
-  progressText.textContent = 'Preparando vídeo...';
-  progressFill.style.width = '5%';
-
-  let videoToUpload = video;
-  try {
-    const { createFFmpeg, fetchFile } = FFmpeg;
-    const ffmpeg = createFFmpeg({ log: false });
-    await ffmpeg.load();
-    ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(video));
-    await ffmpeg.run('-i', 'input.mp4', '-vcodec', 'libx264', '-crf', '28', '-preset', 'fast', '-vf', 'scale=720:-2', '-acodec', 'aac', '-b:a', '96k', 'output.mp4');
-    const compressed = ffmpeg.FS('readFile', 'output.mp4');
-    videoToUpload = new File([compressed.buffer], 'video.mp4', { type: 'video/mp4' });
-    progressFill.style.width = '20%';
-    progressText.textContent = 'Vídeo listo, subiendo...';
-  } catch(e) {
-    videoToUpload = video;
-  }
+  progressText.textContent = 'Subiendo vídeo, por favor espera...';
 
   try {
     const sigRes = await fetch('/api/submit-resena', {
@@ -289,7 +272,7 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
     const { signature, timestamp, publicId, cloudName, apiKey } = await sigRes.json();
 
     const cloudinaryForm = new FormData();
-    cloudinaryForm.append('file', videoToUpload);
+    cloudinaryForm.append('file', video);
     cloudinaryForm.append('public_id', publicId);
     cloudinaryForm.append('timestamp', timestamp);
     cloudinaryForm.append('api_key', apiKey);
