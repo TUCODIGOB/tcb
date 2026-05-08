@@ -214,13 +214,17 @@
   </footer>
 
   <script>
-    document.getElementById('video').addEventListener('change', function() {
-      if (this.files && this.files[0]) {
-        const fn = document.getElementById('uploadFilename');
-        fn.style.display = 'block';
-        fn.textContent = '✓ ' + this.files[0].name;
-      }
-    });
+    const videoInput = document.getElementById('video');
+['change', 'input'].forEach(function(evt) {
+  videoInput.addEventListener(evt, function() {
+    const file = this.files && this.files[0];
+    if (file) {
+      const fn = document.getElementById('uploadFilename');
+      fn.style.display = 'block';
+      fn.textContent = '✓ ' + file.name;
+    }
+  });
+});
 
     document.getElementById('resenaForm').addEventListener('submit', async function(e) {
   e.preventDefault();
