@@ -540,6 +540,7 @@ const pdfResp = await fetch('/api/generar-pdf', {
     carta: _G.carta,
     areas: _G.areas
   })
+});
 const pdfData = await pdfResp.json();
 if (pdfData.pdfBase64) {
   _G.pdfBase64 = pdfData.pdfBase64;
