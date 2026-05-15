@@ -301,7 +301,7 @@
     <div class="screen-inner">
       <div class="spin"></div>
       <h1>Generando <em>Tu Diseño de Origen</em></h1>
-      <p>Estamos calculando tu carta natal y preparando tu estudio personalizado. Esto tarda <strong>entre 2 y 4 minutos</strong>.</p>
+      <p>Estamos calculando tu carta natal y preparando tu estudio personalizado. Esto tarda <strong>entre 1 y 3 minutos</strong>.</p>
       <p class="small-note"><strong>No cierres esta pestaña hasta que termine.</strong></p>
       <div class="pbar"><div class="pfill"></div></div>
     </div>
@@ -523,6 +523,44 @@ async function generarDiagnosticoSilencioso(nombre, sexo, fechaNice, hora, lugar
   if (!data.texto) throw new Error('Respuesta vacía');
 
   _G.areas = data.texto.split('===AREA===').map(p => p.trim()).filter(p => p.length > 0);
+// Generar PDF en servidor y enviar email automáticamente
+const urlParams = new URLSearchParams(window.location.search);
+const sessionId = urlParams.get('session_id');
+fetch('/api/generar-pdf', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    session_id: sessionId,
+    nombre: _G.nombre,
+    sexo: _G.sexo,
+    fechaNice: _G.fechaNice,
+    hora: _G.hora,
+    lugar: _G.lugar,
+    edad: _G.edad,
+    carta: _G.carta,
+    areas: _G.areas
+  })
+}).then(async r => {
+  const data = await r.json();
+  if (data.pdfBase64) {
+    _G.pdfBase64 = data.pdfBase64;
+    // Enviar email automáticamente
+    fetch('/api/save-pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        session_id: sessionId,
+        pdfBase64: data.pdfBase64,
+        nombre: _G.nombre,
+        sexo: _G.sexo || '',
+        fecha: _G.fechaNice || '',
+        hora: _G.hora || '',
+        lugar: _G.lugar || '',
+        edad: _G.edad || ''
+      })
+    }).catch(err => console.warn('Email automático falló:', err));
+  }
+}).catch(err => console.warn('generar-pdf falló:', err));
 }
 
 // ═════════════════════════════════════════════════════════════════
@@ -1604,9 +1642,17 @@ doc.addFont('Roboto-Italic.ttf', 'Roboto', 'italic');
       doc.addImage('/images/9-trasera-pdf.jpg', 'JPEG', 0, 0, W, H);
 
       var fileName = 'TuDisenoDeOrigen_' + fx(nombre).replace(/\s+/g, '_') + '.pdf';
-      doc.save(fileName);
-// Subir PDF a Vercel Blob + enviar email al cliente
+      if (_G.pdfBase64) {
+  const link = document.createElement('a');
+  link.href = _G.pdfBase64;
+  link.download = fileName;
+  link.click();
+} else {
+  doc.save(fileName);
+}
+// Subir PDF a Vercel Blob + enviar email al cliente (solo si no se generó en servidor)
       try {
+        if (_G.pdfBase64) return;
         var pdfBase64 = doc.output('datauristring');
         var urlParams = new URLSearchParams(window.location.search);
         var sessionId = urlParams.get('session_id');
