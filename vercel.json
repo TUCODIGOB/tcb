@@ -5,6 +5,10 @@
     "api/chat.js": {
       "memory": 1024,
       "maxDuration": 300
+    },
+    "api/generar-pdf.js": {
+      "memory": 1024,
+      "maxDuration": 300
     }
   },
   "redirects": [
