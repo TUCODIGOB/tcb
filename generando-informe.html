@@ -514,39 +514,15 @@ async function generarDiagnosticoSilencioso(nombre, sexo, fechaNice, hora, lugar
   const response = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto
-    })
+    body: JSON.stringify({ nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto })
   });
 
   if (!response.ok) throw new Error(await response.text());
 
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let textoCompleto = '';
+  const data = await response.json();
+  if (!data.texto) throw new Error('Respuesta vacía');
 
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    const chunk = decoder.decode(value, { stream: true });
-    const lines = chunk.split('\n');
-    for (const line of lines) {
-      if (!line.startsWith('data: ')) continue;
-      const jsonStr = line.slice(6).trim();
-      if (jsonStr === '[DONE]') continue;
-      try {
-        const parsed = JSON.parse(jsonStr);
-        if (parsed.type === 'content_block_delta' && parsed.delta?.type === 'text_delta') {
-          textoCompleto += parsed.delta.text;
-        }
-      } catch (_) {}
-    }
-  }
-
-  if (!textoCompleto) throw new Error('Respuesta vacía');
-
-  // Guardamos las áreas parseadas para el PDF (pero NO las mostramos)
-  _G.areas = textoCompleto.split('===AREA===').map(p => p.trim()).filter(p => p.length > 0);
+  _G.areas = data.texto.split('===AREA===').map(p => p.trim()).filter(p => p.length > 0);
 }
 
 // ═════════════════════════════════════════════════════════════════
