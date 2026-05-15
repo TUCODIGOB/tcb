@@ -1,7 +1,7 @@
 // ═════════════════════════════════════════════════════════════════
 // /api/submit-resena.js
 // Dos acciones:
-// 1. get-signature: genera firma para subida directa a Cloudinary
+// 1. get-signature: genera URL prefirmada para subida directa a Cloudflare R2
 // 2. save: recibe URL del vídeo ya subido, guarda en Brevo y email
 // ═════════════════════════════════════════════════════════════════
 
@@ -21,39 +21,40 @@ export default async function handler(req, res) {
     }
 
     // ═══════════════════════════════════════
-    // ACCIÓN 1: Generar firma para Cloudinary
+    // ACCIÓN 1: Generar URL prefirmada para R2
     // ═══════════════════════════════════════
     if (action === 'get-signature') {
-      const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-      const apiKey = process.env.CLOUDINARY_API_KEY;
-      const apiSecret = process.env.CLOUDINARY_API_SECRET;
+      const accountId = process.env.RESENA_CLOUDFLARE_ACCOUNT_ID;
+      const accessKeyId = process.env.RESENA_CLOUDFLARE_ACCESS_KEY_ID;
+      const secretAccessKey = process.env.RESENA_CLOUDFLARE_SECRET_ACCESS_KEY;
+      const bucketName = process.env.RESENA_CLOUDFLARE_BUCKET_NAME;
 
       const timestamp = Math.floor(Date.now() / 1000);
-
       const nombreSeguro = nombre.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g, '').trim().replace(/\s+/g, '_');
       const emailSeguro = email.replace(/[^a-zA-Z0-9@._-]/g, '').replace('@', '_at_');
-      const publicId = `resenas/Resena_${nombreSeguro}_${emailSeguro}_${timestamp}`;
+      const objectKey = `resenas/Resena_${nombreSeguro}_${emailSeguro}_${timestamp}.mp4`;
 
-      const signature = crypto
-        .createHash('sha1')
-        .update(`public_id=${publicId}&timestamp=${timestamp}${apiSecret}`)
-        .digest('hex');
+      const endpoint = `https://${accountId}.eu.r2.cloudflarestorage.com`;
+      const presignedUrl = await generatePresignedUrl({
+        endpoint, accessKeyId, secretAccessKey, bucketName, objectKey, expiresIn: 3600,
+      });
+      const publicUrl = `${endpoint}/${bucketName}/${objectKey}`;
 
-      return res.status(200).json({ signature, timestamp, publicId, cloudName, apiKey });
+      return res.status(200).json({ presignedUrl, publicUrl, objectKey });
     }
 
     // ═══════════════════════════════════════
     // ACCIÓN 2: Guardar datos tras subida
     // ═══════════════════════════════════════
     if (action === 'save') {
-      const { videoUrl, publicId } = body;
+      const { videoUrl, objectKey } = body;
 
       if (!videoUrl) {
         return res.status(400).json({ error: 'Falta la URL del vídeo' });
       }
 
       await actualizarBrevo(email, nombre, fecha, texto_consentimiento, videoUrl);
-      await enviarEmailAdmin(nombre, email, fecha, videoUrl, publicId || 'video');
+      await enviarEmailAdmin(nombre, email, fecha, videoUrl, objectKey || 'video');
 
       return res.status(200).json({ ok: true });
     }
@@ -101,7 +102,7 @@ async function actualizarBrevo(email, nombre, fecha, textoConsentimiento, videoU
 // ═══════════════════════════════════════
 // EMAIL ADMIN
 // ═══════════════════════════════════════
-async function enviarEmailAdmin(nombre, email, fecha, videoUrl, publicId) {
+async function enviarEmailAdmin(nombre, email, fecha, videoUrl, objectKey) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) return;
 
@@ -117,7 +118,7 @@ async function enviarEmailAdmin(nombre, email, fecha, videoUrl, publicId) {
         <table style="width:100%;border-collapse:collapse;">
           <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;width:160px;">Nombre:</td><td style="padding:8px 0;color:#333;">${nombre}</td></tr>
           <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Email:</td><td style="padding:8px 0;color:#333;">${email}</td></tr>
-          <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Archivo:</td><td style="padding:8px 0;color:#333;">${publicId}</td></tr>
+          <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Archivo:</td><td style="padding:8px 0;color:#333;">${objectKey}</td></tr>
           <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Fecha:</td><td style="padding:8px 0;color:#333;">${fechaFormateada}</td></tr>
           <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Consentimiento:</td><td style="padding:8px 0;color:#333;">✅ Firmado</td></tr>
         </table>
@@ -144,4 +145,35 @@ async function enviarEmailAdmin(nombre, email, fecha, videoUrl, publicId) {
   });
 
   console.log(`[submit-resena] ✅ Email admin enviado: ${nombre}`);
+}
+async function generatePresignedUrl({ endpoint, accessKeyId, secretAccessKey, bucketName, objectKey, expiresIn }) {
+  const region = 'auto';
+  const service = 's3';
+  const now = new Date();
+  const datestamp = now.toISOString().slice(0, 10).replace(/-/g, '');
+  const amzdate = now.toISOString().replace(/[:-]|\.\d{3}/g, '').slice(0, 15) + 'Z';
+  const credentialScope = `${datestamp}/${region}/${service}/aws4_request`;
+  const credential = `${accessKeyId}/${credentialScope}`;
+  const canonicalUri = `/${bucketName}/${objectKey}`;
+  const canonicalQueryString = [
+    `X-Amz-Algorithm=AWS4-HMAC-SHA256`,
+    `X-Amz-Credential=${encodeURIComponent(credential)}`,
+    `X-Amz-Date=${amzdate}`,
+    `X-Amz-Expires=${expiresIn}`,
+    `X-Amz-SignedHeaders=host`,
+  ].join('&');
+  const host = endpoint.replace('https://', '');
+  const canonicalHeaders = `host:${host}\n`;
+  const canonicalRequest = ['PUT', canonicalUri, canonicalQueryString, canonicalHeaders, 'host', 'UNSIGNED-PAYLOAD'].join('\n');
+  const stringToSign = ['AWS4-HMAC-SHA256', amzdate, credentialScope, crypto.createHash('sha256').update(canonicalRequest).digest('hex')].join('\n');
+  const signingKey = getSigningKey(secretAccessKey, datestamp, region, service);
+  const signature = crypto.createHmac('sha256', signingKey).update(stringToSign).digest('hex');
+  return `${endpoint}/${bucketName}/${objectKey}?${canonicalQueryString}&X-Amz-Signature=${signature}`;
+}
+
+function getSigningKey(secretKey, datestamp, region, service) {
+  const kDate = crypto.createHmac('sha256', `AWS4${secretKey}`).update(datestamp).digest();
+  const kRegion = crypto.createHmac('sha256', kDate).update(region).digest();
+  const kService = crypto.createHmac('sha256', kRegion).update(service).digest();
+  return crypto.createHmac('sha256', kService).update('aws4_request').digest();
 }
