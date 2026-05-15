@@ -125,7 +125,7 @@
             <li>Graba con el móvil, en vertical</li>
             <li>Busca buena luz natural</li>
             <li>Habla con naturalidad, como si se lo contaras a una amiga</li>
-<li>Máx. 100MB</li>
+<li>Máx. 1GB</li>
           </ul>
         </div>
         <div class="instrucciones-img-desktop">
@@ -269,22 +269,16 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
       }),
     });
 
-    if (!sigRes.ok) throw new Error('Error obteniendo firma');
-    const { signature, timestamp, publicId, cloudName, apiKey } = await sigRes.json();
-
-    const cloudinaryForm = new FormData();
-    cloudinaryForm.append('file', video);
-    cloudinaryForm.append('public_id', publicId);
-    cloudinaryForm.append('timestamp', timestamp);
-    cloudinaryForm.append('api_key', apiKey);
-    cloudinaryForm.append('signature', signature);
+    if (!sigRes.ok) throw new Error('Error obteniendo URL');
+    const { presignedUrl, publicUrl, objectKey } = await sigRes.json();
 
     await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', `https://api.cloudinary.com/v1_1/${cloudName}/video/upload`);
+      xhr.open('PUT', presignedUrl);
+      xhr.setRequestHeader('Content-Type', 'video/mp4');
       xhr.upload.onprogress = (e) => {
         if (e.lengthComputable) {
-          const pct = Math.round((e.loaded / e.total) * 80);
+          const pct = Math.round((e.loaded / e.total) * 90);
           progressFill.style.width = pct + '%';
           progressText.textContent = 'Subiendo vídeo... ' + pct + '%';
         }
@@ -292,14 +286,7 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
 
       xhr.onload = async () => {
         if (xhr.status === 200) {
-          let data;
-try {
-  data = JSON.parse(xhr.responseText);
-} catch(e) {
-  reject(new Error('Respuesta inválida de Cloudinary: ' + xhr.responseText));
-  return;
-}
-          progressFill.style.width = '90%';
+          progressFill.style.width = '95%';
           progressText.textContent = 'Procesando...';
 
           await fetch('/api/submit-resena', {
@@ -312,21 +299,21 @@ try {
               consentimiento: 'si',
               fecha: new Date().toISOString(),
               texto_consentimiento: 'Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web y redes sociales para mostrar experiencias reales del producto.',
-              videoUrl: data.secure_url,
-              publicId,
+              videoUrl: publicUrl,
+              objectKey,
             }),
           });
 
           progressFill.style.width = '100%';
           resolve();
         } else {
-          reject(new Error('Error subiendo a Cloudinary: ' + xhr.status + ' - ' + xhr.responseText));
+          reject(new Error('Error subiendo vídeo: ' + xhr.status));
         }
       };
 
       xhr.onerror = () => reject(new Error('Error de red'));
-xhr.ontimeout = () => reject(new Error('Error de red'));
-      xhr.send(cloudinaryForm);
+      xhr.ontimeout = () => reject(new Error('Error de red'));
+      xhr.send(video);
     });
 
     document.getElementById('formCard').style.display = 'none';
@@ -337,7 +324,7 @@ xhr.ontimeout = () => reject(new Error('Error de red'));
     btn.disabled = false;
     btn.textContent = 'Enviar mi testimonio';
     progressWrap.style.display = 'none';
-    alert('Error al subir. Comprueba tu conexión a internet y que el vídeo no supere 100MB.');
+    alert('Error al subir. Comprueba tu conexión a internet e inténtalo de nuevo.');
   }
 });
 </script>
