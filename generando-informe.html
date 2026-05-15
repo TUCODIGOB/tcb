@@ -523,42 +523,40 @@ async function generarDiagnosticoSilencioso(nombre, sexo, fechaNice, hora, lugar
   if (!data.texto) throw new Error('Respuesta vacía');
 
   _G.areas = data.texto.split('===AREA===').map(p => p.trim()).filter(p => p.length > 0);
-// Generar PDF en servidor y enviar email automáticamente
-const urlParams = new URLSearchParams(window.location.search);
-const sessionId = urlParams.get('session_id');
 fetch('/api/generar-pdf', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    session_id: sessionId,
-    nombre: _G.nombre,
-    sexo: _G.sexo,
-    fechaNice: _G.fechaNice,
-    hora: _G.hora,
-    lugar: _G.lugar,
-    edad: _G.edad,
-    carta: _G.carta,
-    areas: _G.areas
-  })
-}).then(r => r.json()).then(pdfData => {
-  if (pdfData.pdfBase64) {
-    _G.pdfBase64 = pdfData.pdfBase64;
-    fetch('/api/save-pdf', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        session_id: sessionId,
-        pdfBase64: pdfData.pdfBase64,
-        nombre: _G.nombre,
-        sexo: _G.sexo || '',
-        fecha: _G.fechaNice || '',
-        hora: _G.hora || '',
-        lugar: _G.lugar || '',
-        edad: _G.edad || ''
-      })
-    }).catch(err => console.warn('Email automático falló:', err));
-  }
-}).catch(err => console.warn('generar-pdf falló:', err));
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      session_id: urlParams.get('session_id'),
+      nombre: _G.nombre,
+      sexo: _G.sexo,
+      fechaNice: _G.fechaNice,
+      hora: _G.hora,
+      lugar: _G.lugar,
+      edad: _G.edad,
+      carta: _G.carta,
+      areas: _G.areas
+    })
+  }).then(r => r.json()).then(pdfData => {
+    if (pdfData.pdfBase64) {
+      _G.pdfBase64 = pdfData.pdfBase64;
+      fetch('/api/save-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: urlParams.get('session_id'),
+          pdfBase64: pdfData.pdfBase64,
+          nombre: _G.nombre,
+          sexo: _G.sexo || '',
+          fecha: _G.fechaNice || '',
+          hora: _G.hora || '',
+          lugar: _G.lugar || '',
+          edad: _G.edad || ''
+        })
+      }).catch(err => console.warn('Email automático falló:', err));
+    }
+  }).catch(err => console.warn('generar-pdf falló:', err));
+}
 
 // ═════════════════════════════════════════════════════════════════
 // CÓDIGO ORIGINAL (cálculo astronómico, geocode, PDF) — NO TOCAR
