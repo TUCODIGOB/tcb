@@ -527,7 +527,7 @@ fetch('/api/generar-pdf', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      session_id: urlParams.get('session_id'),
+      session_id: new URLSearchParams(window.location.search).get('session_id'),
       nombre: _G.nombre,
       sexo: _G.sexo,
       fechaNice: _G.fechaNice,
@@ -544,7 +544,7 @@ fetch('/api/generar-pdf', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          session_id: urlParams.get('session_id'),
+          session_id: new URLSearchParams(window.location.search).get('session_id'),
           pdfBase64: pdfData.pdfBase64,
           nombre: _G.nombre,
           sexo: _G.sexo || '',
