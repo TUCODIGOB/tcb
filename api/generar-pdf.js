@@ -1,4 +1,6 @@
-import { jsPDF } from 'jspdf';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const { jsPDF } = require('jspdf');
 
 const BASE_URL = 'https://tucodigobase.com';
 
