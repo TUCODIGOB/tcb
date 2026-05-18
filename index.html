@@ -531,7 +531,8 @@ display: block;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 2.5rem;
-      margin-top: 4rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
     }
     .video-wrap {
       position: relative;
@@ -548,16 +549,12 @@ display: block;
       height: 100%;
       border: 0;
     }
-    @media (min-width: 768px) {
-      .video-wrap {
-        width: 85%;
-        margin: 0 auto;
-      }
-    }
     @media (max-width: 767px) {
       .video-testimonios {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 3rem;
+        margin-bottom: 2rem;
+        padding: 0 8%;
       }
     }
 /* ══════════════════════════════════════════════
