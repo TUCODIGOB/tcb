@@ -21,13 +21,12 @@
 
 <style>
 :root{--tcb-cream:#fffbef;--tcb-cream-2:#f5eedf;--tcb-gold:#bd9048;--tcb-gold-light:#cfb180;--tcb-teal:#0e3f4b;--tcb-ink:#0c0c0c;--tcb-ink-soft:#3a3a3a}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{font-family:"Open Sans",-apple-system,"Segoe UI",sans-serif;color:var(--tcb-ink);background:var(--tcb-cream);line-height:1.7}
 a{color:var(--tcb-gold);text-decoration:none;transition:color .2s}
 a:hover{color:var(--tcb-teal)}
 h1,h2,h3,h4{font-family:"Playfair Display",Georgia,serif;color:var(--tcb-teal);font-weight:700;letter-spacing:-.01em;line-height:1.15}
-.container{max-width:1120px;margin:0 auto;padding:0 20px}
+.container{width:min(1100px,92vw);margin:0 auto;padding:0 20px}
 .nav{position:static;background:rgba(255,251,239,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(189,144,72,.2)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;padding-block:.2rem}
 .nav-logo img{height:70px;width:auto}
