@@ -17,23 +17,29 @@
 <link rel="icon" type="image/png" href="/images/1-favicon-tu-codigo-base-carta-natal-astral.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
 
 <style>
-:root{--tcb-cream:#fffbef;--tcb-cream-2:#f5eedf;--tcb-gold:#bd9048;--tcb-gold-light:#cfb180;--tcb-teal:#0e3f4b;--tcb-ink:#0c0c0c;--tcb-ink-soft:#3a3a3a}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{font-family:"Open Sans",-apple-system,"Segoe UI",sans-serif;color:var(--tcb-ink);background:var(--tcb-cream);line-height:1.6}
-a{color:var(--tcb-gold);text-decoration:none;transition:color .2s}
-a:hover{color:var(--tcb-teal)}
-h1,h2,h3,h4{font-family:"Playfair Display",Georgia,serif;color:var(--tcb-teal);font-weight:700;letter-spacing:-.01em;line-height:1.15}
-.container{max-width:1120px;margin:0 auto;padding:0 20px}
-.tcb-header{border-bottom:1px solid rgba(207,177,128,.4);background:var(--tcb-cream)}
-.tcb-header-inner{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
-.tcb-logo{font-family:"Playfair Display",Georgia,serif;font-size:1.6rem;color:var(--tcb-teal);font-weight:700}
-.tcb-nav{display:flex;align-items:center;gap:24px;font-size:.95rem}
-.tcb-cta{display:inline-block;background:var(--tcb-gold);color:var(--tcb-cream)!important;padding:10px 22px;border-radius:999px;font-weight:600;font-size:.9rem;transition:background .2s,transform .2s}
-.tcb-cta:hover{background:var(--tcb-teal);transform:translateY(-1px)}
+:root{--tcb-cream:#fffbef;--tcb-cream-2:#f5eedf;--tcb-gold:#bd9048;--tcb-gold-light:#cfb180;--tcb-teal:#0e3f4b;--tcb-ink:#0c0c0c;--tcb-ink-soft:#3a3a3a;--teal-deep:#0e3f4b;--gold-deep:#bd9048;--gold-light:#cfb180;--white:#ffffff;--r-sm:6px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Open Sans",-apple-system,"Segoe UI",sans-serif;background:var(--tcb-cream);color:var(--tcb-ink);line-height:1.7;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+section{padding-block:5rem}
+h1,h2,h3,h4{font-family:"Playfair Display",Georgia,serif;color:var(--tcb-teal);line-height:1.2}
+h1{font-size:clamp(2rem,5vw,2.4rem);font-weight:700}
+h2{font-size:clamp(1.6rem,3.5vw,2.5rem);font-weight:700}
+h3{font-size:clamp(1.1rem,2vw,1.5rem);font-weight:600}
+h4{font-size:1.1rem;font-weight:600}
+p{font-size:clamp(.95rem,1.5vw,1.05rem)}
+.container{width:min(1100px,92vw);margin-inline:auto}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,251,239,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(189,144,72,.2)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding-block:.2rem}
+.nav-logo img{height:70px;width:auto}
+.nav-cta{background:var(--gold-deep);color:var(--white);font-size:.82rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.55rem 1.2rem;border-radius:var(--r-sm);transition:background .2s;white-space:nowrap}
+.nav-cta:hover{background:var(--gold-light)}
 .hero{padding:64px 0 32px}
 .hero .eyebrow{font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:var(--tcb-gold);margin-bottom:14px}
 .hero h1{font-size:clamp(2.5rem,5vw,4rem);margin:0 0 20px}
@@ -56,31 +62,36 @@ h1,h2,h3,h4{font-family:"Playfair Display",Georgia,serif;color:var(--tcb-teal);f
 .final-cta p{color:var(--tcb-ink-soft);font-size:1.1rem;margin:0 0 24px}
 .empty{padding:80px 20px;text-align:center}
 .empty .big{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--tcb-teal);margin-bottom:8px}
-.tcb-footer{margin-top:40px;border-top:1px solid rgba(207,177,128,.4);background:var(--tcb-cream-2);padding:40px 0;color:var(--tcb-ink-soft);font-size:.9rem}
-.tcb-footer-grid{display:grid;grid-template-columns:1fr;gap:28px;margin-bottom:28px}
-@media (min-width:768px){.tcb-footer-grid{grid-template-columns:repeat(3,1fr)}}
-.tcb-footer h4{font-family:"Open Sans",sans-serif;color:var(--tcb-ink);font-size:.95rem;font-weight:600;margin:0 0 10px}
-.tcb-footer ul{list-style:none;padding:0;margin:0}
-.tcb-footer li{margin-bottom:6px}
-.tcb-footer .copy{font-size:.78rem}
+.footer{background:var(--teal-deep);color:rgba(255,251,239,.6);padding-block:2.5rem;font-size:.82rem}
+.footer-inner{display:flex;flex-direction:column;align-items:center;gap:.9rem;text-align:center}
+.footer-email a{color:var(--gold-light);font-weight:500}
+.footer-email a:hover{color:var(--white)}
+.footer-links{display:flex;flex-wrap:wrap;gap:.3rem .75rem;justify-content:center;align-items:center}
+.footer-links a{color:rgba(255,251,239,.65);transition:color .15s}
+.footer-links a:hover{color:var(--gold-light)}
+.footer-links .sep{opacity:.35}
+.footer-copy{color:rgba(255,251,239,.4);font-size:.8rem}
+@media(max-width:600px){section{padding-block:3.5rem}h2{font-size:2.5rem}.nav-inner{flex-direction:column;gap:.6rem;padding-block:.6rem}.nav-cta{width:100%;text-align:center;font-size:1.1rem;padding:.6rem}.nav-logo img{height:80px}.nav.scrolled .nav-inner{padding-block:.4rem}.nav.scrolled .nav-logo{display:none}}
 </style>
 </head>
 <body>
 
-<header class="tcb-header">
-  <div class="container tcb-header-inner">
-    <a href="/" class="tcb-logo">Tu Código Base</a>
-    <nav class="tcb-nav">
-      <a href="/">Inicio</a>
-      <a href="/blog/">Blog</a>
-      <a href="/tu-diseno-de-origen.html" class="tcb-cta">Tu Diseño de Origen · 27€</a>
-    </nav>
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="nav-logo" aria-label="Tu Código Base — Inicio">
+      <img src="/images/3-logo-web-tu-codigo-base-carta-natal-astral-1.png"
+           alt="Tu Código Base — Tu carta natal descifrada" width="400" height="182"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
+      <span style="display:none; font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--teal-deep); letter-spacing:.02em;">
+        TU CÓDIGO BASE
+      </span>
+    </a>
+    <a href="/tu-diseno-de-origen.html" class="nav-cta">Quiero el mío</a>
   </div>
-</header>
+</nav>
 
 <main>
   <section class="hero container">
-    <div class="eyebrow">✦ El blog</div>
     <h1>Entender por qué tu vida<br><em>es como es</em></h1>
     <p>Artículos cortos y profundos sobre carta natal, psicología y neurociencia. Para mujeres que quieren entenderse de verdad, no leer otro horóscopo más.</p>
     <div class="divider"></div>
@@ -103,28 +114,24 @@ h1,h2,h3,h4{font-family:"Playfair Display",Georgia,serif;color:var(--tcb-teal);f
   </section>
 </main>
 
-<footer class="tcb-footer">
-  <div class="container">
-    <div class="tcb-footer-grid">
-      <div>
-        <div class="tcb-logo" style="font-size:1.2rem;margin-bottom:8px">Tu Código Base</div>
-        <p style="margin:0">Estudio personalizado de tu carta natal con psicología, neurociencia y astrología aplicada.</p>
-      </div>
-      <div>
-        <h4>Producto</h4>
-        <ul>
-          <li><a href="/tu-diseno-de-origen.html">Tu Diseño de Origen</a></li>
-          <li><a href="/blog/">Blog</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Contacto</h4>
-        <ul>
-          <li><a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="copy">© <span id="year"></span> Tu Código Base. Todos los derechos reservados.</div>
+<footer class="footer">
+  <div class="container footer-inner">
+    <p class="footer-email">
+      <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>
+    </p>
+    <nav class="footer-links" aria-label="Legal">
+      <a href="/aviso-legal">Aviso legal</a>
+      <span class="sep">|</span>
+      <a href="/politica-de-privacidad">Política de privacidad</a>
+      <span class="sep">|</span>
+      <a href="/politica-de-cookies">Política de cookies</a>
+      <span class="sep">|</span>
+      <a href="/terminos-y-condiciones">Términos y condiciones</a>
+    </nav>
+    <p class="footer-copy">
+      © 2026 TU CÓDIGO BASE. Todos los derechos reservados.<br>
+      Operado por Pura Group LLC
+    </p>
   </div>
 </footer>
 
