@@ -28,12 +28,11 @@ a{color:var(--tcb-gold);text-decoration:none;transition:color .2s}
 a:hover{color:var(--tcb-teal)}
 h1,h2,h3,h4{font-family:"Playfair Display",Georgia,serif;color:var(--tcb-teal);font-weight:700;letter-spacing:-.01em;line-height:1.15}
 .container{max-width:1120px;margin:0 auto;padding:0 20px}
-.tcb-header{border-bottom:1px solid rgba(207,177,128,.4);background:var(--tcb-cream)}
-.tcb-header-inner{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
-.tcb-logo{font-family:"Playfair Display",Georgia,serif;font-size:1.6rem;color:var(--tcb-teal);font-weight:700}
-.tcb-nav{display:flex;align-items:center;gap:24px;font-size:.95rem}
-.tcb-cta{display:inline-block;background:var(--tcb-gold);color:var(--tcb-cream)!important;padding:10px 22px;border-radius:999px;font-weight:600;font-size:.9rem;transition:background .2s,transform .2s}
-.tcb-cta:hover{background:var(--tcb-teal);transform:translateY(-1px)}
+.nav{position:sticky;top:0;z-index:100;background:rgba(255,251,239,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(189,144,72,.2)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding-block:.2rem}
+.nav-logo img{height:70px;width:auto}
+.nav-cta{background:linear-gradient(135deg,#bd9048,#cfb180);color:#fff;font-size:.82rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:.55rem 1.2rem;border-radius:6px;transition:background .2s;white-space:nowrap}
+.nav-cta:hover{background:#cfb180}
 .hero{padding:64px 0 32px}
 .hero .eyebrow{font-size:.75rem;letter-spacing:.25em;text-transform:uppercase;color:var(--tcb-gold);margin-bottom:14px}
 .hero h1{font-size:clamp(2.5rem,5vw,4rem);margin:0 0 20px}
@@ -56,21 +55,25 @@ h1,h2,h3,h4{font-family:"Playfair Display",Georgia,serif;color:var(--tcb-teal);f
 .final-cta p{color:var(--tcb-ink-soft);font-size:1.1rem;margin:0 0 24px}
 .empty{padding:80px 20px;text-align:center}
 .empty .big{font-family:"Playfair Display",serif;font-size:1.6rem;color:var(--tcb-teal);margin-bottom:8px}
-.tcb-footer{margin-top:40px;border-top:1px solid rgba(207,177,128,.4);background:var(--tcb-cream-2);padding:40px 0;color:var(--tcb-ink-soft);font-size:.9rem}
-.tcb-footer-grid{display:grid;grid-template-columns:1fr;gap:28px;margin-bottom:28px}
-@media (min-width:768px){.tcb-footer-grid{grid-template-columns:repeat(3,1fr)}}
-.tcb-footer h4{font-family:"Open Sans",sans-serif;color:var(--tcb-ink);font-size:.95rem;font-weight:600;margin:0 0 10px}
-.tcb-footer ul{list-style:none;padding:0;margin:0}
-.tcb-footer li{margin-bottom:6px}
-.tcb-footer .copy{font-size:.78rem}
+.footer{background:#0e3f4b;color:rgba(255,251,239,.6);padding-block:2.5rem;font-size:.82rem}
+.footer-inner{display:flex;flex-direction:column;align-items:center;gap:.9rem;text-align:center}
+.footer-email a{color:#cfb180;font-weight:500}
+.footer-email a:hover{color:#ffffff}
+.footer-links{display:flex;flex-wrap:wrap;gap:.3rem .75rem;justify-content:center;align-items:center}
+.footer-links a{color:rgba(255,251,239,.65);transition:color .15s}
+.footer-links a:hover{color:#cfb180}
+.footer-links .sep{opacity:.35}
+.footer-copy{color:rgba(255,251,239,.4);font-size:.8rem}
 </style>
 </head>
 <body>
 
-<nav class="nav" style="position:sticky;top:0;z-index:100;background:rgba(255,251,239,.92);backdrop-filter:blur(12px);border-bottom:1px solid rgba(189,144,72,.2);">
-  <div class="container" style="display:flex;align-items:center;justify-content:space-between;padding:.2rem 20px;">
-    <a href="/"><img src="/images/3-logo-tu-codigo-base-carta-natal-astral.webp" alt="Tu Código Base" style="height:70px;width:auto;" /></a>
-    <a href="/tu-diseno-de-origen.html" style="display:inline-block;background:linear-gradient(135deg,#bd9048,#cfb180);color:#fff;font-size:.85rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:.6rem 1.4rem;border-radius:6px;">Lo quiero ahora</a>
+<nav class="nav">
+  <div class="container nav-inner">
+    <a href="/" class="nav-logo" aria-label="Tu Código Base — Inicio">
+      <img src="/images/3-logo-tu-codigo-base-carta-natal-astral.webp" alt="Tu Código Base" />
+    </a>
+    <a href="/tu-diseno-de-origen.html" class="nav-cta">Lo quiero ahora</a>
   </div>
 </nav>
 <main>
@@ -98,22 +101,24 @@ h1,h2,h3,h4{font-family:"Playfair Display",Georgia,serif;color:var(--tcb-teal);f
   </section>
 </main>
 
-<footer style="margin-top:40px;border-top:1px solid rgba(189,144,72,.2);background:#fffbef;padding:40px 0;color:#3a3a3a;font-size:.9rem;font-family:'Open Sans',sans-serif;">
-  <div style="width:min(1100px,92vw);margin:0 auto;text-align:center">
-    <p style="margin:0 0 10px"><a href="mailto:hola@tucodigobase.com" style="color:#bd9048;">hola@tucodigobase.com</a></p>
-    <nav style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:10px;font-size:.82rem;">
-      <a href="/aviso-legal" style="color:#3a3a3a;">Aviso legal</a>
-      <a href="/politica-de-privacidad" style="color:#3a3a3a;">Política de privacidad</a>
-      <a href="/politica-de-cookies" style="color:#3a3a3a;">Política de cookies</a>
-      <a href="/terminos-y-condiciones" style="color:#3a3a3a;">Términos y condiciones</a>
+<footer class="footer">
+  <div class="container footer-inner">
+    <p class="footer-email"><a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a></p>
+    <nav class="footer-links" aria-label="Legal">
+      <a href="/aviso-legal">Aviso legal</a>
+      <span class="sep">|</span>
+      <a href="/politica-de-privacidad">Política de privacidad</a>
+      <span class="sep">|</span>
+      <a href="/politica-de-cookies">Política de cookies</a>
+      <span class="sep">|</span>
+      <a href="/terminos-y-condiciones">Términos y condiciones</a>
     </nav>
-    <p style="font-size:.78rem;margin:0">© 2026 TU CÓDIGO BASE. Todos los derechos reservados.<br>Operado por Pura Group LLC</p>
+    <p class="footer-copy">© 2026 TU CÓDIGO BASE. Todos los derechos reservados.<br>Operado por Pura Group LLC</p>
   </div>
 </footer>
 
 <script>
 const API_BASE = "https://panel.tucodigobase.com";
-document.getElementById("year").textContent = new Date().getFullYear();
 function formatDate(iso){if(!iso) return "";try{return new Date(iso).toLocaleDateString("es-ES",{day:"numeric",month:"long",year:"numeric"})}catch(e){return ""}}
 function escapeHtml(s){return (s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function postCardHtml(p, featured){
