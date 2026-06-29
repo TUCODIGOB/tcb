@@ -149,7 +149,7 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
     <tr><td align="center">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;box-shadow:0 4px 24px rgba(14,63,75,0.08);overflow:hidden;">
         <tr><td style="padding:32px 24px 16px 24px;text-align:center;background:#ffffff;">
-          <img src="https://tcb-iota.vercel.app/images/3-logo-email-tu-codigo-base-carta-natal-astral.png" alt="Tu Código Base" width="180" style="display:block;margin:0 auto 16px auto;max-width:180px;height:auto;border:0;">
+          <img src="https://tcb-iota.vercel.app/images/logo-origen-natal-carta-oscuro.webp" alt="Tu Código Base" width="180" style="display:block;margin:0 auto 16px auto;max-width:180px;height:auto;border:0;">
           <h1 style="font-family:Georgia,'Playfair Display',serif;color:#bd9048;font-size:32px;line-height:1.2;margin:0;font-weight:700;letter-spacing:0.5px;">
             Tu Diseño de Origen
           </h1>
