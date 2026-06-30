@@ -3,22 +3,37 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title id="page-title">Artículo · Tu Código Base</title>
+<title id="page-title">Artículo · Origen Natal</title>
 <meta id="meta-desc" name="description" content="" />
 <link id="canonical-link" rel="canonical" href="https://origennatal.com/blog/" />
 
-<meta property="og:site_name" content="Tu Código Base" />
+<meta property="og:site_name" content="Origen Natal" />
 <meta id="og-title" property="og:title" content="" />
 <meta id="og-desc" property="og:description" content="" />
 <meta id="og-image" property="og:image" content="" />
 <meta property="og:type" content="article" />
 <meta name="twitter:card" content="summary_large_image" />
 
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EJSDFDFZ3G"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-EJSDFDFZ3G');
+</script>
+
 <link rel="icon" type="image/png" href="/images/favicon-origen-natal-oscuro.webp" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
 <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xf6ygmm5pw");
+</script>
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"></script>
 
 <style>
@@ -84,12 +99,12 @@ p{font-size:clamp(.95rem,1.5vw,1.05rem)}
 
 <nav class="nav">
   <div class="container nav-inner">
-    <a href="/" class="nav-logo" aria-label="Tu Código Base — Inicio">
+    <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
       <img src="/images/logo-origen-natal-carta-oscuro.webp"
-           alt="Tu Código Base — Tu carta natal descifrada" width="400" height="182"
+           alt="Origen Natal — Tu carta natal descifrada" width="400" height="182"
            onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
       <span style="display:none; font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--teal-deep); letter-spacing:.02em;">
-        TU CÓDIGO BASE
+        ORIGEN NATAL
       </span>
     </a>
     <a href="/tu-diseno-de-origen.html" class="nav-cta">Quiero el mío</a>
@@ -137,7 +152,7 @@ p{font-size:clamp(.95rem,1.5vw,1.05rem)}
       <a href="/terminos-y-condiciones">Términos y condiciones</a>
     </nav>
     <p class="footer-copy">
-      © 2026 TU CÓDIGO BASE. Todos los derechos reservados.<br>
+      © 2026 ORIGEN NATAL. Todos los derechos reservados.<br>
       Operado por Pura Group LLC
     </p>
   </div>
@@ -170,13 +185,13 @@ async function loadPost(){
 function showNotFound(){
   document.getElementById("notfound").style.display = "block";
   document.getElementById("article").style.display = "none";
-  document.title = "No encontrado · Tu Código Base";
+  document.title = "No encontrado · Origen Natal";
 }
 function render(p){
   document.getElementById("article").style.display = "block";
   const title = p.title || "Artículo";
   document.getElementById("title").textContent = title;
-  const fullTitle = (p.meta_title || title) + " · Tu Código Base";
+  const fullTitle = (p.meta_title || title) + " · Origen Natal";
   document.title = fullTitle;
   document.getElementById("page-title").textContent = fullTitle;
   document.getElementById("meta-desc").content = p.meta_description || p.excerpt || "";
@@ -205,8 +220,8 @@ function render(p){
     "@context":"https://schema.org","@type":"BlogPosting",
     "headline": p.meta_title || p.title, "description": p.meta_description || p.excerpt,
     "datePublished": p.published_at, "dateModified": p.updated_at || p.published_at,
-    "author":{"@type":"Organization","name":p.author||"Tu Código Base"},
-    "publisher":{"@type":"Organization","name":"Tu Código Base"},
+    "author":{"@type":"Organization","name":p.author||"Origen Natal"},
+    "publisher":{"@type":"Organization","name":"Origen Natal"},
     "mainEntityOfPage": canonical, "image": p.cover_image_url || undefined,
     "keywords": (p.keywords||[]).join(", ")
   };
