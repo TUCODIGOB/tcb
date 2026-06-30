@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title id="page-title">Artículo · Tu Código Base</title>
 <meta id="meta-desc" name="description" content="" />
-<link id="canonical-link" rel="canonical" href="https://tucodigobase.com/blog/" />
+<link id="canonical-link" rel="canonical" href="https://origennatal.com/blog/" />
 
 <meta property="og:site_name" content="Tu Código Base" />
 <meta id="og-title" property="og:title" content="" />
@@ -125,7 +125,7 @@ p{font-size:clamp(.95rem,1.5vw,1.05rem)}
 <footer class="footer">
   <div class="container footer-inner">
     <p class="footer-email">
-      <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>
+      <a href="mailto:hola@origennatal.com">hola@origennatal.com</a>
     </p>
     <nav class="footer-links" aria-label="Legal">
       <a href="/aviso-legal">Aviso legal</a>
@@ -187,7 +187,7 @@ function render(p){
     const c = document.getElementById("cover");
     c.src = p.cover_image_url; c.alt = title; c.style.display = "block";
   }
-  const canonical = "https://tucodigobase.com/blog/post.html?slug=" + encodeURIComponent(p.slug);
+  const canonical = "https://origennatal.com/blog/post.html?slug=" + encodeURIComponent(p.slug);
   document.getElementById("canonical-link").href = canonical;
   if(p.excerpt){
     const l = document.getElementById("lead"); l.textContent = p.excerpt; l.style.display = "block";
