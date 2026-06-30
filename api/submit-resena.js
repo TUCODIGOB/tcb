@@ -109,8 +109,8 @@ async function enviarEmailAdmin(nombre, email, fecha, videoUrl, objectKey) {
   const fechaFormateada = fecha ? new Date(fecha).toLocaleString('es-ES') : new Date().toLocaleString('es-ES');
 
   const body = {
-    sender: { email: 'hola@tucodigobase.com', name: 'Tu Código Base — Reseñas' },
-    to: [{ email: 'tucodigobase@gmail.com', name: 'Tu Código Base' }],
+    sender: { email: 'hola@origennatal.com', name: 'Origen Natal — Reseñas' },
+    to: [{ email: 'hola.origennatal@gmail.com', name: 'Origen Natal' }],
     subject: '🎬 RESEÑA RECIBIDA TCB',
     htmlContent: `
       <div style="font-family:Arial,sans-serif;padding:24px;background:#fffbef;max-width:600px;">
@@ -128,7 +128,7 @@ async function enviarEmailAdmin(nombre, email, fecha, videoUrl, objectKey) {
           </a>
         </div>
         <p style="margin-top:20px;font-size:12px;color:#999;">
-          Consentimiento firmado: "Autorizo a Tu Código Base a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto."
+          Consentimiento firmado: "Autorizo a Origen Natal a usar mi imagen, voz y testimonio en su web, redes sociales y materiales de comunicación para mostrar experiencias reales del producto."
         </p>
       </div>
     `,
