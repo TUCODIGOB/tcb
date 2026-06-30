@@ -2,7 +2,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { jsPDF } = require('jspdf');
 
-const BASE_URL = 'https://tucodigobase.com';
+const BASE_URL = 'https://origennatal.com';
 
 export const config = {
   api: {
@@ -324,7 +324,7 @@ export default async function handler(req, res) {
     var cparasRich = [
       [{text:'Antes de tomar tu primera respiracion, ya existia un ',bold:false},{text:'diseno invisible que daba forma a tu manera unica de ser',bold:true},{text:': una estructura precisa de energia, mente y proposito que marcaria la base de como ibas a ver, sentir y experimentar la vida.',bold:false}],
       [{text:'Ese instante inicial activo un programa interno, una configuracion que moldea tu forma de percibir, interpretar y responder ante el mundo, ',bold:false},{text:'define las coordenadas originales desde donde comienza tu historia',bold:true},{text:'.',bold:false}],
-      [{text:'Cada elemento de esa estructura representa una fuerza dentro de ti: tu mente racional, tus emociones mas profundas, tus impulsos vitales y tu busqueda de sentido. Juntas forman la raiz de tu identidad: ',bold:false},{text:'tu Codigo Base',bold:true},{text:'.',bold:false}],
+      [{text:'Cada elemento de esa estructura representa una fuerza dentro de ti: tu mente racional, tus emociones mas profundas, tus impulsos vitales y tu busqueda de sentido. Juntas forman la raiz de tu identidad: ',bold:false},{text:'Origen Natal',bold:true},{text:'.',bold:false}],
       [{text:'Tu diseno no es un destino, es un lenguaje, y cuando aprendes a leerlo, todo cobra sentido: las decisiones que tomas, los vinculos que repites y los caminos que se abren.',bold:false}],
       [{text:'Comprenderlo es volver al punto de origen y ',bold:false},{text:'recordar la verdad de quien eras antes de todo condicionamiento, la persona que siempre fuiste',bold:true},{text:'.',bold:false}]
     ];
@@ -365,13 +365,13 @@ export default async function handler(req, res) {
     // ── PAG 5 POSICIONES ─────────────────────────────────────────────────────
     doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
     doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(189,144,72);
-    doc.text(fx('POSICIONES: Configuracion funcional de tu Codigo Base'),18,30);
+    doc.text(fx('POSICIONES: Configuracion funcional de Origen Natal'),18,30);
     var py5=45; py5=tablaPositions(18,py5); py5+=5;
     doc.setFont('Roboto','italic'); doc.setFontSize(9); doc.setTextColor(60,60,60);
     py5=wrapText(fx('Las posiciones reflejan donde se concentra tu energia y desde que puntos se organiza tu forma de pensar, sentir o actuar, como se forma tu sistema interno y que partes de ti toman mas protagonismo en tu manera de percibir y responder a la vida.'),18,py5,175,5.5);
     py5+=8;
     doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(189,144,72);
-    doc.text(fx('ASPECTOS: Dinamicas internas de tu Codigo Base'),18,py5);
+    doc.text(fx('ASPECTOS: Dinamicas internas de Origen Natal'),18,py5);
     py5+=15;
     var aspTipos=['sol','luna','mercurio','venus','marte','jupiter','saturno','urano','neptuno','asc'];
     var aspRaws=[carta.solRaw,carta.lunaRaw,carta.mercRaw,carta.venRaw,carta.marRaw,carta.jupRaw,carta.satRaw,carta.uraRaw,carta.nepRaw,carta.ascRaw];
