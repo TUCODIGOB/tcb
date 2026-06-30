@@ -172,7 +172,7 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
           </p>
           <div style="background:#f5f1e6;padding:14px 18px;border-radius:6px;margin:0 0 28px 0;">
             <p style="font-size:14px;line-height:1.6;color:#555;margin:0;">
-              📌 Guarda esta dirección <strong>(hola@origennatal.com)</strong> en tus contactos. Así, cuando <strong>Tu Nueva Versión</strong> esté lista, serás ${deLos} en enterarte. Es el siguiente paso: <strong>lo que tienes que hacer exactamente para vivir la vida que quieres.</strong> Y no queremos que se pierda en spam.
+              📌 Guarda esta dirección <strong>(hola@origennatal.com)</strong> en tus contactos. Así, cuando <strong>Tu Plan de Origen</strong> esté lista, serás ${deLos} en enterarte. Es el siguiente paso: <strong>lo que tienes que hacer exactamente para vivir la vida que quieres.</strong> Y no queremos que se pierda en spam.
             </p>
           </div>
           <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 6px 0;">
