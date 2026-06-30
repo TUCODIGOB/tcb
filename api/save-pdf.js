@@ -149,7 +149,7 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
     <tr><td align="center">
       <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;box-shadow:0 4px 24px rgba(14,63,75,0.08);overflow:hidden;">
         <tr><td style="padding:32px 24px 16px 24px;text-align:center;background:#ffffff;">
-          <img src="https://tcb-iota.vercel.app/images/logo-origen-natal-carta-oscuro.webp" alt="Tu Código Base" width="180" style="display:block;margin:0 auto 16px auto;max-width:180px;height:auto;border:0;">
+          <img src="https://tcb-iota.vercel.app/images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" width="180" style="display:block;margin:0 auto 16px auto;max-width:180px;height:auto;border:0;">
           <h1 style="font-family:Georgia,'Playfair Display',serif;color:#bd9048;font-size:32px;line-height:1.2;margin:0;font-weight:700;letter-spacing:0.5px;">
             Tu Diseño de Origen
           </h1>
@@ -172,25 +172,25 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
           </p>
           <div style="background:#f5f1e6;padding:14px 18px;border-radius:6px;margin:0 0 28px 0;">
             <p style="font-size:14px;line-height:1.6;color:#555;margin:0;">
-              📌 Guarda esta dirección <strong>(hola@tucodigobase.com)</strong> en tus contactos. Así, cuando <strong>Tu Nueva Versión</strong> esté lista, serás ${deLos} en enterarte. Es el siguiente paso: <strong>lo que tienes que hacer exactamente para vivir la vida que quieres.</strong> Y no queremos que se pierda en spam.
+              📌 Guarda esta dirección <strong>(hola@origennatal.com)</strong> en tus contactos. Así, cuando <strong>Tu Nueva Versión</strong> esté lista, serás ${deLos} en enterarte. Es el siguiente paso: <strong>lo que tienes que hacer exactamente para vivir la vida que quieres.</strong> Y no queremos que se pierda en spam.
             </p>
           </div>
           <p style="font-size:16px;line-height:1.6;color:#333;margin:0 0 6px 0;">
             Un abrazo,
           </p>
           <p style="font-size:16px;line-height:1.6;color:#0e3f4b;margin:0 0 32px 0;font-weight:600;">
-            El equipo de Tu Código Base
+            El equipo de Origen Natal
           </p>
         </td></tr>
         <tr><td style="background:#0e3f4b;padding:20px 24px;text-align:center;">
           <p style="color:#cfb180;font-size:13px;margin:0 0 6px 0;">
-            <a href="mailto:hola@tucodigobase.com" style="color:#cfb180;text-decoration:none;">hola@tucodigobase.com</a>
+            <a href="mailto:hola@origennatal.com" style="color:#cfb180;text-decoration:none;">hola@origennatal.com</a>
           </p>
           <p style="color:#cfb180;font-size:12px;margin:6px 0 0 0;">
-            <a href="https://www.tucodigobase.com" style="color:#cfb180;text-decoration:none;">www.tucodigobase.com</a>
+            <a href="https://origennatal.com" style="color:#cfb180;text-decoration:none;">www.origennatal.com</a>
           </p>
           <p style="color:rgba(255,251,239,0.5);font-size:11px;margin:0;">
-            © 2026 TU CÓDIGO BASE · Operado por Pura Group LLC
+            © 2026 ORIGEN NATAL · Operado por Pura Group LLC
           </p>
         </td></tr>
       </table>
@@ -200,7 +200,7 @@ async function enviarEmailCliente({ email, nombre, sexo, pdfContent, nombreArchi
 </html>`;
 
   const requestBody = {
-    sender: { email: 'hola@tucodigobase.com', name: 'Tu Código Base' },
+    sender: { email: 'hola@origennatal.com', name: 'Origen Natal' },
     to: [{ email, name: nombre }],
     subject: 'Tu Diseño de Origen ✨',
     htmlContent: html,
@@ -246,8 +246,8 @@ async function enviarEmailAdmin({ asunto, mensaje }) {
   if (!BREVO_API_KEY) return;
 
   const body = {
-    sender: { email: 'hola@tucodigobase.com', name: 'Tu Código Base — Alertas' },
-    to: [{ email: 'hola@tucodigobase.com', name: 'Admin' }],
+    sender: { email: 'hola@origennatal.com', name: 'Origen Natal — Alertas' },
+    to: [{ email: 'hola@origennatal.com', name: 'Admin' }],
     subject: asunto,
     htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
   };
