@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Generando tu Diseño de Origen… | Tu Código Base</title>
+<title>Generando tu Diseño de Origen… | Origen Natal</title>
 <meta name="robots" content="noindex, nofollow" />
 
 <!-- Favicon -->
@@ -278,8 +278,8 @@
 <!-- NAV -->
 <nav class="nav">
   <div class="nav-inner">
-    <a href="/" class="nav-logo" aria-label="Tu Código Base — Inicio">
-      <img src="images/logo-origen-natal-carta-oscuro.webp" alt="Tu Código Base" />
+    <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
+      <img src="images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" />
     </a>
   </div>
 </nav>
@@ -338,7 +338,7 @@
         <a href="/tu-diseno-de-origen">Vuelve al formulario de compra →</a>
         <br><br>
         <strong>¿Acabas de realizar el pago?</strong><br><br>
-        Si has pagado correctamente y estás viendo este mensaje, por favor escríbenos a <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a> con tu nombre, tu número de teléfono y el email que usaste para pagar, contactaremos contigo.
+        Si has pagado correctamente y estás viendo este mensaje, por favor escríbenos a <a href="mailto:hola@origennatal.com">hola@origennatal.com</a> con tu nombre, tu número de teléfono y el email que usaste para pagar, contactaremos contigo.
       </div>
     </div>
   </div>
@@ -348,7 +348,7 @@
 <footer class="footer">
   <div class="footer-inner">
     <p class="footer-email">
-      <a href="mailto:hola@tucodigobase.com">hola@tucodigobase.com</a>
+      <a href="mailto:hola@origennatal.com">hola@origennatal.com</a>
     </p>
     <nav class="footer-links" aria-label="Legal">
       <a href="/aviso-legal">Aviso legal</a>
@@ -360,7 +360,7 @@
       <a href="/terminos-y-condiciones">Términos y condiciones</a>
     </nav>
     <p class="footer-copy">
-      © 2026 TU CÓDIGO BASE. Todos los derechos reservados.<br>
+      © 2026 ORIGEN NATAL. Todos los derechos reservados.<br>
       Operado por Pura Group LLC
     </p>
   </div>
@@ -401,7 +401,7 @@ function showError(msg) {
   } catch(e) {}
 
   if (!pedido || !pedido.nombre || !pedido.fecha || !pedido.hora) {
-    showError('No encontramos los datos de tu pedido. Puede que hayas cambiado de navegador o borrado las cookies. Por favor escríbenos a hola@tucodigobase.com y te enviaremos el informe manualmente.');
+    showError('No encontramos los datos de tu pedido. Puede que hayas cambiado de navegador o borrado las cookies. Por favor escríbenos a hola@origennatal.com y te enviaremos el informe manualmente.');
     return;
   }
 
@@ -415,11 +415,11 @@ function showError(msg) {
     });
     verificado = await resp.json().catch(() => ({ ok: false }));
     if (!resp.ok || !verificado.ok) {
-      showError('No hemos podido verificar tu pago. Si acabas de pagar, espera unos segundos y recarga esta página. Si el problema persiste, escríbenos a hola@tucodigobase.com');
+      showError('No hemos podido verificar tu pago. Si acabas de pagar, espera unos segundos y recarga esta página. Si el problema persiste, escríbenos a hola@origennatal.com');
       return;
     }
   } catch(e) {
-    showError('No hemos podido verificar tu pago. Por favor recarga la página o escríbenos a hola@tucodigobase.com');
+    showError('No hemos podido verificar tu pago. Por favor recarga la página o escríbenos a hola@origennatal.com');
     return;
   }
 
@@ -443,7 +443,7 @@ function showError(msg) {
   }
 
   if (!pedido || !pedido.nombre || !pedido.fecha || !pedido.hora) {
-    showError('No encontramos los datos de tu pedido. Por favor escríbenos a hola@tucodigobase.com y te enviaremos el informe manualmente.');
+    showError('No encontramos los datos de tu pedido. Por favor escríbenos a hola@origennatal.com y te enviaremos el informe manualmente.');
     return;
   }
 
@@ -455,7 +455,7 @@ function showError(msg) {
     await iniciarConDatos(pedido);
   } catch(e) {
     console.error('Error generación:', e);
-    showError('Ha ocurrido un error al generar tu informe. Por favor escríbenos a hola@tucodigobase.com con tu email de compra y te lo enviaremos manualmente.');
+    showError('Ha ocurrido un error al generar tu informe. Por favor escríbenos a hola@origennatal.com con tu email de compra y te lo enviaremos manualmente.');
   }
 })();
 
