@@ -14,9 +14,29 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <!-- Fonts del index -->
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+@font-face {
+  font-display: swap;
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  src: url('fonts-web/playfair-display-v40-latin_latin-ext-700.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts-web/open-sans-v44-latin_latin-ext-regular.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('fonts-web/open-sans-v44-latin_latin-ext-600.woff2') format('woff2');
+}
+</style>
 
 <style>
   :root {
@@ -63,7 +83,7 @@
     width: min(1100px, 92vw);
     margin-inline: auto;
   }
-  .nav-logo img { height: 70px; width: auto; }
+  .nav-logo img { height: 34px; width: auto; }
 
   /* PANTALLAS */
   .screen {
@@ -144,7 +164,7 @@
   }
   .check-icon {
     width: 70px;
-    height: 70px;
+    height: 34px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
     display: flex;
@@ -242,8 +262,8 @@
   .footer-copy { color: rgba(255,251,239,.4); font-size: .8rem; }
 
   @media (max-width: 600px) {
-    .nav-inner { justify-content: center; padding-block: .5rem; }
-    .nav-logo img { height: 80px; }
+    .nav-inner { justify-content: center; padding-block: 1rem; }
+    .nav-logo img { width: 100%; height: auto; }
     .screen { padding-block: 2rem; }
     .ready-box { padding: 2rem 1.5rem; }
   }
@@ -287,7 +307,7 @@
 <nav class="nav">
   <div class="nav-inner">
     <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
-      <img src="images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" />
+      <img src="images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" width="395" height="48" />
     </a>
   </div>
 </nav>
