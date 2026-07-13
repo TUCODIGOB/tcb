@@ -13,10 +13,29 @@
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:image" content="https://origennatal.com/images/logo-google-origen-natal-carta.webp" />
   <link rel="icon" type="image/png" href="images/favicon-origen-natal-oscuro.webp" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" /></noscript>
+  <style>
+@font-face {
+  font-display: swap;
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  src: url('fonts-web/playfair-display-v40-latin_latin-ext-700.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts-web/open-sans-v44-latin_latin-ext-regular.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('fonts-web/open-sans-v44-latin_latin-ext-600.woff2') format('woff2');
+}
+</style>
   <style>
     :root {
       --teal-deep: #0e3f4b;
@@ -36,7 +55,7 @@
     img { display: block; max-width: 100%; }
     a { color: inherit; text-decoration: none; }
     .nav { background: rgba(255,251,239,.95); backdrop-filter: blur(12px); text-align: center; padding-block: .2rem; }
-    .nav a img { height: 70px; width: auto; display: inline-block; }
+    .nav a img { height: 34px; width: auto; display: inline-block; }
     .hero-resena { background: var(--cream); padding-block: 3rem 2rem; text-align: center; }
     .hero-resena h1 { font-family: var(--font-display); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 700; color: var(--teal-deep); line-height: 1.2; margin-bottom: 1rem; }
     .hero-resena p { font-size: 1.1rem; color: #555; max-width: 500px; margin-inline: auto; }
@@ -103,7 +122,7 @@
 </head>
 <body>
   <nav class="nav">
-    <a href="/"><img src="images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" /></a>
+    <a href="/" class="nav-logo"><img src="images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" width="395" height="48" /></a>
   </nav>
 
   <section class="hero-resena">
