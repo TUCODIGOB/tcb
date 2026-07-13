@@ -69,73 +69,6 @@
     img { display: block; max-width: 100%; }
     a { color: inherit; text-decoration: none; }
 
-
-    /* ══════════════════════════════════════════════
-       COUNTDOWN BAR (top sticky)
-    ══════════════════════════════════════════════ */
-    .countdown-bar {
-      background: var(--teal-deep);
-      color: var(--cream);
-      border-bottom: 1px solid rgba(207,177,128,.25);
-      transition: transform .35s ease;
-      position: relative;
-      z-index: 99;
-    }
-    .countdown-bar.hidden {
-      transform: translateY(-100%);
-      position: absolute;
-      width: 100%;
-    }
-    .countdown-bar-inner {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.2rem;
-      padding-block: .55rem;
-      flex-wrap: wrap;
-    }
-    .countdown-bar-text {
-      font-size: .78rem;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      color: var(--gold-light);
-      font-weight: 600;
-    }
-    .countdown {
-      display: flex;
-      gap: .35rem;
-    }
-    .countdown-box {
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(207,177,128,.25);
-  border-radius: var(--r-sm);
-  padding: .35rem .5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: .1rem;
-  min-width: 42px;
-  justify-content: center;
-}
-    .countdown-num {
-      font-family: var(--font-display);
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--gold-light);
-      line-height: 1;
-    }
-    .countdown-label {
-      font-size: .65rem;
-      color: rgba(207,177,128,.7);
-      text-transform: uppercase;
-    }
-    @media (max-width: 600px) {
-      .countdown-bar-inner { gap: .7rem; padding-block: .45rem; }
-      .countdown-bar-text { font-size: .7rem; letter-spacing: .08em; }
-      .countdown-box { padding: .2rem .35rem; min-width: 36px; }
-      .countdown-num { font-size: .9rem; }
-    }
-
     
     /* ─── UTILITIES ──────────────────────────────── */
     .container { width: min(1100px, 92vw); margin-inline: auto; }
@@ -673,20 +606,6 @@ font-weight: 700;
   opacity: .7;
   letter-spacing: .08em;
 }
-.price-countdown {
-  justify-content: center;
-  margin-bottom: 2rem;
-}
-.price-countdown .countdown-box {
-  padding: .6rem .9rem;
-  min-width: 60px;
-}
-.price-countdown .countdown-num {
-  font-size: 1.6rem;
-}
-.price-countdown .countdown-label {
-  font-size: .75rem;
-}
     .features-list {
       list-style: none;
       text-align: left;
@@ -842,7 +761,6 @@ font-weight: 700;
 .testimonials-subtitle { font-size: 1.1rem; }
 .price-cta-subtitle { font-size: 1.1rem; }
 .faq-intro { font-size: 1.1rem; }
-.countdown-num { font-size: 1.3rem; }
 .price-old { font-size: 3rem; }
 .price-tag { font-size: 4.5rem; }
       section { padding-block: 3.5rem; }
@@ -899,19 +817,6 @@ h2 { font-size: 2.5rem; }
     src="https://www.facebook.com/tr?id=1729071528498639&ev=PageView&noscript=1"/></noscript>
 </head>
 <body>
-
-  <!-- ════════════ COUNTDOWN BAR ════════════ -->
-  <div class="countdown-bar" id="countdownBar">
-    <div class="container countdown-bar-inner">
-      <span class="countdown-bar-text">✦ Oferta por tiempo limitado ✦</span>
-      <div class="countdown">
-        <div class="countdown-box"><span class="countdown-num" data-unit="days">07</span><span class="countdown-label">dias</span></div>
-<div class="countdown-box"><span class="countdown-num" data-unit="hours">00</span><span class="countdown-label">horas</span></div>
-<div class="countdown-box"><span class="countdown-num" data-unit="minutes">00</span><span class="countdown-label">min</span></div>
-<div class="countdown-box"><span class="countdown-num" data-unit="seconds">00</span><span class="countdown-label">seg</span></div>
-      </div>
-    </div>
-  </div>
 
   <!-- ════════════ NAV ════════════ -->
   <nav class="nav">
@@ -1097,13 +1002,7 @@ h2 { font-size: 2.5rem; }
      
       <div class="price-card reveal">
 <p class="price-launch">✦ Oferta por tiempo limitado ✦</p>
-
-        <div class="countdown price-countdown">
-  <div class="countdown-box"><span class="countdown-num" data-unit="days">07</span><span class="countdown-label">dias</span></div>
-  <div class="countdown-box"><span class="countdown-num" data-unit="hours">00</span><span class="countdown-label">horas</span></div>
-  <div class="countdown-box"><span class="countdown-num" data-unit="minutes">00</span><span class="countdown-label">min</span></div>
-  <div class="countdown-box"><span class="countdown-num" data-unit="seconds">00</span><span class="countdown-label">seg</span></div>
-</div>
+       
 <div class="price-wrap">
   <div class="price-old"><s>97</s><span class="currency">€</span></div>
   <div class="price-tag">27<span class="currency">€</span></div>
@@ -1228,60 +1127,6 @@ h2 { font-size: 2.5rem; }
       setTimeout(() => el.classList.add('visible'), 80);
     });
   </script>
-
-
-  <!-- ════════════ COUNTDOWN + HIDE ON SCROLL ════════════ -->
-  <script>
-    (function(){
-      const COUNTDOWN_DAYS = 7;
-      const STORAGE_KEY = 'tucodigobase_countdown_end';
-
-      function getEndTime() {
-        let end = parseInt(localStorage.getItem(STORAGE_KEY), 10);
-        const now = Date.now();
-        if (!end || end <= now) {
-          end = now + COUNTDOWN_DAYS * 24 * 60 * 60 * 1000;
-          localStorage.setItem(STORAGE_KEY, end);
-        }
-        return end;
-      }
-
-      function updateCountdown() {
-        const end = getEndTime();
-        const now = Date.now();
-        let diff = Math.max(0, end - now);
-
-        if (diff === 0) {
-          localStorage.removeItem(STORAGE_KEY);
-          return updateCountdown();
-        }
-
-        const days = Math.floor(diff / 86400000);
-        diff -= days * 86400000;
-        const hours = Math.floor(diff / 3600000);
-        diff -= hours * 3600000;
-        const minutes = Math.floor(diff / 60000);
-        diff -= minutes * 60000;
-        const seconds = Math.floor(diff / 1000);
-
-        const pad = n => String(n).padStart(2, '0');
-const set = (unit, val) => {
-  document.querySelectorAll(`[data-unit="${unit}"]`).forEach(el => {
-    el.textContent = pad(val);
-  });
-};
-        set('days', days);
-        set('hours', hours);
-        set('minutes', minutes);
-        set('seconds', seconds);
-      }
-
-      updateCountdown();
-      setInterval(updateCountdown, 1000);
-      
-    })();
-  </script>
-
 
 </body>
 </html>
