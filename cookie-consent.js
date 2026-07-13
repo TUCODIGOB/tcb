@@ -69,18 +69,17 @@
     banner.setAttribute("aria-label", "Consentimiento de cookies");
     banner.style.cssText =
       "position:fixed;left:0;right:0;bottom:0;z-index:9999;" +
-      "background:#0e3f4b;color:#fffbef;padding:.4rem .5rem;" +
-      "display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:center;" +
-      "font-family:'Open Sans',sans-serif;font-size:.68rem;line-height:1.3;" +
+      "background:#0e3f4b;color:#fffbef;padding:.5rem .3rem;" +
+      "display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:center;" +
+      "font-family:'Open Sans',sans-serif;line-height:1.3;" +
       "box-shadow:0 -4px 24px rgba(0,0,0,.2);";
 
     var style = document.createElement("style");
     style.textContent =
-      "#cookie-consent-banner p{margin:0;}" +
+      "#cookie-consent-banner p{margin:0;font-size:.68rem !important;}" +
       "#cookie-consent-banner button{font-family:'Open Sans',sans-serif;}" +
       "@media (max-width:640px){#cookie-consent-banner{padding:1.1rem 1.2rem !important;" +
-      "font-size:.92rem !important;gap:.9rem !important;}" +
-      "#cookie-consent-banner button{font-size:.9rem !important;padding:.6rem 1.1rem !important;}}";
+      "gap:.9rem !important;}#cookie-consent-banner p{font-size:.92rem !important;}}";
     document.head.appendChild(style);
 
     banner.innerHTML =
@@ -89,11 +88,11 @@
       'Más info en nuestra ' +
       '<a href="/politica-de-cookies" style="color:#cfb180;text-decoration:underline;">Política de Cookies</a>.' +
       "</p>" +
-      '<div style="display:flex;gap:.4rem;flex:0 0 auto;">' +
+      '<div style="display:flex;gap:.6rem;flex:0 0 auto;">' +
       '<button id="cookie-reject" style="background:transparent;color:#fffbef;border:1px solid rgba(255,251,239,.4);' +
-      'border-radius:5px;padding:.3rem .65rem;font-size:.68rem;cursor:pointer;">Rechazar</button>' +
+      'border-radius:6px;padding:.6rem 1.1rem;font-size:.9rem;cursor:pointer;">Rechazar</button>' +
       '<button id="cookie-accept" style="background:linear-gradient(135deg,#bd9048,#cfb180);color:#fff;border:none;' +
-      'border-radius:5px;padding:.3rem .8rem;font-size:.68rem;font-weight:600;cursor:pointer;">Aceptar</button>' +
+      'border-radius:6px;padding:.6rem 1.3rem;font-size:.9rem;font-weight:600;cursor:pointer;">Aceptar</button>' +
       "</div>";
 
     document.body.appendChild(banner);
