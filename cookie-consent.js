@@ -69,7 +69,7 @@
     banner.setAttribute("aria-label", "Consentimiento de cookies");
     banner.style.cssText =
       "position:fixed;left:0;right:0;bottom:0;z-index:9999;" +
-      "background:#0e3f4b;color:#fffbef;padding:.5rem .3rem;" +
+      "background:#0e3f4b;color:#fffbef;padding:.1rem .1rem;" +
       "display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:center;" +
       "font-family:'Open Sans',sans-serif;line-height:1.3;" +
       "box-shadow:0 -4px 24px rgba(0,0,0,.2);";
@@ -90,9 +90,9 @@
       "</p>" +
       '<div style="display:flex;gap:.6rem;flex:0 0 auto;">' +
       '<button id="cookie-reject" style="background:transparent;color:#fffbef;border:1px solid rgba(255,251,239,.4);' +
-      'border-radius:6px;padding:.6rem 1.1rem;font-size:.9rem;cursor:pointer;">Rechazar</button>' +
+      'border-radius:6px;padding:.6rem 1.1rem;font-size:.1rem;cursor:pointer;">Rechazar</button>' +
       '<button id="cookie-accept" style="background:linear-gradient(135deg,#bd9048,#cfb180);color:#fff;border:none;' +
-      'border-radius:6px;padding:.6rem 1.3rem;font-size:.9rem;font-weight:600;cursor:pointer;">Aceptar</button>' +
+      'border-radius:6px;padding:.6rem 1.3rem;font-size:.1rem;font-weight:600;cursor:pointer;">Aceptar</button>' +
       "</div>";
 
     document.body.appendChild(banner);
