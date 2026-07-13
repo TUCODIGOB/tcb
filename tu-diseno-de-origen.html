@@ -23,10 +23,29 @@
   <link rel="shortcut icon" href="images/favicon-origen-natal-oscuro.webp" />
 
   <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
-<noscript><link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" /></noscript>
+  <style>
+@font-face {
+  font-display: swap;
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  src: url('fonts-web/playfair-display-v40-latin_latin-ext-700.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts-web/open-sans-v44-latin_latin-ext-regular.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('fonts-web/open-sans-v44-latin_latin-ext-600.woff2') format('woff2');
+}
+</style>
 <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -81,7 +100,7 @@
       width: min(1100px, 92vw);
       margin-inline: auto;
     }
-    .nav-logo img { height: 70px; width: auto; }
+    .nav-logo img { height: 34px; width: auto; }
 
     /* ─── HERO ─── */
     .hero {
@@ -407,8 +426,8 @@
 
     /* RESPONSIVE */
     @media (max-width: 600px) {
-      .nav-inner { justify-content: center; padding-block: .5rem; }
-      .nav-logo img { height: 80px; }
+      .nav-inner { justify-content: center; padding-block: 1rem; }
+      .nav-logo img { width: 100%; height: auto; }
       .hero { padding-block: 2rem 1.5rem; }
       .form-card { padding: 1.5rem 1.2rem; }
       .field-row { grid-template-columns: 1fr; gap: 0; }
@@ -449,7 +468,7 @@
     <div class="nav-inner">
       <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
         <img src="images/logo-origen-natal-carta-oscuro.webp"
-             alt="Origen Natal — Tu carta natal descifrada" />
+             alt="Origen Natal — Tu carta natal descifrada" width="395" height="48" />
       </a>
     </div>
   </nav>
