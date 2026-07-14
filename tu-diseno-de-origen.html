@@ -95,12 +95,26 @@
       border-bottom: 1px solid rgba(189,144,72,.2);
     }
     .nav-inner {
-      display: flex; align-items: center;
+      display: flex; align-items: center; justify-content: space-between;
       padding-block: .2rem;
-      width: min(1100px, 92vw);
-      margin-inline: auto;
     }
-    .nav-logo img { height: 34px; width: auto; }
+    .nav-logo img {
+      height: 34px;
+      width: auto;
+    }
+    .nav-cta {
+      background: var(--gold-deep);
+      color: var(--white);
+      font-size: .82rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .55rem 1.2rem;
+      border-radius: var(--r-sm);
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--gold-light); }
 
     /* ─── HERO ─── */
     .hero {
@@ -426,8 +440,11 @@
 
     /* RESPONSIVE */
     @media (max-width: 600px) {
-      .nav-inner { justify-content: center; padding-block: 1rem; }
+      .nav-inner { flex-direction: column; gap: 1rem; padding-block: 1rem; }
+      .nav-cta { width: 100%; text-align: center; font-size: 1.1rem; padding: .6rem; }
       .nav-logo img { height: 34px; width: auto; }
+      .nav.scrolled .nav-inner { padding-block: .4rem; }
+      .nav.scrolled .nav-logo { display: none; }
       .hero { padding-block: 2rem 1.5rem; }
       .form-card { padding: 1.5rem 1.2rem; }
       .field-row { grid-template-columns: 1fr; gap: 0; }
@@ -465,11 +482,16 @@
 
   <!-- NAV -->
   <nav class="nav">
-    <div class="nav-inner">
+    <div class="container nav-inner">
       <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
         <img src="images/logo-origen-natal-carta-oscuro.webp"
-             alt="Origen Natal — Tu carta natal descifrada" width="395" height="48" />
+             alt="Origen Natal — Tu carta natal descifrada" width="395" height="48"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
+        <span style="display:none; font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--teal-deep); letter-spacing:.02em;">
+          ORIGEN NATAL
+        </span>
       </a>
+      <a href="#formulario" class="nav-cta">Quiero descubrirlo</a>
     </div>
   </nav>
 
@@ -931,5 +953,18 @@
   </script>
 
 <script src="/cookie-consent.js"></script>
+<script>
+    (function(){
+      const nav = document.querySelector('.nav');
+      if (!nav) return;
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          nav.classList.add('scrolled');
+        } else {
+          nav.classList.remove('scrolled');
+        }
+      }, { passive: true });
+    })();
+</script>
 </body>
 </html>
