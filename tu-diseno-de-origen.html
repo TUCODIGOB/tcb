@@ -990,7 +990,7 @@ margin-bottom: -2rem;
     }
 .price-wrap {
   display: flex;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: center;
   gap: 1rem;
   margin-bottom: 1rem;
@@ -1003,13 +1003,12 @@ margin-bottom: -2rem;
   margin-bottom: .5rem;
 }
 .price-old-hero {
-  font-family: var(--font-body);
+  font-family: "Playfair Display", serif;
   font-size: 42px;
-  color: var(--cream);
-  opacity: .5;
+  color: #999999;
 }
 .price-tag-hero {
-  font-family: var(--font-body);
+  font-family: "Playfair Display", serif;
   font-size: 56px;
   font-weight: 700;
   color: var(--gold-deep);
@@ -1191,6 +1190,10 @@ font-weight: 700;
 .step-num { font-size: 2rem; }
 .testimonials-subtitle { font-size: 1.1rem; }
 .hero-trust-note { font-size: 16px; }
+.price-product-name { font-size: 19px; margin-top: .4rem; }
+.price-wrap { flex-direction: column-reverse; align-items: center; gap: .3rem; }
+.price-old-hero { font-size: 20px; }
+.currency { font-size: .45em; }
 .price-cta-subtitle { font-size: 1.1rem; }
 .faq-intro { font-size: 1.1rem; }
 .price-old { font-size: 3rem; }
@@ -1286,7 +1289,7 @@ h2 { font-size: 2.5rem; }
           <a href="tu-diseno-de-origen.html" class="btn-cta">
             Quiero descubrirlo
           </a>
-          <p class="hero-trust-note">"Lo recibes en minutos. Sin cita. Sin espera."</p>
+          <p class="hero-trust-note">Lo recibes en minutos. Sin cita. Sin espera.</p>
         </div>
       </div>
 
