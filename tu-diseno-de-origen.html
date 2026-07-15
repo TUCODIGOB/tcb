@@ -625,7 +625,7 @@ text-align: center;
       line-height: 1.5;
       border-radius: var(--r-sm);
     }
-    .hero-cta-wrap { display: flex; flex-direction: column; align-items: center; gap: .6rem; }
+    .hero-cta-wrap { display: flex; flex-direction: column; align-items: flex-start; gap: .6rem; }
 .btn-cta-sub {
       display: block;
       font-size: .78rem;
@@ -990,8 +990,8 @@ margin-bottom: -2rem;
     }
 .price-wrap {
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
+  align-items: baseline;
+  justify-content: flex-start;
   gap: 1rem;
   margin-bottom: 1rem;
 }
@@ -1003,15 +1003,16 @@ margin-bottom: -2rem;
   margin-bottom: .5rem;
 }
 .price-old-hero {
-  font-family: "Playfair Display", serif;
-  font-size: 42px;
-  color: #999999;
+  font-family: var(--font-body);
+  font-size: 2.6rem;
+  color: var(--cream);
+  opacity: .5;
 }
 .price-tag-hero {
-  font-family: "Playfair Display", serif;
-  font-size: 56px;
+  font-family: var(--font-body);
+  font-size: 3.5rem;
   font-weight: 700;
-  color: var(--gold-deep);
+  color: var(--gold-light);
   line-height: 1;
 }
 .currency {
@@ -1180,6 +1181,8 @@ font-weight: 700;
       .hero-img-wrap { width: 100%; max-width: 400px; height: 440px; margin-inline: auto; }
       .hero-float-badge { left: 0; bottom: -20px; }
       .hero-cta-wrap { align-items: center; }
+      .price-product-name { text-align: center; }
+      .price-wrap { justify-content: center; }
       .hero-home h1, .hero-sub { text-align: center; }
       .hero-testimonial { margin-inline: auto; }
       .steps { grid-template-columns: 1fr; }
@@ -1191,9 +1194,8 @@ font-weight: 700;
 .testimonials-subtitle { font-size: 1.1rem; }
 .hero-trust-note { font-size: 16px; }
 .price-product-name { font-size: 19px; margin-top: .4rem; }
-.price-wrap { flex-direction: column-reverse; align-items: center; gap: .3rem; }
-.price-old-hero { font-size: 20px; }
-.currency { font-size: .45em; }
+.price-old-hero { font-size: 3rem; }
+.price-tag-hero { font-size: 4.5rem; }
 .price-cta-subtitle { font-size: 1.1rem; }
 .faq-intro { font-size: 1.1rem; }
 .price-old { font-size: 3rem; }
