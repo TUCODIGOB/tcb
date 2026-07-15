@@ -1240,7 +1240,7 @@ h2 { font-size: 2.5rem; }
 
   <!-- NAV -->
   <nav class="nav">
-    <div class="container nav-inner">
+    <div class="container-home nav-inner">
       <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
         <img src="images/logo-origen-natal-carta-oscuro.webp"
              alt="Origen Natal — Tu carta natal descifrada" width="395" height="48"
@@ -1963,5 +1963,23 @@ h2 { font-size: 2.5rem; }
       }, { passive: true });
     })();
 </script>
+
+  <!-- ════════════ JS SCROLL REVEAL (bloques copiados del index) ════════════ -->
+  <script>
+    const revealsHome = document.querySelectorAll('.reveal');
+    const ioHome = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          ioHome.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealsHome.forEach(el => ioHome.observe(el));
+
+    document.querySelectorAll('.hero-home .reveal').forEach(el => {
+      setTimeout(() => el.classList.add('visible'), 80);
+    });
+  </script>
 </body>
 </html>
