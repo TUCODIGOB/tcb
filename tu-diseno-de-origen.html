@@ -553,7 +553,7 @@ text-align: center;
     }
     .nav-inner {
       display: flex; align-items: center; justify-content: space-between;
-      padding-block: .2rem;
+      padding-block: 5px;
     }
     .nav-logo img {
       height: 34px;
@@ -602,7 +602,7 @@ text-align: center;
 
     .hero-home h1 em { font-style: italic; color: var(--gold-deep); }
     .hero-sub {
-      font-size: 1.35rem;
+      font-size: 18px;
       font-weight: 600;
       color: #0c0c0c;
       margin-bottom: 1.5rem;
@@ -1170,7 +1170,7 @@ font-weight: 700;
     ══════════════════════════════════════════════ */
     @media (max-width: 860px) {
       .hero-home-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-      .hero-visual { order: -1; }
+      .hero-visual { order: 1; }
       .hero-img-wrap { width: 100%; max-width: 400px; height: 440px; margin-inline: auto; }
       .hero-float-badge { left: 0; bottom: -20px; }
       .hero-cta-wrap { align-items: center; }
@@ -1191,11 +1191,12 @@ font-weight: 700;
       section { padding-block: 3.5rem; }
 .btn-cta { width: 100%; font-size: 1.1rem; padding: 1.1rem 1rem; }
 .btn-cta-sub { font-size: .95rem; }
-.hero-home h1 { font-size: 38px; margin-bottom: 2.5rem; }      
+.hero-home h1 { font-size: 38px; margin-bottom: 2.5rem; } 
+.hero-home h1 { line-height: 1.40; }     
 .hero-sub { margin-bottom: 2rem; }
 .how-subtitle { font-size: 1rem; }
 h2 { font-size: 2.5rem; }
-.hero-sub { font-size: 22px; }
+.hero-sub { font-size: 20px; }
       .hero-product-line { font-size: 1.1rem; text-align: center; margin-bottom: 2.5rem; }
       .hero-testimonial-overlay { font-size: 1.1rem; font-weight: 600; }
 .hero-testimonial-overlay cite { font-size: .95rem; }
