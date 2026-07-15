@@ -96,7 +96,7 @@
     }
     .nav-inner {
       display: flex; align-items: center; justify-content: space-between;
-      padding-block: .2rem;
+      padding-block: .3rem;
     }
     .nav-logo img {
       height: 34px;
@@ -161,7 +161,7 @@
     .form-card .subtitle {
       text-align: center;
       font-size: .9rem;
-      color: #666;
+      color: #0c0c0c;
       margin-bottom: 2rem;
       font-style: italic;
     }
@@ -375,7 +375,7 @@
     .secure-note {
       text-align: center;
       font-size: .82rem;
-      color: #666;
+      color: #0c0c0c;
       margin-top: 1rem;
     }
     .price-info {
@@ -393,7 +393,7 @@
     }
     .price-info .price-label {
       font-size: .85rem;
-      color: #666;
+      color: #0c0c0c;
       display: block;
       margin-top: .2rem;
     }
@@ -508,7 +508,7 @@ text-align: center;
       background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
       color: var(--white);
       font-family: var(--font-body);
-      font-size: 1.05rem;
+      font-size: 18px;
       font-weight: 600;
       letter-spacing: .04em;
       text-transform: uppercase;
@@ -609,11 +609,11 @@ text-align: center;
       max-width: none;
     }
     .hero-trust-note {
-      font-size: .85rem;
-      color: #666;
+      font-size: 14px;
+      color: #0c0c0c;
       margin-top: .6rem;
     }
-    .hero-sub strong { color: var(--teal-deep); font-weight: 600; }
+    .hero-sub strong { color: #0c0c0c; font-weight: 600; }
 .hero-product-line {
       font-family: var(--font-body);
       font-style: italic;
@@ -990,21 +990,21 @@ margin-bottom: -2rem;
     }
 .price-wrap {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: flex-start;
   gap: 1rem;
   margin-bottom: .5rem;
 }
-.price-old {
+.price-old-hero {
   font-family: var(--font-body);
-  font-size: 2.6rem;
-  color: #999;
-  opacity: .7;
+  font-size: 1.8rem;
+  color: var(--gold-deep);
+  opacity: .6;
 }
-.price-old s { text-decoration: line-through; }
-.price-tag {
+.price-old-hero s { text-decoration: line-through; }
+.price-tag-hero {
   font-family: var(--font-display);
-  font-size: 3.5rem;
+  font-size: 2.6rem;
   font-weight: 700;
   color: var(--gold-deep);
   line-height: 1;
@@ -1061,7 +1061,7 @@ font-weight: 700;
     .faq { background: var(--cream); }
 .faq-list { text-align: left; }
     .faq h2 { color: var(--teal-deep); margin-bottom: .5rem; }
-    .faq-intro { color: #666; font-size: .95rem; margin-top: 1.8rem; margin-bottom: 2.5rem; }
+    .faq-intro { color: #0c0c0c; font-size: .95rem; margin-top: 1.8rem; margin-bottom: 2.5rem; }
     .faq-list {
       max-width: 780px;
       margin-inline: auto;
@@ -1191,11 +1191,11 @@ font-weight: 700;
       section { padding-block: 3.5rem; }
 .btn-cta { width: 100%; font-size: 1.1rem; padding: 1.1rem 1rem; }
 .btn-cta-sub { font-size: .95rem; }
-.hero-home h1 { font-size: 2.7rem; margin-bottom: 2.5rem; }       
+.hero-home h1 { font-size: 35px; margin-bottom: 2.5rem; }      
 .hero-sub { margin-bottom: 2rem; }
 .how-subtitle { font-size: 1rem; }
 h2 { font-size: 2.5rem; }
-.hero-sub { font-size: 1.1rem; }
+.hero-sub { font-size: 22px; }
       .hero-product-line { font-size: 1.1rem; text-align: center; margin-bottom: 2.5rem; }
       .hero-testimonial-overlay { font-size: 1.1rem; font-weight: 600; }
 .hero-testimonial-overlay cite { font-size: .95rem; }
@@ -1270,8 +1270,8 @@ h2 { font-size: 2.5rem; }
           Y hasta que no lo descubras, <strong>nada cambiará de verdad</strong>
         </p>
         <div class="price-wrap">
-          <div class="price-old"><s>67</s><span class="currency">€</span></div>
-          <div class="price-tag">47<span class="currency">€</span></div>
+          <div class="price-old-hero"><s>67</s><span class="currency">€</span></div>
+          <div class="price-tag-hero">47<span class="currency">€</span></div>
         </div>
         <div class="hero-cta-wrap">
           <a href="tu-diseno-de-origen.html" class="btn-cta">
