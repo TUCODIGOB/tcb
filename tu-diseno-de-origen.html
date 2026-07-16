@@ -1275,6 +1275,170 @@ h2 { font-size: 2.5rem; }
       .reviews-grid { grid-template-columns: 1fr; }
     }
 
+    /* ══════════════════════════════════════════════
+       AJUSTES LANDING P1 — estructura y estilo ANEXO-02 / Fase 3
+    ══════════════════════════════════════════════ */
+
+    /* Ancla del formulario (compensa el nav sticky) */
+    #formulario { scroll-margin-top: 80px; }
+
+    /* ─── QUÉ ES + LAS 7 ÁREAS (fondo teal corporativo) ─── */
+    .areas p {
+      max-width: 680px;
+      margin-inline: auto;
+      color: rgba(255,251,239,.85);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      position: relative;
+    }
+    .areas .areas-lead {
+      font-size: 1.2rem;
+      color: var(--cream);
+      margin-bottom: 1.2rem;
+    }
+    .areas .areas-lead strong { color: var(--gold-light); }
+    .areas p strong { color: var(--cream); }
+    .areas h2 { position: relative; margin-bottom: 1.8rem; }
+
+    /* ─── TESTIMONIOS — frases reales ─── */
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      max-width: 1000px;
+      margin: 2.5rem auto 3rem;
+      text-align: left;
+    }
+    .quote-card {
+      background: var(--white);
+      border: 1px solid rgba(189,144,72,.25);
+      border-left: 3px solid var(--gold-deep);
+      border-radius: var(--r-md);
+      padding: 1.2rem 1.3rem;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: var(--teal-deep);
+      box-shadow: 0 4px 18px rgba(0,0,0,.05);
+    }
+    .quote-card cite {
+      display: block;
+      margin-top: .6rem;
+      font-family: var(--font-body);
+      font-style: normal;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--gold-deep);
+    }
+
+    /* ─── PRECIO — stack de valor ─── */
+    .price-cta h2 { position: relative; }
+    .features-list li { align-items: flex-start; line-height: 1.55; }
+    .features-list li strong { color: var(--cream); font-weight: 600; }
+    .feat-val {
+      display: block;
+      font-style: normal;
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      opacity: .8;
+      margin-top: .2rem;
+    }
+    .value-compare {
+      position: relative;
+      max-width: 640px;
+      margin: 2.2rem auto 0;
+      font-size: .95rem;
+      line-height: 1.65;
+      color: rgba(255,251,239,.75);
+      font-style: italic;
+    }
+    .price-old {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      color: var(--gold-deep);
+      opacity: .45;
+    }
+    .price-tag {
+      font-family: var(--font-display);
+      font-size: 3.4rem;
+      font-weight: 700;
+      color: var(--gold-deep);
+      line-height: 1;
+    }
+    .price-card .price-wrap { justify-content: center; margin-bottom: 1.8rem; }
+
+    /* ─── GARANTÍA (fondo claro, tarjeta) ─── */
+    .garantia { background: var(--cream); }
+    .garantia h2 { color: var(--teal-deep); }
+    .garantia-card {
+      max-width: 680px;
+      margin-inline: auto;
+      background: var(--cream);
+      border: 1px solid rgba(189,144,72,.3);
+      border-left: 4px solid var(--gold-deep);
+      border-radius: var(--r-md);
+      padding: 2rem 2.2rem;
+      text-align: left;
+      box-shadow: 0 4px 20px rgba(0,0,0,.05);
+    }
+    .garantia-card p {
+      color: var(--ink);
+      font-size: 1.05rem;
+      margin-bottom: .8rem;
+      max-width: none;
+    }
+    .garantia-card p:last-child { margin-bottom: 0; }
+    .garantia-card a { color: var(--gold-deep); text-decoration: underline; }
+    .garantia-card a:hover { color: var(--teal-deep); }
+
+    /* ─── CTA FINAL ─── */
+    .cta-final {
+      background: var(--teal-deep);
+      color: var(--cream);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-final::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(207,177,128,.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-final .container-home { position: relative; }
+    .cta-final h2 {
+      color: var(--cream);
+      font-style: italic;
+      margin-bottom: 2.2rem;
+    }
+    .cta-final-note {
+      font-size: .9rem;
+      color: rgba(207,177,128,.75);
+      margin-top: 1rem;
+    }
+
+    /* ─── RESPONSIVE MÓVIL ─── */
+    @media (max-width: 860px) {
+      .quotes-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .areas .areas-lead { font-size: 1.15rem; }
+      .areas p { font-size: 1.05rem; }
+      .quotes-grid { grid-template-columns: 1fr; gap: 1rem; margin: 2rem auto; }
+      .quote-card { font-size: 1.05rem; }
+      .price-old { font-size: 2.6rem; }
+      .price-tag { font-size: 4rem; }
+      .features-list li { font-size: 1rem; }
+      .garantia-card { padding: 1.5rem 1.3rem; }
+      .garantia-card p { font-size: 1.05rem; }
+      .value-compare { font-size: 1rem; }
+      .cta-final-note { font-size: 1rem; }
+    }
+
 </style>
 <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJSDFDFZ3G"></script>
@@ -1354,11 +1518,11 @@ h2 { font-size: 2.5rem; }
     </div>
   </section>
 
-  <!-- ════════════ EL PROBLEMA QUE VIVES ════════════ -->
+  <!-- ════════════ 1. EL PROBLEMA QUE VIVES ════════════ -->
   <section class="problema">
     <div class="container-home">
       <h2 class="reveal">El problema que vives</h2>
-      <blockquote class="reveal">"Lo has intentado todo. Terapia. Cursos. Libros. Cambios. Y siempre acabas volviendo al mismo punto."</blockquote>
+      <blockquote class="reveal">"Lo has intentado todo. Terapia. Cursos. Libros. Cambios.<br>Y siempre acabas volviendo al mismo punto."</blockquote>
       <p class="reveal">Las mismas dudas. Los mismos miedos. La misma sensación de estar atrapada.<br>
       Los mismos patrones en el amor. El dinero que nunca termina de fluir.<br>
       La voz que te critica. El sabotaje justo cuando algo bueno llega.</p>
@@ -1367,26 +1531,30 @@ h2 { font-size: 2.5rem; }
     </div>
   </section>
 
-  <!-- ════════════ POR QUÉ PASA ESTO ════════════ -->
+  <!-- ════════════ 2. POR QUÉ PASA ESTO ════════════ -->
   <section class="causa">
     <div class="container-home">
       <h2 class="reveal">Por qué pasa esto</h2>
       <p class="reveal">Antes de tomar tu primera respiración, ya había una estructura formada en ti.<br>
       Una configuración única que moldea cómo piensas, cómo sientes, cómo reaccionas y cómo te vinculas con todo.</p>
       <p class="reveal">Esa configuración dirige tu vida entera. Tus decisiones. Tus relaciones. Tu dinero.<br>
-      Y lo hace sin que te des cuenta. <strong>Hasta que la conoces.</strong></p>
+      Y lo hace sin que te des cuenta.</p>
+      <p class="reveal"><strong>Hasta que la conoces.</strong></p>
     </div>
   </section>
 
-  <!-- ════════════ LA SOLUCIÓN: QUÉ ES EL INFORME ════════════ -->
-  <section class="solucion">
+  <!-- ════════════ 3. QUÉ ES TU DISEÑO DE ORIGEN + LAS 7 ÁREAS ════════════ -->
+  <section class="areas">
     <div class="container-home text-center">
       <h2 class="reveal">Qué es Tu Diseño de Origen</h2>
-      <p class="reveal">Tu Diseño de Origen es un estudio <strong>100% personalizado y único</strong> que descifra quién eres realmente.</p>
+
+      <p class="reveal areas-lead">Tu Diseño de Origen es un estudio <strong>100% personalizado y único</strong> que descifra quién eres realmente.</p>
+
       <p class="reveal"><strong>30 páginas.</strong> Generado a partir de tu fecha, hora y lugar exacto de nacimiento.<br>
       Sin tecnicismos. En el lenguaje de cualquier persona.<br>
       Lo recibes en minutos.</p>
-      <p class="reveal">Analiza 7 áreas clave que dirigen tu vida sin que lo sepas:</p>
+
+      <p class="reveal areas-subtitle">Analiza 7 áreas clave que dirigen tu vida sin que lo sepas:</p>
 
       <div class="areas-grid">
         <div class="area-card reveal reveal-delay-1">
@@ -1421,23 +1589,23 @@ h2 { font-size: 2.5rem; }
     </div>
   </section>
 
-  <!-- ════════════ NO ES UN HORÓSCOPO ════════════ -->
+  <!-- ════════════ 4. NO ES UN HORÓSCOPO ════════════ -->
   <section class="causa">
     <div class="container-home">
       <h2 class="reveal">No es un horóscopo</h2>
       <p class="reveal">No es una predicción.<br>
       No es algo genérico que le vale a cualquiera.<br>
       No tiene nada que ver con tu signo del zodiaco.</p>
-      <p class="reveal">Es un análisis profundo, solo sobre ti.<br>
+      <p class="reveal"><strong>Es un análisis profundo, solo sobre ti.</strong><br>
       Basado en las coordenadas exactas del momento en que naciste.</p>
     </div>
   </section>
 
-  <!-- ════════════ CÓMO FUNCIONA ════════════ -->
+  <!-- ════════════ 5. CÓMO LO RECIBES ════════════ -->
   <section class="how">
     <div class="container-home text-center">
-      
-      <h2 class="reveal" style="color:var(--teal-deep);">Cómo lo recibes</h2>
+
+      <h2 class="reveal">Cómo lo recibes</h2>
 
       <div class="steps">
         <div class="step reveal reveal-delay-1">
@@ -1447,7 +1615,7 @@ h2 { font-size: 2.5rem; }
         </div>
         <div class="step reveal reveal-delay-2">
           <div class="step-num">2</div>
-          <h3>El sistema genera tu informe automáticamente</h3>
+          <h3>El sistema genera tu informe de forma automática</h3>
           <p>1-2 minutos</p>
         </div>
         <div class="step reveal reveal-delay-3">
@@ -1458,14 +1626,13 @@ h2 { font-size: 2.5rem; }
       </div>
 
       <div class="how-cta-wrap reveal">
-        <a href="tu-diseno-de-origen.html" class="btn-cta">
+        <a href="#formulario" class="btn-cta">
           Quiero mi Diseño de Origen — 47€
         </a>
       </div>
 
       <div class="how-mockup reveal">
         <h4>Mira cómo es por dentro:</h4>
-        <!-- Reemplazar con mockup real de iPad/tablet con páginas del PDF -->
         <video
           class="mockup-video"
           autoplay muted loop playsinline
@@ -1477,28 +1644,11 @@ h2 { font-size: 2.5rem; }
     </div>
   </section>
 
-  <!-- ════════════ TESTIMONIOS ════════════ -->
+  <!-- ════════════ 6. LO QUE DICEN QUIENES YA LO TIENEN ════════════ -->
   <section class="testimonials">
     <div class="container-home text-center">
-      
+
       <h2 class="reveal">Lo que dicen quienes ya lo tienen</h2>
-
-      <div class="quotes-grid" style="max-width:1100px;margin:0 auto 3rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
-        <p class="reveal" style="font-style:italic;color:var(--teal-deep);">"Me habéis hecho ver cosas de mí que no sabía y tienen todo el sentido. Recomendado 100%." <strong>— Samuel</strong></p>
-        <p class="reveal" style="font-style:italic;color:var(--teal-deep);">"Me he visto reflejada en cada línea. Ahora entiendo porque me cuesta soltar ciertas cosas. ¡Brutal!" <strong>— Salma</strong></p>
-        <p class="reveal" style="font-style:italic;color:var(--teal-deep);">"La verdad plena. Esta herramienta la tendría que hacer todo el mundo." <strong>— Mónica</strong></p>
-        <p class="reveal" style="font-style:italic;color:var(--teal-deep);">"Siempre me pregunté porque tengo tan mala suerte con los hombres. Por fin he entendido porque repito lo mismo. La paz que he sentido." <strong>— Claudia</strong></p>
-        <p class="reveal" style="font-style:italic;color:var(--teal-deep);">"Me siento liberada. He entendido porque mi situación con el trabajo y el dinero es así." <strong>— Cati</strong></p>
-      </div>
-
-      <div class="reviews-grid">
-        <img src="images/2-claridad-emocional-y-crecimiento-personal-tu-codigo-base-resena-1.webp" alt="Reseña de Irene — España" width="600" height="476" class="review-img reveal reveal-delay-1" />
-<img src="images/3-autoconocimiento-personal-profundo-tu-codigo-base-resena-1.webp" alt="Reseña de Salma — Argentina" width="600" height="564" class="review-img reveal reveal-delay-2" />
-<img src="images/5-bloqueo-dinero-y-trabajo-tu-codigo-base-resena-1.webp" alt="Reseña de Cati — Portugal" width="600" height="499" class="review-img reveal reveal-delay-3" />
-<img src="images/1-dudas-sobre-terapias-y-autoconocimiento-tu-codigo-base-resena-1.webp" alt="Reseña de Samuel — España" width="600" height="503" class="review-img reveal reveal-delay-4" />
-<img src="images/8-descubrir-quien-soy-autoconocimiento-tu-codigo-base-resena-renacce-1.webp" alt="Reseña de Mónica — España" width="600" height="502" class="review-img reveal reveal-delay-5" />
-<img src="images/6-alivio-emocional-y-gratitud-tu-codigo-base-resena-1.webp" alt="Reseña de María del Pilar — España" width="600" height="491" class="review-img reveal reveal-delay-6" />
-      </div>
 
       <div class="video-testimonios">
         <div class="video-wrap reveal reveal-delay-1">
@@ -1511,18 +1661,45 @@ h2 { font-size: 2.5rem; }
           <iframe src="https://player.vimeo.com/video/1193156594?badge=0&autopause=0&app_id=58479&title=0&byline=0&portrait=0" frameborder="0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Sara — Tu Diseño de Origen"></iframe>
         </div>
       </div>
+
+      <div class="quotes-grid">
+        <blockquote class="quote-card reveal reveal-delay-1">
+          "Me habéis hecho ver cosas de mí que no sabía y tienen todo el sentido. Recomendado 100%."
+          <cite>— Samuel</cite>
+        </blockquote>
+        <blockquote class="quote-card reveal reveal-delay-2">
+          "Me he visto reflejada en cada línea. Ahora entiendo porque me cuesta soltar ciertas cosas. ¡Brutal!"
+          <cite>— Salma</cite>
+        </blockquote>
+        <blockquote class="quote-card reveal reveal-delay-3">
+          "La verdad plena. Esta herramienta la tendría que hacer todo el mundo."
+          <cite>— Mónica</cite>
+        </blockquote>
+        <blockquote class="quote-card reveal reveal-delay-4">
+          "Siempre me pregunté porque tengo tan mala suerte con los hombres. Por fin he entendido porque repito lo mismo. La paz que he sentido."
+          <cite>— Claudia</cite>
+        </blockquote>
+        <blockquote class="quote-card reveal reveal-delay-5">
+          "Me siento liberada. He entendido porque mi situación con el trabajo y el dinero es así."
+          <cite>— Cati</cite>
+        </blockquote>
+      </div>
+
+      <div class="reviews-grid">
+        <img src="images/2-claridad-emocional-y-crecimiento-personal-tu-codigo-base-resena-1.webp" alt="Reseña de Irene — España" width="600" height="476" class="review-img reveal reveal-delay-1" loading="lazy" />
+        <img src="images/3-autoconocimiento-personal-profundo-tu-codigo-base-resena-1.webp" alt="Reseña de Salma — Argentina" width="600" height="564" class="review-img reveal reveal-delay-2" loading="lazy" />
+        <img src="images/5-bloqueo-dinero-y-trabajo-tu-codigo-base-resena-1.webp" alt="Reseña de Cati — Portugal" width="600" height="499" class="review-img reveal reveal-delay-3" loading="lazy" />
+        <img src="images/1-dudas-sobre-terapias-y-autoconocimiento-tu-codigo-base-resena-1.webp" alt="Reseña de Samuel — España" width="600" height="503" class="review-img reveal reveal-delay-4" loading="lazy" />
+        <img src="images/8-descubrir-quien-soy-autoconocimiento-tu-codigo-base-resena-renacce-1.webp" alt="Reseña de Mónica — España" width="600" height="502" class="review-img reveal reveal-delay-5" loading="lazy" />
+        <img src="images/6-alivio-emocional-y-gratitud-tu-codigo-base-resena-1.webp" alt="Reseña de María del Pilar — España" width="600" height="491" class="review-img reveal reveal-delay-6" loading="lazy" />
+      </div>
     </div>
   </section>
-<!-- ════════════ BRIDGE ════════════ -->
-  <section class="bridge">
-    <div class="container-home">
-      <p class="reveal">No necesitas otro libro, otro curso, otra terapia… Necesitas entender <strong><em>tu programación interna</em></strong></p>
-    </div>
-  </section>
-  <!-- ════════════ OBJECIONES RESUELTAS ════════════ -->
+
+  <!-- ════════════ 7. TUS PREGUNTAS ════════════ -->
   <section class="faq">
     <div class="container-home text-center">
-      
+
       <h2 class="reveal">Tus preguntas</h2>
 
       <div class="faq-list">
@@ -1549,7 +1726,7 @@ h2 { font-size: 2.5rem; }
 
         <details class="reveal reveal-delay-4">
           <summary>¿Y si no sé mi hora de nacimiento? <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">En España puedes obtener tu certificado de nacimiento online de forma gratuita en el Registro Civil en minutos. En otros países hay equivalentes similares.</div>
+          <div class="faq-body">En España puedes obtener tu certificado de nacimiento online de forma gratuita en el <a href="https://sede.mjusticia.gob.es/tramites/certificado-nacimiento" target="_blank" rel="noopener">Registro Civil</a> en minutos. En otros países hay equivalentes similares.</div>
         </details>
 
         <details class="reveal reveal-delay-5">
@@ -1561,43 +1738,50 @@ h2 { font-size: 2.5rem; }
     </div>
   </section>
 
-  <!-- ════════════ PRECIO & CTA DE CIERRE ════════════ -->
-  <section class="price-cta" id="precio">
-    <div class="container-home text-center">
-      
-      <h2 class="reveal">Ya llevas suficiente tiempo preguntándote por qué</h2>
-     
-      <div class="price-card reveal">
-<p class="price-launch">✦ Oferta por tiempo limitado ✦</p>
-       
-<div class="price-wrap">
-  <div class="price-old"><s>67</s><span class="currency">€</span></div>
-  <div class="price-tag">47<span class="currency">€</span></div>
-</div>
-        <ul class="features-list">
-          <li><span class="check">✅</span> Las 7 áreas clave de tu vida analizadas en profundidad</li>
-          <li><span class="check">✅</span> Informe de 23 a 30 páginas en PDF</li>
-<li><span class="check">✅</span> Listo en minutos, descarga inmediata</li>
-          <li><span class="check">✅</span> 100% personalizado y único</li>          
-        </ul>
-
-        <a href="tu-diseno-de-origen.html" class="btn-cta" style="width:100%; text-align:center; display:block;">
-          Descubre tu Diseño de Origen
-        </a>
-        <p class="secure-note">Lo recibes en minutos. Sin cita. Sin espera.</p>
+  <!-- ════════════ 8. GARANTÍA ════════════ -->
+  <section class="garantia">
+    <div class="container-home">
+      <h2 class="reveal">Garantía</h2>
+      <div class="garantia-card reveal">
+        <p>Tu Diseño de Origen es un producto personalizado y automático. Por eso no hay devolución estándar.</p>
+        <p>Pero si hay algún error técnico en tu informe en las primeras 24 horas, <strong>lo resolvemos. Sin preguntas.</strong></p>
+        <p>Escríbenos a <a href="mailto:hola@origennatal.com">hola@origennatal.com</a>.</p>
       </div>
     </div>
   </section>
 
-  <!-- ════════════ GARANTÍA ════════════ -->
-  <section class="garantia">
-    <div class="container-home">
-      <h2 class="reveal">Garantía</h2>
-      <p class="reveal">Tu Diseño de Origen es un producto personalizado y automático. Por eso no hay devolución estándar.</p>
-      <p class="reveal">Pero si hay algún error técnico en tu informe en las primeras 24 horas, lo resolvemos. Sin preguntas.<br>
-      Escríbenos a <a href="mailto:hola@origennatal.com">hola@origennatal.com</a>.</p>
+  <!-- ════════════ 9. CTA DE CIERRE (con precio y stack de valor) ════════════ -->
+  <section class="price-cta" id="precio">
+    <div class="container-home text-center">
+
+      <h2 class="reveal">Ya llevas suficiente tiempo preguntándote por qué</h2>
+
+      <div class="price-card reveal">
+        <p class="price-launch">✦ Oferta por tiempo limitado ✦</p>
+
+        <div class="price-wrap">
+          <div class="price-old"><s>67</s><span class="currency">€</span></div>
+          <div class="price-tag">47<span class="currency">€</span></div>
+        </div>
+
+        <ul class="features-list">
+          <li><span class="check">✦</span> <span><strong>Tu informe Tu Diseño de Origen</strong> — 30 páginas, las 7 áreas clave, 100% personalizado <em class="feat-val">valor 60-400€</em></span></li>
+          <li><span class="check">✦</span> <span><strong>Guía de lectura incluida</strong> — cómo leerlo, en qué orden y qué hacer con cada área <em class="feat-val">valor 15€</em></span></li>
+          <li><span class="check">✦</span> <span><strong>Tu diagrama de nacimiento visual</strong> — el mapa personalizado con todas tus posiciones <em class="feat-val">incluido</em></span></li>
+          <li><span class="check">✦</span> <span><strong>Entrega en menos de 2 minutos</strong> — sin cita, sin espera, descarga inmediata</span></li>
+        </ul>
+
+        <a href="#formulario" class="btn-cta" style="width:100%; text-align:center; display:block;">
+          Descubre tu Diseño de Origen — 47€
+        </a>
+        <p class="secure-note">Lo recibes en minutos. Sin cita. Sin espera.</p>
+      </div>
+
+      <p class="value-compare reveal">Una sesión de astrología psicológica cuesta entre 60 y 400 euros, tarda días en concertarse y una hora en desarrollarse. Tu Diseño de Origen lo tienes en 2 minutos, por 47€.</p>
     </div>
   </section>
+
+  <div id="formulario"></div>
 
 
   <section class="hero">
