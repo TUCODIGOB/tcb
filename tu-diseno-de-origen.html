@@ -931,6 +931,39 @@ margin-bottom: -2rem;
 /* ══════════════════════════════════════════════
        BRIDGE (cierre emocional antes del precio)
     ══════════════════════════════════════════════ */
+    .solucion { background: var(--cream); padding-block: 4.5rem; text-align: center; }
+    .solucion h2 { color: var(--teal-deep); margin-bottom: 1.8rem; }
+    .solucion p { max-width: 680px; margin-inline: auto; font-size: 1.15rem; line-height: 1.7; color: #0c0c0c; margin-bottom: 1rem; }
+    .problema, .causa, .garantia {
+      background: var(--cream);
+      padding-block: 4.5rem;
+      text-align: center;
+    }
+    .causa { background: #f5efdf; }
+    .problema h2, .causa h2, .garantia h2 {
+      color: var(--teal-deep);
+      margin-bottom: 1.8rem;
+    }
+    .problema p, .causa p, .garantia p {
+      max-width: 680px;
+      margin-inline: auto;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #0c0c0c;
+      margin-bottom: 1rem;
+    }
+    .problema blockquote {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.4rem;
+      color: var(--teal-deep);
+      max-width: 640px;
+      margin: 0 auto 1.8rem;
+      line-height: 1.4;
+    }
+    .garantia { background: var(--teal-deep); }
+    .garantia h2, .garantia p { color: var(--cream); }
+    .garantia a { color: var(--gold-light); }
     .bridge {
       background: var(--cream);
       padding-block: 4rem;
@@ -1321,12 +1354,39 @@ h2 { font-size: 2.5rem; }
     </div>
   </section>
 
-  <!-- ════════════ QUÉ DESCUBRIRÁS ════════════ -->
-  <section class="areas">
+  <!-- ════════════ EL PROBLEMA QUE VIVES ════════════ -->
+  <section class="problema">
+    <div class="container-home">
+      <h2 class="reveal">El problema que vives</h2>
+      <blockquote class="reveal">"Lo has intentado todo. Terapia. Cursos. Libros. Cambios. Y siempre acabas volviendo al mismo punto."</blockquote>
+      <p class="reveal">Las mismas dudas. Los mismos miedos. La misma sensación de estar atrapada.<br>
+      Los mismos patrones en el amor. El dinero que nunca termina de fluir.<br>
+      La voz que te critica. El sabotaje justo cuando algo bueno llega.</p>
+      <p class="reveal"><strong>No es culpa tuya. No es falta de esfuerzo.</strong><br>
+      Es que llevas años intentando cambiar sin conocer desde dónde funciona todo.</p>
+    </div>
+  </section>
+
+  <!-- ════════════ POR QUÉ PASA ESTO ════════════ -->
+  <section class="causa">
+    <div class="container-home">
+      <h2 class="reveal">Por qué pasa esto</h2>
+      <p class="reveal">Antes de tomar tu primera respiración, ya había una estructura formada en ti.<br>
+      Una configuración única que moldea cómo piensas, cómo sientes, cómo reaccionas y cómo te vinculas con todo.</p>
+      <p class="reveal">Esa configuración dirige tu vida entera. Tus decisiones. Tus relaciones. Tu dinero.<br>
+      Y lo hace sin que te des cuenta. <strong>Hasta que la conoces.</strong></p>
+    </div>
+  </section>
+
+  <!-- ════════════ LA SOLUCIÓN: QUÉ ES EL INFORME ════════════ -->
+  <section class="solucion">
     <div class="container-home text-center">
-      
-      <h2 class="reveal">¿Qué descubrirás?</h2>
-      <p class="areas-subtitle reveal">Las <strong>7 áreas clave</strong> que dirigen tu vida y que nunca nadie te ha explicado así</p>
+      <h2 class="reveal">Qué es Tu Diseño de Origen</h2>
+      <p class="reveal">Tu Diseño de Origen es un estudio <strong>100% personalizado y único</strong> que descifra quién eres realmente.</p>
+      <p class="reveal"><strong>30 páginas.</strong> Generado a partir de tu fecha, hora y lugar exacto de nacimiento.<br>
+      Sin tecnicismos. En el lenguaje de cualquier persona.<br>
+      Lo recibes en minutos.</p>
+      <p class="reveal">Analiza 7 áreas clave que dirigen tu vida sin que lo sepas:</p>
 
       <div class="areas-grid">
         <div class="area-card reveal reveal-delay-1">
@@ -1361,38 +1421,45 @@ h2 { font-size: 2.5rem; }
     </div>
   </section>
 
+  <!-- ════════════ NO ES UN HORÓSCOPO ════════════ -->
+  <section class="causa">
+    <div class="container-home">
+      <h2 class="reveal">No es un horóscopo</h2>
+      <p class="reveal">No es una predicción.<br>
+      No es algo genérico que le vale a cualquiera.<br>
+      No tiene nada que ver con tu signo del zodiaco.</p>
+      <p class="reveal">Es un análisis profundo, solo sobre ti.<br>
+      Basado en las coordenadas exactas del momento en que naciste.</p>
+    </div>
+  </section>
+
   <!-- ════════════ CÓMO FUNCIONA ════════════ -->
   <section class="how">
     <div class="container-home text-center">
       
-      <h2 class="reveal" style="color:var(--teal-deep);">Así funciona Tu Diseño de Origen</h2>
-      <p class="how-subtitle reveal">
-        El <strong>momento exacto en que naciste</strong> contiene información única sobre ti. Nuestro sistema,
-        desarrollado por expertos en <strong>psicología, neurociencia y astrología aplicada</strong>, analiza
-        tu configuración interior exacta para generar un <strong>diagnóstico profundo e irrepetible</strong>.
-      </p>
+      <h2 class="reveal" style="color:var(--teal-deep);">Cómo lo recibes</h2>
 
       <div class="steps">
         <div class="step reveal reveal-delay-1">
           <div class="step-num">1</div>
-          <h3>Introduce tus datos</h3>
-          <p>Para calcular tu <strong>carta natal</strong> necesitamos: nombre, sexo, fecha, hora y lugar de nacimiento</p>
+          <h3>Metes tu fecha, hora y lugar de nacimiento</h3>
+          <p>En el formulario</p>
         </div>
         <div class="step reveal reveal-delay-2">
           <div class="step-num">2</div>
-          <h3>Analizamos tu carta natal</h3>
-          <p>Nuestro sistema analiza tu configuración exacta y genera <strong>Tu Diseño de Origen 100% personalizado</strong></p>
+          <h3>El sistema genera tu informe automáticamente</h3>
+          <p>1-2 minutos</p>
         </div>
         <div class="step reveal reveal-delay-3">
           <div class="step-num">3</div>
-          <h3>Recíbelo en minutos</h3>
-          <p>Un <strong>PDF de 23 a 30 páginas</strong> con las 7 áreas de tu vida analizadas en profundidad. <strong>Lo descargas al momento</strong></p>
+          <h3>Lo recibes en tu email</h3>
+          <p>Y puedes descargarlo en el momento</p>
         </div>
       </div>
 
       <div class="how-cta-wrap reveal">
         <a href="tu-diseno-de-origen.html" class="btn-cta">
-          Quiero el mío
+          Quiero mi Diseño de Origen — 47€
         </a>
       </div>
 
@@ -1414,8 +1481,15 @@ h2 { font-size: 2.5rem; }
   <section class="testimonials">
     <div class="container-home text-center">
       
-      <h2 class="reveal">Más de 200 personas ya tienen el suyo</h2>
-      <p class="testimonials-subtitle reveal">Esto es lo que nos cuentan...</p>
+      <h2 class="reveal">Lo que dicen quienes ya lo tienen</h2>
+
+      <div class="quotes-grid" style="max-width:1100px;margin:0 auto 3rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;">
+        <p class="reveal" style="font-style:italic;color:var(--teal-deep);">"Me habéis hecho ver cosas de mí que no sabía y tienen todo el sentido. Recomendado 100%." <strong>— Samuel</strong></p>
+        <p class="reveal" style="font-style:italic;color:var(--teal-deep);">"Me he visto reflejada en cada línea. Ahora entiendo porque me cuesta soltar ciertas cosas. ¡Brutal!" <strong>— Salma</strong></p>
+        <p class="reveal" style="font-style:italic;color:var(--teal-deep);">"La verdad plena. Esta herramienta la tendría que hacer todo el mundo." <strong>— Mónica</strong></p>
+        <p class="reveal" style="font-style:italic;color:var(--teal-deep);">"Siempre me pregunté porque tengo tan mala suerte con los hombres. Por fin he entendido porque repito lo mismo. La paz que he sentido." <strong>— Claudia</strong></p>
+        <p class="reveal" style="font-style:italic;color:var(--teal-deep);">"Me siento liberada. He entendido porque mi situación con el trabajo y el dinero es así." <strong>— Cati</strong></p>
+      </div>
 
       <div class="reviews-grid">
         <img src="images/2-claridad-emocional-y-crecimiento-personal-tu-codigo-base-resena-1.webp" alt="Reseña de Irene — España" width="600" height="476" class="review-img reveal reveal-delay-1" />
@@ -1445,18 +1519,60 @@ h2 { font-size: 2.5rem; }
       <p class="reveal">No necesitas otro libro, otro curso, otra terapia… Necesitas entender <strong><em>tu programación interna</em></strong></p>
     </div>
   </section>
-  <!-- ════════════ PRECIO & CTA ════════════ -->
+  <!-- ════════════ OBJECIONES RESUELTAS ════════════ -->
+  <section class="faq">
+    <div class="container-home text-center">
+      
+      <h2 class="reveal">Tus preguntas</h2>
+
+      <div class="faq-list">
+
+        <details class="reveal">
+          <summary>¿Tengo que creer en esto? <span class="faq-arrow">+</span></summary>
+          <div class="faq-body">No tienes que creer en nada. Solo reconocerte.</div>
+        </details>
+
+        <details class="reveal reveal-delay-1">
+          <summary>¿En 2 minutos puede ser serio? <span class="faq-arrow">+</span></summary>
+          <div class="faq-body">La rapidez es tecnología, no superficialidad. El informe tiene 30 páginas.</div>
+        </details>
+
+        <details class="reveal reveal-delay-2">
+          <summary>Ya vi mi carta natal una vez y no entendí nada. <span class="faq-arrow">+</span></summary>
+          <div class="faq-body">Esto no tiene tecnicismos. Ninguno. Está escrito para que cualquier persona lo entienda.</div>
+        </details>
+
+        <details class="reveal reveal-delay-3">
+          <summary>¿Es lo mismo para todo el mundo? <span class="faq-arrow">+</span></summary>
+          <div class="faq-body">No. Necesita tu fecha, hora y lugar exactos de nacimiento. No hay dos iguales.</div>
+        </details>
+
+        <details class="reveal reveal-delay-4">
+          <summary>¿Y si no sé mi hora de nacimiento? <span class="faq-arrow">+</span></summary>
+          <div class="faq-body">En España puedes obtener tu certificado de nacimiento online de forma gratuita en el Registro Civil en minutos. En otros países hay equivalentes similares.</div>
+        </details>
+
+        <details class="reveal reveal-delay-5">
+          <summary>Una sesión con un especialista cuesta mucho más. <span class="faq-arrow">+</span></summary>
+          <div class="faq-body">Entre 60 y 400 euros en España, con cita previa. Tu Diseño de Origen lo recibes en minutos, a 47€.</div>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ PRECIO & CTA DE CIERRE ════════════ -->
   <section class="price-cta" id="precio">
     <div class="container-home text-center">
       
-      <h2 class="reveal">Tu Diseño de Origen</h2>
+      <h2 class="reveal">Ya llevas suficiente tiempo preguntándote por qué</h2>
      
       <div class="price-card reveal">
 <p class="price-launch">✦ Oferta por tiempo limitado ✦</p>
        
 <div class="price-wrap">
-  <div class="price-old"><s>97</s><span class="currency">€</span></div>
-  <div class="price-tag">27<span class="currency">€</span></div>
+  <div class="price-old"><s>67</s><span class="currency">€</span></div>
+  <div class="price-tag">47<span class="currency">€</span></div>
 </div>
         <ul class="features-list">
           <li><span class="check">✅</span> Las 7 áreas clave de tu vida analizadas en profundidad</li>
@@ -1466,63 +1582,23 @@ h2 { font-size: 2.5rem; }
         </ul>
 
         <a href="tu-diseno-de-origen.html" class="btn-cta" style="width:100%; text-align:center; display:block;">
-          Lo quiero ahora
+          Descubre tu Diseño de Origen
         </a>
-        <p class="secure-note">🔒 Pago 100% seguro con Stripe</p>
+        <p class="secure-note">Lo recibes en minutos. Sin cita. Sin espera.</p>
       </div>
     </div>
   </section>
 
-  <!-- ════════════ FAQ ════════════ -->
-  <section class="faq">
-    <div class="container-home text-center">
-      
-      <h2 class="reveal">¿Tienes alguna duda?</h2>
-      <p class="faq-intro reveal">Aquí están las preguntas más frecuentes</p>
-
-      <div class="faq-list">
-
-        <details class="reveal">
-          <summary>¿Qué voy a recibir exactamente? <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">
-            Un informe <strong>en PDF de 23 a 30 páginas, 100% personalizado</strong>, con las 7 áreas clave de tu vida analizadas en profundidad. Calculado a partir de tu carta natal, único e irrepetible. En unos minutos lo tienes listo para descargar.
-          </div>
-        </details>
-
-        <details class="reveal reveal-delay-1">
-          <summary>¿Qué datos necesito? <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">
-            Tu nombre, sexo, fecha, hora y lugar de nacimiento. Con eso calculamos tu <strong>carta natal real</strong> y desciframos tu Diseño de Origen.
-          </div>
-        </details>
-
-        <details class="reveal reveal-delay-2">
-          <summary>¿Y si no sé mi hora exacta de nacimiento? <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">
-            La hora exacta nos permite afinar mucho el resultado. Si no la recuerdas, consulta a familiares o solicita tu Certificado de Nacimiento (es gratuito y rápido).<br><br>
-            • <strong>España:</strong> <a href="https://sede.mjusticia.gob.es/tramites/certificado-nacimiento" target="_blank" rel="noopener">sede.mjusticia.gob.es</a><br>
-            • <strong>Fuera de España:</strong> consulta el Registro Civil oficial de tu país.
-          </div>
-        </details>
-
-        <details class="reveal reveal-delay-3">
-          <summary>¿Es un horóscopo? <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">
-            No, Tu Diseño de Origen es un estudio técnico y profundo calculado a partir de tu carta natal real. No adivinamos el futuro: <strong>desciframos tu estructura interna</strong> con una precisión que nunca antes has obtenido.
-          </div>
-        </details>
-
-        <details class="reveal reveal-delay-4">
-          <summary>¿Puedo comprarlo para otra persona? <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">
-            Sí, es un regalo único y original, perfecto para alguien que quiera entenderse a sí mismo,
-            o para ti si quieres entender mejor a alguien importante en tu vida.
-          </div>
-        </details>
-
-      </div>
+  <!-- ════════════ GARANTÍA ════════════ -->
+  <section class="garantia">
+    <div class="container-home">
+      <h2 class="reveal">Garantía</h2>
+      <p class="reveal">Tu Diseño de Origen es un producto personalizado y automático. Por eso no hay devolución estándar.</p>
+      <p class="reveal">Pero si hay algún error técnico en tu informe en las primeras 24 horas, lo resolvemos. Sin preguntas.<br>
+      Escríbenos a <a href="mailto:hola@origennatal.com">hola@origennatal.com</a>.</p>
     </div>
   </section>
+
 
   <section class="hero">
     <div class="container">
