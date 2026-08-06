@@ -8,8 +8,8 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Precio del producto "Tu Diseño de Origen" en céntimos (27€ = 2700)
-const PRECIO_CENTIMOS = 2700;
+// Precio del producto "Tu Diseño de Origen" en céntimos (47€ = 4700)
+const PRECIO_CENTIMOS = 4700;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
