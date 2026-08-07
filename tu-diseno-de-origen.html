@@ -129,7 +129,8 @@
       line-height: 1.2;
       margin-bottom: 1rem;
     }
-    .form-title { font-size: 2.5rem; }
+    .form-title { font-size: 2.5rem; color: var(--teal-deep); }
+    .break-mobile-form { display: none; }
     .hero p {
       font-size: 1rem;
       color: #3a3a3a;
@@ -439,6 +440,7 @@
 
     /* RESPONSIVE */
     @media (max-width: 600px) {
+      .break-mobile-form { display: block; }
       .nav-inner { flex-direction: column; gap: 1rem; padding-block: 1rem; }
       .nav-cta { width: 100%; text-align: center; font-size: 1.1rem; padding: .6rem; }
       .nav-logo img { height: 34px; width: auto; }
@@ -1694,7 +1696,7 @@ h2 { font-size: 2.5rem; }
 
   <section class="hero">
     <div class="container">
-      <h2 class="form-title">Completa tus datos</h2>
+      <h2 class="form-title">Completa<br class="break-mobile-form">tus datos</h2>
       
     </div>
   </section>
