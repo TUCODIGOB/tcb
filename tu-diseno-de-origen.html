@@ -1035,6 +1035,7 @@ display: block;
   vertical-align: .15em;
   margin-left: .05em;
 }
+.break-mobile { display: none; }
     .features-list {
       list-style: none;
       text-align: left;
@@ -1175,6 +1176,7 @@ display: block;
        RESPONSIVE
     ══════════════════════════════════════════════ */
     @media (max-width: 860px) {
+      .break-mobile { display: block; }
       .problema blockquote { font-size: 24px; }
       .problema p { font-size: 18px; }
       .causa p { font-size: 18px; }
@@ -1367,6 +1369,7 @@ h2 { font-size: 2.5rem; }
     /* ─── RESPONSIVE MÓVIL ─── */
 
     @media (max-width: 600px) {
+      .break-mobile { display: block; }
       .problema blockquote { font-size: 24px; }
       .problema p { font-size: 18px; }
       .causa p { font-size: 18px; }
@@ -1679,7 +1682,7 @@ h2 { font-size: 2.5rem; }
         </div>
 
         <a href="#formulario" class="btn-cta" style="width:100%; text-align:center; display:block;">
-          Descubre tu Diseño de Origen
+          Descubre<br class="break-mobile">tu Diseño de Origen
         </a>
       </div>
 
