@@ -242,6 +242,14 @@
       line-height: 1.5;
       margin-bottom: .8rem;
     }
+    .field-group-title {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--teal-deep);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 1rem;
+    }
 
     /* Tooltip (?) */
     .help-icon {
@@ -1933,7 +1941,7 @@ h2 { font-size: 2.5rem; }
 
           <div class="form-step hidden" data-form-step="3">
 
-          <p class="field-note">Estos son los datos de tu lugar de nacimiento, no tu dirección actual.</p>
+          <h3 class="field-group-title">Lugar de nacimiento</h3>
 
           <div class="field">
               <label for="municipio">Municipio *</label>
@@ -2052,6 +2060,7 @@ h2 { font-size: 2.5rem; }
     // Tooltip tap en móvil
     const helpHora = document.getElementById('helpHora');
     helpHora.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;
       e.preventDefault();
       helpHora.classList.toggle('active');
     });
