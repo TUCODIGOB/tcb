@@ -319,6 +319,29 @@
       gap: .5rem;
     }
     #prefijo { font-family: var(--font-body), "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji"; }
+    .phone-prefix-wrap { position: relative; }
+    .phone-flag {
+      position: absolute;
+      left: 1.5px;
+      top: 1.5px;
+      bottom: 1.5px;
+      width: 38px;
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      border-radius: calc(var(--r-sm) - 1px) 0 0 calc(var(--r-sm) - 1px);
+      z-index: 1;
+    }
+    .phone-flag img {
+      display: block;
+      width: 20px;
+      height: 15px;
+      object-fit: cover;
+      border-radius: 2px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.08);
+    }
 
     /* Checkbox */
     .checkbox-field {
@@ -1836,7 +1859,9 @@ h2 { font-size: 2.5rem; }
           <div class="field">
             <label for="telefono">Teléfono</label>
             <div class="phone-group">
-              <select id="prefijo" name="prefijo" required>
+              <div class="phone-prefix-wrap">
+                <span class="phone-flag" id="phoneFlag" aria-hidden="true"><img id="phoneFlagImg" src="images/flags/es.svg" alt=""></span>
+                <select id="prefijo" name="prefijo" required>
                 <option value="+34">🇪🇸 +34</option>
                 <option value="+52">🇲🇽 +52</option>
                 <option value="+54">🇦🇷 +54</option>
@@ -1861,6 +1886,7 @@ h2 { font-size: 2.5rem; }
                 <option value="+351">🇵🇹 +351</option>
                 <option value="+39">🇮🇹 +39</option>
               </select>
+              </div>
               <input type="tel" id="telefono" name="telefono" placeholder="Número de teléfono" autocomplete="tel">
             </div>
             <div class="field-error" id="err-telefono">Introduce un número de teléfono válido para el país seleccionado.</div>
@@ -1941,24 +1967,22 @@ h2 { font-size: 2.5rem; }
 
           <div class="form-step hidden" data-form-step="3">
 
-          <h3 class="field-group-title">Lugar de nacimiento</h3>
-
           <div class="field">
-              <label for="municipio">Municipio *</label>
-              <input type="text" id="municipio" name="municipio" placeholder="Ej: Madrid" required>
+              <label for="municipio">Lugar de nacimiento *</label>
+              <input type="text" id="municipio" name="municipio" placeholder="Municipio" required>
               <div class="field-error" id="err-municipio">Por favor, introduce tu municipio de nacimiento.</div>
           </div>
 
           <div class="field-row">
             <div class="field">
-              <label for="provincia">Provincia / Estado *</label>
-              <input type="text" id="provincia" name="provincia" placeholder="Ej: Madrid" required>
+              <label for="provincia" class="sr-only">Provincia / Estado *</label>
+              <input type="text" id="provincia" name="provincia" placeholder="Provincia / Estado" required>
               <div class="field-error" id="err-provincia">Por favor, introduce tu provincia o estado.</div>
             </div>
 
             <div class="field">
-              <label for="pais">País *</label>
-              <input type="text" id="pais" name="pais" placeholder="Ej: España" required>
+              <label for="pais" class="sr-only">País *</label>
+              <input type="text" id="pais" name="pais" placeholder="País" required>
               <div class="field-error" id="err-pais">Por favor, introduce tu país.</div>
             </div>
           </div>
@@ -2117,6 +2141,22 @@ h2 { font-size: 2.5rem; }
       '+351': [9],       // Portugal
       '+39':  [9, 10],   // Italia
     };
+
+    // Bandera del prefijo como imagen (independiente del emoji del sistema)
+    const PREFIJO_PAIS = {
+      '+34': 'es', '+52': 'mx', '+54': 'ar', '+56': 'cl', '+57': 'co',
+      '+58': 've', '+51': 'pe', '+593': 'ec', '+598': 'uy', '+595': 'py',
+      '+591': 'bo', '+502': 'gt', '+503': 'sv', '+504': 'hn', '+505': 'ni',
+      '+506': 'cr', '+507': 'pa', '+1': 'us', '+33': 'fr', '+44': 'gb',
+      '+49': 'de', '+351': 'pt', '+39': 'it',
+    };
+    const prefijoSelect = document.getElementById('prefijo');
+    const phoneFlagImg = document.getElementById('phoneFlagImg');
+    function actualizarBanderaTelefono() {
+      const pais = PREFIJO_PAIS[prefijoSelect.value];
+      if (pais) phoneFlagImg.src = 'images/flags/' + pais + '.svg';
+    }
+    prefijoSelect.addEventListener('change', actualizarBanderaTelefono);
 
     function validarTelefono(tel, prefijo) {
       const limpio = tel.replace(/[\s\-()]/g, '');
