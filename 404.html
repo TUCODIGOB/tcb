@@ -114,7 +114,7 @@
       font-weight: 900;
       color: var(--gold-deep);
       line-height: 1;
-      margin-bottom: 1rem;
+      margin-bottom: 2rem;
       letter-spacing: -.02em;
     }
     .error-title {
@@ -138,7 +138,7 @@
       background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
       color: var(--white);
       font-family: var(--font-body);
-      font-size: 1rem;
+      font-size: 18px;
       font-weight: 600;
       letter-spacing: .04em;
       text-transform: uppercase;
@@ -150,6 +150,7 @@
       transition: transform .2s, box-shadow .2s;
     }
     .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(189,144,72,.5); }
+    .break-mobile { display: none; }
 
     /* ══════════════════════════════════════════════
        FOOTER
@@ -189,9 +190,10 @@
 
     @media (max-width: 600px) {
       .nav-inner { justify-content: center; padding-block: 1rem; }
-      .nav-logo img { width: 100%; height: auto; }
+      .nav-logo img { height: 34px; width: auto; }
       .error { padding-block: 3rem; }
-      .btn-cta { font-size: .95rem; padding: 1rem 1.8rem; }
+      .btn-cta { width: 100%; font-size: 20px; padding: 12px 1rem; }
+      .break-mobile { display: block; }
     }
   </style>
 </head>
@@ -216,9 +218,9 @@
     <div class="container">
       <div class="error-inner">
         <div class="error-code">404</div>
-        <h1 class="error-title">Esta página no existe… pero tú sí</h1>
+        <h1 class="error-title">Esta página no existe, pero tú sí...</h1>
         <p class="error-text">y hay cosas de ti que todavía no conoces</p>
-        <a href="/tu-diseno-de-origen" class="btn-cta">Descubre tu Diseño de Origen</a>
+        <a href="/tu-diseno-de-origen#formulario" class="btn-cta">Descubre<br class="break-mobile"> tu Diseño de Origen</a>
       </div>
     </div>
   </section>
