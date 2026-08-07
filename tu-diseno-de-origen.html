@@ -236,6 +236,20 @@
       margin-top: .3rem;
     }
     .field-error.show { display: block; }
+    .field-note {
+      font-size: .85rem;
+      color: #444;
+      line-height: 1.5;
+      margin-bottom: .8rem;
+    }
+    .field-group-title {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--teal-deep);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 1rem;
+    }
 
     /* Tooltip (?) */
     .help-icon {
@@ -304,6 +318,7 @@
       grid-template-columns: 130px 1fr;
       gap: .5rem;
     }
+    #prefijo { font-family: var(--font-body), "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji"; }
 
     /* Checkbox */
     .checkbox-field {
@@ -371,6 +386,85 @@
       cursor: not-allowed;
       box-shadow: none;
       transform: none;
+    }
+
+    /* Progreso del formulario en 3 pasos */
+    .form-progress {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: 1.8rem;
+    }
+    .form-progress-dots {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .form-progress-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(14,63,75,.15);
+      transition: background .2s;
+    }
+    .form-progress-dot.active {
+      background: var(--gold-deep);
+    }
+    .form-progress-label {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--teal-deep);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .form-step.hidden { display: none; }
+    .form-step-nav {
+      display: flex;
+      gap: .8rem;
+      margin-top: 1.5rem;
+    }
+    .form-step-nav .btn-next {
+      flex: 1;
+      display: block;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 1.1rem 1rem;
+      border: none;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      box-shadow: 0 6px 28px rgba(189,144,72,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .form-step-nav .btn-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(189,144,72,.5);
+    }
+    .form-step-nav .btn-back {
+      background: none;
+      border: 1.5px solid rgba(14,63,75,.2);
+      color: var(--teal-deep);
+      font-family: var(--font-body);
+      font-size: .95rem;
+      font-weight: 600;
+      padding: 1.1rem 1.2rem;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+    .form-step-nav .btn-back:hover {
+      background: rgba(14,63,75,.05);
+      border-color: rgba(14,63,75,.4);
+    }
+    .form-step-nav-final .btn-pay {
+      width: auto;
+      flex: 1;
+      margin-top: 0;
     }
 
     .secure-note {
@@ -1710,6 +1804,17 @@ h2 { font-size: 2.5rem; }
 
         <form id="formDatos" novalidate>
 
+          <div class="form-progress">
+            <div class="form-progress-dots">
+              <span class="form-progress-dot active" data-dot="1"></span>
+              <span class="form-progress-dot" data-dot="2"></span>
+              <span class="form-progress-dot" data-dot="3"></span>
+            </div>
+            <p class="form-progress-label" id="formProgressLabel">Paso 1 de 3</p>
+          </div>
+
+          <div class="form-step" data-form-step="1">
+
           <div class="field">
             <label for="nombre">Nombre completo *</label>
             <input type="text" id="nombre" name="nombre" placeholder="Tu nombre y apellidos" autocomplete="name" required>
@@ -1724,7 +1829,7 @@ h2 { font-size: 2.5rem; }
 
           <div class="field">
             <label for="email2">Confirma tu email *</label>
-            <input type="email" id="email2" name="email2" placeholder="Repite tu email" autocomplete="off" onpaste="return false;" ondrop="return false;" oncopy="return false;" required>
+            <input type="email" id="email2" name="email2" placeholder="Repite tu email" autocomplete="new-password" onpaste="return false;" ondrop="return false;" oncopy="return false;" required>
             <div class="field-error" id="err-email2">Los emails no coinciden. Escribe tu email manualmente.</div>
           </div>
 
@@ -1760,6 +1865,14 @@ h2 { font-size: 2.5rem; }
             </div>
             <div class="field-error" id="err-telefono">Introduce un número de teléfono válido para el país seleccionado.</div>
           </div>
+
+          <div class="form-step-nav">
+            <button type="button" class="btn-next" data-next="2">Siguiente</button>
+          </div>
+
+          </div>
+
+          <div class="form-step hidden" data-form-step="2">
 
           <div class="field-row">
             <div class="field">
@@ -1799,8 +1912,7 @@ h2 { font-size: 2.5rem; }
             </div>
           </div>
 
-          <div class="field-row">
-            <div class="field">
+          <div class="field">
               <label for="hora">
                 Hora de nacimiento *
                 <span class="help-icon" tabindex="0" id="helpHora">
@@ -1818,13 +1930,23 @@ h2 { font-size: 2.5rem; }
               </div>
               <input type="hidden" id="hora" name="hora">
               <div class="field-error" id="err-hora">Por favor, introduce una hora.</div>
-            </div>
+          </div>
 
-            <div class="field">
+          <div class="form-step-nav">
+            <button type="button" class="btn-back" data-back="1">Atrás</button>
+            <button type="button" class="btn-next" data-next="3">Siguiente</button>
+          </div>
+
+          </div>
+
+          <div class="form-step hidden" data-form-step="3">
+
+          <h3 class="field-group-title">Lugar de nacimiento</h3>
+
+          <div class="field">
               <label for="municipio">Municipio *</label>
               <input type="text" id="municipio" name="municipio" placeholder="Ej: Madrid" required>
               <div class="field-error" id="err-municipio">Por favor, introduce tu municipio de nacimiento.</div>
-            </div>
           </div>
 
           <div class="field-row">
@@ -1848,9 +1970,14 @@ h2 { font-size: 2.5rem; }
             </label>
           </div>
 
-          <button type="submit" class="btn-pay" id="btnPay">Pagar y generar mi informe</button>
+          <div class="form-step-nav form-step-nav-final">
+            <button type="button" class="btn-back" data-back="2">Atrás</button>
+            <button type="submit" class="btn-pay" id="btnPay">Pagar y generar mi informe</button>
+          </div>
 
           <p class="secure-note">🔒 Pago 100% seguro con Stripe</p>
+
+          </div>
 
           <div class="error-banner" id="errorBanner"></div>
 
@@ -1933,6 +2060,7 @@ h2 { font-size: 2.5rem; }
     // Tooltip tap en móvil
     const helpHora = document.getElementById('helpHora');
     helpHora.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;
       e.preventDefault();
       helpHora.classList.toggle('active');
     });
@@ -2148,6 +2276,52 @@ h2 { font-size: 2.5rem; }
     });
     document.getElementById('politica').addEventListener('change', () => {
       document.getElementById('politicaField').classList.remove('error');
+    });
+
+    // Formulario en 3 pasos
+    const PASO_CAMPOS_REQUERIDOS = {
+      1: ['nombre', 'email', 'email2'],
+      2: ['sexo', 'fecha', 'hora'],
+    };
+
+    function campoPasoVacio(id) {
+      const el = document.getElementById(id);
+      return !el || !el.value || !el.value.trim();
+    }
+
+    function irAPaso(n) {
+      document.querySelectorAll('.form-step').forEach(paso => {
+        paso.classList.toggle('hidden', paso.dataset.formStep !== String(n));
+      });
+      document.querySelectorAll('.form-progress-dot').forEach(dot => {
+        dot.classList.toggle('active', Number(dot.dataset.dot) <= n);
+      });
+      document.getElementById('formProgressLabel').textContent = 'Paso ' + n + ' de 3';
+      document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.querySelectorAll('.btn-next').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pasoActual = btn.closest('.form-step').dataset.formStep;
+        const requeridos = PASO_CAMPOS_REQUERIDOS[pasoActual] || [];
+        let ok = true;
+        requeridos.forEach(id => {
+          if (campoPasoVacio(id)) { showError(id); ok = false; }
+          else clearError(id);
+        });
+        if (pasoActual === '1') {
+          const telefono = document.getElementById('telefono').value.trim();
+          const prefijo = document.getElementById('prefijo').value;
+          if (telefono && !validarTelefono(telefono, prefijo)) { showError('telefono'); ok = false; }
+          else clearError('telefono');
+        }
+        if (!ok) return;
+        irAPaso(Number(btn.dataset.next));
+      });
+    });
+
+    document.querySelectorAll('.btn-back').forEach(btn => {
+      btn.addEventListener('click', () => irAPaso(Number(btn.dataset.back)));
     });
   </script>
 
