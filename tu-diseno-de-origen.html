@@ -236,6 +236,12 @@
       margin-top: .3rem;
     }
     .field-error.show { display: block; }
+    .field-note {
+      font-size: .85rem;
+      color: #444;
+      line-height: 1.5;
+      margin-bottom: .8rem;
+    }
 
     /* Tooltip (?) */
     .help-icon {
@@ -304,6 +310,7 @@
       grid-template-columns: 130px 1fr;
       gap: .5rem;
     }
+    #prefijo { font-family: var(--font-body), "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji"; }
 
     /* Checkbox */
     .checkbox-field {
@@ -445,6 +452,11 @@
     .form-step-nav .btn-back:hover {
       background: rgba(14,63,75,.05);
       border-color: rgba(14,63,75,.4);
+    }
+    .form-step-nav-final .btn-pay {
+      width: auto;
+      flex: 1;
+      margin-top: 0;
     }
 
     .secure-note {
@@ -1809,7 +1821,7 @@ h2 { font-size: 2.5rem; }
 
           <div class="field">
             <label for="email2">Confirma tu email *</label>
-            <input type="email" id="email2" name="email2" placeholder="Repite tu email" autocomplete="off" onpaste="return false;" ondrop="return false;" oncopy="return false;" required>
+            <input type="email" id="email2" name="email2" placeholder="Repite tu email" autocomplete="new-password" onpaste="return false;" ondrop="return false;" oncopy="return false;" required>
             <div class="field-error" id="err-email2">Los emails no coinciden. Escribe tu email manualmente.</div>
           </div>
 
@@ -1921,6 +1933,8 @@ h2 { font-size: 2.5rem; }
 
           <div class="form-step hidden" data-form-step="3">
 
+          <p class="field-note">Estos son los datos de tu lugar de nacimiento, no tu dirección actual.</p>
+
           <div class="field">
               <label for="municipio">Municipio *</label>
               <input type="text" id="municipio" name="municipio" placeholder="Ej: Madrid" required>
@@ -1950,9 +1964,8 @@ h2 { font-size: 2.5rem; }
 
           <div class="form-step-nav form-step-nav-final">
             <button type="button" class="btn-back" data-back="2">Atrás</button>
+            <button type="submit" class="btn-pay" id="btnPay">Pagar y generar mi informe</button>
           </div>
-
-          <button type="submit" class="btn-pay" id="btnPay">Pagar y generar mi informe</button>
 
           <p class="secure-note">🔒 Pago 100% seguro con Stripe</p>
 
@@ -2287,6 +2300,12 @@ h2 { font-size: 2.5rem; }
           if (campoPasoVacio(id)) { showError(id); ok = false; }
           else clearError(id);
         });
+        if (pasoActual === '1') {
+          const telefono = document.getElementById('telefono').value.trim();
+          const prefijo = document.getElementById('prefijo').value;
+          if (telefono && !validarTelefono(telefono, prefijo)) { showError('telefono'); ok = false; }
+          else clearError('telefono');
+        }
         if (!ok) return;
         irAPaso(Number(btn.dataset.next));
       });
