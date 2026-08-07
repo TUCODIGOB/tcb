@@ -191,6 +191,7 @@
       grid-template-columns: 1fr 1.3fr 1fr;
       gap: 0.5rem;
     }
+    .date-selects-2col { grid-template-columns: 1fr 1fr; }
     .date-selects select {
       width: 100%;
       padding: 0.9rem 0.6rem;
@@ -1728,7 +1729,7 @@ h2 { font-size: 2.5rem; }
           </div>
 
           <div class="field">
-            <label for="telefono">Teléfono (opcional)</label>
+            <label for="telefono">Teléfono</label>
             <div class="phone-group">
               <select id="prefijo" name="prefijo" required>
                 <option value="+34">🇪🇸 +34</option>
@@ -1811,7 +1812,7 @@ h2 { font-size: 2.5rem; }
                   </span>
                 </span>
               </label>
-              <div class="date-selects">
+              <div class="date-selects date-selects-2col">
                 <select id="hora-h" required><option value="">Hora</option></select>
                 <select id="hora-m" required><option value="">Minuto</option></select>
               </div>
