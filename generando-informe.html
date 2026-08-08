@@ -82,6 +82,7 @@
     display: flex; align-items: center;
     width: min(1100px, 92vw);
     margin-inline: auto;
+    padding-block: 6px;
   }
   .nav-logo img { height: 34px; width: auto; }
 
@@ -99,15 +100,15 @@
     margin-inline: auto;
   }
 
-  .screen h1 {
+  .screen h1, .screen h2 {
     font-family: var(--font-display);
     font-size: clamp(1.8rem, 5vw, 2.4rem);
     font-weight: 700;
     color: var(--teal-deep);
     line-height: 1.2;
-    margin-bottom: 1rem;
+    margin-bottom: 30px;
   }
-  .screen h1 em {
+  .screen h1 em, .screen h2 em {
     font-style: italic;
     color: var(--gold-deep);
   }
@@ -266,6 +267,7 @@
     .nav-logo img { height: 34px; width: auto; }
     .screen { padding-block: 2rem; }
     .ready-box { padding: 2rem 1.5rem; }
+    .screen p { font-size: 18px; }
   }
 </style>
 <!-- Google Analytics -->
@@ -360,11 +362,9 @@
   <div class="container">
     <div class="screen-inner">
       <h2>No hemos podido verificar tu acceso</h2>
-      <p id="errorMsg">Parece que llegaste a esta página sin completar el pago.</p>
+      <p id="errorMsg">Parece que llegaste a esta página sin completar el pago, por favor vuelve al formulario.</p>
+      <a href="/tu-diseno-de-origen#formulario" class="btn-download" style="display:inline-block; text-decoration:none;">Realizar el pago</a>
       <div class="error-box">
-        <strong>¿Aún no has pagado?</strong><br>
-        <a href="/tu-diseno-de-origen#formulario">Vuelve al formulario de compra →</a>
-        <br><br>
         <strong>¿Acabas de realizar el pago?</strong><br><br>
         Si has pagado correctamente y estás viendo este mensaje, por favor escríbenos a <a href="mailto:hola@origennatal.com">hola@origennatal.com</a> con tu nombre, tu número de teléfono y el email que usaste para pagar, contactaremos contigo.
       </div>
