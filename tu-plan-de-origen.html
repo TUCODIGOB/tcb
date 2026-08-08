@@ -113,8 +113,10 @@
       font-weight: 700;
       color: var(--teal-deep);
       line-height: 1.3;
-      margin-bottom: 1.8rem;
+      margin-bottom: 35px;
     }
+    .plan-highlight { color: var(--gold-deep); }
+    .plan-product-name { font-family: var(--font-display); color: var(--gold-deep); font-size: 1.3rem; font-weight: 700; }
     .plan-text {
       font-size: 1.05rem;
       color: #333;
@@ -125,9 +127,11 @@
     .plan-question {
       font-style: italic;
       color: var(--teal-deep);
+      font-weight: 700;
+      font-size: 21px;
     }
     .plan-status {
-      font-size: .95rem;
+      font-size: 17px;
       color: var(--gold-deep);
       font-weight: 600;
       margin-top: 1.8rem;
@@ -292,6 +296,8 @@
       .plan-form-card, .plan-success { padding: 1.6rem 1.4rem; }
       .btn-cta { font-size: 20px; padding: 12px 1rem; }
       .plan-title { font-size: 38px; }
+      .plan-text { font-size: 18px; }
+      .plan-status { font-size: 18px; }
     }
   </style>
 </head>
@@ -315,13 +321,13 @@
   <section class="plan">
     <div class="container">
       <div class="plan-inner">
-        <h1 class="plan-title">Ya conoces quién eres...<br>Ahora viene lo que haces con ello</h1>
+        <h1 class="plan-title">Ya conoces quién eres.<br>Ahora viene <span class="plan-highlight">lo que haces con ello</span>.</h1>
 
         <p class="plan-text">Cuando terminas tu Diseño de Origen, aparece una pregunta inevitable:</p>
         <p class="plan-text plan-question">"Vale. Y ahora, ¿qué hago con todo esto?"</p>
         <p class="plan-text">Esa es exactamente la pregunta que responde <strong>Tu Plan de Origen</strong>.</p>
-        <p class="plan-text">Tu Plan de Origen no te dice quién eres, te dice exactamente qué hace tu mejor versión y qué tienes que hacer para convertirte en ella.</p>
-        <p class="plan-text">Una hoja de ruta personal, basada en los mismos datos de tu informe: las 7 áreas, pero esta vez con un plan de acción concreto para cada una.</p>
+        <p class="plan-text">Tu Plan de Origen no te dice quién eres, te dice exactamente <strong>qué hace tu mejor versión y qué tienes que hacer para convertirte en ella</strong>.</p>
+        <p class="plan-text">Una hoja de ruta personal, basada en los mismos datos de tu informe: las 7 áreas, pero esta vez <strong>con el plan de acción concreto para cada una</strong>.</p>
         <p class="plan-status">Está en desarrollo, cuando esté listo te avisamos.</p>
 
         <form id="formPlan" novalidate>
