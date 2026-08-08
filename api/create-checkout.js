@@ -58,6 +58,7 @@ export default async function handler(req, res) {
         pais: (datos.pais || '').substring(0, 100),
         telefono: (datos.telefonoCompleto || '').substring(0, 30),
         edad: String(datos.edadCalculada || ''),
+        gaClientId: (datos.gaClientId || '').substring(0, 50),
       },
       success_url: `${origin}/generando-informe?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/tu-diseno-de-origen`,
