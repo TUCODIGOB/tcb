@@ -93,7 +93,7 @@
     .progress-text { font-size: .85rem; color: var(--teal-deep); margin-top: .5rem; text-align: center; }
     .consentimiento { display: flex; align-items: flex-start; gap: .85rem; padding: 1.2rem; background: rgba(14,63,75,.04); border-radius: var(--r-sm); margin-bottom: 1.8rem; }
     .consentimiento input[type="checkbox"] { width: 16px; height: 16px; flex-shrink: 0; margin-top: .2rem; accent-color: var(--gold-deep); cursor: pointer; }
-    .consentimiento label { font-size: .78rem; color: #777; line-height: 1.6; cursor: pointer; }
+    .consentimiento label { font-size: 10px; color: #777; line-height: 1.6; cursor: pointer; }
     .consentimiento label a { color: var(--gold-deep); text-decoration: underline; }
     .btn-submit { width: 100%; background: linear-gradient(135deg, var(--gold-deep), var(--gold-light)); color: var(--white); font-family: var(--font-body); font-size: 1.05rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 1.1rem 2rem; border-radius: var(--r-sm); border: none; cursor: pointer; box-shadow: 0 6px 28px rgba(189,144,72,.35); transition: transform .2s, box-shadow .2s; }
     .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(189,144,72,.5); }
@@ -120,6 +120,7 @@
       .preguntas, .instrucciones { padding: 1.4rem; }
       .nav a img { height: 34px; width: auto; }
       .hero-resena h1 { font-size: 35px; }
+      .consentimiento label { font-size: 12px; }
     }
   </style>
 </head>
@@ -205,7 +206,7 @@
         <div class="consentimiento">
           <input type="checkbox" id="consentimiento" name="consentimiento" required />
           <label for="consentimiento">
-            Autorizo a Origen Natal a usar mi imagen, voz y testimonio en su web, redes sociales y demás canales de comunicación de la marca para mostrar experiencias reales del producto.
+            He leído y acepto la <a href="/politica-de-privacidad" target="_blank">Política de Privacidad</a> y autorizo a Origen Natal a usar mi imagen, voz y testimonio en su web, redes sociales y demás canales de comunicación de la marca para mostrar experiencias reales del producto, y recibir las promociones.
           </label>
         </div>
         <span class="error-msg" id="errorConsentimiento" style="margin-bottom:1rem;">Debes aceptar el consentimiento para continuar.</span>
@@ -287,7 +288,7 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
         email,
         consentimiento: 'si',
         fecha: new Date().toISOString(),
-        texto_consentimiento: 'Autorizo a Origen Natal a usar mi imagen, voz y testimonio en su web y redes sociales para mostrar experiencias reales del producto.',
+        texto_consentimiento: 'He leído y acepto la Política de Privacidad y autorizo a Origen Natal a usar mi imagen, voz y testimonio en su web, redes sociales y demás canales de comunicación de la marca para mostrar experiencias reales del producto, y recibir las promociones.',
       }),
     });
 
@@ -320,7 +321,7 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
               email,
               consentimiento: 'si',
               fecha: new Date().toISOString(),
-              texto_consentimiento: 'Autorizo a Origen Natal a usar mi imagen, voz y testimonio en su web, redes sociales y demás canales de comunicación de la marca para mostrar experiencias reales del producto.',
+              texto_consentimiento: 'He leído y acepto la Política de Privacidad y autorizo a Origen Natal a usar mi imagen, voz y testimonio en su web, redes sociales y demás canales de comunicación de la marca para mostrar experiencias reales del producto, y recibir las promociones.',
               videoUrl: publicUrl,
               objectKey,
             }),
