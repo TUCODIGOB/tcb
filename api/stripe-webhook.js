@@ -4,6 +4,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
+import crypto from 'crypto';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -62,6 +63,16 @@ export default async function handler(req, res) {
         importe: (session.amount_total / 100).toFixed(2),
       });
       console.log('✅ Contacto guardado en Brevo:', email);
+
+      try {
+        await enviarPurchaseGA4({
+          clientId: metadata.gaClientId || '',
+          sessionId: session.id,
+        });
+        console.log('✅ Evento purchase enviado a GA4:', session.id);
+      } catch (gaErr) {
+        console.error('❌ Error enviando evento purchase a GA4:', gaErr);
+      }
     } catch (err) {
       console.error('❌ Error guardando en Brevo:', err);
       // Avisar al admin por email
@@ -81,6 +92,37 @@ export default async function handler(req, res) {
 
   // Responder 200 a Stripe (si no, reintentará)
   return res.status(200).json({ received: true });
+}
+
+// ═════════════════════════════════════════════════════════════════
+// EVENTO "purchase" EN GA4 (Measurement Protocol, servidor a servidor)
+// ═════════════════════════════════════════════════════════════════
+async function enviarPurchaseGA4({ clientId, sessionId }) {
+  const GA4_API_SECRET = process.env.GA4_API_SECRET;
+  if (!GA4_API_SECRET) throw new Error('GA4_API_SECRET no configurada');
+
+  const MEASUREMENT_ID = 'G-EJSDFDFZ3G';
+  const body = {
+    client_id: clientId || crypto.randomUUID(),
+    events: [{
+      name: 'purchase',
+      params: {
+        transaction_id: sessionId,
+        value: 47,
+        currency: 'EUR',
+      },
+    }],
+  };
+
+  const resp = await fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${MEASUREMENT_ID}&api_secret=${GA4_API_SECRET}`, {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+
+  if (!resp.ok) {
+    const errText = await resp.text();
+    throw new Error(`GA4 Measurement Protocol ${resp.status}: ${errText}`);
+  }
 }
 
 // ═════════════════════════════════════════════════════════════════

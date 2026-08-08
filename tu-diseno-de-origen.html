@@ -2257,6 +2257,7 @@ h2 { font-size: 2.5rem; }
       // Todo válido → guardamos datos en localStorage y redirigimos a Stripe
       datos.telefonoCompleto = datos.prefijo + ' ' + datos.telefono;
       datos.edadCalculada = calcularEdad(datos.fecha);
+      datos.gaClientId = obtenerGAClientId();
       delete datos.email2;
 
       try {
@@ -2303,6 +2304,14 @@ h2 { font-size: 2.5rem; }
       const m = hoy.getMonth() - nacimiento.getMonth();
       if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) edad--;
       return edad;
+    }
+
+    // Client ID de GA4 desde la cookie _ga (formato GA1.1.XXXXXXXXXX.XXXXXXXXXX)
+    function obtenerGAClientId() {
+      const match = document.cookie.match(/(?:^|;\s*)_ga=([^;]+)/);
+      if (!match) return '';
+      const partes = match[1].split('.');
+      return partes.length >= 4 ? partes[2] + '.' + partes[3] : '';
     }
 
     // Limpiar error individual al escribir
