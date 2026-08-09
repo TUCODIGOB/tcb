@@ -502,7 +502,7 @@ async function iniciarConDatos(pedido) {
   const cartaResp = await fetch('/api/calcular-carta', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ year: yr, month: mo, day: dy, localHour: hh, localMin: mm, latDeg: geo.lat, lonDeg: geo.lon, tzOffset: tzOff })
+  body: JSON.stringify({ session_id: new URLSearchParams(window.location.search).get('session_id'), year: yr, month: mo, day: dy, localHour: hh, localMin: mm, latDeg: geo.lat, lonDeg: geo.lon, tzOffset: tzOff })
 });
 if (!cartaResp.ok) throw new Error('Error calculando carta natal');
 const carta = await cartaResp.json();
