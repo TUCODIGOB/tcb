@@ -1,3 +1,7 @@
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -6,6 +10,21 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  const { session_id } = req.body;
+
+  if (!session_id || typeof session_id !== 'string') {
+    return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.retrieve(session_id);
+    if (!session || session.payment_status !== 'paid') {
+      return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
+    }
+  } catch (err) {
+    return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
+  }
 
   const { nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto } = req.body;
 
