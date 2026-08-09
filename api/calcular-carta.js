@@ -121,6 +121,57 @@ function moonLongitude(T) {
   return _mod(lon, 360);
 }
 
+// Latitud eclíptica geocéntrica de la Luna (Meeus cap.47, tabla Σβ, ~60 términos periódicos
+// + términos aditivos A1/A3). Recalcula D, M, M', F, E de forma independiente (mismas fórmulas
+// que moonLongitude(), sin tocar esa función) para no depender de nada ya verificado hoy.
+function moonLatitude(T) {
+  const LpDeg = _mod(218.3165 + 481267.8813*T - 0.001133*T*T, 360);
+  const D  = _R(_mod(297.8502 + 445267.1115*T - 0.00163*T*T + T*T*T/538841, 360));
+  const M  = _R(_mod(357.5291 + 35999.0503*T - 0.0001559*T*T, 360));
+  const Mp = _R(_mod(134.9634 + 477198.8676*T + 0.008997*T*T + T*T*T/69699, 360));
+  const F  = _R(_mod( 93.2721 + 483202.0175*T - 0.003403*T*T - T*T*T/3526000, 360));
+  const E  = 1 - 0.002516*T - 0.0000074*T*T;
+
+  const Lp = _R(LpDeg);
+  const A1 = _R(_mod(119.75 + 131.849*T, 360));
+  const A3 = _R(_mod(313.45 + 481266.484*T, 360));
+
+  // [D, M, M', F, coeficiente en unidades de 0.000001°] — Meeus, "Astronomical Algorithms", Σβ
+  const TERMS_BETA = [
+    [0,0,0,1,5128122],[0,0,1,1,280602],[0,0,1,-1,277693],[2,0,0,-1,173237],
+    [2,0,-1,1,55413],[2,0,-1,-1,46271],[2,0,0,1,32573],[0,0,2,1,17198],
+    [2,0,1,-1,9266],[0,0,2,-1,8822],[2,-1,0,-1,8216],[2,0,-2,-1,4324],
+    [2,0,1,1,4200],[2,1,0,-1,-3359],[2,-1,-1,1,2463],[2,-1,0,1,2211],
+    [2,-1,-1,-1,2065],[0,1,-1,-1,-1870],[4,0,-1,-1,1828],[0,1,0,1,-1794],
+    [0,0,0,3,-1749],[0,1,-1,1,-1565],[1,0,0,1,-1491],[0,1,1,1,-1475],
+    [0,1,1,-1,-1410],[0,1,0,-1,-1344],[1,0,0,-1,-1335],[0,0,3,1,1107],
+    [4,0,0,-1,1021],[4,0,-1,1,833],[0,0,1,-3,777],[4,0,-2,1,671],
+    [2,0,0,-3,607],[2,0,2,-1,596],[2,-1,1,-1,491],[2,0,-2,1,-451],
+    [0,0,3,-1,439],[2,0,2,1,422],[2,0,-3,-1,421],[2,1,-1,1,-366],
+    [2,1,0,1,-351],[4,0,0,1,331],[2,-1,1,1,315],[2,-2,0,-1,302],
+    [0,0,1,3,-283],[2,1,1,-1,-229],[1,1,0,-1,223],[1,1,0,1,223],
+    [0,1,-2,-1,-220],[2,1,-1,-1,-220],[1,0,1,1,-185],[2,-1,-2,-1,181],
+    [0,1,2,1,-177],[4,0,-2,-1,176],[4,-1,-1,-1,166],[1,0,1,-1,-164],
+    [4,0,1,-1,132],[1,0,-1,-1,-119],[4,-1,0,-1,115],[2,-2,0,1,107]
+  ];
+
+  let sumBeta = 0;
+  for (let i = 0; i < TERMS_BETA.length; i++) {
+    const t = TERMS_BETA[i];
+    const arg = t[0]*D + t[1]*M + t[2]*Mp + t[3]*F;
+    let amp = t[4];
+    if (Math.abs(t[1]) === 1) amp *= E;
+    else if (Math.abs(t[1]) === 2) amp *= E*E;
+    sumBeta += amp * Math.sin(arg);
+  }
+
+  // Términos aditivos (perturbaciones de Venus/Júpiter y achatamiento terrestre, Meeus cap.47)
+  sumBeta += -2235*Math.sin(Lp) + 382*Math.sin(A3) + 175*Math.sin(A1-F) + 175*Math.sin(A1+F)
+           +  127*Math.sin(Lp-Mp) - 115*Math.sin(Lp+Mp);
+
+  return sumBeta / 1000000; // de 0.000001° a grados
+}
+
 function _earthHelio(T) {
   const s = sunLongitude(T);
   const M = _R(_mod(357.52911 + 35999.05029*T, 360));
@@ -226,6 +277,9 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
   // Declinación del Sol (latitud eclíptica del Sol ≈ 0° por definición del propio eclíptico)
   const sunDeclDeg = _D(Math.asin(Math.sin(epsTR) * Math.sin(_R(sunL))));
   const moonL = moonLongitude(T);
+  // Latitud eclíptica y declinación de la Luna (aditivo, ver moonLatitude() arriba)
+  const moonLatDeg = moonLatitude(T);
+  const moonDeclDeg = _declinacion(moonL, moonLatDeg, epsTR);
   const mercL = mercuryLongitude(T);
   const venL  = venusLongitude(T);
   const marL  = marsLongitude(T);
@@ -277,6 +331,8 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     solLatDeg:  0,
     solDeclDeg: sunDeclDeg,
     lunaRaw: moonL,
+    lunaLatDeg: moonLatDeg,
+    lunaDeclDeg: moonDeclDeg,
     mercRaw: mercL,
     mercLatDeg: mercLatDeg,
     mercDeclDeg: mercDeclDeg,
