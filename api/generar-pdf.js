@@ -318,13 +318,13 @@ export default async function handler(req, res) {
       var rows = [
         ['Sol',carta.sol||'-',casaDe(carta.solRaw),formatGradosNS(carta.solLatDeg),formatGradosNS(carta.solDeclDeg)],
         ['Luna',carta.luna||'-',casaDe(carta.lunaRaw),'3 45 N','19 0 S'],
-        ['Mercurio',carta.mercurio||'-',casaDe(carta.mercRaw),'2 52 N','4 57 S'],
-        ['Venus',carta.venus||'-',casaDe(carta.venRaw),'1 30 N','14 49 N'],
-        ['Marte',carta.marte||'-',casaDe(carta.marRaw),'4 2 N','15 14 N'],
-        ['Jupiter',carta.jupiter||'-',casaDe(carta.jupRaw),'1 19 N','11 32 N'],
-        ['Saturno',carta.saturno||'-',casaDe(carta.satRaw),'2 24 N','4 39 N'],
-        ['Urano',carta.urano||'-',casaDe(carta.uraRaw),'0 17 N','18 51 S'],
-        ['Neptuno',carta.neptuno||'-',casaDe(carta.nepRaw),'1 22 N','21 51 S'],
+        ['Mercurio',carta.mercurio||'-',casaDe(carta.mercRaw),formatGradosNS(carta.mercLatDeg),formatGradosNS(carta.mercDeclDeg)],
+        ['Venus',carta.venus||'-',casaDe(carta.venRaw),formatGradosNS(carta.venLatDeg),formatGradosNS(carta.venDeclDeg)],
+        ['Marte',carta.marte||'-',casaDe(carta.marRaw),formatGradosNS(carta.marLatDeg),formatGradosNS(carta.marDeclDeg)],
+        ['Jupiter',carta.jupiter||'-',casaDe(carta.jupRaw),formatGradosNS(carta.jupLatDeg),formatGradosNS(carta.jupDeclDeg)],
+        ['Saturno',carta.saturno||'-',casaDe(carta.satRaw),formatGradosNS(carta.satLatDeg),formatGradosNS(carta.satDeclDeg)],
+        ['Urano',carta.urano||'-',casaDe(carta.uraRaw),formatGradosNS(carta.uraLatDeg),formatGradosNS(carta.uraDeclDeg)],
+        ['Neptuno',carta.neptuno||'-',casaDe(carta.nepRaw),formatGradosNS(carta.nepLatDeg),formatGradosNS(carta.nepDeclDeg)],
         ['Ascendente',carta.ascendente||'-','-','-','-'],
       ];
       for (var r3=0;r3<rows.length;r3++) {
