@@ -1,6 +1,9 @@
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { jsPDF } = require('jspdf');
+import Stripe from 'stripe';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const BASE_URL = 'https://origennatal.com';
  
@@ -13,6 +16,23 @@ export const config = {
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  {
+    const { session_id } = req.body;
+
+    if (!session_id || typeof session_id !== 'string') {
+      return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
+    }
+
+    try {
+      const session = await stripe.checkout.sessions.retrieve(session_id);
+      if (!session || session.payment_status !== 'paid') {
+        return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
+      }
+    } catch (err) {
+      return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
+    }
   }
 
   const { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas, session_id } = req.body;
