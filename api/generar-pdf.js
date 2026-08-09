@@ -317,7 +317,7 @@ export default async function handler(req, res) {
       y += rH;
       var rows = [
         ['Sol',carta.sol||'-',casaDe(carta.solRaw),formatGradosNS(carta.solLatDeg),formatGradosNS(carta.solDeclDeg)],
-        ['Luna',carta.luna||'-',casaDe(carta.lunaRaw),'3 45 N','19 0 S'],
+        ['Luna',carta.luna||'-',casaDe(carta.lunaRaw),formatGradosNS(carta.lunaLatDeg),formatGradosNS(carta.lunaDeclDeg)],
         ['Mercurio',carta.mercurio||'-',casaDe(carta.mercRaw),formatGradosNS(carta.mercLatDeg),formatGradosNS(carta.mercDeclDeg)],
         ['Venus',carta.venus||'-',casaDe(carta.venRaw),formatGradosNS(carta.venLatDeg),formatGradosNS(carta.venDeclDeg)],
         ['Marte',carta.marte||'-',casaDe(carta.marRaw),formatGradosNS(carta.marLatDeg),formatGradosNS(carta.marDeclDeg)],
