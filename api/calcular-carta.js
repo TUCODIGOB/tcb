@@ -128,24 +128,35 @@ function _earthHelio(T) {
 }
 function _rv(a, e, M) { return a*(1-e*e)/(1+e*Math.cos(M)); }
 function _eqC(e, M) { return (2*e-e*e*e/4)*_D(Math.sin(M))+(5/4*e*e)*_D(Math.sin(2*M))+(13/12*e*e*e)*_D(Math.sin(3*M)); }
-function _helioToGeo(lon, r, earth) {
-  const px = r*Math.cos(_R(lon)) - earth.r*Math.cos(_R(earth.lon));
-  const py = r*Math.sin(_R(lon)) - earth.r*Math.sin(_R(earth.lon));
-  return _mod(_D(Math.atan2(py, px)), 360);
+function _helioToGeo(p, earth) {
+  const ex = earth.r*Math.cos(_R(earth.lon));
+  const ey = earth.r*Math.sin(_R(earth.lon));
+  return _mod(_D(Math.atan2(p.y - ey, p.x - ex)), 360);
 }
-function _planet(L0,L1,L2,w0,w1,a,e,T) {
+// Inclinación (I) y longitud del nodo ascendente (Ω) J2000 + tasa por siglo juliano
+// Fuente: Standish, E.M. (1992), "Keplerian Elements for Approximate Positions of the
+// Major Planets", JPL/NASA Solar System Dynamics (válida 1800-2050 EC)
+function _planet(L0,L1,L2,w0,w1,a,e,I0,I1,O0,O1,T) {
   const L = _mod(L0+L1*T+L2*T*T, 360);
-  const w = _mod(w0+w1*T, 360);
+  const w = _mod(w0+w1*T, 360);           // ϖ, longitud del perihelio
+  const O = _mod(O0+O1*T, 360);           // Ω, longitud del nodo ascendente
+  const I = _R(I0+I1*T);                  // inclinación orbital respecto a la eclíptica
   const M = _R(_mod(L-w, 360));
-  return { lon: _mod(L+_eqC(e,M), 360), r: _rv(a,e,M) };
+  const r = _rv(a,e,M);
+  const nu = M + _R(_eqC(e,M));           // anomalía verdadera
+  const u  = nu + _R(_mod(w-O, 360));     // argumento de latitud (desde el nodo ascendente)
+  const OR = _R(O);
+  const x = r*(Math.cos(OR)*Math.cos(u) - Math.sin(OR)*Math.sin(u)*Math.cos(I));
+  const y = r*(Math.sin(OR)*Math.cos(u) + Math.cos(OR)*Math.sin(u)*Math.cos(I));
+  return { x, y };
 }
-function mercuryLongitude(T) { const e=_earthHelio(T); const p=_planet(252.250906,149474.0722491,0.00030350,77.45611904,0.1593667,0.38709831,0.20563069,T); return _helioToGeo(p.lon,p.r,e); }
-function venusLongitude(T)   { const e=_earthHelio(T); const p=_planet(181.979801,58519.2130302,0.00031014,131.563703,0.0048746,0.72332982,0.00677323,T); return _helioToGeo(p.lon,p.r,e); }
-function marsLongitude(T)    { const e=_earthHelio(T); const p=_planet(355.433275,19141.6964746,0.00031052,336.560357,0.4442616,1.52366231,0.09341233,T); return _helioToGeo(p.lon,p.r,e); }
-function jupiterLongitude(T) { const e=_earthHelio(T); const p=_planet(34.351519,3036.3027748,0.00022330,14.331532,0.3371283,5.20252,0.04849485,T); return _helioToGeo(p.lon,p.r,e); }
-function saturnLongitude(T)  { const e=_earthHelio(T); const p=_planet(50.077444,1223.5110686,0.00051908,93.056787,0.5665496,9.55184,0.05550825,T); return _helioToGeo(p.lon,p.r,e); }
-function uranusLongitude(T)  { const e=_earthHelio(T); const p=_planet(314.055005,429.8640561,0,173.005159,0.0893158,19.21814,0.04629590,T); return _helioToGeo(p.lon,p.r,e); }
-function neptuneLongitude(T) { const e=_earthHelio(T); const p=_planet(304.348665,219.8833092,0,48.120276,0.0291866,30.10957,0.00898809,T); return _helioToGeo(p.lon,p.r,e); }
+function mercuryLongitude(T) { const e=_earthHelio(T); const p=_planet(252.250906,149474.0722491,0.00030350,77.45611904,0.1593667,0.38709831,0.20563069, 7.00497902,-0.00594749, 48.33076593,-0.12534081,T); return _helioToGeo(p,e); }
+function venusLongitude(T)   { const e=_earthHelio(T); const p=_planet(181.979801,58519.2130302,0.00031014,131.563703,0.0048746,0.72332982,0.00677323, 3.39467605,-0.00078890, 76.67984255,-0.27769418,T); return _helioToGeo(p,e); }
+function marsLongitude(T)    { const e=_earthHelio(T); const p=_planet(355.433275,19141.6964746,0.00031052,336.560357,0.4442616,1.52366231,0.09341233, 1.84969142,-0.00813131, 49.55953891,-0.29257343,T); return _helioToGeo(p,e); }
+function jupiterLongitude(T) { const e=_earthHelio(T); const p=_planet(34.351519,3036.3027748,0.00022330,14.331532,0.3371283,5.20252,0.04849485, 1.30439695,-0.00183714, 100.47390909,0.20469106,T); return _helioToGeo(p,e); }
+function saturnLongitude(T)  { const e=_earthHelio(T); const p=_planet(50.077444,1223.5110686,0.00051908,93.056787,0.5665496,9.55184,0.05550825, 2.48599187,0.00193609, 113.66242448,-0.28867794,T); return _helioToGeo(p,e); }
+function uranusLongitude(T)  { const e=_earthHelio(T); const p=_planet(314.055005,429.8640561,0,173.005159,0.0893158,19.21814,0.04629590, 0.77263783,-0.00242939, 74.01692503,0.04240589,T); return _helioToGeo(p,e); }
+function neptuneLongitude(T) { const e=_earthHelio(T); const p=_planet(304.348665,219.8833092,0,48.120276,0.0291866,30.10957,0.00898809, 1.77004347,0.00035372, 131.78422574,-0.00508664,T); return _helioToGeo(p,e); }
 
 // Nodo Norte de la Luna
 function lunarNode(T) {
