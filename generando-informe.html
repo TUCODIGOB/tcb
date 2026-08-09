@@ -363,7 +363,7 @@
     <div class="screen-inner">
       <h2>No hemos podido verificar tu acceso</h2>
       <p id="errorMsg">Parece que llegaste a esta página sin completar el pago, por favor vuelve al formulario.</p>
-      <a href="/tu-diseno-de-origen#formulario" class="btn-download" style="display:inline-block; text-decoration:none;">Realizar el pago</a>
+      <a href="/tu-diseno-de-origen#formulario" id="errorBtn" class="btn-download" style="display:inline-block; text-decoration:none;">Realizar el pago</a>
       <div class="error-box">
         <strong>¿Acabas de realizar el pago?</strong><br><br>
         Si has pagado correctamente y estás viendo este mensaje, por favor escríbenos a <a href="mailto:hola@origennatal.com">hola@origennatal.com</a> con tu nombre, tu número de teléfono y el email que usaste para pagar, contactaremos contigo.
@@ -403,8 +403,12 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-function showError(msg) {
+function showError(msg, hideSupportBox) {
   if (msg) document.getElementById('errorMsg').textContent = msg;
+  const box = document.querySelector('#screenError .error-box');
+  if (box) box.style.display = hideSupportBox ? 'none' : '';
+  const btn = document.getElementById('errorBtn');
+  if (btn) btn.textContent = hideSupportBox ? 'Volver a intentarlo' : 'Realizar el pago';
   showScreen('screenError');
 }
 
@@ -482,7 +486,11 @@ function showError(msg) {
     await iniciarConDatos(pedido);
   } catch(e) {
     console.error('Error generación:', e);
-    showError('Ha ocurrido un error al generar tu informe. Por favor escríbenos a hola@origennatal.com con tu email de compra y te lo enviaremos manualmente.');
+    if (e.message === 'DATOS_INVALIDOS') {
+      showError('Ha habido un error con tus datos, por favor vuelve a intentarlo', true);
+    } else {
+      showError('Ha ocurrido un error al generar tu informe. Por favor escríbenos a hola@origennatal.com con tu email de compra y te lo enviaremos manualmente.');
+    }
   }
 })();
 
@@ -504,7 +512,7 @@ async function iniciarConDatos(pedido) {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ session_id: new URLSearchParams(window.location.search).get('session_id'), year: yr, month: mo, day: dy, localHour: hh, localMin: mm, latDeg: geo.lat, lonDeg: geo.lon, tzOffset: tzOff })
 });
-if (!cartaResp.ok) throw new Error('Error calculando carta natal');
+if (!cartaResp.ok) throw new Error(cartaResp.status === 400 ? 'DATOS_INVALIDOS' : 'Error calculando carta natal');
 const carta = await cartaResp.json();
 
   // Formato fecha bonito
