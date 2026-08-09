@@ -587,8 +587,6 @@
     }
 
     /* ─── RESET ──────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
     body {
       font-family: var(--font-body);
       background: var(--cream);
@@ -596,10 +594,8 @@
       line-height: 1.7;
       overflow-x: hidden;
     }
-    img { display: block; max-width: 100%; }
-    a { color: inherit; text-decoration: none; }
 
-    
+
     /* ─── UTILITIES ──────────────────────────────── */
     .container-home { width: min(1100px, 92vw); margin-inline: auto; }
     .text-center { text-align: center; }
@@ -653,21 +649,6 @@ text-align: center;
       color: var(--gold-deep);
       margin-bottom: .75rem;
     }
-
-    /* ══════════════════════════════════════════════
-       NAV
-    ══════════════════════════════════════════════ */
-    .nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255,251,239,.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(189,144,72,.2);
-    }
-    .nav-logo img {
-      height: 34px;
-      width: auto;
-    }
-    .nav-cta:hover { background: var(--gold-light); }
 
     /* ══════════════════════════════════════════════
        HERO
@@ -1215,12 +1196,6 @@ display: block;
     /* ══════════════════════════════════════════════
        FOOTER
     ══════════════════════════════════════════════ */
-    .footer {
-      background: var(--teal-deep);
-      color: rgba(255,251,239,.6);
-      padding-block: 2.5rem;
-      font-size: .82rem;
-    }
     .footer-inner {
       display: flex; flex-direction: column;
       align-items: center; gap: .9rem;
@@ -1230,23 +1205,6 @@ display: block;
       color: var(--gold-light);
       font-weight: 500;
       font-size: .82rem;
-    }
-    .footer-email a:hover { color: var(--white); }
-    .footer-links {
-      display: flex; flex-wrap: wrap;
-      gap: .3rem .75rem;
-      justify-content: center;
-      align-items: center;
-    }
-    .footer-links a {
-      color: rgba(255,251,239,.65);
-      transition: color .15s;
-    }
-    .footer-links a:hover { color: var(--gold-light); }
-    .footer-links .sep { opacity: .35; }
-    .footer-copy {
-      color: rgba(255,251,239,.4);
-      font-size: .8rem;
     }
 
     /* ══════════════════════════════════════════════
