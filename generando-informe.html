@@ -487,7 +487,7 @@ function showError(msg, hideSupportBox) {
   } catch(e) {
     console.error('Error generación:', e);
     if (e.message === 'DATOS_INVALIDOS') {
-      showError('Ha habido un error con tus datos, por favor vuelve a intentarlo', true);
+      showError('Lo sentimos, ha habido un error en alguno de tus datos, por favor vuelve a intentarlo.', true);
     } else {
       showError('Ha ocurrido un error al generar tu informe. Por favor escríbenos a hola@origennatal.com con tu email de compra y te lo enviaremos manualmente.');
     }
