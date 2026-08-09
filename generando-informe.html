@@ -648,14 +648,6 @@ async function geocode(ciudad, provincia, pais) {
   return { lat: 40.4168, lon: -3.7038, ok: false }; // fallback Madrid
 }
 
-function reiniciar() {
-  document.getElementById('sRes').classList.remove('on');
-  document.getElementById('sForm').style.display = 'block';
-  ['nombre','fecha','hora','pais','provincia','ciudad'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('sexo').value = '';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
 function descargarPDF() {
   var fileName = 'TuDisenoDeOrigen_' + (_G.nombre || '').replace(/\s+/g, '_') + '.pdf';
   var link = document.createElement('a');
