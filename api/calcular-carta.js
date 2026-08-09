@@ -22,6 +22,13 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
   }
 
+  const CAMPOS_REQUERIDOS = ['year', 'month', 'day', 'localHour', 'localMin', 'latDeg', 'lonDeg', 'tzOffset'];
+  const campoFaltante = CAMPOS_REQUERIDOS.find(campo => req.body[campo] === undefined || req.body[campo] === null);
+
+  if (campoFaltante) {
+    return res.status(400).json({ error: 'Faltan datos para calcular la carta natal' });
+  }
+
   try {
     const { year, month, day, localHour, localMin, latDeg, lonDeg, tzOffset } = req.body;
 
