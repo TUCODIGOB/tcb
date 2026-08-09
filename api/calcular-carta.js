@@ -90,7 +90,7 @@ function moonLongitude(T) {
 
   const lon = Lp
     + 6.2888*Math.sin(Mp)
-    - 1.2740*Math.sin(2*D - Mp)
+    + 1.2740*Math.sin(2*D - Mp)
     + 0.6583*Math.sin(2*D)
     + 0.2136*Math.sin(2*Mp)
     - 0.1851*E*Math.sin(M)
@@ -99,7 +99,7 @@ function moonLongitude(T) {
     + 0.0572*E*Math.sin(2*D - M - Mp)
     + 0.0533*Math.sin(2*D + Mp)
     + 0.0458*Math.sin(2*D - M)
-    + 0.0409*E*Math.sin(M - Mp)
+    - 0.0409*E*Math.sin(M - Mp)
     - 0.0347*Math.sin(D + Mp)
     - 0.0305*E*Math.sin(2*(D - M))
     - 0.0283*Math.sin(D)
