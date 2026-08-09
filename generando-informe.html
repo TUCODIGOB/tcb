@@ -541,7 +541,7 @@ async function generarDiagnosticoSilencioso(nombre, sexo, fechaNice, hora, lugar
   const response = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto })
+    body: JSON.stringify({ session_id: new URLSearchParams(window.location.search).get('session_id'), nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto })
   });
 
   if (!response.ok) throw new Error(await response.text());
