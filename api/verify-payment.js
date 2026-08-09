@@ -40,7 +40,7 @@ export default async function handler(req, res) {
       metadata: { ...session.metadata, informe_generado: 'si' }
     });
 
-    const email = session.customer_email;
+    const email = session.customer_email || session.customer_details?.email;
     const BREVO_API_KEY = process.env.BREVO_API_KEY;
 
     // Actualizar Brevo
