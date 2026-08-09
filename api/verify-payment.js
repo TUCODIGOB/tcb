@@ -50,7 +50,9 @@ export default async function handler(req, res) {
         headers: { 'accept': 'application/json', 'content-type': 'application/json', 'api-key': BREVO_API_KEY },
         body: JSON.stringify({ attributes: { P1_COMPRADO: 'si' } }),
       });
-    } catch(e) {}
+    } catch(e) {
+      console.error('Error actualizando Brevo:', e);
+    }
 
     return res.status(200).json({
       ok: true,
