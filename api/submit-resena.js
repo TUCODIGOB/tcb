@@ -38,7 +38,7 @@ export default async function handler(req, res) {
       const presignedUrl = await generatePresignedUrl({
         endpoint, accessKeyId, secretAccessKey, bucketName, objectKey, expiresIn: 3600,
       });
-      const publicUrl = `https://pub-45da8c6fce494400a69aad6c01be58d7.r2.dev/${objectKey}`;
+      const publicUrl = `${process.env.RESENA_R2_PUBLIC_URL}${objectKey}`;
 
       return res.status(200).json({ presignedUrl, publicUrl, objectKey });
     }
