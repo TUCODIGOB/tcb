@@ -12,7 +12,9 @@ export default async function handler(req, res) {
     const data = await r.json();
     if (data && typeof data.rawOffset === 'number') {
       const month = parseInt(fechaISO.split('-')[1]);
-      const isDST = typeof data.dstOffset === 'number' && month >= 4 && month <= 10;
+      // Hemisferio norte: horario de verano abril-octubre. Hemisferio sur (lat < 0): al revés, octubre-marzo.
+      const enRangoDST = lat < 0 ? (month >= 10 || month <= 3) : (month >= 4 && month <= 10);
+      const isDST = typeof data.dstOffset === 'number' && enRangoDST;
       return res.status(200).json({ offset: isDST ? data.dstOffset : data.rawOffset });
     }
     return res.status(500).json({ error: 'No offset' });
