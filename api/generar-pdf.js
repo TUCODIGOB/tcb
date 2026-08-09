@@ -290,6 +290,23 @@ export default async function handler(req, res) {
       }
     }
 
+    // Casa Whole Sign de un planeta, a partir de su longitud cruda y del array "casas" que
+    // calcular-carta.js ya calcula (cúspides whole-sign, en grados, indexadas 0=Casa1...11=Casa12)
+    function casaDe(raw) {
+      if (!carta.casas || raw === undefined || raw === null) return '-';
+      var signStart = Math.floor((((raw % 360) + 360) % 360) / 30) * 30;
+      var idx = carta.casas.indexOf(signStart);
+      return idx >= 0 ? String(idx + 1) : '-';
+    }
+
+    // Formato grados/minutos + N/S, mismo estilo que ya usaba la tabla (p.ej. "3 45 N")
+    function formatGradosNS(val) {
+      if (val === undefined || val === null) return '-';
+      var abs = Math.abs(val), deg = Math.floor(abs), min = Math.round((abs - deg) * 60);
+      if (min === 60) { deg += 1; min = 0; }
+      return deg + ' ' + min + ' ' + (val >= 0 ? 'N' : 'S');
+    }
+
     function tablaPositions(sx, sy) {
       var cols = [sx, sx+30, sx+65, sx+80, sx+96];
       var rH = 5.5, y = sy;
@@ -299,15 +316,15 @@ export default async function handler(req, res) {
       for (var h2=0;h2<heads.length;h2++) doc.text(heads[h2],cols[h2]+1,y+3.8);
       y += rH;
       var rows = [
-        ['Sol',carta.sol||'-','6','0 0 N','3 25 S'],
-        ['Luna',carta.luna||'-','4','3 45 N','19 0 S'],
-        ['Mercurio',carta.mercurio||'-','5','2 52 N','4 57 S'],
-        ['Venus',carta.venus||'-','8','1 30 N','14 49 N'],
-        ['Marte',carta.marte||'-','11','4 2 N','15 14 N'],
-        ['Jupiter',carta.jupiter||'-','11','1 19 N','11 32 N'],
-        ['Saturno',carta.saturno||'-','12','2 24 N','4 39 N'],
-        ['Urano',carta.urano||'-','2','0 17 N','18 51 S'],
-        ['Neptuno',carta.neptuno||'-','3','1 22 N','21 51 S'],
+        ['Sol',carta.sol||'-',casaDe(carta.solRaw),formatGradosNS(carta.solLatDeg),formatGradosNS(carta.solDeclDeg)],
+        ['Luna',carta.luna||'-',casaDe(carta.lunaRaw),'3 45 N','19 0 S'],
+        ['Mercurio',carta.mercurio||'-',casaDe(carta.mercRaw),'2 52 N','4 57 S'],
+        ['Venus',carta.venus||'-',casaDe(carta.venRaw),'1 30 N','14 49 N'],
+        ['Marte',carta.marte||'-',casaDe(carta.marRaw),'4 2 N','15 14 N'],
+        ['Jupiter',carta.jupiter||'-',casaDe(carta.jupRaw),'1 19 N','11 32 N'],
+        ['Saturno',carta.saturno||'-',casaDe(carta.satRaw),'2 24 N','4 39 N'],
+        ['Urano',carta.urano||'-',casaDe(carta.uraRaw),'0 17 N','18 51 S'],
+        ['Neptuno',carta.neptuno||'-',casaDe(carta.nepRaw),'1 22 N','21 51 S'],
         ['Ascendente',carta.ascendente||'-','-','-','-'],
       ];
       for (var r3=0;r3<rows.length;r3++) {

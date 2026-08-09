@@ -199,6 +199,8 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
 
   // Planetas
   const sunL  = sunLongitude(T);
+  // Declinación del Sol (latitud eclíptica del Sol ≈ 0° por definición del propio eclíptico)
+  const sunDeclDeg = _D(Math.asin(Math.sin(epsTR) * Math.sin(_R(sunL))));
   const moonL = moonLongitude(T);
   const mercL = mercuryLongitude(T);
   const venL  = venusLongitude(T);
@@ -230,7 +232,10 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     neptuno:    signoNombre(nepL),
     nodoNorte:  signoNombre(nodeL),
     ascRaw:  ASC,
+    casas:   casas,
     solRaw:  sunL,
+    solLatDeg:  0,
+    solDeclDeg: sunDeclDeg,
     lunaRaw: moonL,
     mercRaw: mercL,
     venRaw:  venL,
