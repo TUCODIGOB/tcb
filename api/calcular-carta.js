@@ -148,7 +148,21 @@ function _planet(L0,L1,L2,w0,w1,a,e,I0,I1,O0,O1,T) {
   const OR = _R(O);
   const x = r*(Math.cos(OR)*Math.cos(u) - Math.sin(OR)*Math.sin(u)*Math.cos(I));
   const y = r*(Math.sin(OR)*Math.cos(u) + Math.cos(OR)*Math.sin(u)*Math.cos(I));
-  return { x, y };
+  const z = r*Math.sin(u)*Math.sin(I);    // componente fuera del plano eclíptico (para latitud)
+  return { x, y, z };
+}
+// Latitud eclíptica geocéntrica a partir de la posición heliocéntrica 3D del planeta (p.x,p.y,p.z)
+// y la posición heliocéntrica de la Tierra (siempre con z=0, la Tierra define el plano eclíptico)
+function _eclipticLatitude(p, earth) {
+  const ex = earth.r*Math.cos(_R(earth.lon));
+  const ey = earth.r*Math.sin(_R(earth.lon));
+  const dx = p.x - ex, dy = p.y - ey;
+  return _D(Math.atan2(p.z, Math.sqrt(dx*dx + dy*dy)));
+}
+// Declinación ecuatorial a partir de longitud + latitud eclíptica y la oblicuidad (fórmula estándar)
+function _declinacion(lambdaDeg, betaDeg, epsR) {
+  const lam = _R(lambdaDeg), bet = _R(betaDeg);
+  return _D(Math.asin(Math.sin(bet)*Math.cos(epsR) + Math.cos(bet)*Math.sin(epsR)*Math.sin(lam)));
 }
 function mercuryLongitude(T) { const e=_earthHelio(T); const p=_planet(252.250906,149474.0722491,0.00030350,77.45611904,0.1593667,0.38709831,0.20563069, 7.00497902,-0.00594749, 48.33076593,-0.12534081,T); return _helioToGeo(p,e); }
 function venusLongitude(T)   { const e=_earthHelio(T); const p=_planet(181.979801,58519.2130302,0.00031014,131.563703,0.0048746,0.72332982,0.00677323, 3.39467605,-0.00078890, 76.67984255,-0.27769418,T); return _helioToGeo(p,e); }
@@ -157,6 +171,16 @@ function jupiterLongitude(T) { const e=_earthHelio(T); const p=_planet(34.351519
 function saturnLongitude(T)  { const e=_earthHelio(T); const p=_planet(50.077444,1223.5110686,0.00051908,93.056787,0.5665496,9.55184,0.05550825, 2.48599187,0.00193609, 113.66242448,-0.28867794,T); return _helioToGeo(p,e); }
 function uranusLongitude(T)  { const e=_earthHelio(T); const p=_planet(314.055005,429.8640561,0,173.005159,0.0893158,19.21814,0.04629590, 0.77263783,-0.00242939, 74.01692503,0.04240589,T); return _helioToGeo(p,e); }
 function neptuneLongitude(T) { const e=_earthHelio(T); const p=_planet(304.348665,219.8833092,0,48.120276,0.0291866,30.10957,0.00898809, 1.77004347,0.00035372, 131.78422574,-0.00508664,T); return _helioToGeo(p,e); }
+
+// Latitud eclíptica geocéntrica de cada planeta (mismos elementos orbitales que sus funciones
+// de longitud de arriba, sin tocarlas — aquí solo se usa la componente z, antes descartada)
+function mercuryLatitude(T) { const e=_earthHelio(T); const p=_planet(252.250906,149474.0722491,0.00030350,77.45611904,0.1593667,0.38709831,0.20563069, 7.00497902,-0.00594749, 48.33076593,-0.12534081,T); return _eclipticLatitude(p,e); }
+function venusLatitude(T)   { const e=_earthHelio(T); const p=_planet(181.979801,58519.2130302,0.00031014,131.563703,0.0048746,0.72332982,0.00677323, 3.39467605,-0.00078890, 76.67984255,-0.27769418,T); return _eclipticLatitude(p,e); }
+function marsLatitude(T)    { const e=_earthHelio(T); const p=_planet(355.433275,19141.6964746,0.00031052,336.560357,0.4442616,1.52366231,0.09341233, 1.84969142,-0.00813131, 49.55953891,-0.29257343,T); return _eclipticLatitude(p,e); }
+function jupiterLatitude(T) { const e=_earthHelio(T); const p=_planet(34.351519,3036.3027748,0.00022330,14.331532,0.3371283,5.20252,0.04849485, 1.30439695,-0.00183714, 100.47390909,0.20469106,T); return _eclipticLatitude(p,e); }
+function saturnLatitude(T)  { const e=_earthHelio(T); const p=_planet(50.077444,1223.5110686,0.00051908,93.056787,0.5665496,9.55184,0.05550825, 2.48599187,0.00193609, 113.66242448,-0.28867794,T); return _eclipticLatitude(p,e); }
+function uranusLatitude(T)  { const e=_earthHelio(T); const p=_planet(314.055005,429.8640561,0,173.005159,0.0893158,19.21814,0.04629590, 0.77263783,-0.00242939, 74.01692503,0.04240589,T); return _eclipticLatitude(p,e); }
+function neptuneLatitude(T) { const e=_earthHelio(T); const p=_planet(304.348665,219.8833092,0,48.120276,0.0291866,30.10957,0.00898809, 1.77004347,0.00035372, 131.78422574,-0.00508664,T); return _eclipticLatitude(p,e); }
 
 // Nodo Norte de la Luna
 function lunarNode(T) {
@@ -211,6 +235,22 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
   const nepL  = neptuneLongitude(T);
   const nodeL = lunarNode(T);
 
+  // Latitud eclíptica y declinación de Mercurio a Neptuno (aditivo, ver funciones xxxLatitude arriba)
+  const mercLatDeg = mercuryLatitude(T);
+  const mercDeclDeg = _declinacion(mercL, mercLatDeg, epsTR);
+  const venLatDeg  = venusLatitude(T);
+  const venDeclDeg  = _declinacion(venL, venLatDeg, epsTR);
+  const marLatDeg  = marsLatitude(T);
+  const marDeclDeg  = _declinacion(marL, marLatDeg, epsTR);
+  const jupLatDeg  = jupiterLatitude(T);
+  const jupDeclDeg  = _declinacion(jupL, jupLatDeg, epsTR);
+  const satLatDeg  = saturnLatitude(T);
+  const satDeclDeg  = _declinacion(satL, satLatDeg, epsTR);
+  const uraLatDeg  = uranusLatitude(T);
+  const uraDeclDeg  = _declinacion(uraL, uraLatDeg, epsTR);
+  const nepLatDeg  = neptuneLatitude(T);
+  const nepDeclDeg  = _declinacion(nepL, nepLatDeg, epsTR);
+
   const signoNombre = (d) => {
     const signos = ['Aries','Tauro','Géminis','Cáncer','Leo','Virgo','Libra','Escorpio','Sagitario','Capricornio','Acuario','Piscis'];
     d = _mod(d, 360);
@@ -238,12 +278,26 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     solDeclDeg: sunDeclDeg,
     lunaRaw: moonL,
     mercRaw: mercL,
+    mercLatDeg: mercLatDeg,
+    mercDeclDeg: mercDeclDeg,
     venRaw:  venL,
+    venLatDeg: venLatDeg,
+    venDeclDeg: venDeclDeg,
     marRaw:  marL,
+    marLatDeg: marLatDeg,
+    marDeclDeg: marDeclDeg,
     jupRaw:  jupL,
+    jupLatDeg: jupLatDeg,
+    jupDeclDeg: jupDeclDeg,
     satRaw:  satL,
+    satLatDeg: satLatDeg,
+    satDeclDeg: satDeclDeg,
     uraRaw:  uraL,
+    uraLatDeg: uraLatDeg,
+    uraDeclDeg: uraDeclDeg,
     nepRaw:  nepL,
+    nepLatDeg: nepLatDeg,
+    nepDeclDeg: nepDeclDeg,
     nodeRaw: nodeL,
     lat:     latDeg,
     lon:     lonDeg,
