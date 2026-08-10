@@ -18,6 +18,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  let sessionMetadata = {};
   {
     const { session_id } = req.body;
 
@@ -30,6 +31,10 @@ export default async function handler(req, res) {
       if (!session || session.payment_status !== 'paid') {
         return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
       }
+      if (session.metadata?.informe_completado === 'si') {
+        return res.status(403).json({ error: 'Este informe ya fue generado.' });
+      }
+      sessionMetadata = session.metadata || {};
     } catch (err) {
       return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
     }
@@ -516,6 +521,15 @@ export default async function handler(req, res) {
 
     // ── Devolver PDF en base64 ────────────────────────────────────────────────
     const pdfBase64 = doc.output('datauristring');
+
+    // Marcar el informe como completado para bloquear generaciones repetidas
+    try {
+      await stripe.checkout.sessions.update(session_id, {
+        metadata: { ...sessionMetadata, informe_completado: 'si' }
+      });
+    } catch (err) {
+      console.error('Error marcando informe_completado:', err.message);
+    }
 
     return res.status(200).json({ pdfBase64 });
 
