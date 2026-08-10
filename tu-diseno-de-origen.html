@@ -2126,7 +2126,14 @@ h2 { font-size: 2.5rem; }
         banner.textContent = 'Por favor, revisa los campos marcados en rojo antes de continuar.';
         banner.classList.add('show');
         const primerError = document.querySelector('.error');
-        if (primerError) primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (primerError) {
+          // Si el campo con error está en un paso oculto, navegamos ahí primero para que se vea
+          const pasoDelError = primerError.closest('.form-step');
+          if (pasoDelError && pasoDelError.classList.contains('hidden')) {
+            irAPaso(Number(pasoDelError.dataset.formStep));
+          }
+          primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
         return;
       }
 
