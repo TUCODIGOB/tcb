@@ -111,10 +111,10 @@ async function enviarEmailAdmin(nombre, email, fecha, videoUrl, objectKey) {
   const body = {
     sender: { email: 'hola@origennatal.com', name: 'Origen Natal — Reseñas' },
     to: [{ email: 'hola.origennatal@gmail.com', name: 'Origen Natal' }],
-    subject: '🎬 RESEÑA RECIBIDA TCB',
+    subject: '🎬 RESEÑA RECIBIDA',
     htmlContent: `
       <div style="font-family:Arial,sans-serif;padding:24px;background:#fffbef;max-width:600px;">
-        <h2 style="color:#0e3f4b;margin-bottom:20px;">🎬 RESEÑA RECIBIDA TCB</h2>
+        <h2 style="color:#0e3f4b;margin-bottom:20px;">🎬 RESEÑA RECIBIDA</h2>
         <table style="width:100%;border-collapse:collapse;">
           <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;width:160px;">Nombre:</td><td style="padding:8px 0;color:#333;">${nombre}</td></tr>
           <tr><td style="padding:8px 0;font-weight:600;color:#0e3f4b;">Email:</td><td style="padding:8px 0;color:#333;">${email}</td></tr>
