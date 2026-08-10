@@ -18,6 +18,9 @@ export default async function handler(req, res) {
     if (!session || session.payment_status !== 'paid') {
       return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
     }
+    if (session.metadata?.informe_completado === 'si') {
+      return res.status(403).json({ error: 'Este informe ya fue generado.' });
+    }
   } catch (err) {
     return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
   }
