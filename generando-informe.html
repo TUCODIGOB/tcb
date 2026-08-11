@@ -432,6 +432,11 @@ function showError(msg, hideSupportBox) {
     return;
   }
 
+  // Pago verificado correctamente: el pedido guardado ya no hace falta
+  try {
+    localStorage.removeItem('tcb_pedido');
+  } catch (e) {}
+
   // Si localStorage no tiene datos, usamos los metadata de Stripe como fallback
   if ((!pedido || !pedido.nombre || !pedido.fecha || !pedido.hora) && verificado.metadata) {
     const m = verificado.metadata;

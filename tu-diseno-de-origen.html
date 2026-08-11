@@ -1966,8 +1966,26 @@ h2 { font-size: 2.5rem; }
 
       try {
         localStorage.setItem('tcb_pedido', JSON.stringify(datos));
+
+        // Enviamos el pedido completo a Brevo justo antes de salir hacia Stripe.
+        // sendBeacon (no fetch normal) porque la página redirige justo después
+        // y un fetch en curso podría cortarse.
+        const leadPayload = {
+          nombre: datos.nombre,
+          email: datos.email,
+          telefono: datos.telefonoCompleto,
+          sexo: datos.sexo,
+          fecha: datos.fecha,
+          hora: datos.hora,
+          municipio: datos.municipio,
+          provincia: datos.provincia,
+          pais: datos.pais,
+          edad: datos.edadCalculada,
+        };
+        const blob = new Blob([JSON.stringify(leadPayload)], { type: 'application/json' });
+        navigator.sendBeacon('/api/captar-lead', blob);
       } catch (err) {
-        // Si falla localStorage, seguimos igual (el webhook de Stripe recogerá los datos vía email)
+        // Si falla localStorage o el envío a Brevo, seguimos igual (el webhook de Stripe recogerá los datos vía email)
       }
 
       btn.textContent = 'Redirigiendo al pago seguro...';
@@ -2118,6 +2136,47 @@ h2 { font-size: 2.5rem; }
     document.querySelectorAll('.btn-back').forEach(btn => {
       btn.addEventListener('click', () => irAPaso(Number(btn.dataset.back)));
     });
+
+    // Si el usuario canceló el pago y vuelve, recuperamos su pedido guardado
+    // (nunca marcamos la política de privacidad automáticamente).
+    (function prefillDesdeCarrito() {
+      let pedido;
+      try {
+        pedido = JSON.parse(localStorage.getItem('tcb_pedido'));
+      } catch (err) {
+        return;
+      }
+      if (!pedido || !pedido.nombre || !pedido.fecha || !pedido.hora) return;
+
+      const setValue = (id, value) => {
+        const el = document.getElementById(id);
+        if (el && value !== undefined && value !== null) el.value = value;
+      };
+
+      setValue('nombre', pedido.nombre);
+      setValue('sexo', pedido.sexo);
+      setValue('municipio', pedido.municipio);
+      setValue('provincia', pedido.provincia);
+      setValue('pais', pedido.pais);
+      setValue('email', pedido.email);
+      setValue('email2', pedido.email);
+      setValue('prefijo', pedido.prefijo);
+      setValue('telefono', pedido.telefono);
+      actualizarBanderaTelefono();
+
+      const [anio, mes, dia] = (pedido.fecha || '').split('-');
+      setValue('fecha-dia', dia);
+      setValue('fecha-mes', mes);
+      setValue('fecha-anio', anio);
+      setValue('fecha', pedido.fecha);
+
+      const [hh, mm] = (pedido.hora || '').split(':');
+      setValue('hora-h', hh);
+      setValue('hora-m', mm);
+      setValue('hora', pedido.hora);
+
+      document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    })();
   </script>
 
 <script src="/cookie-consent.js"></script>

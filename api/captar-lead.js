@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  const { nombre, email, telefono } = req.body || {};
+  const { nombre, email, telefono, sexo, fecha, hora, municipio, provincia, pais, edad } = req.body || {};
 
   if (!email || !validarEmail(email)) {
     return res.status(400).json({ error: 'Email inválido' });
@@ -25,6 +25,12 @@ export default async function handler(req, res) {
 
     const attributes = { NOMBRE: nombre || '' };
     if (telefono) attributes.SMS = telefono;
+    if (sexo) attributes.SEXO = sexo;
+    if (fecha) attributes.FECHA_NAC = fecha;
+    if (hora) attributes.HORA_NAC = hora;
+    const lugarNac = [municipio, provincia, pais].filter(Boolean).join(', ');
+    if (lugarNac) attributes.LUGAR_NAC = lugarNac;
+    if (edad) attributes.EDAD = parseInt(edad);
 
     const resp = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
