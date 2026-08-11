@@ -1882,18 +1882,28 @@ h2 { font-size: 2.5rem; }
 
     // Validar lugar con Nominatim (OpenStreetMap) — gratis
     async function validarLugar(municipio, provincia, pais) {
+      // Un país de 1-2 caracteres nunca es un nombre real (el país más corto
+      // del mundo tiene 3+ letras) — lo rechazamos sin consultar la API.
+      if (pais.trim().length < 3) return { ok: false };
+
       const query = [municipio, provincia, pais].filter(Boolean).join(', ');
-      try {
-        const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&format=json&limit=1&addressdetails=1';
-        const r = await fetch(url, { headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' } });
-        const data = await r.json();
-        if (data && data.length > 0) {
+      const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&format=json&limit=1&addressdetails=1';
+
+      const INTENTOS = 3; // 1 intento inicial + 2 reintentos
+      for (let intento = 1; intento <= INTENTOS; intento++) {
+        try {
+          const r = await fetch(url, { headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' } });
+          if (!r.ok) throw new Error('Nominatim respondió ' + r.status);
+          const data = await r.json();
+          if (!data || data.length === 0) return { ok: false };
           return { ok: true, lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+        } catch (e) {
+          // Un lugar no verificable nunca debe dejar avanzar al pago, ni
+          // siquiera si el fallo es del servicio externo — pero antes de
+          // bloquear, absorbemos fallos transitorios con 2 reintentos.
+          if (intento === INTENTOS) return { ok: false };
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
-        return { ok: false };
-      } catch(e) {
-        // Si el servicio no responde, dejamos pasar (no penalizar por fallo externo)
-        return { ok: true, lat: 0, lon: 0, skipped: true };
       }
     }
 
