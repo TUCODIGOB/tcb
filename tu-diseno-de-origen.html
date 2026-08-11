@@ -2140,6 +2140,9 @@ h2 { font-size: 2.5rem; }
     // Si el usuario canceló el pago y vuelve, recuperamos su pedido guardado
     // (nunca marcamos la política de privacidad automáticamente).
     (function prefillDesdeCarrito() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('volver') !== '1') return;
+
       let pedido;
       try {
         pedido = JSON.parse(localStorage.getItem('tcb_pedido'));
@@ -2175,7 +2178,9 @@ h2 { font-size: 2.5rem; }
       setValue('hora-m', mm);
       setValue('hora', pedido.hora);
 
-      document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      params.delete('volver');
+      const nuevaUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '') + window.location.hash;
+      history.replaceState(null, '', nuevaUrl);
     })();
   </script>
 
