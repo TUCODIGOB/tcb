@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  const { nombre, email } = req.body || {};
+  const { nombre, email, telefono } = req.body || {};
 
   if (!email || !validarEmail(email)) {
     return res.status(400).json({ error: 'Email inválido' });
@@ -22,6 +22,9 @@ export default async function handler(req, res) {
   try {
     const BREVO_API_KEY = process.env.BREVO_API_KEY;
     if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
+
+    const attributes = { NOMBRE: nombre || '' };
+    if (telefono) attributes.SMS = telefono;
 
     const resp = await fetch('https://api.brevo.com/v3/contacts', {
       method: 'POST',
@@ -32,7 +35,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         email,
-        attributes: { NOMBRE: nombre || '' },
+        attributes,
         listIds: [11],
         updateEnabled: true,
       }),
