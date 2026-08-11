@@ -2032,9 +2032,9 @@ h2 { font-size: 2.5rem; }
 
     // Captación silenciosa del lead en Brevo al salir del campo email
     let ultimoLeadCaptado = '';
-    function capturarLead() {
+    function construirDatosLead() {
       const emailInput = document.getElementById('email');
-      if (!validarEmail(emailInput.value)) return;
+      if (!validarEmail(emailInput.value)) return null;
       const emailNormalizado = emailInput.value.trim().toLowerCase();
       const nombre = document.getElementById('nombre').value;
       const telefonoInput = document.getElementById('telefono').value;
@@ -2042,20 +2042,36 @@ h2 { font-size: 2.5rem; }
         ? document.getElementById('prefijo').value + ' ' + telefonoInput
         : '';
       const clave = emailNormalizado + '|' + nombre + '|' + telefono;
-      if (clave === ultimoLeadCaptado) return;
+      if (clave === ultimoLeadCaptado) return null;
       ultimoLeadCaptado = clave;
+      return { nombre, email: emailNormalizado, telefono };
+    }
+
+    function capturarLead() {
+      const datos = construirDatosLead();
+      if (!datos) return;
       fetch('/api/captar-lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nombre,
-          email: emailNormalizado,
-          telefono,
-        }),
+        body: JSON.stringify(datos),
       }).catch(() => {});
     }
+
+    function capturarLeadAlCerrar() {
+      const datos = construirDatosLead();
+      if (!datos) return;
+      const blob = new Blob([JSON.stringify(datos)], { type: 'application/json' });
+      navigator.sendBeacon('/api/captar-lead', blob);
+    }
+
     document.getElementById('email').addEventListener('blur', capturarLead);
     document.getElementById('telefono').addEventListener('blur', capturarLead);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        capturarLeadAlCerrar();
+      }
+    });
 
     // Formulario en 3 pasos
     const PASO_CAMPOS_REQUERIDOS = {
