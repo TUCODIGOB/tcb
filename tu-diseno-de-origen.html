@@ -1729,6 +1729,17 @@ h2 { font-size: 2.5rem; }
 
   <script>
 // Rellenar desplegables de fecha y hora
+    function actualizarFecha() {
+      const d = document.getElementById('fecha-dia').value;
+      const m = document.getElementById('fecha-mes').value;
+      const y = document.getElementById('fecha-anio').value;
+      document.getElementById('fecha').value = (d && m && y) ? y + '-' + m + '-' + d : '';
+    }
+    function actualizarHora() {
+      const h = document.getElementById('hora-h').value;
+      const m = document.getElementById('hora-m').value;
+      document.getElementById('hora').value = (h && m) ? h + ':' + m : '';
+    }
     (function() {
       const dia = document.getElementById('fecha-dia');
       for (let i = 1; i <= 31; i++) {
@@ -1758,17 +1769,6 @@ h2 { font-size: 2.5rem; }
         o.value = String(i).padStart(2, '0');
         o.textContent = String(i).padStart(2, '0');
         horaM.appendChild(o);
-      }
-      function actualizarFecha() {
-        const d = document.getElementById('fecha-dia').value;
-        const m = document.getElementById('fecha-mes').value;
-        const y = document.getElementById('fecha-anio').value;
-        document.getElementById('fecha').value = (d && m && y) ? y + '-' + m + '-' + d : '';
-      }
-      function actualizarHora() {
-        const h = document.getElementById('hora-h').value;
-        const m = document.getElementById('hora-m').value;
-        document.getElementById('hora').value = (h && m) ? h + ':' + m : '';
       }
       ['fecha-dia','fecha-mes','fecha-anio'].forEach(id => {
         document.getElementById(id).addEventListener('change', actualizarFecha);
@@ -2153,7 +2153,9 @@ h2 { font-size: 2.5rem; }
 
       const setValue = (id, value) => {
         const el = document.getElementById(id);
-        if (el && value !== undefined && value !== null) el.value = value;
+        if (!el || value === undefined || value === null) return;
+        if (el.tagName === 'SELECT' && ![...el.options].some(o => o.value === String(value))) return;
+        el.value = value;
       };
 
       setValue('nombre', pedido.nombre);
@@ -2171,12 +2173,12 @@ h2 { font-size: 2.5rem; }
       setValue('fecha-dia', dia);
       setValue('fecha-mes', mes);
       setValue('fecha-anio', anio);
-      setValue('fecha', pedido.fecha);
+      actualizarFecha();
 
       const [hh, mm] = (pedido.hora || '').split(':');
       setValue('hora-h', hh);
       setValue('hora-m', mm);
-      setValue('hora', pedido.hora);
+      actualizarHora();
 
       document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
