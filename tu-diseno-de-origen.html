@@ -2178,6 +2178,8 @@ h2 { font-size: 2.5rem; }
       setValue('hora-m', mm);
       setValue('hora', pedido.hora);
 
+      document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
       params.delete('volver');
       const nuevaUrl = window.location.pathname + (params.toString() ? '?' + params.toString() : '') + window.location.hash;
       history.replaceState(null, '', nuevaUrl);
