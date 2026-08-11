@@ -2030,6 +2030,24 @@ h2 { font-size: 2.5rem; }
       document.getElementById('politicaField').classList.remove('error');
     });
 
+    // Captación silenciosa del lead en Brevo al salir del campo email
+    let ultimoEmailCaptado = '';
+    document.getElementById('email').addEventListener('blur', () => {
+      const emailInput = document.getElementById('email');
+      if (!validarEmail(emailInput.value)) return;
+      const emailNormalizado = emailInput.value.trim().toLowerCase();
+      if (emailNormalizado === ultimoEmailCaptado) return;
+      ultimoEmailCaptado = emailNormalizado;
+      fetch('/api/captar-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: document.getElementById('nombre').value,
+          email: emailNormalizado,
+        }),
+      }).catch(() => {});
+    });
+
     // Formulario en 3 pasos
     const PASO_CAMPOS_REQUERIDOS = {
       1: ['nombre', 'email', 'email2'],
