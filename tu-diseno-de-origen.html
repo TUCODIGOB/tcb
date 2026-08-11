@@ -1777,24 +1777,6 @@ h2 { font-size: 2.5rem; }
         document.getElementById(id).addEventListener('change', actualizarHora);
       });
     })();
-
-    // El navegador puede restaurar los <select> (día/mes/año, hora/minuto) al
-    // volver con el botón "atrás", pero no sabe rellenar los inputs ocultos
-    // #fecha/#hora (solo los actualiza nuestro propio código, vía 'change').
-    // Los resincronizamos siempre al cargar: si los selects están vacíos
-    // (visita normal) esto no cambia nada; si el navegador ya los rellenó,
-    // #fecha/#hora quedan correctos sin que el usuario toque nada.
-    actualizarFecha();
-    actualizarHora();
-
-    // Si el navegador restaura la página desde bfcache (atrás/adelante),
-    // ningún script se re-ejecuta; resincronizamos por si acaso.
-    window.addEventListener('pageshow', (event) => {
-      if (event.persisted) {
-        actualizarFecha();
-        actualizarHora();
-      }
-    });
     // Tooltip tap en móvil
     const helpHora = document.getElementById('helpHora');
     helpHora.addEventListener('click', (e) => {
@@ -1911,6 +1893,8 @@ h2 { font-size: 2.5rem; }
     document.getElementById('formDatos').addEventListener('submit', async function(e) {
       e.preventDefault();
       clearAllErrors();
+      actualizarFecha();
+      actualizarHora();
 
       const datos = {
         nombre: document.getElementById('nombre').value.trim(),
@@ -2151,6 +2135,8 @@ h2 { font-size: 2.5rem; }
 
     document.querySelectorAll('.btn-next').forEach(btn => {
       btn.addEventListener('click', () => {
+        actualizarFecha();
+        actualizarHora();
         const pasoActual = btn.closest('.form-step').dataset.formStep;
         const requeridos = PASO_CAMPOS_REQUERIDOS[pasoActual] || [];
         let ok = true;
