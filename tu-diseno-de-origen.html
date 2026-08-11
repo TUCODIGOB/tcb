@@ -1968,8 +1968,8 @@ h2 { font-size: 2.5rem; }
         localStorage.setItem('tcb_pedido', JSON.stringify(datos));
 
         // Enviamos el pedido completo a Brevo justo antes de salir hacia Stripe.
-        // sendBeacon (no fetch normal) porque la página redirige justo después
-        // y un fetch en curso podría cortarse.
+        // keepalive: true (no fetch normal) porque la página redirige justo
+        // después y la petición debe sobrevivir a la navegación.
         const leadPayload = {
           nombre: datos.nombre,
           email: datos.email,
@@ -1982,8 +1982,12 @@ h2 { font-size: 2.5rem; }
           pais: datos.pais,
           edad: datos.edadCalculada,
         };
-        const blob = new Blob([JSON.stringify(leadPayload)], { type: 'application/json' });
-        navigator.sendBeacon('/api/captar-lead', blob);
+        fetch('/api/captar-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(leadPayload),
+          keepalive: true,
+        }).catch(() => {});
       } catch (err) {
         // Si falla localStorage o el envío a Brevo, seguimos igual (el webhook de Stripe recogerá los datos vía email)
       }
@@ -2078,8 +2082,12 @@ h2 { font-size: 2.5rem; }
     function capturarLeadAlCerrar() {
       const datos = construirDatosLead();
       if (!datos) return;
-      const blob = new Blob([JSON.stringify(datos)], { type: 'application/json' });
-      navigator.sendBeacon('/api/captar-lead', blob);
+      fetch('/api/captar-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos),
+        keepalive: true,
+      }).catch(() => {});
     }
 
     document.getElementById('email').addEventListener('blur', capturarLead);
