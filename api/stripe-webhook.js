@@ -157,6 +157,7 @@ async function guardarContactoBrevo(datos) {
     FECHA_NAC: datos.fecha || '',
     HORA_NAC: datos.hora || '',
     LUGAR_NAC: [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', '),
+    P1_COMPRADO: 'SI',
 };
 
   const body = {
