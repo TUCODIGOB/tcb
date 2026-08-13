@@ -99,7 +99,11 @@
       position: sticky; top: 0; z-index: 100;
       background: rgba(255,251,239,.92);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(189,144,72,.2);
+      border-bottom: 1px solid transparent;
+      transition: border-bottom-color .25s ease;
+    }
+    .nav.is-scrolled {
+      border-bottom-color: rgba(189,144,72,.2);
     }
     .nav-inner {
       display: flex; align-items: center; justify-content: space-between;
@@ -609,7 +613,7 @@ text-align: center;
       position: relative;
       overflow: hidden;
       background: #fffbef;
-      padding-block: 48px 40px;
+      padding-block: 35px 40px;
       text-align: center;
     }
 
@@ -641,10 +645,10 @@ text-align: center;
       font-weight: 500;
       font-size: 30px;
       color: var(--teal-deep);
-      letter-spacing: 5px;
+      letter-spacing: 1px;
       text-transform: uppercase;
     }
-    .hero-arc { margin: 18px auto 22px; }
+    .hero-arc { margin: 1px auto 22px; }
     .hero-arc svg { display: block; margin-inline: auto; }
 
     .hero-home h1 { width: 100%; max-width: 700px; color: var(--teal-deep); margin-bottom: 1.5rem; line-height: 1.25; }
@@ -684,7 +688,7 @@ text-align: center;
       background: linear-gradient(135deg, #0e3f4b, #14525f);
       box-shadow: 0 20px 50px rgba(14,63,75,.35);
       border: 1px solid rgba(207,177,128,.35);
-      margin-bottom: 1.8rem;
+      margin-bottom: 40px;
       display: flex; align-items: center; justify-content: center;
       overflow: hidden;
     }
@@ -1203,6 +1207,9 @@ h2 { font-size: 2.5rem; }
 .hero-sub { font-size: 22px; }
 .hero-statement { font-size: 22px; }
 .hero-offer { font-size: 22px; }
+.hero-kicker { font-size: 28px; }
+.hero-statement { margin-bottom: 40px; }
+.hero-video { margin-bottom: 50px; }
 .hero-home .container-home { width: calc(100% - 20px); }
 
       .areas-grid { grid-template-columns: 1fr; }
@@ -2368,6 +2375,11 @@ h2 { font-size: 2.5rem; }
     document.querySelectorAll('.hero-home .reveal').forEach(el => {
       setTimeout(() => el.classList.add('visible'), 80);
     });
+
+    const navEl = document.querySelector('.nav');
+    const updateNavScrolled = () => navEl.classList.toggle('is-scrolled', window.scrollY > 20);
+    updateNavScrolled();
+    window.addEventListener('scroll', updateNavScrolled, { passive: true });
   </script>
 </body>
 </html>
