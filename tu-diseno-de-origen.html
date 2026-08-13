@@ -619,10 +619,6 @@ text-align: center;
       position: absolute;
       display: block;
     }
-    .hero-orbit--tl { top: -140px; left: -140px; opacity: .16; }
-    .hero-orbit--br { bottom: -160px; right: -160px; opacity: .12; }
-    .hero-orbit--left { top: 50%; left: -90px; transform: translateY(-50%); opacity: .1; }
-    .hero-orbit--right { top: 50%; right: -90px; transform: translateY(-50%) scaleX(-1); opacity: .1; }
 
     /* Contenido del hero, sin tarjeta */
     .hero-home .container-home {
@@ -633,7 +629,6 @@ text-align: center;
       align-items: center;
     }
 
-    .hero-home h1,
     .hero-sub,
     .hero-statement,
     .hero-offer {
@@ -652,7 +647,7 @@ text-align: center;
     .hero-arc { margin: 18px auto 22px; }
     .hero-arc svg { display: block; margin-inline: auto; }
 
-    .hero-home h1 { color: var(--teal-deep); margin-bottom: 1.5rem; line-height: 1.25; }
+    .hero-home h1 { width: 100%; max-width: 700px; color: var(--teal-deep); margin-bottom: 1.5rem; line-height: 1.25; }
     .hero-home h1 .hero-script {
       display: inline-block;
       font-family: 'Italianno', cursive;
@@ -717,7 +712,7 @@ text-align: center;
       font-family: var(--font-body);
       font-weight: 400;
       color: #0c0c0c;
-      font-size: clamp(.95rem, 1.6vw, 1.05rem);
+      font-size: 20px;
       margin-bottom: 1.4rem;
     }
     .hero-offer strong { font-weight: 700; }
@@ -1207,6 +1202,7 @@ summary { font-size: 18px; }
 h2 { font-size: 2.5rem; }
 .hero-sub { font-size: 22px; }
 .hero-statement { font-size: 22px; }
+.hero-offer { font-size: 22px; }
 .hero-home .container-home { width: calc(100% - 20px); }
 
       .areas-grid { grid-template-columns: 1fr; }
@@ -1371,21 +1367,50 @@ h2 { font-size: 2.5rem; }
   <!-- HERO -->
   <section class="hero-home">
     <div class="hero-orbits" aria-hidden="true">
-      <svg class="hero-orbit hero-orbit--tl" viewBox="0 0 400 400" width="400" height="400" aria-hidden="true">
-        <circle cx="200" cy="200" r="180" fill="none" stroke="#cfb180" stroke-width="1"/>
-        <circle cx="200" cy="200" r="130" fill="none" stroke="#cfb180" stroke-width="1"/>
-        <circle cx="200" cy="200" r="80" fill="none" stroke="#cfb180" stroke-width="1"/>
+      <svg class="hero-orbit" viewBox="0 0 100 100" width="400" height="400" style="top:-140px;left:-140px;opacity:.18" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="31" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="19" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
       </svg>
-      <svg class="hero-orbit hero-orbit--br" viewBox="0 0 360 360" width="360" height="360" aria-hidden="true">
-        <circle cx="180" cy="180" r="160" fill="none" stroke="#cfb180" stroke-width="1"/>
-        <circle cx="180" cy="180" r="115" fill="none" stroke="#cfb180" stroke-width="1"/>
-        <circle cx="180" cy="180" r="70" fill="none" stroke="#cfb180" stroke-width="1"/>
+      <svg class="hero-orbit" viewBox="0 0 100 100" width="360" height="360" style="bottom:-160px;right:-160px;opacity:.14" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="31" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="19" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
       </svg>
-      <svg class="hero-orbit hero-orbit--left" viewBox="0 0 220 520" width="220" height="520" aria-hidden="true">
-        <path d="M 16 16 Q 200 260 16 504" fill="none" stroke="#cfb180" stroke-width="1"/>
+      <svg class="hero-orbit" viewBox="0 0 100 220" width="180" height="400" style="top:8%;left:-64px;opacity:.13" aria-hidden="true">
+        <path d="M 12 12 Q 90 110 12 208" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
       </svg>
-      <svg class="hero-orbit hero-orbit--right" viewBox="0 0 220 520" width="220" height="520" aria-hidden="true">
-        <path d="M 16 16 Q 200 260 16 504" fill="none" stroke="#cfb180" stroke-width="1"/>
+      <svg class="hero-orbit" viewBox="0 0 100 220" width="180" height="400" style="top:8%;right:-64px;opacity:.13;transform:scaleX(-1)" aria-hidden="true">
+        <path d="M 12 12 Q 90 110 12 208" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <svg class="hero-orbit" viewBox="0 0 100 100" width="100" height="100" style="top:12%;left:-30px;opacity:.2" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="28" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <svg class="hero-orbit" viewBox="0 0 100 100" width="90" height="90" style="top:16%;right:-24px;opacity:.18" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="28" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <svg class="hero-orbit" viewBox="0 0 100 220" width="140" height="260" style="top:58%;left:-46px;opacity:.15" aria-hidden="true">
+        <path d="M 12 12 Q 90 110 12 208" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <svg class="hero-orbit" viewBox="0 0 100 100" width="160" height="160" style="top:64%;right:-50px;opacity:.16" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="31" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="19" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <svg class="hero-orbit" viewBox="0 0 100 100" width="300" height="300" style="bottom:-100px;left:50%;transform:translateX(-50%);opacity:.12" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="31" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="19" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <svg class="hero-orbit" viewBox="0 0 100 100" width="80" height="80" style="bottom:6%;left:34%;opacity:.19" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="28" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+      </svg>
+      <svg class="hero-orbit" viewBox="0 0 100 100" width="110" height="110" style="bottom:3%;left:58%;opacity:.16" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
+        <circle cx="50" cy="50" r="28" fill="none" stroke="#cfb180" stroke-width="1" vector-effect="non-scaling-stroke"/>
       </svg>
     </div>
 
@@ -1394,14 +1419,13 @@ h2 { font-size: 2.5rem; }
       <div class="hero-arc">
         <svg viewBox="0 0 200 26" width="200" height="26" aria-hidden="true">
           <path d="M 10 4 Q 100 30 190 4" fill="none" stroke="#cfb180" stroke-width="1.1" stroke-linecap="round"/>
-          <circle cx="100" cy="19.5" r="2.2" fill="#bd9048"/>
         </svg>
       </div>
 
-      <h1>¿Y si el problema<br><span class="hero-script">nunca fuiste tú</span>?</h1>
+      <h1>¿Y si el problema <br class="break-mobile"><span class="hero-script">nunca fuiste tú</span>?</h1>
 
-      <p class="hero-sub">Hay algo que se formó en ti <strong>el día que naciste</strong> y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.</strong></p>
-      <p class="hero-statement">Y hasta que no lo descubras, nada va a cambiar de verdad.</p>
+      <p class="hero-sub">Hay algo que se formó en ti el día que naciste y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.</strong></p>
+      <p class="hero-statement">Y hasta que no lo descubras, nada cambiará de verdad.</p>
 
       <div class="hero-video">
         <!-- Cuando el vídeo esté listo: eliminar el botón de play e insertar
