@@ -631,8 +631,7 @@ text-align: center;
     }
 
     .hero-sub,
-    .hero-statement,
-    .hero-offer {
+    .hero-statement {
       width: 100%;
       max-width: 640px;
     }
@@ -676,16 +675,19 @@ text-align: center;
       margin-bottom: 1.8rem;
     }
 
-    .hero-video {
+    .hero-purchase {
       position: relative;
       width: 100%;
-      max-width: 760px;
+    }
+    .hero-video {
+      position: relative;
+      z-index: 2;
+      width: calc(100% - 120px);
+      margin-inline: auto;
       height: 300px;
-      border-radius: 4px;
+      border-radius: 3px;
       background: linear-gradient(135deg, #0e3f4b, #14525f);
-      box-shadow: 0 20px 50px rgba(14,63,75,.35);
-      border: 1px solid rgba(207,177,128,.35);
-      margin-bottom: 40px;
+      box-shadow: 0 16px 40px rgba(14,63,75,.28);
       display: flex; align-items: center; justify-content: center;
       overflow: hidden;
     }
@@ -709,12 +711,27 @@ text-align: center;
       border-color: transparent transparent transparent #fff;
     }
 
+    .hero-purchase-box {
+      position: relative;
+      z-index: 1;
+      width: calc(100% - 36px);
+      margin-inline: auto;
+      margin-top: -48px;
+      background: #ffffff;
+      border-radius: 3px;
+      box-shadow: 0 14px 42px rgba(14,63,75,.14);
+      padding: 74px 32px 40px;
+    }
+
     .hero-offer {
       font-family: var(--font-body);
       font-weight: 400;
       color: #0c0c0c;
       font-size: 20px;
       margin-bottom: 1.4rem;
+      width: 100%;
+      max-width: 640px;
+      margin-inline: auto;
     }
     .hero-offer strong { font-weight: 700; }
 
@@ -1206,7 +1223,8 @@ h2 { font-size: 2.5rem; }
 .hero-offer { font-size: 22px; }
 .hero-kicker { font-size: 28px; }
 .hero-statement { margin-bottom: 40px; }
-.hero-video { margin-bottom: 50px; }
+.hero-video { width: calc(100% - 48px); }
+.hero-purchase-box { width: calc(100% - 20px); }
 .hero-home .container-home { width: calc(100% - 20px); }
 
       .areas-grid { grid-template-columns: 1fr; }
@@ -1383,23 +1401,27 @@ h2 { font-size: 2.5rem; }
       <p class="hero-sub">Hay algo que se formó en ti el día que naciste y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.</strong></p>
       <p class="hero-statement">Y hasta que no lo descubras, nada cambiará de verdad.</p>
 
-      <div class="hero-video">
-        <!-- Cuando el vídeo esté listo: eliminar el botón de play e insertar
-             <iframe class="hero-video-embed" src="..." frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Tu Diseño de Origen"></iframe> -->
-        <button type="button" class="hero-video-play" aria-label="Reproducir vídeo de presentación">
-          <span></span>
-        </button>
+      <div class="hero-purchase">
+        <div class="hero-video">
+          <!-- Cuando el vídeo esté listo: eliminar el botón de play e insertar
+               <iframe class="hero-video-embed" src="..." frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Tu Diseño de Origen"></iframe> -->
+          <button type="button" class="hero-video-play" aria-label="Reproducir vídeo de presentación">
+            <span></span>
+          </button>
+        </div>
+
+        <div class="hero-purchase-box">
+          <p class="hero-offer">El estudio <strong style="color:#bd9048">100% personalizado</strong> que te explica, por fin, <strong>por qué eres como eres</strong> y <strong>por qué te pasa lo que te pasa.</strong></p>
+
+          <div class="price-wrap">
+            <div class="price-old-hero"><s>67</s><span class="currency">€</span></div>
+            <div class="price-tag-hero">47<span class="currency">€</span></div>
+          </div>
+
+          <a href="#formulario" class="btn-cta">Quiero descubrirlo&nbsp;→</a>
+          <p class="hero-trust-note">Lo recibes en minutos, sin cita, sin espera.</p>
+        </div>
       </div>
-
-      <p class="hero-offer">El estudio <strong style="color:#bd9048">100% personalizado</strong> que te explica, por fin, <strong>por qué eres como eres</strong> y <strong>por qué te pasa lo que te pasa.</strong></p>
-
-      <div class="price-wrap">
-        <div class="price-old-hero"><s>67</s><span class="currency">€</span></div>
-        <div class="price-tag-hero">47<span class="currency">€</span></div>
-      </div>
-
-      <a href="#formulario" class="btn-cta">Quiero descubrirlo&nbsp;→</a>
-      <p class="hero-trust-note">Lo recibes en minutos, sin cita, sin espera.</p>
     </div>
 
     <div class="hero-ribbon" aria-hidden="true">
