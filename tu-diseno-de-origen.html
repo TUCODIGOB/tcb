@@ -644,8 +644,12 @@ text-align: center;
       letter-spacing: 1px;
       text-transform: uppercase;
     }
-    .hero-arc { margin: 1px auto 22px; }
-    .hero-arc svg { display: block; margin-inline: auto; }
+    .hero-deco {
+      display: block;
+      width: 190px;
+      height: auto;
+      margin: 1px auto 22px;
+    }
 
     .hero-home h1 { width: 100%; max-width: 700px; color: var(--teal-deep); margin-bottom: 1.5rem; line-height: 1.25; }
     .hero-home h1 .hero-script {
@@ -1222,6 +1226,7 @@ h2 { font-size: 2.5rem; }
 .hero-statement { font-size: 22px; }
 .hero-offer { font-size: 22px; }
 .hero-kicker { font-size: 28px; }
+.hero-deco { width: 130px; }
 .hero-statement { margin-bottom: 40px; }
 .hero-video { width: calc(100% - 48px); }
 .hero-purchase-box { width: calc(100% - 20px); }
@@ -1391,11 +1396,7 @@ h2 { font-size: 2.5rem; }
   <section class="hero-home">
     <div class="container-home">
       <p class="hero-kicker">Tu Diseño de Origen</p>
-      <div class="hero-arc">
-        <svg viewBox="0 0 200 26" width="200" height="26" aria-hidden="true">
-          <path d="M 10 4 Q 100 30 190 4" fill="none" stroke="#cfb180" stroke-width="1.1" stroke-linecap="round"/>
-        </svg>
-      </div>
+      <img class="hero-deco" src="images/deco-1.webp" alt="" width="317" height="82" />
 
       <h1>¿Y si el problema <br class="break-mobile"><span class="hero-script">nunca fuiste tú</span>?</h1>
 
