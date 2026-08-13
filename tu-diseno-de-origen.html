@@ -608,58 +608,37 @@ text-align: center;
     .hero-home {
       position: relative;
       overflow: hidden;
-      background: #f2e5cf;
-      padding-block: 64px 0;
-    }
-
-    /* Destellos decorativos (puntos de luz con rayos, no estrellas) */
-    .hero-glints { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
-    .hero-glint {
-      position: absolute;
-      animation: heroGlintPulse 3.6s ease-in-out infinite;
-    }
-    .hero-glint::before {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 4px; height: 4px;
-      margin: -2px 0 0 -2px;
-      border-radius: 50%;
       background: #fffbef;
-      box-shadow: 0 0 6px 2px rgba(189,144,72,.9);
-    }
-    .hero-glint::after {
-      content: '';
-      position: absolute;
-      top: 50%; left: 0;
-      width: 100%; height: 1px;
-      transform: translateY(-50%);
-      background: linear-gradient(to right, transparent, #bd9048, transparent);
-    }
-    .hero-glint i {
-      position: absolute;
-      top: 0; left: 50%;
-      width: 1px; height: 100%;
-      transform: translateX(-50%);
-      background: linear-gradient(to bottom, transparent, #bd9048, transparent);
-      font-style: normal;
-    }
-    @keyframes heroGlintPulse {
-      0%, 100% { opacity: .3; transform: scale(.6); }
-      50%      { opacity: 1;  transform: scale(1); }
+      padding-block: 48px 40px;
+      text-align: center;
     }
 
-    /* Tarjeta central */
-    .hero-home .container-home { display: flex; justify-content: center; }
-    .hero-card {
+    /* Patrón decorativo: arcos finos y órbitas concéntricas (sin iconografía astrológica) */
+    .hero-orbits { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .hero-orbit {
+      position: absolute;
+      display: block;
+    }
+    .hero-orbit--tl { top: -140px; left: -140px; opacity: .16; }
+    .hero-orbit--br { bottom: -160px; right: -160px; opacity: .12; }
+    .hero-orbit--left { top: 50%; left: -90px; transform: translateY(-50%); opacity: .1; }
+    .hero-orbit--right { top: 50%; right: -90px; transform: translateY(-50%) scaleX(-1); opacity: .1; }
+
+    /* Contenido del hero, sin tarjeta */
+    .hero-home .container-home {
       position: relative;
       z-index: 1;
-      width: min(640px, calc(100% - 68px));
-      background: rgba(255,251,239,.96);
-      border-radius: 3px;
-      box-shadow: 0 18px 55px rgba(14,63,75,.20);
-      padding: 44px 46px 40px;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-home h1,
+    .hero-sub,
+    .hero-statement,
+    .hero-offer {
+      width: 100%;
+      max-width: 640px;
     }
 
     .hero-kicker {
@@ -690,7 +669,6 @@ text-align: center;
       font-size: 20px;
       color: #0c0c0c;
       margin-bottom: 1.1rem;
-      max-width: none;
     }
     .hero-sub strong { font-weight: 700; color: #0c0c0c; }
 
@@ -704,10 +682,13 @@ text-align: center;
 
     .hero-video {
       position: relative;
+      width: 100%;
+      max-width: 760px;
       height: 300px;
       border-radius: 4px;
       background: linear-gradient(135deg, #0e3f4b, #14525f);
-      box-shadow: 0 14px 40px rgba(14,63,75,.28);
+      box-shadow: 0 20px 50px rgba(14,63,75,.35);
+      border: 1px solid rgba(207,177,128,.35);
       margin-bottom: 1.8rem;
       display: flex; align-items: center; justify-content: center;
       overflow: hidden;
@@ -762,7 +743,7 @@ text-align: center;
       opacity: .62;
     }
 
-    /* Cinta continua, fuera de la tarjeta */
+    /* Cinta continua al final del hero */
     .hero-ribbon {
       position: relative;
       z-index: 1;
@@ -1226,7 +1207,7 @@ summary { font-size: 18px; }
 h2 { font-size: 2.5rem; }
 .hero-sub { font-size: 22px; }
 .hero-statement { font-size: 22px; }
-.hero-card { width: min(640px, calc(100% - 32px)); padding: 28px 20px; }
+.hero-home .container-home { width: calc(100% - 20px); }
 
       .areas-grid { grid-template-columns: 1fr; }
 .area-title { font-size: 1.5rem; }
@@ -1389,50 +1370,56 @@ h2 { font-size: 2.5rem; }
 
   <!-- HERO -->
   <section class="hero-home">
-    <div class="hero-glints" aria-hidden="true">
-      <div class="hero-glint" style="top:8%;left:6%;width:28px;height:28px;animation-delay:0s"><i></i></div>
-      <div class="hero-glint" style="top:14%;left:88%;width:34px;height:34px;animation-delay:.4s"><i></i></div>
-      <div class="hero-glint" style="top:30%;left:16%;width:22px;height:22px;animation-delay:.9s"><i></i></div>
-      <div class="hero-glint" style="top:26%;left:78%;width:40px;height:40px;animation-delay:1.3s"><i></i></div>
-      <div class="hero-glint" style="top:52%;left:4%;width:46px;height:46px;animation-delay:1.8s"><i></i></div>
-      <div class="hero-glint" style="top:60%;left:92%;width:26px;height:26px;animation-delay:2.2s"><i></i></div>
-      <div class="hero-glint" style="top:78%;left:20%;width:32px;height:32px;animation-delay:2.7s"><i></i></div>
-      <div class="hero-glint" style="top:82%;left:84%;width:24px;height:24px;animation-delay:3.1s"><i></i></div>
+    <div class="hero-orbits" aria-hidden="true">
+      <svg class="hero-orbit hero-orbit--tl" viewBox="0 0 400 400" width="400" height="400" aria-hidden="true">
+        <circle cx="200" cy="200" r="180" fill="none" stroke="#cfb180" stroke-width="1"/>
+        <circle cx="200" cy="200" r="130" fill="none" stroke="#cfb180" stroke-width="1"/>
+        <circle cx="200" cy="200" r="80" fill="none" stroke="#cfb180" stroke-width="1"/>
+      </svg>
+      <svg class="hero-orbit hero-orbit--br" viewBox="0 0 360 360" width="360" height="360" aria-hidden="true">
+        <circle cx="180" cy="180" r="160" fill="none" stroke="#cfb180" stroke-width="1"/>
+        <circle cx="180" cy="180" r="115" fill="none" stroke="#cfb180" stroke-width="1"/>
+        <circle cx="180" cy="180" r="70" fill="none" stroke="#cfb180" stroke-width="1"/>
+      </svg>
+      <svg class="hero-orbit hero-orbit--left" viewBox="0 0 220 520" width="220" height="520" aria-hidden="true">
+        <path d="M 16 16 Q 200 260 16 504" fill="none" stroke="#cfb180" stroke-width="1"/>
+      </svg>
+      <svg class="hero-orbit hero-orbit--right" viewBox="0 0 220 520" width="220" height="520" aria-hidden="true">
+        <path d="M 16 16 Q 200 260 16 504" fill="none" stroke="#cfb180" stroke-width="1"/>
+      </svg>
     </div>
 
     <div class="container-home">
-      <div class="hero-card">
-        <p class="hero-kicker">Tu Diseño de Origen</p>
-        <div class="hero-arc">
-          <svg viewBox="0 0 200 26" width="200" height="26" aria-hidden="true">
-            <path d="M 10 4 Q 100 30 190 4" fill="none" stroke="#cfb180" stroke-width="1.1" stroke-linecap="round"/>
-            <circle cx="100" cy="19.5" r="2.2" fill="#bd9048"/>
-          </svg>
-        </div>
-
-        <h1>¿Y si el problema<br><span class="hero-script">nunca fuiste tú</span>?</h1>
-
-        <p class="hero-sub">Hay algo que se formó en ti <strong>el día que naciste</strong> y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.</strong></p>
-        <p class="hero-statement">Y hasta que no lo descubras, nada va a cambiar de verdad.</p>
-
-        <div class="hero-video">
-          <!-- Cuando el vídeo esté listo: eliminar el botón de play e insertar
-               <iframe class="hero-video-embed" src="..." frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Tu Diseño de Origen"></iframe> -->
-          <button type="button" class="hero-video-play" aria-label="Reproducir vídeo de presentación">
-            <span></span>
-          </button>
-        </div>
-
-        <p class="hero-offer">El estudio <strong style="color:#bd9048">100% personalizado</strong> que te explica, por fin, <strong>por qué eres como eres</strong> y <strong>por qué te pasa lo que te pasa.</strong></p>
-
-        <div class="price-wrap">
-          <div class="price-old-hero"><s>67</s><span class="currency">€</span></div>
-          <div class="price-tag-hero">47<span class="currency">€</span></div>
-        </div>
-
-        <a href="#formulario" class="btn-cta">Quiero descubrirlo&nbsp;→</a>
-        <p class="hero-trust-note">Lo recibes en minutos, sin cita, sin espera.</p>
+      <p class="hero-kicker">Tu Diseño de Origen</p>
+      <div class="hero-arc">
+        <svg viewBox="0 0 200 26" width="200" height="26" aria-hidden="true">
+          <path d="M 10 4 Q 100 30 190 4" fill="none" stroke="#cfb180" stroke-width="1.1" stroke-linecap="round"/>
+          <circle cx="100" cy="19.5" r="2.2" fill="#bd9048"/>
+        </svg>
       </div>
+
+      <h1>¿Y si el problema<br><span class="hero-script">nunca fuiste tú</span>?</h1>
+
+      <p class="hero-sub">Hay algo que se formó en ti <strong>el día que naciste</strong> y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.</strong></p>
+      <p class="hero-statement">Y hasta que no lo descubras, nada va a cambiar de verdad.</p>
+
+      <div class="hero-video">
+        <!-- Cuando el vídeo esté listo: eliminar el botón de play e insertar
+             <iframe class="hero-video-embed" src="..." frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Tu Diseño de Origen"></iframe> -->
+        <button type="button" class="hero-video-play" aria-label="Reproducir vídeo de presentación">
+          <span></span>
+        </button>
+      </div>
+
+      <p class="hero-offer">El estudio <strong style="color:#bd9048">100% personalizado</strong> que te explica, por fin, <strong>por qué eres como eres</strong> y <strong>por qué te pasa lo que te pasa.</strong></p>
+
+      <div class="price-wrap">
+        <div class="price-old-hero"><s>67</s><span class="currency">€</span></div>
+        <div class="price-tag-hero">47<span class="currency">€</span></div>
+      </div>
+
+      <a href="#formulario" class="btn-cta">Quiero descubrirlo&nbsp;→</a>
+      <p class="hero-trust-note">Lo recibes en minutos, sin cita, sin espera.</p>
     </div>
 
     <div class="hero-ribbon" aria-hidden="true">
