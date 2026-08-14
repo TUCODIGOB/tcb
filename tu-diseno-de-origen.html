@@ -995,7 +995,7 @@ display: block;
     .b1-row { display: flex; align-items: stretch; }
     .b1-photo {
       flex: 0 0 46%;
-      margin: 28px 0 28px 28px;
+      margin: 60px 0 60px 30px;
       min-height: 400px;
       background: #e3d3b5;
     }
@@ -1005,7 +1005,7 @@ display: block;
     .b1-title {
       position: absolute;
       top: 70px;
-      left: 10%;
+      left: 28%;
       width: 54%;
       font-family: var(--font-display);
       font-weight: 700;
@@ -1022,11 +1022,11 @@ display: block;
       position: absolute;
       left: 50%;
       bottom: 0;
-      transform: translate(-50%, 50%);
+      transform: translate(-50%, calc(50% + 30px));
       width: min(600px, calc(100% - 40px));
       background: var(--beige-marca);
       padding: 40px 40px;
-      text-align: left;
+      text-align: center;
       z-index: 4;
     }
     .b1-card .b1-card-intro {
@@ -1040,10 +1040,12 @@ display: block;
       font-size: 16px;
       color: #3d3a33;
       margin: 0 0 10px;
-      padding-left: 22px;
-      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 8px;
     }
-    .b1-card .b1-card-q::before { content: '✓'; position: absolute; left: 0; color: var(--gold-deep); }
+    .b1-card .b1-card-q::before { content: '✓'; color: var(--gold-deep); }
     .b1-card .b1-card-q strong { color: var(--teal-deep); }
     .b1-card .b1-card-final {
       font-family: var(--font-display);
@@ -1058,7 +1060,7 @@ display: block;
     ══════════════════════════════════════════════ */
     .causa.b2 {
       background: var(--teal-deep);
-      padding: 110px 24px 90px;
+      padding: 180px 24px 90px;
       text-align: center;
     }
     .b2-inner { max-width: 520px; margin: 0 auto; }
@@ -1308,10 +1310,11 @@ display: block;
       .steps { grid-template-columns: 1fr; }
       .problema { padding-bottom: 200px; }
       .b1-row { flex-direction: column; }
-      .b1-photo { flex-basis: auto; min-height: 240px; margin: 20px; }
-      .b1-textcol { padding: 30px 24px 20px; }
-      .b1-title { position: static; width: auto; font-size: 30px; margin: -30px 20px 24px; }
+      .b1-photo { flex-basis: auto; min-height: 240px; margin: 60px 0 30px 0; }
+      .b1-textcol { padding: 30px 0px 20px; text-align: center; }
+      .b1-title { position: static; width: auto; font-size: 30px; margin: -50px 20px 24px; text-align: center; }
       .b1-card { padding: 32px 28px; }
+      .causa.b2 { padding: 240px 24px 90px; }
       .price-wrap { margin-bottom: 14px; }
       .hero-purchase-box { padding: 100px 10px 60px; }
     }
@@ -1562,13 +1565,13 @@ y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.<
         <div class="b1-photo">
           <!-- FOTO PENDIENTE -->
         </div>
+        <h2 class="b1-title reveal">Lo has intentado <em>todo</em>…</h2>
         <div class="b1-textcol">
           <p class="b1-line reveal">Terapia, cursos, libros, cambios de trabajo, propósitos de año nuevo…</p>
           <p class="b1-line reveal"><strong>Y siempre acabas volviendo al mismo punto.</strong></p>
           <p class="b1-line reveal">Las mismas dudas, los mismos miedos, los mismos patrones en el amor, el dinero que nunca termina de fluir… Esa voz que te critica por dentro.</p>
         </div>
       </div>
-      <h2 class="b1-title reveal">Lo has intentado <em>todo</em>…</h2>
     </div>
 
     <div class="b1-wave" aria-hidden="true">
