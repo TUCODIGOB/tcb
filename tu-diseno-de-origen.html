@@ -982,30 +982,26 @@ display: block;
        PROBLEMA — foto ancha + tarjeta flotante
     ══════════════════════════════════════════════ */
     .problema {
+      position: relative;
       background: var(--cream);
-      padding-block: 0;
+      padding-block: 4.5rem;
       text-align: left;
     }
-    .problema-inner {
-      display: grid;
-      grid-template-columns: 1fr;
-      padding-block: 4.5rem;
-    }
     .problema-photo {
-      grid-column: 1;
-      grid-row: 1;
-      align-self: start;
       width: 100%;
-      height: 460px;
-      border-radius: var(--r-md);
+      height: 700px;
       background: #e3d3b5;
     }
+    .problema-card-wrap {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      pointer-events: none;
+    }
     .problema-card {
-      grid-column: 1;
-      grid-row: 1;
-      align-self: center;
-      justify-self: end;
-      z-index: 1;
+      pointer-events: auto;
       width: min(440px, 100%);
       background: var(--cream);
       border-radius: var(--r-md);
@@ -1262,12 +1258,13 @@ display: block;
       .hero-home h1, .hero-sub { text-align: center; }
       .steps { grid-template-columns: 1fr; }
       .problema-photo { height: 260px; }
-      .problema-card {
-        grid-row: 2;
-        align-self: start;
-        justify-self: stretch;
+      .problema-card-wrap.container-home {
+        position: static;
         width: 100%;
+        margin-inline: 0;
+        display: block;
       }
+      .problema-card { width: 100%; }
       .price-wrap { margin-bottom: 14px; }
       .hero-purchase-box { padding: 100px 10px 60px; }
     }
@@ -1513,10 +1510,10 @@ y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.<
 
   <!-- ════════════ 1. EL PROBLEMA QUE VIVES ════════════ -->
   <section class="problema">
-    <div class="container-home problema-inner">
-      <div class="problema-photo">
-        <!-- FOTO PENDIENTE -->
-      </div>
+    <div class="problema-photo">
+      <!-- FOTO PENDIENTE -->
+    </div>
+    <div class="container-home problema-card-wrap">
       <div class="problema-card">
         <h2 class="reveal">Lo has intentado <mark>todo</mark>…</h2>
         <p class="reveal">Terapia, cursos, libros, cambios de trabajo, propósitos de año nuevo… <strong>Y siempre acabas volviendo al mismo punto.</strong></p>
