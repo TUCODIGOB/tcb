@@ -105,6 +105,7 @@
     .nav.is-scrolled {
       border-bottom-color: rgba(189,144,72,.2);
     }
+    .nav.scrolled .nav-logo { display: none; }
     .nav-inner {
       display: flex; align-items: center; justify-content: space-between;
       padding-block: 6px;
@@ -532,7 +533,6 @@
       .nav-cta { width: 100%; text-align: center; font-size: 19px; padding: .6rem; }
       .nav-logo img { height: 34px; width: auto; }
       .nav.scrolled .nav-inner { padding-block: .4rem; }
-      .nav.scrolled .nav-logo { display: none; }
       .hero { padding-block: 2rem 1.5rem; }
       .form-card { padding: 1.5rem 1.2rem; }
       .field-row { grid-template-columns: 1fr; gap: 0; }
@@ -674,6 +674,7 @@ text-align: center;
     .hero-statement {
       font-family: var(--font-body);
       font-weight: 700;
+      font-style: italic;
       color: var(--teal-deep);
       font-size: 20px;
       margin-bottom: 1.8rem;
@@ -691,7 +692,7 @@ text-align: center;
       height: 300px;
       border-radius: 3px;
       background: linear-gradient(135deg, #0e3f4b, #14525f);
-      box-shadow: 0 16px 40px rgba(14,63,75,.28);
+      box-shadow: 0 5px 40px rgba(14, 63, 75, .28);
       display: flex; align-items: center; justify-content: center;
       overflow: hidden;
     }
@@ -1200,6 +1201,7 @@ display: block;
       .hero-home h1, .hero-sub { text-align: center; }
       .steps { grid-template-columns: 1fr; }
       .price-wrap { margin-bottom: 14px; }
+      .hero-purchase-box { padding: 74px 10px 40px; }
     }
     @media (max-width: 600px) {
 .problema blockquote { font-size: 24px; }
@@ -1397,7 +1399,8 @@ h2 { font-size: 2.5rem; }
     <div class="container-home">
       <h1>¿Y si el problema <br class="break-mobile"><span class="hero-script">nunca fuiste tú</span>?</h1>
 
-      <p class="hero-sub">Hay algo que se formó en ti el día que naciste y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.</strong></p>
+      <p class="hero-sub">Hay algo que se formó en ti el día que naciste</p>
+      <p class="hero-sub">y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.</strong></p>
       <p class="hero-statement">Y hasta que no lo descubras, nada cambiará de verdad.</p>
 
       <div class="hero-purchase">
