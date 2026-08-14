@@ -105,7 +105,7 @@
     .nav.is-scrolled {
       border-bottom-color: rgba(189,144,72,.2);
     }
-    .nav.scrolled .nav-logo { display: none; }
+    .nav.scrolled .nav-logo { visibility: hidden; }
     .nav-inner {
       display: flex; align-items: center; justify-content: space-between;
       padding-block: 6px;
@@ -533,6 +533,7 @@
       .nav-cta { width: 100%; text-align: center; font-size: 19px; padding: .6rem; }
       .nav-logo img { height: 34px; width: auto; }
       .nav.scrolled .nav-inner { padding-block: .4rem; }
+      .nav.scrolled .nav-logo { display: none; }
       .hero { padding-block: 2rem 1.5rem; }
       .form-card { padding: 1.5rem 1.2rem; }
       .field-row { grid-template-columns: 1fr; gap: 0; }
@@ -617,7 +618,7 @@ text-align: center;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      padding-block: 35px 40px;
+      padding-block: 35px 0;
       text-align: center;
     }
 
@@ -639,14 +640,14 @@ text-align: center;
     .hero-kicker {
       font-family: 'Playfair Display', Georgia, serif;
       font-weight: 500;
-      font-size: 30px;
+      font-size: 28px;
       color: var(--teal-deep);
       letter-spacing: 1px;
       text-transform: uppercase;
     }
     .hero-deco {
       display: block;
-      width: 190px;
+      width: 120px;
       height: auto;
       margin: 1px auto 22px;
     }
@@ -765,7 +766,7 @@ text-align: center;
     .hero-ribbon {
       position: relative;
       z-index: 1;
-      margin-top: 40px;
+      margin-top: 0;
       background: var(--teal-deep);
       overflow: hidden;
       white-space: nowrap;
@@ -1226,8 +1227,9 @@ summary { font-size: 18px; }
 h2 { font-size: 2.5rem; }
 .hero-sub { font-size: 22px; }
 .hero-statement { font-size: 22px; }
-.hero-offer { font-size: 22px; }
-.hero-kicker { font-size: 28px; }
+.hero-offer { font-size: 18px; }
+.hero-kicker { font-size: 26px; }
+.hero-ribbon-track span { font-size: 18px; }
 .hero-deco { width: 130px; }
 .hero-statement { margin-bottom: 40px; }
 .hero-video { width: calc(100% - 48px); }
@@ -1416,7 +1418,8 @@ y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.<
           <p class="hero-kicker">Tu Diseño de Origen</p>
           <img class="hero-deco" src="images/deco-1.webp" alt="" width="317" height="82" />
 
-          <p class="hero-offer">El estudio <strong style="color:#bd9048">100% personalizado</strong> que te explica, por fin, <strong>por qué eres como eres</strong> y <strong>por qué te pasa lo que te pasa.</strong></p>
+          <p class="hero-offer">El estudio <strong style="color:#bd9048">100% personalizado</strong> que te explica, por fin,<br>
+<strong>por qué eres como eres</strong> y <strong>por qué te pasa lo que te pasa.</strong></p>
 
           <div class="price-wrap">
             <div class="price-old-hero"><s>67</s><span class="currency">€</span></div>
