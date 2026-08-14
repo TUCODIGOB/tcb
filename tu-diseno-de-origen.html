@@ -79,6 +79,7 @@
       --white:       #ffffff;
       --ink:         #0c0c0c;
       --error:       #c0392b;
+      --beige-marca: #f1e4c9;
       --font-display: 'Playfair Display', Georgia, serif;
       --font-body:    'Open Sans', sans-serif;
       --r-sm: 6px;
@@ -551,6 +552,7 @@
       --cream:       #fffbef;
       --white:       #ffffff;
       --ink:         #0c0c0c;
+      --beige-marca: #f1e4c9;
 
       --font-display: 'Playfair Display', Georgia, serif;
       --font-body:    'Open Sans', sans-serif;
@@ -980,146 +982,115 @@ display: block;
       margin-bottom: 1rem;
     }
     /* ══════════════════════════════════════════════
-       PROBLEMA — foto ancha + tarjeta flotante
+       PROBLEMA — bloque 1: foto + texto + tarjeta a caballo
     ══════════════════════════════════════════════ */
     .problema {
       position: relative;
-      background: var(--cream);
-      padding-block: 0;
+      background: #ffffff;
+      padding-top: 0;
+      padding-bottom: 90px;
       text-align: left;
     }
-    .problema-photo {
-      width: 100%;
-      height: 700px;
+    .b1-inner { position: relative; }
+    .b1-row { display: flex; align-items: stretch; }
+    .b1-photo {
+      flex: 0 0 46%;
+      margin: 28px 0 28px 28px;
+      min-height: 400px;
       background: #e3d3b5;
     }
-    .problema-card-wrap {
+    .b1-textcol { flex: 1; padding: 210px 56px 40px 46px; }
+    .b1-textcol .b1-line { font-size: 16.8px; line-height: 1.7; color: #4a4538; margin: 0 0 12px; }
+    .b1-textcol .b1-line strong { color: var(--teal-deep); }
+    .b1-title {
       position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      pointer-events: none;
-    }
-    .problema-card {
-      pointer-events: auto;
-      width: min(440px, 100%);
-      background-color: #ffffff;
-      border-radius: 2px;
-      padding: 2.5rem 2.25rem;
-    }
-    .problema-card h2 {
-      color: var(--teal-deep);
-      margin-bottom: 1.2rem;
-    }
-    .problema-card h2 mark {
-      background-color: transparent;
-      background-image: linear-gradient(var(--gold-deep), var(--gold-deep));
-      background-repeat: no-repeat;
-      background-size: 100% 8px;
-      background-position: 0 100%;
-      color: inherit;
-      padding-bottom: 2px;
-    }
-    .problema-card p {
-      max-width: none;
-      font-size: 16.8px;
-      line-height: 1.7;
-      color: #0c0c0c;
-      margin-bottom: 1rem;
-    }
-    .problema-card p strong { font-weight: 700; }
-    .problema-questions p {
-      font-style: italic;
-      color: rgba(12,12,12,.55);
-      font-size: 16.8px;
-      line-height: 1.6;
-      margin-bottom: .4rem;
-    }
-    .problema-final {
+      top: 70px;
+      left: 10%;
+      width: 54%;
+      font-family: var(--font-display);
       font-weight: 700;
-      font-size: 19px;
+      font-size: 40px;
+      line-height: 1.25;
       color: var(--teal-deep);
-      margin-top: 1.4rem;
+      margin: 0;
+      z-index: 3;
+    }
+    .b1-title em { font-style: italic; color: var(--gold-deep); }
+    .b1-wave { position: absolute; left: 0; right: 0; bottom: 0; line-height: 0; }
+    .b1-wave svg { display: block; width: 100%; height: 90px; }
+    .b1-card {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      transform: translate(-50%, 50%);
+      width: min(600px, calc(100% - 40px));
+      background: var(--beige-marca);
+      padding: 40px 40px;
+      text-align: left;
+      z-index: 4;
+    }
+    .b1-card .b1-card-intro {
+      font-family: var(--font-display);
+      font-style: italic;
+      color: var(--teal-deep);
+      font-size: 19px;
+      margin: 0 0 16px;
+    }
+    .b1-card .b1-card-q {
+      font-size: 16px;
+      color: #3d3a33;
+      margin: 0 0 10px;
+      padding-left: 22px;
+      position: relative;
+    }
+    .b1-card .b1-card-q::before { content: '✓'; position: absolute; left: 0; color: var(--gold-deep); }
+    .b1-card .b1-card-q strong { color: var(--teal-deep); }
+    .b1-card .b1-card-final {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--teal-deep);
+      font-size: 19px;
+      margin-top: 18px;
       margin-bottom: 0;
     }
     /* ══════════════════════════════════════════════
-       CAUSA (bloque 2) — tarjeta oscura a caballo
+       CAUSA (bloque 2) — texto sobre fondo teal
     ══════════════════════════════════════════════ */
     .causa.b2 {
-      padding-top: 0;
-      padding-bottom: 0;
-    }
-    .b2-card {
-      position: relative;
-      margin: 0 auto;
-      transform: translateY(-50%);
-      max-width: 640px;
       background: var(--teal-deep);
-      padding: 64px 44px;
+      padding: 110px 24px 90px;
       text-align: center;
-      box-shadow: none;
     }
-    .b2-circles {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: -1;
-      pointer-events: none;
-    }
-    .b2-circles span {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(207,177,128,.12);
-      border-radius: 50%;
-    }
-    .b2-circles span:nth-child(1) { width: 140px; height: 140px; }
-    .b2-circles span:nth-child(2) { width: 230px; height: 230px; }
-    .b2-circles span:nth-child(3) { width: 320px; height: 320px; }
-    .b2-card .b2-eyebrow {
+    .b2-inner { max-width: 520px; margin: 0 auto; }
+    .b2-inner .b2-q {
       font-family: var(--font-display);
-      font-size: 20px;
+      font-size: 19px;
       color: rgba(255,251,239,.85);
-      margin-bottom: .4rem;
+      margin: 0 0 2px;
     }
-    .b2-card .b2-script {
+    .b2-inner .b2-cursive {
       font-family: 'Italianno', cursive;
       font-weight: 400;
-      font-size: 50px;
-      line-height: 1;
+      font-size: 48px;
       color: var(--gold-light);
-      margin-bottom: 1.2rem;
+      line-height: 1;
+      margin: 0 0 26px;
     }
-    .b2-card .b2-text {
-      font-family: var(--font-body);
+    .b2-inner .b2-line {
       font-size: 16.8px;
       line-height: 1.7;
-      color: rgba(255,251,239,.82);
-      max-width: none;
-      margin-bottom: 0;
+      color: rgba(255,251,239,.85);
+      margin: 0 0 14px;
     }
-    .b2-card .b2-text strong {
-      font-weight: 700;
-      color: var(--gold-light);
-    }
-    .b2-divider {
-      width: 44px;
-      height: 2px;
-      background: var(--gold-deep);
-      margin: 1.6rem auto;
-    }
-    .b2-card .b2-final {
+    .b2-inner .b2-line strong { color: var(--gold-light); }
+    .b2-rule { width: 44px; height: 2px; background: var(--gold-deep); margin: 22px auto 16px; }
+    .b2-inner .b2-final {
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 18px;
+      font-size: 19px;
       color: var(--gold-light);
-      margin-bottom: 0;
-    }
-    @media (max-width: 600px) {
-      .b2-card { width: calc(100% - 20px); }
+      line-height: 1.5;
+      margin: 0;
     }
     /* ══════════════════════════════════════════════
        PRICE & FINAL CTA
@@ -1335,14 +1306,12 @@ display: block;
       .price-old-hero, .price-tag-hero, .price-product-name { font-family: "Playfair Display", serif; }
       .hero-home h1, .hero-sub { text-align: center; }
       .steps { grid-template-columns: 1fr; }
-      .problema-photo { height: 260px; }
-      .problema-card-wrap.container-home {
-        position: static;
-        width: 100%;
-        margin-inline: 0;
-        display: block;
-      }
-      .problema-card { width: 100%; }
+      .problema { padding-bottom: 200px; }
+      .b1-row { flex-direction: column; }
+      .b1-photo { flex-basis: auto; min-height: 240px; margin: 20px; }
+      .b1-textcol { padding: 30px 24px 20px; }
+      .b1-title { position: static; width: auto; font-size: 30px; margin: -30px 20px 24px; }
+      .b1-card { padding: 32px 28px; }
       .price-wrap { margin-bottom: 14px; }
       .hero-purchase-box { padding: 100px 10px 60px; }
     }
@@ -1588,34 +1557,45 @@ y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.<
 
   <!-- ════════════ 1. EL PROBLEMA QUE VIVES ════════════ -->
   <section class="problema">
-    <div class="problema-photo">
-      <!-- FOTO PENDIENTE -->
-    </div>
-    <div class="container-home problema-card-wrap">
-      <div class="problema-card">
-        <h2 class="reveal">Lo has intentado <mark>todo</mark>…</h2>
-        <p class="reveal">Terapia, cursos, libros, cambios de trabajo, propósitos de año nuevo…<br>
-        Y siempre acabas volviendo al mismo punto.<br>
-        Las mismas dudas, los mismos miedos, los mismos patrones en el amor, el dinero que nunca termina de fluir… Esa voz que te critica por dentro.</p>
-        <p class="reveal">Y entonces piensas:</p>
-        <div class="problema-questions reveal">
-          <p>¿Por qué a todo el mundo le sale y a mí no?</p>
-          <p>¿Hay algo malo en mí?</p>
-          <p>¿Es que ya está, que esto es lo que hay?</p>
+    <div class="b1-inner container-home">
+      <div class="b1-row">
+        <div class="b1-photo">
+          <!-- FOTO PENDIENTE -->
         </div>
-        <p class="problema-final reveal">No es falta de esfuerzo, no es mala suerte, no es culpa tuya.</p>
+        <div class="b1-textcol">
+          <p class="b1-line reveal">Terapia, cursos, libros, cambios de trabajo, propósitos de año nuevo…</p>
+          <p class="b1-line reveal"><strong>Y siempre acabas volviendo al mismo punto.</strong></p>
+          <p class="b1-line reveal">Las mismas dudas, los mismos miedos, los mismos patrones en el amor, el dinero que nunca termina de fluir… Esa voz que te critica por dentro.</p>
+        </div>
       </div>
+      <h2 class="b1-title reveal">Lo has intentado <em>todo</em>…</h2>
+    </div>
+
+    <div class="b1-wave" aria-hidden="true">
+      <svg viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 C300,90 900,90 1200,0 L1200,90 L0,90 Z" fill="#0e3f4b"/>
+      </svg>
+    </div>
+
+    <div class="b1-card">
+      <p class="b1-card-intro reveal">Y entonces piensas:</p>
+      <p class="b1-card-q reveal"><strong>¿Por qué a todo el mundo le sale y a mí no?</strong></p>
+      <p class="b1-card-q reveal">¿Hay algo malo en mí?</p>
+      <p class="b1-card-q reveal">¿Es que ya está, que esto es lo que hay?</p>
+      <p class="b1-card-final reveal">No es falta de esfuerzo, no es mala suerte, no es culpa tuya.</p>
     </div>
   </section>
 
   <!-- ════════════ 2. POR QUÉ PASA ESTO ════════════ -->
   <section class="causa b2">
-    <div class="b2-card">
-      <div class="b2-circles" aria-hidden="true"><span></span><span></span><span></span></div>
-      <p class="b2-eyebrow reveal">Entonces, ¿qué está pasando?</p>
-      <p class="b2-script reveal">Te lo explico.</p>
-      <p class="b2-text reveal">Antes de que aprendieras a hablar, antes de tu primer recuerdo, antes incluso de tu primera respiración… ya se había formado algo en ti. Una <strong>programación única</strong> que decide cómo piensas, cómo sientes, cómo reaccionas y cómo te vinculas con todo lo que te rodea. Y dirige tu vida entera: tus decisiones, tus relaciones, tu dinero, tus miedos… todos los días, sin que te des cuenta.</p>
-      <div class="b2-divider reveal"></div>
+    <div class="b2-inner">
+      <p class="b2-q reveal">Entonces, ¿qué está pasando?</p>
+      <p class="b2-cursive reveal">Te lo explico.</p>
+      <p class="b2-line reveal">Antes de que aprendieras a hablar, antes de tu primer recuerdo, antes incluso de tu primera respiración… ya se había formado algo en ti.</p>
+      <p class="b2-line reveal">Una <strong>programación única</strong> que decide cómo piensas, cómo sientes, cómo reaccionas y cómo te vinculas con todo lo que te rodea.</p>
+      <p class="b2-line reveal">Y dirige tu vida entera: tus decisiones, tus relaciones, tu dinero, tus miedos…</p>
+      <p class="b2-line reveal">Todos los días, sin que te des cuenta.</p>
+      <div class="b2-rule reveal"></div>
       <p class="b2-final reveal">Y seguirá siendo así, año tras año, mientras sigas intentando cambiar sin saber desde dónde funciona todo.</p>
     </div>
   </section>
