@@ -1044,6 +1044,84 @@ display: block;
       margin-bottom: 0;
     }
     /* ══════════════════════════════════════════════
+       CAUSA (bloque 2) — tarjeta oscura a caballo
+    ══════════════════════════════════════════════ */
+    .causa.b2 {
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+    .b2-card {
+      position: relative;
+      margin: 0 auto;
+      transform: translateY(-50%);
+      max-width: 640px;
+      background: var(--teal-deep);
+      padding: 64px 44px;
+      text-align: center;
+      box-shadow: none;
+    }
+    .b2-circles {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      pointer-events: none;
+    }
+    .b2-circles span {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(207,177,128,.12);
+      border-radius: 50%;
+    }
+    .b2-circles span:nth-child(1) { width: 140px; height: 140px; }
+    .b2-circles span:nth-child(2) { width: 230px; height: 230px; }
+    .b2-circles span:nth-child(3) { width: 320px; height: 320px; }
+    .b2-card .b2-eyebrow {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: rgba(255,251,239,.85);
+      margin-bottom: .4rem;
+    }
+    .b2-card .b2-script {
+      font-family: 'Italianno', cursive;
+      font-weight: 400;
+      font-size: 50px;
+      line-height: 1;
+      color: var(--gold-light);
+      margin-bottom: 1.2rem;
+    }
+    .b2-card .b2-text {
+      font-family: var(--font-body);
+      font-size: 16.8px;
+      line-height: 1.7;
+      color: rgba(255,251,239,.82);
+      max-width: none;
+      margin-bottom: 0;
+    }
+    .b2-card .b2-text strong {
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+    .b2-divider {
+      width: 44px;
+      height: 2px;
+      background: var(--gold-deep);
+      margin: 1.6rem auto;
+    }
+    .b2-card .b2-final {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--gold-light);
+      margin-bottom: 0;
+    }
+    @media (max-width: 600px) {
+      .b2-card { width: calc(100% - 20px); }
+    }
+    /* ══════════════════════════════════════════════
        PRICE & FINAL CTA
     ══════════════════════════════════════════════ */
     .price-cta {
@@ -1531,13 +1609,14 @@ y lleva <strong>dirigiendo tu vida entera</strong>… <strong>sin que lo sepas.<
   </section>
 
   <!-- ════════════ 2. POR QUÉ PASA ESTO ════════════ -->
-  <section class="causa">
-    <div class="container-home">
-      <h2 class="reveal">Por qué pasa esto</h2>
-      <p class="reveal">Antes de tomar tu primera respiración, ya había una estructura formada en ti.<br>
-      Una configuración única que moldea cómo piensas, cómo sientes, cómo reaccionas y cómo te vinculas con todo.</p>
-      <p class="reveal">Esa configuración dirige tu vida entera: Tus decisiones, tus relaciones, tu dinero...</p>
-      <p class="reveal">Y lo hace sin que te des cuenta, <strong>hasta que la conoces.</strong></p>
+  <section class="causa b2">
+    <div class="b2-card">
+      <div class="b2-circles" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="b2-eyebrow reveal">Entonces, ¿qué está pasando?</p>
+      <p class="b2-script reveal">Te lo explico.</p>
+      <p class="b2-text reveal">Antes de que aprendieras a hablar, antes de tu primer recuerdo, antes incluso de tu primera respiración… ya se había formado algo en ti. Una <strong>programación única</strong> que decide cómo piensas, cómo sientes, cómo reaccionas y cómo te vinculas con todo lo que te rodea. Y dirige tu vida entera: tus decisiones, tus relaciones, tu dinero, tus miedos… todos los días, sin que te des cuenta.</p>
+      <div class="b2-divider reveal"></div>
+      <p class="b2-final reveal">Y seguirá siendo así, año tras año, mientras sigas intentando cambiar sin saber desde dónde funciona todo.</p>
     </div>
   </section>
 
