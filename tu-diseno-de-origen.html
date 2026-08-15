@@ -1096,8 +1096,23 @@ display: block;
       background: var(--teal-deep);
       padding: 180px 24px 90px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
     }
-    .b2-inner { max-width: 520px; margin: 0 auto; }
+    .b2-inner { max-width: 520px; margin: 0 auto; position: relative; z-index: 2; }
+    .b2-rings {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 680px; height: 680px;
+      border-radius: 50%;
+      border: 1px solid rgba(207,177,128,.12);
+    }
+    .b2-rings::before, .b2-rings::after {
+      content: ''; position: absolute; border-radius: 50%;
+      border: 1px solid rgba(207,177,128,.12);
+    }
+    .b2-rings::before { inset: 80px; }
+    .b2-rings::after { inset: 170px; }
     .b2-inner .b2-q {
       font-family: var(--font-display);
       font-size: 19px;
@@ -1351,6 +1366,7 @@ display: block;
       .b1-card { padding: 32px 28px; }
       .b1-card { transform: translate(-50%, calc(50% + -60px)); }
       .causa.b2 { padding: 240px 24px 90px; }
+      .b2-rings { display: none; }
       .price-wrap { margin-bottom: 14px; }
       .hero-purchase-box { padding: 100px 10px 60px; }
     }
@@ -1635,11 +1651,13 @@ y <span style="font-weight: 700; color: #0c0c0c;">dirige tu vida entera</span>�
       <p class="b1-card-q reveal">¿Hay algo malo en mí?</p>
       <p class="b1-card-q reveal">¿Es que ya está, que esto es lo que hay?</p>
       <p class="b1-card-final reveal">No es falta de esfuerzo, no es mala suerte, no es culpa tuya.</p>
+      <p class="b1-card-intro reveal">Pero, ¿qué está pasando?</p>
     </div>
   </section>
 
   <!-- ════════════ 2. POR QUÉ PASA ESTO ════════════ -->
   <section class="causa b2">
+    <div class="b2-rings" aria-hidden="true"></div>
     <div class="b2-inner">
       <p class="b2-q reveal">Entonces, ¿qué está pasando?</p>
       <p class="b2-cursive reveal">Te lo explico.</p>
