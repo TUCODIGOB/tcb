@@ -1056,7 +1056,7 @@ display: block;
       position: absolute;
       left: 50%;
       bottom: 0;
-      transform: translate(-50%, calc(50% + 60px));
+      transform: translate(-50%, calc(50% + 30px));
       width: min(600px, calc(100% - 40px));
       background: var(--cream);
       padding: 40px 40px;
@@ -1349,9 +1349,13 @@ display: block;
       .b1-textcol { padding: 30px 0px 20px; text-align: center; }
       .b1-title { position: static; width: auto; font-size: 40px; margin: -80px 10px 24px; text-align: center; }
       .b1-card { padding: 32px 28px; }
+      .b1-card { transform: translate(-50%, calc(50% + 0px)); }
       .causa.b2 { padding: 240px 24px 90px; }
       .price-wrap { margin-bottom: 14px; }
       .hero-purchase-box { padding: 100px 10px 60px; }
+    }
+    @media (min-width: 861px) {
+      .b1-card { transform: translate(-50%, calc(50% + 60px)); }
     }
     @media (max-width: 600px) {
 .problema blockquote { font-size: 24px; }
