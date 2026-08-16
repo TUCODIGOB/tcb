@@ -79,7 +79,6 @@
       --white:       #ffffff;
       --ink:         #0c0c0c;
       --error:       #c0392b;
-      --beige-marca: #f1e4c9;
       --font-display: 'Playfair Display', Georgia, serif;
       --font-body:    'Open Sans', sans-serif;
       --r-sm: 6px;
@@ -106,7 +105,7 @@
     .nav.is-scrolled {
       border-bottom-color: rgba(189,144,72,.2);
     }
-    .nav.scrolled .nav-logo { visibility: hidden; }
+    .nav.is-scrolled .nav-logo { visibility: hidden; }
     .nav-inner {
       display: flex; align-items: center; justify-content: space-between;
       padding-block: 6px;
@@ -514,7 +513,7 @@
       width: min(1100px, 92vw);
       margin-inline: auto;
     }
-    .footer-email a { color: var(--gold-light); font-weight: 500; }
+    .footer-email a { color: var(--gold-light); font-weight: 500; font-size: .82rem; }
     .footer-email a:hover { color: var(--white); }
     .footer-links {
       display: flex; flex-wrap: wrap;
@@ -527,40 +526,11 @@
     .footer-links .sep { opacity: .35; }
     .footer-copy { color: rgba(255,251,239,.4); font-size: .8rem; }
 
-    /* RESPONSIVE */
-    @media (max-width: 600px) {
-      .break-mobile-form { display: block; }
-      .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
-      .nav-cta { width: 100%; text-align: center; font-size: 19px; padding: .6rem; }
-      .nav-logo img { height: 34px; width: auto; }
-      .nav.scrolled .nav-inner { padding-block: .4rem; }
-      .nav.scrolled .nav-logo { display: none; }
-      .hero { padding-block: 2rem 1.5rem; }
-      .form-card { padding: 1.5rem 1.2rem; }
-      .field-row { grid-template-columns: 1fr; gap: 0; }
-      .phone-group { grid-template-columns: 110px 1fr; }
-      .help-icon .tooltip { width: 240px; }
-      .checkbox-field label { font-size: 11px; }
-    }
-  
+    /* Lo responsive de esta página está unificado en el bloque
+       @media (max-width: 600px) del final de la hoja. */
+
     /* ── BLOQUES COPIADOS DE INDEX.HTML ── */
-    /* ─── TOKENS ─────────────────────────────────── */
-    :root {
-      --teal-deep:   #0e3f4b;
-      --gold-deep:   #bd9048;
-      --gold-light:  #cfb180;
-      --cream:       #fffbef;
-      --white:       #ffffff;
-      --ink:         #0c0c0c;
-      --beige-marca: #f1e4c9;
-
-      --font-display: 'Playfair Display', Georgia, serif;
-      --font-body:    'Open Sans', sans-serif;
-
-      --r-sm: 6px;
-      --r-md: 12px;
-      --r-lg: 24px;
-    }
+    /* Los tokens de color y tipografía viven en el :root único de arriba. */
 
     /* ─── RESET ──────────────────────────────────── */
     body {
@@ -762,12 +732,7 @@ text-align: center;
     }
     .hero-home .price-old-hero { opacity: .32; }
 
-    .hero-home .btn-cta { animation: heroPulse 2.4s ease-in-out infinite; }
-    @keyframes heroPulse {
-      0%, 100% { box-shadow: 0 6px 28px rgba(189,144,72,.35); }
-      50%      { box-shadow: 0 10px 40px rgba(189,144,72,.6); }
-    }
-    .hero-home .btn-cta { animation: none; box-shadow: 0 4px 12px rgba(189,144,72,.25); }
+    .hero-home .btn-cta { box-shadow: 0 4px 12px rgba(189,144,72,.25); }
     .hero-home .btn-cta:hover { box-shadow: 0 6px 18px rgba(189,144,72,.35); }
 
     .hero-trust-note {
@@ -915,16 +880,6 @@ display: block;
       height: auto;
       display: block;
     }
-    @media (min-width: 768px) {
-      .review-img {
-        width: 85%;
-        margin: 0 auto;
-        border-radius: 8px;
-      }
-      .reviews-grid {
-        gap: 2.5rem;
-      }
-    }
     .video-testimonios {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -948,6 +903,14 @@ display: block;
       border: 0;
     }
     @media (min-width: 768px) {
+      .review-img {
+        width: 85%;
+        margin: 0 auto;
+        border-radius: 8px;
+      }
+      .reviews-grid {
+        gap: 2.5rem;
+      }
       .video-wrap {
         width: 85%;
         margin: 0 auto;
@@ -970,15 +933,13 @@ display: block;
       padding-block: 4.5rem;
       text-align: center;
     }
-    .problema, .causa {
-      background: var(--cream);
-    }
     .causa { background: #f5efdf; }
-    .problema h2, .causa h2, .garantia h2 {
+    /* El h2 de .problema es siempre .b1-title, que define sus propios
+       márgenes y relleno; no se agrupa aquí para no pisarlo. */
+    .causa h2, .garantia h2 {
       color: var(--teal-deep);
       margin-bottom: 1.8rem;
     }
-    .problema h2 { padding-top: 10px; }
     .problema p, .causa p {
       max-width: 680px;
       margin-inline: auto;
@@ -1002,7 +963,10 @@ display: block;
       position: relative;
       background: #ffffff;
       padding-top: 30px;
-      padding-bottom: 90px;
+      /* Reserva el hueco de la tarjeta que sobresale. El valor de
+         escritorio vive aquí, no en una media query, para que no quede
+         ningún ancho sin cubrir entre 860 y 861 px. */
+      padding-bottom: 300px;
       text-align: left;
     }
     .b1-inner { position: relative; }
@@ -1046,7 +1010,8 @@ display: block;
       font-size: 40px;
       line-height: 1.25;
       color: var(--teal-deep);
-      margin: 0;
+      padding-top: 10px;
+      margin: 0 0 1.8rem;
       z-index: 3;
     }
     .b1-title em { font-style: italic; color: var(--gold-deep); }
@@ -1056,13 +1021,18 @@ display: block;
       position: absolute;
       left: 50%;
       bottom: 0;
-      transform: translate(-50%, calc(50% + 30px));
+      /* Posición de escritorio en la regla base para que no quede ningún
+         ancho sin cubrir entre 860 y 861 px; móvil la sobrescribe. */
+      transform: translate(-50%, calc(50% + -30px));
       width: min(600px, calc(100% - 40px));
       background: var(--cream);
       padding: 40px 20px;
       text-align: center;
       z-index: 4;
     }
+    /* La tarjeta no hereda el ancho máximo que .problema p impone al
+       texto de la columna de la izquierda. */
+    .b1-card p { max-width: none; }
     .b1-card .b1-card-intro {
       font-family: var(--font-display);
       font-style: italic;
@@ -1073,15 +1043,12 @@ display: block;
       margin: 0 0 40px;
       text-transform: none;
     }
-    .b1-card-intro .b1-intro-accent {
-    }
     .b1-intro-dots { color: var(--teal-deep); }
     .b1-card .b1-card-q {
       font-size: 18px;
       color: #3d3a33;
       margin: 0 0 10px;
       text-align: center;
-      gap: 8px;
     }
     .b1-card .b1-card-q strong { color: var(--teal-deep); }
     .b1-card-rule {
@@ -1205,37 +1172,18 @@ display: block;
   gap: 1rem;
   margin-bottom: 1rem;
 }
-.price-product-name {
-  font-family: "Playfair Display", serif;
-  font-weight: 700;
-  font-size: 26px;
-  color: #bd9048;
-  margin-bottom: .5rem;
-}
+/* La familia tipográfica de estos dos la fija .hero-home .price-*, que es
+   el único sitio donde se usan y gana en especificidad. */
 .price-old-hero {
-  font-family: var(--font-body);
   font-size: 30px;
   color: #bd9048;
   opacity: .4;
 }
 .price-tag-hero {
-  font-family: var(--font-body);
   font-size: 36px;
   font-weight: 500;
   color: #bd9048;
   line-height: 1;
-}
-@media (min-width: 861px) {
-  .price-line { display: flex; align-items: baseline; gap: .4rem; margin-bottom: 18px; }
-  .price-product-name { margin: 0; }
-  .price-wrap { margin: 0; }
-  .price-dash { font-family: "Playfair Display", serif; font-size: 22px; color: #bd9048; }
-  .price-old-hero, .price-tag-hero { font-family: "Playfair Display", serif; }
-  .btn-cta { padding: 10px 40px; min-width: 400px; }
-  .field label { font-size: 12px; }
-  .field input, .field select { font-size: 14px; }
-  .btn-pay { padding: 10px; }
-  .field input, .field select { padding: 10px; }
 }
 .currency {
   font-size: .65em;
@@ -1268,9 +1216,9 @@ display: block;
        FAQ
     ══════════════════════════════════════════════ */
     .faq { background: #f5efdf; }
-    .faq-list { text-align: left; }
     .faq h2 { color: var(--teal-deep); margin-bottom: 3rem; }
     .faq-list {
+      text-align: left;
       max-width: 780px;
       margin-inline: auto;
       display: flex; flex-direction: column; gap: .75rem;
@@ -1367,89 +1315,36 @@ display: block;
     ══════════════════════════════════════════════ */
     @media (max-width: 860px) {
       .break-mobile { display: block; }
-      .problema blockquote { font-size: 24px; }
       .problema p { font-size: 18px; }
       .causa p { font-size: 18px; }
       summary { font-size: 18px; }
       .faq-body { font-size: 16px; }
       .garantia p { font-size: 18px; }
       .value-compare { font-size: 18px; }
-      .price-product-name { text-align: center; margin-bottom: 0px; }
-      .price-dash { display: none; }
-      .price-wrap { justify-content: center; margin: 0; }
-      .price-old-hero, .price-tag-hero, .price-product-name { font-family: "Playfair Display", serif; }
+      .price-wrap { justify-content: center; margin: 0 0 14px; }
       .hero-home h1, .hero-sub { text-align: center; }
       .steps { grid-template-columns: 1fr; }
-      .problema { padding-bottom: 380px; }
-      .problema { padding-top: 40px; }
+      .problema { padding-top: 40px; padding-bottom: 380px; }
       .b1-row { flex-direction: column; }
       .b1-photo { flex-basis: auto; min-height: 240px; margin: 60px 0 30px 0; }
       .b1-textcol { padding: 30px 0px 20px; text-align: center; }
-      .b1-title { position: static; width: auto; font-size: 40px; margin: -80px 10px 24px; text-align: center; }
-      .b1-card { padding: 50px 15px 60px; }
-      .b1-card { transform: translate(-50%, calc(50% + -90px)); }
+      .b1-title { position: static; width: auto; font-size: 40px; margin: -80px 10px 1.8rem; text-align: center; }
+      .b1-card { padding: 50px 15px 60px; transform: translate(-50%, calc(50% + -90px)); }
       .b1-card .b1-card-intro { font-size: 35px; margin: 0 0 50px; }
       .b1-card .b1-card-final { margin-top: 50px; font-size: 48px; line-height: 40px; }
       .b1-card-arrow svg { width: 32px; height: 56px; }
       .causa.b2 { padding: 240px 24px 90px; }
       .b2-rings { display: none; }
-      .price-wrap { margin-bottom: 14px; }
       .hero-purchase-box { padding: 100px 10px 60px; }
     }
     @media (min-width: 861px) {
-      .b1-card { transform: translate(-50%, calc(50% + -30px)); }
-      .problema { padding-bottom: 300px; }
+      .price-wrap { margin: 0; }
+      .btn-cta { padding: 10px 40px; min-width: 400px; }
+      .field label { font-size: 12px; }
+      .field input, .field select { font-size: 14px; padding: 10px; }
+      .btn-pay { padding: 10px; }
       .b1-card .b1-card-q { margin: 0 0 0px; }
       .b1-final-line2 { margin-top: 10px; }
-    }
-    @media (max-width: 600px) {
-.problema blockquote { font-size: 24px; }
-.problema p { font-size: 18px; }
-.causa p { font-size: 18px; }
-summary { font-size: 18px; }
-.faq-body { font-size: 16px; }
-.garantia p { font-size: 18px; }
-.value-compare { font-size: 18px; }
-.step p { font-size: 18px; }
-.step-num { font-size: 2rem; }
-.hero-trust-note { font-size: 15px; }
-.price-product-name { font-size: 30px; margin-top: .4rem; margin-bottom: 0px; }
-.price-old-hero { font-size: 38px; }
-.price-tag-hero { font-size: 48px; }
-.price-wrap { margin-top: 6px; }
-      section { padding-block: 3.5rem; }
-.btn-cta { width: 100%; font-size: 20px; padding: 12px 1rem; }
-.hero-home h1 { font-size: 38px; margin-bottom: 2.5rem; }
-.hero-home h1 { line-height: 1.40; }
-.hero-sub { margin-bottom: 2rem; }
-h2 { font-size: 2.5rem; }
-.hero-sub { font-size: 20px; }
-.hero-statement { font-size: 24px; }
-.hero-offer { font-size: 20px; }
-.hero-kicker { font-size: 25px; }
-.hero-ribbon-track span { font-size: 18px; }
-.hero-deco { width: 130px; }
-.hero-statement { margin-bottom: 50px; }
-.hero-video { width: calc(100% - 48px); }
-.hero-purchase-box { width: calc(100% - 20px); }
-.hero-purchase-box { margin-bottom: 80px; }
-.hero-home .container-home { width: calc(100% - 20px); }
-.hero-home { background-image: url('images/fondo-hear-origen-natal-carta-movil-4.webp'); }
-.b1-textcol .b1-line { font-size: 18px; }
-.b1-textcol .b1-line span.b1-turn-point { font-size: 45px; line-height: 40px; }
-.b1-textcol .b1-line strong.b1-inner-voice { font-size: 22px; }
-.b1-card .b1-card-q { font-size: 22px; }
-.b2-inner .b2-line { font-size: 18px; }
-
-      .areas-grid { grid-template-columns: 1fr; }
-.area-title { font-size: 1.5rem; }
-      .area-card p { font-size: 18px; }
-      .areas-subtitle { font-size: 24px; }
-      .reviews-grid { grid-template-columns: 1fr 1fr; }
-      .price-card { padding: 1.8rem 1.4rem; }
-    }
-    @media (max-width: 400px) {
-      .reviews-grid { grid-template-columns: 1fr; }
     }
 
     /* ══════════════════════════════════════════════
@@ -1474,16 +1369,16 @@ h2 { font-size: 2.5rem; }
       color: var(--cream);
       margin-bottom: 1.2rem;
     }
-    .areas .areas-subtitle {
-      color: var(--gold-light);
-    }
+    /* No es redundante con .areas-subtitle: hace falta ganarle a
+       .areas p, que tiene más especificidad y otro color. */
+    .areas .areas-subtitle { color: var(--gold-light); }
     .areas .areas-lead strong { color: var(--gold-light); }
     .areas p strong { color: var(--cream); }
     .areas h2 { position: relative; margin-bottom: 1.8rem; }
 
     /* ─── PRECIO — stack de valor ─── */
     .price-cta h2 { position: relative; }
-    .features-list li { align-items: flex-start; line-height: 1.55; }
+    .features-list li { line-height: 1.55; }
     .features-list li strong { color: var(--cream); font-weight: 600; }
     .feat-val {
       display: block;
@@ -1513,7 +1408,6 @@ h2 { font-size: 2.5rem; }
 
     /* ─── GARANTÍA (fondo claro, tarjeta) ─── */
     .garantia { background: var(--cream); }
-    .garantia h2 { color: var(--teal-deep); }
     .garantia-card {
       max-width: 680px;
       margin-inline: auto;
@@ -1535,29 +1429,98 @@ h2 { font-size: 2.5rem; }
     .garantia-card a { color: var(--gold-deep); text-decoration: underline; }
     .garantia-card a:hover { color: var(--teal-deep); }
 
-    /* ─── RESPONSIVE MÓVIL ─── */
+    /* ─── RESPONSIVE MÓVIL ───────────────────────────
+       Único bloque de 600px de la hoja. Lo que ya cubre
+       @media (max-width: 860px) no se repite aquí.       */
 
     @media (max-width: 600px) {
-      .break-mobile { display: block; }
-      .problema blockquote { font-size: 24px; }
-      .problema p { font-size: 18px; }
-      .causa p { font-size: 18px; }
-      summary { font-size: 18px; }
-      .faq-body { font-size: 16px; }
-      .garantia p { font-size: 18px; }
-      .value-compare { font-size: 18px; }
-      .feat-val { font-size: 17px; }
+      /* Nav, hero de formulario y campos */
+      .break-mobile-form { display: block; }
+      .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
+      .nav-cta { width: 100%; text-align: center; font-size: 19px; padding: .6rem; }
+      .nav-logo img { height: 34px; width: auto; }
+      .nav.is-scrolled .nav-inner { padding-block: .4rem; }
+      .nav.is-scrolled .nav-logo { display: none; }
+      .hero { padding-block: 2rem 1.5rem; }
+      .form-card { padding: 1.5rem 1.2rem; }
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+      .phone-group { grid-template-columns: 110px 1fr; }
+      .help-icon .tooltip { width: 240px; }
+      .checkbox-field label { font-size: 11px; }
       .field label { font-size: 15px; }
+
+      /* Ritmo general y tipografía */
+      section { padding-block: 3.5rem; }
+      h2 { font-size: 2.5rem; }
+      .btn-cta { width: 100%; font-size: 20px; padding: 12px 1rem; }
+
+      /* Hero */
+      .hero-home { background-image: url('images/fondo-hear-origen-natal-carta-movil-4.webp'); }
+      .hero-home h1 { font-size: 38px; margin-bottom: 2.5rem; line-height: 1.40; }
+      .hero-home .container-home { width: calc(100% - 20px); }
+      .hero-sub { margin-bottom: 2rem; font-size: 20px; }
+      .hero-statement { font-size: 24px; margin-bottom: 50px; }
+      .hero-offer { font-size: 20px; }
+      .hero-kicker { font-size: 25px; }
+      .hero-deco { width: 130px; }
+      .hero-ribbon-track span { font-size: 18px; }
+      .hero-video { width: calc(100% - 48px); }
+      .hero-purchase-box { width: calc(100% - 20px); margin-bottom: 80px; }
+      .hero-trust-note { font-size: 15px; }
+      .price-old-hero { font-size: 38px; }
+      .price-tag-hero { font-size: 48px; }
+      .price-wrap { margin-top: 6px; }
+
+      /* Bloque 1 y bloque 2 */
+      .b1-textcol .b1-line { font-size: 18px; }
+      .b1-textcol .b1-line span.b1-turn-point { font-size: 45px; line-height: 40px; }
+      .b1-textcol .b1-line strong.b1-inner-voice { font-size: 22px; }
+      .b1-card .b1-card-q { font-size: 22px; }
+      .b2-inner .b2-line { font-size: 18px; }
+
+      /* Áreas, pasos y reseñas */
+      .areas-grid { grid-template-columns: 1fr; }
+      .area-title { font-size: 1.5rem; }
+      .area-card p { font-size: 18px; }
+      .areas-subtitle { font-size: 24px; }
       .areas .areas-lead { font-size: 1.25rem; }
       .areas p { font-size: 18px; }
+      .step p { font-size: 18px; }
+      .step-num { font-size: 2rem; }
+      .reviews-grid { grid-template-columns: 1fr 1fr; }
+
+      /* Precio, garantía y FAQ */
+      .price-card { padding: 1.8rem 1.4rem; }
       .price-old { font-size: 45px; }
       .price-tag { font-size: 60px; }
       .features-list li { font-size: 18px; }
+      .feat-val { font-size: 17px; }
       .garantia-card { padding: 1.5rem 1.3rem; }
       .garantia-card p { font-size: 18px; }
     }
 
+    /* Va después del bloque de 600px: misma especificidad, tiene que ganar. */
+    @media (max-width: 400px) {
+      .reviews-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── MOVIMIENTO REDUCIDO ─── */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal { opacity: 1; transform: none; }
+    }
+
 </style>
+<noscript>
+  <!-- Sin JavaScript el observador no llega a mostrar el contenido: lo dejamos visible. -->
+  <style>.reveal { opacity: 1; transform: none; }</style>
+</noscript>
 <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJSDFDFZ3G"></script>
   <script>
@@ -1641,7 +1604,7 @@ y <span style="font-weight: 700; color: #0c0c0c;">dirige tu vida entera</span>�
         <div class="hero-ribbon-group">
           <span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Me siento liberada, totalmente&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Cati</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;He sentido más claridad que en todo este tiempo junto&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Irene</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Me habéis hecho ver cosas de mí que no sabía&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Samuel</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Descubres tanto, es descubrir la verdad sobre ti&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Mónica</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Ahora entiendo por qué me cuesta soltar ciertas cosas&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Salma</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;No sabéis la paz que he sentido&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Claudia</span>&nbsp;·&nbsp;</span>
         </div>
-        <div class="hero-ribbon-group" aria-hidden="true">
+        <div class="hero-ribbon-group">
           <span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Me siento liberada, totalmente&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Cati</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;He sentido más claridad que en todo este tiempo junto&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Irene</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Me habéis hecho ver cosas de mí que no sabía&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Samuel</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Descubres tanto, es descubrir la verdad sobre ti&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Mónica</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Ahora entiendo por qué me cuesta soltar ciertas cosas&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Salma</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;No sabéis la paz que he sentido&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Claudia</span>&nbsp;·&nbsp;</span>
         </div>
       </div>
@@ -2560,41 +2523,43 @@ y <span style="font-weight: 700; color: #0c0c0c;">dirige tu vida entera</span>�
   </script>
 
 <script src="/cookie-consent.js"></script>
-<script>
-    (function(){
-      const nav = document.querySelector('.nav');
-      if (!nav) return;
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-          nav.classList.add('scrolled');
-        } else {
-          nav.classList.remove('scrolled');
-        }
-      }, { passive: true });
-    })();
-</script>
 
   <!-- ════════════ JS SCROLL REVEAL (bloques copiados del index) ════════════ -->
   <script>
     const revealsHome = document.querySelectorAll('.reveal');
-    const ioHome = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          ioHome.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12 });
-    revealsHome.forEach(el => ioHome.observe(el));
+    // El contenido arranca a opacity:0, así que cualquier fallo aquí dejaría
+    // la página en blanco: ante la duda, se muestra todo.
+    const mostrarTodo = () => revealsHome.forEach(el => el.classList.add('visible'));
 
-    document.querySelectorAll('.hero-home .reveal').forEach(el => {
-      setTimeout(() => el.classList.add('visible'), 80);
-    });
+    try {
+      if (!('IntersectionObserver' in window)) {
+        mostrarTodo();
+      } else {
+        const ioHome = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible');
+              ioHome.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        revealsHome.forEach(el => ioHome.observe(el));
 
+        document.querySelectorAll('.hero-home .reveal').forEach(el => {
+          setTimeout(() => el.classList.add('visible'), 80);
+        });
+      }
+    } catch (err) {
+      mostrarTodo();
+    }
+
+    // Estado único del nav: una sola clase, un solo umbral, un solo listener.
     const navEl = document.querySelector('.nav');
-    const updateNavScrolled = () => navEl.classList.toggle('is-scrolled', window.scrollY > 20);
-    updateNavScrolled();
-    window.addEventListener('scroll', updateNavScrolled, { passive: true });
+    if (navEl) {
+      const updateNavScrolled = () => navEl.classList.toggle('is-scrolled', window.scrollY > 20);
+      updateNavScrolled();
+      window.addEventListener('scroll', updateNavScrolled, { passive: true });
+    }
   </script>
 </body>
 </html>
