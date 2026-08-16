@@ -1507,36 +1507,6 @@ display: block;
       .reviews-grid { grid-template-columns: 1fr; }
     }
 
-    /* ─── MOVIMIENTO REDUCIDO ───────────────────────────
-       Sin comodín: se desactiva solo lo que puede marear.
-       La cinta del hero se detiene y los revelados aparecen
-       sin desplazamiento; la flecha conserva su rebote, más
-       corto y más lento.                                   */
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-
-      /* Desplazamiento lateral continuo: es el que marea. */
-      .hero-ribbon-track {
-        animation-duration: .01ms;
-        animation-iteration-count: 1;
-      }
-
-      /* El contenido aparece ya colocado, sin deslizarse. */
-      .reveal {
-        opacity: 1;
-        transform: none;
-        transition: none;
-      }
-
-      /* La flecha sigue indicando que hay que seguir bajando:
-         5px en vez de 14px y el doble de lenta. */
-      .b1-card-arrow { animation: b1ArrowBounceSuave 1.6s ease-in-out infinite; }
-      @keyframes b1ArrowBounceSuave {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(5px); }
-      }
-    }
-
 </style>
 <noscript>
   <!-- Sin JavaScript el observador no llega a mostrar el contenido: lo dejamos visible. -->
