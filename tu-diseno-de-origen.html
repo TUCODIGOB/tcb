@@ -1507,18 +1507,6 @@ display: block;
       .reviews-grid { grid-template-columns: 1fr; }
     }
 
-    /* ─── MOVIMIENTO REDUCIDO ─── */
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .01ms !important;
-        scroll-behavior: auto !important;
-      }
-      .reveal { opacity: 1; transform: none; }
-    }
-
 </style>
 <noscript>
   <!-- Sin JavaScript el observador no llega a mostrar el contenido: lo dejamos visible. -->
