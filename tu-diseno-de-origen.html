@@ -1000,7 +1000,7 @@ display: block;
       line-height: 32px;
     }
     .b1-textcol .b1-line strong.b1-plain-bold { color: #4a4538; font-style: italic; }
-    .b1-textcol .b1-line.b1-line-voice { margin-top: 20px; }
+    .b1-textcol .b1-line.b1-line-voice { margin-top: 0px; }
     .b1-textcol .b1-line.b1-line-tight { margin: 0; }
     .b1-title {
       position: absolute;
@@ -1120,6 +1120,7 @@ display: block;
       color: var(--gold-light);
       line-height: 1;
       margin: 0 0 26px;
+      margin-top: 20px;
     }
     .b2-inner .b2-line {
       font-size: 16.8px;
@@ -1132,7 +1133,7 @@ display: block;
     .b2-inner .b2-final {
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 19px;
+      font-size: 26px;
       color: var(--gold-light);
       line-height: 1.5;
       margin: 0;
@@ -1319,6 +1320,7 @@ display: block;
     ══════════════════════════════════════════════ */
     @media (max-width: 860px) {
       .break-mobile { display: block; }
+      .break-desktop { display: none; }
       .problema p { font-size: 20px; }
       .causa p { font-size: 20px; }
       summary { font-size: 20px; }
@@ -1332,7 +1334,7 @@ display: block;
       .b1-row { flex-direction: column; }
       .b1-photo { flex-basis: auto; min-height: 240px; margin: 60px 0 30px 0; }
       .b1-textcol { padding: 30px 0px 20px; text-align: center; }
-      .b1-title { position: static; width: auto; font-size: 40px; margin: -80px 10px 1.8rem; text-align: center; }
+      .b1-title { position: static; width: auto; font-size: 40px; margin: -70px 10px 1.8rem; text-align: center; }
       .b1-card { padding: 50px 15px 40px; transform: translate(-50%, calc(50% + -90px)); }
       .b1-card .b1-card-intro { font-size: 40px; margin: 0 0 50px; }
       .b1-card .b1-card-final { margin-top: 50px; font-size: 48px; line-height: 40px; }
@@ -1477,8 +1479,8 @@ display: block;
 
       /* Bloque 1 y bloque 2 */
       .b1-textcol .b1-line { font-size: 20px; }
-      .b1-textcol .b1-line span.b1-turn-point { font-size: 45px; line-height: 40px; }
-      .b1-textcol .b1-line strong.b1-inner-voice { font-size: 22px; }
+      .b1-textcol .b1-line span.b1-turn-point { font-size: 48px; line-height: 40px; }
+      .b1-textcol .b1-line strong.b1-inner-voice { font-size: 25px; }
       .b1-card .b1-card-q { font-size: 22px; }
       .b2-inner .b2-line { font-size: 20px; }
 
@@ -1635,7 +1637,7 @@ y <span style="font-weight: 700; color: #0c0c0c;">dirige tu vida entera</span>�
       <p class="b1-card-q reveal">¿Hay algo <strong><em>malo en mí?</em></strong></p>
       <div class="b1-card-rule" aria-hidden="true"></div>
       <p class="b1-card-q reveal">¿Por qué <strong><em>soy así?</em></strong></p>
-      <p class="b1-card-final reveal">No es falta de esfuerzo,<br class="break-mobile"> no es mala suerte,<br><span class="b1-final-line2">no es culpa tuya...</span></p>
+      <p class="b1-card-final reveal">No te falta esfuerzo,<br class="break-mobile"> no es mala suerte,<br><span class="b1-final-line2">no es culpa tuya...</span></p>
       <div class="b1-card-arrow reveal" aria-hidden="true">
         <svg width="24" height="42" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
           <line x1="8" y1="0" x2="8" y2="18" stroke="#bd9048" stroke-width="1.5" stroke-linecap="round"/>
@@ -1651,10 +1653,10 @@ y <span style="font-weight: 700; color: #0c0c0c;">dirige tu vida entera</span>�
     <div class="b2-inner">
       <p class="b2-q reveal">Entonces,<br class="break-mobile"> ¿qué está pasando?</p>
       <p class="b2-cursive reveal">Te lo explico</p>
-      <p class="b2-line reveal">Antes de tomar tu primera respiración, ya se había formado algo en ti.</p>
-      <p class="b2-line reveal">Una <strong>programación única</strong> que decide cómo piensas, cómo sientes, cómo te vinculas con todo lo que te rodea...</p>
-      <p class="b2-line reveal">Y dirige tu vida entera: tus decisiones, tus relaciones, tu dinero, tus miedos…</p>
-      <p class="b2-line reveal">Todos los días, sin que te des cuenta.</p>
+      <p class="b2-line reveal">Antes de tomar tu primera respiración,<br class="break-desktop"> ya se había formado <strong>algo</strong> en ti:</p>
+      <p class="b2-line reveal">una <strong>programación única</strong> que decide cómo piensas, cómo sientes, cómo te vinculas con todo lo que te rodea...</p>
+      <p class="b2-line reveal">Y dirige tu vida entera (tus decisiones, tus relaciones, tu dinero, tus miedos…)</p>
+      <p class="b2-line reveal">todos los días, sin que te des cuenta.</p>
       <div class="b2-rule reveal"></div>
       <p class="b2-final reveal">Y seguirá siendo así, año tras año, mientras sigas intentando cambiar sin saber desde dónde funciona todo.</p>
     </div>
