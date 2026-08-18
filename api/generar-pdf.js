@@ -404,14 +404,14 @@ export default async function handler(req, res) {
 
     // ── PAG 5 POSICIONES ─────────────────────────────────────────────────────
     doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
-    doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(189,144,72);
-    doc.text(fx('POSICIONES: Configuracion funcional de Origen Natal'),18,30);
+    doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(207,177,128);
+    doc.text(fx('POSICIONES: Configuracion funcional de tu programacion inicial'),18,30);
     var py5=45; py5=tablaPositions(18,py5); py5+=5;
     doc.setFont('Roboto','italic'); doc.setFontSize(9); doc.setTextColor(60,60,60);
-    py5=wrapText(fx('Las posiciones reflejan donde se concentra tu energia y desde que puntos se organiza tu forma de pensar, sentir o actuar, como se forma tu sistema interno y que partes de ti toman mas protagonismo en tu manera de percibir y responder a la vida.'),18,py5,175,5.5);
+    py5=wrapText(fx('Las posiciones reflejan como funciona tu forma de pensar, sentir y actuar, y que partes de ti tienen mas peso en la manera en que percibes y respondes a la vida.'),18,py5,175,5.5);
     py5+=8;
-    doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(189,144,72);
-    doc.text(fx('ASPECTOS: Dinamicas internas de Origen Natal'),18,py5);
+    doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(207,177,128);
+    doc.text(fx('ASPECTOS: Dinamicas internas de tu programacion inicial'),18,py5);
     py5+=15;
     var aspTipos=['sol','luna','mercurio','venus','marte','jupiter','saturno','urano','neptuno','asc'];
     var aspRaws=[carta.solRaw,carta.lunaRaw,carta.mercRaw,carta.venRaw,carta.marRaw,carta.jupRaw,carta.satRaw,carta.uraRaw,carta.nepRaw,carta.ascRaw];
@@ -460,7 +460,7 @@ export default async function handler(req, res) {
     doc.text('T = Trigono   C = Cuadratura   S = Sextil   O = Oposicion   = = Conjuncion',W/2,py5,{align:'center'});
     py5+=6;
     doc.setFont('Roboto','italic'); doc.setFontSize(9); doc.setTextColor(60,60,60);
-    wrapText(fx('Los aspectos muestran como interactuan tus distintas fuerzas internas: los equilibrios, tensiones y conexiones que dan forma a tu manera de vincularte, decidir y reaccionar, son la expresion visible de tu movimiento interno.'),18,py5,175,5.5);
+    wrapText(fx('Los aspectos muestran como se relacionan esas partes entre si: los equilibrios, las tensiones y las conexiones que forman tu manera de vincularte, decidir y reaccionar.'),18,py5,175,5.5);
     addPageNum(5);
 
     // ── PAGS 6-19 LAS 7 AREAS ────────────────────────────────────────────────
