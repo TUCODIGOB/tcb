@@ -361,8 +361,6 @@ export default async function handler(req, res) {
 
     // ── PAG 4 CONFIGURACION INICIAL ──────────────────────────────────────────
     doc.addPage(); doc.addImage(img_rueda,'JPEG',0,0,W,H);
-    doc.setFont('Roboto','bold'); doc.setFontSize(25); doc.setTextColor(14,63,75);
-    doc.text(fx('TU CONFIGURACION INICIAL'),18,30);
     var cparasRich = [
       [{text:'Antes de tomar tu primera respiracion, ya existia un ',bold:false},{text:'diseno invisible que daba forma a tu manera unica de ser',bold:true},{text:': una estructura precisa de energia, mente y proposito que marcaria la base de como ibas a ver, sentir y experimentar la vida.',bold:false}],
       [{text:'Ese instante inicial activo un programa interno, una configuracion que moldea tu forma de percibir, interpretar y responder ante el mundo, ',bold:false},{text:'define las coordenadas originales desde donde comienza tu historia',bold:true},{text:'.',bold:false}],
@@ -384,7 +382,7 @@ export default async function handler(req, res) {
         doc.setFont('Roboto',words[w2].bold?'bold':'normal');
         var wordStr=fx(words[w2].text), wordWidth=doc.getTextWidth(wordStr), spaceWidth=doc.getTextWidth(' ');
         if(xCursor+wordWidth>lineStartX+maxWidth&&xCursor>lineStartX){cy4+=lineHeight;xCursor=lineStartX;}
-        doc.text(wordStr,xCursor,cy4); xCursor+=wordWidth+spaceWidth;
+        xCursor+=wordWidth+spaceWidth;
       }
       cy4+=lineHeight+4;
     }
@@ -400,7 +398,7 @@ export default async function handler(req, res) {
     doc.text(fx('Lat: '+formatCoord(carta.lat,'n','s')+'  ·  Lon: '+formatCoord(carta.lon,'e','w')+'  ·  UT: '+formatUT(carta.utH,carta.utM)+'  ·  T. Sidereo: '+formatSidereal(carta.LST)+'  ·  JD: '+carta.JD.toFixed(2)),W/2,textoY,{align:'center'});
     textoY+=7;
     doc.setFont('Roboto','italic'); doc.setFontSize(8); doc.setTextColor(100,100,100);
-    var captLines=doc.splitTextToSize(fx('Representacion visual de tu configuracion inicial: la huella simbolica del instante en que comenzo tu historia.'),155);
+    var captLines=doc.splitTextToSize(fx('Representacion visual de tu programacion inicial: el mapa del instante en que comenzo tu historia.'),155);
     for(var cl2=0;cl2<captLines.length;cl2++) doc.text(fx(captLines[cl2]),W/2,textoY+cl2*4.5,{align:'center'});
     addPageNum(4);
 
