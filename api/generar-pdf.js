@@ -69,6 +69,7 @@ export default async function handler(req, res) {
 
     const [regular, bold, italic,
       img_portada, img_indice, img_bienvenido, img_rueda, img_base,
+      img_identidad, img_patrones, img_miedos, img_herida, img_amor, img_relaciones, img_dinero,
       img_frase, img_proximo, img_proximo2, img_trasera
     ] = await Promise.all([
       loadFontBase64('/fonts/Roboto-Regular.ttf'),
@@ -79,11 +80,21 @@ export default async function handler(req, res) {
       loadImageBase64('/images/3-bienvenido-pdf.jpg'),
       loadImageBase64('/images/4-rueda-pdf.jpg'),
       loadImageBase64('/images/5-base-pdf.jpg'),
+      loadImageBase64('/images/5A-base-identidad-pdf.jpg'),
+      loadImageBase64('/images/5B-base-patrones-pdf.jpg'),
+      loadImageBase64('/images/5C-base-miedos-pdf.jpg'),
+      loadImageBase64('/images/5D-base-herida-pdf.jpg'),
+      loadImageBase64('/images/5E-base-amor-pdf.jpg'),
+      loadImageBase64('/images/5F-base-relaciones-pdf.jpg'),
+      loadImageBase64('/images/5G-base-dinero-pdf.jpg'),
       loadImageBase64('/images/7-frase-pdf.jpg'),
       loadImageBase64('/images/8-proximo-paso-pdf.jpg'),
       loadImageBase64('/images/8a-proximo-paso-pdf.jpg'),
       loadImageBase64('/images/9-trasera-pdf.jpg'),
     ]);
+
+    // Fondos de la primera pagina de cada area, en el mismo orden que areaTitles
+    const img_areas = [img_identidad, img_patrones, img_miedos, img_herida, img_amor, img_relaciones, img_dinero];
 
     const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
 
@@ -490,12 +501,7 @@ export default async function handler(req, res) {
           if(group.length>0) paras.push(group);
         } else { paras.push(chunk); }
       }
-      doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
-      doc.setFont('Roboto','bold'); doc.setFontSize(25); doc.setTextColor(14,63,75);
-      doc.text(fx('AREA '+(ai2+1)+' | '+areaTitles[ai2].tit),18,30);
-      doc.setFont('Roboto','bold'); doc.setFontSize(18); doc.setTextColor(189,144,72);
-      var subls=doc.splitTextToSize(areaTitles[ai2].sub,175);
-      for(var sl=0;sl<subls.length;sl++) doc.text(fx(subls[sl]),18,40+sl*7);
+      doc.addPage(); doc.addImage(img_areas[ai2],'JPEG',0,0,W,H);
       var ay=60, areaPageCount=1;
       for(var pi2=0;pi2<paras.length;pi2++){
         if(!paras[pi2]) continue;
