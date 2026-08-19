@@ -605,8 +605,56 @@ export default async function handler(req, res) {
     console.error('Error generando PDF:', err.message);
     // El PDF no salio: soltar la reserva para que quede un intento util.
     await liberar(stripe, session_id, token);
+    // Y avisar. Sin esto el cliente se queda sin informe y sin correo, y aqui
+    // no se entera nadie: el navegador solo escribia el fallo en su consola.
+    try {
+      await enviarAvisoPDFNoGenerado({ nombre, email: sessionEmail, sessionId: session_id, motivo: err.message });
+    } catch (avisoErr) {
+      console.error('Tampoco se pudo avisar de que el PDF no salio:', avisoErr.message);
+    }
     return res.status(500).json({ error: 'Error generando el PDF: ' + err.message });
   }
+}
+
+
+// ═════════════════════════════════════════════════════════════════
+// AVISO DE PDF NO GENERADO (via Brevo)
+// Distinto del de arriba: alli el PDF si sale y solo falla algun fichero.
+// Aqui el cliente ha pagado y NO tiene nada.
+// ═════════════════════════════════════════════════════════════════
+async function enviarAvisoPDFNoGenerado({ nombre, email, sessionId, motivo }) {
+  const BREVO_API_KEY = process.env.BREVO_API_KEY;
+  if (!BREVO_API_KEY) return;
+
+  const mensaje = [
+    'Este cliente HA PAGADO y NO tiene su PDF. El informe se genero pero el',
+    'PDF fallo al montarse, asi que no ha recibido nada.',
+    '',
+    'Le queda un intento: si vuelve a abrir su enlace, se regenera solo.',
+    'Si no vuelve, hay que generarselo a mano.',
+    '',
+    `Cliente:    ${nombre || '-'}`,
+    `Email:      ${email || '(desconocido)'}`,
+    `Session ID: ${sessionId || '-'}`,
+    `Motivo:     ${motivo || '-'}`,
+  ].join('\n');
+
+  const body = {
+    sender: { email: 'hola@origennatal.com', name: 'Origen Natal — Alertas' },
+    to: [{ email: 'hola.origennatal@gmail.com', name: 'Origen Natal' }],
+    subject: 'PDF NO GENERADO — CLIENTE SIN INFORME',
+    htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
+  };
+
+  await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': BREVO_API_KEY,
+    },
+    body: JSON.stringify(body),
+  });
 }
 
 

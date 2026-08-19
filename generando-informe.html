@@ -391,6 +391,9 @@ function showError(msg, hideSupportBox) {
   if (btn) {
     btn.style.display = 'inline-block';
     btn.textContent = hideSupportBox ? 'Volver a intentarlo' : 'Realizar el pago';
+    // Reintentar es recargar esta misma pagina con su session_id. Antes este
+    // boton llevaba al formulario de pago, que no reintenta nada.
+    btn.href = hideSupportBox ? window.location.href : '/tu-diseno-de-origen#formulario';
   }
   showScreen('screenError');
 }
@@ -421,19 +424,10 @@ function showAviso(titulo, msg) {
     return;
   }
 
-  // 2. Leer datos del formulario guardados en localStorage
-  let pedido = null;
-  try {
-    const raw = localStorage.getItem('tcb_pedido');
-    if (raw) pedido = JSON.parse(raw);
-  } catch(e) {}
-
-  if (!pedido || !pedido.nombre || !pedido.fecha || !pedido.hora) {
-    showError('No encontramos los datos de tu pedido. Puede que hayas cambiado de navegador o borrado las cookies. Por favor escríbenos a hola@origennatal.com y te enviaremos el informe manualmente.');
-    return;
-  }
-
-  // 3. Verificar el pago con Stripe a través de nuestra API
+  // 2. Verificar el pago con Stripe a través de nuestra API.
+  //    Esto va ANTES de mirar los datos del pedido: antes se cortaba aqui si
+  //    localStorage estaba vacio, y entonces el respaldo con los datos de
+  //    Stripe (mas abajo) no se llegaba a ejecutar nunca.
   let verificado = null;
   try {
     const resp = await fetch('/api/verify-payment', {
@@ -455,6 +449,8 @@ function showAviso(titulo, msg) {
   // No se arranca nada: se le dice al cliente que ya lo tiene. El servidor lo
   // rechazaria igualmente, esto solo evita la espera y el mensaje confuso.
   if (verificado.estadoInforme === 'completado') {
+    // Terminado: ya se puede soltar la copia local de los datos.
+    try { localStorage.removeItem('tcb_pedido'); } catch (e) {}
     showAviso('Tu informe ya está listo',
       'Ya generamos tu informe y te lo enviamos por email con el PDF adjunto. Revisa tu bandeja de entrada y, si no lo ves, la carpeta de spam.');
     return;
@@ -465,13 +461,19 @@ function showAviso(titulo, msg) {
     return;
   }
 
-  // Pago verificado correctamente: el pedido guardado ya no hace falta
-  try {
-    localStorage.removeItem('tcb_pedido');
-  } catch (e) {}
+  // 3. Datos del pedido: primero los que guardo el formulario en este
+  //    navegador y, si no estan, los que Stripe guardo al cobrar. Ese
+  //    respaldo es lo que permite reintentar tras un fallo, o abrir el
+  //    enlace desde otro navegador o movil.
+  const datosCompletos = p => Boolean(p && p.nombre && p.fecha && p.hora);
 
-  // Si localStorage no tiene datos, usamos los metadata de Stripe como fallback
-  if ((!pedido || !pedido.nombre || !pedido.fecha || !pedido.hora) && verificado.metadata) {
+  let pedido = null;
+  try {
+    const raw = localStorage.getItem('tcb_pedido');
+    if (raw) pedido = JSON.parse(raw);
+  } catch(e) {}
+
+  if (!datosCompletos(pedido) && verificado.metadata) {
     const m = verificado.metadata;
     if (m.nombre && m.fecha && m.hora) {
       pedido = {
@@ -489,7 +491,7 @@ function showAviso(titulo, msg) {
     }
   }
 
-  if (!pedido || !pedido.nombre || !pedido.fecha || !pedido.hora) {
+  if (!datosCompletos(pedido)) {
     showError('No encontramos los datos de tu pedido. Por favor escríbenos a hola@origennatal.com y te enviaremos el informe manualmente.');
     return;
   }
@@ -615,25 +617,35 @@ fetch('/api/generar-pdf', {
       areas: _G.areas
     })
   }).then(r => r.json()).then(pdfData => {
-    if (pdfData.pdfBase64) {
-      _G.pdfBase64 = pdfData.pdfBase64;
-      fetch('/api/save-pdf', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          session_id: new URLSearchParams(window.location.search).get('session_id'),
-          token: _G.token,
-          pdfBase64: pdfData.pdfBase64,
-          nombre: _G.nombre,
-          sexo: _G.sexo || '',
-          fecha: _G.fechaNice || '',
-          hora: _G.hora || '',
-          lugar: _G.lugar || '',
-          edad: _G.edad || ''
-        })
-      }).catch(err => console.warn('Email automático falló:', err));
-    }
-  }).catch(err => console.warn('generar-pdf falló:', err));
+    // Un 500 de generar-pdf devuelve JSON sin pdfBase64: antes eso no entraba
+    // en el .catch y no pasaba nada de nada, el cliente se quedaba mirando
+    // "Tu informe esta listo" sin informe y sin correo.
+    if (!pdfData.pdfBase64) throw new Error(pdfData.error || 'El PDF no llegó');
+    _G.pdfBase64 = pdfData.pdfBase64;
+    // El PDF existe: la copia local de los datos ya no hace falta.
+    try { localStorage.removeItem('tcb_pedido'); } catch (e) {}
+    fetch('/api/save-pdf', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        session_id: new URLSearchParams(window.location.search).get('session_id'),
+        token: _G.token,
+        pdfBase64: pdfData.pdfBase64,
+        nombre: _G.nombre,
+        sexo: _G.sexo || '',
+        fecha: _G.fechaNice || '',
+        hora: _G.hora || '',
+        lugar: _G.lugar || '',
+        edad: _G.edad || ''
+      })
+    }).catch(err => console.warn('Email automático falló:', err));
+  }).catch(err => {
+    // No dejar al cliente creyendo que ya lo tiene. El aviso a la tienda lo
+    // manda el propio generar-pdf; aqui solo se le ofrece reintentar, que
+    // ahora funciona porque la reserva se libero al fallar.
+    console.warn('generar-pdf falló:', err);
+    showError('No hemos podido terminar tu informe. Por favor vuelve a intentarlo; si vuelve a fallar, escríbenos a hola@origennatal.com y te lo enviamos nosotros.', true);
+  });
 }
 
 // ═════════════════════════════════════════════════════════════════
