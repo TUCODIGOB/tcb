@@ -199,7 +199,14 @@ Edad: ${edad} años
 
 ${cartaTexto}`;
 
-  async function generarArea(area) {
+  // Las 7 areas se piden a la vez, asi que un fallo puntual en una sola tumbaba
+  // el informe entero y gastaba un intento del cliente. Ahora cada area se
+  // reintenta hasta 3 veces cuando el fallo es temporal (saturacion, error del
+  // servidor, corte de red). Los fallos permanentes (clave mal, peticion mal
+  // formada) no se reintentan: no van a mejorar por repetirlos.
+  const INTENTOS_POR_AREA = 3;
+
+  async function pedirArea(area) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -220,17 +227,38 @@ ${cartaTexto}`;
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Error en área ${area.id}: ${response.status} — ${errorText}`);
+      const err = new Error(`Error en área ${area.id}: ${response.status} — ${errorText}`);
+      err.temporal = response.status === 429 || response.status >= 500;
+      throw err;
     }
 
     const data = await response.json();
     const texto = data.content?.[0]?.text || '';
 
     if (!texto || texto.trim().length < 100) {
-      throw new Error(`Área ${area.id} devolvió texto vacío o demasiado corto`);
+      const err = new Error(`Área ${area.id} devolvió texto vacío o demasiado corto`);
+      err.temporal = true;
+      throw err;
     }
 
     return texto.trim();
+  }
+
+  async function generarArea(area) {
+    let ultimoError;
+    for (let intento = 1; intento <= INTENTOS_POR_AREA; intento++) {
+      try {
+        return await pedirArea(area);
+      } catch (err) {
+        ultimoError = err;
+        // Un corte de red llega sin marca; se trata como temporal.
+        const temporal = err.temporal !== false;
+        if (!temporal || intento === INTENTOS_POR_AREA) break;
+        console.warn(`Área ${area.id}: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
+        await new Promise(r => setTimeout(r, 1500 * intento));
+      }
+    }
+    throw ultimoError;
   }
 
   try {
