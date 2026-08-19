@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "jspdf": "^2.5.1",
     "stripe": "^17.4.0",
-    "jspdf": "^2.5.1"
+    "tz-lookup": "^6.1.25"
   }
 }

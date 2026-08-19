@@ -471,6 +471,8 @@ function showError(msg, hideSupportBox) {
     console.error('Error generación:', e);
     if (e.message === 'DATOS_INVALIDOS') {
       showError('Lo sentimos, ha habido un error en alguno de tus datos, por favor vuelve a intentarlo.', true);
+    } else if (e.message === 'ZONA_HORARIA') {
+      showError('No hemos podido calcular la hora exacta de tu lugar de nacimiento. Por favor vuelve a intentarlo en unos segundos.', true);
     } else {
       showError('Ha ocurrido un error al generar tu informe. Por favor escríbenos a hola@origennatal.com con tu email de compra y te lo enviaremos manualmente.');
     }
@@ -487,7 +489,7 @@ async function iniciarConDatos(pedido) {
   const [hh, mm] = pedido.hora.split(':').map(Number);
 
   // Zona horaria
-  const tzOff = await getTZOffset(geo.lat, geo.lon, pedido.fecha);
+  const tzOff = await getTZOffset(geo.lat, geo.lon, pedido.fecha, pedido.hora);
 
   // Calcular carta natal
   const cartaResp = await fetch('/api/calcular-carta', {
@@ -585,26 +587,30 @@ let _G = {};
 
 
 // ─── TIMEZONE HISTÓRICO POR FECHA ────────────────────────────────────────────
-async function getTZOffset(lat, lon, fechaISO) {
-  try {
-    const r = await fetch('/api/timezone', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ lat, lon, fechaISO })
-    });
-    if (r.ok) {
-      const data = await r.json();
-      if (data && data.offset !== undefined) {
-        return data.offset;
+async function getTZOffset(lat, lon, fechaISO, hora) {
+  // Dos intentos: un fallo puntual de red no debe estropear el informe.
+  for (let intento = 0; intento < 2; intento++) {
+    try {
+      const r = await fetch('/api/timezone', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lat, lon, fechaISO, hora })
+      });
+      if (r.ok) {
+        const data = await r.json();
+        if (data && typeof data.offset === 'number' && isFinite(data.offset)) {
+          return data.offset;
+        }
       }
-    }
-  } catch(e) {}
+    } catch(e) {}
+    if (intento === 0) await new Promise(r => setTimeout(r, 800));
+  }
 
-  // Fallback: estimación por longitud
-  const roughTZ = Math.round(lon / 15);
-  const month = parseInt(fechaISO.split('-')[1]);
-  const isDST = (lat > 30 && lat < 65 && month >= 4 && month <= 10);
-  return roughTZ + (isDST ? 1 : 0);
+  // Antes se estimaba el desfase a partir de la longitud. Esa estimación daba
+  // UTC+0 para toda España, así que producía cartas natales con una o dos horas
+  // de error sin que nadie se enterara. Es preferible parar y que el cliente
+  // reintente, porque una hora mal cambia el Ascendente de signo.
+  throw new Error('ZONA_HORARIA');
 }
 // ─── GEOCODIFICACIÓN ──────────────────────────────────────────────────────────
 async function geocode(ciudad, provincia, pais) {
