@@ -277,6 +277,8 @@ export default async function handler(req, res) {
         else if(tipo==='saturno'){doc.line(x-sz*.25,y-sz*.5,x-sz*.25,y+sz*.4);doc.line(x-sz*.5,y-sz*.3,x,y-sz*.3);doc.line(x-sz*.25,y+sz*.4,x+sz*.1,y+sz*.55);doc.line(x+sz*.1,y+sz*.55,x+sz*.3,y+sz*.4);doc.line(x+sz*.3,y+sz*.4,x+sz*.3,y+sz*.1);}
         else if(tipo==='urano'){doc.line(x-sz*.35,y-sz*.5,x-sz*.35,y+sz*.15);doc.line(x+sz*.35,y-sz*.5,x+sz*.35,y+sz*.15);doc.line(x-sz*.35,y-sz*.15,x+sz*.35,y-sz*.15);doc.line(x,y+sz*.15,x,y+sz*.35);doc.circle(x,y+sz*.5,sz*.15);}
         else if(tipo==='neptuno'){doc.line(x-sz*.5,y-sz*.3,x-sz*.35,y+sz*.2);doc.line(x+sz*.5,y-sz*.3,x+sz*.35,y+sz*.2);doc.line(x,y-sz*.3,x,y+sz*.4);doc.line(x-sz*.5,y-sz*.3,x+sz*.5,y-sz*.3);doc.line(x-sz*.25,y+sz*.4,x+sz*.25,y+sz*.4);doc.line(x-sz*.5,y-sz*.3,x-sz*.3,y-sz*.55);doc.line(x-sz*.3,y-sz*.55,x+sz*.3,y-sz*.55);doc.line(x+sz*.3,y-sz*.55,x+sz*.5,y-sz*.3);}
+        else if(tipo==='pluton'){doc.line(x-sz*.25,y-sz*.55,x-sz*.25,y+sz*.5);doc.line(x-sz*.25,y-sz*.55,x+sz*.15,y-sz*.55);doc.line(x+sz*.15,y-sz*.55,x+sz*.15,y-sz*.1);doc.line(x+sz*.15,y-sz*.1,x-sz*.25,y-sz*.1);doc.line(x-sz*.25,y+sz*.5,x+sz*.35,y+sz*.5);}
+        else if(tipo==='quiron'){doc.circle(x,y+sz*.35,sz*.28);doc.line(x,y-sz*.6,x,y+sz*.07);doc.line(x,y-sz*.15,x+sz*.35,y-sz*.55);doc.line(x,y-sz*.15,x+sz*.35,y+sz*.15);}
         else if(tipo==='nodo'){doc.line(x-sz*.4,y+sz*.4,x-sz*.4,y-sz*.2);doc.line(x-sz*.4,y-sz*.2,x-sz*.15,y-sz*.45);doc.line(x-sz*.15,y-sz*.45,x+sz*.15,y-sz*.45);doc.line(x+sz*.15,y-sz*.45,x+sz*.4,y-sz*.2);doc.line(x+sz*.4,y-sz*.2,x+sz*.4,y+sz*.4);doc.line(x-sz*.4,y+sz*.4,x-sz*.55,y+sz*.5);doc.line(x+sz*.4,y+sz*.4,x+sz*.55,y+sz*.5);}
       }
 
@@ -285,7 +287,8 @@ export default async function handler(req, res) {
         {raw:carta.mercRaw,tipo:'mercurio'},{raw:carta.venRaw,tipo:'venus'},
         {raw:carta.marRaw,tipo:'marte'},{raw:carta.jupRaw,tipo:'jupiter'},
         {raw:carta.satRaw,tipo:'saturno'},{raw:carta.uraRaw,tipo:'urano'},
-        {raw:carta.nepRaw,tipo:'neptuno'},{raw:carta.nodeRaw,tipo:'nodo'}
+        {raw:carta.nepRaw,tipo:'neptuno'},{raw:carta.plutRaw,tipo:'pluton'},
+        {raw:carta.quirRaw,tipo:'quiron'},{raw:carta.nodeRaw,tipo:'nodo'}
       ];
 
       var active = planetDefs.filter(p => p.raw !== undefined && p.raw !== null);
@@ -393,13 +396,15 @@ export default async function handler(req, res) {
         ['Saturno',carta.saturno||'-',casaDe(carta.satRaw),formatGradosNS(carta.satLatDeg),formatGradosNS(carta.satDeclDeg)],
         ['Urano',carta.urano||'-',casaDe(carta.uraRaw),formatGradosNS(carta.uraLatDeg),formatGradosNS(carta.uraDeclDeg)],
         ['Neptuno',carta.neptuno||'-',casaDe(carta.nepRaw),formatGradosNS(carta.nepLatDeg),formatGradosNS(carta.nepDeclDeg)],
+        ['Plutón',carta.pluton||'-',casaDe(carta.plutRaw),formatGradosNS(carta.plutLatDeg),formatGradosNS(carta.plutDeclDeg)],
+        ['Quirón',carta.quiron||'-',casaDe(carta.quirRaw),formatGradosNS(carta.quirLatDeg),formatGradosNS(carta.quirDeclDeg)],
         ['Ascendente',carta.ascendente||'-','-','-','-'],
       ];
       for (var r3=0;r3<rows.length;r3++) {
         var fill = r3%2===0?[252,249,240]:[255,255,255];
         doc.setFillColor(fill[0],fill[1],fill[2]); doc.rect(sx,y,110,rH,'F');
-        doc.setFont('Roboto',r3===9?'bold':'normal'); doc.setFontSize(7);
-        doc.setTextColor(r3===9?14:40,r3===9?63:40,r3===9?75:40);
+        doc.setFont('Roboto',r3===11?'bold':'normal'); doc.setFontSize(7);
+        doc.setTextColor(r3===11?14:40,r3===11?63:40,r3===11?75:40);
         for (var c3=0;c3<rows[r3].length;c3++) doc.text(fx(String(rows[r3][c3])),cols[c3]+1,y+3.8);
         doc.setDrawColor(220,210,190); doc.setLineWidth(0.1); doc.line(sx,y+rH,sx+110,y+rH);
         y += rH;
@@ -456,8 +461,8 @@ export default async function handler(req, res) {
     doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(207,177,128);
     doc.text(fx('ASPECTOS: Dinámicas internas de tu programación inicial'),18,py5);
     py5+=15;
-    var aspTipos=['sol','luna','mercurio','venus','marte','jupiter','saturno','urano','neptuno','asc'];
-    var aspRaws=[carta.solRaw,carta.lunaRaw,carta.mercRaw,carta.venRaw,carta.marRaw,carta.jupRaw,carta.satRaw,carta.uraRaw,carta.nepRaw,carta.ascRaw];
+    var aspTipos=['sol','luna','mercurio','venus','marte','jupiter','saturno','urano','neptuno','pluton','quiron','asc'];
+    var aspRaws=[carta.solRaw,carta.lunaRaw,carta.mercRaw,carta.venRaw,carta.marRaw,carta.jupRaw,carta.satRaw,carta.uraRaw,carta.nepRaw,carta.plutRaw,carta.quirRaw,carta.ascRaw];
     var aspDefs2=[{deg:0,orb:8,symbol:'=',color:[120,120,120]},{deg:60,orb:6,symbol:'S',color:[90,140,120]},{deg:90,orb:8,symbol:'C',color:[180,95,85]},{deg:120,orb:8,symbol:'T',color:[90,140,120]},{deg:180,orb:10,symbol:'O',color:[180,95,85]}];
     function dibujarMini(tipo,cx2,cy2,sz){
       doc.setDrawColor(14,63,75); doc.setLineWidth(0.3);
@@ -471,11 +476,14 @@ export default async function handler(req, res) {
       else if(tipo==='saturno'){doc.line(x-sz*.25,y-sz*.5,x-sz*.25,y+sz*.4);doc.line(x-sz*.5,y-sz*.3,x,y-sz*.3);doc.line(x-sz*.25,y+sz*.4,x+sz*.1,y+sz*.55);doc.line(x+sz*.1,y+sz*.55,x+sz*.3,y+sz*.4);doc.line(x+sz*.3,y+sz*.4,x+sz*.3,y+sz*.1);}
       else if(tipo==='urano'){doc.line(x-sz*.35,y-sz*.5,x-sz*.35,y+sz*.15);doc.line(x+sz*.35,y-sz*.5,x+sz*.35,y+sz*.15);doc.line(x-sz*.35,y-sz*.15,x+sz*.35,y-sz*.15);doc.line(x,y+sz*.15,x,y+sz*.35);doc.circle(x,y+sz*.5,sz*.15);}
       else if(tipo==='neptuno'){doc.line(x-sz*.5,y-sz*.3,x-sz*.35,y+sz*.2);doc.line(x+sz*.5,y-sz*.3,x+sz*.35,y+sz*.2);doc.line(x,y-sz*.3,x,y+sz*.4);doc.line(x-sz*.5,y-sz*.3,x+sz*.5,y-sz*.3);doc.line(x-sz*.25,y+sz*.4,x+sz*.25,y+sz*.4);doc.line(x-sz*.5,y-sz*.3,x-sz*.3,y-sz*.55);doc.line(x-sz*.3,y-sz*.55,x+sz*.3,y-sz*.55);doc.line(x+sz*.3,y-sz*.55,x+sz*.5,y-sz*.3);}
+      else if(tipo==='pluton'){doc.line(x-sz*.25,y-sz*.55,x-sz*.25,y+sz*.5);doc.line(x-sz*.25,y-sz*.55,x+sz*.15,y-sz*.55);doc.line(x+sz*.15,y-sz*.55,x+sz*.15,y-sz*.1);doc.line(x+sz*.15,y-sz*.1,x-sz*.25,y-sz*.1);doc.line(x-sz*.25,y+sz*.5,x+sz*.35,y+sz*.5);}
+      else if(tipo==='quiron'){doc.circle(x,y+sz*.35,sz*.28);doc.line(x,y-sz*.6,x,y+sz*.07);doc.line(x,y-sz*.15,x+sz*.35,y-sz*.55);doc.line(x,y-sz*.15,x+sz*.35,y+sz*.15);}
       else if(tipo==='asc'){doc.line(x-sz*.6,y,x+sz*.4,y);doc.line(x+sz*.4,y,x+sz*.2,y-sz*.25);doc.line(x+sz*.4,y,x+sz*.2,y+sz*.25);}
     }
-    var cellS=10,aspX=30,aspY=py5,miniSz=2.2;
+    var cellS=100/aspTipos.length,aspX=30,aspY=py5,miniSz=2.2;   // el total sigue midiendo 100 mm
+    var nAsp=aspTipos.length;
     for(var ai4=0;ai4<aspTipos.length;ai4++) dibujarMini(aspTipos[ai4],aspX+ai4*cellS+cellS/2,aspY-3,miniSz);
-    for(var row=0;row<10;row++){
+    for(var row=0;row<nAsp;row++){
       dibujarMini(aspTipos[row],aspX-4,aspY+row*cellS+cellS/2,miniSz);
       for(var col=0;col<=row;col++){
         var cx3=aspX+col*cellS,cy3=aspY+row*cellS;
@@ -498,7 +506,7 @@ export default async function handler(req, res) {
         }
       }
     }
-    py5=aspY+10*cellS+6;
+    py5=aspY+nAsp*cellS+6;
     doc.setFont('Roboto','normal'); doc.setFontSize(7); doc.setTextColor(100,100,100);
     doc.text('T = Trígono   C = Cuadratura   S = Sextil   O = Oposición   = = Conjunción',W/2,py5,{align:'center'});
     py5+=6;

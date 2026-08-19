@@ -197,6 +197,52 @@ const _ELEMENTOS = {
 // grado y medio por siglo respecto al resto de la carta.
 function _precesion(T) { return 1.396971*T + 0.0003086*T*T; }
 
+// ── Plutón y Quirón ───────────────────────────────────────────────────────────
+// Sus órbitas son mucho más elípticas que las de los planetas (e = 0.25 y 0.38
+// frente a 0.09 de Marte), así que la serie aproximada que basta para el resto
+// se queda corta con ellos. Para estos dos se resuelve la ecuación de Kepler.
+function _kepler(e, M) {
+  let E = M;
+  for (let i = 0; i < 100; i++) {
+    const d = (E - e*Math.sin(E) - M) / (1 - e*Math.cos(E));
+    E -= d;
+    if (Math.abs(d) < 1e-13) break;
+  }
+  return E;
+}
+function _desdeNu(a, e, E, w, O, I) {
+  const nu = 2*Math.atan2(Math.sqrt(1+e)*Math.sin(E/2), Math.sqrt(1-e)*Math.cos(E/2));
+  const r = a*(1 - e*Math.cos(E));
+  const u = nu + w, OR = O;
+  return { x: r*(Math.cos(OR)*Math.cos(u) - Math.sin(OR)*Math.sin(u)*Math.cos(I)),
+           y: r*(Math.sin(OR)*Math.cos(u) + Math.cos(OR)*Math.sin(u)*Math.cos(I)),
+           z: r*Math.sin(u)*Math.sin(I) };
+}
+
+// Plutón: misma tabla y mismo formato que los planetas (Standish, JPL/NASA),
+// pero resolviendo Kepler en vez de la serie.
+const _ELEM_PLUTON = [238.92903833, 145.20780515, 0, 224.06891629, -0.04062942, 39.48211675, 0.24882730, 17.14001206, 0.00004818, 110.30393684, -0.01183482];
+function _plutonHelio(T) {
+  const [L0,L1,L2,w0,w1,a,e,I0,I1,O0,O1] = _ELEM_PLUTON;
+  const L = _mod(L0+L1*T+L2*T*T, 360), w = _mod(w0+w1*T, 360), O = _mod(O0+O1*T, 360);
+  const M = _R(_mod(L-w+180, 360) - 180);
+  return _desdeNu(a, e, _kepler(e, M), _R(_mod(w-O, 360)), _R(O), _R(I0+I1*T));
+}
+
+// Quirón: elementos osculadores en su época de referencia (JD 2456000.5), del
+// mismo juego que usan las efemérides de Moshier. Su órbita está muy perturbada
+// por Saturno y Urano, así que su precisión es menor que la de los planetas.
+const _ELEM_QUIRON = { epoca: 2456000.5, a: 13.670338374188397, e: 0.3792037887546262,
+                       i: 6.926651533484328, O: 209.3851130617651, w: 339.4595737215378,
+                       M0: 114.8798253094007 };
+function _quironHelio(T) {
+  const q = _ELEM_QUIRON;
+  const JD = T*36525 + 2451545.0;
+  const n = 0.9856076686 / Math.pow(q.a, 1.5);          // grados/día, 3ª ley de Kepler
+  const M = _R(_mod(q.M0 + n*(JD - q.epoca), 360));
+  return _desdeNu(q.a, q.e, _kepler(q.e, M), _R(q.w), _R(q.O), _R(q.i));
+}
+
 // La Tierra se calcula con los mismos elementos y la misma fuente que el resto,
 // para que la resta Tierra-planeta se haga dentro del mismo sistema.
 function _earthHelio(T) {
@@ -261,6 +307,11 @@ function saturnLatitude(T)  { return _geoLat(_ELEMENTOS.saturno,  T); }
 function uranusLatitude(T)  { return _geoLat(_ELEMENTOS.urano,    T); }
 function neptuneLatitude(T) { return _geoLat(_ELEMENTOS.neptuno,  T); }
 
+function plutonLongitude(T) { return _mod(_helioToGeo(_plutonHelio(T), _earthHelio(T)) + _precesion(T), 360); }
+function plutonLatitude(T)  { return _eclipticLatitude(_plutonHelio(T), _earthHelio(T)); }
+function quironLongitude(T) { return _mod(_helioToGeo(_quironHelio(T), _earthHelio(T)) + _precesion(T), 360); }
+function quironLatitude(T)  { return _eclipticLatitude(_quironHelio(T), _earthHelio(T)); }
+
 // Nodo Norte de la Luna
 function lunarNode(T) {
   return _mod(125.04452 - 1934.136261*T + 0.0020708*T*T, 360);
@@ -315,6 +366,8 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
   const satL  = saturnLongitude(T);
   const uraL  = uranusLongitude(T);
   const nepL  = neptuneLongitude(T);
+  const plutL = plutonLongitude(T);
+  const quirL = quironLongitude(T);
   const nodeL = lunarNode(T);
 
   // Latitud eclíptica y declinación de Mercurio a Neptuno (aditivo, ver funciones xxxLatitude arriba)
@@ -332,6 +385,10 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
   const uraDeclDeg  = _declinacion(uraL, uraLatDeg, epsTR);
   const nepLatDeg  = neptuneLatitude(T);
   const nepDeclDeg  = _declinacion(nepL, nepLatDeg, epsTR);
+  const plutLatDeg = plutonLatitude(T);
+  const plutDeclDeg = _declinacion(plutL, plutLatDeg, epsTR);
+  const quirLatDeg = quironLatitude(T);
+  const quirDeclDeg = _declinacion(quirL, quirLatDeg, epsTR);
 
   const signoNombre = (d) => {
     const signos = ['Aries','Tauro','Géminis','Cáncer','Leo','Virgo','Libra','Escorpio','Sagitario','Capricornio','Acuario','Piscis'];
@@ -352,6 +409,8 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     saturno:    signoNombre(satL),
     urano:      signoNombre(uraL),
     neptuno:    signoNombre(nepL),
+    pluton:     signoNombre(plutL),
+    quiron:     signoNombre(quirL),
     nodoNorte:  signoNombre(nodeL),
     ascRaw:  ASC,
     casas:   casas,
@@ -382,6 +441,12 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     nepRaw:  nepL,
     nepLatDeg: nepLatDeg,
     nepDeclDeg: nepDeclDeg,
+    plutRaw: plutL,
+    plutLatDeg: plutLatDeg,
+    plutDeclDeg: plutDeclDeg,
+    quirRaw: quirL,
+    quirLatDeg: quirLatDeg,
+    quirDeclDeg: quirDeclDeg,
     nodeRaw: nodeL,
     lat:     latDeg,
     lon:     lonDeg,
