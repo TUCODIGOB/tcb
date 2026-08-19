@@ -312,6 +312,18 @@ function plutonLatitude(T)  { return _eclipticLatitude(_plutonHelio(T), _earthHe
 function quironLongitude(T) { return _mod(_helioToGeo(_quironHelio(T), _earthHelio(T)) + _precesion(T), 360); }
 function quironLatitude(T)  { return _eclipticLatitude(_quironHelio(T), _earthHelio(T)); }
 
+// Un cuerpo esta RETROGRADO cuando, visto desde la Tierra, su longitud disminuye
+// de un dia para otro. Es un movimiento aparente, no real, y en astrologia se
+// marca con una R porque cambia la lectura de ese planeta. El Sol y la Luna
+// nunca lo estan.
+function _retrogrado(fn, T) {
+  const dT = 1 / 36525;                 // un dia, en siglos julianos
+  let paso = fn(T + dT) - fn(T);
+  if (paso > 180) paso -= 360;
+  if (paso < -180) paso += 360;
+  return paso < 0;
+}
+
 // Nodo Norte de la Luna
 function lunarNode(T) {
   return _mod(125.04452 - 1934.136261*T + 0.0020708*T*T, 360);
@@ -369,6 +381,16 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
   const plutL = plutonLongitude(T);
   const quirL = quironLongitude(T);
   const nodeL = lunarNode(T);
+
+  const mercRetro = _retrogrado(mercuryLongitude, T);
+  const venRetro  = _retrogrado(venusLongitude,   T);
+  const marRetro  = _retrogrado(marsLongitude,    T);
+  const jupRetro  = _retrogrado(jupiterLongitude, T);
+  const satRetro  = _retrogrado(saturnLongitude,  T);
+  const uraRetro  = _retrogrado(uranusLongitude,  T);
+  const nepRetro  = _retrogrado(neptuneLongitude, T);
+  const plutRetro = _retrogrado(plutonLongitude,  T);
+  const quirRetro = _retrogrado(quironLongitude,  T);
 
   // Latitud eclíptica y declinación de Mercurio a Neptuno (aditivo, ver funciones xxxLatitude arriba)
   const mercLatDeg = mercuryLatitude(T);
@@ -447,6 +469,15 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     quirRaw: quirL,
     quirLatDeg: quirLatDeg,
     quirDeclDeg: quirDeclDeg,
+    mercRetro: mercRetro,
+    venRetro:  venRetro,
+    marRetro:  marRetro,
+    jupRetro:  jupRetro,
+    satRetro:  satRetro,
+    uraRetro:  uraRetro,
+    nepRetro:  nepRetro,
+    plutRetro: plutRetro,
+    quirRetro: quirRetro,
     nodeRaw: nodeL,
     lat:     latDeg,
     lon:     lonDeg,

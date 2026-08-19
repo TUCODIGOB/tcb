@@ -524,15 +524,15 @@ async function generarDiagnosticoSilencioso(nombre, sexo, fechaNice, hora, lugar
 - Ascendente: ${carta.ascendente}
 - Sol: ${carta.sol}
 - Luna: ${carta.luna}
-- Mercurio: ${carta.mercurio}
-- Venus: ${carta.venus}
-- Marte: ${carta.marte}
-- Júpiter: ${carta.jupiter}
-- Saturno: ${carta.saturno}
-- Urano: ${carta.urano}
-- Neptuno: ${carta.neptuno}
-- Plutón: ${carta.pluton}
-- Quirón: ${carta.quiron}
+- Mercurio: ${carta.mercurio}${carta.mercRetro ? ' (retrógrado)' : ''}
+- Venus: ${carta.venus}${carta.venRetro ? ' (retrógrado)' : ''}
+- Marte: ${carta.marte}${carta.marRetro ? ' (retrógrado)' : ''}
+- Júpiter: ${carta.jupiter}${carta.jupRetro ? ' (retrógrado)' : ''}
+- Saturno: ${carta.saturno}${carta.satRetro ? ' (retrógrado)' : ''}
+- Urano: ${carta.urano}${carta.uraRetro ? ' (retrógrado)' : ''}
+- Neptuno: ${carta.neptuno}${carta.nepRetro ? ' (retrógrado)' : ''}
+- Plutón: ${carta.pluton}${carta.plutRetro ? ' (retrógrado)' : ''}
+- Quirón: ${carta.quiron}${carta.quirRetro ? ' (retrógrado)' : ''}
 - Nodo Norte: ${carta.nodoNorte}`;
 
   const response = await fetch('/api/chat', {
