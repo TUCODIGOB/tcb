@@ -612,7 +612,8 @@ ${listaAspectos || '- sin aspectos dentro de orbe'}`;
   // Token de la reserva: sin el, generar-pdf y save-pdf no aceptan la peticion.
   _G.token = data.token;
 
-  _G.areas = data.texto.split('===AREA===').map(p => p.trim()).filter(p => p.length > 0);
+  // U+001F, el mismo separador invisible que usa api/chat.js al unir las areas.
+  _G.areas = data.texto.split('\u001F').map(p => p.trim()).filter(p => p.length > 0);
 fetch('/api/generar-pdf', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

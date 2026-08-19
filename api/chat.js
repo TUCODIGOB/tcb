@@ -3,6 +3,10 @@ import { MAX_INTENTOS, estado, reservar, liberar } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// Separador entre las 7 areas del informe. Tiene que ser algo que el modelo
+// no pueda escribir nunca; ver la nota donde se usa.
+const SEPARADOR_AREAS = '\u001F';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -279,8 +283,16 @@ ${cartaTexto}`;
       AREAS.map(area => generarArea(area))
     );
 
-    // Unir con el separador que ya usa el frontend
-    const textoCompleto = resultados.join('\n\n===AREA===\n\n');
+    // Unir con el separador. Es U+001F (Unit Separator), un caracter de
+    // control invisible que existe justo para esto y que no aparece en texto
+    // escrito. Antes era la palabra "===AREA===": si el modelo la escribia por
+    // casualidad dentro de un area, el informe se partia mal y los textos se
+    // desplazaban de seccion.
+    // Por si acaso, se quita el separador del texto de cada area antes de unir:
+    // asi ni escribiendolo a proposito se puede romper el reparto.
+    const textoCompleto = resultados
+      .map(t => t.split(SEPARADOR_AREAS).join(''))
+      .join(SEPARADOR_AREAS);
 
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
     // que demuestra que quien pide el PDF es quien tiene la reserva.
