@@ -111,10 +111,12 @@ ESTILO DE ESCRITURA:
 - Escribe como un humano, no como una IA: menos puntos, más comas, frases que fluyen
 
 REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
-- Párrafos cortos. Ninguno pasa de 70 palabras. Al maquetarse en el PDF final, 70 palabras ocupan 5 líneas, y 5 líneas es el máximo absoluto. El punto bueno está entre 55 y 70 palabras por párrafo, que son 4 o 5 líneas.
+- TECHO ABSOLUTO: ningún párrafo pasa de 70 palabras. Al maquetarse en el PDF, 70 palabras ocupan 5 líneas, y 5 líneas es el máximo. Si se te va por encima, pártelo en dos. Esto no se negocia nunca.
+- NO HAY MÍNIMO. Los párrafos van de 2 a 5 líneas y tienen que MEZCLARSE sin patrón: uno de cinco que desarrolla, dos cortos seguidos, otro de tres, uno de dos líneas que remata y duele. Escribe como escribe una persona, no como una máquina que reparte el texto en trozos iguales.
+- Si todos tus párrafos miden parecido, está MAL aunque respeten el techo. Se lee robótico y el lector lo nota aunque no sepa por qué.
+- Un párrafo de dos líneas es la mejor herramienta que tienes para cerrar una idea o dejar caer algo incómodo. Úsalos, y no siempre en el mismo sitio.
 - Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
-- Si un párrafo se te va por encima de 70 palabras, pártelo en dos párrafos cortos. Nunca lo dejes largo.
-- REGLA CRÍTICA DE LONGITUD: esta área tiene OBLIGATORIAMENTE entre 850 y 900 palabras. No hay un número fijo de párrafos: salen los que hagan falta. Y como cada párrafo es corto, de 55 a 70 palabras, para llegar a 850-900 palabras hacen falta MUCHOS párrafos, entre 13 y 16. Son bastantes más de los que te va a pedir el instinto, y es correcto que sean tantos. Un área con menos de 850 palabras es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle, más ejemplos, más variaciones de la misma idea, y hazlo AÑADIENDO párrafos cortos nuevos, nunca engordando los que ya tienes.
+- REGLA CRÍTICA DE LONGITUD: esta área tiene OBLIGATORIAMENTE entre 850 y 900 palabras. No hay número fijo de párrafos: con la mezcla saldrán bastantes, entre 15 y 22. Un área con menos de 850 palabras es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente ella, que por fin alguien se lo explica.
 
@@ -155,6 +157,7 @@ PROHIBICIONES ABSOLUTAS:
 - No decir qué debe hacer la persona
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
 - PROHIBIDO escribir párrafos de más de 5 líneas. Parte en 2 si hace falta
+- PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
 - PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
 - PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea`;
 
@@ -163,37 +166,37 @@ PROHIBICIONES ABSOLUTAS:
       id: 1,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro, cómo se vive a sí misma, cómo se valora cuando nadie la mira, su diálogo interno.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos cortos de 55 a 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
     },
     {
       id: 2,
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué hace automáticamente cuando algo pasa, cómo reacciona, cómo se sabotea, por qué siempre acaba en los mismos sitios.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos cortos de 55 a 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
     },
     {
       id: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que más gobierna su vida sin que lo nombre, qué evita por ese miedo, qué gana al tenerlo.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos cortos de 55 a 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
     },
     {
       id: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué duele hoy, cuándo se dispara, qué situaciones lo reactivan, cómo afecta su presente.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos cortos de 55 a 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
     },
     {
       id: 5,
       prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo ama en pareja, qué patrón repite, por qué atrae siempre el mismo tipo de personas, qué pasa con el deseo y la intimidad.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos cortos de 55 a 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
     },
     {
       id: 6,
       prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: qué rol ocupa con los demás, cómo encaja o no en grupos, qué personas atrae, por qué se acerca o se aleja.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos cortos de 55 a 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
     },
     {
       id: 7,
@@ -201,7 +204,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
 
 Después del cierre normal del área, añade UN SOLO párrafo final de despedida de todo el estudio, corto y contundente (máximo 2 líneas, entre 20 y 35 palabras). Como cuando alguien que te conoce bien te dice algo al final de una conversación larga y te deja tocado. Sin consejos, sin motivación, solo una verdad que resuena.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos cortos de 55 a 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
     },
   ];
 
