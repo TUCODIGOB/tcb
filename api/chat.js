@@ -109,6 +109,10 @@ ESTILO DE ESCRITURA:
 - No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo
 - No empieces dos párrafos con la misma estructura. Varía los arranques
 - Escribe como un humano, no como una IA: menos puntos, más comas, frases que fluyen
+- CADA FRASE TIENE QUE SONAR COMO HABLA UNA PERSONA DE VERDAD. Antes de dar una frase por buena, léela en voz alta por dentro: si nadie la diría hablando, está mal y se reescribe. No fuerces la gramática para que suene elaborado, y no cojas un verbo raro cuando el normal dice lo mismo. Lo que suena a literatura no emociona, distrae: el lector tropieza, sale del texto y deja de reconocerse.
+- MAL: "el cariño que no te has ganado con algo no termina de ser de fiar" (construcción retorcida, hay que releerla). BIEN: "del cariño que llega gratis no te puedes fiar".
+- MAL: "enseñar que algo te ha dolido" (verbo forzado). BIEN: "dejar ver que algo te ha dolido".
+- Vigila especialmente la primera frase del área. Si el lector tropieza ahí, ya no entra.
 
 REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 - TECHO ABSOLUTO: ningún párrafo pasa de 70 palabras. Al maquetarse en el PDF, 70 palabras ocupan 5 líneas, y 5 líneas es el máximo. Si se te va por encima, pártelo en dos. Esto no se negocia nunca.
@@ -139,7 +143,8 @@ HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta par
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
 
-ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendió, con quién, en qué situación, y qué hace hoy exactamente por haberlo aprendido. El razonamiento tiene esta forma: "aprendiste esto de pequeña, y por eso hoy, sin darte cuenta, haces esto otro". La forma es esa, las palabras las pones tú y cambian en cada área. Alrededor de una quinta parte del área.
+ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendió, con quién, en qué situación, y qué hace hoy exactamente por haberlo aprendido. El razonamiento tiene esta forma: "aprendiste esto de pequeña, y por eso hoy, sin darte cuenta, haces esto otro". La forma es esa, las palabras las pones tú y cambian en cada área.
+UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluyó ella de aquello, y qué hace hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra infancia distinta. Alrededor de una quinta parte del área.
 
 CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Alrededor de una quinta parte del área.
 
@@ -177,7 +182,7 @@ El área termina con un párrafo de cierre potente, no con una frase suave o vag
 Ejemplos del tono que busco para los cierres:
 - "Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva años esperándote dentro."
 - "Porque en el fondo lo sabes. Siempre lo has sabido. Solo que mirar para otro lado era más cómodo."
-- "El día que dejes de demostrar, empiezas a existir."
+- "Llevas media vida demostrando que vales para no tener que averiguar si es verdad."
 
 PROHIBICIONES ABSOLUTAS:
 - No repetir el título del área en el texto
@@ -186,6 +191,8 @@ PROHIBICIONES ABSOLUTAS:
 - No decir qué debe hacer la persona
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
 - PROHIBIDO escribir párrafos de más de 5 líneas. Parte en 2 si hace falta
+- PROHIBIDO retorcer una frase o usar un verbo raro para que suene literario. Si no lo diría una persona hablando, se reescribe
+- PROHIBIDO apilar varias explicaciones del origen. Una sola, bien desarrollada
 - PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
 - PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
 - PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea`;
