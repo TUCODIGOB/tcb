@@ -6,6 +6,12 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const BASE_URL = 'https://origennatal.com';
+
+// Las 16 imagenes y las 3 fuentes del PDF son identicas para todos los clientes,
+// asi que se guardan la primera vez y se reutilizan en las generaciones siguientes
+// del mismo contenedor. Solo se guarda lo que se ha descargado bien: un fallo
+// nunca se cachea, para que no se repita en todos los PDFs posteriores.
+const ASSET_CACHE = new Map();
  
 export const config = {
   api: {
@@ -19,6 +25,7 @@ export default async function handler(req, res) {
   }
 
   let sessionMetadata = {};
+  let sessionEmail = '';
   {
     const { session_id } = req.body;
 
@@ -35,6 +42,7 @@ export default async function handler(req, res) {
         return res.status(403).json({ error: 'Este informe ya fue generado.' });
       }
       sessionMetadata = session.metadata || {};
+      sessionEmail = session.customer_email || session.customer_details?.email || '';
     } catch (err) {
       return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
     }
@@ -47,24 +55,41 @@ export default async function handler(req, res) {
   }
 
   try {
-    // ── Cargar fuentes ────────────────────────────────────────────────────────
-    async function loadFontBase64(path) {
+    // Ficheros que no se han podido cargar en esta generacion
+    const fallosCarga = [];
+
+    // ── Descarga con cache. Devuelve el mismo base64 que se usaba antes ───────
+    async function loadAssetBase64(path) {
+      if (ASSET_CACHE.has(path)) return ASSET_CACHE.get(path);
       const r = await fetch(`${BASE_URL}${path}`);
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
       const buf = await r.arrayBuffer();
       const bytes = new Uint8Array(buf);
       let binary = '';
       for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-      return btoa(binary);
+      const b64 = btoa(binary);
+      ASSET_CACHE.set(path, b64);
+      return b64;
+    }
+
+    // ── Cargar fuentes ────────────────────────────────────────────────────────
+    async function loadFontBase64(path) {
+      try {
+        return await loadAssetBase64(path);
+      } catch (err) {
+        fallosCarga.push(`${path} (${err.message})`);
+        return null;
+      }
     }
 
     // ── Cargar imágenes ───────────────────────────────────────────────────────
     async function loadImageBase64(path) {
-      const r = await fetch(`${BASE_URL}${path}`);
-      const buf = await r.arrayBuffer();
-      const bytes = new Uint8Array(buf);
-      let binary = '';
-      for (let i = 0; i < bytes.length; i++) binary += String.fromCharCode(bytes[i]);
-      return 'data:image/jpeg;base64,' + btoa(binary);
+      try {
+        return 'data:image/jpeg;base64,' + await loadAssetBase64(path);
+      } catch (err) {
+        fallosCarga.push(`${path} (${err.message})`);
+        return null;
+      }
     }
 
     const [regular, bold, italic,
@@ -98,12 +123,17 @@ export default async function handler(req, res) {
 
     const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
 
-    doc.addFileToVFS('Roboto-Regular.ttf', regular);
-    doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal');
-    doc.addFileToVFS('Roboto-Bold.ttf', bold);
-    doc.addFont('Roboto-Bold.ttf', 'Roboto', 'bold');
-    doc.addFileToVFS('Roboto-Italic.ttf', italic);
-    doc.addFont('Roboto-Italic.ttf', 'Roboto', 'italic');
+    // Si una fuente no se ha podido cargar no se registra: jsPDF dibuja ese texto
+    // con la fuente por defecto en lugar de fallar, y el informe sigue siendo legible.
+    if (regular) { doc.addFileToVFS('Roboto-Regular.ttf', regular); doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal'); }
+    if (bold)    { doc.addFileToVFS('Roboto-Bold.ttf', bold);       doc.addFont('Roboto-Bold.ttf', 'Roboto', 'bold'); }
+    if (italic)  { doc.addFileToVFS('Roboto-Italic.ttf', italic);   doc.addFont('Roboto-Italic.ttf', 'Roboto', 'italic'); }
+
+    // Si un fondo no se ha podido cargar, esa pagina sale sin fondo en vez de
+    // romper el PDF entero. Se envuelve addImage una sola vez para no tener que
+    // tocar ninguna de las llamadas de dibujo que ya existen.
+    const _addImage = doc.addImage.bind(doc);
+    doc.addImage = function (img, ...resto) { return img ? _addImage(img, ...resto) : doc; };
 
     function fx(s) { return s || ''; }
     var W = 210, H = 297;
@@ -526,6 +556,22 @@ export default async function handler(req, res) {
     // ── Devolver PDF en base64 ────────────────────────────────────────────────
     const pdfBase64 = doc.output('datauristring');
 
+    // Si algun fichero no se ha podido cargar, el PDF va igualmente al cliente
+    // pero puede tener alguna pagina sin fondo, asi que se avisa para revisarlo.
+    if (fallosCarga.length > 0) {
+      console.error('PDF generado con ficheros que fallaron:', fallosCarga.join(', '));
+      try {
+        await enviarAvisoFalloPDF({
+          nombre,
+          email: sessionEmail,
+          sessionId: session_id,
+          fallos: fallosCarga,
+        });
+      } catch (avisoErr) {
+        console.error('Tampoco se pudo avisar del fallo del PDF:', avisoErr.message);
+      }
+    }
+
     // Marcar el informe como completado para bloquear generaciones repetidas
     try {
       await stripe.checkout.sessions.update(session_id, {
@@ -541,4 +587,44 @@ export default async function handler(req, res) {
     console.error('Error generando PDF:', err.message);
     return res.status(500).json({ error: 'Error generando el PDF: ' + err.message });
   }
+}
+
+
+// ═════════════════════════════════════════════════════════════════
+// AVISO DE FALLO AL MONTAR EL PDF (via Brevo)
+// El PDF se entrega igualmente; esto solo sirve para poder revisarlo y,
+// si hace falta, reenviarlo a mano.
+// ═════════════════════════════════════════════════════════════════
+async function enviarAvisoFalloPDF({ nombre, email, sessionId, fallos }) {
+  const BREVO_API_KEY = process.env.BREVO_API_KEY;
+  if (!BREVO_API_KEY) return;
+
+  const mensaje = [
+    'El PDF se ha generado y enviado al cliente, pero algun fichero no cargo.',
+    'Revisa el PDF y reenvialo a mano si hace falta.',
+    '',
+    `Cliente:    ${nombre || '-'}`,
+    `Email:      ${email || '(desconocido)'}`,
+    `Session ID: ${sessionId || '-'}`,
+    '',
+    `Ficheros que fallaron (${fallos.length}):`,
+    ...fallos.map(f => `  - ${f}`),
+  ].join('\n');
+
+  const body = {
+    sender: { email: 'hola@origennatal.com', name: 'Origen Natal — Alertas' },
+    to: [{ email: 'hola.origennatal@gmail.com', name: 'Origen Natal' }],
+    subject: 'FALLO PDF CLIENTE',
+    htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
+  };
+
+  await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': BREVO_API_KEY,
+    },
+    body: JSON.stringify(body),
+  });
 }
