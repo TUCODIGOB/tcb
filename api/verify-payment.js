@@ -30,16 +30,6 @@ export default async function handler(req, res) {
       return res.status(402).json({ ok: false, error: 'El pago no está confirmado' });
     }
 
-    // Bloquear si ya fue generado
-    if (session.metadata?.informe_generado === 'si') {
-      return res.status(403).json({ ok: false, error: 'Este informe ya fue generado.' });
-    }
-
-    // Marcar como usado en Stripe antes de responder
-    await stripe.checkout.sessions.update(session_id, {
-      metadata: { ...session.metadata, informe_generado: 'si' }
-    });
-
     const email = session.customer_email || session.customer_details?.email;
     const BREVO_API_KEY = process.env.BREVO_API_KEY;
 
