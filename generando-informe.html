@@ -471,6 +471,8 @@ function showError(msg, hideSupportBox) {
     console.error('Error generación:', e);
     if (e.message === 'DATOS_INVALIDOS') {
       showError('Lo sentimos, ha habido un error en alguno de tus datos, por favor vuelve a intentarlo.', true);
+    } else if (e.message === 'LUGAR_NACIMIENTO') {
+      showError('No hemos podido localizar tu lugar de nacimiento. Por favor vuelve a intentarlo en unos segundos.', true);
     } else if (e.message === 'ZONA_HORARIA') {
       showError('No hemos podido calcular la hora exacta de tu lugar de nacimiento. Por favor vuelve a intentarlo en unos segundos.', true);
     } else {
@@ -615,15 +617,27 @@ async function getTZOffset(lat, lon, fechaISO, hora) {
 // ─── GEOCODIFICACIÓN ──────────────────────────────────────────────────────────
 async function geocode(ciudad, provincia, pais) {
   const query = [ciudad, provincia, pais].filter(Boolean).join(', ');
-  try {
-    const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&format=json&limit=1&addressdetails=1';
-    const r = await fetch(url, { headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' } });
-    const data = await r.json();
-    if (data && data.length > 0) {
-      return { lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon), ok: true };
-    }
-  } catch(e) {}
-  return { lat: 40.4168, lon: -3.7038, ok: false }; // fallback Madrid
+  // Dos intentos: Nominatim limita las peticiones y a veces rechaza la primera.
+  for (let intento = 0; intento < 2; intento++) {
+    try {
+      const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&format=json&limit=1&addressdetails=1';
+      const r = await fetch(url, { headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' } });
+      const data = await r.json();
+      if (data && data.length > 0) {
+        const lat = parseFloat(data[0].lat), lon = parseFloat(data[0].lon);
+        if (isFinite(lat) && isFinite(lon)) {
+          return { lat, lon, ok: true };
+        }
+      }
+    } catch(e) {}
+    if (intento === 0) await new Promise(r => setTimeout(r, 1200));
+  }
+
+  // Antes se devolvian aqui las coordenadas de Madrid. Un cliente de Bogota
+  // recibia entonces una carta calculada sobre Madrid, con el Ascendente en
+  // otro signo, sin que ni el ni nosotros nos enterasemos. Es preferible parar
+  // y que reintente, igual que con la zona horaria.
+  throw new Error('LUGAR_NACIMIENTO');
 }
 
 function descargarPDF() {
