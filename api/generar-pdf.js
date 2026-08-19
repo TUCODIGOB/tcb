@@ -293,10 +293,32 @@ export default async function handler(req, res) {
 
       var rPlanet = (rCasa + rSigno) / 2 - 1;
       var minSep = 7;
-      for (var q = 0; q < active.length; q++) active[q].r = rPlanet;
-      for (var q2 = 1; q2 < active.length; q2++) {
-        var diff = Math.abs(active[q2].raw - active[q2-1].raw);
-        if (diff < minSep) active[q2].r = active[q2-1].r - 4.5;
+      var pasoR = 4.5;
+
+      // Distancia angular real sobre el circulo: 359 y 1 estan a 2 grados, no a 358.
+      function sepAngular(a, b) {
+        var d = Math.abs(a - b) % 360;
+        return d > 180 ? 360 - d : d;
+      }
+
+      // Cada planeta se coloca en el primer anillo donde no quede a menos de
+      // minSep de NINGUNO de los ya colocados en ese mismo anillo, comparando
+      // contra todos y no solo contra el anterior de la lista.
+      var anillos = [];
+      for (var q = 0; q < active.length; q++) {
+        var nivel = 0;
+        for (;;) {
+          var ocupantes = anillos[nivel] || [];
+          var libre = true;
+          for (var z = 0; z < ocupantes.length; z++) {
+            if (sepAngular(active[q].raw, ocupantes[z].raw) < minSep) { libre = false; break; }
+          }
+          if (libre) break;
+          nivel++;
+        }
+        if (!anillos[nivel]) anillos[nivel] = [];
+        anillos[nivel].push(active[q]);
+        active[q].r = rPlanet - nivel * pasoR;
       }
 
       var plSize = (rSigno - rCasa) * 0.38;
