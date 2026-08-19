@@ -1,4 +1,5 @@
 import Stripe from 'stripe';
+import { estado } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -18,8 +19,13 @@ export default async function handler(req, res) {
     if (!session || session.payment_status !== 'paid') {
       return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
     }
-    if (session.metadata?.informe_completado === 'si') {
+    const st = estado(session);
+    if (st.completado) {
       return res.status(403).json({ error: 'Este informe ya fue generado.' });
+    }
+    // Se esta generando ahora mismo: no hay nada que recalcular.
+    if (st.ocupada) {
+      return res.status(409).json({ error: 'Tu informe se esta generando ahora mismo.' });
     }
   } catch (err) {
     return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });

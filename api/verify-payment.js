@@ -5,6 +5,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
+import { estado } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -44,10 +45,17 @@ export default async function handler(req, res) {
       console.error('Error actualizando Brevo:', e);
     }
 
+    // El estado se calcula aqui, con el reloj del servidor: si se calculara
+    // en el navegador, un reloj desajustado daria un resultado distinto.
+    // Sirve para que la pagina no arranque una generacion que el servidor va
+    // a rechazar de todos modos, y pueda decirle al cliente que pasa.
+    const st = estado(session);
+
     return res.status(200).json({
       ok: true,
       email,
       metadata: session.metadata || {},
+      estadoInforme: st.completado ? 'completado' : (st.ocupada ? 'en_curso' : 'libre'),
     });
 
   } catch (error) {

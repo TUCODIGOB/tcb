@@ -2,6 +2,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { jsPDF } = require('jspdf');
 import Stripe from 'stripe';
+import { estado, liberar, completar } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -24,10 +25,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  let sessionMetadata = {};
   let sessionEmail = '';
   {
-    const { session_id } = req.body;
+    const { session_id, token } = req.body;
 
     if (!session_id || typeof session_id !== 'string') {
       return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
@@ -38,17 +38,25 @@ export default async function handler(req, res) {
       if (!session || session.payment_status !== 'paid') {
         return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
       }
-      if (session.metadata?.informe_completado === 'si') {
+
+      const st = estado(session);
+      if (st.completado) {
         return res.status(403).json({ error: 'Este informe ya fue generado.' });
       }
-      sessionMetadata = session.metadata || {};
+      // Sin la reserva que dio chat.js no se genera nada. Tener el enlace
+      // (el session_id) no basta: el token solo lo tiene el navegador que
+      // acaba de pasar por chat.js con la reserva en la mano.
+      if (!token || typeof token !== 'string' || token !== st.token) {
+        return res.status(403).json({ error: 'Este informe ya fue generado.' });
+      }
+
       sessionEmail = session.customer_email || session.customer_details?.email || '';
     } catch (err) {
       return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
     }
   }
 
-  const { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas, session_id } = req.body;
+  const { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas, session_id, token } = req.body;
 
   if (!nombre || !areas || !session_id) {
     return res.status(400).json({ error: 'Faltan parámetros' });
@@ -582,11 +590,11 @@ export default async function handler(req, res) {
       }
     }
 
-    // Marcar el informe como completado para bloquear generaciones repetidas
+    // Marcar el informe como completado para bloquear generaciones repetidas.
+    // completar() vuelve a leer la metadata justo antes de escribir, para no
+    // pisar lo que se haya guardado mientras se construia el PDF.
     try {
-      await stripe.checkout.sessions.update(session_id, {
-        metadata: { ...sessionMetadata, informe_completado: 'si' }
-      });
+      await completar(stripe, session_id);
     } catch (err) {
       console.error('Error marcando informe_completado:', err.message);
     }
@@ -595,6 +603,8 @@ export default async function handler(req, res) {
 
   } catch (err) {
     console.error('Error generando PDF:', err.message);
+    // El PDF no salio: soltar la reserva para que quede un intento util.
+    await liberar(stripe, session_id, token);
     return res.status(500).json({ error: 'Error generando el PDF: ' + err.message });
   }
 }

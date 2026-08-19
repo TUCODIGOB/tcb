@@ -339,7 +339,7 @@
 <section id="screenError" class="screen">
   <div class="container">
     <div class="screen-inner">
-      <h2>No hemos podido verificar tu acceso</h2>
+      <h2 id="errorTitulo">No hemos podido verificar tu acceso</h2>
       <p id="errorMsg">Parece que llegaste a esta página sin completar el pago, por favor vuelve al formulario.</p>
       <a href="/tu-diseno-de-origen#formulario" id="errorBtn" class="btn-download" style="display:inline-block; text-decoration:none;">Realizar el pago</a>
       <div class="error-box">
@@ -383,10 +383,29 @@ function showScreen(id) {
 
 function showError(msg, hideSupportBox) {
   if (msg) document.getElementById('errorMsg').textContent = msg;
+  const titulo = document.getElementById('errorTitulo');
+  if (titulo) titulo.textContent = 'No hemos podido verificar tu acceso';
   const box = document.querySelector('#screenError .error-box');
   if (box) box.style.display = hideSupportBox ? 'none' : '';
   const btn = document.getElementById('errorBtn');
-  if (btn) btn.textContent = hideSupportBox ? 'Volver a intentarlo' : 'Realizar el pago';
+  if (btn) {
+    btn.style.display = 'inline-block';
+    btn.textContent = hideSupportBox ? 'Volver a intentarlo' : 'Realizar el pago';
+  }
+  showScreen('screenError');
+}
+
+// El informe ya existe, o se esta generando en otra pestana. No es un error:
+// el cliente ha pagado y su informe esta bien. Se le dice lo que pasa y no se
+// le ofrece pagar otra vez ni reintentar, porque no hay nada que reintentar.
+function showAviso(titulo, msg) {
+  const h = document.getElementById('errorTitulo');
+  if (h) h.textContent = titulo;
+  document.getElementById('errorMsg').textContent = msg;
+  const box = document.querySelector('#screenError .error-box');
+  if (box) box.style.display = '';
+  const btn = document.getElementById('errorBtn');
+  if (btn) btn.style.display = 'none';
   showScreen('screenError');
 }
 
@@ -429,6 +448,20 @@ function showError(msg, hideSupportBox) {
     }
   } catch(e) {
     showError('No hemos podido verificar tu pago. Por favor recarga la página o escríbenos a hola@origennatal.com');
+    return;
+  }
+
+  // El informe ya se genero, o se esta generando ahora mismo en otra pestana.
+  // No se arranca nada: se le dice al cliente que ya lo tiene. El servidor lo
+  // rechazaria igualmente, esto solo evita la espera y el mensaje confuso.
+  if (verificado.estadoInforme === 'completado') {
+    showAviso('Tu informe ya está listo',
+      'Ya generamos tu informe y te lo enviamos por email con el PDF adjunto. Revisa tu bandeja de entrada y, si no lo ves, la carpeta de spam.');
+    return;
+  }
+  if (verificado.estadoInforme === 'en_curso') {
+    showAviso('Tu informe se está generando',
+      'Lo estamos preparando ahora mismo. En unos minutos te llegará por email con el PDF adjunto. No hace falta que hagas nada.');
     return;
   }
 
@@ -475,6 +508,12 @@ function showError(msg, hideSupportBox) {
       showError('No hemos podido localizar tu lugar de nacimiento. Por favor vuelve a intentarlo en unos segundos.', true);
     } else if (e.message === 'ZONA_HORARIA') {
       showError('No hemos podido calcular la hora exacta de tu lugar de nacimiento. Por favor vuelve a intentarlo en unos segundos.', true);
+    } else if (e.message === 'YA_GENERADO') {
+      showAviso('Tu informe ya está listo',
+        'Ya generamos tu informe y te lo enviamos por email con el PDF adjunto. Revisa tu bandeja de entrada y, si no lo ves, la carpeta de spam.');
+    } else if (e.message === 'EN_CURSO') {
+      showAviso('Tu informe se está generando',
+        'Lo estamos preparando ahora mismo. En unos minutos te llegará por email con el PDF adjunto. No hace falta que hagas nada.');
     } else {
       showError('Ha ocurrido un error al generar tu informe. Por favor escríbenos a hola@origennatal.com con tu email de compra y te lo enviaremos manualmente.');
     }
@@ -499,7 +538,11 @@ async function iniciarConDatos(pedido) {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ session_id: new URLSearchParams(window.location.search).get('session_id'), year: yr, month: mo, day: dy, localHour: hh, localMin: mm, latDeg: geo.lat, lonDeg: geo.lon, tzOffset: tzOff })
 });
-if (!cartaResp.ok) throw new Error(cartaResp.status === 400 ? 'DATOS_INVALIDOS' : 'Error calculando carta natal');
+if (!cartaResp.ok) {
+  if (cartaResp.status === 409) throw new Error('EN_CURSO');
+  if (cartaResp.status === 403) throw new Error('YA_GENERADO');
+  throw new Error(cartaResp.status === 400 ? 'DATOS_INVALIDOS' : 'Error calculando carta natal');
+}
 const carta = await cartaResp.json();
 
   // Formato fecha bonito
@@ -541,10 +584,19 @@ async function generarDiagnosticoSilencioso(nombre, sexo, fechaNice, hora, lugar
     body: JSON.stringify({ session_id: new URLSearchParams(window.location.search).get('session_id'), nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto })
   });
 
-  if (!response.ok) throw new Error(await response.text());
+  if (!response.ok) {
+    // chat.js dice por que no genera: ya esta hecho, o se esta haciendo.
+    const fallo = await response.json().catch(() => ({}));
+    if (fallo.motivo === 'completado') throw new Error('YA_GENERADO');
+    if (fallo.motivo === 'en_curso') throw new Error('EN_CURSO');
+    throw new Error(fallo.error || 'Error generando el informe');
+  }
 
   const data = await response.json();
   if (!data.texto) throw new Error('Respuesta vacía');
+
+  // Token de la reserva: sin el, generar-pdf y save-pdf no aceptan la peticion.
+  _G.token = data.token;
 
   _G.areas = data.texto.split('===AREA===').map(p => p.trim()).filter(p => p.length > 0);
 fetch('/api/generar-pdf', {
@@ -552,6 +604,7 @@ fetch('/api/generar-pdf', {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       session_id: new URLSearchParams(window.location.search).get('session_id'),
+      token: _G.token,
       nombre: _G.nombre,
       sexo: _G.sexo,
       fechaNice: _G.fechaNice,
@@ -569,6 +622,7 @@ fetch('/api/generar-pdf', {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           session_id: new URLSearchParams(window.location.search).get('session_id'),
+          token: _G.token,
           pdfBase64: pdfData.pdfBase64,
           nombre: _G.nombre,
           sexo: _G.sexo || '',

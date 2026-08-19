@@ -4,6 +4,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
+import { estado, marcarEmailEnviado } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -19,7 +20,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { session_id, pdfBase64, nombre, sexo, fecha, hora, lugar, edad } = req.body;
+    const { session_id, token, pdfBase64, nombre, sexo, fecha, hora, lugar, edad } = req.body;
 
     if (!session_id || !pdfBase64) {
       return res.status(400).json({ error: 'Faltan datos' });
@@ -31,6 +32,17 @@ export default async function handler(req, res) {
       return res.status(402).json({ error: 'Pago no confirmado' });
     }
 
+    // 2. Verificar que quien envia es quien genero el PDF. Sin esto, tener el
+    //    enlace bastaba para hacer que Brevo mandara al comprador cualquier
+    //    fichero, tantas veces como se quisiera.
+    const st = estado(session);
+    if (!token || typeof token !== 'string' || token !== st.token) {
+      return res.status(403).json({ error: 'Entrega no autorizada' });
+    }
+    if (st.emailEnviado) {
+      return res.status(409).json({ error: 'El informe ya se envio por correo' });
+    }
+
     const email = session.customer_email;
     const nombreCliente = (nombre || session.metadata?.nombre || 'Cliente').toString();
     const sexoCliente = (sexo || session.metadata?.sexo || '').toString();
@@ -39,7 +51,7 @@ export default async function handler(req, res) {
     const lugarCliente = (lugar || session.metadata?.municipio || '').toString();
     const edadCliente = String(edad || session.metadata?.edad || '');
 
-    // 2. Limpiar base64: quitar prefijo data URI + espacios/saltos de línea
+    // 3. Limpiar base64: quitar prefijo data URI + espacios/saltos de línea
     let base64Limpio = String(pdfBase64);
     const comma = base64Limpio.indexOf(',');
     if (base64Limpio.startsWith('data:') && comma > -1) {
@@ -50,7 +62,7 @@ export default async function handler(req, res) {
     // Nombre del archivo adjunto (solo caracteres seguros)
     const nombreArchivo = `TuDisenoDeOrigen_${nombreCliente.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
 
-    // 3. Enviar email al cliente con el PDF adjunto
+    // 4. Enviar email al cliente con el PDF adjunto
     try {
       await enviarEmailCliente({
         email,
@@ -68,7 +80,14 @@ export default async function handler(req, res) {
       return res.status(500).json({ error: 'No se pudo enviar el email', detalle: err.message });
     }
 
-    // 4. Actualizar contacto en Brevo
+    // El correo salio: cerrar la puerta para que no se pueda reenviar en bucle.
+    try {
+      await marcarEmailEnviado(stripe, session_id);
+    } catch (err) {
+      console.error('[save-pdf] Error marcando email_enviado:', err.message);
+    }
+
+    // 5. Actualizar contacto en Brevo
     try {
       await actualizarContactoBrevo(email, { nombreCliente, fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente });
     } catch (err) {

@@ -1,11 +1,7 @@
 import Stripe from 'stripe';
+import { MAX_INTENTOS, estado, reservar, liberar } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-// Tope de intentos de generacion por compra: el intento que falla + 1 reintento.
-// Se cuenta aqui porque cada llamada a este endpoint son 7 peticiones al modelo,
-// que es lo unico que cuesta dinero de verdad en todo el flujo.
-const MAX_INTENTOS = 2;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -22,22 +18,34 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
   }
 
+  // Este endpoint es el unico que cuesta dinero (7 llamadas al modelo por
+  // peticion), asi que aqui es donde se decide si se genera o no. Las tres
+  // puertas van en este orden a proposito: primero lo definitivo, luego lo
+  // temporal, y el contador de intentos el ultimo, para que una recarga
+  // mientras se genera no consuma intentos ni dispare avisos en falso.
+  let reserva;
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id);
     if (!session || session.payment_status !== 'paid') {
       return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
     }
-    if (session.metadata?.informe_completado === 'si') {
-      return res.status(403).json({ error: 'Este informe ya fue generado.' });
+
+    const st = estado(session);
+
+    // 1. Ya se genero: definitivo. Ni recargando, ni con el enlace, ni nunca.
+    if (st.completado) {
+      return res.status(403).json({ error: 'Este informe ya fue generado.', motivo: 'completado' });
     }
 
-    // Contar el intento ANTES de generar: si el proceso se cae a mitad, el
-    // intento igualmente cuenta y nadie puede lanzar generaciones sin freno.
-    const intentos = parseInt(session.metadata?.intentos_informe || '0', 10) || 0;
-    if (intentos >= MAX_INTENTOS) {
-      // Avisar al admin: este cliente ha pagado y se ha quedado sin informe.
-      // Solo la primera vez (aviso_agotado), para no mandar un correo por cada
-      // peticion bloqueada. Nada de esto puede tumbar la respuesta 429.
+    // 2. Se esta generando ahora mismo. No es un error: el informe viene en
+    //    camino y llegara por correo. Sin gasto.
+    if (st.ocupada) {
+      return res.status(409).json({ error: 'Tu informe se esta generando ahora mismo.', motivo: 'en_curso' });
+    }
+
+    // 3. Se agotaron los intentos de verdad (los dos fallaron y liberaron la
+    //    reserva, o caducaron). Aqui si hay que avisar al admin.
+    if (st.intentos >= MAX_INTENTOS) {
       if (session.metadata?.aviso_agotado !== 'si') {
         try {
           const m = session.metadata || {};
@@ -56,7 +64,7 @@ export default async function handler(req, res) {
               `Edad:     ${m.edad || '-'}`,
               ``,
               `Session:  ${session_id}`,
-              `Intentos: ${intentos} de ${MAX_INTENTOS}`,
+              `Intentos: ${st.intentos} de ${MAX_INTENTOS}`,
             ].join('\n'),
           });
           await stripe.checkout.sessions.update(session_id, {
@@ -66,11 +74,15 @@ export default async function handler(req, res) {
           console.error('No se pudo avisar al admin de intentos agotados:', avisoErr.message);
         }
       }
-      return res.status(429).json({ error: 'Se ha alcanzado el limite de intentos para este informe. Escribenos a hola@origennatal.com y te lo enviamos.' });
+      return res.status(429).json({ error: 'Se ha alcanzado el limite de intentos para este informe. Escribenos a hola@origennatal.com y te lo enviamos.', motivo: 'agotado' });
     }
-    await stripe.checkout.sessions.update(session_id, {
-      metadata: { ...session.metadata, intentos_informe: String(intentos + 1) }
-    });
+
+    // Coger la reserva ANTES de gastar. Si otra peticion simultanea se la
+    // lleva, cedemos sin gastar nada.
+    reserva = await reservar(stripe, session_id, session);
+    if (!reserva.ok) {
+      return res.status(409).json({ error: 'Tu informe se esta generando ahora mismo.', motivo: 'en_curso' });
+    }
   } catch (err) {
     return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
   }
@@ -270,10 +282,15 @@ ${cartaTexto}`;
     // Unir con el separador que ya usa el frontend
     const textoCompleto = resultados.join('\n\n===AREA===\n\n');
 
-    return res.status(200).json({ texto: textoCompleto });
+    // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
+    // que demuestra que quien pide el PDF es quien tiene la reserva.
+    return res.status(200).json({ texto: textoCompleto, token: reserva.token });
 
   } catch (err) {
     console.error('Error generando áreas:', err.message);
+    // Soltar la reserva para que el cliente pueda reintentar en el acto en
+    // vez de esperar a que caduque.
+    await liberar(stripe, session_id, reserva.token);
     return res.status(500).json({ error: 'Error generando el informe: ' + err.message });
   }
 }
