@@ -175,10 +175,33 @@ function moonLatitude(T) {
   return sumBeta / 1000000; // de 0.000001° a grados
 }
 
+// Elementos orbitales de los planetas y de la Tierra, referidos todos a la
+// misma referencia: eclíptica y equinoccio J2000. FUENTE ÚNICA: Standish, E.M.,
+// "Keplerian Elements for Approximate Positions of the Major Planets",
+// JPL/NASA Solar System Dynamics, válida entre 1800 y 2050.
+// Orden de cada fila: L0, L1, L2, ϖ0, ϖ1, a, e, I0, I1, Ω0, Ω1
+const _ELEMENTOS = {
+  mercurio: [252.25032350, 149472.67411175, 0,  77.45779628,  0.16047689,  0.38709927, 0.20563593,  7.00497902, -0.00594749,  48.33076593, -0.12534081],
+  venus:    [181.97909950,  58517.81538729, 0, 131.60246718,  0.00268329,  0.72333566, 0.00677672,  3.39467605, -0.00078890,  76.67984255, -0.27769418],
+  marte:    [ -4.55343205,  19140.30268499, 0, -23.94362959,  0.44441088,  1.52371034, 0.09339410,  1.84969142, -0.00813131,  49.55953891, -0.29257343],
+  jupiter:  [ 34.39644051,   3034.74612775, 0,  14.72847983,  0.21252668,  5.20288700, 0.04838624,  1.30439695, -0.00183714, 100.47390909,  0.20469106],
+  saturno:  [ 49.95424423,   1222.49362201, 0,  92.59887831, -0.41897216,  9.53667594, 0.05386179,  2.48599187,  0.00193609, 113.66242448, -0.28867794],
+  urano:    [313.23810451,    428.48202785, 0, 170.95427630,  0.40805281, 19.18916464, 0.04725744,  0.77263783, -0.00242939,  74.01692503,  0.04240589],
+  neptuno:  [-55.12002969,    218.45945325, 0,  44.96476227,  0.32241560, 30.06992276, 0.00859048,  1.77004347,  0.00035372, 131.78422574, -0.00508664],
+  tierra:   [100.46457166,  35999.37244981, 0, 102.93768193,  0.32327364,  1.00000261, 0.01671123, -0.00001531, -0.01294668,   0.0,          0.0       ],
+};
+
+// Precesión general en longitud. Pasa del equinoccio J2000, en el que están los
+// elementos de arriba, al equinoccio de la fecha, que es el que ya usan el Sol,
+// la Luna y el Ascendente. Sin esto los planetas quedaban desfasados casi un
+// grado y medio por siglo respecto al resto de la carta.
+function _precesion(T) { return 1.396971*T + 0.0003086*T*T; }
+
+// La Tierra se calcula con los mismos elementos y la misma fuente que el resto,
+// para que la resta Tierra-planeta se haga dentro del mismo sistema.
 function _earthHelio(T) {
-  const s = sunLongitude(T);
-  const M = _R(_mod(357.52911 + 35999.05029*T, 360));
-  return { lon: _mod(s + 180, 360), r: 1.000001018*(1 - 0.01671*Math.cos(M) - 0.00014*Math.cos(2*M)) };
+  const p = _planet(..._ELEMENTOS.tierra, T);
+  return { lon: _mod(_D(Math.atan2(p.y, p.x)), 360), r: Math.sqrt(p.x*p.x + p.y*p.y) };
 }
 function _rv(a, e, nu) { return a*(1-e*e)/(1+e*Math.cos(nu)); }
 function _eqC(e, M) { return (2*e-e*e*e/4)*_D(Math.sin(M))+(5/4*e*e)*_D(Math.sin(2*M))+(13/12*e*e*e)*_D(Math.sin(3*M)); }
@@ -218,23 +241,25 @@ function _declinacion(lambdaDeg, betaDeg, epsR) {
   const lam = _R(lambdaDeg), bet = _R(betaDeg);
   return _D(Math.asin(Math.sin(bet)*Math.cos(epsR) + Math.cos(bet)*Math.sin(epsR)*Math.sin(lam)));
 }
-function mercuryLongitude(T) { const e=_earthHelio(T); const p=_planet(252.250906,149474.0722491,0.00030350,77.45611904,0.1593667,0.38709831,0.20563069, 7.00497902,-0.00594749, 48.33076593,-0.12534081,T); return _helioToGeo(p,e); }
-function venusLongitude(T)   { const e=_earthHelio(T); const p=_planet(181.979801,58519.2130302,0.00031014,131.563703,0.0048746,0.72332982,0.00677323, 3.39467605,-0.00078890, 76.67984255,-0.27769418,T); return _helioToGeo(p,e); }
-function marsLongitude(T)    { const e=_earthHelio(T); const p=_planet(355.433275,19141.6964746,0.00031052,336.560357,0.4442616,1.52366231,0.09341233, 1.84969142,-0.00813131, 49.55953891,-0.29257343,T); return _helioToGeo(p,e); }
-function jupiterLongitude(T) { const e=_earthHelio(T); const p=_planet(34.351519,3036.3027748,0.00022330,14.331532,0.3371283,5.20252,0.04849485, 1.30439695,-0.00183714, 100.47390909,0.20469106,T); return _helioToGeo(p,e); }
-function saturnLongitude(T)  { const e=_earthHelio(T); const p=_planet(50.077444,1223.5110686,0.00051908,93.056787,0.5665496,9.55184,0.05550825, 2.48599187,0.00193609, 113.66242448,-0.28867794,T); return _helioToGeo(p,e); }
-function uranusLongitude(T)  { const e=_earthHelio(T); const p=_planet(314.055005,429.8640561,0,173.005159,0.0893158,19.21814,0.04629590, 0.77263783,-0.00242939, 74.01692503,0.04240589,T); return _helioToGeo(p,e); }
-function neptuneLongitude(T) { const e=_earthHelio(T); const p=_planet(304.348665,219.8833092,0,48.120276,0.0291866,30.10957,0.00898809, 1.77004347,0.00035372, 131.78422574,-0.00508664,T); return _helioToGeo(p,e); }
+function _geoLon(el, T) { return _mod(_helioToGeo(_planet(...el, T), _earthHelio(T)) + _precesion(T), 360); }
+function _geoLat(el, T) { return _eclipticLatitude(_planet(...el, T), _earthHelio(T)); }
 
-// Latitud eclíptica geocéntrica de cada planeta (mismos elementos orbitales que sus funciones
-// de longitud de arriba, sin tocarlas — aquí solo se usa la componente z, antes descartada)
-function mercuryLatitude(T) { const e=_earthHelio(T); const p=_planet(252.250906,149474.0722491,0.00030350,77.45611904,0.1593667,0.38709831,0.20563069, 7.00497902,-0.00594749, 48.33076593,-0.12534081,T); return _eclipticLatitude(p,e); }
-function venusLatitude(T)   { const e=_earthHelio(T); const p=_planet(181.979801,58519.2130302,0.00031014,131.563703,0.0048746,0.72332982,0.00677323, 3.39467605,-0.00078890, 76.67984255,-0.27769418,T); return _eclipticLatitude(p,e); }
-function marsLatitude(T)    { const e=_earthHelio(T); const p=_planet(355.433275,19141.6964746,0.00031052,336.560357,0.4442616,1.52366231,0.09341233, 1.84969142,-0.00813131, 49.55953891,-0.29257343,T); return _eclipticLatitude(p,e); }
-function jupiterLatitude(T) { const e=_earthHelio(T); const p=_planet(34.351519,3036.3027748,0.00022330,14.331532,0.3371283,5.20252,0.04849485, 1.30439695,-0.00183714, 100.47390909,0.20469106,T); return _eclipticLatitude(p,e); }
-function saturnLatitude(T)  { const e=_earthHelio(T); const p=_planet(50.077444,1223.5110686,0.00051908,93.056787,0.5665496,9.55184,0.05550825, 2.48599187,0.00193609, 113.66242448,-0.28867794,T); return _eclipticLatitude(p,e); }
-function uranusLatitude(T)  { const e=_earthHelio(T); const p=_planet(314.055005,429.8640561,0,173.005159,0.0893158,19.21814,0.04629590, 0.77263783,-0.00242939, 74.01692503,0.04240589,T); return _eclipticLatitude(p,e); }
-function neptuneLatitude(T) { const e=_earthHelio(T); const p=_planet(304.348665,219.8833092,0,48.120276,0.0291866,30.10957,0.00898809, 1.77004347,0.00035372, 131.78422574,-0.00508664,T); return _eclipticLatitude(p,e); }
+function mercuryLongitude(T) { return _geoLon(_ELEMENTOS.mercurio, T); }
+function venusLongitude(T)   { return _geoLon(_ELEMENTOS.venus,    T); }
+function marsLongitude(T)    { return _geoLon(_ELEMENTOS.marte,    T); }
+function jupiterLongitude(T) { return _geoLon(_ELEMENTOS.jupiter,  T); }
+function saturnLongitude(T)  { return _geoLon(_ELEMENTOS.saturno,  T); }
+function uranusLongitude(T)  { return _geoLon(_ELEMENTOS.urano,    T); }
+function neptuneLongitude(T) { return _geoLon(_ELEMENTOS.neptuno,  T); }
+
+// Latitud eclíptica geocéntrica: mismos elementos, aquí se usa la componente z.
+function mercuryLatitude(T) { return _geoLat(_ELEMENTOS.mercurio, T); }
+function venusLatitude(T)   { return _geoLat(_ELEMENTOS.venus,    T); }
+function marsLatitude(T)    { return _geoLat(_ELEMENTOS.marte,    T); }
+function jupiterLatitude(T) { return _geoLat(_ELEMENTOS.jupiter,  T); }
+function saturnLatitude(T)  { return _geoLat(_ELEMENTOS.saturno,  T); }
+function uranusLatitude(T)  { return _geoLat(_ELEMENTOS.urano,    T); }
+function neptuneLatitude(T) { return _geoLat(_ELEMENTOS.neptuno,  T); }
 
 // Nodo Norte de la Luna
 function lunarNode(T) {
