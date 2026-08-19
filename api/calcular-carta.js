@@ -426,6 +426,56 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     return g + '° de ' + signos[idx];
   };
 
+  // ── Casas y aspectos, derivados una sola vez ─────────────────────────────
+  // Se calculan aqui para que el texto que lee el cliente pueda usarlos: antes
+  // al modelo solo le llegaba el signo de cada planeta, que es la capa que
+  // comparte una de cada doce personas.
+  // OJO: los angulos y orbes de _ASPECTOS de abajo son los mismos que dibuja
+  // la parrilla de la pagina 5 del PDF (aspDefs2 en api/generar-pdf.js). Si se
+  // cambia un orbe hay que cambiarlo en los dos sitios, o el PDF y el texto
+  // diran cosas distintas.
+  const _CUERPOS = {
+    sol: sunL, luna: moonL, mercurio: mercL, venus: venL, marte: marL,
+    jupiter: jupL, saturno: satL, urano: uraL, neptuno: nepL,
+    pluton: plutL, quiron: quirL, ascendente: ASC,
+  };
+
+  // Casas de signo completo: la casa es la posicion del signo dentro de la
+  // lista que arranca en el signo del Ascendente. Mismo criterio que ya usaba
+  // la tabla del PDF.
+  const casaDe = {};
+  for (const [nombre, lon] of Object.entries(_CUERPOS)) {
+    const inicioSigno = Math.floor(_mod(lon, 360) / 30) * 30;
+    const i = casas.indexOf(inicioSigno);
+    casaDe[nombre] = i >= 0 ? i + 1 : null;
+  }
+
+  // Aspectos: mismos angulos y orbes que dibuja la parrilla del PDF.
+  const _ASPECTOS = [
+    { grados: 0,   orbe: 8,  nombre: 'Conjunción' },
+    { grados: 60,  orbe: 6,  nombre: 'Sextil' },
+    { grados: 90,  orbe: 8,  nombre: 'Cuadratura' },
+    { grados: 120, orbe: 8,  nombre: 'Trígono' },
+    { grados: 180, orbe: 10, nombre: 'Oposición' },
+  ];
+  const nombres = Object.keys(_CUERPOS);
+  const aspectos = [];
+  for (let i = 0; i < nombres.length; i++) {
+    for (let j = i + 1; j < nombres.length; j++) {
+      let d = Math.abs(_CUERPOS[nombres[i]] - _CUERPOS[nombres[j]]) % 360;
+      if (d > 180) d = 360 - d;
+      for (const asp of _ASPECTOS) {
+        if (Math.abs(d - asp.grados) <= asp.orbe) {
+          aspectos.push({
+            a: nombres[i], b: nombres[j], tipo: asp.nombre,
+            orbe: Number(Math.abs(d - asp.grados).toFixed(1)),
+          });
+          break;
+        }
+      }
+    }
+  }
+
   return {
     ascendente: signoNombre(ASC),
     sol:        signoNombre(sunL),
@@ -442,6 +492,8 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     nodoNorte:  signoNombre(nodeL),
     ascRaw:  ASC,
     casas:   casas,
+    casaDe:  casaDe,
+    aspectos: aspectos,
     solRaw:  sunL,
     solLatDeg:  0,
     solDeclDeg: sunDeclDeg,
