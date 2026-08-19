@@ -133,14 +133,43 @@ Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo int
 La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar de que es un ejemplo.
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
-Cubre estos puntos pero NUNCA empieces con las frases de abajo. Son guías para ti, no para el texto. Varía radicalmente cómo abres cada párrafo.
-- Cómo se manifiesta en su vida ahora
-- La escena real concreta y visual (OBLIGATORIA)
-- El origen: cuándo empezó y por qué
-- El bucle que se repite
-- Qué le está costando
-- Una verdad incómoda que provoca el clic (nunca empieces con "la verdad incómoda es")
-- Qué creencia o autoengaño tiene que soltar (nunca empieces con "tienes que soltar")
+El área cubre seis puntos. Los nombres de abajo son guías para ti: NUNCA se escriben, NUNCA se anuncian, y NUNCA empiezas un párrafo con ellos.
+
+HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo, alrededor de una cuarta parte del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
+
+ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
+
+ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendió, con quién, en qué situación, y qué hace hoy exactamente por haberlo aprendido. El razonamiento tiene esta forma: "aprendiste esto de pequeña, y por eso hoy, sin darte cuenta, haces esto otro". La forma es esa, las palabras las pones tú y cambian en cada área. Alrededor de una quinta parte del área.
+
+CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Alrededor de una quinta parte del área.
+
+SOLTAR — QUÉ TIENE QUE SOLTAR. Solo NOMBRAR la creencia concreta que tiene que caer. Nada más. Ni pasos, ni ejercicios, ni plan, ni "empieza por", ni por dónde, ni cómo hacerlo. El cómo es otro producto y aquí sobra. Es el punto más corto de todos.
+
+CIERRE — el cierre, tal como pide la sección CIERRE DE CADA ÁREA. Además tiene que salir del contenido concreto de ESTA área y de ESTA persona: si ese mismo cierre pudiera ir al final de cualquiera de las otras seis áreas, no vale y lo reescribes.
+
+SIN SOLAPE ENTRE LOS SEIS PUNTOS:
+Cada punto cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. El pasado sale únicamente en ORIGEN. La escena no se anuncia antes ni se resume después: se cuenta y se sigue. SOLTAR no vuelve a explicar la creencia, solo la nombra. El cierre no es un resumen de nada de lo anterior. Si al escribir un punto notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: en 850-900 palabras no sobra sitio para repetirse.
+
+EL ORDEN DE LOS SEIS PUNTOS CAMBIA SEGÚN EL ÁREA:
+Las siete áreas se leen seguidas dentro del mismo informe. Si las siete siguen el mismo esqueleto se nota, y el estudio deja de parecer escrito para esa persona y empieza a parecer una plantilla rellenada. Por eso cada área lleva su propia secuencia. El cierre es lo único que va siempre al final, porque es el cierre.
+
+Sigue EXACTAMENTE la secuencia del área que te están pidiendo:
+- ÁREA 1, IDENTIDAD:   HOY, ESCENA, ORIGEN, CREENCIAS, SOLTAR, CIERRE
+- ÁREA 2, PATRONES:    ESCENA, HOY, CREENCIAS, ORIGEN, SOLTAR, CIERRE
+- ÁREA 3, MIEDOS:      ORIGEN, HOY, CREENCIAS, SOLTAR, ESCENA, CIERRE
+- ÁREA 4, HERIDA:      CREENCIAS, HOY, ESCENA, ORIGEN, SOLTAR, CIERRE
+- ÁREA 5, AMOR:        HOY, ESCENA, CREENCIAS, SOLTAR, ORIGEN, CIERRE
+- ÁREA 6, RELACIONES:  ORIGEN, HOY, ESCENA, CREENCIAS, SOLTAR, CIERRE
+- ÁREA 7, DINERO:      ESCENA, CREENCIAS, ORIGEN, HOY, SOLTAR, CIERRE
+
+Cuando un punto te caiga en un sitio que no es el que pediría la lógica de siempre, engánchalo bien con lo que va antes: el texto tiene que leerse como alguien hablando seguido, nunca como piezas sueltas colocadas en otro orden.
+
+NADA DE FRASES MOLDE:
+Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta al leerlas del tirón. La lógica de fondo se mantiene siempre (qué te pasa, de dónde viene, qué creencia lo sostiene, qué se cae), lo que cambia en cada área es cómo se dice y en qué orden aparece. Quedan PROHIBIDAS estas fórmulas y cualquier variante suya:
+- "el bucle es siempre el mismo", "el patrón es siempre el mismo", "y así una y otra vez"
+- "lo que tienes que soltar es", "lo que te toca soltar es", "toca soltar"
+- "el día que ... todo cambia", "el día que ... todo empieza", "cuando entiendas esto, todo cambia"
+No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que salga de lo que acabas de contar y no de una plantilla.
 
 CIERRE DE CADA ÁREA (OBLIGATORIO):
 El área termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una imagen contundente, una paradoja, una frase corta que golpea. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz.
