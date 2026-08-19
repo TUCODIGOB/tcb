@@ -337,7 +337,7 @@ export default async function handler(req, res) {
         ['Mercurio',carta.mercurio||'-',casaDe(carta.mercRaw),formatGradosNS(carta.mercLatDeg),formatGradosNS(carta.mercDeclDeg)],
         ['Venus',carta.venus||'-',casaDe(carta.venRaw),formatGradosNS(carta.venLatDeg),formatGradosNS(carta.venDeclDeg)],
         ['Marte',carta.marte||'-',casaDe(carta.marRaw),formatGradosNS(carta.marLatDeg),formatGradosNS(carta.marDeclDeg)],
-        ['Jupiter',carta.jupiter||'-',casaDe(carta.jupRaw),formatGradosNS(carta.jupLatDeg),formatGradosNS(carta.jupDeclDeg)],
+        ['Júpiter',carta.jupiter||'-',casaDe(carta.jupRaw),formatGradosNS(carta.jupLatDeg),formatGradosNS(carta.jupDeclDeg)],
         ['Saturno',carta.saturno||'-',casaDe(carta.satRaw),formatGradosNS(carta.satLatDeg),formatGradosNS(carta.satDeclDeg)],
         ['Urano',carta.urano||'-',casaDe(carta.uraRaw),formatGradosNS(carta.uraLatDeg),formatGradosNS(carta.uraDeclDeg)],
         ['Neptuno',carta.neptuno||'-',casaDe(carta.nepRaw),formatGradosNS(carta.nepLatDeg),formatGradosNS(carta.nepDeclDeg)],
@@ -406,23 +406,23 @@ export default async function handler(req, res) {
     function formatCoord(val,posChar,negChar){var abs=Math.abs(val),deg=Math.floor(abs),min=Math.round((abs-deg)*60);if(min===60){deg+=1;min=0;}var dir=val>=0?posChar:negChar;return deg+dir+(min<10?'0'+min:min);}
     function formatSidereal(lstDeg){var hours=lstDeg/15;if(hours<0)hours+=24;var h=Math.floor(hours),m=Math.floor((hours-h)*60),s=Math.round(((hours-h)*60-m)*60);if(s===60){s=0;m+=1;}if(m===60){m=0;h+=1;}return h+':'+(m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
     function formatUT(h,m){var hh=((h%24)+24)%24;return(hh<10?'0':'')+hh+':'+(m<10?'0':'')+m;}
-    doc.text(fx('Lat: '+formatCoord(carta.lat,'n','s')+'  ·  Lon: '+formatCoord(carta.lon,'e','w')+'  ·  UT: '+formatUT(carta.utH,carta.utM)+'  ·  T. Sidereo: '+formatSidereal(carta.LST)+'  ·  JD: '+carta.JD.toFixed(2)),W/2,textoY,{align:'center'});
+    doc.text(fx('Lat: '+formatCoord(carta.lat,'n','s')+'  ·  Lon: '+formatCoord(carta.lon,'e','w')+'  ·  UT: '+formatUT(carta.utH,carta.utM)+'  ·  T. Sidéreo: '+formatSidereal(carta.LST)+'  ·  JD: '+carta.JD.toFixed(2)),W/2,textoY,{align:'center'});
     textoY+=7;
     doc.setFont('Roboto','italic'); doc.setFontSize(8); doc.setTextColor(100,100,100);
-    var captLines=doc.splitTextToSize(fx('Representacion visual de tu programacion inicial: el mapa del instante en que comenzo tu historia.'),155);
+    var captLines=doc.splitTextToSize(fx('Representación visual de tu programación inicial: el mapa del instante en que comenzó tu historia.'),155);
     for(var cl2=0;cl2<captLines.length;cl2++) doc.text(fx(captLines[cl2]),W/2,textoY+cl2*4.5,{align:'center'});
     addPageNum(4);
 
     // ── PAG 5 POSICIONES ─────────────────────────────────────────────────────
     doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
     doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(207,177,128);
-    doc.text(fx('POSICIONES: Configuracion funcional de tu programacion inicial'),18,30);
+    doc.text(fx('POSICIONES: Configuración funcional de tu programación inicial'),18,30);
     var py5=45; py5=tablaPositions(18,py5); py5+=5;
     doc.setFont('Roboto','italic'); doc.setFontSize(9); doc.setTextColor(60,60,60);
-    py5=wrapText(fx('Las posiciones reflejan como funciona tu forma de pensar, sentir y actuar, y que partes de ti tienen mas peso en la manera en que percibes y respondes a la vida.'),18,py5,175,5.5);
+    py5=wrapText(fx('Las posiciones reflejan cómo funciona tu forma de pensar, sentir y actuar, y qué partes de ti tienen más peso en la manera en que percibes y respondes a la vida.'),18,py5,175,5.5);
     py5+=8;
     doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(207,177,128);
-    doc.text(fx('ASPECTOS: Dinamicas internas de tu programacion inicial'),18,py5);
+    doc.text(fx('ASPECTOS: Dinámicas internas de tu programación inicial'),18,py5);
     py5+=15;
     var aspTipos=['sol','luna','mercurio','venus','marte','jupiter','saturno','urano','neptuno','asc'];
     var aspRaws=[carta.solRaw,carta.lunaRaw,carta.mercRaw,carta.venRaw,carta.marRaw,carta.jupRaw,carta.satRaw,carta.uraRaw,carta.nepRaw,carta.ascRaw];
@@ -468,10 +468,10 @@ export default async function handler(req, res) {
     }
     py5=aspY+10*cellS+6;
     doc.setFont('Roboto','normal'); doc.setFontSize(7); doc.setTextColor(100,100,100);
-    doc.text('T = Trigono   C = Cuadratura   S = Sextil   O = Oposicion   = = Conjuncion',W/2,py5,{align:'center'});
+    doc.text('T = Trígono   C = Cuadratura   S = Sextil   O = Oposición   = = Conjunción',W/2,py5,{align:'center'});
     py5+=6;
     doc.setFont('Roboto','italic'); doc.setFontSize(9); doc.setTextColor(60,60,60);
-    wrapText(fx('Los aspectos muestran como se relacionan esas partes entre si: los equilibrios, las tensiones y las conexiones que forman tu manera de vincularte, decidir y reaccionar.'),18,py5,175,5.5);
+    wrapText(fx('Los aspectos muestran cómo se relacionan esas partes entre sí: los equilibrios, las tensiones y las conexiones que forman tu manera de vincularte, decidir y reaccionar.'),18,py5,175,5.5);
     addPageNum(5);
 
     // ── PAGS 6-19 LAS 7 AREAS ────────────────────────────────────────────────
