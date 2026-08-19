@@ -2,6 +2,11 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// Tope de intentos de generacion por compra: el intento que falla + 1 reintento.
+// Se cuenta aqui porque cada llamada a este endpoint son 7 peticiones al modelo,
+// que es lo unico que cuesta dinero de verdad en todo el flujo.
+const MAX_INTENTOS = 2;
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -25,6 +30,16 @@ export default async function handler(req, res) {
     if (session.metadata?.informe_completado === 'si') {
       return res.status(403).json({ error: 'Este informe ya fue generado.' });
     }
+
+    // Contar el intento ANTES de generar: si el proceso se cae a mitad, el
+    // intento igualmente cuenta y nadie puede lanzar generaciones sin freno.
+    const intentos = parseInt(session.metadata?.intentos_informe || '0', 10) || 0;
+    if (intentos >= MAX_INTENTOS) {
+      return res.status(429).json({ error: 'Se ha alcanzado el limite de intentos para este informe. Escribenos a hola@origennatal.com y te lo enviamos.' });
+    }
+    await stripe.checkout.sessions.update(session_id, {
+      metadata: { ...session.metadata, intentos_informe: String(intentos + 1) }
+    });
   } catch (err) {
     return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
   }
