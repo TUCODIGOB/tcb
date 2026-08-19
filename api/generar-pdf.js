@@ -402,31 +402,11 @@ export default async function handler(req, res) {
 
     // ── PAG 4 CONFIGURACION INICIAL ──────────────────────────────────────────
     doc.addPage(); doc.addImage(img_rueda,'JPEG',0,0,W,H);
-    var cparasRich = [
-      [{text:'Antes de tomar tu primera respiracion, ya existia un ',bold:false},{text:'diseno invisible que daba forma a tu manera unica de ser',bold:true},{text:': una estructura precisa de energia, mente y proposito que marcaria la base de como ibas a ver, sentir y experimentar la vida.',bold:false}],
-      [{text:'Ese instante inicial activo un programa interno, una configuracion que moldea tu forma de percibir, interpretar y responder ante el mundo, ',bold:false},{text:'define las coordenadas originales desde donde comienza tu historia',bold:true},{text:'.',bold:false}],
-      [{text:'Cada elemento de esa estructura representa una fuerza dentro de ti: tu mente racional, tus emociones mas profundas, tus impulsos vitales y tu busqueda de sentido. Juntas forman la raiz de tu identidad: ',bold:false},{text:'Origen Natal',bold:true},{text:'.',bold:false}],
-      [{text:'Tu diseno no es un destino, es un lenguaje, y cuando aprendes a leerlo, todo cobra sentido: las decisiones que tomas, los vinculos que repites y los caminos que se abren.',bold:false}],
-      [{text:'Comprenderlo es volver al punto de origen y ',bold:false},{text:'recordar la verdad de quien eras antes de todo condicionamiento, la persona que siempre fuiste',bold:true},{text:'.',bold:false}]
-    ];
-    var cy4 = 60;
-    doc.setFontSize(12); doc.setTextColor(50,50,50);
-    var maxWidth = 175, lineHeight = 5.5;
-    for (var cp=0;cp<cparasRich.length;cp++) {
-      var words = [];
-      for (var sg2=0;sg2<cparasRich[cp].length;sg2++) {
-        var seg=cparasRich[cp][sg2], segWords=seg.text.split(' ');
-        for (var sw=0;sw<segWords.length;sw++) { if(segWords[sw]==='') continue; words.push({text:segWords[sw],bold:seg.bold}); }
-      }
-      var xCursor=18, lineStartX=18;
-      for (var w2=0;w2<words.length;w2++) {
-        doc.setFont('Roboto',words[w2].bold?'bold':'normal');
-        var wordStr=fx(words[w2].text), wordWidth=doc.getTextWidth(wordStr), spaceWidth=doc.getTextWidth(' ');
-        if(xCursor+wordWidth>lineStartX+maxWidth&&xCursor>lineStartX){cy4+=lineHeight;xCursor=lineStartX;}
-        xCursor+=wordWidth+spaceWidth;
-      }
-      cy4+=lineHeight+4;
-    }
+    // La rueda se colocaba a partir de cy4, que salia de medir palabra por palabra
+    // unos parrafos que ya no se dibujan: su texto esta incluido en la imagen de
+    // fondo 4-rueda-pdf.jpg desde el commit 81ad818. Se conserva el valor exacto
+    // que producia aquel calculo, 151.5 mm, para que la rueda no se mueva.
+    var cy4 = 151.5;
     var cartaR=48, cartaCX=W/2, cartaCY=cy4+cartaR+5;
     dibujarCarta(cartaCX,cartaCY,cartaR);
     var textoY=cartaCY+cartaR+15;
