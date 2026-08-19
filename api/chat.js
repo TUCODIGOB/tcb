@@ -35,6 +35,37 @@ export default async function handler(req, res) {
     // intento igualmente cuenta y nadie puede lanzar generaciones sin freno.
     const intentos = parseInt(session.metadata?.intentos_informe || '0', 10) || 0;
     if (intentos >= MAX_INTENTOS) {
+      // Avisar al admin: este cliente ha pagado y se ha quedado sin informe.
+      // Solo la primera vez (aviso_agotado), para no mandar un correo por cada
+      // peticion bloqueada. Nada de esto puede tumbar la respuesta 429.
+      if (session.metadata?.aviso_agotado !== 'si') {
+        try {
+          const m = session.metadata || {};
+          const emailCliente = session.customer_email || session.customer_details?.email || '(desconocido)';
+          await enviarEmailAdmin({
+            asunto: `⚠️ URGENTE — Cliente sin informe tras ${MAX_INTENTOS} intentos — ${m.nombre || 'Cliente'}`,
+            mensaje: [
+              `Este cliente HA PAGADO y NO tiene su informe. Hay que generarselo a mano.`,
+              ``,
+              `Email:    ${emailCliente}`,
+              `Nombre:   ${m.nombre || '-'}`,
+              `Telefono: ${m.telefono || '-'}`,
+              `Sexo:     ${m.sexo || '-'}`,
+              `Nacio:    ${m.fecha || '-'} a las ${m.hora || '-'}`,
+              `Lugar:    ${[m.municipio, m.provincia, m.pais].filter(Boolean).join(', ') || '-'}`,
+              `Edad:     ${m.edad || '-'}`,
+              ``,
+              `Session:  ${session_id}`,
+              `Intentos: ${intentos} de ${MAX_INTENTOS}`,
+            ].join('\n'),
+          });
+          await stripe.checkout.sessions.update(session_id, {
+            metadata: { ...session.metadata, aviso_agotado: 'si' }
+          });
+        } catch (avisoErr) {
+          console.error('No se pudo avisar al admin de intentos agotados:', avisoErr.message);
+        }
+      }
       return res.status(429).json({ error: 'Se ha alcanzado el limite de intentos para este informe. Escribenos a hola@origennatal.com y te lo enviamos.' });
     }
     await stripe.checkout.sessions.update(session_id, {
@@ -217,4 +248,30 @@ ${cartaTexto}`;
     console.error('Error generando áreas:', err.message);
     return res.status(500).json({ error: 'Error generando el informe: ' + err.message });
   }
+}
+
+
+// ═════════════════════════════════════════════════════════════════
+// AVISO AL ADMIN (via Brevo) — mismo formato que save-pdf.js
+// ═════════════════════════════════════════════════════════════════
+async function enviarEmailAdmin({ asunto, mensaje }) {
+  const BREVO_API_KEY = process.env.BREVO_API_KEY;
+  if (!BREVO_API_KEY) return;
+
+  const body = {
+    sender: { email: 'hola@origennatal.com', name: 'Origen Natal — Alertas' },
+    to: [{ email: 'hola@origennatal.com', name: 'Admin' }],
+    subject: asunto,
+    htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
+  };
+
+  await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': BREVO_API_KEY,
+    },
+    body: JSON.stringify(body),
+  });
 }
