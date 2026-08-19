@@ -180,7 +180,7 @@ function _earthHelio(T) {
   const M = _R(_mod(357.52911 + 35999.05029*T, 360));
   return { lon: _mod(s + 180, 360), r: 1.000001018*(1 - 0.01671*Math.cos(M) - 0.00014*Math.cos(2*M)) };
 }
-function _rv(a, e, M) { return a*(1-e*e)/(1+e*Math.cos(M)); }
+function _rv(a, e, nu) { return a*(1-e*e)/(1+e*Math.cos(nu)); }
 function _eqC(e, M) { return (2*e-e*e*e/4)*_D(Math.sin(M))+(5/4*e*e)*_D(Math.sin(2*M))+(13/12*e*e*e)*_D(Math.sin(3*M)); }
 function _helioToGeo(p, earth) {
   const ex = earth.r*Math.cos(_R(earth.lon));
@@ -196,8 +196,8 @@ function _planet(L0,L1,L2,w0,w1,a,e,I0,I1,O0,O1,T) {
   const O = _mod(O0+O1*T, 360);           // Ω, longitud del nodo ascendente
   const I = _R(I0+I1*T);                  // inclinación orbital respecto a la eclíptica
   const M = _R(_mod(L-w, 360));
-  const r = _rv(a,e,M);
   const nu = M + _R(_eqC(e,M));           // anomalía verdadera
+  const r = _rv(a,e,nu);                  // el radio depende de nu, no de M
   const u  = nu + _R(_mod(w-O, 360));     // argumento de latitud (desde el nodo ascendente)
   const OR = _R(O);
   const x = r*(Math.cos(OR)*Math.cos(u) - Math.sin(OR)*Math.sin(u)*Math.cos(I));
