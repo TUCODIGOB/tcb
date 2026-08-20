@@ -151,7 +151,14 @@ Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué 
 Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que ella no pondría primero si le preguntaras. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
 Los puntos ciegos que no ve: lo que hace y no registra como un problema, o que registra al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
 Qué muestra, qué oculta y qué contradicciones tiene: la distancia entre la persona que enseña y la que guarda, y las cosas suyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a ella y no a un perfil que le valdría a cualquiera.
-Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante. En las otras seis áreas este punto es el normal: cómo se manifiesta hoy en esa parcela concreta, lo bueno y lo malo.
+Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante.
+SOLO EN EL ÁREA 2 (PATRONES) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+Cuáles son sus patrones: los que de verdad le gobiernan la vida, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera.
+Qué los enciende: la situación exacta que los dispara, la que hace saltar el automatismo antes de que ella se dé cuenta. Es lo que hace que se reconozca al leerlo.
+Dónde acaba siempre: el mismo punto de llegada al que vuelve una vez tras otra, por caminos distintos y con gente distinta. Es donde ve que el patrón existe de verdad.
+Qué gana con ellos: de qué la protegen, qué le evitan, qué se ahorra cada vez que los repite. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
+Lo que gana con el patrón va aquí; la creencia que lo sostiene va más adelante, en su sitio, y no se cuenta dos veces.
+EN LAS DEMÁS ÁREAS este punto es el normal: cómo se manifiesta hoy en esa parcela concreta, lo bueno y lo malo.
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
 
