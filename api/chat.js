@@ -118,8 +118,8 @@ ESTILO DE ESCRITURA:
 - FRASES LARGAS, NO CORTAS. La media va de 25 a 40 palabras por frase, unidas con comas y con "y", "que", "porque", "así que", "aunque". PROHIBIDO encadenar tres frases cortas seguidas: eso suena a titular y no a alguien hablando. Las frases de menos de diez palabras se reservan para rematar, dos o tres en toda el área como mucho.
 
 REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
-- TECHO ABSOLUTO: ningún párrafo pasa de 110 palabras. Al maquetarse en el PDF, 110 palabras ocupan 8 líneas, y 8 líneas es el máximo. Si se te va por encima, pártelo en dos. Esto no se negocia nunca.
-- NO HAY MÍNIMO. Los párrafos van de 2 a 8 líneas y tienen que MEZCLARSE sin patrón: uno de ocho que desarrolla una idea entera sin cortarla, otro de cinco, dos cortos seguidos, uno de dos líneas que remata y duele. Escribe como escribe una persona, no como una máquina que reparte el texto en trozos iguales.
+- TECHO ABSOLUTO: ningún párrafo pasa de 90 palabras. Al maquetarse en el PDF, 90 palabras ocupan 7 líneas, y 7 líneas es el máximo. Si se te va por encima, pártelo en dos. Esto no se negocia nunca.
+- NO HAY MÍNIMO. Los párrafos van de 2 a 7 líneas y tienen que MEZCLARSE sin patrón: uno de siete que desarrolla una idea entera sin cortarla, otro de cinco, dos cortos seguidos, uno de dos líneas que remata y duele. Escribe como escribe una persona, no como una máquina que reparte el texto en trozos iguales.
 - Si todos tus párrafos miden parecido, está MAL aunque respeten el techo. Se lee robótico y el lector lo nota aunque no sepa por qué.
 - Un párrafo de dos líneas es la mejor herramienta que tienes para cerrar una idea o dejar caer algo incómodo. Úsalos, y no siempre en el mismo sitio.
 - Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
@@ -201,7 +201,7 @@ PROHIBICIONES ABSOLUTAS:
 - No frases de autoayuda ni coaching
 - No decir qué debe hacer la persona
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
-- PROHIBIDO escribir párrafos de más de 8 líneas. Parte en 2 si hace falta
+- PROHIBIDO escribir párrafos de más de 7 líneas. Parte en 2 si hace falta
 - PROHIBIDO enumerar o anunciar cuántas cosas vienen ("son tres", "el primero", "la segunda")
 - PROHIBIDO que un párrafo empiece un tema nuevo sin engancharlo con el anterior
 - PROHIBIDO encadenar tres frases cortas seguidas. Frases largas unidas por comas
@@ -217,37 +217,37 @@ PROHIBICIONES ABSOLUTAS:
       id: 1,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro, cómo se vive a sí misma, cómo se valora cuando nadie la mira, su diálogo interno.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 2,
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué hace automáticamente cuando algo pasa, cómo reacciona, cómo se sabotea, por qué siempre acaba en los mismos sitios.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que más gobierna su vida sin que lo nombre, qué evita por ese miedo, qué gana al tenerlo.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué duele hoy, cuándo se dispara, qué situaciones lo reactivan, cómo afecta su presente.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 5,
       prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo ama en pareja, qué patrón repite, por qué atrae siempre el mismo tipo de personas, qué pasa con el deseo y la intimidad.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 6,
       prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: qué rol ocupa con los demás, cómo encaja o no en grupos, qué personas atrae, por qué se acerca o se aleja.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 7,
@@ -255,7 +255,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
 
 Después del cierre normal del área, añade UN SOLO párrafo final de despedida de todo el estudio, corto y contundente (máximo 2 líneas, entre 20 y 35 palabras). Como cuando alguien que te conoce bien te dice algo al final de una conversación larga y te deja tocado. Sin consejos, sin motivación, solo una verdad que resuena.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
   ];
 
