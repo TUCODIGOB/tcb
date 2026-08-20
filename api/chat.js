@@ -166,6 +166,12 @@ SOLO EN EL ÁREA 4 (HERIDA) este punto cubre tres cosas, cada una sacada de su c
 Cuál es la herida y qué la reabre hoy: qué se le rompió y qué le sigue faltando desde entonces, y las situaciones concretas de su vida de ahora que la vuelven a tocar.
 Cómo se protege cuando se reabre, y qué se está perdiendo por protegerse así: lo que hace en ese momento para que no le vuelva a doler, y lo que esa misma protección le está dejando fuera.
 Qué necesita de verdad en ese momento: ponerle nombre a lo que lleva años sintiendo sin saber decirlo, y qué acaba haciendo con esa necesidad.
+SOLO EN EL ÁREA 5 (AMOR) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+Cómo es en el amor: cómo se comporta cuando quiere a alguien de verdad, cómo lo demuestra, cuánto se entrega y cuánto se guarda, y qué le pasa con el deseo y con la intimidad.
+Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que ella no se está dando.
+Qué necesita de la otra persona para sentirse querida y qué le enamora: lo que le hace falta para bajar la guardia, y lo que la engancha de alguien, que no siempre es lo mismo.
+Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué hace ella ahí sin darse cuenta.
+Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que ella da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
 EN LAS DEMÁS ÁREAS este punto es el normal: cómo se manifiesta hoy en esa parcela concreta, lo bueno y lo malo.
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
