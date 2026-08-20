@@ -124,7 +124,7 @@ REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 - Un párrafo de dos líneas es la mejor herramienta que tienes para cerrar una idea o dejar caer algo incómodo. Úsalos, y no siempre en el mismo sitio.
 - Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
 - SI EL ÁREA TE SOBRA DE LARGO, quita contenido entero: un párrafo, una idea, un ejemplo. NUNCA comprimas lo que ya está escrito apretándolo, porque al apretarlo se pierden las explicaciones, se queda en afirmaciones sueltas y el área acaba leyéndose como un esquema.
-- REGLA CRÍTICA DE LONGITUD: esta área tiene OBLIGATORIAMENTE entre 850 y 900 palabras. No cuentes párrafos ni te marques un número: salen los que salgan. Un área con menos de 850 palabras es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
+- REGLA CRÍTICA DE LONGITUD: cada área tiene OBLIGATORIAMENTE entre 850 y 900 palabras, con UNA excepción: el ÁREA 1 (IDENTIDAD) va entre 1.100 y 1.300 palabras, porque cubre más terreno. No cuentes párrafos ni te marques un número: salen los que salgan. Un área por debajo de su mínimo es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente ella, que por fin alguien se lo explica.
 
@@ -217,7 +217,7 @@ PROHIBICIONES ABSOLUTAS:
       id: 1,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro, cómo se vive a sí misma, cómo se valora cuando nadie la mira, su diálogo interno.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 2,
@@ -286,7 +286,7 @@ ${cartaTexto}`;
       },
       body: JSON.stringify({
         model: 'claude-sonnet-5',
-        max_tokens: 2500,
+        max_tokens: 3500,
         system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
