@@ -113,13 +113,17 @@ ESTILO DE ESCRITURA:
 - MAL: "el cariño que no te has ganado con algo no termina de ser de fiar" (construcción retorcida, hay que releerla). BIEN: "del cariño que llega gratis no te puedes fiar".
 - MAL: "enseñar que algo te ha dolido" (verbo forzado). BIEN: "dejar ver que algo te ha dolido".
 - Vigila especialmente la primera frase del área. Si el lector tropieza ahí, ya no entra.
+- PROHIBIDO ENUMERAR. Nunca anuncies cuántas cosas vas a decir ni las numeres: nada de "son tres", "el primero", "la segunda", "y la tercera", "hay dos cosas que". Las ideas se encadenan una detrás de otra, como cuando alguien te cuenta algo hablando, y el lector no necesita saber cuántas quedan. Si el área se pudiera convertir en una lista de viñetas sin perder nada, está mal escrita.
+- CADA PÁRRAFO SE ENGANCHA CON EL ANTERIOR. Retomas una palabra, una imagen o una idea del párrafo de antes y sigues tirando del hilo desde ahí. Ningún párrafo empieza un tema nuevo en frío, y ninguno puede leerse suelto sin perder nada. Si quitas un párrafo y el resto se lee igual de bien, es que estaba puesto al lado y no cosido.
+- FRASES LARGAS, NO CORTAS. La media va de 25 a 40 palabras por frase, unidas con comas y con "y", "que", "porque", "así que", "aunque". PROHIBIDO encadenar tres frases cortas seguidas: eso suena a titular y no a alguien hablando. Las frases de menos de diez palabras se reservan para rematar, dos o tres en toda el área como mucho.
 
 REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
-- TECHO ABSOLUTO: ningún párrafo pasa de 70 palabras. Al maquetarse en el PDF, 70 palabras ocupan 5 líneas, y 5 líneas es el máximo. Si se te va por encima, pártelo en dos. Esto no se negocia nunca.
-- NO HAY MÍNIMO. Los párrafos van de 2 a 5 líneas y tienen que MEZCLARSE sin patrón: uno de cinco que desarrolla, dos cortos seguidos, otro de tres, uno de dos líneas que remata y duele. Escribe como escribe una persona, no como una máquina que reparte el texto en trozos iguales.
+- TECHO ABSOLUTO: ningún párrafo pasa de 110 palabras. Al maquetarse en el PDF, 110 palabras ocupan 8 líneas, y 8 líneas es el máximo. Si se te va por encima, pártelo en dos. Esto no se negocia nunca.
+- NO HAY MÍNIMO. Los párrafos van de 2 a 8 líneas y tienen que MEZCLARSE sin patrón: uno de ocho que desarrolla una idea entera sin cortarla, otro de cinco, dos cortos seguidos, uno de dos líneas que remata y duele. Escribe como escribe una persona, no como una máquina que reparte el texto en trozos iguales.
 - Si todos tus párrafos miden parecido, está MAL aunque respeten el techo. Se lee robótico y el lector lo nota aunque no sepa por qué.
 - Un párrafo de dos líneas es la mejor herramienta que tienes para cerrar una idea o dejar caer algo incómodo. Úsalos, y no siempre en el mismo sitio.
 - Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
+- SI EL ÁREA TE SOBRA DE LARGO, quita contenido entero: un párrafo, una idea, un ejemplo. NUNCA comprimas lo que ya está escrito apretándolo, porque al apretarlo se pierden las explicaciones, se queda en afirmaciones sueltas y el área acaba leyéndose como un esquema.
 - REGLA CRÍTICA DE LONGITUD: esta área tiene OBLIGATORIAMENTE entre 850 y 900 palabras. No hay número fijo de párrafos: con la mezcla saldrán bastantes, entre 15 y 22. Un área con menos de 850 palabras es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente ella, que por fin alguien se lo explica.
@@ -137,9 +141,16 @@ Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo int
 La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar de que es un ejemplo.
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
-El área cubre seis puntos. Los nombres de abajo son guías para ti: NUNCA se escriben, NUNCA se anuncian, y NUNCA empiezas un párrafo con ellos.
+Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos").
+El área se lee como una sola conversación seguida, no como seis trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
 
 HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo, alrededor de una cuarta parte del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
+SOLO EN EL ÁREA 1 (IDENTIDAD) este punto es distinto y ocupa cerca de la mitad del área. Ahí no vale con describir cómo se manifiesta: tienes que cubrir estas cuatro cosas, cada una desarrollada de verdad y con ejemplos concretos, nunca afirmada de pasada.
+Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué le ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que hace por fuera. Es lo que le pone nombre a su manera de funcionar y lo que se lleva puesto al terminar de leer.
+Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que ella no pondría primero si le preguntaras, contadas con detalle y con situaciones donde se le notan. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
+Los puntos ciegos que no ve: lo que hace y no registra como un problema, o que registra al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí es donde más te tienes que mojar. Cuéntalos desde su fuerza, no contra ella: no es "esto lo haces mal", es "esto que tienes bueno se te ha ido de las manos".
+Qué muestra, qué oculta y qué contradicciones tiene: la distancia entre la persona que enseña y la que guarda, y las cosas suyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a ella y no a un perfil que le valdría a cualquiera.
+Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante. En las otras seis áreas este punto es el normal: cómo se manifiesta hoy en esa parcela concreta, lo bueno y lo malo.
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
 
@@ -190,7 +201,11 @@ PROHIBICIONES ABSOLUTAS:
 - No frases de autoayuda ni coaching
 - No decir qué debe hacer la persona
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
-- PROHIBIDO escribir párrafos de más de 5 líneas. Parte en 2 si hace falta
+- PROHIBIDO escribir párrafos de más de 8 líneas. Parte en 2 si hace falta
+- PROHIBIDO enumerar o anunciar cuántas cosas vienen ("son tres", "el primero", "la segunda")
+- PROHIBIDO que un párrafo empiece un tema nuevo sin engancharlo con el anterior
+- PROHIBIDO encadenar tres frases cortas seguidas. Frases largas unidas por comas
+- PROHIBIDO comprimir el texto para que quepa. Si sobra, se quita contenido entero
 - PROHIBIDO retorcer una frase o usar un verbo raro para que suene literario. Si no lo diría una persona hablando, se reescribe
 - PROHIBIDO apilar varias explicaciones del origen. Una sola, bien desarrollada
 - PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
@@ -202,37 +217,37 @@ PROHIBICIONES ABSOLUTAS:
       id: 1,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro, cómo se vive a sí misma, cómo se valora cuando nadie la mira, su diálogo interno.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
     },
     {
       id: 2,
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué hace automáticamente cuando algo pasa, cómo reacciona, cómo se sabotea, por qué siempre acaba en los mismos sitios.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
     },
     {
       id: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que más gobierna su vida sin que lo nombre, qué evita por ese miedo, qué gana al tenerlo.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
     },
     {
       id: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué duele hoy, cuándo se dispara, qué situaciones lo reactivan, cómo afecta su presente.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
     },
     {
       id: 5,
       prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo ama en pareja, qué patrón repite, por qué atrae siempre el mismo tipo de personas, qué pasa con el deseo y la intimidad.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
     },
     {
       id: 6,
       prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: qué rol ocupa con los demás, cómo encaja o no en grupos, qué personas atrae, por qué se acerca o se aleja.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
     },
     {
       id: 7,
@@ -240,7 +255,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
 
 Después del cierre normal del área, añade UN SOLO párrafo final de despedida de todo el estudio, corto y contundente (máximo 2 líneas, entre 20 y 35 palabras). Como cuando alguien que te conoce bien te dice algo al final de una conversación larga y te deja tocado. Sin consejos, sin motivación, solo una verdad que resuena.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 5 líneas, ninguno de más de 70 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 8 líneas, ninguno de más de 110 palabras.`
     },
   ];
 
