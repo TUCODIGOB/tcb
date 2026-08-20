@@ -158,6 +158,10 @@ Qué los enciende: la situación exacta que los dispara, la que hace saltar el a
 Dónde acaba siempre: el mismo punto de llegada al que vuelve una vez tras otra, por caminos distintos y con gente distinta. Es donde ve que el patrón existe de verdad.
 Qué gana con ellos: de qué la protegen, qué le evitan, qué se ahorra cada vez que los repite. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
 Lo que gana con el patrón va aquí; la creencia que lo sostiene va más adelante, en su sitio, y no se cuenta dos veces.
+SOLO EN EL ÁREA 3 (MIEDOS) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+Cuál es el miedo que gobierna su vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que ella nombraría si le preguntaras, y de qué tiene miedo en el fondo cuando tiene miedo de eso.
+Qué se lo dispara y cómo reacciona cuando aparece: las situaciones concretas que lo encienden, y lo que hace en ese momento sin decidirlo, si se paraliza, si controla más, si se adelanta, si desaparece.
+Qué está evitando por él y qué le ha costado ya: lo que lleva años sin hacer por ese miedo, y el precio que ha pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijo a tiempo.
 EN LAS DEMÁS ÁREAS este punto es el normal: cómo se manifiesta hoy en esa parcela concreta, lo bueno y lo malo.
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
