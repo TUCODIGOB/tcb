@@ -176,6 +176,10 @@ SOLO EN EL ÁREA 6 (RELACIONES) este punto cubre tres cosas, cada una sacada de 
 Qué papel ocupa siempre sin decidirlo: el sitio que acaba ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darse cuenta de que lo ocupa.
 Qué pasa con lo que da y lo que recibe: si la balanza le sale igualada o no, cuánto sostiene ella y cuánto le sostienen a ella, y qué hace cuando esa cuenta no le cuadra.
 En qué dinámicas acaba metida una y otra vez: el tipo de relación que se le repite con gente distinta, y qué se repite dentro de ella cada vez que vuelve a pasar.
+SOLO EN EL ÁREA 7 (DINERO) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+Qué significa el dinero para ella y qué le mueve a ganarlo: qué representa de verdad en su cabeza, más allá de los números, y qué es lo que la empuja a querer más o a conformarse.
+Qué hace con él cuando lo tiene: cómo lo gasta, cómo toma las decisiones de dinero, y cómo lleva el riesgo cuando hay algo en juego.
+Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo con el que se encuentra una y otra vez, incluido lo que hace en el trabajo cuando toca pedir o cobrar lo que vale, y qué le ocurre justo cuando las cosas empiezan a salirle.
 EN LAS DEMÁS ÁREAS este punto es el normal: cómo se manifiesta hoy en esa parcela concreta, lo bueno y lo malo.
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
