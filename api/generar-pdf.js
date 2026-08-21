@@ -224,6 +224,20 @@ export default async function handler(req, res) {
       return lineas;
     }
 
+    // Al partir un parrafo largo en trozos, el corte puede caer dentro de una
+    // negrita y dejar la marca de abrir en un trozo y la de cerrar en el
+    // siguiente. Sin su pareja las dos se limpian y la negrita se pierde, asi
+    // que se cierra al final del trozo y se vuelve a abrir en el de despues.
+    function cuadrarNegritas(trozos) {
+      var abierta = false;
+      return trozos.map(function (t) {
+        var salida = abierta ? '**' + t : t;
+        var marcas = (salida.match(/\*\*/g) || []).length;
+        abierta = (marcas % 2) === 1;
+        return abierta ? salida + '**' : salida;
+      });
+    }
+
     function dibujarCarta(cx, cy, r) {
       var PI = Math.PI;
       var asc = carta.ascRaw || 0;
@@ -605,12 +619,16 @@ export default async function handler(req, res) {
         var esCierre=(rp===idxCierre);
         if(chunk.length>500){
           var sentences=chunk.split(/(?<=\.)\s+/);
-          var group='',sCount=0;
+          var trozos=[],group='',sCount=0;
           for(var si2=0;si2<sentences.length;si2++){
             group+=(group?' ':'')+sentences[si2]; sCount++;
-            if(sCount>=3&&group.length>200){paras.push({t:group,cierre:esCierre});group='';sCount=0;}
+            if(sCount>=3&&group.length>200){trozos.push(group);group='';sCount=0;}
           }
-          if(group.length>0) paras.push({t:group,cierre:esCierre});
+          if(group.length>0) trozos.push(group);
+          // Si el modelo dejo una marca sin cerrar, no se cuadra nada: el
+          // asterisco suelto se limpia al maquetar, igual que hasta ahora.
+          if((((chunk.match(/\*\*/g)||[]).length)%2)===0) trozos=cuadrarNegritas(trozos);
+          for(var tz=0;tz<trozos.length;tz++) paras.push({t:trozos[tz],cierre:esCierre});
         } else { paras.push({t:chunk,cierre:esCierre}); }
       }
       doc.addPage(); doc.addImage(img_areas[ai2],'JPEG',0,0,W,H);
