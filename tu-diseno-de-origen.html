@@ -1888,7 +1888,27 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       <div class="form-card">
         
 
-        <form id="formDatos" novalidate>
+        <script>
+          // Red de seguridad. El botón de pagar es de tipo "enviar", así que si
+          // el script del formulario (más abajo) no llegara a ejecutarse, el
+          // navegador haría un envío normal: la página se recargaría sola, los
+          // datos se perderían y el email quedaría a la vista en la barra de
+          // direcciones, sin que el cliente entendiera nada. Esto lo impide y
+          // le dice qué hacer.
+          function alEnviarFormulario(evento) {
+            evento.preventDefault();
+            if (window.formularioPreparado) return false; // lo gestiona su propio código
+            var aviso = document.getElementById('errorBanner');
+            if (aviso) {
+              aviso.textContent = 'No hemos podido cargar el formulario del todo. Recarga la página e inténtalo de nuevo. Si vuelve a pasar, escríbenos a hola@origennatal.com';
+              aviso.classList.add('show');
+              aviso.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            return false;
+          }
+        </script>
+
+        <form id="formDatos" novalidate onsubmit="return alEnviarFormulario(event);">
 
           <div class="form-progress">
             <div class="form-progress-dots">
@@ -2513,6 +2533,10 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
         btn.textContent = 'Pagar y generar mi informe';
       }
     });
+
+    // El envío ya está en manos del código de arriba: la red de seguridad de
+    // la etiqueta <form> se aparta.
+    window.formularioPreparado = true;
 
     function calcularEdad(fechaISO) {
       const nacimiento = new Date(fechaISO);
