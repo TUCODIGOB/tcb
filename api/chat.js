@@ -331,7 +331,12 @@ ${cartaTexto}`;
       },
       body: JSON.stringify({
         model: 'claude-sonnet-5',
-        max_tokens: 3500,
+        // Tope de seguridad, no un objetivo: solo se paga lo que el modelo
+        // escribe, y el largo lo manda el prompt. Tiene que dar para el area
+        // mas larga (1.300 palabras, unos 2.500 tokens) MAS el razonamiento
+        // que el modelo hace antes de escribir, que sale del mismo presupuesto.
+        // Con 3.500 el area 1 podia llegar cortada a media frase.
+        max_tokens: 6000,
         system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
