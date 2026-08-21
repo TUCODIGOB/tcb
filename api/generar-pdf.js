@@ -2,7 +2,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { jsPDF } = require('jspdf');
 import Stripe from 'stripe';
-import { estado, liberar, completar } from '../lib/reserva.js';
+import { estado, liberar, completar, compraValida } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
     try {
       const session = await stripe.checkout.sessions.retrieve(session_id);
-      if (!session || session.payment_status !== 'paid') {
+      if (!compraValida(session)) {
         return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
       }
 

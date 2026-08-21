@@ -5,7 +5,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
-import { estado } from '../lib/reserva.js';
+import { estado, compraValida } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       return res.status(404).json({ ok: false, error: 'Sesión no encontrada' });
     }
 
-    if (session.payment_status !== 'paid') {
+    if (!compraValida(session)) {
       return res.status(402).json({ ok: false, error: 'El pago no está confirmado' });
     }
 
