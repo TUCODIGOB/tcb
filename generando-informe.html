@@ -492,7 +492,16 @@ function showAviso(titulo, msg) {
   }
 
   if (!datosCompletos(pedido)) {
-    showError('No encontramos los datos de tu pedido. Por favor escríbenos a hola@origennatal.com y te enviaremos el informe manualmente.');
+    // Los datos de nacimiento no estan ni en este navegador ni en la copia de
+    // Stripe, asi que recargar no arregla nada y no se ofrece. Se avisa a la
+    // tienda para poder generarlo a mano sin depender de que el cliente escriba.
+    fetch('/api/verify-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ session_id: sessionId, avisarDatosPerdidos: true }),
+    }).catch(() => {});
+    showAviso('No encontramos los datos de tu pedido',
+      'Escríbenos a hola@origennatal.com con el email que usaste para pagar y te enviamos el informe nosotros. Ya estamos avisados.');
     return;
   }
 
@@ -517,7 +526,9 @@ function showAviso(titulo, msg) {
       showAviso('Tu informe se está generando',
         'Lo estamos preparando ahora mismo. En unos minutos te llegará por email con el PDF adjunto. No hace falta que hagas nada.');
     } else {
-      showError('Ha ocurrido un error al generar tu informe. Por favor escríbenos a hola@origennatal.com con tu email de compra y te lo enviaremos manualmente.');
+      // Mismo trato que el resto de fallos recuperables: el cliente ya ha
+      // pagado, asi que se le ofrece recargar, nunca volver a pagar.
+      showError('No hemos podido terminar tu informe. Por favor vuelve a intentarlo; si vuelve a fallar, escríbenos a hola@origennatal.com y te lo enviamos nosotros.', true);
     }
   }
 })();
