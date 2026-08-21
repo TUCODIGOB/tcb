@@ -536,30 +536,41 @@ export default async function handler(req, res) {
     for(var ai2=0;ai2<areaTitles.length;ai2++){
       var areaText=areas[ai2]||'';
       var rawParas=areaText.split(/\n\n+/).filter(p=>p.trim().length>0);
+      // El ultimo parrafo de cada area es el CIERRE, la frase que se destaca.
+      var idxCierre = rawParas.length-1;
       var paras=[];
       for(var rp=0;rp<rawParas.length;rp++){
         var chunk=rawParas[rp].trim();
+        var esCierre=(rp===idxCierre);
         if(chunk.length>500){
           var sentences=chunk.split(/(?<=\.)\s+/);
           var group='',sCount=0;
           for(var si2=0;si2<sentences.length;si2++){
             group+=(group?' ':'')+sentences[si2]; sCount++;
-            if(sCount>=3&&group.length>200){paras.push(group);group='';sCount=0;}
+            if(sCount>=3&&group.length>200){paras.push({t:group,cierre:esCierre});group='';sCount=0;}
           }
-          if(group.length>0) paras.push(group);
-        } else { paras.push(chunk); }
+          if(group.length>0) paras.push({t:group,cierre:esCierre});
+        } else { paras.push({t:chunk,cierre:esCierre}); }
       }
       doc.addPage(); doc.addImage(img_areas[ai2],'JPEG',0,0,W,H);
       var ay=60, areaPageCount=1;
       for(var pi2=0;pi2<paras.length;pi2++){
-        if(!paras[pi2]) continue;
-        doc.setFont('Roboto','normal'); doc.setFontSize(12); doc.setTextColor(40,40,40);
-        var plines=doc.splitTextToSize(fx(paras[pi2].trim()),175);
+        if(!paras[pi2]||!paras[pi2].t) continue;
+        var esC=paras[pi2].cierre;
+        // El cierre es la frase que el lector se lleva puesta: se saca del
+        // bloque de texto y se pinta en negrita dorada, centrada y con aire.
+        var fuente=esC?'bold':'normal', cuerpo=esC?14:12;
+        var color=esC?[207,177,128]:[40,40,40];
+        var ancho=esC?150:175, alto=esC?8:7;
+        if(esC) ay+=8;
+        doc.setFont('Roboto',fuente); doc.setFontSize(cuerpo); doc.setTextColor(color[0],color[1],color[2]);
+        var plines=doc.splitTextToSize(fx(paras[pi2].t.trim()),ancho);
         for(var pl2=0;pl2<plines.length;pl2++){
-          if(ay>H-16){addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFont('Roboto','normal');doc.setFontSize(12);doc.setTextColor(40,40,40);ay=60;}
-          doc.text(fx(plines[pl2]),18,ay); ay+=7;
+          if(ay>H-16){addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFont('Roboto',fuente);doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);ay=60;}
+          if(esC){ doc.text(fx(plines[pl2]),105,ay,{align:'center'}); } else { doc.text(fx(plines[pl2]),18,ay); }
+          ay+=alto;
         }
-        ay+=4;
+        ay+=esC?8:4;
       }
       if(areaPageCount<2){addPageNum(pageC);pageC++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);}
       addPageNum(pageC); pageC++;

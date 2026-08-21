@@ -282,8 +282,6 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 7,
       prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero.
 
-Después del cierre normal del área, añade UN SOLO párrafo final de despedida de todo el estudio, corto y contundente (máximo 2 líneas, entre 20 y 35 palabras). Como cuando alguien que te conoce bien te dice algo al final de una conversación larga y te deja tocado. Sin consejos, sin motivación, solo una verdad que resuena.
-
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
   ];
