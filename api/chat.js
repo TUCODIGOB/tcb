@@ -145,7 +145,7 @@ ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
 Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos").
 El área se lee como una sola conversación seguida, no como seis trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
 
-HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo, alrededor de una cuarta parte del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
+HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
 SOLO EN EL ÁREA 1 (IDENTIDAD) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué le ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que hace por fuera. Es lo que le pone nombre a su manera de funcionar y lo que se lleva puesto al terminar de leer.
 Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que ella no pondría primero si le preguntaras. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
@@ -180,23 +180,22 @@ SOLO EN EL ÁREA 7 (DINERO) este punto cubre tres cosas, cada una sacada de su c
 Qué significa el dinero para ella y qué le mueve a ganarlo: qué representa de verdad en su cabeza, más allá de los números, y qué es lo que la empuja a querer más o a conformarse.
 Qué hace con él cuando lo tiene: cómo lo gasta, cómo toma las decisiones de dinero, y cómo lleva el riesgo cuando hay algo en juego.
 Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo con el que se encuentra una y otra vez, incluido lo que hace en el trabajo cuando toca pedir o cobrar lo que vale, y qué le ocurre justo cuando las cosas empiezan a salirle.
-EN LAS DEMÁS ÁREAS este punto es el normal: cómo se manifiesta hoy en esa parcela concreta, lo bueno y lo malo.
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
 
 ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendió, con quién, en qué situación, y qué hace hoy exactamente por haberlo aprendido. El razonamiento tiene esta forma: "aprendiste esto de pequeña, y por eso hoy, sin darte cuenta, haces esto otro". La forma es esa, las palabras las pones tú y cambian en cada área.
-UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluyó ella de aquello, y qué hace hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra infancia distinta. Alrededor de una quinta parte del área.
+UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluyó ella de aquello, y qué hace hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra infancia distinta.
 
-CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Alrededor de una quinta parte del área.
+CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Después de HOY, es el punto que más sitio ocupa.
 
 SOLTAR — QUÉ TIENE QUE SOLTAR. Solo NOMBRAR la creencia concreta que tiene que caer. Nada más. Ni pasos, ni ejercicios, ni plan, ni "empieza por", ni por dónde, ni cómo hacerlo. El cómo es otro producto y aquí sobra. Es el punto más corto de todos.
 
 CIERRE — el cierre, tal como pide la sección CIERRE DE CADA ÁREA. Además tiene que salir del contenido concreto de ESTA área y de ESTA persona: si ese mismo cierre pudiera ir al final de cualquiera de las otras seis áreas, no vale y lo reescribes.
 
-SIN SOLAPE ENTRE LOS SEIS PUNTOS:
-Cada punto cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. El pasado sale únicamente en ORIGEN. La escena no se anuncia antes ni se resume después: se cuenta y se sigue. SOLTAR no vuelve a explicar la creencia, solo la nombra. El cierre no es un resumen de nada de lo anterior. Si al escribir un punto notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: en 850-900 palabras no sobra sitio para repetirse.
+SIN SOLAPE ENTRE LOS SEIS BLOQUES:
+Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. El pasado sale únicamente en ORIGEN. La escena no se anuncia antes ni se resume después: se cuenta y se sigue. SOLTAR no vuelve a explicar la creencia, solo la nombra. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
 
-EL ORDEN DE LOS SEIS PUNTOS CAMBIA SEGÚN EL ÁREA:
+EL ORDEN DE LOS SEIS BLOQUES CAMBIA SEGÚN EL ÁREA:
 Las siete áreas se leen seguidas dentro del mismo informe. Si las siete siguen el mismo esqueleto se nota, y el estudio deja de parecer escrito para esa persona y empieza a parecer una plantilla rellenada. Por eso cada área lleva su propia secuencia. El cierre es lo único que va siempre al final, porque es el cierre.
 
 Sigue EXACTAMENTE la secuencia del área que te están pidiendo:
@@ -208,7 +207,7 @@ Sigue EXACTAMENTE la secuencia del área que te están pidiendo:
 - ÁREA 6, RELACIONES:  ORIGEN, HOY, ESCENA, CREENCIAS, SOLTAR, CIERRE
 - ÁREA 7, DINERO:      ESCENA, CREENCIAS, ORIGEN, HOY, SOLTAR, CIERRE
 
-Cuando un punto te caiga en un sitio que no es el que pediría la lógica de siempre, engánchalo bien con lo que va antes: el texto tiene que leerse como alguien hablando seguido, nunca como piezas sueltas colocadas en otro orden.
+Cuando un bloque te caiga en un sitio que no es el que pediría la lógica de siempre, engánchalo bien con lo que va antes: el texto tiene que leerse como alguien hablando seguido, nunca como piezas sueltas colocadas en otro orden.
 
 NADA DE FRASES MOLDE:
 Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta al leerlas del tirón. La lógica de fondo se mantiene siempre (qué te pasa, de dónde viene, qué creencia lo sostiene, qué se cae), lo que cambia en cada área es cómo se dice y en qué orden aparece. Quedan PROHIBIDAS estas fórmulas y cualquier variante suya:
