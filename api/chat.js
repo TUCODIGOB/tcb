@@ -245,43 +245,43 @@ PROHIBICIONES ABSOLUTAS:
   const AREAS = [
     {
       id: 1,
-      prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro, cómo se vive a sí misma, cómo se valora cuando nadie la mira, su diálogo interno.
+      prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí misma.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 2,
-      prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué hace automáticamente cuando algo pasa, cómo reacciona, cómo se sabotea, por qué siempre acaba en los mismos sitios.
+      prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué repite una y otra vez sin darse cuenta.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 3,
-      prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que más gobierna su vida sin que lo nombre, qué evita por ese miedo, qué gana al tenerlo.
+      prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que gobierna su vida sin que lo nombre.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 4,
-      prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué duele hoy, cuándo se dispara, qué situaciones lo reactivan, cómo afecta su presente.
+      prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué le sigue doliendo hoy y cómo le afecta.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 5,
-      prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo ama en pareja, qué patrón repite, por qué atrae siempre el mismo tipo de personas, qué pasa con el deseo y la intimidad.
+      prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo vive las relaciones de pareja.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 6,
-      prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: qué rol ocupa con los demás, cómo encaja o no en grupos, qué personas atrae, por qué se acerca o se aleja.
+      prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: cómo se vincula con los demás fuera de la pareja.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 7,
-      prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero, qué pasa cuando empieza a irle bien, qué creencias tiene que no ve, cómo actúa en el trabajo.
+      prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero.
 
 Después del cierre normal del área, añade UN SOLO párrafo final de despedida de todo el estudio, corto y contundente (máximo 2 líneas, entre 20 y 35 palabras). Como cuando alguien que te conoce bien te dice algo al final de una conversación larga y te deja tocado. Sin consejos, sin motivación, solo una verdad que resuena.
 
