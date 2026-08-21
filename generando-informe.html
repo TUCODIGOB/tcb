@@ -535,8 +535,15 @@ function showAviso(titulo, msg) {
 
 // Función que lanza todo el proceso usando los datos del pedido
 async function iniciarConDatos(pedido) {
-  // Geocode del lugar de nacimiento
-  const geo = await geocode(pedido.municipio, pedido.provincia, pedido.pais);
+  // Coordenadas del lugar de nacimiento. Las del formulario ya se comprobaron
+  // antes de pagar, asi que se usan esas: repetir la busqueda aqui podia dar
+  // un punto distinto del que se valido. Si el pedido viene del respaldo de
+  // Stripe (otro navegador, o un reintento) no las lleva, y entonces se buscan
+  // como siempre.
+  const latGuardada = Number(pedido.lat), lonGuardada = Number(pedido.lon);
+  const geo = (Number.isFinite(latGuardada) && Number.isFinite(lonGuardada) && (latGuardada !== 0 || lonGuardada !== 0))
+    ? { lat: latGuardada, lon: lonGuardada, ok: true }
+    : await geocode(pedido.municipio, pedido.provincia, pedido.pais);
 
   // Parsear fecha y hora
   const [yr, mo, dy] = pedido.fecha.split('-').map(Number);

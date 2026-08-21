@@ -2353,11 +2353,32 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       return true;
     }
 
+    // Avisar a la tienda de que el servicio de mapas no responde. Sin esto, un
+    // corte del servicio deja a todos los clientes sin poder pagar y desde
+    // fuera no se nota nada. Se manda una sola vez por visita para no llenar
+    // el correo si el cliente reintenta varias veces.
+    let avisoMapaEnviado = false;
+    function avisarFalloDelMapa(datos) {
+      if (avisoMapaEnviado) return;
+      avisoMapaEnviado = true;
+      fetch('/api/avisar-fallo-mapa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: datos.nombre,
+          email: datos.email,
+          municipio: datos.municipio,
+          provincia: datos.provincia,
+          pais: datos.pais,
+        }),
+      }).catch(() => {});
+    }
+
     // Validar lugar con Nominatim (OpenStreetMap) — gratis
     async function validarLugar(municipio, provincia, pais) {
       // Un país de 1-2 caracteres nunca es un nombre real (el país más corto
       // del mundo tiene 3+ letras) — lo rechazamos sin consultar la API.
-      if (pais.trim().length < 3) return { ok: false };
+      if (pais.trim().length < 3) return { ok: false, motivo: 'no_encontrado' };
 
       const query = [municipio, provincia, pais].filter(Boolean).join(', ');
       // limit=5: el primer resultado no siempre es el municipio (puede ser un
@@ -2372,15 +2393,16 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
           const r = await fetch(url, { headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' } });
           if (!r.ok) throw new Error('Nominatim respondió ' + r.status);
           const data = await r.json();
-          if (!data || data.length === 0) return { ok: false };
+          if (!data || data.length === 0) return { ok: false, motivo: 'no_encontrado' };
           const acertado = data.find(res => resultadoCoincide(res, municipio, provincia, pais));
-          if (!acertado) return { ok: false };
+          if (!acertado) return { ok: false, motivo: 'no_encontrado' };
           return { ok: true, lat: parseFloat(acertado.lat), lon: parseFloat(acertado.lon) };
         } catch (e) {
           // Un lugar no verificable nunca debe dejar avanzar al pago, ni
           // siquiera si el fallo es del servicio externo — pero antes de
           // bloquear, absorbemos fallos transitorios con 2 reintentos.
-          if (intento === INTENTOS) return { ok: false };
+          // El motivo importa: aquí el cliente no ha hecho nada mal.
+          if (intento === INTENTOS) return { ok: false, motivo: 'sin_respuesta' };
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
@@ -2454,12 +2476,20 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       const lugarOk = await validarLugar(datos.municipio, datos.provincia, datos.pais);
 
       if (!lugarOk.ok) {
-        // El lugar no se encontró → marcar los 3 campos en rojo
-        showError('municipio');
-        showError('provincia');
-        showError('pais');
         const banner = document.getElementById('errorBanner');
-        banner.textContent = 'No hemos encontrado el lugar de nacimiento que has escrito. Por favor revisa el municipio, la provincia y el país (sin abreviaturas) antes de continuar.';
+        if (lugarOk.motivo === 'sin_respuesta') {
+          // El servicio de mapas no contesta. No es culpa del cliente: ni se le
+          // marcan los campos en rojo ni se le manda revisar lo que ha escrito.
+          // Y avisamos a la tienda, porque si no esto no se nota desde fuera.
+          avisarFalloDelMapa(datos);
+          banner.textContent = 'No podemos verificar tu lugar de nacimiento en este momento. Inténtalo de nuevo en unos minutos, o escríbenos a hola@origennatal.com y lo hacemos nosotros.';
+        } else {
+          // El lugar no se encontró → marcar los 3 campos en rojo
+          showError('municipio');
+          showError('provincia');
+          showError('pais');
+          banner.textContent = 'No hemos encontrado el lugar de nacimiento que has escrito. Por favor revisa el municipio, la provincia y el país (sin abreviaturas) antes de continuar.';
+        }
         banner.classList.add('show');
         banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
         btn.disabled = false;
@@ -2471,6 +2501,10 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       // Sin espacios: Brevo rechaza el numero entero si los lleva, y entonces
       // el contacto se guarda sin telefono y no se le puede mandar un SMS.
       datos.telefonoCompleto = (datos.prefijo + datos.telefono).replace(/\s+/g, '');
+      // Coordenadas ya comprobadas: se guardan con el pedido para que el
+      // informe se calcule con ellas y no con una segunda búsqueda distinta.
+      datos.lat = lugarOk.lat;
+      datos.lon = lugarOk.lon;
       datos.edadCalculada = calcularEdad(datos.fecha);
       datos.gaClientId = obtenerGAClientId();
       delete datos.email2;
