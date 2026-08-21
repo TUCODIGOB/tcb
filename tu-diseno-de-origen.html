@@ -2321,14 +2321,20 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
     // no ha encontrado lo que el cliente escribió y ha devuelto la zona entera.
     const RESULTADOS_DEMASIADO_GRANDES = ['country', 'continent', 'state', 'region'];
 
-    function resultadoCoincide(res, municipio, provincia, pais) {
-      if (RESULTADOS_DEMASIADO_GRANDES.includes(res.addresstype)) return false;
+    // Devuelve null si el resultado es de verdad el lugar escrito, y si no, el
+    // nombre del campo que no cuadra. Saber cuál falla permite marcar en rojo
+    // solo ese: marcar los tres cuando dos están bien deja al cliente sin
+    // saber qué tiene que corregir.
+    function campoQueFalla(res, municipio, provincia, pais) {
+      // El mapa ha devuelto una región entera en vez de un municipio: es el
+      // municipio escrito lo que no ha sabido encontrar.
+      if (RESULTADOS_DEMASIADO_GRANDES.includes(res.addresstype)) return 'municipio';
 
       const dir = res.address || {};
 
       // 1) El país devuelto tiene que ser el escrito. Pedimos los nombres en
       //    castellano (accept-language), así "Francia" no choca con "France".
-      if (dir.country && !coincideLugar(pais, dir.country)) return false;
+      if (dir.country && !coincideLugar(pais, dir.country)) return 'pais';
 
       // 2) El municipio devuelto tiene que ser el escrito. Miramos todos sus
       //    nombres: el oficial, los alternativos y los de otras lenguas.
@@ -2341,16 +2347,24 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       }
       CAMPOS_MUNICIPIO.forEach(campo => { if (dir[campo]) nombres.push(dir[campo]); });
       if (res.display_name) nombres.push(res.display_name.split(',')[0]);
-      if (!nombres.some(nombre => coincideLugar(municipio, nombre))) return false;
+      if (!nombres.some(nombre => coincideLugar(municipio, nombre))) return 'municipio';
 
       // 3) La provincia escrita tiene que aparecer en la dirección devuelta.
       //    Es lo que distingue dos municipios con el mismo nombre. Si el
       //    resultado no trae ninguna división de ese nivel (países pequeños
       //    que no las tienen), no hay nada que contradecir y pasa.
       const provinciasDevueltas = CAMPOS_PROVINCIA.map(c => dir[c]).filter(Boolean);
-      if (provinciasDevueltas.length && !provinciasDevueltas.some(p => coincideLugar(provincia, p))) return false;
+      if (provinciasDevueltas.length && !provinciasDevueltas.some(p => coincideLugar(provincia, p))) return 'provincia';
 
-      return true;
+      return null;
+    }
+
+    // De todos los resultados que no valen, el campo culpable solo esta claro
+    // si es el mismo en todos. Si unos fallan por una cosa y otros por otra,
+    // no se puede senalar a uno: entonces se devuelve null y se marcan los tres.
+    function campoCulpable(fallos) {
+      const primero = fallos[0];
+      return fallos.every(f => f === primero) ? primero : null;
     }
 
     // Avisar a la tienda de que el servicio de mapas no responde. Sin esto, un
@@ -2374,11 +2388,16 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       }).catch(() => {});
     }
 
+    // Cierto solo cuando se han marcado los tres campos del lugar por no poder
+    // saber cuál falla. Entonces, al corregir cualquiera de ellos, se limpian
+    // los tres: si no, quedan dos en rojo sin que el cliente sepa por qué.
+    let lugarMarcadoEntero = false;
+
     // Validar lugar con Nominatim (OpenStreetMap) — gratis
     async function validarLugar(municipio, provincia, pais) {
       // Un país de 1-2 caracteres nunca es un nombre real (el país más corto
       // del mundo tiene 3+ letras) — lo rechazamos sin consultar la API.
-      if (pais.trim().length < 3) return { ok: false, motivo: 'no_encontrado' };
+      if (pais.trim().length < 3) return { ok: false, motivo: 'no_encontrado', campo: 'pais' };
 
       const query = [municipio, provincia, pais].filter(Boolean).join(', ');
       // limit=5: el primer resultado no siempre es el municipio (puede ser un
@@ -2393,16 +2412,19 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
           const r = await fetch(url, { headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' } });
           if (!r.ok) throw new Error('Nominatim respondió ' + r.status);
           const data = await r.json();
-          if (!data || data.length === 0) return { ok: false, motivo: 'no_encontrado' };
-          const acertado = data.find(res => resultadoCoincide(res, municipio, provincia, pais));
-          if (!acertado) return { ok: false, motivo: 'no_encontrado' };
-          return { ok: true, lat: parseFloat(acertado.lat), lon: parseFloat(acertado.lon) };
+          // Sin ningun resultado no hay nada que comparar, asi que tampoco se
+          // puede saber cual de los tres campos esta mal: campo va vacio.
+          if (!data || data.length === 0) return { ok: false, motivo: 'no_encontrado', campo: null };
+          const fallos = data.map(res => campoQueFalla(res, municipio, provincia, pais));
+          const bueno = fallos.indexOf(null);
+          if (bueno === -1) return { ok: false, motivo: 'no_encontrado', campo: campoCulpable(fallos) };
+          return { ok: true, lat: parseFloat(data[bueno].lat), lon: parseFloat(data[bueno].lon) };
         } catch (e) {
           // Un lugar no verificable nunca debe dejar avanzar al pago, ni
           // siquiera si el fallo es del servicio externo — pero antes de
           // bloquear, absorbemos fallos transitorios con 2 reintentos.
           // El motivo importa: aquí el cliente no ha hecho nada mal.
-          if (intento === INTENTOS) return { ok: false, motivo: 'sin_respuesta' };
+          if (intento === INTENTOS) return { ok: false, motivo: 'sin_respuesta', campo: null };
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
@@ -2483,8 +2505,21 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
           // Y avisamos a la tienda, porque si no esto no se nota desde fuera.
           avisarFalloDelMapa(datos);
           banner.textContent = 'No podemos verificar tu lugar de nacimiento en este momento. Inténtalo de nuevo en unos minutos, o escríbenos a hola@origennatal.com y lo hacemos nosotros.';
+        } else if (lugarOk.campo) {
+          // Sabemos cuál de los tres no cuadra: se marca solo ese y se le dice
+          // exactamente qué revisar.
+          const MENSAJES = {
+            pais: 'No hemos encontrado ese país. Por favor escríbelo completo y sin abreviaturas.',
+            municipio: 'No hemos encontrado ese municipio de nacimiento. Por favor revisa cómo está escrito.',
+            provincia: 'Esa provincia no se corresponde con el municipio que has escrito. Por favor revísala.',
+          };
+          lugarMarcadoEntero = false;
+          showError(lugarOk.campo);
+          banner.textContent = MENSAJES[lugarOk.campo];
         } else {
-          // El lugar no se encontró → marcar los 3 campos en rojo
+          // El mapa no ha devuelto nada con lo que comparar, así que no se
+          // puede señalar a un campo: se marcan los tres.
+          lugarMarcadoEntero = true;
           showError('municipio');
           showError('provincia');
           showError('pais');
@@ -2597,6 +2632,18 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
         input.addEventListener('change', () => clearError(id));
       }
     });
+    ['municipio', 'provincia', 'pais'].forEach(id => {
+      const campo = document.getElementById(id);
+      if (!campo) return;
+      campo.addEventListener('input', () => {
+        if (!lugarMarcadoEntero) return;
+        lugarMarcadoEntero = false;
+        clearError('municipio');
+        clearError('provincia');
+        clearError('pais');
+      });
+    });
+
     document.getElementById('politica').addEventListener('change', () => {
       document.getElementById('politicaField').classList.remove('error');
     });
