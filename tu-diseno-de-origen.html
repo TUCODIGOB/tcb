@@ -2508,14 +2508,11 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
         } else if (lugarOk.campo) {
           // Sabemos cuál de los tres no cuadra: se marca solo ese y se le dice
           // exactamente qué revisar.
-          const MENSAJES = {
-            pais: 'No hemos encontrado ese país. Por favor escríbelo completo y sin abreviaturas.',
-            municipio: 'No hemos encontrado ese municipio de nacimiento. Por favor revisa cómo está escrito.',
-            provincia: 'Esa provincia no se corresponde con el municipio que has escrito. Por favor revísala.',
-          };
+          // Mismo mensaje para los tres: solo cambia de qué campo se habla.
+          const NOMBRES = { pais: 'ese país', municipio: 'ese municipio', provincia: 'esa provincia' };
           lugarMarcadoEntero = false;
           showError(lugarOk.campo);
-          banner.textContent = MENSAJES[lugarOk.campo];
+          banner.textContent = 'No hemos encontrado ' + NOMBRES[lugarOk.campo] + '. Échale un vistazo antes de seguir.';
         } else {
           // El mapa no ha devuelto nada con lo que comparar, así que no se
           // puede señalar a un campo: se marcan los tres.
