@@ -4,7 +4,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
-import { estado, marcarEmailEnviado } from '../lib/reserva.js';
+import { estado, marcarEmailEnviado, compraValida } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
     // 1. Verificar que el pago es real consultando Stripe
     const session = await stripe.checkout.sessions.retrieve(session_id);
-    if (!session || session.payment_status !== 'paid') {
+    if (!compraValida(session)) {
       return res.status(402).json({ error: 'Pago no confirmado' });
     }
 
