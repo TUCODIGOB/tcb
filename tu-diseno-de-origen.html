@@ -2321,23 +2321,22 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
     // no ha encontrado lo que el cliente escribió y ha devuelto la zona entera.
     const RESULTADOS_DEMASIADO_GRANDES = ['country', 'continent', 'state', 'region'];
 
-    // Devuelve null si el resultado es de verdad el lugar escrito, y si no, el
-    // nombre del campo que no cuadra. Saber cuál falla permite marcar en rojo
-    // solo ese: marcar los tres cuando dos están bien deja al cliente sin
-    // saber qué tiene que corregir.
-    function campoQueFalla(res, municipio, provincia, pais) {
-      // El mapa ha devuelto una región entera en vez de un municipio: es el
-      // municipio escrito lo que no ha sabido encontrar.
-      if (RESULTADOS_DEMASIADO_GRANDES.includes(res.addresstype)) return 'municipio';
-
+    // Devuelve qué campos no cuadran con este resultado del mapa (lista vacía
+    // si el resultado es de verdad el lugar escrito). Se comprueban los tres
+    // siempre, sin parar en el primero que falle: así, si el municipio y la
+    // provincia están mal pero el país bien, se puede marcar solo lo que falla.
+    function camposQueFallan(res, municipio, provincia, pais) {
       const dir = res.address || {};
+      const falla = [];
 
       // 1) El país devuelto tiene que ser el escrito. Pedimos los nombres en
       //    castellano (accept-language), así "Francia" no choca con "France".
-      if (dir.country && !coincideLugar(pais, dir.country)) return 'pais';
+      if (dir.country && !coincideLugar(pais, dir.country)) falla.push('pais');
 
       // 2) El municipio devuelto tiene que ser el escrito. Miramos todos sus
-      //    nombres: el oficial, los alternativos y los de otras lenguas.
+      //    nombres: el oficial, los alternativos y los de otras lenguas. Si el
+      //    mapa ha devuelto una región entera en vez de un municipio, es el
+      //    municipio escrito lo que no ha sabido encontrar.
       const nombres = [];
       if (res.name) nombres.push(res.name);
       if (res.namedetails) {
@@ -2347,24 +2346,25 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       }
       CAMPOS_MUNICIPIO.forEach(campo => { if (dir[campo]) nombres.push(dir[campo]); });
       if (res.display_name) nombres.push(res.display_name.split(',')[0]);
-      if (!nombres.some(nombre => coincideLugar(municipio, nombre))) return 'municipio';
+      const demasiadoGrande = RESULTADOS_DEMASIADO_GRANDES.includes(res.addresstype);
+      if (demasiadoGrande || !nombres.some(nombre => coincideLugar(municipio, nombre))) falla.push('municipio');
 
       // 3) La provincia escrita tiene que aparecer en la dirección devuelta.
       //    Es lo que distingue dos municipios con el mismo nombre. Si el
       //    resultado no trae ninguna división de ese nivel (países pequeños
       //    que no las tienen), no hay nada que contradecir y pasa.
       const provinciasDevueltas = CAMPOS_PROVINCIA.map(c => dir[c]).filter(Boolean);
-      if (provinciasDevueltas.length && !provinciasDevueltas.some(p => coincideLugar(provincia, p))) return 'provincia';
+      if (provinciasDevueltas.length && !provinciasDevueltas.some(p => coincideLugar(provincia, p))) falla.push('provincia');
 
-      return null;
+      return falla;
     }
 
-    // De todos los resultados que no valen, el campo culpable solo esta claro
-    // si es el mismo en todos. Si unos fallan por una cosa y otros por otra,
-    // no se puede senalar a uno: entonces se devuelve null y se marcan los tres.
-    function campoCulpable(fallos) {
-      const primero = fallos[0];
-      return fallos.every(f => f === primero) ? primero : null;
+    // El mapa devuelve varios resultados. Un campo solo se puede dar por malo
+    // si no cuadra en NINGUNO de ellos: si alguno lo da por bueno, el problema
+    // esta en otro sitio y marcarlo confundiria al cliente.
+    function camposCulpables(fallosPorResultado) {
+      return ['municipio', 'provincia', 'pais']
+        .filter(campo => fallosPorResultado.every(falla => falla.includes(campo)));
     }
 
     // Avisar a la tienda de que el servicio de mapas no responde. Sin esto, un
@@ -2397,7 +2397,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
     async function validarLugar(municipio, provincia, pais) {
       // Un país de 1-2 caracteres nunca es un nombre real (el país más corto
       // del mundo tiene 3+ letras) — lo rechazamos sin consultar la API.
-      if (pais.trim().length < 3) return { ok: false, motivo: 'no_encontrado', campo: 'pais' };
+      if (pais.trim().length < 3) return { ok: false, motivo: 'no_encontrado', campos: ['pais'] };
 
       const query = [municipio, provincia, pais].filter(Boolean).join(', ');
       // limit=5: el primer resultado no siempre es el municipio (puede ser un
@@ -2413,18 +2413,18 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
           if (!r.ok) throw new Error('Nominatim respondió ' + r.status);
           const data = await r.json();
           // Sin ningun resultado no hay nada que comparar, asi que tampoco se
-          // puede saber cual de los tres campos esta mal: campo va vacio.
-          if (!data || data.length === 0) return { ok: false, motivo: 'no_encontrado', campo: null };
-          const fallos = data.map(res => campoQueFalla(res, municipio, provincia, pais));
-          const bueno = fallos.indexOf(null);
-          if (bueno === -1) return { ok: false, motivo: 'no_encontrado', campo: campoCulpable(fallos) };
+          // puede saber cuales de los tres campos estan mal: la lista va vacia.
+          if (!data || data.length === 0) return { ok: false, motivo: 'no_encontrado', campos: [] };
+          const fallosPorResultado = data.map(res => camposQueFallan(res, municipio, provincia, pais));
+          const bueno = fallosPorResultado.findIndex(falla => falla.length === 0);
+          if (bueno === -1) return { ok: false, motivo: 'no_encontrado', campos: camposCulpables(fallosPorResultado) };
           return { ok: true, lat: parseFloat(data[bueno].lat), lon: parseFloat(data[bueno].lon) };
         } catch (e) {
           // Un lugar no verificable nunca debe dejar avanzar al pago, ni
           // siquiera si el fallo es del servicio externo — pero antes de
           // bloquear, absorbemos fallos transitorios con 2 reintentos.
           // El motivo importa: aquí el cliente no ha hecho nada mal.
-          if (intento === INTENTOS) return { ok: false, motivo: 'sin_respuesta', campo: null };
+          if (intento === INTENTOS) return { ok: false, motivo: 'sin_respuesta', campos: [] };
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
       }
@@ -2505,21 +2505,15 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
           // Y avisamos a la tienda, porque si no esto no se nota desde fuera.
           avisarFalloDelMapa(datos);
           banner.textContent = 'No podemos verificar tu lugar de nacimiento en este momento. Inténtalo de nuevo en unos minutos, o escríbenos a hola@origennatal.com y lo hacemos nosotros.';
-        } else if (lugarOk.campo) {
-          // Sabemos cuál de los tres no cuadra: se marca solo ese y se le dice
-          // exactamente qué revisar.
-          // Mismo mensaje para los tres: solo cambia de qué campo se habla.
-          const NOMBRES = { pais: 'ese país', municipio: 'ese municipio', provincia: 'esa provincia' };
-          lugarMarcadoEntero = false;
-          showError(lugarOk.campo);
-          banner.textContent = 'No hemos encontrado ' + NOMBRES[lugarOk.campo] + '. Échale un vistazo antes de seguir.';
         } else {
-          // El mapa no ha devuelto nada con lo que comparar, así que no se
-          // puede señalar a un campo: se marcan los tres.
-          lugarMarcadoEntero = true;
-          showError('municipio');
-          showError('provincia');
-          showError('pais');
+          // Se marcan en rojo solo los campos que no cuadran. Cuando no se
+          // puede saber cuáles son (el mapa no ha devuelto nada, o cada
+          // resultado falla por un motivo distinto) se marcan los tres.
+          const campos = lugarOk.campos && lugarOk.campos.length
+            ? lugarOk.campos
+            : ['municipio', 'provincia', 'pais'];
+          lugarMarcadoEntero = campos.length === 3;
+          campos.forEach(showError);
           banner.textContent = 'No hemos encontrado el lugar de nacimiento que has escrito. Por favor revisa el municipio, la provincia y el país (sin abreviaturas) antes de continuar.';
         }
         banner.classList.add('show');
