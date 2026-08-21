@@ -163,6 +163,67 @@ export default async function handler(req, res) {
       return y;
     }
 
+    // ── NEGRITAS DENTRO DEL TEXTO ────────────────────────────────────────────
+    // El modelo marca lo que destaca con **dos asteriscos**. jsPDF pinta cada
+    // llamada a text() con una sola fuente, asi que no basta con partir el
+    // parrafo en lineas: hay que partirlo en palabras, cada una sabiendo si va
+    // en negrita, y colocarlas una detras de otra midiendo lo que ocupan.
+    function palabrasConNegrita(txt) {
+      var segs = [], resto = String(txt || ''), m;
+      var marca = /\*\*([\s\S]+?)\*\*/;
+      while ((m = marca.exec(resto)) !== null) {
+        if (m.index > 0) segs.push({ t: resto.slice(0, m.index), b: false });
+        segs.push({ t: m[1], b: true });
+        resto = resto.slice(m.index + m[0].length);
+      }
+      if (resto) segs.push({ t: resto, b: false });
+      var out = [];
+      for (var i = 0; i < segs.length; i++) {
+        // Asterisco suelto: marca sin cerrar, o cortada al partir el parrafo por
+        // longitud. Se limpia, porque al cliente no le puede llegar impreso.
+        var trozos = segs[i].t.replace(/\*/g, '').split(/(\s+)/);
+        for (var j = 0; j < trozos.length; j++) {
+          if (trozos[j] === '') continue;
+          out.push({ t: trozos[j], b: segs[i].b, esp: /^\s+$/.test(trozos[j]) });
+        }
+      }
+      return out;
+    }
+
+    function anchoPalabra(pal, size, todoNegrita) {
+      doc.setFontSize(size);
+      doc.setFont('Roboto', (todoNegrita || pal.b) ? 'bold' : 'normal');
+      return doc.getTextWidth(pal.t);
+    }
+
+    function anchoLinea(linea, size, todoNegrita) {
+      var a = 0;
+      for (var i = 0; i < linea.length; i++) a += anchoPalabra(linea[i], size, todoNegrita);
+      return a;
+    }
+
+    // Lo mismo que splitTextToSize, pero midiendo cada palabra con su fuente.
+    function lineasConNegrita(txt, maxW, size, todoNegrita) {
+      var pals = palabrasConNegrita(txt), lineas = [], linea = [], ancho = 0;
+      for (var i = 0; i < pals.length; i++) {
+        var w = anchoPalabra(pals[i], size, todoNegrita);
+        if (pals[i].esp) {
+          if (linea.length === 0) continue;
+          linea.push(pals[i]); ancho += w; continue;
+        }
+        if (ancho + w > maxW && linea.length > 0) {
+          while (linea.length > 0 && linea[linea.length - 1].esp) {
+            ancho -= anchoPalabra(linea.pop(), size, todoNegrita);
+          }
+          lineas.push(linea); linea = []; ancho = 0;
+        }
+        linea.push(pals[i]); ancho += w;
+      }
+      while (linea.length > 0 && linea[linea.length - 1].esp) linea.pop();
+      if (linea.length > 0) lineas.push(linea);
+      return lineas;
+    }
+
     function dibujarCarta(cx, cy, r) {
       var PI = Math.PI;
       var asc = carta.ascRaw || 0;
@@ -559,15 +620,20 @@ export default async function handler(req, res) {
         var esC=paras[pi2].cierre;
         // El cierre es la frase que el lector se lleva puesta: se saca del
         // bloque de texto y se pinta en negrita dorada, centrada y con aire.
-        var fuente=esC?'bold':'normal', cuerpo=esC?14:12;
+        var cuerpo=esC?14:12;
         var color=esC?[207,177,128]:[40,40,40];
         var ancho=esC?150:175, alto=esC?8:7;
         if(esC) ay+=8;
-        doc.setFont('Roboto',fuente); doc.setFontSize(cuerpo); doc.setTextColor(color[0],color[1],color[2]);
-        var plines=doc.splitTextToSize(fx(paras[pi2].t.trim()),ancho);
+        doc.setFontSize(cuerpo); doc.setTextColor(color[0],color[1],color[2]);
+        var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esC);
         for(var pl2=0;pl2<plines.length;pl2++){
-          if(ay>H-16){addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFont('Roboto',fuente);doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);ay=60;}
-          if(esC){ doc.text(fx(plines[pl2]),105,ay,{align:'center'}); } else { doc.text(fx(plines[pl2]),18,ay); }
+          if(ay>H-16){addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);ay=60;}
+          var lin=plines[pl2];
+          var cx=esC?(105-anchoLinea(lin,cuerpo,esC)/2):18;
+          for(var wi=0;wi<lin.length;wi++){
+            if(!lin[wi].esp){ doc.setFont('Roboto',(esC||lin[wi].b)?'bold':'normal'); doc.text(lin[wi].t,cx,ay); }
+            cx+=anchoPalabra(lin[wi],cuerpo,esC);
+          }
           ay+=alto;
         }
         ay+=esC?8:4;
