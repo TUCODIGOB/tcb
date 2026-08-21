@@ -8,8 +8,12 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// Precio del producto "Tu Diseño de Origen" en céntimos (47€ = 4700)
-const PRECIO_CENTIMOS = 4700;
+// Precio del producto "Tu Diseño de Origen", creado en el panel de Stripe.
+// El importe, el nombre y la descripcion que ve el cliente al pagar salen de
+// ahi, no de aqui: asi el producto y sus ventas quedan registrados en Stripe y
+// el precio no vive en el codigo. OJO: si en Stripe se cambia el importe, Stripe
+// crea un precio nuevo con otro identificador y hay que actualizarlo aqui.
+const PRICE_ID = 'price_1TPikI0TJvLtDGUGREUg7kkc';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -33,14 +37,7 @@ export default async function handler(req, res) {
       payment_method_types: ['card'],
       line_items: [
         {
-          price_data: {
-            currency: 'eur',
-            product_data: {
-              name: 'Tu Diseño de Origen',
-              description: 'Pago único · Entrega inmediata tras el pago',
-            },
-            unit_amount: PRECIO_CENTIMOS,
-          },
+          price: PRICE_ID,
           quantity: 1,
         },
       ],
