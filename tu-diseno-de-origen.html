@@ -2229,6 +2229,110 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       return longitudes.includes(limpio.length);
     }
 
+    // ── Comparar lo escrito con lo que devuelve el mapa ──────────────────
+    // El buscador de OpenStreetMap "adivina": si el municipio o la provincia
+    // están mal escritos devuelve igualmente el sitio que más se le parece.
+    // Antes eso se daba por bueno, el cliente pagaba y el informe se calculaba
+    // sobre las coordenadas de otro lugar. Aquí comprobamos, con manga ancha,
+    // que lo devuelto sea de verdad lo que el cliente escribió.
+
+    // Palabras que no distinguen un lugar de otro: quitándolas, "Barcelona"
+    // coincide con "Provincia de Barcelona" y "La Coruña" con "A Coruña".
+    const RELLENO_LUGAR = /\b(provincia|departamento|estado|comunidad|comunitat|autonoma|autonomo|region|regiao|municipio|municipality|canton|prefectura|condado|county|area|metropolitana|de|del|la|el|los|las|do|da|dos|das)\b/g;
+
+    // Nombres con dos formas igual de válidas (lengua propia / castellano, o
+    // abreviaturas de uso corriente). Sin esto rechazaríamos a un cliente que
+    // escribe su provincia bien, pero en la otra lengua.
+    const ALIAS_LUGAR = {
+      'lleida': 'lerida', 'girona': 'gerona', 'ourense': 'orense',
+      'araba': 'alava', 'gipuzkoa': 'guipuzcoa', 'bizkaia': 'vizcaya',
+      'nafarroa': 'navarra', 'alacant': 'alicante', 'castello': 'castellon',
+      'illes balears': 'islas baleares', 'eivissa': 'ibiza',
+      'donostia': 'san sebastian', 'a coruna': 'coruna',
+      'cdmx': 'ciudad mexico', 'distrito federal': 'ciudad mexico',
+      'caba': 'buenos aires', 'eeuu': 'estados unidos', 'usa': 'estados unidos',
+      'estados unidos america': 'estados unidos', 'uk': 'reino unido',
+      'holanda': 'paises bajos',
+    };
+
+    function normalizarLugar(texto) {
+      return (texto || '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // fuera tildes
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, ' ')                      // fuera puntuación
+        .trim();
+    }
+
+    function canonizarLugar(texto) {
+      let t = normalizarLugar(texto).replace(RELLENO_LUGAR, ' ').replace(/\s+/g, ' ').trim();
+      for (const alias in ALIAS_LUGAR) {
+        t = t.replace(new RegExp('(^| )' + alias + '( |$)', 'g'), '$1' + ALIAS_LUGAR[alias] + '$2');
+      }
+      return t.replace(/\s+/g, ' ').trim();
+    }
+
+    // Todas las palabras de `buscado`, seguidas y en orden, dentro de `texto`.
+    // Comparamos palabras enteras y no trozos sueltos: si no, una provincia
+    // inventada como "Val" colaría dentro de "Valencia".
+    function contienePalabras(texto, buscado) {
+      const t = texto.split(' '), q = buscado.split(' ');
+      if (!q[0] || q.length > t.length) return false;
+      for (let i = 0; i + q.length <= t.length; i++) {
+        let igual = true;
+        for (let j = 0; j < q.length; j++) {
+          if (t[i + j] !== q[j]) { igual = false; break; }
+        }
+        if (igual) return true;
+      }
+      return false;
+    }
+
+    function coincideLugar(escrito, devuelto) {
+      const a = canonizarLugar(escrito), b = canonizarLugar(devuelto);
+      if (!a || !b) return false;
+      return a === b || contienePalabras(b, a) || contienePalabras(a, b);
+    }
+
+    // Campos de la respuesta donde puede venir el nombre del municipio...
+    const CAMPOS_MUNICIPIO = ['city', 'town', 'village', 'hamlet', 'municipality', 'city_district', 'suburb', 'neighbourhood', 'locality'];
+    // ...y dónde puede venir la provincia, el estado o la región.
+    const CAMPOS_PROVINCIA = ['province', 'state', 'county', 'state_district', 'region', 'city', 'town', 'municipality'];
+    // Un resultado de este tamaño no es un municipio: quiere decir que el mapa
+    // no ha encontrado lo que el cliente escribió y ha devuelto la zona entera.
+    const RESULTADOS_DEMASIADO_GRANDES = ['country', 'continent', 'state', 'region'];
+
+    function resultadoCoincide(res, municipio, provincia, pais) {
+      if (RESULTADOS_DEMASIADO_GRANDES.includes(res.addresstype)) return false;
+
+      const dir = res.address || {};
+
+      // 1) El país devuelto tiene que ser el escrito. Pedimos los nombres en
+      //    castellano (accept-language), así "Francia" no choca con "France".
+      if (dir.country && !coincideLugar(pais, dir.country)) return false;
+
+      // 2) El municipio devuelto tiene que ser el escrito. Miramos todos sus
+      //    nombres: el oficial, los alternativos y los de otras lenguas.
+      const nombres = [];
+      if (res.name) nombres.push(res.name);
+      if (res.namedetails) {
+        for (const clave in res.namedetails) {
+          if (/^(name|official_name|alt_name|short_name)(:|$)/.test(clave)) nombres.push(res.namedetails[clave]);
+        }
+      }
+      CAMPOS_MUNICIPIO.forEach(campo => { if (dir[campo]) nombres.push(dir[campo]); });
+      if (res.display_name) nombres.push(res.display_name.split(',')[0]);
+      if (!nombres.some(nombre => coincideLugar(municipio, nombre))) return false;
+
+      // 3) La provincia escrita tiene que aparecer en la dirección devuelta.
+      //    Es lo que distingue dos municipios con el mismo nombre. Si el
+      //    resultado no trae ninguna división de ese nivel (países pequeños
+      //    que no las tienen), no hay nada que contradecir y pasa.
+      const provinciasDevueltas = CAMPOS_PROVINCIA.map(c => dir[c]).filter(Boolean);
+      if (provinciasDevueltas.length && !provinciasDevueltas.some(p => coincideLugar(provincia, p))) return false;
+
+      return true;
+    }
+
     // Validar lugar con Nominatim (OpenStreetMap) — gratis
     async function validarLugar(municipio, provincia, pais) {
       // Un país de 1-2 caracteres nunca es un nombre real (el país más corto
@@ -2236,7 +2340,11 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       if (pais.trim().length < 3) return { ok: false };
 
       const query = [municipio, provincia, pais].filter(Boolean).join(', ');
-      const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&format=json&limit=1&addressdetails=1';
+      // limit=5: el primer resultado no siempre es el municipio (puede ser un
+      // barrio o una calle con ese nombre), así que revisamos los cinco y nos
+      // quedamos con el primero que coincida de verdad con lo escrito.
+      const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) +
+        '&format=json&limit=5&addressdetails=1&namedetails=1&accept-language=es';
 
       const INTENTOS = 3; // 1 intento inicial + 2 reintentos
       for (let intento = 1; intento <= INTENTOS; intento++) {
@@ -2245,7 +2353,9 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
           if (!r.ok) throw new Error('Nominatim respondió ' + r.status);
           const data = await r.json();
           if (!data || data.length === 0) return { ok: false };
-          return { ok: true, lat: parseFloat(data[0].lat), lon: parseFloat(data[0].lon) };
+          const acertado = data.find(res => resultadoCoincide(res, municipio, provincia, pais));
+          if (!acertado) return { ok: false };
+          return { ok: true, lat: parseFloat(acertado.lat), lon: parseFloat(acertado.lon) };
         } catch (e) {
           // Un lugar no verificable nunca debe dejar avanzar al pago, ni
           // siquiera si el fallo es del servicio externo — pero antes de
