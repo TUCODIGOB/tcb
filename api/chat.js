@@ -172,6 +172,10 @@ Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué 
 Qué necesita de la otra persona para sentirse querida y qué le enamora: lo que le hace falta para bajar la guardia, y lo que la engancha de alguien, que no siempre es lo mismo.
 Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué hace ella ahí sin darse cuenta.
 Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que ella da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
+SOLO EN EL ÁREA 6 (RELACIONES) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
+Qué papel ocupa siempre sin decidirlo: el sitio que acaba ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darse cuenta de que lo ocupa.
+Qué pasa con lo que da y lo que recibe: si la balanza le sale igualada o no, cuánto sostiene ella y cuánto le sostienen a ella, y qué hace cuando esa cuenta no le cuadra.
+En qué dinámicas acaba metida una y otra vez: el tipo de relación que se le repite con gente distinta, y qué se repite dentro de ella cada vez que vuelve a pasar.
 EN LAS DEMÁS ÁREAS este punto es el normal: cómo se manifiesta hoy en esa parcela concreta, lo bueno y lo malo.
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
