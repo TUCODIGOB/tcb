@@ -2338,7 +2338,9 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       }
 
       // Todo válido → guardamos datos en localStorage y redirigimos a Stripe
-      datos.telefonoCompleto = datos.prefijo + ' ' + datos.telefono;
+      // Sin espacios: Brevo rechaza el numero entero si los lleva, y entonces
+      // el contacto se guarda sin telefono y no se le puede mandar un SMS.
+      datos.telefonoCompleto = (datos.prefijo + datos.telefono).replace(/\s+/g, '');
       datos.edadCalculada = calcularEdad(datos.fecha);
       datos.gaClientId = obtenerGAClientId();
       delete datos.email2;
@@ -2440,7 +2442,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       const nombre = document.getElementById('nombre').value;
       const telefonoInput = document.getElementById('telefono').value;
       const telefono = telefonoInput
-        ? document.getElementById('prefijo').value + ' ' + telefonoInput
+        ? (document.getElementById('prefijo').value + telefonoInput).replace(/\s+/g, '')
         : '';
       const clave = emailNormalizado + '|' + nombre + '|' + telefono;
       if (clave === ultimoLeadCaptado) return null;
