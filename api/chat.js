@@ -215,7 +215,7 @@ Qué significa el dinero para ella y qué le mueve a ganarlo: qué representa de
 Qué hace con él cuando lo tiene: cómo lo gasta, cómo toma las decisiones de dinero, y cómo lleva el riesgo cuando hay algo en juego.
 Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo con el que se encuentra una y otra vez, incluido lo que hace en el trabajo cuando toca pedir o cobrar lo que vale, y qué le ocurre justo cuando las cosas empiezan a salirle.
 
-ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
+ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio. Y en las áreas cuya secuencia empieza por ella, no es lo primero que se lee: delante van igualmente el arranque que sitúa el área y la frase que presenta la escena.
 
 ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendió, con quién, en qué situación, y qué hace hoy exactamente por haberlo aprendido. El razonamiento tiene esta forma: "aprendiste esto de pequeña, y por eso hoy, sin darte cuenta, haces esto otro". La forma es esa, las palabras las pones tú y cambian en cada área.
 UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluyó ella de aquello, y qué hace hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra infancia distinta.
@@ -326,7 +326,7 @@ PROHIBICIONES ABSOLUTAS:
 - No repetir el título del área en el texto
 - No causas vagas sin explicar cómo y cuándo
 - No frases de autoayuda ni coaching
-- No decir qué debe hacer la persona
+- No decir qué debe hacer la persona: ni pasos, ni ejercicios, ni plan, ni "empieza por". Enseñarle lo que se le abre el día que algo deje de mandarla no es decirle qué hacer, es enseñarle una puerta, y eso sí va
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
 - PROHIBIDO escribir párrafos de más de 7 líneas. Parte en 2 si hace falta
 - PROHIBIDO enumerar o anunciar cuántas cosas vienen ("son tres", "el primero", "la segunda")
@@ -337,7 +337,7 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO apilar varias explicaciones del origen. Una sola, bien desarrollada
 - PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
 - PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
-- PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea
+- PROHIBIDO cerrar un área con una frase suave o vaga. El cierre golpea primero y solo despues abre: el golpe nunca se cambia por la luz, van los dos y en ese orden
 - PROHIBIDO contar en tu área el mismo mecanismo que gobierna otra. Mira la parte de la carta que te toca
 - PROHIBIDO quedarse en el patrón general. Sin un detalle que solo le valga a ella, el área no vale
 - PROHIBIDO un área que solo diagnostique. Sin el don contado a fondo, el área no vale
