@@ -65,6 +65,11 @@ const SIN_ESCENA = [
 
 // Se cambia entre las dos escenas de prueba: el modelo que nunca pone la
 // escena, y el que devuelve el area cortada a media frase.
+// La misma area pero CON su escena: un informe que sale bien.
+const AREA_BUENA = SIN_ESCENA.replace(
+  '[SUBTITULO] Donde empezo esto',
+  '[ESCENA] Son las once de la noche y sigues con el movil en la mano sin mirar nada.\n\n[SUBTITULO] Donde empezo esto');
+
 let modo = 'sin escena';
 let correoRevienta = false;
 const correos = [];
@@ -76,6 +81,9 @@ globalThis.fetch = async (url, opts = {}) => {
     return { ok: true, status: 201, json: async () => ({}) };
   }
   if (u.includes('api.anthropic.com')) {
+    if (modo === 'buena') {
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_BUENA }] }) };
+    }
     if (modo === 'cortada') {
       return { ok: true, status: 200, json: async () => ({
         stop_reason: 'max_tokens',
@@ -180,6 +188,23 @@ try {
   const r3 = res();
   await chat({ method: 'POST', body: { session_id: SID3, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r3);
   c('con el correo caido, el informe se entrega igual', r3.code === 200, 'HTTP ' + r3.code);
+
+  // ── Y LO MAS IMPORTANTE: si el informe sale BIEN, ni un correo ────
+  console.log('\n  el informe sale bien\n');
+  modo = 'buena';
+  correoRevienta = false;
+  correos.length = 0;
+  gritos.length = 0;
+  const SID4 = 'cs_test_bueno';
+  TIENDA.set(SID4, {
+    id: SID4, payment_status: 'paid', customer_email: 'cliente@ejemplo.com',
+    customer_details: { email: 'cliente@ejemplo.com' }, metadata: { nombre: 'Ana Ruiz' },
+  });
+  const r4 = res();
+  await chat({ method: 'POST', body: { session_id: SID4, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r4);
+  c('el informe sale', r4.code === 200, 'HTTP ' + r4.code);
+  c('y NO llega ningun correo', correos.length === 0, correos.length + ' correos');
+  c('ni ningun grito de area coja', !gritos.some(g => g.includes('ENTREGADA SIN ARREGLAR')));
 } catch (err) {
   console.error = errOriginal;
   console.error('\n  X la prueba reventó:', err.message);
