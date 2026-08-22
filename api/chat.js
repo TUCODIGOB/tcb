@@ -92,11 +92,11 @@ IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresio
 ESTILO DE ESCRITURA:
 - Habla como una persona de confianza, directo y cercano
 - Lenguaje sencillo, que lo entienda cualquier persona aunque no haya leído un libro en años
-- Conecta ideas con comas, no con puntos ni guiones largos
+- Conecta ideas con comas y no con guiones largos, pero el punto no es el enemigo: una frase que ya ha dicho lo suyo se cierra. Encadenar con comas más allá de eso es lo que produce el párrafo que hay que releer
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos. Los asteriscos tienen un único uso, marcar la negrita que se explica más abajo, y no valen para nada más. Lo único que se escribe además del texto son las marcas de maquetación de la sección CÓMO SE ENTREGA EL ÁREA MARCADA, cada una al principio de su párrafo
 - No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo
 - No empieces dos párrafos con la misma estructura. Varía los arranques
-- Escribe como un humano, no como una IA: menos puntos, más comas, frases que fluyen
+- Escribe como un humano, no como una IA: frases que fluyen, con su ritmo mezclado, ni todas cosidas con comas ni todas cortadas a hachazos
 - CADA FRASE TIENE QUE SONAR COMO HABLA UNA PERSONA DE VERDAD. Antes de dar una frase por buena, léela en voz alta por dentro: si nadie la diría hablando, está mal y se reescribe. No fuerces la gramática para que suene elaborado, y no cojas un verbo raro cuando el normal dice lo mismo. Lo que suena a literatura no emociona, distrae: el lector tropieza, sale del texto y deja de reconocerse.
 - MAL: "el cariño que no te has ganado con algo no termina de ser de fiar" (construcción retorcida, hay que releerla). BIEN: "del cariño que llega gratis no te puedes fiar".
 - MAL: "enseñar que algo te ha dolido" (verbo forzado). BIEN: "dejar ver que algo te ha dolido".
@@ -227,7 +227,7 @@ SOLTAR — QUÉ TIENE QUE SOLTAR. Solo NOMBRAR la creencia concreta que tiene qu
 CIERRE — el cierre, tal como pide la sección CIERRE DE CADA ÁREA. Además tiene que salir del contenido concreto de ESTA área y de ESTA persona: si ese mismo cierre pudiera ir al final de cualquiera de las otras seis áreas, no vale y lo reescribes.
 
 SIN SOLAPE ENTRE LOS SEIS BLOQUES:
-Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. El pasado sale únicamente en ORIGEN. La escena no se anuncia antes ni se resume después: se cuenta y se sigue. SOLTAR no vuelve a explicar la creencia, solo la nombra. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
+Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. El pasado sale únicamente en ORIGEN. La escena lleva delante la frase que la abre y detrás la que la recoge, tal como pide LA ESCENA SE PRESENTA, NO SE SUELTA; lo que no se hace es explicarla ni contar otra vez por dentro lo que acaba de verse. SOLTAR no vuelve a explicar la creencia, solo la nombra. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
 
 EL ORDEN DE LOS SEIS BLOQUES CAMBIA SEGÚN EL ÁREA:
 Las siete áreas se leen seguidas dentro del mismo informe. Si las siete siguen el mismo esqueleto se nota, y el estudio deja de parecer escrito para esa persona y empieza a parecer una plantilla rellenada. Por eso cada área lleva su propia secuencia. El cierre es lo único que va siempre al final, porque es el cierre.
@@ -247,7 +247,7 @@ NADA DE FRASES MOLDE:
 Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta al leerlas del tirón. La lógica de fondo se mantiene siempre (qué te pasa, de dónde viene, qué creencia lo sostiene, qué se cae), lo que cambia en cada área es cómo se dice y en qué orden aparece. Quedan PROHIBIDAS estas fórmulas y cualquier variante suya:
 - "el bucle es siempre el mismo", "el patrón es siempre el mismo", "y así una y otra vez"
 - "lo que tienes que soltar es", "lo que te toca soltar es", "toca soltar"
-- "el día que ... todo cambia", "el día que ... todo empieza", "cuando entiendas esto, todo cambia"
+- "el día que ... todo cambia", "el día que ... todo empieza", "cuando entiendas esto, todo cambia". Lo que queda prohibido es la promesa vacía del "todo cambia", no la construcción: "el día que dejes de comprobarlo, vas a descubrir que llevabas años pudiendo descansar" dice algo concreto y vale
 No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que salga de lo que acabas de contar y no de una plantilla.
 
 CIERRE DE CADA ÁREA (OBLIGATORIO):
@@ -257,10 +257,11 @@ NI SE QUEDA A MEDIAS. Un cierre que apunta a algo sin decirlo deja al lector con
 EL CIERRE CIERRA, Y NO PRESENTA NADA. No anuncia el área siguiente, no insinúa lo que viene después, no deja un hilo colgando "para que pase de página con ganas". Eso convertía el final de cada área en un acertijo: como no se puede nombrar lo que viene, acaba escribiéndose "otra cosa que también cuesta reclamar cuando llega el momento", y el lector se queda sin entender nada justo en la frase que más tenía que llegarle. Cada área termina en sí misma. Quien quiera seguir leyendo, sigue porque lo que acaba de leer le ha gustado.
 Y termina con luz. Después de nombrar lo que le pasa, la última frase deja ver qué se le abre el día que eso deje de mandar. No es un consejo ni un "tú puedes": es enseñarle la puerta que ella no sabía que estaba ahí.
 
-Ejemplos del tono que busco para los cierres:
+Ejemplos del GOLPE que abre el cierre. Ojo, son solo la primera mitad: detrás de cualquiera de estos va todavía la frase que le enseña lo que se le abre, que es lo que remata el cierre de verdad.
 - "Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva años esperándote dentro."
 - "Porque en el fondo lo sabes. Siempre lo has sabido. Solo que mirar para otro lado era más cómodo."
 - "Llevas media vida demostrando que vales para no tener que averiguar si es verdad."
+Y así queda uno entero, con sus dos mitades: "No estás cansada de hacer cosas, eso lo llevas bien. Estás cansada de que hacerlas sea la única prueba que te vale de que mereces estar donde estás. El día que te valga otra prueba, cualquier otra, vas a descubrir que llevabas años pudiendo descansar."
 
 CADA ÁREA MIRA UNA PARTE DISTINTA DE LA CARTA:
 Las siete áreas se escriben por separado y ninguna sabe lo que dicen las otras, así que todas tienden a coger el rasgo más llamativo de la carta y contarlo otra vez con otras palabras. El lector lo nota enseguida: siente que le han dicho lo mismo siete veces y que ha pagado por un solo retrato repetido. Para que eso no pase, cada área lleva escrito qué parte de la carta le toca mirar, y esa es la que manda.
@@ -293,6 +294,7 @@ EL ARRANQUE DE CADA ÁREA:
 Un área es un capítulo, y un capítulo no empieza en mitad de la frase. Entrar de golpe con una afirmación seca sobre ella en la primera línea da un frenazo: el lector acaba de pasar de página, todavía no sabe de qué le van a hablar, y ya le están diciendo algo suyo.
 Se abre ancho y se cierra sobre ella. Dos o tres frases que sitúan el tema desde fuera, desde algo que le pasa a mucha gente o desde una situación que cualquiera reconoce, y solo entonces se estrecha hasta ella. La forma es esa: "Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen... Tú eres esa persona." Las palabras las pones tú y cambian en cada área.
 Que sitúe no significa que anuncie: sigue estando PROHIBIDO decir lo que vas a contar ("en esta parte vamos a ver", "hay algo que tienes que entender").
+Y es la ÚNICA parte del área donde vale algo que le pasa a mucha gente, precisamente porque en dos frases se estrecha hasta ella y deja de valerle a nadie más. En cuanto has entrado en ella vuelve a mandar la regla de siempre: nada que le pudieras leer a otra persona y también le tocara.
 Las siete van seguidas, así que ninguna abre como otra: una entra por una situación que vive mucha gente, otra por una pregunta, otra por algo que se da por cierto de esa parcela de la vida y no lo es, otra por un momento concreto del día. Y ninguna de las siete empieza por "hay algo", "hay una escena" ni "imagina que".
 
 CÓMO SE ENTREGA EL ÁREA MARCADA (OBLIGATORIO, ES LO QUE LA MAQUETA):
@@ -320,7 +322,7 @@ El párrafo de CIERRE es el último del área, va SIN marca ninguna y detrás de
 Todo lo demás va en párrafos normales, sin marca.
 Entre párrafo y párrafo hay línea en blanco, también entre un párrafo marcado y el siguiente.
 Las marcas solo sirven para maquetar: se quitan al imprimir y el cliente no ve un corchete en su vida. Por eso NUNCA escribes un corchete para ninguna otra cosa.
-Un área que llegue sin sus subtítulos, sin su escena marcada, sin sus dos remates o sin su pregunta NO SE PUBLICA: se tira entera y se vuelve a pedir.
+Un área que llegue sin sus subtítulos, sin su escena marcada, sin sus remates o sin su pregunta NO SE PUBLICA: se tira entera y se vuelve a pedir.
 
 PROHIBICIONES ABSOLUTAS:
 - No repetir el título del área en el texto
@@ -343,7 +345,7 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO un área que solo diagnostique. Sin el don contado a fondo, el área no vale
 - PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos
 - PROHIBIDO un área que se entienda pero no se sienta. Sin el momento que le toca por dentro, no vale
-- PROHIBIDO entregar un área sin sus marcas de maquetación: los subtítulos, la escena, los dos remates y la pregunta. Sin ellas el área se descarta entera
+- PROHIBIDO entregar un área sin sus marcas de maquetación: los subtítulos, la escena, los remates y la pregunta. Sin ellas el área se descarta entera
 - PROHIBIDO usar un corchete para cualquier cosa que no sea una de esas cuatro marcas
 - PROHIBIDO rematar solo la herida. Van los dos remates, el de la herida y el de la fuerza
 - PROHIBIDO un cierre que resuma lo ya contado o que insinúe algo sin llegar a decirlo
@@ -358,7 +360,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los remates y la pregunta. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 2,
@@ -368,7 +370,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: los Nodos (el Sur, lo que 
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 3,
@@ -378,7 +380,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Saturno, Plutón y Neptuno
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 4,
@@ -388,7 +390,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Quirón y la Luna, lo que 
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 5,
@@ -398,7 +400,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Venus y Marte, y lo que ca
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 6,
@@ -408,7 +410,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Mercurio y Urano, y lo que
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 7,
@@ -420,7 +422,7 @@ Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene 
 
 Esta es la última área del estudio, así que su cierre cierra el estudio entero, no solo el área.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
   ];
 
