@@ -144,5 +144,16 @@ console.log('\nREVISION DEL AREA\n');
   comprobar('una negrita del tamano de un parrafo se rechaza', fallosArea.some(f => f.includes('se ha ido de largo')), fallosArea.join(' | '));
 }
 
+// ── 9. Un area larga con una sola negrita se queda plana ──────────────
+// El suelo crece con lo que mide el area: cuatro paginas con una frase
+// subrayada se leen igual de planas que sin ninguna.
+{
+  const relleno = Array.from({ length: 24 }, (_, i) =>
+    `Parrafo numero ${i} de relleno, con la longitud que tiene un parrafo de verdad dentro del area, para que el area entera se acerque a las novecientas palabras que tiene una de cliente y el suelo suba con ella.`).join('\n\n');
+  const larga = area('**Nadie te ha pedido nunca que pares**, y por eso llevas anos sin hacerlo.') + '\n\n' + relleno;
+  const fallosArea = revisarBloques(analizarArea(larga));
+  comprobar('un area larga con una sola negrita se rechaza', fallosArea.some(f => f.includes('se queda plana')), fallosArea.join(' | '));
+}
+
 console.log(fallos === 0 ? '\nTODO BIEN\n' : `\n${fallos} FALLO(S)\n`);
 process.exit(fallos === 0 ? 0 : 1);
