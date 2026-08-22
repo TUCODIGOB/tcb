@@ -330,9 +330,6 @@ PROHIBICIONES ABSOLUTAS:
   const AREAS = [
     {
       id: 1,
-      // El area 1 va entre 1.100 y 1.300 palabras, las demas entre 850 y 900,
-      // asi que aqui se exige un subtitulo mas que en el resto.
-      minSub: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí misma.
 
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el planeta que rige su signo, y lo que caiga en la casa 1, con los aspectos del Sol. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
