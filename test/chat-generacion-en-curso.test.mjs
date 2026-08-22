@@ -20,6 +20,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { analizarArea, revisarBloques } from '../lib/bloques.js';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.join(AQUI, '..');
@@ -50,6 +51,49 @@ export default function Stripe() {
 }`;
 globalThis.__TIENDA = TIENDA;
 
+// ── El area que devuelve el modelo de mentira.
+//
+// Tiene que pasar la MISMA revision que una de verdad (lib/bloques.js),
+// porque el codigo bajo prueba es el de produccion tal cual. Antes aqui
+// habia una linea de relleno repetida diez veces, y el dia que se empezo
+// a exigir que el area llegara marcada (commit bb514c2) esa linea dejo de
+// valer: chat.js la rechazaba, reintentaba, y la prueba moria antes de
+// llegar a la guarda que viene a mirar. Se quedo once commits en rojo
+// sin comprobar nada. De ahi el aviso de mas abajo.
+const AREA_DE_MENTIRA = [
+  'Te levantas y lo primero que haces es repasar la lista de lo que tienes pendiente, no porque haga falta, sino porque asi el dia empieza con algo bajo control.',
+  '',
+  'Y mientras asientes, por dentro **estas calculando cuanto has ensenado de mas**, que es un trabajo que no descansa nunca y que no te ha visto hacer nadie.',
+  '',
+  '[SUBTITULO] La cuenta que no llevas',
+  'De ahi sale todo lo demas, que es lo que nadie te ha contado y llevas media vida pagando sin enterarte de que lo estabas pagando.',
+  '',
+  '[ESCENA] Son las once de la noche y todavia estas repasando el movil con la luz apagada, buscando algo que ya has leido dos veces.',
+  '',
+  '[REMATE] Llevas media vida pidiendo permiso para ocupar tu propio sitio',
+  '',
+  '[SUBTITULO] Donde empezo esto',
+  'Eso no se arregla apretando mas, se arregla mirando de donde viene, y viene de mucho antes de que tuvieras nada que demostrarle a nadie.',
+  '',
+  '[PREGUNTA] ¿Cuantas veces te has callado algo por no montar un lio?',
+  '',
+  'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
+].join('\n');
+
+// Y aqui esta el aviso. Si algun dia se le pide al area algo mas y este
+// texto de mentira deja de cumplirlo, la prueba lo dice en una linea en vez
+// de morirse reintentando y dejar de vigilar la guarda sin que nadie lo note.
+{
+  const faltan = revisarBloques(analizarArea(AREA_DE_MENTIRA), { minSub: 2 });
+  if (faltan.length > 0) {
+    console.error('\n  X El area de mentira de esta prueba ya no pasa la revision de lib/bloques.js:');
+    for (const f of faltan) console.error('    - ' + f);
+    console.error('\n  Arregla AREA_DE_MENTIRA aqui arriba. Mientras no pase, esta prueba');
+    console.error('  no comprueba la guarda de "generacion en curso", solo se estrella.\n');
+    process.exit(1);
+  }
+}
+
 // ── Contamos lo unico que cuesta dinero: las llamadas al modelo.
 let llamadasAlModelo = 0;
 globalThis.fetch = async (url) => {
@@ -57,10 +101,7 @@ globalThis.fetch = async (url) => {
   if (u.includes('api.anthropic.com')) {
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
-    // api/chat.js descarta cualquier area de menos de 100 caracteres y la
-    // reintenta, asi que la respuesta de mentira tiene que dar la talla.
-    const texto = 'Texto de area generado para la prueba. '.repeat(10);
-    return { ok: true, status: 200, json: async () => ({ content: [{ text: texto }] }) };
+    return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_DE_MENTIRA }] }) };
   }
   return { ok: true, status: 200, json: async () => ({}) };   // Brevo
 };
