@@ -652,13 +652,18 @@ ${texto}`;
     // Los tres intentos han fallado. Si en alguno llego un area entera y lo
     // unico que fallaba eran las marcas, se le pide que se las ponga sobre ese
     // mismo texto, sin reescribirlo.
-    if (sinMarcar && faltabanEn) {
+    // Y se le dan los mismos tres intentos que a la parte de escribir. Poner
+    // cuatro marcas sobre un texto que ya existe es lo mas facil de todo lo
+    // que se pide aqui: si algo tiene que tener varias oportunidades, es esto
+    // y no lo otro.
+    for (let repaso = 1; sinMarcar && faltabanEn && repaso <= INTENTOS_POR_AREA; repaso++) {
       try {
         const marcado = await ponerMarcas(area, sinMarcar, faltabanEn);
-        console.warn(`Área ${area.id}: marcada en el repaso final tras ${INTENTOS_POR_AREA} intentos`);
+        console.warn(`Área ${area.id}: marcada en el repaso ${repaso} tras ${INTENTOS_POR_AREA} intentos de escritura`);
         return marcado;
       } catch (err) {
-        console.warn(`Área ${area.id}: el repaso final tampoco salió (${err.message.slice(0, 120)})`);
+        console.warn(`Área ${area.id}: repaso ${repaso} sin éxito (${err.message.slice(0, 120)})`);
+        if (repaso < INTENTOS_POR_AREA) await new Promise(r => setTimeout(r, 1000 * repaso));
       }
     }
 
