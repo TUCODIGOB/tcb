@@ -312,7 +312,7 @@ Qué lleva cada marca:
 - [PREGUNTA]: la pregunta directa. Va SOLA en su párrafo, es una sola frase y no lleva nada delante ni detrás dentro de ese párrafo. Si el área pide dos preguntas, las dos se marcan igual. Va después de haberle contado algo, nunca en frío, y lo que viene justo debajo recoge lo que acaba de pasarle al leerla: se le hace la pregunta para que pare y trabaje, no para adornar la página.
 
 DÓNDE VAN, QUE ES LA MITAD DEL TRABAJO:
-- EL ÁREA NO EMPIEZA POR UNA MARCA. Ni por un subtítulo, ni por un remate, ni por una pregunta. El área abre con texto corrido (o con la escena, en las áreas cuya secuencia empieza por ella), porque la primera página ya lleva el título impreso arriba y una marca pegada debajo se lee como si el área empezara por la mitad. La primera marca llega cuando ya se han leído dos o tres párrafos.
+- EL ÁREA NO EMPIEZA POR UNA MARCA. Ni por un subtítulo, ni por un remate, ni por una pregunta, ni por la escena. El área abre siempre con texto corrido, porque la primera página ya lleva el título impreso arriba y una marca pegada debajo se lee como si el área empezara por la mitad. En las áreas cuya secuencia empieza por la escena, delante van igualmente las frases que la abren y la sitúan, que es lo que pide LA ESCENA SE PRESENTA, NO SE SUELTA.
 - NUNCA VAN DOS DESTACADAS SEGUIDAS. Entre un [REMATE] y una [PREGUNTA], o entre dos [REMATE], siempre va texto normal. Se imprimen grandes y centradas: dos pegadas se leen como un cartel puesto en medio del área, no como parte de lo que le estás contando.
 - CADA DESTACADA SALE DE LO QUE ACABAS DE CONTAR, Y EL TEXTO SIGUE DESPUÉS. El lector viene leyendo, se encuentra la frase, y continúa. No es una frase suelta colocada en cualquier sitio: si la quitas, el párrafo de antes y el de después tienen que seguir enganchados igual.
 
@@ -456,7 +456,7 @@ ${cartaTexto}`;
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
 7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
 8. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos
-9. CUENTA LAS MARCAS antes de entregar, que es lo que mas se olvida. Tiene que haber TRES lineas que empiecen por [SUBTITULO] (CUATRO en el area 1), una que empiece por [ESCENA], DOS que empiecen por [REMATE] y una que empiece por [PREGUNTA]. Si te sale menos de esa cuenta, no entregues: vuelve al texto y ponlas donde faltan
+9. CUENTA LAS MARCAS antes de entregar, que es lo que mas se olvida. Tiene que haber TRES lineas que empiecen por [SUBTITULO] (CUATRO en el area 1), una que empiece por [ESCENA], DOS COMO MINIMO que empiecen por [REMATE] y una que empiece por [PREGUNTA]. Si te sale menos de esa cuenta, no entregues: vuelve al texto y ponlas donde faltan
 10. Y MIRA DONDE HAN QUEDADO: el area no empieza por una marca, y no hay dos destacadas ([REMATE] o [PREGUNTA]) seguidas, siempre va texto entre ellas. El cierre es el ultimo parrafo, sin marca, y detras no va nada
 11. Que se note que hay alguien hablandole: tres o cuatro veces en toda el area te paras y le hablas de tu a tu, y antes de nombrarle lo que le pesa le quitas la culpa de encima
 12. El area abre situando el tema desde fuera, no de golpe con una frase seca sobre ella. Y el cierre CIERRA: no presenta la siguiente area, no insinua nada, y deja ver que se le abre`;
