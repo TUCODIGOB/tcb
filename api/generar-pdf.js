@@ -627,7 +627,7 @@ export default async function handler(req, res) {
     var ESTILOS = {
       texto:    { size: 12,   color: [40, 40, 40],   x: 18, ancho: 175, alto: 7,   antes: 0,  despues: 4,  fuente: 'normal' },
       sub:      { size: 10,   color: [189, 144, 72], x: 18, ancho: 175, alto: 6,   antes: 11, despues: 6,  fuente: 'bold',   mayus: true, filete: true, juntar: true },
-      escena:   { size: 11,   color: [70, 70, 70],   x: 27, ancho: 157, alto: 6.4, antes: 8,  despues: 9,  fuente: 'italic', barra: true },
+      escena:   { size: 12,   color: [70, 70, 70],   x: 27, ancho: 157, alto: 7,   antes: 8,  despues: 9,  fuente: 'italic', barra: true },
       pregunta: { size: 13,   color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.4, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
       remate:   { size: 13.5, color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.8, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
       cierre:   { size: 16.5, color: [207, 177, 128], x: 18, ancho: 152, alto: 9.5, antes: 19, despues: 8, fuente: 'bold',  centrado: true, juntar: true },
@@ -636,7 +636,10 @@ export default async function handler(req, res) {
     // Estado de la maquetacion de las areas: en que altura vamos y por que
     // pagina. Va aparte para que las funciones de abajo puedan moverlo.
     var maq = { y: 60, pag: 6, paginas: 1 };
-    var Y_TOPE = H - 16;
+    // El numero de pagina se pinta en H-16. Si el texto pudiera llegar hasta
+    // ahi, la ultima linea le quedaba a la misma altura y una linea larga se
+    // le echaba encima. Se para cinco milimetros antes.
+    var Y_TOPE = H - 21;
 
     function paginaNueva() {
       addPageNum(maq.pag); maq.pag++;
@@ -742,7 +745,10 @@ export default async function handler(req, res) {
         // barra maciza de casi un milimetro tira a mostaza.
         if (e.barra) {
           doc.setDrawColor(207, 177, 128); doc.setLineWidth(0.8);
-          doc.line(e.x - 7, maq.y - 4.6, e.x - 7, maq.y + 1.8);
+          // El trozo mide exactamente lo que separa una linea de la siguiente,
+          // sacado de e.alto: puesto a mano, al cambiar el cuerpo de la escena
+          // la barra se quedaba a trozos con un hueco entre linea y linea.
+          doc.line(e.x - 7, maq.y - (e.alto - 1.8), e.x - 7, maq.y + 1.8);
         }
         for (var wi = 0; wi < linea.length; wi++) {
           if (!linea[wi].esp) {

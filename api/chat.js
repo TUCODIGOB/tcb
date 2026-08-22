@@ -270,10 +270,15 @@ El área no se imprime como un bloque de texto seguido: se maqueta. Novecientas 
 Eso de arriba es SOLO el formato: lo que va detrás de cada marca lo escribes tú, sacado de esta persona y de esta área. No copies esas palabras.
 
 Qué lleva cada marca:
-- [SUBTITULO]: uno cada 250 o 300 palabras. En un área de 850 a 900 palabras salen TRES, y en el ÁREA 1, que es más larga, salen CUATRO. Nunca menos. Es un ladillo corto, de tres a cinco palabras, sin punto final, que sale de lo que se cuenta justo debajo y hace que dé ganas de seguir leyendo. NO es el nombre de un bloque ni una etiqueta ("HOY", "EL ORIGEN", "LAS CREENCIAS", "LO QUE HAY QUE SOLTAR") y NO anuncia lo que viene ("lo que voy a contarte ahora"). Sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. Si ese mismo ladillo pudiera ir en el área de otro cliente, o en otra de las siete áreas de esta, no vale y lo cambias. No existe una lista de ladillos buenos: no repitas nunca uno que ya hayas visto escrito en estas instrucciones. El área NUNCA empieza con un subtítulo: primero se entra en materia y el primero llega más abajo. Y no cortan el hilo: el párrafo que va debajo sigue enganchado con lo de antes igual que si el subtítulo no estuviera.
+- [SUBTITULO]: uno cada 250 o 300 palabras. En un área de 850 a 900 palabras salen TRES, y en el ÁREA 1, que es más larga, salen CUATRO. Nunca menos. Es un ladillo corto, de tres a cinco palabras, sin punto final, que sale de lo que se cuenta justo debajo y hace que dé ganas de seguir leyendo. NO es el nombre de un bloque ni una etiqueta ("HOY", "EL ORIGEN", "LAS CREENCIAS", "LO QUE HAY QUE SOLTAR") y NO anuncia lo que viene ("lo que voy a contarte ahora"). Sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. Si ese mismo ladillo pudiera ir en el área de otro cliente, o en otra de las siete áreas de esta, no vale y lo cambias. No existe una lista de ladillos buenos: no repitas nunca uno que ya hayas visto escrito en estas instrucciones. Y no cortan el hilo: el párrafo que va debajo sigue enganchado con lo de antes igual que si el subtítulo no estuviera.
 - [ESCENA]: la escena real obligatoria. Uno o dos párrafos, cada uno con su marca delante. No lleva negritas dentro.
 - [REMATE]: los dos remates del área, el de la herida y el de la fuerza. Cada uno va SOLO en su párrafo, es una frase, no lleva negritas y no comparte párrafo con nada más. Son dos, ni uno ni tres.
 - [PREGUNTA]: la pregunta directa. Va SOLA en su párrafo, es una sola frase y no lleva nada delante ni detrás dentro de ese párrafo. Si el área pide dos preguntas, las dos se marcan igual.
+
+DÓNDE VAN, QUE ES LA MITAD DEL TRABAJO:
+- EL ÁREA NO EMPIEZA POR UNA MARCA. Ni por un subtítulo, ni por un remate, ni por una pregunta. El área abre con texto corrido (o con la escena, en las áreas cuya secuencia empieza por ella), porque la primera página ya lleva el título impreso arriba y una marca pegada debajo se lee como si el área empezara por la mitad. La primera marca llega cuando ya se han leído dos o tres párrafos.
+- NUNCA VAN DOS DESTACADAS SEGUIDAS. Entre un [REMATE] y una [PREGUNTA], o entre dos [REMATE], siempre va texto normal. Se imprimen grandes y centradas: dos pegadas se leen como un cartel puesto en medio del área, no como parte de lo que le estás contando.
+- CADA DESTACADA SALE DE LO QUE ACABAS DE CONTAR, Y EL TEXTO SIGUE DESPUÉS. El lector viene leyendo, se encuentra la frase, y continúa. No es una frase suelta colocada en cualquier sitio: si la quitas, el párrafo de antes y el de después tienen que seguir enganchados igual.
 
 El párrafo de CIERRE es el último del área, va SIN marca ninguna y detrás de él no va nada más: ni un remate, ni una pregunta, ni una despedida.
 Todo lo demás va en párrafos normales, sin marca.
@@ -418,7 +423,7 @@ ${cartaTexto}`;
       ? 'un HOMBRE. Todo en masculino: solo, cansado, el mismo. Nunca en femenino.'
       : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos, dale la vuelta a la frase cuando haga falta.';
 
-  const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS NUEVE, QUE SON LAS QUE MAS SE ESCAPAN:
+  const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS DIEZ, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
 2. El nombre "${nombrePila}" aparece UNA vez en el area, dentro de una frase, nunca al empezar
 3. Hay al menos una frase en **negrita**, la que aguanta sola fuera de su parrafo
@@ -427,7 +432,8 @@ ${cartaTexto}`;
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
 7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
 8. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos
-9. CUENTA LAS MARCAS antes de entregar, que es lo que mas se olvida. Tiene que haber TRES lineas que empiecen por [SUBTITULO] (CUATRO en el area 1), una que empiece por [ESCENA], DOS que empiecen por [REMATE] y una que empiece por [PREGUNTA]. Si te sale menos de esa cuenta, no entregues: vuelve al texto y ponlas donde faltan. El cierre es el ultimo parrafo, sin marca, y detras no va nada`;
+9. CUENTA LAS MARCAS antes de entregar, que es lo que mas se olvida. Tiene que haber TRES lineas que empiecen por [SUBTITULO] (CUATRO en el area 1), una que empiece por [ESCENA], DOS que empiecen por [REMATE] y una que empiece por [PREGUNTA]. Si te sale menos de esa cuenta, no entregues: vuelve al texto y ponlas donde faltan
+10. Y MIRA DONDE HAN QUEDADO: el area no empieza por una marca, y no hay dos destacadas ([REMATE] o [PREGUNTA]) seguidas, siempre va texto entre ellas. El cierre es el ultimo parrafo, sin marca, y detras no va nada`;
 
   // Las 7 areas se piden a la vez, asi que un fallo puntual en una sola tumbaba
   // el informe entero y gastaba un intento del cliente. Ahora cada area se
@@ -541,9 +547,11 @@ ${cartaTexto}`;
   // Es una tarea mecanica, no creativa, y no puede empeorar la redaccion
   // porque no se le deja tocarla.
   async function ponerMarcas(area, texto, faltan) {
-    const encargo = `Aqui abajo tienes un area ya escrita de un estudio. El texto esta bien y NO se toca: no cambies ni una palabra, ni el orden de los parrafos, ni la puntuacion, ni añadas frases nuevas.
+    const encargo = `Aqui abajo tienes un area ya escrita de un estudio. LAS PALABRAS NO SE TOCAN: no cambies ninguna, no reescribas frases, no añadas texto nuevo y no quites nada de lo que se cuenta.
 
-Lo unico que le falta es marcarlo para poder maquetarlo. Esto es lo que le falta: ${faltan.join('; ')}.
+Tu trabajo es solo colocar bien las marcas de maquetacion. El area puede traer ya algunas puestas: esas las puedes mover de sitio o quitarlas si estan donde no toca, pero el texto se queda como esta.
+
+Esto es lo que hay que corregir: ${faltan.join('; ')}.
 
 Las marcas van al principio de su propio parrafo:
 [SUBTITULO] tres o cinco palabras, sin punto final, sacadas de lo que se cuenta en el parrafo que va justo debajo
@@ -551,12 +559,15 @@ Las marcas van al principio de su propio parrafo:
 [REMATE] delante de la frase que remata, que va sola en su parrafo
 [PREGUNTA] delante de la pregunta directa, que va sola en su parrafo
 
-Como se hace:
-- El subtitulo es lo UNICO que puedes añadir, porque no esta en el texto. Van repartidos, uno cada 250 o 300 palabras, nunca al principio del area.
-- Todo lo demas ya esta escrito: solo tienes que ponerle la marca delante al parrafo que le toca.
+Reglas de colocacion, que es lo importante:
+- EL AREA NO EMPIEZA POR NINGUNA MARCA. La primera pagina ya lleva el titulo impreso arriba, asi que una marca pegada debajo se lee como si el area empezara por la mitad. El area abre con texto corrido, o con la escena si es ahi donde se cuenta, y la primera marca llega cuando ya se han leido dos o tres parrafos.
+- NUNCA DOS DESTACADAS SEGUIDAS. Entre un [REMATE] y una [PREGUNTA], o entre dos [REMATE], siempre tiene que quedar texto normal en medio. Se imprimen grandes y centradas: dos pegadas se leen como un cartel en mitad del area.
+- Los subtitulos van repartidos, uno cada 250 o 300 palabras, y cada uno dice lo que se cuenta justo debajo de el.
 - Si la frase que remata o la pregunta estan dentro de un parrafo mas largo, sacalas a su propio parrafo con sus palabras exactas, sin reescribirlas.
 - El ultimo parrafo es el cierre y va SIN marca. Detras de el no va nada.
 - Entre parrafo y parrafo, una linea en blanco.
+
+Lo unico que escribes tu son los subtitulos, porque no estan en el texto. Todo lo demas ya esta escrito.
 
 Devuelve el area entera ya marcada, y nada mas: ni explicaciones, ni comentarios.
 
