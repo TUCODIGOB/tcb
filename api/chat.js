@@ -172,7 +172,7 @@ Ejemplos de escenas BUENAS (úsalas de inspiración, no las copies):
 
 Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas ("cuando te sientes mal, piensas cosas"), obvias ("a veces dudas de ti mismo") o vacías.
 
-La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar de que es un ejemplo.
+La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar nunca de que es un ejemplo ni llamarla ejemplo: se presenta como un rato suyo, no como una ilustración de lo que le estás explicando.
 LA ESCENA SE PRESENTA, NO SE SUELTA. Soltada de golpe, el lector se encuentra de pronto en una cocina a las once de la noche sin saber por qué le están contando eso. Delante va una frase que la abre sin explicarla, del tipo "para que veas de qué te hablo, déjame contarte un rato tuyo, uno normal de esos que ni recuerdas al día siguiente". Y detrás, cuando la escena termina, otra frase que recoge lo que acaba de leer y le pone nombre. Esas dos frases van fuera de la escena, en sus propios párrafos, no dentro de la marca.
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
@@ -261,7 +261,7 @@ Ejemplos del GOLPE que abre el cierre. Ojo, son solo la primera mitad: detrás d
 - "Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva años esperándote dentro."
 - "Porque en el fondo lo sabes. Siempre lo has sabido. Solo que mirar para otro lado era más cómodo."
 - "Llevas media vida demostrando que vales para no tener que averiguar si es verdad."
-Y así queda uno entero, con sus dos mitades: "No estás cansada de hacer cosas, eso lo llevas bien. Estás cansada de que hacerlas sea la única prueba que te vale de que mereces estar donde estás. El día que te valga otra prueba, cualquier otra, vas a descubrir que llevabas años pudiendo descansar."
+Uno entero, con sus dos mitades, es el que ya has visto arriba en ASÍ SUENA CUANDO ESTÁ BIEN: primero el golpe, y detrás la frase que le enseña la puerta.
 
 CADA ÁREA MIRA UNA PARTE DISTINTA DE LA CARTA:
 Las siete áreas se escriben por separado y ninguna sabe lo que dicen las otras, así que todas tienden a coger el rasgo más llamativo de la carta y contarlo otra vez con otras palabras. El lector lo nota enseguida: siente que le han dicho lo mismo siete veces y que ha pagado por un solo retrato repetido. Para que eso no pase, cada área lleva escrito qué parte de la carta le toca mirar, y esa es la que manda.
