@@ -202,6 +202,23 @@ const casillas = (nParrafos, sitio) => ({
   }
 }
 {
+  // Barrido: las cuatro al mismo sitio, probando TODOS los sitios posibles en
+  // areas de todos los tamanos. El hueco se busca hacia delante y, si no lo
+  // hay, hacia atras saltando los ocupados.
+  let mal = 0;
+  for (const n of [3, 4, 5, 6, 8, 12, 20]) {
+    for (let sitio = 1; sitio <= n; sitio++) {
+      const b = analizarArea(montarArea(casillas(n, sitio)));
+      const grandes = b.filter(x => ['remate', 'pregunta'].includes(x.tipo)).length;
+      if (grandes !== 3 || !b.some(x => x.tipo === 'escena') || revisarBloques(b).length > 0) {
+        mal++;
+        if (mal === 1) console.log(`        primera que falla: ${n} parrafos, sitio ${sitio}`);
+      }
+    }
+  }
+  c('las cuatro al mismo sitio, en cualquier sitio y tamano', mal === 0, mal + ' combinaciones mal');
+}
+{
   // Numeros imposibles: el modelo se inventa un parrafo 99 o un -3.
   const raro = { ...casillas(10, 3), escena: { tras_parrafo: 99, texto: 'Son las once.' }, pregunta: { tras_parrafo: -3, texto: '¿Y tu?' } };
   const b = analizarArea(montarArea(raro));
