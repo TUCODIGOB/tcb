@@ -29,6 +29,10 @@ export default async function handler(req, res) {
   // temporal, y el contador de intentos el ultimo, para que una recarga
   // mientras se genera no consuma intentos ni dispare avisos en falso.
   let reserva;
+  // En que numero de intento va esta generacion, y la sesion de Stripe con los
+  // datos del cliente: hacen falta si la generacion falla y era la ultima.
+  let intentoActual = 0;
+  let datosCliente = null;
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id);
     if (!compraValida(session)) {
@@ -51,34 +55,7 @@ export default async function handler(req, res) {
     // 3. Se agotaron los intentos de verdad (los dos fallaron y liberaron la
     //    reserva, o caducaron). Aqui si hay que avisar al admin.
     if (st.intentos >= MAX_INTENTOS) {
-      if (session.metadata?.aviso_agotado !== 'si') {
-        try {
-          const m = session.metadata || {};
-          const emailCliente = session.customer_email || session.customer_details?.email || '(desconocido)';
-          await enviarEmailAdmin({
-            asunto: `⚠️ URGENTE — Cliente sin informe tras ${MAX_INTENTOS} intentos — ${m.nombre || 'Cliente'}`,
-            mensaje: [
-              `Este cliente HA PAGADO y NO tiene su informe. Hay que generarselo a mano.`,
-              ``,
-              `Email:    ${emailCliente}`,
-              `Nombre:   ${m.nombre || '-'}`,
-              `Telefono: ${m.telefono || '-'}`,
-              `Sexo:     ${m.sexo || '-'}`,
-              `Nacio:    ${m.fecha || '-'} a las ${m.hora || '-'}`,
-              `Lugar:    ${[m.municipio, m.provincia, m.pais].filter(Boolean).join(', ') || '-'}`,
-              `Edad:     ${m.edad || '-'}`,
-              ``,
-              `Session:  ${session_id}`,
-              `Intentos: ${st.intentos} de ${MAX_INTENTOS}`,
-            ].join('\n'),
-          });
-          await stripe.checkout.sessions.update(session_id, {
-            metadata: { ...session.metadata, aviso_agotado: 'si' }
-          });
-        } catch (avisoErr) {
-          console.error('No se pudo avisar al admin de intentos agotados:', avisoErr.message);
-        }
-      }
+      await avisarClienteSinInforme(stripe, session_id, session, st.intentos, 'se agotaron los intentos');
       return res.status(429).json({ error: 'Se ha alcanzado el limite de intentos para este informe. Escribenos a hola@origennatal.com y te lo enviamos.', motivo: 'agotado' });
     }
 
@@ -88,6 +65,10 @@ export default async function handler(req, res) {
     if (!reserva.ok) {
       return res.status(409).json({ error: 'Tu informe se esta generando ahora mismo.', motivo: 'en_curso' });
     }
+    // Este es el intento numero X de Y. Se guarda para saber, si esta
+    // generacion falla, si al cliente le quedaba otra oportunidad o no.
+    intentoActual = st.intentos + 1;
+    datosCliente = session;
   } catch (err) {
     return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
   }
@@ -697,7 +678,61 @@ ${texto}`;
     // Soltar la reserva para que el cliente pueda reintentar en el acto en
     // vez de esperar a que caduque.
     await liberar(stripe, session_id, reserva.token);
+    // Si con esta se le acaban los intentos, el cliente se queda sin informe
+    // aqui mismo: se avisa ahora. Antes el aviso salia cuando volvia a pedirlo
+    // otra vez, asi que si no volvia, no se enteraba nadie.
+    if (intentoActual >= MAX_INTENTOS) {
+      await avisarClienteSinInforme(stripe, session_id, datosCliente, intentoActual, err.message);
+    }
     return res.status(500).json({ error: 'Error generando el informe: ' + err.message });
+  }
+}
+
+
+// ═════════════════════════════════════════════════════════════════
+// AVISO: CLIENTE PAGADO Y SIN INFORME
+//
+// Se manda en el momento en que se le acaban los intentos, no cuando el
+// cliente vuelve a pedirlo: si no volvia, antes no se enteraba nadie de que
+// habia pagado y se habia quedado sin nada.
+// La marca aviso_agotado en Stripe evita que salga dos veces por la misma
+// compra, aunque el cliente recargue o vuelva a darle al boton.
+// ═════════════════════════════════════════════════════════════════
+async function avisarClienteSinInforme(stripe, session_id, session, intentos, motivo) {
+  try {
+    // Se relee la sesion: la que tenemos en la mano puede llevar varios
+    // minutos en memoria y la marca del aviso puede haberse escrito despues.
+    const fresca = await stripe.checkout.sessions.retrieve(session_id);
+    if (fresca?.metadata?.aviso_agotado === 'si') return;
+
+    const m = fresca?.metadata || {};
+    const emailCliente = fresca?.customer_email || fresca?.customer_details?.email
+      || session?.customer_email || '(desconocido)';
+
+    await enviarEmailAdmin({
+      asunto: `⚠️ URGENTE — Cliente sin informe tras ${MAX_INTENTOS} intentos — ${m.nombre || 'Cliente'}`,
+      mensaje: [
+        `Este cliente HA PAGADO y NO tiene su informe. Hay que generarselo a mano.`,
+        ``,
+        `Email:    ${emailCliente}`,
+        `Nombre:   ${m.nombre || '-'}`,
+        `Telefono: ${m.telefono || '-'}`,
+        `Sexo:     ${m.sexo || '-'}`,
+        `Nacio:    ${m.fecha || '-'} a las ${m.hora || '-'}`,
+        `Lugar:    ${[m.municipio, m.provincia, m.pais].filter(Boolean).join(', ') || '-'}`,
+        `Edad:     ${m.edad || '-'}`,
+        ``,
+        `Session:  ${session_id}`,
+        `Intentos: ${intentos} de ${MAX_INTENTOS}`,
+        `Motivo:   ${motivo || '-'}`,
+      ].join('\n'),
+    });
+
+    await stripe.checkout.sessions.update(session_id, {
+      metadata: { ...(fresca?.metadata || {}), aviso_agotado: 'si' },
+    });
+  } catch (err) {
+    console.error('No se pudo avisar de que el cliente se quedo sin informe:', err.message);
   }
 }
 
