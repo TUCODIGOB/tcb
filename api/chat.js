@@ -331,12 +331,26 @@ ${cartaTexto}`;
       },
       body: JSON.stringify({
         model: 'claude-sonnet-5',
+        // Sonnet 5 razona antes de escribir salvo que se le diga que no, y ese
+        // razonamiento sale del mismo presupuesto que el texto y se paga igual.
+        // Sonnet 4.5, el modelo anterior, no lo hacia: por eso al cambiar de
+        // modelo el 19 de agosto las areas empezaron a llegar cortadas, cada
+        // generacion paso de 2 a mas de 4 minutos y el coste se multiplico por
+        // cinco. En los registros se veia clavado: la salida era siempre el
+        // tope exacto (3.500 con el tope en 3.500, 6.000 al subirlo), porque el
+        // razonamiento se expande hasta llenar lo que le des. Aqui no hace
+        // falta razonar: hay que escribir un area con el prompt que ya lleva
+        // todas las reglas.
+        thinking: { type: 'disabled' },
         // Tope de seguridad, no un objetivo: solo se paga lo que el modelo
-        // escribe, y el largo lo manda el prompt. Tiene que dar para el area
-        // mas larga (1.300 palabras, unos 2.500 tokens) MAS el razonamiento
-        // que el modelo hace antes de escribir, que sale del mismo presupuesto.
-        // Con 3.500 el area 1 podia llegar cortada a media frase.
-        max_tokens: 6000,
+        // escribe, y el largo lo manda el prompt. La cuenta, con la proporcion
+        // que se ve en los registros (2,15 caracteres por token en castellano):
+        // el AREA 1 en su tope son 1.300 palabras, unos 7.500 caracteres, unos
+        // 3.500 tokens; el resto de areas, unos 2.400. Con 5.000 queda casi la
+        // mitad de margen y ninguna llega a rozarlo. Bajarlo mas seria
+        // peligroso: desde ahora un area que se corte NO se entrega, asi que un
+        // tope escaso no cortaria el texto, cortaria la venta.
+        max_tokens: 5000,
         system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
@@ -353,6 +367,18 @@ ${cartaTexto}`;
     }
 
     const data = await response.json();
+
+    // El modelo se ha quedado sin espacio y ha dejado el area a media frase.
+    // Esto NO llega como error: la respuesta trae texto y es larga, asi que
+    // colaba como buena y el area entraba cortada en el PDF del cliente. La
+    // propia API lo dice en stop_reason, y hasta ahora se ignoraba. Se trata
+    // como fallo para que se vuelva a pedir; si no sale entera en ningun
+    // intento, no se entrega nada y el cliente ve la pantalla de reintentar.
+    if (data.stop_reason === 'max_tokens') {
+      const err = new Error(`Área ${area.id} se quedó sin espacio y llegó cortada`);
+      err.temporal = true;
+      throw err;
+    }
 
     // La respuesta viene en bloques y el area puede no ser el primero: los
     // modelos que razonan antes de escribir colocan delante un bloque de
