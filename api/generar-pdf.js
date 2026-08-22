@@ -668,7 +668,23 @@ export default async function handler(req, res) {
       return salida;
     }
 
-    function pintarBloque(bloque) {
+    // Ni una linea suelta al final de una pagina, ni una sola arrastrada al
+    // principio de la siguiente: las dos cosas se leen como un error de
+    // imprenta. Devuelve por que linea hay que cambiar de pagina, o -1 si el
+    // bloque cabe entero. Si no queda sitio ni para partirlo bien, baja el
+    // bloque entero a la pagina siguiente.
+    function corteSinLineasSueltas(lineas, e) {
+      for (var vuelta = 0; vuelta < 2; vuelta++) {
+        var caben = Math.floor((Y_TOPE - maq.y) / e.alto) + 1;
+        if (caben >= lineas.length) return -1;
+        if (caben >= 2 && lineas.length - caben >= 2) return caben;
+        if (caben >= 3 && lineas.length - caben === 1) return caben - 1;
+        paginaNueva();
+      }
+      return -1;
+    }
+
+    function pintarBloque(bloque, siguiente) {
       var e = ESTILOS[bloque.tipo] || ESTILOS.texto;
       var texto = e.mayus ? bloque.t.toUpperCase() : bloque.t;
       var lineas = lineasConNegrita(fx(texto), e.ancho, e.size, e.fuente);
@@ -686,7 +702,15 @@ export default async function handler(req, res) {
         if (maq.y > 60) maq.y += e.antes;
         // Un subtitulo, una pregunta o un remate colgando en la ultima linea de
         // la pagina se leen como un descuido: bajan enteros a la siguiente.
-        if (e.juntar && lineas.length <= 5 && maq.y + altoBloque > Y_TOPE) paginaNueva();
+        // Y un subtitulo no se queda nunca solo al pie de la pagina: se le
+        // exige sitio para el y para las dos primeras lineas de lo que va
+        // debajo, que es de lo que es el titulo.
+        var reserva = 0;
+        if (bloque.tipo === 'sub' && siguiente) {
+          var eSig = ESTILOS[siguiente.tipo] || ESTILOS.texto;
+          reserva = e.despues + eSig.antes + 2 * eSig.alto;
+        }
+        if (e.juntar && lineas.length <= 5 && maq.y + altoBloque + reserva > Y_TOPE) paginaNueva();
       }
 
       // El cierre lleva un filete corto encima, centrado: separa el golpe del
@@ -699,11 +723,13 @@ export default async function handler(req, res) {
         doc.line(105 - 16, maq.y - 16, 105 + 16, maq.y - 16);
       }
 
+      var corte = corteSinLineasSueltas(lineas, e);
+
       doc.setFontSize(e.size);
       doc.setTextColor(e.color[0], e.color[1], e.color[2]);
 
       for (var li = 0; li < lineas.length; li++) {
-        if (maq.y > Y_TOPE) {
+        if ((corte >= 0 && li === corte) || maq.y > Y_TOPE) {
           paginaNueva();
           doc.setFontSize(e.size);
           doc.setTextColor(e.color[0], e.color[1], e.color[2]);
@@ -744,7 +770,7 @@ export default async function handler(req, res) {
       var bloques = trocearLargos(analizarArea(areas[ai2] || ''));
       doc.addPage(); doc.addImage(img_areas[ai2],'JPEG',0,0,W,H);
       maq.y = 60; maq.paginas = 1;
-      for (var bi = 0; bi < bloques.length; bi++) pintarBloque(bloques[bi]);
+      for (var bi = 0; bi < bloques.length; bi++) pintarBloque(bloques[bi], bloques[bi + 1]);
       if(maq.paginas<2){addPageNum(maq.pag);maq.pag++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);}
       addPageNum(maq.pag); maq.pag++;
     }
