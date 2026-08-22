@@ -541,14 +541,95 @@ ${cartaTexto}`;
       const err = new Error(`Área ${area.id} llegó mal marcada: ${faltan.join('; ')}`);
       err.temporal = true;
       err.faltan = faltan;
+      // El area va dentro del error para poder repasarle las marcas al final,
+      // sin volver a escribirla. No se entrega nunca sin marcar. Ver ponerMarcas.
+      err.texto = texto.trim();
       throw err;
     }
 
     return texto.trim();
   }
 
+  // Ultimo recurso antes de tirar un area. En los tres intentos de arriba se
+  // le pide que reescriba el area ENTERA, con todas las reglas encima, y ahi
+  // pasa lo que se vio en la primera generacion real: arregla los subtitulos
+  // y se deja los remates, arregla los remates y se deja la escena. Cada
+  // intento es una tirada nueva.
+  // Aqui no se le pide que escriba nada: se le devuelve su propio texto y se
+  // le pide solo que le ponga las marcas que faltan, sin cambiar una palabra.
+  // Es una tarea mecanica, no creativa, y no puede empeorar la redaccion
+  // porque no se le deja tocarla.
+  async function ponerMarcas(area, texto, faltan) {
+    const encargo = `Aqui abajo tienes un area ya escrita de un estudio. El texto esta bien y NO se toca: no cambies ni una palabra, ni el orden de los parrafos, ni la puntuacion, ni añadas frases nuevas.
+
+Lo unico que le falta es marcarlo para poder maquetarlo. Esto es lo que le falta: ${faltan.join('; ')}.
+
+Las marcas van al principio de su propio parrafo:
+[SUBTITULO] tres o cinco palabras, sin punto final, sacadas de lo que se cuenta en el parrafo que va justo debajo
+[ESCENA] delante del parrafo donde se cuenta la escena concreta y visual
+[REMATE] delante de la frase que remata, que va sola en su parrafo
+[PREGUNTA] delante de la pregunta directa, que va sola en su parrafo
+
+Como se hace:
+- El subtitulo es lo UNICO que puedes añadir, porque no esta en el texto. Van repartidos, uno cada 250 o 300 palabras, nunca al principio del area.
+- Todo lo demas ya esta escrito: solo tienes que ponerle la marca delante al parrafo que le toca.
+- Si la frase que remata o la pregunta estan dentro de un parrafo mas largo, sacalas a su propio parrafo con sus palabras exactas, sin reescribirlas.
+- El ultimo parrafo es el cierre y va SIN marca. Detras de el no va nada.
+- Entre parrafo y parrafo, una linea en blanco.
+
+Devuelve el area entera ya marcada, y nada mas: ni explicaciones, ni comentarios.
+
+EL AREA:
+${texto}`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-5',
+        thinking: { type: 'disabled' },
+        max_tokens: 5000,
+        messages: [{ role: 'user', content: encargo }],
+      }),
+    });
+
+    if (!response.ok) throw new Error(`Área ${area.id}: el repaso de marcas devolvió ${response.status}`);
+
+    const data = await response.json();
+    if (data.stop_reason === 'max_tokens') throw new Error(`Área ${area.id}: el repaso de marcas llegó cortado`);
+
+    const marcado = (data.content || [])
+      .filter(b => b && typeof b.text === 'string')
+      .map(b => b.text)
+      .join('')
+      .trim();
+
+    // Si al marcarlo se ha comido texto, no vale: se prefiere no entregar
+    // nada antes que entregar un area recortada. El margen del 15% deja sitio
+    // a que quite algun espacio, no a que se salte parrafos.
+    if (marcado.length < texto.length * 0.85) {
+      throw new Error(`Área ${area.id}: el repaso de marcas devolvió el texto recortado`);
+    }
+
+    const faltanAun = revisarBloques(analizarArea(marcado), { minSub: area.minSub || 2 });
+    if (faltanAun.length > 0) {
+      throw new Error(`Área ${area.id} sigue mal marcada tras el repaso: ${faltanAun.join('; ')}`);
+    }
+
+    return marcado;
+  }
+
   async function generarArea(area) {
     let ultimoError;
+    // El area completa mas reciente que se descarto SOLO por las marcas, y lo
+    // que le faltaba. Se guardan juntas: si el ultimo intento se cae por un
+    // corte de red, el repaso final tiene que poder trabajar igual sobre el
+    // texto bueno que llego antes.
+    let sinMarcar = '', faltabanEn = null;
     // Lo que le faltaba al intento anterior, para decirselo en el siguiente:
     // volver a pedir lo mismo tal cual invita al mismo despiste.
     let aviso = '';
@@ -557,6 +638,7 @@ ${cartaTexto}`;
         return await pedirArea(area, aviso);
       } catch (err) {
         ultimoError = err;
+        if (err.texto) { sinMarcar = err.texto; faltabanEn = err.faltan; }
         aviso = err.faltan
           ? `AVISO: el intento anterior de esta area se descarto por esto: ${err.faltan.join('; ')}. Escribela entera otra vez y pon todas las marcas en su sitio.`
           : '';
@@ -567,6 +649,19 @@ ${cartaTexto}`;
         await new Promise(r => setTimeout(r, 1500 * intento));
       }
     }
+    // Los tres intentos han fallado. Si en alguno llego un area entera y lo
+    // unico que fallaba eran las marcas, se le pide que se las ponga sobre ese
+    // mismo texto, sin reescribirlo.
+    if (sinMarcar && faltabanEn) {
+      try {
+        const marcado = await ponerMarcas(area, sinMarcar, faltabanEn);
+        console.warn(`Área ${area.id}: marcada en el repaso final tras ${INTENTOS_POR_AREA} intentos`);
+        return marcado;
+      } catch (err) {
+        console.warn(`Área ${area.id}: el repaso final tampoco salió (${err.message.slice(0, 120)})`);
+      }
+    }
+
     // Un area mal marcada NO se entrega, igual que una cortada. Sin sus
     // marcas el estudio se lee como un muro de texto y no vale los 47 euros
     // que ha pagado el cliente, asi que se prefiere no mandar nada, avisar, y
