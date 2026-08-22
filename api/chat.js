@@ -455,7 +455,7 @@ ${cartaTexto}`;
   // formada) no se reintentan: no van a mejorar por repetirlos.
   const INTENTOS_POR_AREA = 3;
 
-  async function pedirArea(area, aviso) {
+  async function pedirArea(area) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -488,7 +488,7 @@ ${cartaTexto}`;
         system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
-          content: `${contextoPersona}\n\n${area.prompt}\n\n${recordatorioFinal}${aviso ? '\n\n' + aviso : ''}`,
+          content: `${contextoPersona}\n\n${area.prompt}\n\n${recordatorioFinal}`,
         }],
       }),
     });
@@ -630,18 +630,17 @@ ${texto}`;
     // corte de red, el repaso final tiene que poder trabajar igual sobre el
     // texto bueno que llego antes.
     let sinMarcar = '', faltabanEn = null;
-    // Lo que le faltaba al intento anterior, para decirselo en el siguiente:
-    // volver a pedir lo mismo tal cual invita al mismo despiste.
-    let aviso = '';
     for (let intento = 1; intento <= INTENTOS_POR_AREA; intento++) {
       try {
-        return await pedirArea(area, aviso);
+        return await pedirArea(area);
       } catch (err) {
         ultimoError = err;
-        if (err.texto) { sinMarcar = err.texto; faltabanEn = err.faltan; }
-        aviso = err.faltan
-          ? `AVISO: el intento anterior de esta area se descarto por esto: ${err.faltan.join('; ')}. Escribela entera otra vez y pon todas las marcas en su sitio.`
-          : '';
+        // Si el area llego entera y lo unico que fallaban eran las marcas, NO
+        // se vuelve a escribir. Reescribirla es caro y encima es lo que rompe
+        // el area: en la primera generacion real, cada reescritura arreglaba
+        // los subtitulos y se dejaba los remates, o al reves. El texto ya esta
+        // bien; lo que falta es ponerle cuatro etiquetas, y eso se hace abajo.
+        if (err.texto) { sinMarcar = err.texto; faltabanEn = err.faltan; break; }
         // Un corte de red llega sin marca; se trata como temporal.
         const temporal = err.temporal !== false;
         if (!temporal || intento === INTENTOS_POR_AREA) break;
@@ -649,17 +648,14 @@ ${texto}`;
         await new Promise(r => setTimeout(r, 1500 * intento));
       }
     }
-    // Los tres intentos han fallado. Si en alguno llego un area entera y lo
-    // unico que fallaba eran las marcas, se le pide que se las ponga sobre ese
-    // mismo texto, sin reescribirlo.
-    // Y se le dan los mismos tres intentos que a la parte de escribir. Poner
-    // cuatro marcas sobre un texto que ya existe es lo mas facil de todo lo
-    // que se pide aqui: si algo tiene que tener varias oportunidades, es esto
-    // y no lo otro.
+    // Si el area llego entera pero sin marcar, se le pide que le ponga las
+    // marcas sobre ese mismo texto, sin reescribirlo. Aqui si se reintenta
+    // hasta tres veces, porque es lo mas facil de todo lo que se pide en este
+    // fichero y es barato: no se escribe nada nuevo.
     for (let repaso = 1; sinMarcar && faltabanEn && repaso <= INTENTOS_POR_AREA; repaso++) {
       try {
         const marcado = await ponerMarcas(area, sinMarcar, faltabanEn);
-        console.warn(`Área ${area.id}: marcada en el repaso ${repaso} tras ${INTENTOS_POR_AREA} intentos de escritura`);
+        console.warn(`Área ${area.id}: marcada en el repaso ${repaso}`);
         return marcado;
       } catch (err) {
         console.warn(`Área ${area.id}: repaso ${repaso} sin éxito (${err.message.slice(0, 120)})`);
