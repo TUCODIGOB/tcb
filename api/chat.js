@@ -712,7 +712,7 @@ async function avisarClienteSinInforme(stripe, session_id, session, intentos, mo
     await enviarEmailAdmin({
       asunto: `⚠️ URGENTE — Cliente sin informe tras ${MAX_INTENTOS} intentos — ${m.nombre || 'Cliente'}`,
       mensaje: [
-        `Este cliente HA PAGADO y NO tiene su informe. Hay que generarselo a mano.`,
+        `Este cliente HA PAGADO y NO tiene su informe`,
         ``,
         `Email:    ${emailCliente}`,
         `Nombre:   ${m.nombre || '-'}`,
