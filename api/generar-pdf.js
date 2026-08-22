@@ -618,15 +618,19 @@ export default async function handler(req, res) {
     // mismo color, el cliente ve cuatro paginas de muro gris y el ojo se cansa
     // antes de llegar a lo que ha pagado. Cada bloque se pinta distinto para
     // que la pagina respire y para que lo importante se vea desde lejos.
-    // Los colores son los de la marca: dorado bd9048, dorado claro cfb180 y
-    // verde oscuro 0e3f4b. Las preguntas y los remates son la misma familia
+    // Los colores son los de la marca: dorado cfb180 y verde oscuro 0e3f4b.
+    // El dorado va en un solo tono en todo el estudio, el cfb180. El otro
+    // dorado de la marca, el bd9048, se saco de aqui: en texto pequeno y en
+    // los filetes tiraba a mostaza y desentonaba con el dorado de las
+    // portadas y de los ladillos impresos en las paginas.
+    // Las preguntas y los remates son la misma familia
     // (frases sueltas que se destacan) y por eso van del mismo color y las dos
     // centradas: dos verdes distintos en la misma pagina se leen como un
     // descuido. El verde oscuro da 11 a 1 de contraste sobre el crema, asi que
     // se lee perfecto tambien impreso.
     var ESTILOS = {
       texto:    { size: 12,   color: [40, 40, 40],   x: 18, ancho: 175, alto: 7,   antes: 0,  despues: 4,  fuente: 'normal' },
-      sub:      { size: 10,   color: [189, 144, 72], x: 18, ancho: 175, alto: 6,   antes: 11, despues: 6,  fuente: 'bold',   mayus: true, filete: true, juntar: true },
+      sub:      { size: 10,   color: [207, 177, 128], x: 18, ancho: 175, alto: 6,   antes: 11, despues: 6,  fuente: 'bold',   mayus: true, filete: true, juntar: true },
       escena:   { size: 12,   color: [70, 70, 70],   x: 27, ancho: 157, alto: 7,   antes: 8,  despues: 9,  fuente: 'italic', barra: true },
       pregunta: { size: 13,   color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.4, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
       remate:   { size: 13.5, color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.8, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
@@ -761,7 +765,7 @@ export default async function handler(req, res) {
       }
 
       if (e.filete) {
-        doc.setDrawColor(189, 144, 72); doc.setLineWidth(0.4);
+        doc.setDrawColor(207, 177, 128); doc.setLineWidth(0.4);
         doc.line(e.x, maq.y - 3.2, e.x + 24, maq.y - 3.2);
         maq.y += 1;
       }
