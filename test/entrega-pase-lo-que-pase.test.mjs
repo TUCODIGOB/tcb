@@ -66,9 +66,15 @@ const SIN_ESCENA = [
 // Se cambia entre las dos escenas de prueba: el modelo que nunca pone la
 // escena, y el que devuelve el area cortada a media frase.
 let modo = 'sin escena';
-globalThis.fetch = async (url) => {
+let correoRevienta = false;
+const correos = [];
+globalThis.fetch = async (url, opts = {}) => {
   const u = String(url);
-  if (u.includes('api.brevo.com')) return { ok: true, status: 201, json: async () => ({}) };
+  if (u.includes('api.brevo.com')) {
+    if (correoRevienta) throw new Error('Brevo caido');
+    correos.push(JSON.parse(opts.body || '{}'));
+    return { ok: true, status: 201, json: async () => ({}) };
+  }
   if (u.includes('api.anthropic.com')) {
     if (modo === 'cortada') {
       return { ok: true, status: 200, json: async () => ({
@@ -83,7 +89,9 @@ globalThis.fetch = async (url) => {
 
 process.env.STRIPE_SECRET_KEY = 'sk_test';
 process.env.ANTHROPIC_API_KEY = 'sk-ant-test';
-process.env.BREVO_API_KEY = '';
+// Con la clave vacia, enviarEmailAdmin no manda nada y no se probaria el
+// aviso. Aqui se pone una de mentira: el fetch a Brevo esta interceptado.
+process.env.BREVO_API_KEY = 'brevo-de-mentira';
 
 const stripeFalsoRuta = path.join(AQUI, '.stripe-falso-red.mjs');
 const chatRuta = path.join(AQUI, '.chat-red.mjs');
@@ -133,6 +141,13 @@ try {
   c('y grita en los registros', gritos.some(g => g.includes('ENTREGADA SIN ARREGLAR')),
     gritos.filter(g => g.includes('ENTREGADA')).length + ' avisos');
   c('el aviso dice que falta la escena', gritos.some(g => g.includes('falta la escena')));
+  c('manda UN correo, no uno por area', correos.length === 1, correos.length + ' correos');
+  c('el correo dice que el informe SI se entrego',
+    JSON.stringify(correos[0] || {}).includes('SE HA ENTREGADO'));
+  c('y lista las siete areas cojas', (() => {
+    const cuerpo = (correos[0]?.htmlContent || '') + (correos[0]?.subject || '');
+    return (cuerpo.match(/rea \d+:/g) || []).length === 7;
+  })(), ((correos[0]?.htmlContent || '').match(/rea \d+:/g) || []).length + ' areas listadas');
 
   // ── Y AHORA LO CONTRARIO ──────────────────────────────────────────
   // Un area que llega cortada a media frase no es una marca que falta: es
@@ -150,6 +165,21 @@ try {
   await chat({ method: 'POST', body: { session_id: SID2, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r2);
   c('un area cortada NO se entrega', r2.code !== 200, 'HTTP ' + r2.code);
   c('y no se cuela ningun texto', !r2.body?.texto, r2.body?.texto ? 'llego texto' : 'sin texto');
+
+  // ── Y si el correo revienta, el informe sale igual ────────────────
+  // El aviso es para enterarse, no para bloquear una venta: si Brevo esta
+  // caido, el cliente tiene que recibir su informe de todas formas.
+  console.log('\\n  el correo de aviso revienta\\n');
+  modo = 'sin escena';
+  correoRevienta = true;
+  const SID3 = 'cs_test_correo';
+  TIENDA.set(SID3, {
+    id: SID3, payment_status: 'paid', customer_email: 'cliente@ejemplo.com',
+    customer_details: { email: 'cliente@ejemplo.com' }, metadata: { nombre: 'Ana Ruiz' },
+  });
+  const r3 = res();
+  await chat({ method: 'POST', body: { session_id: SID3, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r3);
+  c('con el correo caido, el informe se entrega igual', r3.code === 200, 'HTTP ' + r3.code);
 } catch (err) {
   console.error = errOriginal;
   console.error('\n  X la prueba reventó:', err.message);

@@ -471,6 +471,11 @@ ${cartaTexto}`;
   // formada) no se reintentan: no van a mejorar por repetirlos.
   const INTENTOS_POR_AREA = 3;
 
+  // Las areas que se entregan sabiendo que les falta algo. Se juntan aqui para
+  // mandar UN correo al final, no uno por area: el informe sale igual, pero
+  // hay que enterarse de que ha salido cojo.
+  const entregadasSinArreglar = [];
+
   async function pedirArea(area) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -724,6 +729,7 @@ ${texto}`;
     // Eso no es una marca que falta, es texto que no existe.
     if (sinMarcar) {
       console.error(`ENTREGADA SIN ARREGLAR — Área ${area.id}: ${(faltabanEn || []).join('; ')}`);
+      entregadasSinArreglar.push(`Área ${area.id}: ${(faltabanEn || []).join('; ')}`);
       return sinMarcar;
     }
     throw ultimoError;
@@ -750,6 +756,13 @@ ${texto}`;
     const textoCompleto = resultados
       .map(t => quitarComaAntesDeY(t).split(SEPARADOR_AREAS).join(''))
       .join(SEPARADOR_AREAS);
+
+    // Si alguna area salio coja, un correo. Uno por informe y solo cuando pasa,
+    // que es raro: el informe se entrega igual, pero esto hay que saberlo, y
+    // los registros de Vercel no se miran todos los dias.
+    if (entregadasSinArreglar.length > 0) {
+      await avisarAreasCojas(datosCliente, session_id, entregadasSinArreglar);
+    }
 
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
     // que demuestra que quien pide el PDF es quien tiene la reserva.
@@ -780,6 +793,34 @@ ${texto}`;
 // La marca aviso_agotado en Stripe evita que salga dos veces por la misma
 // compra, aunque el cliente recargue o vuelva a darle al boton.
 // ═════════════════════════════════════════════════════════════════
+// El informe SI se ha entregado, pero con alguna area a la que le faltaba una
+// marca despues de tres repasos. No es urgente y el cliente tiene lo suyo, pero
+// si esto empieza a salir a menudo, lo que hay que arreglar es el prompt.
+// Nunca tira la generacion: si el correo falla, se apunta y se sigue.
+async function avisarAreasCojas(session, session_id, areas) {
+  try {
+    const m = session?.metadata || {};
+    await enviarEmailAdmin({
+      asunto: `Informe entregado con ${areas.length} área(s) sin marcar — ${m.nombre || 'Cliente'}`,
+      mensaje: [
+        `El informe SE HA ENTREGADO. El cliente lo tiene.`,
+        `Pero estas areas salieron sin alguna de sus marcas, despues de tres repasos:`,
+        ``,
+        ...areas.map(a => `  - ${a}`),
+        ``,
+        `Email:   ${session?.customer_email || session?.customer_details?.email || '-'}`,
+        `Nombre:  ${m.nombre || '-'}`,
+        `Session: ${session_id}`,
+        ``,
+        `Si esto sale a menudo, hay que mirar el prompt: es el modelo el que no`,
+        `esta poniendo esa marca, no un fallo de la web.`,
+      ].join('\n'),
+    });
+  } catch (err) {
+    console.error('No se pudo avisar de las areas cojas:', err.message);
+  }
+}
+
 async function avisarClienteSinInforme(stripe, session_id, session, intentos, motivo) {
   try {
     // Se relee la sesion: la que tenemos en la mano puede llevar varios
