@@ -21,6 +21,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analizarArea, revisarBloques } from '../lib/bloques.js';
+import { vecesQueSaleElNombre } from '../lib/estilo.js';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.join(AQUI, '..');
@@ -66,7 +67,7 @@ const AREA_DE_MENTIRA = [
   'Y mientras asientes, por dentro **estas calculando cuanto has ensenado de mas**, que es un trabajo que no descansa nunca y que no te ha visto hacer nadie.',
   '',
   '[SUBTITULO] La cuenta que no llevas',
-  'De ahi sale todo lo demas, que es lo que nadie te ha contado y llevas media vida pagando sin enterarte de que lo estabas pagando.',
+  'De ahi sale todo lo demas, Ana, que es lo que nadie te ha contado y llevas media vida pagando sin enterarte de que lo estabas pagando.',
   '',
   '[ESCENA] Son las once de la noche y todavia estas repasando el movil con la luz apagada, buscando algo que ya has leido dos veces.',
   '',
@@ -85,6 +86,12 @@ const AREA_DE_MENTIRA = [
 // de morirse reintentando y dejar de vigilar la guarda sin que nadie lo note.
 {
   const faltan = revisarBloques(analizarArea(AREA_DE_MENTIRA), { minSub: 2 });
+  // El nombre se revisa aparte de las marcas en api/chat.js, asi que aqui
+  // tambien: la primera vez que se exigio, esta prueba se cayo sin que el
+  // aviso dijera por que. "Ana" es el nombre de pila que usa la prueba.
+  if (vecesQueSaleElNombre(AREA_DE_MENTIRA, 'Ana') < 1) {
+    faltan.push('el area de mentira no llama "Ana" a la clienta ni una vez, y api/chat.js lo exige');
+  }
   if (faltan.length > 0) {
     console.error('\n  X El area de mentira de esta prueba ya no pasa la revision de lib/bloques.js:');
     for (const f of faltan) console.error('    - ' + f);

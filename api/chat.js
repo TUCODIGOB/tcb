@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { MAX_INTENTOS, estado, reservar, liberar, compraValida } from '../lib/reserva.js';
 import { analizarArea, revisarBloques } from '../lib/bloques.js';
+import { quitarComaAntesDeY, vecesQueSaleElNombre } from '../lib/estilo.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -551,7 +552,14 @@ ${cartaTexto}`;
     // saldria como el muro de texto de antes, que es justo lo que se esta
     // arreglando, asi que el area no se da por buena: se vuelve a pedir. Es el
     // mismo trato que se le da a un area que llega cortada.
+    // El nombre se revisa aqui, con las marcas, porque falla igual que ellas:
+    // esta pedido en el prompt y en el repaso final, y en el informe del 22 de
+    // agosto salio CERO veces en las siete areas. Pedirlo otra vez por escrito
+    // ya se ha probado y no funciona; contarlo, si.
     const faltan = revisarBloques(analizarArea(texto), { minSub: area.minSub || 2 });
+    if (vecesQueSaleElNombre(texto, nombrePila) < 1) {
+      faltan.push(`el area no la llama por su nombre ni una vez: "${nombrePila}" tiene que aparecer UNA vez, dentro de una frase, nunca al empezar el area ni al abrir un parrafo`);
+    }
     if (faltan.length > 0) {
       const err = new Error(`Área ${area.id} llegó mal marcada: ${faltan.join('; ')}`);
       err.temporal = true;
@@ -575,7 +583,7 @@ ${cartaTexto}`;
   // Es una tarea mecanica, no creativa, y no puede empeorar la redaccion
   // porque no se le deja tocarla.
   async function ponerMarcas(area, texto, faltan) {
-    const encargo = `Aqui abajo tienes un area ya escrita de un estudio. LAS PALABRAS NO SE TOCAN: no cambies ninguna, no reescribas frases, no añadas texto nuevo y no quites nada de lo que se cuenta.
+    const encargo = `Aqui abajo tienes un area ya escrita de un estudio. LAS PALABRAS NO SE TOCAN: no cambies ninguna, no reescribas frases, no añadas texto nuevo y no quites nada de lo que se cuenta. La UNICA excepcion es el nombre de la persona, y solo si en la lista de abajo te dicen que falta.
 
 Tu trabajo es solo colocar bien las marcas de maquetacion. El area puede traer ya algunas puestas: esas las puedes mover de sitio o quitarlas si estan donde no toca, pero el texto se queda como esta.
 
@@ -596,6 +604,8 @@ Reglas de colocacion, que es lo importante:
 - Entre parrafo y parrafo, una linea en blanco.
 
 LAS NEGRITAS, si es una de las cosas que hay que corregir. Se marcan con dos asteriscos a cada lado, **asi**, y no son maquetacion: son lo que esa persona subrayaria con fosforito leyendo esto, la frase en la que se reconoce de golpe o la que le pone nombre a algo que hacia sin saberlo. Nunca la explicacion, ni el ejemplo, ni el piropo. Se marca desde donde empieza a doler hasta donde deja de doler, aunque caiga en mitad de la frase: de tres palabras a una frase, nunca una palabra suelta ni dos lineas seguidas. Van solo en el texto corrido, nunca dentro de la escena, ni en los remates, ni en la pregunta, ni en el cierre. No hay numero: las que pasen eso y ninguna mas. Si sobran, quitas los asteriscos de las que no lo pasen. Poner o quitar asteriscos no es tocar las palabras: las palabras siguen siendo exactamente las mismas.
+
+EL NOMBRE, si es una de las cosas que hay que corregir. Se mete UNA sola vez en toda el area, dentro de una frase que ya existe, donde caiga natural: igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te esta diciendo algo que te toca. No al empezar el area, no abriendo un parrafo, y no dentro de la escena ni de un remate ni de la pregunta. Es meter una palabra entre comas en una frase que ya esta escrita, nada mas: el resto de esa frase se queda igual.
 
 Lo unico que escribes tu son los subtitulos, porque no estan en el texto. Todo lo demas ya esta escrito.
 
@@ -638,6 +648,9 @@ ${texto}`;
     }
 
     const faltanAun = revisarBloques(analizarArea(marcado), { minSub: area.minSub || 2 });
+    if (vecesQueSaleElNombre(marcado, nombrePila) < 1) {
+      faltanAun.push(`sigue sin aparecer el nombre "${nombrePila}"`);
+    }
     if (faltanAun.length > 0) {
       throw new Error(`Área ${area.id} sigue mal marcada tras el repaso: ${faltanAun.join('; ')}`);
     }
@@ -706,8 +719,13 @@ ${texto}`;
     // desplazaban de seccion.
     // Por si acaso, se quita el separador del texto de cada area antes de unir:
     // asi ni escribiendolo a proposito se puede romper el reparto.
+    // La coma antes de "y" lleva pedida desde el principio y se sigue colando:
+    // 78 veces en el informe del 22 de agosto. Aqui se quitan las que se puede
+    // quitar sin riesgo, que son las que no llevan sujeto propio detras. Ver
+    // lib/estilo.js: ante la duda no se toca, porque una coma quitada donde
+    // hacia falta es una falta de ortografia impresa.
     const textoCompleto = resultados
-      .map(t => t.split(SEPARADOR_AREAS).join(''))
+      .map(t => quitarComaAntesDeY(t).split(SEPARADOR_AREAS).join(''))
       .join(SEPARADOR_AREAS);
 
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
