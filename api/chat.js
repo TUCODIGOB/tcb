@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { MAX_INTENTOS, estado, reservar, liberar, compraValida } from '../lib/reserva.js';
-import { analizarArea, revisarBloques, avisosBloques } from '../lib/bloques.js';
+import { analizarArea, revisarBloques, avisosBloques, montarArea, ESQUEMA_AREA } from '../lib/bloques.js';
 import { quitarComaAntesDeY, vecesQueLaLlamaPorSuNombre } from '../lib/estilo.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -298,32 +298,23 @@ Que sitúe no significa que anuncie: sigue estando PROHIBIDO decir lo que vas a 
 Y es la ÚNICA parte del área donde vale algo que le pasa a mucha gente, precisamente porque en dos frases se estrecha hasta ella y deja de valerle a nadie más. En cuanto has entrado en ella vuelve a mandar la regla de siempre: nada que le pudieras leer a otra persona y también le tocara.
 Las siete van seguidas, así que ninguna abre como otra: una entra por una situación que vive mucha gente, otra por una pregunta, otra por algo que se da por cierto de esa parcela de la vida y no lo es, otra por un momento concreto del día. Y ninguna de las siete empieza por "hay algo", "hay una escena" ni "imagina que".
 
-CÓMO SE ENTREGA EL ÁREA MARCADA (OBLIGATORIO, ES LO QUE LA MAQUETA):
-El área no se imprime como un bloque de texto seguido: se maqueta. Novecientas palabras del mismo tamaño y del mismo color son cuatro páginas de muro gris, y el ojo se cansa antes de llegar a lo que la persona ha pagado. Para que respire, marcas cuatro cosas, cada una al principio de su propio párrafo y escrita EXACTAMENTE así, con los corchetes:
+CÓMO SE ENTREGA EL ÁREA (ES LO QUE LA MAQUETA):
+El área no se entrega como un texto seguido: se entrega por casillas, y cada casilla se imprime distinta. Novecientas palabras del mismo tamaño y del mismo color son cuatro páginas de muro gris, y el ojo se cansa antes de llegar a lo que la persona ha pagado.
 
-[SUBTITULO] aquí el ladillo, tres o cinco palabras
-[ESCENA] aquí la escena entera, uno o dos párrafos
-[REMATE] aquí la frase que remata
-[PREGUNTA] ¿aquí la pregunta directa?
+- parrafos: el texto del área, en su orden. Cada uno lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras. El PRIMER párrafo nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
+- escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro.
+- remate_herida y remate_fuerza: las dos frases que rematan, tal como pide LAS FRASES QUE REMATAN. Cada una es UNA frase de treinta palabras como mucho, se imprime grande y centrada, y no lleva negritas.
+- pregunta: la pregunta directa, tal como pide PREGÚNTALE DIRECTAMENTE. Una sola frase, y no lleva negritas.
+- cierre: el último párrafo del área, tal como pide CIERRE DE CADA ÁREA. Va sin nada detrás.
 
-Eso de arriba es SOLO el formato: lo que va detrás de cada marca lo escribes tú, sacado de esta persona y de esta área. No copies esas palabras.
+DÓNDE VA CADA COSA, QUE ES LA MITAD DEL TRABAJO:
+La escena, los dos remates y la pregunta llevan un número, "tras_parrafo", que dice detrás de qué párrafo se leen. Ese número es tuyo y es donde de verdad se decide cómo se lee el área.
+- Cada uno sale de lo que acabas de contar en el párrafo que tiene delante, y el texto sigue después. El lector viene leyendo, se encuentra la frase, y continúa. Si la quitas, el párrafo de antes y el de después tienen que seguir enganchados igual.
+- Ninguno va detrás del último párrafo: ahí solo va el cierre.
+- No pongas dos frases grandes detrás del mismo párrafo: entre un remate y una pregunta siempre tiene que quedar texto, o se leen como un cartel puesto en medio del área.
+- El orden lo eliges tú, y en cada área sale distinto: la escena puede ir pronto en una y en mitad en otra. Las siete se leen seguidas, así que si todas llevan las cosas en el mismo sitio, el estudio se lee a plantilla.
 
-Qué lleva cada marca:
-- [SUBTITULO]: uno cada 250 o 300 palabras. En un área de 850 a 900 palabras salen TRES, y en el ÁREA 1, que es más larga, salen CUATRO. Nunca menos. Es un ladillo corto, de tres a cinco palabras, sin punto final, que sale de lo que se cuenta justo debajo y hace que dé ganas de seguir leyendo. NO es el nombre de un bloque ni una etiqueta ("HOY", "EL ORIGEN", "LAS CREENCIAS", "LO QUE HAY QUE SOLTAR") y NO anuncia lo que viene ("lo que voy a contarte ahora"). Sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. Si ese mismo ladillo pudiera ir en el área de otro cliente, o en otra de las siete áreas de esta, no vale y lo cambias. No existe una lista de ladillos buenos: no repitas nunca uno que ya hayas visto escrito en estas instrucciones. Y no cortan el hilo: el párrafo que va debajo sigue enganchado con lo de antes igual que si el subtítulo no estuviera.
-- [ESCENA]: la escena real obligatoria. Uno o dos párrafos, cada uno con su marca delante. No lleva negritas dentro.
-- [REMATE]: las frases que rematan, tal como pide la sección LAS FRASES QUE REMATAN. Cada una va SOLA en su párrafo, es UNA frase y no pasa de treinta palabras: se imprime grande y centrada, así que un remate de dos frases o de tres líneas deja de rematar y el área se descarta. No lleva negritas y no comparte párrafo con nada más. Dos como mínimo, tres si el texto lo pide, nunca más.
-- [PREGUNTA]: la pregunta directa. Va SOLA en su párrafo, es una sola frase y no lleva nada delante ni detrás dentro de ese párrafo. Si el área pide dos preguntas, las dos se marcan igual. Va después de haberle contado algo, nunca en frío, y lo que viene justo debajo recoge lo que acaba de pasarle al leerla: se le hace la pregunta para que pare y trabaje, no para adornar la página.
-
-DÓNDE VAN, QUE ES LA MITAD DEL TRABAJO:
-- EL ÁREA NO EMPIEZA POR UNA MARCA. Ni por un subtítulo, ni por un remate, ni por una pregunta, ni por la escena. El área abre siempre con texto corrido, porque la primera página ya lleva el título impreso arriba y una marca pegada debajo se lee como si el área empezara por la mitad. En las áreas cuya secuencia empieza por la escena, delante van igualmente las frases que la abren y la sitúan, que es lo que pide LA ESCENA SE PRESENTA, NO SE SUELTA.
-- NUNCA VAN DOS DESTACADAS SEGUIDAS. Entre un [REMATE] y una [PREGUNTA], o entre dos [REMATE], siempre va texto normal. Se imprimen grandes y centradas: dos pegadas se leen como un cartel puesto en medio del área, no como parte de lo que le estás contando.
-- CADA DESTACADA SALE DE LO QUE ACABAS DE CONTAR, Y EL TEXTO SIGUE DESPUÉS. El lector viene leyendo, se encuentra la frase, y continúa. No es una frase suelta colocada en cualquier sitio: si la quitas, el párrafo de antes y el de después tienen que seguir enganchados igual.
-
-El párrafo de CIERRE es el último del área, va SIN marca ninguna y detrás de él no va nada más: ni un remate, ni una pregunta, ni una despedida.
-Todo lo demás va en párrafos normales, sin marca.
-Entre párrafo y párrafo hay línea en blanco, también entre un párrafo marcado y el siguiente.
-Las marcas solo sirven para maquetar: se quitan al imprimir y el cliente no ve un corchete en su vida. Por eso NUNCA escribes un corchete para ninguna otra cosa.
-Un área que llegue sin sus subtítulos, sin su escena marcada, sin sus remates o sin su pregunta NO SE PUBLICA: se tira entera y se vuelve a pedir.
+Las casillas son para maquetar: el cliente no ve ningún nombre de casilla, ve su estudio. Y NUNCA escribas corchetes ni marcas dentro del texto: eso ya no hace falta, cada cosa va en su sitio.
 
 PROHIBICIONES ABSOLUTAS:
 - No repetir el título del área en el texto
@@ -459,8 +450,8 @@ ${cartaTexto}`;
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
 7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
 8. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos
-9. CUENTA LAS MARCAS antes de entregar, que es lo que mas se olvida. Tiene que haber TRES lineas que empiecen por [SUBTITULO] (CUATRO en el area 1), una que empiece por [ESCENA], DOS COMO MINIMO que empiecen por [REMATE] y una que empiece por [PREGUNTA]. Si te sale menos de esa cuenta, no entregues: vuelve al texto y ponlas donde faltan
-10. Y MIRA DONDE HAN QUEDADO: el area no empieza por una marca, y no hay dos destacadas ([REMATE] o [PREGUNTA]) seguidas, siempre va texto entre ellas. El cierre es el ultimo parrafo, sin marca, y detras no va nada
+9. Ninguna casilla se queda vacia: la escena, los dos remates, la pregunta y el cierre van SIEMPRE
+10. Y MIRA DONDE LAS HAS PUESTO: ninguna detras del ultimo parrafo, y nunca dos frases grandes detras del mismo parrafo, que entre ellas tiene que quedar texto
 11. Que se note que hay alguien hablandole: tres o cuatro veces en toda el area te paras y le hablas de tu a tu, y antes de nombrarle lo que le pesa le quitas la culpa de encima
 12. El area abre situando el tema desde fuera, no de golpe con una frase seca sobre ella. Y el cierre CIERRA: no presenta la siguiente area, no insinua nada, y deja ver que se le abre`;
 
@@ -471,10 +462,6 @@ ${cartaTexto}`;
   // formada) no se reintentan: no van a mejorar por repetirlos.
   const INTENTOS_POR_AREA = 3;
 
-  // Las areas que se entregan sabiendo que les falta algo. Se juntan aqui para
-  // mandar UN correo al final, no uno por area: el informe sale igual, pero
-  // hay que enterarse de que ha salido cojo.
-  const entregadasSinArreglar = [];
 
   async function pedirArea(area) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -497,6 +484,10 @@ ${cartaTexto}`;
         // falta razonar: hay que escribir un area con el prompt que ya lleva
         // todas las reglas.
         thinking: { type: 'disabled' },
+        // El area se pide por casillas y la API le obliga a rellenarlas todas.
+        // Antes se le pedia texto seguido con marcas dentro y se le olvidaba
+        // alguna; asi no puede. Ver ESQUEMA_AREA en lib/bloques.js.
+        output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREA } },
         // Tope de seguridad, no un objetivo: solo se paga lo que el modelo
         // escribe, y el largo lo manda el prompt. La cuenta, con la proporcion
         // que se ve en los registros (2,15 caracteres por token en castellano):
@@ -552,6 +543,33 @@ ${cartaTexto}`;
       throw err;
     }
 
+    // Con output_config.format, lo que llega es JSON valido y con todas sus
+    // casillas. Lo unico que la API no puede garantizar es que ninguna venga
+    // en blanco, asi que eso se mira aqui y se vuelve a pedir si pasa.
+    let datos;
+    try {
+      datos = JSON.parse(texto);
+    } catch {
+      const err = new Error(`Área ${area.id} no llegó como estructura`);
+      err.temporal = true;
+      throw err;
+    }
+    const vacias = [
+      ['la escena', datos?.escena?.texto],
+      ['el remate de la herida', datos?.remate_herida?.texto],
+      ['el remate de la fuerza', datos?.remate_fuerza?.texto],
+      ['la pregunta', datos?.pregunta?.texto],
+      ['el cierre', datos?.cierre],
+    ].filter(([, t]) => !t || !String(t).trim()).map(([n]) => n);
+    if (!Array.isArray(datos?.parrafos) || datos.parrafos.length === 0) vacias.push('los párrafos');
+    if (vacias.length > 0) {
+      const err = new Error(`Área ${area.id} llegó con casillas vacías: ${vacias.join(', ')}`);
+      err.temporal = true;
+      throw err;
+    }
+
+    const montada = montarArea(datos);
+
     // El area viene marcada por bloques (subtitulos, escena, remates,
     // pregunta) y esas marcas son las que la maquetan. Si falta alguna, el PDF
     // saldria como el muro de texto de antes, que es justo lo que se esta
@@ -561,176 +579,45 @@ ${cartaTexto}`;
     // esta pedido en el prompt y en el repaso final, y en el informe del 22 de
     // agosto salio CERO veces en las siete areas. Pedirlo otra vez por escrito
     // ya se ha probado y no funciona; contarlo, si.
-    const bloques = analizarArea(texto);
+    const bloques = analizarArea(montada);
     const faltan = revisarBloques(bloques);
 
     // Lo que no para el area pero conviene saber. Va a los registros y ya: si
     // llegan mil correos por esto, no se lee ninguno. Si un aviso se repite
     // informe tras informe, es que algo se esta escapando en el prompt.
     const avisos = avisosBloques(bloques, { minSub: area.minSub || 2 });
-    if (vecesQueLaLlamaPorSuNombre(texto, nombrePila) < 1) {
+    if (vecesQueLaLlamaPorSuNombre(montada, nombrePila) < 1) {
       avisos.push(`no la llama "${nombrePila}" ni una vez`);
     }
     if (avisos.length > 0) {
       console.warn(`SE ENTREGA CON AVISOS — Área ${area.id}: ${avisos.join('; ')}`);
     }
 
+    // Esto ya no deberia poder saltar: las casillas obligatorias vienen de la
+    // API y colocarlas es cosa del codigo. Se queda como red por si el esquema
+    // cambiara algun dia sin que nadie se acuerde de mirar aqui.
     if (faltan.length > 0) {
-      const err = new Error(`Área ${area.id} llegó mal marcada: ${faltan.join('; ')}`);
+      const err = new Error(`Área ${area.id} llegó incompleta: ${faltan.join('; ')}`);
       err.temporal = true;
-      err.faltan = faltan;
-      // El area va dentro del error para poder repasarle las marcas al final,
-      // sin volver a escribirla. No se entrega nunca sin marcar. Ver ponerMarcas.
-      err.texto = texto.trim();
       throw err;
     }
 
-    return texto.trim();
-  }
-
-  // Ultimo recurso antes de tirar un area. En los tres intentos de arriba se
-  // le pide que reescriba el area ENTERA, con todas las reglas encima, y ahi
-  // pasa lo que se vio en la primera generacion real: arregla los subtitulos
-  // y se deja los remates, arregla los remates y se deja la escena. Cada
-  // intento es una tirada nueva.
-  // Aqui no se le pide que escriba nada: se le devuelve su propio texto y se
-  // le pide solo que le ponga las marcas que faltan, sin cambiar una palabra.
-  // Es una tarea mecanica, no creativa, y no puede empeorar la redaccion
-  // porque no se le deja tocarla.
-  async function ponerMarcas(area, texto, faltan) {
-    const encargo = `Aqui abajo tienes un area ya escrita de un estudio. LAS PALABRAS NO SE TOCAN: no cambies ninguna, no reescribas frases, no añadas texto nuevo y no quites nada de lo que se cuenta. La UNICA excepcion es el nombre de la persona, y solo si en la lista de abajo te dicen que falta.
-
-Tu trabajo es solo colocar bien las marcas de maquetacion. El area puede traer ya algunas puestas: esas las puedes mover de sitio o quitarlas si estan donde no toca, pero el texto se queda como esta.
-
-Esto es lo que hay que corregir: ${faltan.join('; ')}.
-
-Las marcas van al principio de su propio parrafo:
-[SUBTITULO] tres o cinco palabras, sin punto final, sacadas de lo que se cuenta en el parrafo que va justo debajo
-[ESCENA] delante del parrafo donde se cuenta la escena concreta y visual
-[REMATE] delante de la frase que remata, que va sola en su parrafo
-[PREGUNTA] delante de la pregunta directa, que va sola en su parrafo
-
-Reglas de colocacion, que es lo importante:
-- EL AREA NO EMPIEZA POR NINGUNA MARCA, y este es el fallo que hay que mirar PRIMERO. La primera linea de lo que devuelvas no puede ser un [SUBTITULO], ni un titulo en markdown (## Asi), ni ninguna otra marca: tiene que ser la primera frase del texto. La pagina ya lleva el titulo del area impreso arriba, asi que un ladillo pegado debajo se lee como si el area empezara por la mitad. Si el texto que te doy empieza por un ladillo, lo BORRAS o lo bajas a su sitio, y el area arranca con el parrafo que venia detras. La primera marca llega cuando ya se han leido dos o tres parrafos.
-- NUNCA DOS DESTACADAS SEGUIDAS. Entre un [REMATE] y una [PREGUNTA], o entre dos [REMATE], siempre tiene que quedar texto normal en medio. Se imprimen grandes y centradas: dos pegadas se leen como un cartel en mitad del area.
-- Los subtitulos van repartidos, uno cada 250 o 300 palabras, y cada uno dice lo que se cuenta justo debajo de el.
-- Si la frase que remata o la pregunta estan dentro de un parrafo mas largo, sacalas a su propio parrafo con sus palabras exactas, sin reescribirlas.
-- El ultimo parrafo es el cierre y va SIN marca. Detras de el no va nada.
-- Entre parrafo y parrafo, una linea en blanco.
-
-LAS NEGRITAS, si es una de las cosas que hay que corregir. Se marcan con dos asteriscos a cada lado, **asi**, y no son maquetacion: son lo que esa persona subrayaria con fosforito leyendo esto, la frase en la que se reconoce de golpe o la que le pone nombre a algo que hacia sin saberlo. Nunca la explicacion, ni el ejemplo, ni el piropo. Se marca desde donde empieza a doler hasta donde deja de doler, aunque caiga en mitad de la frase: de tres palabras a una frase, nunca una palabra suelta ni dos lineas seguidas. Van solo en el texto corrido, nunca dentro de la escena, ni en los remates, ni en la pregunta, ni en el cierre. No hay numero: las que pasen eso y ninguna mas. Si sobran, quitas los asteriscos de las que no lo pasen. Poner o quitar asteriscos no es tocar las palabras: las palabras siguen siendo exactamente las mismas.
-
-EL NOMBRE, si es una de las cosas que hay que corregir. Se mete UNA sola vez en toda el area, dentro de una frase que ya existe y hablandole a ella ("y ahi esta, Raquel, lo que no ves"), donde caiga natural: igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te esta diciendo algo que te toca. No al empezar el area, no abriendo un parrafo, y no dentro de la escena ni de un remate ni de la pregunta. Es meter una palabra entre comas en una frase que ya esta escrita, nada mas: el resto de esa frase se queda igual.
-
-Lo unico que escribes tu son los subtitulos, porque no estan en el texto. Todo lo demas ya esta escrito.
-
-Devuelve el area ENTERA ya marcada, y nada mas: ni explicaciones, ni comentarios. Entera quiere decir del primer parrafo al ultimo, con todos los parrafos que traia y con las mismas palabras: si lo que devuelves es mas corto que lo que te he dado, se tira y no sirve de nada. No resumas, no acortes, no te dejes parrafos por el camino.
-
-EL AREA:
-${texto}`;
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-5',
-        thinking: { type: 'disabled' },
-        max_tokens: 5000,
-        messages: [{ role: 'user', content: encargo }],
-      }),
-    });
-
-    if (!response.ok) throw new Error(`Área ${area.id}: el repaso de marcas devolvió ${response.status}`);
-
-    const data = await response.json();
-    if (data.stop_reason === 'max_tokens') throw new Error(`Área ${area.id}: el repaso de marcas llegó cortado`);
-
-    const marcado = (data.content || [])
-      .filter(b => b && typeof b.text === 'string')
-      .map(b => b.text)
-      .join('')
-      .trim();
-
-    // Si al marcarlo se ha comido texto, no vale: se prefiere no entregar
-    // nada antes que entregar un area recortada. El margen del 15% deja sitio
-    // a que quite algun espacio, no a que se salte parrafos.
-    if (marcado.length < texto.length * 0.85) {
-      throw new Error(`Área ${area.id}: el repaso de marcas devolvió el texto recortado`);
-    }
-
-    const faltanAun = revisarBloques(analizarArea(marcado));
-    if (faltanAun.length > 0) {
-      throw new Error(`Área ${area.id} sigue mal marcada tras el repaso: ${faltanAun.join('; ')}`);
-    }
-
-    return marcado;
+    return montada;
   }
 
   async function generarArea(area) {
     let ultimoError;
-    // El area completa mas reciente que se descarto SOLO por las marcas, y lo
-    // que le faltaba. Se guardan juntas: si el ultimo intento se cae por un
-    // corte de red, el repaso final tiene que poder trabajar igual sobre el
-    // texto bueno que llego antes.
-    let sinMarcar = '', faltabanEn = null;
     for (let intento = 1; intento <= INTENTOS_POR_AREA; intento++) {
       try {
         return await pedirArea(area);
       } catch (err) {
         ultimoError = err;
-        // Si el area llego entera y lo unico que fallaban eran las marcas, NO
-        // se vuelve a escribir. Reescribirla es caro y encima es lo que rompe
-        // el area: en la primera generacion real, cada reescritura arreglaba
-        // los subtitulos y se dejaba los remates, o al reves. El texto ya esta
-        // bien; lo que falta es ponerle cuatro etiquetas, y eso se hace abajo.
-        if (err.texto) { sinMarcar = err.texto; faltabanEn = err.faltan; break; }
         // Un corte de red llega sin marca; se trata como temporal.
         const temporal = err.temporal !== false;
         if (!temporal || intento === INTENTOS_POR_AREA) break;
         console.warn(`Área ${area.id}: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
         await new Promise(r => setTimeout(r, 1500 * intento));
       }
-    }
-    // Si el area llego entera pero sin marcar, se le pide que le ponga las
-    // marcas sobre ese mismo texto, sin reescribirlo. Aqui si se reintenta
-    // hasta tres veces, porque es lo mas facil de todo lo que se pide en este
-    // fichero y es barato: no se escribe nada nuevo.
-    for (let repaso = 1; sinMarcar && faltabanEn && repaso <= INTENTOS_POR_AREA; repaso++) {
-      try {
-        const marcado = await ponerMarcas(area, sinMarcar, faltabanEn);
-        console.warn(`Área ${area.id}: marcada en el repaso ${repaso}`);
-        return marcado;
-      } catch (err) {
-        console.warn(`Área ${area.id}: repaso ${repaso} sin éxito (${err.message.slice(0, 120)})`);
-        if (repaso < INTENTOS_POR_AREA) await new Promise(r => setTimeout(r, 1000 * repaso));
-      }
-    }
-
-    // ULTIMA RED: si el area esta escrita entera y lo unico que falla son las
-    // marcas, se entrega.
-    //
-    // Antes se tiraba. La idea era buena —un muro de texto no vale 47 euros—
-    // pero el trato salia al reves: por una marca mal puesta el cliente pagaba
-    // y no recibia nada, que es mucho peor que recibir un area con un remate
-    // de menos. El 22 de agosto paso exactamente eso.
-    //
-    // Aqui ya se ha intentado todo: se pidio el area, se reviso, y se mando
-    // tres veces al repaso. Si aun asi le falta algo, el texto que hay esta
-    // escrito y se lee; lo que falta es una marca. Se entrega y se grita en
-    // los registros, porque si esto sale a menudo es que algo esta mal en el
-    // prompt y hay que arreglarlo ahi, no dejar al cliente sin informe.
-    //
-    // Lo que NO se entrega nunca sigue siendo lo de arriba: un area que llego
-    // cortada a media frase, vacia, o que nunca llego porque fallo la API.
-    // Eso no es una marca que falta, es texto que no existe.
-    if (sinMarcar) {
-      console.error(`ENTREGADA SIN ARREGLAR — Área ${area.id}: ${(faltabanEn || []).join('; ')}`);
-      entregadasSinArreglar.push(`Área ${area.id}: ${(faltabanEn || []).join('; ')}`);
-      return sinMarcar;
     }
     throw ultimoError;
   }
@@ -756,13 +643,6 @@ ${texto}`;
     const textoCompleto = resultados
       .map(t => quitarComaAntesDeY(t).split(SEPARADOR_AREAS).join(''))
       .join(SEPARADOR_AREAS);
-
-    // Si alguna area salio coja, un correo. Uno por informe y solo cuando pasa,
-    // que es raro: el informe se entrega igual, pero esto hay que saberlo, y
-    // los registros de Vercel no se miran todos los dias.
-    if (entregadasSinArreglar.length > 0) {
-      await avisarAreasCojas(datosCliente, session_id, entregadasSinArreglar);
-    }
 
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
     // que demuestra que quien pide el PDF es quien tiene la reserva.
@@ -793,34 +673,6 @@ ${texto}`;
 // La marca aviso_agotado en Stripe evita que salga dos veces por la misma
 // compra, aunque el cliente recargue o vuelva a darle al boton.
 // ═════════════════════════════════════════════════════════════════
-// El informe SI se ha entregado, pero con alguna area a la que le faltaba una
-// marca despues de tres repasos. No es urgente y el cliente tiene lo suyo, pero
-// si esto empieza a salir a menudo, lo que hay que arreglar es el prompt.
-// Nunca tira la generacion: si el correo falla, se apunta y se sigue.
-async function avisarAreasCojas(session, session_id, areas) {
-  try {
-    const m = session?.metadata || {};
-    await enviarEmailAdmin({
-      asunto: `Informe entregado con ${areas.length} área(s) sin marcar — ${m.nombre || 'Cliente'}`,
-      mensaje: [
-        `El informe SE HA ENTREGADO. El cliente lo tiene.`,
-        `Pero estas areas salieron sin alguna de sus marcas, despues de tres repasos:`,
-        ``,
-        ...areas.map(a => `  - ${a}`),
-        ``,
-        `Email:   ${session?.customer_email || session?.customer_details?.email || '-'}`,
-        `Nombre:  ${m.nombre || '-'}`,
-        `Session: ${session_id}`,
-        ``,
-        `Si esto sale a menudo, hay que mirar el prompt: es el modelo el que no`,
-        `esta poniendo esa marca, no un fallo de la web.`,
-      ].join('\n'),
-    });
-  } catch (err) {
-    console.error('No se pudo avisar de las areas cojas:', err.message);
-  }
-}
-
 async function avisarClienteSinInforme(stripe, session_id, session, intentos, motivo) {
   try {
     // Se relee la sesion: la que tenemos en la mano puede llevar varios

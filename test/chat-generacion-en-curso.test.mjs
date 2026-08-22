@@ -20,7 +20,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { analizarArea, revisarBloques } from '../lib/bloques.js';
+import { analizarArea, revisarBloques, montarArea } from '../lib/bloques.js';
 import { vecesQueLaLlamaPorSuNombre } from '../lib/estilo.js';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
@@ -54,42 +54,35 @@ globalThis.__TIENDA = TIENDA;
 
 // ── El area que devuelve el modelo de mentira.
 //
-// Tiene que pasar la MISMA revision que una de verdad (lib/bloques.js),
-// porque el codigo bajo prueba es el de produccion tal cual. Antes aqui
-// habia una linea de relleno repetida diez veces, y el dia que se empezo
-// a exigir que el area llegara marcada (commit bb514c2) esa linea dejo de
-// valer: chat.js la rechazaba, reintentaba, y la prueba moria antes de
-// llegar a la guarda que viene a mirar. Se quedo once commits en rojo
-// sin comprobar nada. De ahi el aviso de mas abajo.
-const AREA_DE_MENTIRA = [
-  'Te levantas y lo primero que haces es repasar la lista de lo que tienes pendiente, no porque haga falta, sino porque asi el dia empieza con algo bajo control.',
-  '',
-  'Y mientras asientes, por dentro **estas calculando cuanto has ensenado de mas**, que es un trabajo que no descansa nunca y que no te ha visto hacer nadie.',
-  '',
-  '[SUBTITULO] La cuenta que no llevas',
-  'De ahi sale todo lo demas, Ana, que es lo que nadie te ha contado y llevas media vida pagando sin enterarte de que lo estabas pagando.',
-  '',
-  '[ESCENA] Son las once de la noche y todavia estas repasando el movil con la luz apagada, buscando algo que ya has leido dos veces.',
-  '',
-  '[REMATE] Llevas media vida pidiendo permiso para ocupar tu propio sitio',
-  '',
-  '[SUBTITULO] Donde empezo esto',
-  'Eso no se arregla apretando mas, se arregla mirando de donde viene, y viene de mucho antes de que tuvieras nada que demostrarle a nadie.',
-  '',
-  '[PREGUNTA] ¿Cuantas veces te has callado algo por no montar un lio?',
-  '',
-  'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
-].join('\n');
+// Desde que el area se pide por casillas (output_config.format), lo que
+// devuelve el modelo es JSON, no texto con marcas dentro. Si esto se queda
+// con el formato viejo, chat.js lo rechaza por no ser una estructura, se
+// pasa la prueba entera reintentando y acaba en 500 sin haber comprobado
+// nunca la guarda que viene a mirar.
+const AREA_DE_MENTIRA = JSON.stringify({
+  parrafos: [
+    { ladillo: null, texto: 'Te levantas y lo primero que haces es repasar la lista de lo que tienes pendiente, y eso lo llevas haciendo desde siempre.' },
+    { ladillo: 'La cuenta que no llevas', texto: 'Y mientras asientes, Ana, por dentro **estas calculando cuanto has ensenado de mas**, que es un trabajo que no descansa.' },
+    { ladillo: null, texto: 'De ahi sale todo lo demas, que es lo que nadie te ha contado y llevas media vida pagando sin enterarte.' },
+    { ladillo: 'Donde empezo esto', texto: 'Eso no se arregla apretando mas, se arregla mirando de donde viene y quien te enseno a hacerlo asi.' },
+  ],
+  escena: { tras_parrafo: 1, texto: 'Son las once de la noche y todavia estas repasando el movil con la luz apagada.' },
+  remate_herida: { tras_parrafo: 3, texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
+  remate_fuerza: { tras_parrafo: 4, texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
+  pregunta: { tras_parrafo: 2, texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
+  cierre: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
+});
 
 // Y aqui esta el aviso. Si algun dia se le pide al area algo mas y este
 // texto de mentira deja de cumplirlo, la prueba lo dice en una linea en vez
 // de morirse reintentando y dejar de vigilar la guarda sin que nadie lo note.
 {
-  const faltan = revisarBloques(analizarArea(AREA_DE_MENTIRA), { minSub: 2 });
+  const montada = montarArea(JSON.parse(AREA_DE_MENTIRA));
+  const faltan = revisarBloques(analizarArea(montada));
   // El nombre se revisa aparte de las marcas en api/chat.js, asi que aqui
   // tambien: la primera vez que se exigio, esta prueba se cayo sin que el
   // aviso dijera por que. "Ana" es el nombre de pila que usa la prueba.
-  if (vecesQueLaLlamaPorSuNombre(AREA_DE_MENTIRA, 'Ana') < 1) {
+  if (vecesQueLaLlamaPorSuNombre(montada, 'Ana') < 1) {
     faltan.push('el area de mentira no llama "Ana" a la clienta ni una vez, y api/chat.js lo exige');
   }
   if (faltan.length > 0) {
