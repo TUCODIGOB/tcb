@@ -110,11 +110,14 @@ ESTILO DE ESCRITURA:
 - PREGÚNTALE DIRECTAMENTE. De vez en cuando párate y hazle una pregunta de verdad, de las que se quedan un rato dando vueltas. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
 - Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: "¿cuántas veces te has callado algo por no montar un lío?". Las MALAS valen para cualquiera y no dicen nada: "¿te suena?", "¿te identificas con esto?", "¿te ha pasado alguna vez?".
 - No hay número fijo de preguntas: van las que pida el texto y ninguna más. Si un área no pide ninguna, no la fuerces.
-- RESALTA EN NEGRITA LO QUE LO MERECE, marcándolo con dos asteriscos a cada lado: **así**. Se marca la frase que sigue en pie fuera de su párrafo, la que si la sacas de ahí y la escribes sola en una página sigue diciendo algo por sí misma. Esa es la única condición y no hay ninguna más.
-- NO HAY NÚMERO NI SITIO FIJO. En un área saldrán tres y en otra siete, las que dé el texto, nunca una cantidad repartida por página. Si un área no pide ninguna, no la fuerces.
-- Se marca una frase entera o media frase, nunca una palabra suelta y nunca un concepto. NO se marcan las explicaciones, ni los datos, ni los piropos, ni lo que ya se veía venir dos líneas antes. Y de un mismo contraste se marca solo una mitad ("por dentro estás calculando cuánto has enseñado"), nunca las dos, porque marcar las dos se lee a plantilla.
-- NUNCA marques nada dentro de la escena: se lee del tirón, y una marca ahí saca al lector de golpe. NUNCA marques el párrafo de cierre, que ya se destaca solo al maquetarlo.
-- Los asteriscos van siempre en pareja, dos para abrir y dos para cerrar. Nunca sueltos, nunca impares y nunca para ninguna otra cosa.
+- LA NEGRITA ES EL FOSFORITO DEL LECTOR, y se marca con dos asteriscos a cada lado: **así**. No es maquetación, no es un resumen y no es para que la página quede bonita: es exactamente lo que esa persona subrayaría si estuviera leyendo esto en un libro suyo, con un rotulador en la mano y sin pensárselo. La pregunta que decide cada una es esa: al llegar aquí, ¿pararía y lo subrayaría, o seguiría de largo?
+- SE MARCA LO QUE LA NOMBRA, NO LO QUE LE EXPLICAS. Lo que se subraya es la frase en la que se reconoce de golpe, la que le pone nombre a algo que llevaba años haciendo sin saber que lo hacía, la que ella se dice por dentro y no ha dicho nunca en voz alta, o la cuenta exacta de lo que le está costando. El porqué, el ejemplo, el contexto y la parte amable no se subrayan jamás: son lo que sostiene la frase que sí.
+- LA PRUEBA, Y ES LA QUE MANDA: al terminar el área, lee seguido SOLO lo que has marcado. Tiene que sonar a lo que esa persona le contaría de sí misma a una amiga después de leerlo. Si suena a titulares, has marcado lo que quedaba bien. Si suena al área otra vez pero más corta, has marcado de más. Si no dice nada, has marcado de menos.
+- LA CANTIDAD LA DECIDE EL TEXTO, NO UNA CUOTA. No hay un número, ni por área ni por página, ni tres ni cinco ni diez: sale lo que pase la prueba y ni una más. Lo normal es que haya párrafos enteros sin nada que subrayar y que de pronto uno pida dos. Si te has puesto a repartirlas para que queden equilibradas por la página, están mal puestas TODAS y se quitan.
+- EL TAMAÑO ES EL DEL GOLPE, no el de la frase. Se marca desde donde empieza a doler hasta donde deja de doler, aunque eso caiga en mitad de la frase y se lleve por delante una coma: "y mientras asientes, por dentro **estás calculando cuánto has enseñado de más**". Van de tres palabras a una frase entera, nunca una palabra suelta, y nunca dos líneas y media seguidas, que ya no es una negrita sino un bloque y deja de resaltar.
+- NO SE MARCAN NUNCA: las explicaciones, los datos, los piropos, ni lo que ya se veía venir dos líneas antes. De un mismo contraste se marca solo la mitad que escuece, nunca las dos, porque marcar las dos se lee a plantilla. Y dos negritas seguidas que dicen lo mismo con otras palabras son una sola: se queda la buena.
+- FUERA DEL TEXTO CORRIDO NO HAY NEGRITAS. Ni dentro de la escena, que se lee del tirón y una marca ahí saca al lector de golpe, ni en los remates, ni en la pregunta, ni en el cierre: esos ya se destacan solos al maquetarlos, y una negrita encima no se ve, se pierde.
+- Los asteriscos van siempre en pareja, dos para abrir y dos para cerrar, y la pareja entera dentro del mismo párrafo. Nunca sueltos, nunca impares y nunca para ninguna otra cosa.
 - CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra: se escribe "quiero plátanos, peras y fresas", no "quiero plátanos, peras, y fresas". Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.
 
 REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
@@ -426,7 +429,7 @@ ${cartaTexto}`;
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS DIEZ, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
 2. El nombre "${nombrePila}" aparece UNA vez en el area, dentro de una frase, nunca al empezar
-3. Hay al menos una frase en **negrita**, la que aguanta sola fuera de su parrafo
+3. Lo que va en **negrita** es lo que ella subrayaria con fosforito, no lo que suena bien: relee solo lo marcado seguido y tiene que sonar a ella contandose a si misma. Las que no pasen eso, se quitan
 4. Hay al menos una pregunta directa, salida de lo que acabas de contarle
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
@@ -566,6 +569,8 @@ Reglas de colocacion, que es lo importante:
 - Si la frase que remata o la pregunta estan dentro de un parrafo mas largo, sacalas a su propio parrafo con sus palabras exactas, sin reescribirlas.
 - El ultimo parrafo es el cierre y va SIN marca. Detras de el no va nada.
 - Entre parrafo y parrafo, una linea en blanco.
+
+LAS NEGRITAS, si es una de las cosas que hay que corregir. Se marcan con dos asteriscos a cada lado, **asi**, y no son maquetacion: son lo que esa persona subrayaria con fosforito leyendo esto, la frase en la que se reconoce de golpe o la que le pone nombre a algo que hacia sin saberlo. Nunca la explicacion, ni el ejemplo, ni el piropo. Se marca desde donde empieza a doler hasta donde deja de doler, aunque caiga en mitad de la frase: de tres palabras a una frase, nunca una palabra suelta ni dos lineas seguidas. Van solo en el texto corrido, nunca dentro de la escena, ni en los remates, ni en la pregunta, ni en el cierre. No hay numero: las que pasen eso y ninguna mas. Si sobran, quitas los asteriscos de las que no lo pasen. Poner o quitar asteriscos no es tocar las palabras: las palabras siguen siendo exactamente las mismas.
 
 Lo unico que escribes tu son los subtitulos, porque no estan en el texto. Todo lo demas ya esta escrito.
 
