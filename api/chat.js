@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { MAX_INTENTOS, estado, reservar, liberar, compraValida } from '../lib/reserva.js';
-import { analizarArea, revisarBloques } from '../lib/bloques.js';
+import { analizarArea, revisarBloques, avisosBloques } from '../lib/bloques.js';
 import { quitarComaAntesDeY, vecesQueLaLlamaPorSuNombre } from '../lib/estilo.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -556,10 +556,20 @@ ${cartaTexto}`;
     // esta pedido en el prompt y en el repaso final, y en el informe del 22 de
     // agosto salio CERO veces en las siete areas. Pedirlo otra vez por escrito
     // ya se ha probado y no funciona; contarlo, si.
-    const faltan = revisarBloques(analizarArea(texto), { minSub: area.minSub || 2 });
+    const bloques = analizarArea(texto);
+    const faltan = revisarBloques(bloques);
+
+    // Lo que no para el area pero conviene saber. Va a los registros y ya: si
+    // llegan mil correos por esto, no se lee ninguno. Si un aviso se repite
+    // informe tras informe, es que algo se esta escapando en el prompt.
+    const avisos = avisosBloques(bloques, { minSub: area.minSub || 2 });
     if (vecesQueLaLlamaPorSuNombre(texto, nombrePila) < 1) {
-      faltan.push(`el area no la llama por su nombre ni una vez: "${nombrePila}" tiene que aparecer UNA vez, hablandole a ella dentro de una frase ("y ahi esta, ${nombrePila}, lo que no ves"), nunca al empezar el area ni al abrir un parrafo`);
+      avisos.push(`no la llama "${nombrePila}" ni una vez`);
     }
+    if (avisos.length > 0) {
+      console.warn(`SE ENTREGA CON AVISOS — Área ${area.id}: ${avisos.join('; ')}`);
+    }
+
     if (faltan.length > 0) {
       const err = new Error(`Área ${area.id} llegó mal marcada: ${faltan.join('; ')}`);
       err.temporal = true;
@@ -647,10 +657,7 @@ ${texto}`;
       throw new Error(`Área ${area.id}: el repaso de marcas devolvió el texto recortado`);
     }
 
-    const faltanAun = revisarBloques(analizarArea(marcado), { minSub: area.minSub || 2 });
-    if (vecesQueLaLlamaPorSuNombre(marcado, nombrePila) < 1) {
-      faltanAun.push(`sigue sin llamarla por su nombre: falta "${nombrePila}" dentro de una frase`);
-    }
+    const faltanAun = revisarBloques(analizarArea(marcado));
     if (faltanAun.length > 0) {
       throw new Error(`Área ${area.id} sigue mal marcada tras el repaso: ${faltanAun.join('; ')}`);
     }

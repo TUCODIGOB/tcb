@@ -14,7 +14,7 @@
 // Sin red y sin dependencias.
 // ═════════════════════════════════════════════════════════════════
 
-import { analizarArea, revisarBloques } from '../lib/bloques.js';
+import { analizarArea, revisarBloques, avisosBloques, negritasDe } from '../lib/bloques.js';
 
 let fallos = 0;
 const c = (titulo, ok, det) => {
@@ -76,16 +76,83 @@ c('dos ladillos seguidos al principio', (() => {
 
 console.log('\nLO QUE SIGUE SIENDO UN FALLO DE VERDAD\n');
 {
-  // Empezar por un remate no es maquetacion: es que el area arranca por el
-  // golpe, y eso hay que reescribirlo.
-  const b = analizarArea(['[REMATE] Llevas media vida pidiendo permiso', ...CUERPO].join('\n'));
-  c('empezar por un remate se sigue rechazando',
-    revisarBloques(b).some(f => f.includes('empieza por una frase destacada')), revisarBloques(b).join(' | '));
+  // Empezar por una frase grande tampoco tira el area: baja a parrafo normal
+  // y sirve de entradilla, que es como se lee esa misma frase dentro del texto.
+  const b = analizarArea(['[REMATE] Llevas media vida pidiendo permiso para ocupar tu sitio', ...CUERPO].join('\n'));
+  c('empezar por un remate se arregla solo', b[0].tipo === 'texto', 'empieza por ' + b[0].tipo);
+  c('y el area sigue pasando', revisarBloques(b).length === 0, revisarBloques(b).join(' | '));
 }
 {
   const sinRemate = CUERPO.filter(l => !l.startsWith('[REMATE]'));
   c('un area sin remate se sigue rechazando',
     revisarBloques(analizarArea(sinRemate.join('\n'))).some(f => f.includes('remate')));
+}
+
+console.log('\nLO QUE SOBRA SE COLOCA SOLO, SIN GASTAR UNA LLAMADA\n');
+const pal = t => t.replace(/\*\*/g, ' ').trim().split(/\s+/).length;
+const conCuerpo = (...lineas) => analizarArea([...lineas, ...CUERPO].join('\n'));
+
+{
+  const b = conCuerpo('[SUBTITULO] ' + 'palabra '.repeat(30));
+  c('un ladillo larguisimo baja a texto normal', !b.some(x => x.tipo === 'sub' && x.t.length > 80));
+}
+{
+  const muchos = Array.from({ length: 14 }, (_, i) => `[SUBTITULO] Ladillo numero ${i}\nUn parrafo detras del ladillo para que tenga cuerpo.\n`);
+  const b = analizarArea([...CUERPO, ...muchos].join('\n'));
+  c('catorce ladillos se quedan en ocho', b.filter(x => x.tipo === 'sub').length <= 8,
+    b.filter(x => x.tipo === 'sub').length + ' ladillos');
+}
+{
+  const b = analizarArea([CUERPO[0], '', '[ESCENA] Una.', '', '[ESCENA] Dos.', '', '[ESCENA] Tres.', '', '[ESCENA] Cuatro.', '', ...CUERPO.slice(2)].join('\n'));
+  c('cuatro escenas se quedan en dos', b.filter(x => x.tipo === 'escena').length === 2);
+}
+{
+  const b = conCuerpo('Apertura normal del area para que no empiece por marca.', '', '[REMATE] ' + 'palabra '.repeat(60));
+  c('un remate de tres lineas baja a texto', !b.some(x => x.tipo === 'remate' && x.t.length > 220));
+}
+{
+  const b = analizarArea([CUERPO[0], '', '[REMATE] Uno', '', '[PREGUNTA] ¿Dos?', '', ...CUERPO.slice(2)].join('\n'));
+  const seguidas = b.some((x, i) => i > 0 && ['remate','pregunta'].includes(x.tipo) && ['remate','pregunta'].includes(b[i-1].tipo));
+  c('dos frases grandes seguidas se separan', !seguidas);
+}
+{
+  const larga = 'palabra '.repeat(45).trim();
+  const b = conCuerpo('Apertura del area, texto corrido.', '', 'Y aqui **' + larga + '** dentro.');
+  c('una negrita larguisima se desmarca', !negritasDe(b).some(t => t.length > 200));
+}
+{
+  const b = analizarArea(['Apertura corta del area aqui.', '', '**' + 'uno '.repeat(25).trim() + '**', '', '**' + 'dos '.repeat(25).trim() + '**', '', 'Cierre.'].join('\n'));
+  const cuerpo = b.filter(x => x.tipo === 'texto').reduce((n, x) => n + pal(x.t), 0);
+  const marc = negritasDe(b).reduce((n, x) => n + pal(x), 0);
+  c('media area en negrita se recorta al tope', cuerpo === 0 || marc <= cuerpo * 0.25, marc + ' de ' + cuerpo);
+}
+
+console.log('\nLO QUE PARA EL AREA (y solo eso)\n');
+const tira = (nombre, quitar) => {
+  const b = analizarArea(CUERPO.filter(l => !l.startsWith(quitar)).join('\n'));
+  c('sin ' + nombre + ' se para', revisarBloques(b).length > 0, revisarBloques(b).join(' | '));
+};
+tira('escena', '[ESCENA]');
+tira('remate', '[REMATE]');
+tira('pregunta', '[PREGUNTA]');
+c('un area entera pasa sin fallos', revisarBloques(analizarArea(CUERPO.join('\n'))).length === 0);
+
+console.log('\nLO QUE SE ENTREGA Y SOLO AVISA\n');
+{
+  const unLadillo = CUERPO.filter(l => !l.startsWith('[SUBTITULO] Lo que se cae'));
+  const b = analizarArea(unLadillo.join('\n'));
+  c('con un ladillo de menos NO se para', revisarBloques(b).length === 0, revisarBloques(b).join(' | '));
+  c('...pero avisa', avisosBloques(b).some(a => a.includes('ladillo')), avisosBloques(b).join(' | '));
+}
+{
+  const b = analizarArea(CUERPO.join('\n'));
+  c('con un solo remate NO se para', revisarBloques(b).length === 0);
+  c('...pero avisa', avisosBloques(b).some(a => a.includes('remate')), avisosBloques(b).join(' | '));
+}
+{
+  const b = analizarArea(CUERPO.map(l => l.replace(/\*\*/g, '')).join('\n'));
+  c('sin negritas NO se para', revisarBloques(b).length === 0);
+  c('...pero avisa', avisosBloques(b).some(a => a.includes('plana')), avisosBloques(b).join(' | '));
 }
 
 console.log(fallos === 0 ? '\nTODO BIEN\n' : `\n${fallos} FALLO(S)\n`);

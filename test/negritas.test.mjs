@@ -15,7 +15,7 @@
 // Sin red y sin dependencias: solo lib/bloques.js.
 // ═════════════════════════════════════════════════════════════════
 
-import { analizarArea, revisarBloques, negritasDe } from '../lib/bloques.js';
+import { analizarArea, revisarBloques, avisosBloques, negritasDe } from '../lib/bloques.js';
 
 let fallos = 0;
 function comprobar(titulo, condicion, detalle) {
@@ -113,6 +113,11 @@ console.log('\nNEGRITAS DEL CUERPO\n');
 }
 
 console.log('\nREVISION DEL AREA\n');
+// Lo que hacen las negritas ha cambiado a proposito: ya no tiran el area.
+// Una negrita que se pasa se desmarca sola, que no toca ni una palabra y no
+// puede crear una falta; y un area sin negritas se entrega y se avisa, porque
+// se lee bien. Tirar el informe entero por esto es lo que dejo a una clienta
+// pagando sin recibir nada. Lo de aqui abajo vigila ese trato.
 
 // ── 5. Un area con su negrita pasa ────────────────────────────────────
 {
@@ -120,39 +125,41 @@ console.log('\nREVISION DEL AREA\n');
   comprobar('un area con su negrita no da fallos', fallosArea.length === 0, fallosArea.join(' | '));
 }
 
-// ── 6. Un area sin ninguna negrita no pasa ────────────────────────────
+// ── 6. Un area sin ninguna negrita se entrega, pero avisa ─────────────
 {
-  const fallosArea = revisarBloques(analizarArea(area('Nadie te ha pedido nunca que pares, y por eso llevas anos sin hacerlo, ni siquiera cuando el cuerpo te lo pide a gritos.')));
-  comprobar('un area sin negritas se rechaza', fallosArea.some(f => f.includes('negrita')), fallosArea.join(' | '));
+  const bl = analizarArea(area('Nadie te ha pedido nunca que pares, y por eso llevas anos sin hacerlo, ni siquiera cuando el cuerpo te lo pide a gritos.'));
+  comprobar('un area sin negritas NO se rechaza', revisarBloques(bl).length === 0, revisarBloques(bl).join(' | '));
+  comprobar('...pero deja aviso', avisosBloques(bl).some(a => a.includes('plana')), avisosBloques(bl).join(' | '));
 }
 
-// ── 7. Un area marcada de mas tampoco pasa ────────────────────────────
-// Marcada media area, la negrita deja de destacar nada: lo que resalta
-// es lo que va solo.
+// ── 7. Marcada de mas: se recorta sola hasta el tope ──────────────────
 {
   const todoMarcado = area('**Nadie te ha pedido nunca que pares, y por eso llevas anos sin hacerlo, ni siquiera cuando el cuerpo te lo pide a gritos, ni cuando ya no te queda nada que dar y sigues dando.**')
     .replace('Eso no se arregla apretando mas, se arregla mirando de donde viene, y de donde viene es de mucho antes de que tuvieras nada que demostrarle a nadie.',
              '**Eso no se arregla apretando mas, se arregla mirando de donde viene, y de donde viene es de mucho antes de que tuvieras nada que demostrarle a nadie.**');
-  const fallosArea = revisarBloques(analizarArea(todoMarcado));
-  comprobar('un area marcada de mas se rechaza', fallosArea.some(f => f.includes('demasiado texto en negrita')), fallosArea.join(' | '));
+  const bl = analizarArea(todoMarcado);
+  const pal = t => t.replace(/\*\*/g, ' ').trim().split(/\s+/).filter(Boolean).length;
+  const cuerpo = bl.filter(b => b.tipo === 'texto').reduce((n, b) => n + pal(b.t), 0);
+  const marcadas = negritasDe(bl).reduce((n, t) => n + pal(t), 0);
+  comprobar('marcada de mas, se recorta al tope', cuerpo === 0 || marcadas <= cuerpo * 0.25, marcadas + ' de ' + cuerpo);
+  comprobar('y no se rechaza', revisarBloques(bl).length === 0, revisarBloques(bl).join(' | '));
 }
 
-// ── 8. Una negrita del tamano de un parrafo no pasa ───────────────────
+// ── 8. Una negrita del tamano de un parrafo se desmarca ───────────────
 {
   const larga = 'Y ahi esta el trabajo de verdad, ' + 'el que no se ve y no se cobra y nadie te agradece nunca, '.repeat(4) + 'que es el que llevas haciendo desde siempre.';
-  const fallosArea = revisarBloques(analizarArea(area(`Te pasa cada vez, **${larga}**`)));
-  comprobar('una negrita del tamano de un parrafo se rechaza', fallosArea.some(f => f.includes('se ha ido de largo')), fallosArea.join(' | '));
+  const bl = analizarArea(area(`Te pasa cada vez, **${larga}**`));
+  comprobar('una negrita de un parrafo se desmarca sola', !negritasDe(bl).some(t => t.length > 200));
+  comprobar('y no se rechaza', revisarBloques(bl).length === 0, revisarBloques(bl).join(' | '));
 }
 
-// ── 9. Un area larga con una sola negrita se queda plana ──────────────
-// El suelo crece con lo que mide el area: cuatro paginas con una frase
-// subrayada se leen igual de planas que sin ninguna.
+// ── 9. Un area larga con una sola negrita se entrega y avisa ──────────
 {
   const relleno = Array.from({ length: 24 }, (_, i) =>
     `Parrafo numero ${i} de relleno, con la longitud que tiene un parrafo de verdad dentro del area, para que el area entera se acerque a las novecientas palabras que tiene una de cliente y el suelo suba con ella.`).join('\n\n');
-  const larga = area('**Nadie te ha pedido nunca que pares**, y por eso llevas anos sin hacerlo.') + '\n\n' + relleno;
-  const fallosArea = revisarBloques(analizarArea(larga));
-  comprobar('un area larga con una sola negrita se rechaza', fallosArea.some(f => f.includes('se queda plana')), fallosArea.join(' | '));
+  const bl = analizarArea(area('**Nadie te ha pedido nunca que pares**, y por eso llevas anos sin hacerlo.') + '\n\n' + relleno);
+  comprobar('un area larga con una sola negrita NO se rechaza', revisarBloques(bl).length === 0, revisarBloques(bl).join(' | '));
+  comprobar('...pero deja aviso', avisosBloques(bl).some(a => a.includes('plana')), avisosBloques(bl).join(' | '));
 }
 
 console.log(fallos === 0 ? '\nTODO BIEN\n' : `\n${fallos} FALLO(S)\n`);
