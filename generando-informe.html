@@ -381,25 +381,21 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-function showError(msg, hideSupportBox) {
+// Solo para los fallos de ACCESO: llegar sin session_id, o no poder
+// verificar el pago. Los fallos de generacion tienen sus dos pantallas
+// propias, mas abajo.
+function showError(msg) {
   if (msg) document.getElementById('errorMsg').textContent = msg;
   const titulo = document.getElementById('errorTitulo');
   if (titulo) titulo.textContent = 'No hemos podido verificar tu acceso';
   const box = document.querySelector('#screenError .error-box');
-  if (box) box.style.display = hideSupportBox ? 'none' : '';
+  if (box) box.style.display = '';
   const btn = document.getElementById('errorBtn');
   if (btn) {
-    if (hideSupportBox) {
-      // Ha pagado y la generacion ha fallado: se reintenta con un clic, aqui
-      // mismo. Antes el boton recargaba la pagina, y como la pagina arrancaba
-      // sola al abrirse, cualquier recarga gastaba el intento sin pedirlo.
-      prepararBotonReintentar();
-    } else {
-      btn.style.display = 'inline-block';
-      btn.textContent = 'Realizar el pago';
-      btn.href = '/tu-diseno-de-origen#formulario';
-      btn.onclick = null;
-    }
+    btn.style.display = 'inline-block';
+    btn.textContent = 'Realizar el pago';
+    btn.href = '/tu-diseno-de-origen#formulario';
+    btn.onclick = null;
   }
   showScreen('screenError');
 }
@@ -419,24 +415,42 @@ function showAviso(titulo, msg) {
 }
 
 // Dos intentos por compra, igual que en el servidor (lib/reserva.js): el
-// primero automatico al pagar y uno mas si aquel fallo.
+// primero al pagar y uno mas si aquel fallo.
 const MAX_INTENTOS = 2;
 
-// El pedido que se esta generando, para que el boton de reintentar pueda
-// volver a lanzarlo sin recargar la pagina.
+// El pedido que se esta generando, para que el boton pueda lanzarlo sin
+// recargar la pagina.
 let _pedidoActual = null;
 
-// La primera generacion fallo y queda un intento. No se arranca nada: se
-// ensena el boton y se espera. Solo el clic gasta el intento que queda.
-function ofrecerReintento(pedido) {
-  _pedidoActual = pedido;
+// Intentos ya gastados de esta compra. Decide cual de las dos pantallas de
+// fallo se le ensena: la que ofrece el boton, o la que ya no lo ofrece.
+let _intentosUsados = 0;
+
+// PANTALLA 1 — la generacion ha fallado y queda un intento. No se genera
+// nada hasta que el cliente pulse: recargar la pagina no cuesta dinero.
+function pantallaReintento(pedido) {
+  if (pedido) _pedidoActual = pedido;
   const titulo = document.getElementById('errorTitulo');
-  if (titulo) titulo.textContent = 'No pudimos terminar tu informe';
+  if (titulo) titulo.textContent = 'No hemos podido terminar tu estudio';
   document.getElementById('errorMsg').textContent =
-    'Tu pago está confirmado. La generación anterior no llegó a terminar, así que puedes volver a intentarlo. Te queda un intento; si tampoco sale, escríbenos a hola@origennatal.com y te lo enviamos nosotros.';
+    'No te preocupes, tu pago está confirmado, dale al botón para que termine de generarse.';
   const box = document.querySelector('#screenError .error-box');
   if (box) box.style.display = 'none';
   prepararBotonReintentar();
+  showScreen('screenError');
+}
+
+// PANTALLA 2 — se acabaron los intentos. Sin boton: pulsarlo no generaria
+// nada (el servidor lo rechaza) y dejaria al cliente dandole en balde.
+function pantallaSinIntentos() {
+  const titulo = document.getElementById('errorTitulo');
+  if (titulo) titulo.textContent = 'Algo está fallando en este momento';
+  document.getElementById('errorMsg').textContent =
+    'No te preocupes, tu pago está confirmado, escríbenos a hola@origennatal.com con el email que usaste para pagar y te lo mandamos nosotros mismos en breve.';
+  const box = document.querySelector('#screenError .error-box');
+  if (box) box.style.display = 'none';
+  const btn = document.getElementById('errorBtn');
+  if (btn) { btn.style.display = 'none'; btn.onclick = null; }
   showScreen('screenError');
 }
 
@@ -556,15 +570,26 @@ function prepararBotonReintentar() {
   //    se le ensena el boton y no pasa nada hasta que lo pulse. Antes
   //    bastaba con que la pestana se recargara sola para gastar el intento
   //    que le quedaba, sin que nadie lo pidiera.
-  if (verificado.intentos >= MAX_INTENTOS) {
-    showAviso('Ya lo hemos intentado dos veces',
-      'Escríbenos a hola@origennatal.com con el email que usaste para pagar y te enviamos el informe nosotros.');
+  const intentos = Number(verificado.intentos);
+
+  // Si no se sabe cuantos intentos lleva la compra, NO se genera: se ensena
+  // el boton y decide el cliente. Generar a ciegas puede costar un intento
+  // (y dinero) que nadie ha pedido.
+  if (!Number.isFinite(intentos)) {
+    _intentosUsados = MAX_INTENTOS - 1;   // lo damos por gastado salvo uno
+    pantallaReintento(pedido);
     return;
   }
-  if (verificado.intentos > 0) {
-    ofrecerReintento(pedido);
+  if (intentos >= MAX_INTENTOS) {
+    pantallaSinIntentos();
     return;
   }
+  if (intentos > 0) {
+    _intentosUsados = intentos;
+    pantallaReintento(pedido);
+    return;
+  }
+  _intentosUsados = 0;
 
   await arrancarGeneracion(pedido);
 })();
@@ -572,28 +597,27 @@ function prepararBotonReintentar() {
 // Lanza la generacion y traduce los fallos a algo que el cliente entienda.
 async function arrancarGeneracion(pedido) {
   _pedidoActual = pedido;
+  _intentosUsados++;
   showScreen('screenGenerate');
 
   try {
     await iniciarConDatos(pedido);
   } catch(e) {
+    // El motivo exacto del fallo queda en la consola y en el aviso que le
+    // llega a la tienda. Al cliente, que ya ha pagado, solo le sirve saber
+    // una cosa: si puede reintentar o si nos escribe. Por eso todos los
+    // fallos acaban en la misma pareja de pantallas.
     console.error('Error generación:', e);
-    if (e.message === 'DATOS_INVALIDOS') {
-      showError('Lo sentimos, ha habido un error en alguno de tus datos, por favor vuelve a intentarlo.', true);
-    } else if (e.message === 'LUGAR_NACIMIENTO') {
-      showError('No hemos podido localizar tu lugar de nacimiento. Por favor vuelve a intentarlo en unos segundos.', true);
-    } else if (e.message === 'ZONA_HORARIA') {
-      showError('No hemos podido calcular la hora exacta de tu lugar de nacimiento. Por favor vuelve a intentarlo en unos segundos.', true);
-    } else if (e.message === 'YA_GENERADO') {
+    if (e.message === 'YA_GENERADO') {
       showAviso('Tu informe ya está listo',
         'Ya generamos tu informe y te lo enviamos por email con el PDF adjunto. Revisa tu bandeja de entrada y, si no lo ves, la carpeta de spam.');
     } else if (e.message === 'EN_CURSO') {
       showAviso('Tu informe se está generando',
         'Lo estamos preparando ahora mismo. En unos minutos te llegará por email con el PDF adjunto. No hace falta que hagas nada.');
+    } else if (_intentosUsados >= MAX_INTENTOS) {
+      pantallaSinIntentos();
     } else {
-      // Mismo trato que el resto de fallos recuperables: el cliente ya ha
-      // pagado, asi que se le ofrece recargar, nunca volver a pagar.
-      showError('No hemos podido terminar tu informe. Por favor vuelve a intentarlo; si vuelve a fallar, escríbenos a hola@origennatal.com y te lo enviamos nosotros.', true);
+      pantallaReintento(pedido);
     }
   }
 }
@@ -737,10 +761,11 @@ fetch('/api/generar-pdf', {
     }).catch(err => console.warn('Email automático falló:', err));
   }).catch(err => {
     // No dejar al cliente creyendo que ya lo tiene. El aviso a la tienda lo
-    // manda el propio generar-pdf; aqui solo se le ofrece reintentar, que
-    // ahora funciona porque la reserva se libero al fallar.
+    // manda el propio generar-pdf; aqui se le ensena la misma pantalla que
+    // en cualquier otro fallo de generacion, segun le quede intento o no.
     console.warn('generar-pdf falló:', err);
-    showError('No hemos podido terminar tu informe. Por favor vuelve a intentarlo; si vuelve a fallar, escríbenos a hola@origennatal.com y te lo enviamos nosotros.', true);
+    if (_intentosUsados >= MAX_INTENTOS) pantallaSinIntentos();
+    else pantallaReintento(_pedidoActual);
   });
 }
 
