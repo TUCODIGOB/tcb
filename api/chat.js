@@ -110,9 +110,10 @@ ESTILO DE ESCRITURA:
 - PREGÚNTALE DIRECTAMENTE. De vez en cuando párate y hazle una pregunta de verdad, de las que se quedan un rato dando vueltas. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
 - Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: "¿cuántas veces te has callado algo por no montar un lío?". Las MALAS valen para cualquiera y no dicen nada: "¿te suena?", "¿te identificas con esto?", "¿te ha pasado alguna vez?".
 - No hay número fijo de preguntas: van las que pida el texto y ninguna más. Si un área no pide ninguna, no la fuerces.
-- RESALTA EN NEGRITA LO QUE LO MERECE, marcándolo con dos asteriscos a cada lado: **así**. Se marca la frase que sigue en pie fuera de su párrafo, la que si la sacas de ahí y la escribes sola en una página sigue diciendo algo por sí misma. Esa es la única condición y no hay ninguna más.
-- NO HAY NÚMERO NI SITIO FIJO. En un área saldrán tres y en otra siete, las que dé el texto, nunca una cantidad repartida por página. Si un área no pide ninguna, no la fuerces.
-- Se marca una frase entera o media frase, nunca una palabra suelta y nunca un concepto. NO se marcan las explicaciones, ni los datos, ni los piropos, ni lo que ya se veía venir dos líneas antes. Y de un mismo contraste se marca solo una mitad ("por dentro estás calculando cuánto has enseñado"), nunca las dos, porque marcar las dos se lee a plantilla.
+- SUBRAYA COMO SUBRAYA UN LECTOR CON UN ROTULADOR EN LA MANO. Va leyendo y, cada vez que una frase le sacude, la subraya. No lleva la cuenta, no las reparte por la página y no se guarda ninguna para más adelante: subraya todas las que le sacuden, y si en un área hay ocho que lo merecen, subraya las ocho. Eso es lo que haces tú, poniendo dos asteriscos a cada lado: **así**.
+- QUÉ SACUDE: lo que le pone nombre a algo que lleva años sintiendo sin saber decirlo; lo que la retrata haciendo algo que creía que no se le notaba; lo que le escuece porque no lo puede negar; y también lo que la deja bien parada de una manera que no esperaba. La prueba es física: si al leerla en voz alta te paras un segundo, va subrayada.
+- QUÉ NO: lo que solo explica o informa, y lo que ya se veía venir dos líneas antes. Se subraya la frase entera o media frase, nunca una palabra suelta y nunca un concepto. Y de un contraste se subraya la mitad que duele, no las dos, que marcar las dos se lee a plantilla.
+- SI DUDAS, SUBRAYA. Un área con siete frases subrayadas se lee bien y se recuerda. Un área con una sola parece que no tenía nada que decir, y ese es el fallo que hay que evitar: quedarse corto hace más daño que pasarse.
 - NUNCA marques nada dentro de la escena: se lee del tirón, y una marca ahí saca al lector de golpe. NUNCA marques el párrafo de cierre, que ya se destaca solo al maquetarlo.
 - Los asteriscos van siempre en pareja, dos para abrir y dos para cerrar. Nunca sueltos, nunca impares y nunca para ninguna otra cosa.
 - CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra: se escribe "quiero plátanos, peras y fresas", no "quiero plátanos, peras, y fresas". Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.
@@ -426,7 +427,7 @@ ${cartaTexto}`;
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS DIEZ, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
 2. El nombre "${nombrePila}" aparece UNA vez en el area, dentro de una frase, nunca al empezar
-3. Hay al menos una frase en **negrita**, la que aguanta sola fuera de su parrafo
+3. Has subrayado en **negrita** todo lo que sacude, no una sola cosa. Relee el area: si solo hay una frase subrayada, te has quedado corta y faltan
 4. Hay al menos una pregunta directa, salida de lo que acabas de contarle
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
@@ -566,6 +567,8 @@ Reglas de colocacion, que es lo importante:
 - Si la frase que remata o la pregunta estan dentro de un parrafo mas largo, sacalas a su propio parrafo con sus palabras exactas, sin reescribirlas.
 - El ultimo parrafo es el cierre y va SIN marca. Detras de el no va nada.
 - Entre parrafo y parrafo, una linea en blanco.
+
+Si lo que falta son negritas: subraya poniendo dos asteriscos a cada lado (**asi**) las frases del texto corrido que sacuden, las que le ponen nombre a algo que llevaba años sintiendo sin saber decirlo, las que la retratan, las que le escuecen porque no las puede negar. Todas las que lo merezcan, no una cuenta. Se subraya la frase entera o media frase, nunca una palabra suelta. Dentro de la escena, del remate, de la pregunta y del cierre NO se subraya nada. Poner los asteriscos no cambia ni una palabra, que es la regla de arriba.
 
 Lo unico que escribes tu son los subtitulos, porque no estan en el texto. Todo lo demas ya esta escrito.
 
