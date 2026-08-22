@@ -630,7 +630,7 @@ export default async function handler(req, res) {
       escena:   { size: 11,   color: [70, 70, 70],   x: 27, ancho: 157, alto: 6.4, antes: 8,  despues: 9,  fuente: 'italic', barra: true },
       pregunta: { size: 13,   color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.4, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
       remate:   { size: 13.5, color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.8, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
-      cierre:   { size: 14,   color: [207, 177, 128], x: 18, ancho: 150, alto: 8,  antes: 20, despues: 8,  fuente: 'bold',  centrado: true, juntar: true },
+      cierre:   { size: 16.5, color: [207, 177, 128], x: 18, ancho: 152, alto: 9.5, antes: 26, despues: 8, fuente: 'bold',  centrado: true, juntar: true },
     };
 
     // Estado de la maquetacion de las areas: en que altura vamos y por que
@@ -690,12 +690,14 @@ export default async function handler(req, res) {
       }
 
       // El cierre lleva un filete corto encima, centrado: separa el golpe del
-      // texto que venia antes y avisa de que el area se acaba aqui. Va a media
-      // altura del hueco, a 12 mm de la frase y a 12 del texto de arriba: mas
-      // cerca de uno de los dos y se lee como si fuera parte de ese.
+      // texto que venia antes y avisa de que el area se acaba aqui. El hueco
+      // que deja delante son 26 mm y el filete va a 18 de la frase dorada, no
+      // a la mitad: las mayusculas de la frase suben desde la linea, asi que
+      // midiendo por la mitad el hueco de abajo se ve mas pequeno que el de
+      // arriba y el filete parece pegado al dorado.
       if (bloque.tipo === 'cierre') {
         doc.setDrawColor(207, 177, 128); doc.setLineWidth(0.4);
-        doc.line(105 - 14, maq.y - 12, 105 + 14, maq.y - 12);
+        doc.line(105 - 16, maq.y - 18, 105 + 16, maq.y - 18);
       }
 
       doc.setFontSize(e.size);
