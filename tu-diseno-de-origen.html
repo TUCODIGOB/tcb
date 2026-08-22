@@ -1940,7 +1940,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
           </div>
 
           <div class="field">
-            <label for="telefono">Teléfono</label>
+            <label for="telefono">Teléfono *</label>
             <div class="phone-group">
               <div class="phone-prefix-wrap">
                 <span class="phone-flag" id="phoneFlag" aria-hidden="true"><img id="phoneFlagImg" src="images/flags/es.svg" alt=""></span>
@@ -1970,7 +1970,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
                 <option value="+39">🇮🇹 +39</option>
               </select>
               </div>
-              <input type="tel" id="telefono" name="telefono" placeholder="Número de teléfono" autocomplete="tel">
+              <input type="tel" id="telefono" name="telefono" placeholder="Número de teléfono" autocomplete="tel" required>
             </div>
             <div class="field-error" id="err-telefono">Introduce un número de teléfono válido para el país seleccionado.</div>
           </div>
@@ -2507,7 +2507,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       if (!datos.pais) { showError('pais'); valido = false; }
       if (!validarEmail(datos.email)) { showError('email'); valido = false; }
       if (datos.email !== datos.email2 || !datos.email2) { showError('email2'); valido = false; }
-      if (datos.telefono && !validarTelefono(datos.telefono, datos.prefijo)) { showError('telefono'); valido = false; }
+      if (!validarTelefono(datos.telefono, datos.prefijo)) { showError('telefono'); valido = false; }
       if (!datos.politica) {
         document.getElementById('politicaField').classList.add('error');
         valido = false;
@@ -2727,7 +2727,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
 
     // Formulario en 3 pasos
     const PASO_CAMPOS_REQUERIDOS = {
-      1: ['nombre', 'email', 'email2'],
+      1: ['nombre', 'email', 'email2', 'telefono'],
       2: ['sexo', 'fecha', 'hora'],
     };
 
@@ -2761,7 +2761,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
         if (pasoActual === '1') {
           const telefono = document.getElementById('telefono').value.trim();
           const prefijo = document.getElementById('prefijo').value;
-          if (telefono && !validarTelefono(telefono, prefijo)) { showError('telefono'); ok = false; }
+          if (!validarTelefono(telefono, prefijo)) { showError('telefono'); ok = false; }
           else clearError('telefono');
         }
         if (!ok) return;

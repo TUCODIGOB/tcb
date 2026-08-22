@@ -8,6 +8,17 @@ function validarEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+// Brevo rechaza el contacto ENTERO si el telefono no le vale, y entonces la
+// compra no se guarda: ni la lista de compradores, ni los datos de nacimiento,
+// ni nada. Cuando el campo era opcional y el cliente lo dejaba vacio se le
+// mandaba el prefijo suelto ("+34"), y eso es justo lo que tumbaba el registro.
+// Ahora el telefono vuelve a ser obligatorio, pero la comprobacion se queda:
+// un dato de contacto nunca debe poder cargarse una venta.
+function telefonoValido(telefono) {
+  const limpio = String(telefono || '').replace(/[\s\-()]/g, '');
+  return /^\+\d{7,15}$/.test(limpio);
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
@@ -24,7 +35,7 @@ export default async function handler(req, res) {
     if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
 
     const attributes = { NOMBRE: nombre || '' };
-    if (telefono) attributes.SMS = telefono;
+    if (telefonoValido(telefono)) attributes.SMS = telefono;
     if (sexo) attributes.SEXO = sexo;
     if (fecha) attributes.FECHA_NAC = fecha;
     if (hora) attributes.HORA_NAC = hora;
