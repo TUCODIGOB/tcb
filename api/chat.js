@@ -299,14 +299,15 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos
 - PROHIBIDO un área que se entienda pero no se sienta. Sin el momento que le toca por dentro, no vale
 - PROHIBIDO rematar solo la herida. Van los dos remates, el de la herida y el de la fuerza
-- PROHIBIDO un cierre que resuma lo ya contado o que insinúe algo sin llegar a decirlo`;
+- PROHIBIDO un cierre que resuma lo ya contado o que insinúe algo sin llegar a decirlo
+- PROHIBIDA cualquier palabra técnica en el texto del cliente: nombres de planetas, casas, signos, aspectos, "carta natal", "tu signo". Le prometemos un estudio que se entiende sin saber nada de astrología, y una sola de esas palabras rompe esa promesa. La carta guía lo que escribes por dentro; fuera se traduce a su vida`;
 
   const AREAS = [
     {
       id: 1,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí misma.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el planeta que rige su signo, y lo que caiga en la casa 1, con los aspectos del Sol. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el planeta que rige su signo, y lo que caiga en la casa 1, con los aspectos del Sol. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
 
 Después de esta viene el ÁREA 2, lo que repite sin darse cuenta: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -316,7 +317,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 pa
       id: 2,
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué repite una y otra vez sin darse cuenta.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: los Nodos (el Sur, lo que repite en automatico, y el Norte, hacia donde no va), lo que caiga en la casa 6, y los aspectos tensos que se repiten entre varios planetas a la vez. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: los Nodos (el Sur, lo que repite en automatico, y el Norte, hacia donde no va), lo que caiga en la casa 6, y los aspectos tensos que se repiten entre varios planetas a la vez. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
 
 Después de esta viene el ÁREA 3, el miedo que gobierna su vida: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -326,7 +327,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que gobierna su vida sin que lo nombre.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Saturno, Plutón y Neptuno, y lo que caiga en la casa 12, con los aspectos duros de esos tres a los planetas personales. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Saturno, Plutón y Neptuno, y lo que caiga en la casa 12, con los aspectos duros de esos tres a los planetas personales. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
 
 Después de esta viene el ÁREA 4, lo que le sigue doliendo: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -336,7 +337,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué le sigue doliendo hoy y cómo le afecta.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Quirón y la Luna, lo que caiga en la casa 4, y los aspectos entre la Luna y Quirón, Saturno o Plutón. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Quirón y la Luna, lo que caiga en la casa 4, y los aspectos entre la Luna y Quirón, Saturno o Plutón. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
 
 Después de esta viene el ÁREA 5, cómo vive el amor: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -346,7 +347,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 5,
       prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo vive las relaciones de pareja.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Venus y Marte, y lo que caiga en las casas 5 y 7, con los aspectos entre Venus y Marte. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Venus y Marte, y lo que caiga en las casas 5 y 7, con los aspectos entre Venus y Marte. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
 
 Después de esta viene el ÁREA 6, cómo se vincula fuera de la pareja: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -356,7 +357,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 6,
       prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: cómo se vincula con los demás fuera de la pareja.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Mercurio y Urano, y lo que caiga en las casas 3 y 11, con los aspectos de Mercurio. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Mercurio y Urano, y lo que caiga en las casas 3 y 11, con los aspectos de Mercurio. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
 
 Después de esta viene el ÁREA 7, su relación con el dinero: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -366,7 +367,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 7,
       prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Júpiter, y lo que caiga en las casas 2 y 8, con los aspectos de Júpiter. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Júpiter, y lo que caiga en las casas 2 y 8, con los aspectos de Júpiter. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
 
 Esta es la última área del estudio: el cierre no apunta a ninguna otra, cierra el informe entero.
 
@@ -397,14 +398,15 @@ ${cartaTexto}`;
       ? 'un HOMBRE. Todo en masculino: solo, cansado, el mismo. Nunca en femenino.'
       : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos, dale la vuelta a la frase cuando haga falta.';
 
-  const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS SIETE, QUE SON LAS QUE MAS SE ESCAPAN:
+  const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS OCHO, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
 2. El nombre "${nombrePila}" aparece UNA vez en el area, dentro de una frase, nunca al empezar
 3. Hay al menos una frase en **negrita**, la que aguanta sola fuera de su parrafo
 4. Hay al menos una pregunta directa, salida de lo que acabas de contarle
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
-7. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos`;
+7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
+8. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos`;
 
   // Las 7 areas se piden a la vez, asi que un fallo puntual en una sola tumbaba
   // el informe entero y gastaba un intento del cliente. Ahora cada area se
