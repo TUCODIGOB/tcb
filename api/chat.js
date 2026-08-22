@@ -281,13 +281,15 @@ Cada área lleva escrito cuál viene después. El cierre sigue siendo el golpe q
 CÓMO SE ENTREGA EL ÁREA MARCADA (OBLIGATORIO, ES LO QUE LA MAQUETA):
 El área no se imprime como un bloque de texto seguido: se maqueta. Novecientas palabras del mismo tamaño y del mismo color son cuatro páginas de muro gris, y el ojo se cansa antes de llegar a lo que la persona ha pagado. Para que respire, marcas cuatro cosas, cada una al principio de su propio párrafo y escrita EXACTAMENTE así, con los corchetes:
 
-[SUBTITULO] Lo que haces cuando nadie mira
-[ESCENA] Son las once de la noche y estás repasando la conversación de esta tarde, ...
-[REMATE] Llevas media vida pidiendo permiso para ocupar tu sitio.
-[PREGUNTA] ¿Cuántas veces te has callado algo por no montar un lío?
+[SUBTITULO] aquí el ladillo, tres o cinco palabras
+[ESCENA] aquí la escena entera, uno o dos párrafos
+[REMATE] aquí la frase que remata
+[PREGUNTA] ¿aquí la pregunta directa?
+
+Eso de arriba es SOLO el formato: lo que va detrás de cada marca lo escribes tú, sacado de esta persona y de esta área. No copies esas palabras.
 
 Qué lleva cada marca:
-- [SUBTITULO]: uno cada 250 o 300 palabras. En un área de 850 a 900 palabras salen TRES, y en el ÁREA 1, que es más larga, salen CUATRO. Nunca menos. Es un ladillo corto, de tres a cinco palabras, sin punto final, que sale de lo que se cuenta justo debajo y hace que dé ganas de seguir leyendo. NO es el nombre de un bloque ni una etiqueta ("HOY", "EL ORIGEN", "LAS CREENCIAS", "LO QUE HAY QUE SOLTAR") y NO anuncia lo que viene ("lo que voy a contarte ahora"). Es una frase suya en pequeño: "Lo que haces cuando nadie mira", "El precio de llegar la primera". El área NUNCA empieza con un subtítulo: primero se entra en materia y el primero llega más abajo. Y no cortan el hilo: el párrafo que va debajo sigue enganchado con lo de antes igual que si el subtítulo no estuviera.
+- [SUBTITULO]: uno cada 250 o 300 palabras. En un área de 850 a 900 palabras salen TRES, y en el ÁREA 1, que es más larga, salen CUATRO. Nunca menos. Es un ladillo corto, de tres a cinco palabras, sin punto final, que sale de lo que se cuenta justo debajo y hace que dé ganas de seguir leyendo. NO es el nombre de un bloque ni una etiqueta ("HOY", "EL ORIGEN", "LAS CREENCIAS", "LO QUE HAY QUE SOLTAR") y NO anuncia lo que viene ("lo que voy a contarte ahora"). Sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. Si ese mismo ladillo pudiera ir en el área de otro cliente, o en otra de las siete áreas de esta, no vale y lo cambias. No existe una lista de ladillos buenos: no repitas nunca uno que ya hayas visto escrito en estas instrucciones. El área NUNCA empieza con un subtítulo: primero se entra en materia y el primero llega más abajo. Y no cortan el hilo: el párrafo que va debajo sigue enganchado con lo de antes igual que si el subtítulo no estuviera.
 - [ESCENA]: la escena real obligatoria. Uno o dos párrafos, cada uno con su marca delante. No lleva negritas dentro.
 - [REMATE]: los dos remates del área, el de la herida y el de la fuerza. Cada uno va SOLO en su párrafo, es una frase, no lleva negritas y no comparte párrafo con nada más. Son dos, ni uno ni tres.
 - [PREGUNTA]: la pregunta directa. Va SOLA en su párrafo, es una sola frase y no lleva nada delante ni detrás dentro de ese párrafo. Si el área pide dos preguntas, las dos se marcan igual.

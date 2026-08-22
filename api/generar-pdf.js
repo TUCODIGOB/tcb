@@ -618,19 +618,18 @@ export default async function handler(req, res) {
     // mismo color, el cliente ve cuatro paginas de muro gris y el ojo se cansa
     // antes de llegar a lo que ha pagado. Cada bloque se pinta distinto para
     // que la pagina respire y para que lo importante se vea desde lejos.
-    // Los colores son los de la marca: dorado bd9048, dorado claro cfb180,
-    // verde oscuro 0e3f4b y verde claro 729790. El verde claro solo se usa en
-    // las preguntas, y en cuerpo grande y negrita: sobre el crema del fondo da
-    // un contraste de 3,1 a 1, que vale para texto grande y no para texto
-    // corrido. El verde oscuro da 11 a 1, se lee perfecto, pero al lado del
-    // negro del texto se distingue sobre todo por el tono, asi que se reserva
-    // para los remates, que ademas van en cuerpo grande.
+    // Los colores son los de la marca: dorado bd9048, dorado claro cfb180 y
+    // verde oscuro 0e3f4b. Las preguntas y los remates son la misma familia
+    // (frases sueltas que se destacan) y por eso van del mismo color y las dos
+    // centradas: dos verdes distintos en la misma pagina se leen como un
+    // descuido. El verde oscuro da 11 a 1 de contraste sobre el crema, asi que
+    // se lee perfecto tambien impreso.
     var ESTILOS = {
       texto:    { size: 12,   color: [40, 40, 40],   x: 18, ancho: 175, alto: 7,   antes: 0,  despues: 4,  fuente: 'normal' },
       sub:      { size: 10,   color: [189, 144, 72], x: 18, ancho: 175, alto: 6,   antes: 11, despues: 6,  fuente: 'bold',   mayus: true, filete: true, juntar: true },
       escena:   { size: 11,   color: [70, 70, 70],   x: 27, ancho: 157, alto: 6.4, antes: 8,  despues: 9,  fuente: 'italic', barra: true },
-      pregunta: { size: 13,   color: [114, 151, 144], x: 30, ancho: 150, alto: 7.4, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
-      remate:   { size: 13.5, color: [14, 63, 75],   x: 22, ancho: 166, alto: 7.8, antes: 10, despues: 10, fuente: 'bold',  juntar: true },
+      pregunta: { size: 13,   color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.4, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
+      remate:   { size: 13.5, color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.8, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
       cierre:   { size: 14,   color: [207, 177, 128], x: 18, ancho: 150, alto: 8,  antes: 10, despues: 8,  fuente: 'bold',  centrado: true, juntar: true },
     };
 
@@ -693,7 +692,7 @@ export default async function handler(req, res) {
       // El cierre lleva un filete corto encima, centrado: separa el golpe del
       // texto que venia antes y avisa de que el area se acaba aqui.
       if (bloque.tipo === 'cierre') {
-        doc.setDrawColor(189, 144, 72); doc.setLineWidth(0.4);
+        doc.setDrawColor(207, 177, 128); doc.setLineWidth(0.4);
         doc.line(105 - 14, maq.y - 7, 105 + 14, maq.y - 7);
       }
 
@@ -709,9 +708,11 @@ export default async function handler(req, res) {
         var linea = lineas[li];
         var cx = e.centrado ? (105 - anchoLinea(linea, e.size, e.fuente) / 2) : e.x;
         // La escena lleva un filete dorado a la izquierda, dibujado linea a
-        // linea para que siga a la escena si cambia de pagina.
+        // linea para que siga a la escena si cambia de pagina. Va en el dorado
+        // claro de la marca, el mismo del cierre: en el dorado fuerte, una
+        // barra maciza de casi un milimetro tira a mostaza.
         if (e.barra) {
-          doc.setDrawColor(189, 144, 72); doc.setLineWidth(0.9);
+          doc.setDrawColor(207, 177, 128); doc.setLineWidth(0.8);
           doc.line(e.x - 7, maq.y - 4.6, e.x - 7, maq.y + 1.8);
         }
         for (var wi = 0; wi < linea.length; wi++) {
