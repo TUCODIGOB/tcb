@@ -91,6 +91,10 @@ export default async function handler(req, res) {
       email,
       metadata: session.metadata || {},
       estadoInforme: st.completado ? 'completado' : (st.ocupada ? 'en_curso' : 'libre'),
+      // Cuantas generaciones se han llegado a lanzar. La pagina lo necesita
+      // para saber si arranca sola (primera vez) o si tiene que esperar a que
+      // el cliente pulse el boton (ya fallo una).
+      intentos: st.intentos,
     });
 
   } catch (error) {

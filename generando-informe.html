@@ -389,11 +389,17 @@ function showError(msg, hideSupportBox) {
   if (box) box.style.display = hideSupportBox ? 'none' : '';
   const btn = document.getElementById('errorBtn');
   if (btn) {
-    btn.style.display = 'inline-block';
-    btn.textContent = hideSupportBox ? 'Volver a intentarlo' : 'Realizar el pago';
-    // Reintentar es recargar esta misma pagina con su session_id. Antes este
-    // boton llevaba al formulario de pago, que no reintenta nada.
-    btn.href = hideSupportBox ? window.location.href : '/tu-diseno-de-origen#formulario';
+    if (hideSupportBox) {
+      // Ha pagado y la generacion ha fallado: se reintenta con un clic, aqui
+      // mismo. Antes el boton recargaba la pagina, y como la pagina arrancaba
+      // sola al abrirse, cualquier recarga gastaba el intento sin pedirlo.
+      prepararBotonReintentar();
+    } else {
+      btn.style.display = 'inline-block';
+      btn.textContent = 'Realizar el pago';
+      btn.href = '/tu-diseno-de-origen#formulario';
+      btn.onclick = null;
+    }
   }
   showScreen('screenError');
 }
@@ -410,6 +416,43 @@ function showAviso(titulo, msg) {
   const btn = document.getElementById('errorBtn');
   if (btn) btn.style.display = 'none';
   showScreen('screenError');
+}
+
+// Dos intentos por compra, igual que en el servidor (lib/reserva.js): el
+// primero automatico al pagar y uno mas si aquel fallo.
+const MAX_INTENTOS = 2;
+
+// El pedido que se esta generando, para que el boton de reintentar pueda
+// volver a lanzarlo sin recargar la pagina.
+let _pedidoActual = null;
+
+// La primera generacion fallo y queda un intento. No se arranca nada: se
+// ensena el boton y se espera. Solo el clic gasta el intento que queda.
+function ofrecerReintento(pedido) {
+  _pedidoActual = pedido;
+  const titulo = document.getElementById('errorTitulo');
+  if (titulo) titulo.textContent = 'No pudimos terminar tu informe';
+  document.getElementById('errorMsg').textContent =
+    'Tu pago está confirmado. La generación anterior no llegó a terminar, así que puedes volver a intentarlo. Te queda un intento; si tampoco sale, escríbenos a hola@origennatal.com y te lo enviamos nosotros.';
+  const box = document.querySelector('#screenError .error-box');
+  if (box) box.style.display = 'none';
+  prepararBotonReintentar();
+  showScreen('screenError');
+}
+
+// Deja el boton listo para reintentar con un clic, sin recargar: recargar
+// volveria a mostrar este mismo boton, que es justo lo que se quiere.
+function prepararBotonReintentar() {
+  const btn = document.getElementById('errorBtn');
+  if (!btn) return;
+  btn.style.display = 'inline-block';
+  btn.textContent = 'Generar mi informe';
+  btn.href = '#';
+  btn.onclick = (e) => {
+    e.preventDefault();
+    btn.onclick = null;               // un solo clic, no dos generaciones
+    if (_pedidoActual) arrancarGeneracion(_pedidoActual);
+  };
 }
 
 // Arranque al cargar la página
@@ -505,10 +548,32 @@ function showAviso(titulo, msg) {
     return;
   }
 
-  // 4. Pasar a pantalla de generación
+  // 4. Arrancar, o esperar a que el cliente lo pida.
+  //
+  //    Generar cuesta dinero, asi que el reintento tiene que ser una
+  //    decision, no un efecto secundario de recargar la pagina. Si ya se
+  //    gasto un intento (la primera generacion fallo), aqui no se arranca:
+  //    se le ensena el boton y no pasa nada hasta que lo pulse. Antes
+  //    bastaba con que la pestana se recargara sola para gastar el intento
+  //    que le quedaba, sin que nadie lo pidiera.
+  if (verificado.intentos >= MAX_INTENTOS) {
+    showAviso('Ya lo hemos intentado dos veces',
+      'Escríbenos a hola@origennatal.com con el email que usaste para pagar y te enviamos el informe nosotros.');
+    return;
+  }
+  if (verificado.intentos > 0) {
+    ofrecerReintento(pedido);
+    return;
+  }
+
+  await arrancarGeneracion(pedido);
+})();
+
+// Lanza la generacion y traduce los fallos a algo que el cliente entienda.
+async function arrancarGeneracion(pedido) {
+  _pedidoActual = pedido;
   showScreen('screenGenerate');
 
-  // 5. Ejecutar todo el cálculo astronómico y generación (código original)
   try {
     await iniciarConDatos(pedido);
   } catch(e) {
@@ -531,7 +596,7 @@ function showAviso(titulo, msg) {
       showError('No hemos podido terminar tu informe. Por favor vuelve a intentarlo; si vuelve a fallar, escríbenos a hola@origennatal.com y te lo enviamos nosotros.', true);
     }
   }
-})();
+}
 
 // Función que lanza todo el proceso usando los datos del pedido
 async function iniciarConDatos(pedido) {
