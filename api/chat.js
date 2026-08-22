@@ -330,9 +330,9 @@ PROHIBICIONES ABSOLUTAS:
   const AREAS = [
     {
       id: 1,
-      // El area 1 va entre 1.100 y 1.300 palabras, las demas entre 850 y 900:
-      // con un subtitulo cada 250 o 300 palabras, aqui salen cuatro.
-      minSub: 4,
+      // El area 1 va entre 1.100 y 1.300 palabras, las demas entre 850 y 900,
+      // asi que aqui se exige un subtitulo mas que en el resto.
+      minSub: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí misma.
 
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el planeta que rige su signo, y lo que caiga en la casa 1, con los aspectos del Sol. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
@@ -449,7 +449,7 @@ ${cartaTexto}`;
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
 7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
 8. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos
-9. Estan puestas las marcas, cada una al principio de su parrafo: los [SUBTITULO], el [ESCENA], los DOS [REMATE] y el [PREGUNTA]. El cierre es el ultimo parrafo, sin marca, y detras no va nada`;
+9. CUENTA LAS MARCAS antes de entregar, que es lo que mas se olvida. Tiene que haber TRES lineas que empiecen por [SUBTITULO] (CUATRO en el area 1), una que empiece por [ESCENA], DOS que empiecen por [REMATE] y una que empiece por [PREGUNTA]. Si te sale menos de esa cuenta, no entregues: vuelve al texto y ponlas donde faltan. El cierre es el ultimo parrafo, sin marca, y detras no va nada`;
 
   // Las 7 areas se piden a la vez, asi que un fallo puntual en una sola tumbaba
   // el informe entero y gastaba un intento del cliente. Ahora cada area se
@@ -539,7 +539,7 @@ ${cartaTexto}`;
     // saldria como el muro de texto de antes, que es justo lo que se esta
     // arreglando, asi que el area no se da por buena: se vuelve a pedir. Es el
     // mismo trato que se le da a un area que llega cortada.
-    const faltan = revisarBloques(analizarArea(texto), { minSub: area.minSub || 3 });
+    const faltan = revisarBloques(analizarArea(texto), { minSub: area.minSub || 2 });
     if (faltan.length > 0) {
       const err = new Error(`Área ${area.id} llegó mal marcada: ${faltan.join('; ')}`);
       err.temporal = true;
