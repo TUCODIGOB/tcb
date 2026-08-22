@@ -21,7 +21,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { analizarArea, revisarBloques } from '../lib/bloques.js';
-import { vecesQueSaleElNombre } from '../lib/estilo.js';
+import { vecesQueLaLlamaPorSuNombre } from '../lib/estilo.js';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.join(AQUI, '..');
@@ -89,7 +89,7 @@ const AREA_DE_MENTIRA = [
   // El nombre se revisa aparte de las marcas en api/chat.js, asi que aqui
   // tambien: la primera vez que se exigio, esta prueba se cayo sin que el
   // aviso dijera por que. "Ana" es el nombre de pila que usa la prueba.
-  if (vecesQueSaleElNombre(AREA_DE_MENTIRA, 'Ana') < 1) {
+  if (vecesQueLaLlamaPorSuNombre(AREA_DE_MENTIRA, 'Ana') < 1) {
     faltan.push('el area de mentira no llama "Ana" a la clienta ni una vez, y api/chat.js lo exige');
   }
   if (faltan.length > 0) {

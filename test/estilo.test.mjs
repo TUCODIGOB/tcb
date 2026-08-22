@@ -14,7 +14,7 @@
 // Sin red y sin dependencias.
 // ═════════════════════════════════════════════════════════════════
 
-import { quitarComaAntesDeY, vecesQueSaleElNombre } from '../lib/estilo.js';
+import { quitarComaAntesDeY, vecesQueLaLlamaPorSuNombre } from '../lib/estilo.js';
 
 let fallos = 0;
 function comprobar(titulo, ok, detalle) {
@@ -70,14 +70,32 @@ comprobar('nulo no revienta', quitarComaAntesDeY(null) === '');
     quitarComaAntesDeY(conNegrita));
 }
 
-console.log('\nLA CUENTA DEL NOMBRE\n');
-comprobar('lo encuentra dentro de una frase', vecesQueSaleElNombre('Y ahi esta, Raquel, lo que no ves.', 'Raquel') === 1);
-comprobar('no le importan las mayusculas', vecesQueSaleElNombre('y ahi esta, raquel, lo que no ves', 'Raquel') === 1);
-comprobar('no le importan las tildes', vecesQueSaleElNombre('Ya lo sabes, Maria.', 'María') === 1);
-comprobar('no cuenta dentro de otra palabra', vecesQueSaleElNombre('Manana por la manana.', 'Ana') === 0);
-comprobar('cuenta las veces que sale', vecesQueSaleElNombre('Ana, mira. Y otra vez Ana.', 'Ana') === 2);
-comprobar('si no sale, cero', vecesQueSaleElNombre('Aqui no hay ningun nombre.', 'Raquel') === 0);
-comprobar('nombre vacio no revienta', vecesQueSaleElNombre('lo que sea', '') === 0);
+console.log('\nQUE LA LLAME POR SU NOMBRE\n');
+// No vale con que la palabra este en el texto. Lo que cuenta es el vocativo,
+// que es la forma de llamar a alguien y va siempre entre comas. Sin esto, una
+// clienta llamada Sol se quedaba sin que nadie la nombrara y sin que saltara
+// nada, porque cualquier "sale el sol" del texto ya colaba.
+const llama = vecesQueLaLlamaPorSuNombre;
+comprobar('entre comas, en medio de la frase', llama('Y ahi esta, Raquel, lo que no ves.', 'Raquel') === 1);
+comprobar('al final de la frase',              llama('...eso es lo que no ves, Raquel.', 'Raquel') === 1);
+comprobar('abriendo la frase',                 llama('Raquel, mira una cosa.', 'Raquel') === 1);
+comprobar('dentro de una pregunta',            llama('¿Cuantas veces, Raquel, te has callado?', 'Raquel') === 1);
+comprobar('no le importan las mayusculas',     llama('y ahi esta, raquel, lo que no ves', 'Raquel') === 1);
+comprobar('no le importan las tildes',         llama('Ya lo sabes, Maria, desde hace anos.', 'María') === 1);
+comprobar('la eñe tampoco',                    llama('Ya lo sabes, Begona, desde hace anos.', 'Begoña') === 1);
+comprobar('cuenta las veces que la llama',     llama('Ana, mira. Y otra cosa, Ana.', 'Ana') === 2);
+
+console.log('\nLOS NOMBRES QUE SON PALABRA COMUN\n');
+// Estos son los que rompian la comprobacion anterior.
+comprobar('"sale el sol" no cuenta',       llama('Es como cuando sale el sol cada dia.', 'Sol') === 0);
+comprobar('pero a Sol si la llama',        llama('Y ahi esta, Sol, lo que no ves.', 'Sol') === 1);
+comprobar('"una rosa" no cuenta',          llama('Te regalaron una rosa y la tiraste.', 'Rosa') === 0);
+comprobar('"al alba" no cuenta',           llama('Te levantas al alba sin que nadie te lo pida.', 'Alba') === 0);
+comprobar('"la luz" no cuenta',            llama('Apagas la luz y sigues pensando.', 'Luz') === 0);
+comprobar('nombrarla en tercera no cuenta', llama('Lo que le pasa a Raquel es otra cosa.', 'Raquel') === 0);
+comprobar('dentro de otra palabra, no',    llama('Manana por la manana.', 'Ana') === 0);
+comprobar('si no sale, cero',              llama('Aqui no hay ningun nombre.', 'Raquel') === 0);
+comprobar('nombre vacio no revienta',      llama('lo que sea', '') === 0);
 
 console.log(fallos === 0 ? '\nTODO BIEN\n' : `\n${fallos} FALLO(S)\n`);
 process.exit(fallos === 0 ? 0 : 1);
