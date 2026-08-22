@@ -496,7 +496,12 @@ ${cartaTexto}`;
         // mitad de margen y ninguna llega a rozarlo. Bajarlo mas seria
         // peligroso: desde ahora un area que se corte NO se entrega, asi que un
         // tope escaso no cortaria el texto, cortaria la venta.
-        max_tokens: 5000,
+        // El area viaja ahora como JSON, que ocupa un 4% mas que el texto
+        // suelto, y un corte ya no deja el area a medias: deja el JSON roto y
+        // hay que pedirla entera otra vez. El AREA 1 en su tope son unos 3.600
+        // tokens, asi que con 6.000 queda margen de sobra. Solo se paga lo que
+        // el modelo escribe, el tope es una red y no un objetivo.
+        max_tokens: 6000,
         system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
