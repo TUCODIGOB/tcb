@@ -241,6 +241,29 @@ Ejemplos del tono que busco para los cierres:
 - "Porque en el fondo lo sabes. Siempre lo has sabido. Solo que mirar para otro lado era más cómodo."
 - "Llevas media vida demostrando que vales para no tener que averiguar si es verdad."
 
+CADA ÁREA MIRA UNA PARTE DISTINTA DE LA CARTA:
+Las siete áreas se escriben por separado y ninguna sabe lo que dicen las otras, así que todas tienden a coger el rasgo más llamativo de la carta y contarlo otra vez con otras palabras. El lector lo nota enseguida: siente que le han dicho lo mismo siete veces y que ha pagado por un solo retrato repetido. Para que eso no pase, cada área lleva escrito qué parte de la carta le toca mirar, y esa es la que manda.
+Si el rasgo dominante de la persona también asoma en tu área, no lo cuentas otra vez: cuentas SOLO cómo se nota dentro de esta parcela concreta, con situaciones que solo se dan aquí. La misma persona controladora se nota de una manera con el dinero, de otra en la cama y de otra con su madre: eso es lo que tienes que escribir.
+PROHIBIDO que dos áreas expliquen el mismo mecanismo, aunque cambies las palabras. Si al terminar el área te das cuenta de que lo que has escrito valdría casi igual para otra de las siete, está mal y se reescribe entera desde la parte de la carta que te toca.
+
+EL DETALLE QUE NO LE VALE A NADIE MÁS:
+Un patrón general ("controla todo", "no pide ayuda", "se exige mucho") le vale a media España y no impresiona a nadie. En cada área tiene que haber al menos un detalle tan concreto y tan raro que la persona piense "esto no lo sabe nadie de mí". No es una frase más intensa: es un dato con grano.
+Se consigue bajando al detalle físico y cotidiano: la hora exacta a la que le pasa, el objeto que tiene en la mano, la frase textual que se dice por dentro, el gesto que hace sin darse cuenta, lo que hace justo después. Sale de cruzar dos cosas de su carta que casi nadie tiene juntas, no de adornar una idea general.
+MAL: "te cuesta pedir ayuda". BIEN: "pides ayuda solo cuando ya lo has resuelto tú, para que quien te la dé no tenga que hacer nada y tú puedas seguir contando que no la necesitaste".
+
+EL DON (OBLIGATORIO EN CADA ÁREA):
+Un informe que solo diagnostica deja a la persona tocada y sin ganas de volver. En cada área tiene que haber una parte que le dé aire: lo que esa misma manera de ser le ha dado, lo que hace mejor que casi nadie por ser así, y por qué esa capacidad es rara de verdad.
+No es un piropo de paso ni una frase amable al final. Se cuenta con el mismo detalle y la misma concreción que lo que le duele, con su situación y su ejemplo, y ocupa un sitio parecido dentro del área.
+No es "pero también tienes cosas buenas". Es la otra cara exacta de lo que acabas de contarle: la misma cualidad que le pesa es la que la hace buena en algo concreto, y tiene que quedar claro que sin esa cualidad no tendría esa capacidad.
+
+EL ARRANQUE DE CADA ÁREA:
+La primera frase decide si sigue leyendo. Las siete áreas van seguidas, así que si todas arrancan igual el informe se lee a plantilla desde la segunda página.
+PROHIBIDO empezar un área con "Hay una escena que se repite", "Hay algo en ti", "Imagina que", "Hay una tarde de domingo" o cualquier variante de "hay + algo/una escena/un momento". Prohibido también anunciar lo que vas a contar.
+Se entra directamente en materia, cada área de una manera distinta: una con un gesto suyo, otra con una frase que ella se dice, otra con una situación en marcha, otra con una afirmación seca sobre ella. Que ninguna de las siete empiece como otra.
+
+EL CIERRE ABRE LA PUERTA:
+Cada área lleva escrito cuál viene después. El cierre sigue siendo el golpe que ya se pide, y además, sin anunciarlo ni nombrar el área siguiente, deja algo abierto que apunta hacia ese terreno, para que el lector pase de página con ganas. En el área 7, que es la última, el cierre no apunta a ninguna parte: cierra el estudio entero.
+
 PROHIBICIONES ABSOLUTAS:
 - No repetir el título del área en el texto
 - No causas vagas sin explicar cómo y cuándo
@@ -256,12 +279,20 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO apilar varias explicaciones del origen. Una sola, bien desarrollada
 - PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
 - PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
-- PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea`;
+- PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea
+- PROHIBIDO contar en tu área el mismo mecanismo que gobierna otra. Mira la parte de la carta que te toca
+- PROHIBIDO quedarse en el patrón general. Sin un detalle que solo le valga a ella, el área no vale
+- PROHIBIDO un área que solo diagnostique. Sin el don contado a fondo, el área no vale
+- PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos`;
 
   const AREAS = [
     {
       id: 1,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí misma.
+
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y su regente, la casa 1, y los aspectos del Sol con el resto. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+
+Después de esta viene el ÁREA 2, lo que repite sin darse cuenta: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
@@ -269,11 +300,19 @@ No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 pa
       id: 2,
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué repite una y otra vez sin darse cuenta.
 
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: la Luna, los Nodos, la casa 12 y los aspectos tensos que se repiten entre planetas personales. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+
+Después de esta viene el ÁREA 3, el miedo que gobierna su vida: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
+
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que gobierna su vida sin que lo nombre.
+
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Saturno y Plutón, las casas 8 y 12, y los aspectos duros a los planetas personales. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+
+Después de esta viene el ÁREA 4, lo que le sigue doliendo: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
@@ -281,11 +320,19 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué le sigue doliendo hoy y cómo le afecta.
 
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Quirón, la Luna, la casa 4 y los aspectos entre la Luna y Saturno o Plutón. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+
+Después de esta viene el ÁREA 5, cómo vive el amor: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
+
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 5,
       prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo vive las relaciones de pareja.
+
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Venus y Marte, las casas 5 y 7, y los aspectos entre Venus, Marte y la Luna. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+
+Después de esta viene el ÁREA 6, cómo se vincula fuera de la pareja: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
@@ -293,11 +340,19 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 6,
       prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: cómo se vincula con los demás fuera de la pareja.
 
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Mercurio y Júpiter, las casas 3 y 11, y los aspectos de Mercurio. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+
+Después de esta viene el ÁREA 7, su relación con el dinero: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
+
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 7,
       prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero.
+
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: las casas 2 y 8, Júpiter y Saturno, y los aspectos que los tocan. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+
+Esta es la última área del estudio: el cierre no apunta a ninguna otra, cierra el informe entero.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
@@ -313,6 +368,27 @@ Lugar: ${lugar}
 Edad: ${edad} años
 
 ${cartaTexto}`;
+
+  // Lo ultimo que lee el modelo antes de escribir. Las reglas de detalle
+  // estaban solo en el prompt de sistema, que son 150 lineas, y se le perdian:
+  // en el informe del 22 de agosto el nombre no aparecio ni una vez en las
+  // siete areas, habia 89 comas antes de "y" y cuatro preguntas en 21 paginas.
+  // Aqui, pegadas a la orden concreta y en femenino o masculino segun quien
+  // sea, pesan mucho mas.
+  const trato = sexo === 'mujer'
+    ? 'una MUJER. Todo en femenino: sola, cansada, ella misma. Nunca en masculino.'
+    : sexo === 'hombre'
+      ? 'un HOMBRE. Todo en masculino: solo, cansado, el mismo. Nunca en femenino.'
+      : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos, dale la vuelta a la frase cuando haga falta.';
+
+  const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS SIETE, QUE SON LAS QUE MAS SE ESCAPAN:
+1. Escribes para ${trato}
+2. El nombre "${nombrePila}" aparece UNA vez en el area, dentro de una frase, nunca al empezar
+3. Hay al menos una frase en **negrita**, la que aguanta sola fuera de su parrafo
+4. Hay al menos una pregunta directa, salida de lo que acabas de contarle
+5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
+6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
+7. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos`;
 
   // Las 7 areas se piden a la vez, asi que un fallo puntual en una sola tumbaba
   // el informe entero y gastaba un intento del cliente. Ahora cada area se
@@ -354,7 +430,7 @@ ${cartaTexto}`;
         system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
-          content: `${contextoPersona}\n\n${area.prompt}`,
+          content: `${contextoPersona}\n\n${area.prompt}\n\n${recordatorioFinal}`,
         }],
       }),
     });
