@@ -29,6 +29,10 @@ export default async function handler(req, res) {
   // temporal, y el contador de intentos el ultimo, para que una recarga
   // mientras se genera no consuma intentos ni dispare avisos en falso.
   let reserva;
+  // En que numero de intento va esta generacion, y la sesion de Stripe con los
+  // datos del cliente: hacen falta si la generacion falla y era la ultima.
+  let intentoActual = 0;
+  let datosCliente = null;
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id);
     if (!compraValida(session)) {
@@ -51,34 +55,7 @@ export default async function handler(req, res) {
     // 3. Se agotaron los intentos de verdad (los dos fallaron y liberaron la
     //    reserva, o caducaron). Aqui si hay que avisar al admin.
     if (st.intentos >= MAX_INTENTOS) {
-      if (session.metadata?.aviso_agotado !== 'si') {
-        try {
-          const m = session.metadata || {};
-          const emailCliente = session.customer_email || session.customer_details?.email || '(desconocido)';
-          await enviarEmailAdmin({
-            asunto: `⚠️ URGENTE — Cliente sin informe tras ${MAX_INTENTOS} intentos — ${m.nombre || 'Cliente'}`,
-            mensaje: [
-              `Este cliente HA PAGADO y NO tiene su informe. Hay que generarselo a mano.`,
-              ``,
-              `Email:    ${emailCliente}`,
-              `Nombre:   ${m.nombre || '-'}`,
-              `Telefono: ${m.telefono || '-'}`,
-              `Sexo:     ${m.sexo || '-'}`,
-              `Nacio:    ${m.fecha || '-'} a las ${m.hora || '-'}`,
-              `Lugar:    ${[m.municipio, m.provincia, m.pais].filter(Boolean).join(', ') || '-'}`,
-              `Edad:     ${m.edad || '-'}`,
-              ``,
-              `Session:  ${session_id}`,
-              `Intentos: ${st.intentos} de ${MAX_INTENTOS}`,
-            ].join('\n'),
-          });
-          await stripe.checkout.sessions.update(session_id, {
-            metadata: { ...session.metadata, aviso_agotado: 'si' }
-          });
-        } catch (avisoErr) {
-          console.error('No se pudo avisar al admin de intentos agotados:', avisoErr.message);
-        }
-      }
+      await avisarClienteSinInforme(stripe, session_id, session, st.intentos, 'se agotaron los intentos');
       return res.status(429).json({ error: 'Se ha alcanzado el limite de intentos para este informe. Escribenos a hola@origennatal.com y te lo enviamos.', motivo: 'agotado' });
     }
 
@@ -88,6 +65,10 @@ export default async function handler(req, res) {
     if (!reserva.ok) {
       return res.status(409).json({ error: 'Tu informe se esta generando ahora mismo.', motivo: 'en_curso' });
     }
+    // Este es el intento numero X de Y. Se guarda para saber, si esta
+    // generacion falla, si al cliente le quedaba otra oportunidad o no.
+    intentoActual = st.intentos + 1;
+    datosCliente = session;
   } catch (err) {
     return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
   }
@@ -330,9 +311,6 @@ PROHIBICIONES ABSOLUTAS:
   const AREAS = [
     {
       id: 1,
-      // El area 1 va entre 1.100 y 1.300 palabras, las demas entre 850 y 900:
-      // con un subtitulo cada 250 o 300 palabras, aqui salen cuatro.
-      minSub: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí misma.
 
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el planeta que rige su signo, y lo que caiga en la casa 1, con los aspectos del Sol. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
@@ -449,7 +427,7 @@ ${cartaTexto}`;
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
 7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
 8. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos
-9. Estan puestas las marcas, cada una al principio de su parrafo: los [SUBTITULO], el [ESCENA], los DOS [REMATE] y el [PREGUNTA]. El cierre es el ultimo parrafo, sin marca, y detras no va nada`;
+9. CUENTA LAS MARCAS antes de entregar, que es lo que mas se olvida. Tiene que haber TRES lineas que empiecen por [SUBTITULO] (CUATRO en el area 1), una que empiece por [ESCENA], DOS que empiecen por [REMATE] y una que empiece por [PREGUNTA]. Si te sale menos de esa cuenta, no entregues: vuelve al texto y ponlas donde faltan. El cierre es el ultimo parrafo, sin marca, y detras no va nada`;
 
   // Las 7 areas se piden a la vez, asi que un fallo puntual en una sola tumbaba
   // el informe entero y gastaba un intento del cliente. Ahora cada area se
@@ -458,7 +436,7 @@ ${cartaTexto}`;
   // formada) no se reintentan: no van a mejorar por repetirlos.
   const INTENTOS_POR_AREA = 3;
 
-  async function pedirArea(area, aviso) {
+  async function pedirArea(area) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -491,7 +469,7 @@ ${cartaTexto}`;
         system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
-          content: `${contextoPersona}\n\n${area.prompt}\n\n${recordatorioFinal}${aviso ? '\n\n' + aviso : ''}`,
+          content: `${contextoPersona}\n\n${area.prompt}\n\n${recordatorioFinal}`,
         }],
       }),
     });
@@ -539,30 +517,111 @@ ${cartaTexto}`;
     // saldria como el muro de texto de antes, que es justo lo que se esta
     // arreglando, asi que el area no se da por buena: se vuelve a pedir. Es el
     // mismo trato que se le da a un area que llega cortada.
-    const faltan = revisarBloques(analizarArea(texto), { minSub: area.minSub || 3 });
+    const faltan = revisarBloques(analizarArea(texto), { minSub: area.minSub || 2 });
     if (faltan.length > 0) {
       const err = new Error(`Área ${area.id} llegó mal marcada: ${faltan.join('; ')}`);
       err.temporal = true;
       err.faltan = faltan;
+      // El area va dentro del error para poder repasarle las marcas al final,
+      // sin volver a escribirla. No se entrega nunca sin marcar. Ver ponerMarcas.
+      err.texto = texto.trim();
       throw err;
     }
 
     return texto.trim();
   }
 
+  // Ultimo recurso antes de tirar un area. En los tres intentos de arriba se
+  // le pide que reescriba el area ENTERA, con todas las reglas encima, y ahi
+  // pasa lo que se vio en la primera generacion real: arregla los subtitulos
+  // y se deja los remates, arregla los remates y se deja la escena. Cada
+  // intento es una tirada nueva.
+  // Aqui no se le pide que escriba nada: se le devuelve su propio texto y se
+  // le pide solo que le ponga las marcas que faltan, sin cambiar una palabra.
+  // Es una tarea mecanica, no creativa, y no puede empeorar la redaccion
+  // porque no se le deja tocarla.
+  async function ponerMarcas(area, texto, faltan) {
+    const encargo = `Aqui abajo tienes un area ya escrita de un estudio. El texto esta bien y NO se toca: no cambies ni una palabra, ni el orden de los parrafos, ni la puntuacion, ni añadas frases nuevas.
+
+Lo unico que le falta es marcarlo para poder maquetarlo. Esto es lo que le falta: ${faltan.join('; ')}.
+
+Las marcas van al principio de su propio parrafo:
+[SUBTITULO] tres o cinco palabras, sin punto final, sacadas de lo que se cuenta en el parrafo que va justo debajo
+[ESCENA] delante del parrafo donde se cuenta la escena concreta y visual
+[REMATE] delante de la frase que remata, que va sola en su parrafo
+[PREGUNTA] delante de la pregunta directa, que va sola en su parrafo
+
+Como se hace:
+- El subtitulo es lo UNICO que puedes añadir, porque no esta en el texto. Van repartidos, uno cada 250 o 300 palabras, nunca al principio del area.
+- Todo lo demas ya esta escrito: solo tienes que ponerle la marca delante al parrafo que le toca.
+- Si la frase que remata o la pregunta estan dentro de un parrafo mas largo, sacalas a su propio parrafo con sus palabras exactas, sin reescribirlas.
+- El ultimo parrafo es el cierre y va SIN marca. Detras de el no va nada.
+- Entre parrafo y parrafo, una linea en blanco.
+
+Devuelve el area entera ya marcada, y nada mas: ni explicaciones, ni comentarios.
+
+EL AREA:
+${texto}`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-5',
+        thinking: { type: 'disabled' },
+        max_tokens: 5000,
+        messages: [{ role: 'user', content: encargo }],
+      }),
+    });
+
+    if (!response.ok) throw new Error(`Área ${area.id}: el repaso de marcas devolvió ${response.status}`);
+
+    const data = await response.json();
+    if (data.stop_reason === 'max_tokens') throw new Error(`Área ${area.id}: el repaso de marcas llegó cortado`);
+
+    const marcado = (data.content || [])
+      .filter(b => b && typeof b.text === 'string')
+      .map(b => b.text)
+      .join('')
+      .trim();
+
+    // Si al marcarlo se ha comido texto, no vale: se prefiere no entregar
+    // nada antes que entregar un area recortada. El margen del 15% deja sitio
+    // a que quite algun espacio, no a que se salte parrafos.
+    if (marcado.length < texto.length * 0.85) {
+      throw new Error(`Área ${area.id}: el repaso de marcas devolvió el texto recortado`);
+    }
+
+    const faltanAun = revisarBloques(analizarArea(marcado), { minSub: area.minSub || 2 });
+    if (faltanAun.length > 0) {
+      throw new Error(`Área ${area.id} sigue mal marcada tras el repaso: ${faltanAun.join('; ')}`);
+    }
+
+    return marcado;
+  }
+
   async function generarArea(area) {
     let ultimoError;
-    // Lo que le faltaba al intento anterior, para decirselo en el siguiente:
-    // volver a pedir lo mismo tal cual invita al mismo despiste.
-    let aviso = '';
+    // El area completa mas reciente que se descarto SOLO por las marcas, y lo
+    // que le faltaba. Se guardan juntas: si el ultimo intento se cae por un
+    // corte de red, el repaso final tiene que poder trabajar igual sobre el
+    // texto bueno que llego antes.
+    let sinMarcar = '', faltabanEn = null;
     for (let intento = 1; intento <= INTENTOS_POR_AREA; intento++) {
       try {
-        return await pedirArea(area, aviso);
+        return await pedirArea(area);
       } catch (err) {
         ultimoError = err;
-        aviso = err.faltan
-          ? `AVISO: el intento anterior de esta area se descarto por esto: ${err.faltan.join('; ')}. Escribela entera otra vez y pon todas las marcas en su sitio.`
-          : '';
+        // Si el area llego entera y lo unico que fallaban eran las marcas, NO
+        // se vuelve a escribir. Reescribirla es caro y encima es lo que rompe
+        // el area: en la primera generacion real, cada reescritura arreglaba
+        // los subtitulos y se dejaba los remates, o al reves. El texto ya esta
+        // bien; lo que falta es ponerle cuatro etiquetas, y eso se hace abajo.
+        if (err.texto) { sinMarcar = err.texto; faltabanEn = err.faltan; break; }
         // Un corte de red llega sin marca; se trata como temporal.
         const temporal = err.temporal !== false;
         if (!temporal || intento === INTENTOS_POR_AREA) break;
@@ -570,6 +629,26 @@ ${cartaTexto}`;
         await new Promise(r => setTimeout(r, 1500 * intento));
       }
     }
+    // Si el area llego entera pero sin marcar, se le pide que le ponga las
+    // marcas sobre ese mismo texto, sin reescribirlo. Aqui si se reintenta
+    // hasta tres veces, porque es lo mas facil de todo lo que se pide en este
+    // fichero y es barato: no se escribe nada nuevo.
+    for (let repaso = 1; sinMarcar && faltabanEn && repaso <= INTENTOS_POR_AREA; repaso++) {
+      try {
+        const marcado = await ponerMarcas(area, sinMarcar, faltabanEn);
+        console.warn(`Área ${area.id}: marcada en el repaso ${repaso}`);
+        return marcado;
+      } catch (err) {
+        console.warn(`Área ${area.id}: repaso ${repaso} sin éxito (${err.message.slice(0, 120)})`);
+        if (repaso < INTENTOS_POR_AREA) await new Promise(r => setTimeout(r, 1000 * repaso));
+      }
+    }
+
+    // Un area mal marcada NO se entrega, igual que una cortada. Sin sus
+    // marcas el estudio se lee como un muro de texto y no vale los 47 euros
+    // que ha pagado el cliente, asi que se prefiere no mandar nada, avisar, y
+    // generarlo a mano. Ojo con cambiar esto: es una decision de producto, no
+    // una limitacion tecnica.
     throw ultimoError;
   }
 
@@ -599,7 +678,61 @@ ${cartaTexto}`;
     // Soltar la reserva para que el cliente pueda reintentar en el acto en
     // vez de esperar a que caduque.
     await liberar(stripe, session_id, reserva.token);
+    // Si con esta se le acaban los intentos, el cliente se queda sin informe
+    // aqui mismo: se avisa ahora. Antes el aviso salia cuando volvia a pedirlo
+    // otra vez, asi que si no volvia, no se enteraba nadie.
+    if (intentoActual >= MAX_INTENTOS) {
+      await avisarClienteSinInforme(stripe, session_id, datosCliente, intentoActual, err.message);
+    }
     return res.status(500).json({ error: 'Error generando el informe: ' + err.message });
+  }
+}
+
+
+// ═════════════════════════════════════════════════════════════════
+// AVISO: CLIENTE PAGADO Y SIN INFORME
+//
+// Se manda en el momento en que se le acaban los intentos, no cuando el
+// cliente vuelve a pedirlo: si no volvia, antes no se enteraba nadie de que
+// habia pagado y se habia quedado sin nada.
+// La marca aviso_agotado en Stripe evita que salga dos veces por la misma
+// compra, aunque el cliente recargue o vuelva a darle al boton.
+// ═════════════════════════════════════════════════════════════════
+async function avisarClienteSinInforme(stripe, session_id, session, intentos, motivo) {
+  try {
+    // Se relee la sesion: la que tenemos en la mano puede llevar varios
+    // minutos en memoria y la marca del aviso puede haberse escrito despues.
+    const fresca = await stripe.checkout.sessions.retrieve(session_id);
+    if (fresca?.metadata?.aviso_agotado === 'si') return;
+
+    const m = fresca?.metadata || {};
+    const emailCliente = fresca?.customer_email || fresca?.customer_details?.email
+      || session?.customer_email || '(desconocido)';
+
+    await enviarEmailAdmin({
+      asunto: `⚠️ URGENTE — Cliente sin informe tras ${MAX_INTENTOS} intentos — ${m.nombre || 'Cliente'}`,
+      mensaje: [
+        `Este cliente HA PAGADO y NO tiene su informe`,
+        ``,
+        `Email:    ${emailCliente}`,
+        `Nombre:   ${m.nombre || '-'}`,
+        `Telefono: ${m.telefono || '-'}`,
+        `Sexo:     ${m.sexo || '-'}`,
+        `Nacio:    ${m.fecha || '-'} a las ${m.hora || '-'}`,
+        `Lugar:    ${[m.municipio, m.provincia, m.pais].filter(Boolean).join(', ') || '-'}`,
+        `Edad:     ${m.edad || '-'}`,
+        ``,
+        `Session:  ${session_id}`,
+        `Intentos: ${intentos} de ${MAX_INTENTOS}`,
+        `Motivo:   ${motivo || '-'}`,
+      ].join('\n'),
+    });
+
+    await stripe.checkout.sessions.update(session_id, {
+      metadata: { ...(fresca?.metadata || {}), aviso_agotado: 'si' },
+    });
+  } catch (err) {
+    console.error('No se pudo avisar de que el cliente se quedo sin informe:', err.message);
   }
 }
 
