@@ -83,9 +83,23 @@ console.log('\nLO QUE SIGUE SIENDO UN FALLO DE VERDAD\n');
   c('y el area sigue pasando', revisarBloques(b).length === 0, revisarBloques(b).join(' | '));
 }
 {
+  // Un remate sin marcar se reconoce solo, como ya se hacia con las preguntas,
+  // para no tirar el area por una marca olvidada. Solo se hace si no hay
+  // NINGUNO: si lo hiciera siempre, el area se llenaria de frases grandes.
   const sinRemate = CUERPO.filter(l => !l.startsWith('[REMATE]'));
-  c('un area sin remate se sigue rechazando',
-    revisarBloques(analizarArea(sinRemate.join('\n'))).some(f => f.includes('remate')));
+  const b = analizarArea(sinRemate.join('\n'));
+  c('un remate sin marcar se reconoce solo', b.some(x => x.tipo === 'remate'));
+  c('y el area ya no se rechaza', revisarBloques(b).length === 0, revisarBloques(b).join(' | '));
+  c('el elegido es una sola frase corta', (() => {
+    const r = b.find(x => x.tipo === 'remate');
+    return r && r.t.length <= 160 && !/[.!?]/.test(r.t.replace(/\*\*/g, '').trim().slice(0, -1));
+  })());
+}
+{
+  // Y si el area YA trae su remate, no se toca ningun parrafo mas.
+  const b = analizarArea(CUERPO.join('\n'));
+  c('con remate marcado no se asciende ningun parrafo', b.filter(x => x.tipo === 'remate').length === 1,
+    b.filter(x => x.tipo === 'remate').length + ' remates');
 }
 
 console.log('\nLO QUE SOBRA SE COLOCA SOLO, SIN GASTAR UNA LLAMADA\n');
@@ -133,7 +147,8 @@ const tira = (nombre, quitar) => {
   c('sin ' + nombre + ' se para', revisarBloques(b).length > 0, revisarBloques(b).join(' | '));
 };
 tira('escena', '[ESCENA]');
-tira('remate', '[REMATE]');
+// El remate ya no se prueba aqui: se reconoce solo aunque venga sin marcar,
+// y su caso esta arriba.
 tira('pregunta', '[PREGUNTA]');
 c('un area entera pasa sin fallos', revisarBloques(analizarArea(CUERPO.join('\n'))).length === 0);
 

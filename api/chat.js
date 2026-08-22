@@ -705,11 +705,27 @@ ${texto}`;
       }
     }
 
-    // Un area mal marcada NO se entrega, igual que una cortada. Sin sus
-    // marcas el estudio se lee como un muro de texto y no vale los 47 euros
-    // que ha pagado el cliente, asi que se prefiere no mandar nada, avisar, y
-    // generarlo a mano. Ojo con cambiar esto: es una decision de producto, no
-    // una limitacion tecnica.
+    // ULTIMA RED: si el area esta escrita entera y lo unico que falla son las
+    // marcas, se entrega.
+    //
+    // Antes se tiraba. La idea era buena —un muro de texto no vale 47 euros—
+    // pero el trato salia al reves: por una marca mal puesta el cliente pagaba
+    // y no recibia nada, que es mucho peor que recibir un area con un remate
+    // de menos. El 22 de agosto paso exactamente eso.
+    //
+    // Aqui ya se ha intentado todo: se pidio el area, se reviso, y se mando
+    // tres veces al repaso. Si aun asi le falta algo, el texto que hay esta
+    // escrito y se lee; lo que falta es una marca. Se entrega y se grita en
+    // los registros, porque si esto sale a menudo es que algo esta mal en el
+    // prompt y hay que arreglarlo ahi, no dejar al cliente sin informe.
+    //
+    // Lo que NO se entrega nunca sigue siendo lo de arriba: un area que llego
+    // cortada a media frase, vacia, o que nunca llego porque fallo la API.
+    // Eso no es una marca que falta, es texto que no existe.
+    if (sinMarcar) {
+      console.error(`ENTREGADA SIN ARREGLAR — Área ${area.id}: ${(faltabanEn || []).join('; ')}`);
+      return sinMarcar;
+    }
     throw ultimoError;
   }
 
