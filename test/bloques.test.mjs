@@ -14,7 +14,7 @@
 // Sin red y sin dependencias.
 // ═════════════════════════════════════════════════════════════════
 
-import { analizarArea, revisarBloques, avisosBloques, negritasDe } from '../lib/bloques.js';
+import { analizarArea, revisarBloques, avisosBloques, negritasDe, montarArea } from '../lib/bloques.js';
 
 let fallos = 0;
 const c = (titulo, ok, det) => {
@@ -169,6 +169,47 @@ console.log('\nLO QUE SE ENTREGA Y SOLO AVISA\n');
   c('sin negritas NO se para', revisarBloques(b).length === 0);
   c('...pero avisa', avisosBloques(b).some(a => a.includes('plana')), avisosBloques(b).join(' | '));
 }
+
+console.log('\nMONTAR EL AREA DESDE SUS CASILLAS\n');
+// El modelo rellena casillas y dice detras de que parrafo va cada cosa.
+// Colocarlas es de aqui, y aqui no se pierde ninguna.
+const casillas = (nParrafos, sitio) => ({
+  parrafos: Array.from({ length: nParrafos }, (_, i) => ({
+    ladillo: i === 1 ? 'Un ladillo corto' : null,
+    texto: `Parrafo ${i + 1} con su texto normal y su desarrollo entero para que tenga cuerpo de verdad.`,
+  })),
+  escena: { tras_parrafo: sitio, texto: 'Son las once de la noche y sigues de pie sin sentarte.' },
+  remate_herida: { tras_parrafo: sitio, texto: 'Llevas media vida pidiendo permiso' },
+  remate_fuerza: { tras_parrafo: sitio, texto: 'Nadie aguanta tanto sin que eso sea una fuerza' },
+  pregunta: { tras_parrafo: sitio, texto: '¿Cuantas veces te has callado algo?' },
+  cierre: 'El cierre del area, que golpea y abre.',
+});
+{
+  const b = analizarArea(montarArea(casillas(12, 4)));
+  c('un area montada pasa la revision', revisarBloques(b).length === 0, revisarBloques(b).join(' | '));
+  c('no empieza por un ladillo', b[0].tipo === 'texto', 'empieza por ' + b[0].tipo);
+  c('el cierre es lo ultimo', b[b.length - 1].tipo === 'cierre');
+}
+{
+  // El peor caso: el modelo manda las cuatro detras del MISMO parrafo. Si se
+  // dejaran pegadas, al sanearlo una frase grande se perderia.
+  for (const n of [14, 8, 5, 4, 3]) {
+    const b = analizarArea(montarArea(casillas(n, 2)));
+    const grandes = b.filter(x => ['remate', 'pregunta'].includes(x.tipo)).length;
+    c(`las cuatro al mismo sitio con ${n} parrafos: no se pierde ninguna`,
+      grandes === 3 && b.some(x => x.tipo === 'escena') && revisarBloques(b).length === 0,
+      grandes + ' grandes, ' + revisarBloques(b).join(' | '));
+  }
+}
+{
+  // Numeros imposibles: el modelo se inventa un parrafo 99 o un -3.
+  const raro = { ...casillas(10, 3), escena: { tras_parrafo: 99, texto: 'Son las once.' }, pregunta: { tras_parrafo: -3, texto: '¿Y tu?' } };
+  const b = analizarArea(montarArea(raro));
+  c('un numero fuera de rango no rompe nada', revisarBloques(b).length === 0, revisarBloques(b).join(' | '));
+  c('y nada queda detras del cierre', b[b.length - 1].tipo === 'cierre');
+}
+c('sin parrafos devuelve vacio', montarArea({ parrafos: [] }) === '');
+c('sin datos no revienta', montarArea(null) === '' && montarArea(undefined) === '');
 
 console.log(fallos === 0 ? '\nTODO BIEN\n' : `\n${fallos} FALLO(S)\n`);
 process.exit(fallos === 0 ? 0 : 1);
