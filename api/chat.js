@@ -292,7 +292,7 @@ DÓNDE VA CADA UNA, QUE ES LO QUE MÁS SE FALLA. No se colocan para repartir la 
 No van seguidas ni en el mismo párrafo, y ninguna es el cierre del área. Si al terminar solo hay una de las dos, está a medias.
 
 EL ARRANQUE DE CADA ÁREA:
-Un área es un capítulo, y un capítulo no empieza en mitad de la frase. Entrar de golpe con una afirmación seca sobre ella en la primera línea da un frenazo: el lector acaba de pasar de página, todavía no sabe de qué le van a hablar, y ya le están diciendo algo suyo.
+Un área se lee como un capítulo, y un capítulo no empieza en mitad de la frase. Pero es un capítulo SIN TÍTULO PROPIO: el título ya va impreso arriba en la página, así que la primera línea del área es la primera frase de la entradilla, nunca un ladillo. Un [SUBTITULO] en la primera línea hace que el área se descarte entera, y es el fallo que más se comete aquí. Entrar de golpe con una afirmación seca sobre ella en la primera línea da un frenazo: el lector acaba de pasar de página, todavía no sabe de qué le van a hablar, y ya le están diciendo algo suyo.
 Se abre ancho y se cierra sobre ella. Dos o tres frases que sitúan el tema desde fuera, desde algo que le pasa a mucha gente o desde una situación que cualquiera reconoce, y solo entonces se estrecha hasta ella. La forma es esa: "Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen... Tú eres esa persona." Las palabras las pones tú y cambian en cada área.
 Que sitúe no significa que anuncie: sigue estando PROHIBIDO decir lo que vas a contar ("en esta parte vamos a ver", "hay algo que tienes que entender").
 Y es la ÚNICA parte del área donde vale algo que le pasa a mucha gente, precisamente porque en dos frases se estrecha hasta ella y deja de valerle a nadie más. En cuanto has entrado en ella vuelve a mandar la regla de siempre: nada que le pudieras leer a otra persona y también le tocara.
@@ -311,7 +311,7 @@ Eso de arriba es SOLO el formato: lo que va detrás de cada marca lo escribes t�
 Qué lleva cada marca:
 - [SUBTITULO]: uno cada 250 o 300 palabras. En un área de 850 a 900 palabras salen TRES, y en el ÁREA 1, que es más larga, salen CUATRO. Nunca menos. Es un ladillo corto, de tres a cinco palabras, sin punto final, que sale de lo que se cuenta justo debajo y hace que dé ganas de seguir leyendo. NO es el nombre de un bloque ni una etiqueta ("HOY", "EL ORIGEN", "LAS CREENCIAS", "LO QUE HAY QUE SOLTAR") y NO anuncia lo que viene ("lo que voy a contarte ahora"). Sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. Si ese mismo ladillo pudiera ir en el área de otro cliente, o en otra de las siete áreas de esta, no vale y lo cambias. No existe una lista de ladillos buenos: no repitas nunca uno que ya hayas visto escrito en estas instrucciones. Y no cortan el hilo: el párrafo que va debajo sigue enganchado con lo de antes igual que si el subtítulo no estuviera.
 - [ESCENA]: la escena real obligatoria. Uno o dos párrafos, cada uno con su marca delante. No lleva negritas dentro.
-- [REMATE]: las frases que rematan, tal como pide la sección LAS FRASES QUE REMATAN. Cada una va SOLA en su párrafo, es una frase, no lleva negritas y no comparte párrafo con nada más. Dos como mínimo, tres si el texto lo pide, nunca más.
+- [REMATE]: las frases que rematan, tal como pide la sección LAS FRASES QUE REMATAN. Cada una va SOLA en su párrafo, es UNA frase y no pasa de treinta palabras: se imprime grande y centrada, así que un remate de dos frases o de tres líneas deja de rematar y el área se descarta. No lleva negritas y no comparte párrafo con nada más. Dos como mínimo, tres si el texto lo pide, nunca más.
 - [PREGUNTA]: la pregunta directa. Va SOLA en su párrafo, es una sola frase y no lleva nada delante ni detrás dentro de ese párrafo. Si el área pide dos preguntas, las dos se marcan igual. Va después de haberle contado algo, nunca en frío, y lo que viene justo debajo recoge lo que acaba de pasarle al leerla: se le hace la pregunta para que pare y trabaje, no para adornar la página.
 
 DÓNDE VAN, QUE ES LA MITAD DEL TRABAJO:
@@ -596,7 +596,7 @@ Las marcas van al principio de su propio parrafo:
 [PREGUNTA] delante de la pregunta directa, que va sola en su parrafo
 
 Reglas de colocacion, que es lo importante:
-- EL AREA NO EMPIEZA POR NINGUNA MARCA. La primera pagina ya lleva el titulo impreso arriba, asi que una marca pegada debajo se lee como si el area empezara por la mitad. El area abre con texto corrido, o con la escena si es ahi donde se cuenta, y la primera marca llega cuando ya se han leido dos o tres parrafos.
+- EL AREA NO EMPIEZA POR NINGUNA MARCA, y este es el fallo que hay que mirar PRIMERO. La primera linea de lo que devuelvas no puede ser un [SUBTITULO], ni un titulo en markdown (## Asi), ni ninguna otra marca: tiene que ser la primera frase del texto. La pagina ya lleva el titulo del area impreso arriba, asi que un ladillo pegado debajo se lee como si el area empezara por la mitad. Si el texto que te doy empieza por un ladillo, lo BORRAS o lo bajas a su sitio, y el area arranca con el parrafo que venia detras. La primera marca llega cuando ya se han leido dos o tres parrafos.
 - NUNCA DOS DESTACADAS SEGUIDAS. Entre un [REMATE] y una [PREGUNTA], o entre dos [REMATE], siempre tiene que quedar texto normal en medio. Se imprimen grandes y centradas: dos pegadas se leen como un cartel en mitad del area.
 - Los subtitulos van repartidos, uno cada 250 o 300 palabras, y cada uno dice lo que se cuenta justo debajo de el.
 - Si la frase que remata o la pregunta estan dentro de un parrafo mas largo, sacalas a su propio parrafo con sus palabras exactas, sin reescribirlas.
@@ -609,7 +609,7 @@ EL NOMBRE, si es una de las cosas que hay que corregir. Se mete UNA sola vez en 
 
 Lo unico que escribes tu son los subtitulos, porque no estan en el texto. Todo lo demas ya esta escrito.
 
-Devuelve el area entera ya marcada, y nada mas: ni explicaciones, ni comentarios.
+Devuelve el area ENTERA ya marcada, y nada mas: ni explicaciones, ni comentarios. Entera quiere decir del primer parrafo al ultimo, con todos los parrafos que traia y con las mismas palabras: si lo que devuelves es mas corto que lo que te he dado, se tira y no sirve de nada. No resumas, no acortes, no te dejes parrafos por el camino.
 
 EL AREA:
 ${texto}`;
