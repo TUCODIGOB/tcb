@@ -544,6 +544,9 @@ ${cartaTexto}`;
       const err = new Error(`Área ${area.id} llegó mal marcada: ${faltan.join('; ')}`);
       err.temporal = true;
       err.faltan = faltan;
+      // El area va dentro del error: si los tres intentos salen mal marcados,
+      // se entrega igual. Ver generarArea.
+      err.texto = texto.trim();
       throw err;
     }
 
@@ -569,6 +572,16 @@ ${cartaTexto}`;
         console.warn(`Área ${area.id}: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
         await new Promise(r => setTimeout(r, 1500 * intento));
       }
+    }
+    // Si lo unico que fallo fueron las marcas, el area se entrega tal cual.
+    // Sin marcas esa area se lee como el muro de texto de antes, que es feo,
+    // pero perder la venta entera por una cuestion de maquetacion es mucho
+    // peor: el cliente ha pagado y se quedaria sin informe. Lo que NO se
+    // entrega nunca es un area cortada a media frase, que eso si es un
+    // producto roto y sigue tumbando la generacion.
+    if (ultimoError && ultimoError.texto) {
+      console.warn(`Área ${area.id} se entrega mal marcada tras ${INTENTOS_POR_AREA} intentos: ${ultimoError.message}`);
+      return ultimoError.texto;
     }
     throw ultimoError;
   }
