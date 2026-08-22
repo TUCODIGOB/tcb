@@ -3,6 +3,7 @@ const require = createRequire(import.meta.url);
 const { jsPDF } = require('jspdf');
 import Stripe from 'stripe';
 import { estado, liberar, completar, compraValida } from '../lib/reserva.js';
+import { analizarArea } from '../lib/bloques.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -190,30 +191,35 @@ export default async function handler(req, res) {
       return out;
     }
 
-    function anchoPalabra(pal, size, todoNegrita) {
+    // La fuente base dice como se pinta el bloque entero: 'normal' deja que
+    // las palabras marcadas salgan en negrita, y 'bold' o 'italic' mandan
+    // sobre todo el bloque (dentro de una cursiva no cabe una negrita: la
+    // fuente negrita-cursiva no esta cargada, y mezclarlas descuadraria la
+    // medida de la linea).
+    function anchoPalabra(pal, size, fuenteBase) {
       doc.setFontSize(size);
-      doc.setFont('Roboto', (todoNegrita || pal.b) ? 'bold' : 'normal');
+      doc.setFont('Roboto', (fuenteBase === 'normal' && pal.b) ? 'bold' : fuenteBase);
       return doc.getTextWidth(pal.t);
     }
 
-    function anchoLinea(linea, size, todoNegrita) {
+    function anchoLinea(linea, size, fuenteBase) {
       var a = 0;
-      for (var i = 0; i < linea.length; i++) a += anchoPalabra(linea[i], size, todoNegrita);
+      for (var i = 0; i < linea.length; i++) a += anchoPalabra(linea[i], size, fuenteBase);
       return a;
     }
 
     // Lo mismo que splitTextToSize, pero midiendo cada palabra con su fuente.
-    function lineasConNegrita(txt, maxW, size, todoNegrita) {
+    function lineasConNegrita(txt, maxW, size, fuenteBase) {
       var pals = palabrasConNegrita(txt), lineas = [], linea = [], ancho = 0;
       for (var i = 0; i < pals.length; i++) {
-        var w = anchoPalabra(pals[i], size, todoNegrita);
+        var w = anchoPalabra(pals[i], size, fuenteBase);
         if (pals[i].esp) {
           if (linea.length === 0) continue;
           linea.push(pals[i]); ancho += w; continue;
         }
         if (ancho + w > maxW && linea.length > 0) {
           while (linea.length > 0 && linea[linea.length - 1].esp) {
-            ancho -= anchoPalabra(linea.pop(), size, todoNegrita);
+            ancho -= anchoPalabra(linea.pop(), size, fuenteBase);
           }
           lineas.push(linea); linea = []; ancho = 0;
         }
@@ -607,63 +613,142 @@ export default async function handler(req, res) {
       {tit:fx('RELACIONES'),sub:fx('Como te vinculas con los demas y que rol ocupas sin darte cuenta')},
       {tit:fx('DINERO'),sub:fx('Por que el dinero no termina de fluir en tu vida')},
     ];
-    var pageC=6;
-    for(var ai2=0;ai2<areaTitles.length;ai2++){
-      var areaText=areas[ai2]||'';
-      var rawParas=areaText.split(/\n\n+/).filter(p=>p.trim().length>0);
-      // El ultimo parrafo de cada area es el CIERRE, la frase que se destaca.
-      var idxCierre = rawParas.length-1;
-      var paras=[];
-      for(var rp=0;rp<rawParas.length;rp++){
-        var chunk=rawParas[rp].trim();
-        var esCierre=(rp===idxCierre);
-        if(chunk.length>500){
-          var sentences=chunk.split(/(?<=\.)\s+/);
-          var trozos=[],group='',sCount=0;
-          for(var si2=0;si2<sentences.length;si2++){
-            group+=(group?' ':'')+sentences[si2]; sCount++;
-            if(sCount>=3&&group.length>200){trozos.push(group);group='';sCount=0;}
-          }
-          if(group.length>0) trozos.push(group);
-          // Si el modelo dejo una marca sin cerrar, no se cuadra nada: el
-          // asterisco suelto se limpia al maquetar, igual que hasta ahora.
-          if((((chunk.match(/\*\*/g)||[]).length)%2)===0) trozos=cuadrarNegritas(trozos);
-          for(var tz=0;tz<trozos.length;tz++) paras.push({t:trozos[tz],cierre:esCierre});
-        } else { paras.push({t:chunk,cierre:esCierre}); }
-      }
-      doc.addPage(); doc.addImage(img_areas[ai2],'JPEG',0,0,W,H);
-      var ay=60, areaPageCount=1;
-      for(var pi2=0;pi2<paras.length;pi2++){
-        if(!paras[pi2]||!paras[pi2].t) continue;
-        var esC=paras[pi2].cierre;
-        // El cierre es la frase que el lector se lleva puesta: se saca del
-        // bloque de texto y se pinta en negrita dorada, centrada y con aire.
-        var cuerpo=esC?14:12;
-        var color=esC?[207,177,128]:[40,40,40];
-        var ancho=esC?150:175, alto=esC?8:7;
-        if(esC) ay+=8;
-        doc.setFontSize(cuerpo); doc.setTextColor(color[0],color[1],color[2]);
-        var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esC);
-        for(var pl2=0;pl2<plines.length;pl2++){
-          if(ay>H-16){addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);ay=60;}
-          var lin=plines[pl2];
-          var cx=esC?(105-anchoLinea(lin,cuerpo,esC)/2):18;
-          for(var wi=0;wi<lin.length;wi++){
-            if(!lin[wi].esp){ doc.setFont('Roboto',(esC||lin[wi].b)?'bold':'normal'); doc.text(lin[wi].t,cx,ay); }
-            cx+=anchoPalabra(lin[wi],cuerpo,esC);
-          }
-          ay+=alto;
+    // ── ESTILOS DE CADA BLOQUE ───────────────────────────────────────────────
+    // Un area son 900 palabras. Puestas todas seguidas en el mismo cuerpo y el
+    // mismo color, el cliente ve cuatro paginas de muro gris y el ojo se cansa
+    // antes de llegar a lo que ha pagado. Cada bloque se pinta distinto para
+    // que la pagina respire y para que lo importante se vea desde lejos.
+    // Los colores son los de la marca: dorado bd9048, dorado claro cfb180,
+    // verde oscuro 0e3f4b y verde claro 729790. El verde claro solo se usa en
+    // las preguntas, y en cuerpo grande y negrita: sobre el crema del fondo da
+    // un contraste de 3,1 a 1, que vale para texto grande y no para texto
+    // corrido. El verde oscuro da 11 a 1, se lee perfecto, pero al lado del
+    // negro del texto se distingue sobre todo por el tono, asi que se reserva
+    // para los remates, que ademas van en cuerpo grande.
+    var ESTILOS = {
+      texto:    { size: 12,   color: [40, 40, 40],   x: 18, ancho: 175, alto: 7,   antes: 0,  despues: 4,  fuente: 'normal' },
+      sub:      { size: 10,   color: [189, 144, 72], x: 18, ancho: 175, alto: 6,   antes: 11, despues: 6,  fuente: 'bold',   mayus: true, filete: true, juntar: true },
+      escena:   { size: 11,   color: [70, 70, 70],   x: 27, ancho: 157, alto: 6.4, antes: 8,  despues: 9,  fuente: 'italic', barra: true },
+      pregunta: { size: 13,   color: [114, 151, 144], x: 30, ancho: 150, alto: 7.4, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
+      remate:   { size: 13.5, color: [14, 63, 75],   x: 22, ancho: 166, alto: 7.8, antes: 10, despues: 10, fuente: 'bold',  juntar: true },
+      cierre:   { size: 14,   color: [207, 177, 128], x: 18, ancho: 150, alto: 8,  antes: 10, despues: 8,  fuente: 'bold',  centrado: true, juntar: true },
+    };
+
+    // Estado de la maquetacion de las areas: en que altura vamos y por que
+    // pagina. Va aparte para que las funciones de abajo puedan moverlo.
+    var maq = { y: 60, pag: 6, paginas: 1 };
+    var Y_TOPE = H - 16;
+
+    function paginaNueva() {
+      addPageNum(maq.pag); maq.pag++;
+      maq.paginas++;
+      doc.addPage(); doc.addImage(img_base, 'JPEG', 0, 0, W, H);
+      maq.y = 60;
+    }
+
+    // Un parrafo largo se parte en trozos para que el corte de pagina caiga en
+    // un sitio decente. Solo se parte el texto corrido: los bloques marcados
+    // van enteros, que para eso estan marcados.
+    function trocearLargos(bloques) {
+      var salida = [];
+      for (var i = 0; i < bloques.length; i++) {
+        var b = bloques[i];
+        if (b.tipo !== 'texto' || b.t.length <= 500) { salida.push(b); continue; }
+        var frases = b.t.split(/(?<=\.)\s+/);
+        var trozos = [], grupo = '', nFrases = 0;
+        for (var f = 0; f < frases.length; f++) {
+          grupo += (grupo ? ' ' : '') + frases[f]; nFrases++;
+          if (nFrases >= 3 && grupo.length > 200) { trozos.push(grupo); grupo = ''; nFrases = 0; }
         }
-        ay+=esC?8:4;
+        if (grupo.length > 0) trozos.push(grupo);
+        // Si el modelo dejo una marca de negrita sin cerrar, no se cuadra nada:
+        // el asterisco suelto se limpia al maquetar, igual que hasta ahora.
+        if ((((b.t.match(/\*\*/g) || []).length) % 2) === 0) trozos = cuadrarNegritas(trozos);
+        for (var t = 0; t < trozos.length; t++) salida.push({ tipo: 'texto', t: trozos[t] });
       }
-      if(areaPageCount<2){addPageNum(pageC);pageC++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);}
-      addPageNum(pageC); pageC++;
+      return salida;
+    }
+
+    function pintarBloque(bloque) {
+      var e = ESTILOS[bloque.tipo] || ESTILOS.texto;
+      var texto = e.mayus ? bloque.t.toUpperCase() : bloque.t;
+      var lineas = lineasConNegrita(fx(texto), e.ancho, e.size, e.fuente);
+      if (lineas.length === 0) return;
+
+      var altoBloque = lineas.length * e.alto + (e.filete ? 2.5 : 0);
+
+      // El cierre es la frase que el lector se lleva puesta: no se aprieta
+      // contra el borde de la pagina. Si no le queda sitio con aire, pasa a la
+      // siguiente y se coloca bajo, con la pagina para el.
+      if (bloque.tipo === 'cierre' && maq.y + e.antes + altoBloque + 18 > Y_TOPE) {
+        paginaNueva();
+        maq.y = 95;
+      } else {
+        if (maq.y > 60) maq.y += e.antes;
+        // Un subtitulo, una pregunta o un remate colgando en la ultima linea de
+        // la pagina se leen como un descuido: bajan enteros a la siguiente.
+        if (e.juntar && lineas.length <= 5 && maq.y + altoBloque > Y_TOPE) paginaNueva();
+      }
+
+      // El cierre lleva un filete corto encima, centrado: separa el golpe del
+      // texto que venia antes y avisa de que el area se acaba aqui.
+      if (bloque.tipo === 'cierre') {
+        doc.setDrawColor(189, 144, 72); doc.setLineWidth(0.4);
+        doc.line(105 - 14, maq.y - 7, 105 + 14, maq.y - 7);
+      }
+
+      doc.setFontSize(e.size);
+      doc.setTextColor(e.color[0], e.color[1], e.color[2]);
+
+      for (var li = 0; li < lineas.length; li++) {
+        if (maq.y > Y_TOPE) {
+          paginaNueva();
+          doc.setFontSize(e.size);
+          doc.setTextColor(e.color[0], e.color[1], e.color[2]);
+        }
+        var linea = lineas[li];
+        var cx = e.centrado ? (105 - anchoLinea(linea, e.size, e.fuente) / 2) : e.x;
+        // La escena lleva un filete dorado a la izquierda, dibujado linea a
+        // linea para que siga a la escena si cambia de pagina.
+        if (e.barra) {
+          doc.setDrawColor(189, 144, 72); doc.setLineWidth(0.9);
+          doc.line(e.x - 7, maq.y - 4.6, e.x - 7, maq.y + 1.8);
+        }
+        for (var wi = 0; wi < linea.length; wi++) {
+          if (!linea[wi].esp) {
+            doc.setFont('Roboto', (e.fuente === 'normal' && linea[wi].b) ? 'bold' : e.fuente);
+            doc.text(linea[wi].t, cx, maq.y);
+          }
+          cx += anchoPalabra(linea[wi], e.size, e.fuente);
+        }
+        maq.y += e.alto;
+      }
+
+      if (e.filete) {
+        doc.setDrawColor(189, 144, 72); doc.setLineWidth(0.4);
+        doc.line(e.x, maq.y - 3.2, e.x + 24, maq.y - 3.2);
+        maq.y += 1;
+      }
+      maq.y += e.despues;
+    }
+
+    for(var ai2=0;ai2<areaTitles.length;ai2++){
+      // El texto del area llega marcado por bloques (subtitulos, escena,
+      // remates, pregunta) y chat.js no lo entrega si le falta alguno, asi que
+      // aqui solo hay que pintarlos. Un area sin marcas se pintaria como el
+      // muro de texto de antes, pero no llega ninguna: se vuelve a pedir.
+      var bloques = trocearLargos(analizarArea(areas[ai2] || ''));
+      doc.addPage(); doc.addImage(img_areas[ai2],'JPEG',0,0,W,H);
+      maq.y = 60; maq.paginas = 1;
+      for (var bi = 0; bi < bloques.length; bi++) pintarBloque(bloques[bi]);
+      if(maq.paginas<2){addPageNum(maq.pag);maq.pag++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);}
+      addPageNum(maq.pag); maq.pag++;
     }
 
     // ── PÁGINAS FINALES ───────────────────────────────────────────────────────
-    doc.addPage(); doc.addImage(img_frase,'JPEG',0,0,W,H); addPageNum(pageC); pageC++;
-    doc.addPage(); doc.addImage(img_proximo,'JPEG',0,0,W,H); addPageNum(pageC); pageC++;
-    doc.addPage(); doc.addImage(img_proximo2,'JPEG',0,0,W,H); addPageNum(pageC); pageC++;
+    doc.addPage(); doc.addImage(img_frase,'JPEG',0,0,W,H); addPageNum(maq.pag); maq.pag++;
+    doc.addPage(); doc.addImage(img_proximo,'JPEG',0,0,W,H); addPageNum(maq.pag); maq.pag++;
+    doc.addPage(); doc.addImage(img_proximo2,'JPEG',0,0,W,H); addPageNum(maq.pag); maq.pag++;
     doc.addPage(); doc.addImage(img_trasera,'JPEG',0,0,W,H);
 
     // ── Devolver PDF en base64 ────────────────────────────────────────────────

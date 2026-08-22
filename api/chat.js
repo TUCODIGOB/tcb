@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { MAX_INTENTOS, estado, reservar, liberar, compraValida } from '../lib/reserva.js';
+import { analizarArea, revisarBloques } from '../lib/bloques.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -111,7 +112,7 @@ ESTILO DE ESCRITURA:
 - Habla como una persona de confianza, directo y cercano
 - Lenguaje sencillo, que lo entienda cualquier persona aunque no haya leído un libro en años
 - Conecta ideas con comas, no con puntos ni guiones largos
-- Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos. Los asteriscos tienen un único uso, marcar la negrita que se explica más abajo, y no valen para nada más
+- Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos. Los asteriscos tienen un único uso, marcar la negrita que se explica más abajo, y no valen para nada más. Lo único que se escribe además del texto son las marcas de maquetación de la sección CÓMO SE ENTREGA EL ÁREA MARCADA, cada una al principio de su párrafo
 - No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo
 - No empieces dos párrafos con la misma estructura. Varía los arranques
 - Escribe como un humano, no como una IA: menos puntos, más comas, frases que fluyen
@@ -159,7 +160,7 @@ Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo int
 La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar de que es un ejemplo.
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
-Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos").
+Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos"). Los subtítulos que sí se escriben son otra cosa distinta y se explican en CÓMO SE ENTREGA EL ÁREA MARCADA: nunca llevan el nombre de una de estas etiquetas.
 El área se lee como una sola conversación seguida, no como seis trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
 
 HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
@@ -277,6 +278,26 @@ Se entra directamente en materia, cada área de una manera distinta: una con un 
 EL CIERRE ABRE LA PUERTA:
 Cada área lleva escrito cuál viene después. El cierre sigue siendo el golpe que ya se pide, y además, sin anunciarlo ni nombrar el área siguiente, deja algo abierto que apunta hacia ese terreno, para que el lector pase de página con ganas. En el área 7, que es la última, el cierre no apunta a ninguna parte: cierra el estudio entero.
 
+CÓMO SE ENTREGA EL ÁREA MARCADA (OBLIGATORIO, ES LO QUE LA MAQUETA):
+El área no se imprime como un bloque de texto seguido: se maqueta. Novecientas palabras del mismo tamaño y del mismo color son cuatro páginas de muro gris, y el ojo se cansa antes de llegar a lo que la persona ha pagado. Para que respire, marcas cuatro cosas, cada una al principio de su propio párrafo y escrita EXACTAMENTE así, con los corchetes:
+
+[SUBTITULO] Lo que haces cuando nadie mira
+[ESCENA] Son las once de la noche y estás repasando la conversación de esta tarde, ...
+[REMATE] Llevas media vida pidiendo permiso para ocupar tu sitio.
+[PREGUNTA] ¿Cuántas veces te has callado algo por no montar un lío?
+
+Qué lleva cada marca:
+- [SUBTITULO]: uno cada 250 o 300 palabras. En un área de 850 a 900 palabras salen TRES, y en el ÁREA 1, que es más larga, salen CUATRO. Nunca menos. Es un ladillo corto, de tres a cinco palabras, sin punto final, que sale de lo que se cuenta justo debajo y hace que dé ganas de seguir leyendo. NO es el nombre de un bloque ni una etiqueta ("HOY", "EL ORIGEN", "LAS CREENCIAS", "LO QUE HAY QUE SOLTAR") y NO anuncia lo que viene ("lo que voy a contarte ahora"). Es una frase suya en pequeño: "Lo que haces cuando nadie mira", "El precio de llegar la primera". El área NUNCA empieza con un subtítulo: primero se entra en materia y el primero llega más abajo. Y no cortan el hilo: el párrafo que va debajo sigue enganchado con lo de antes igual que si el subtítulo no estuviera.
+- [ESCENA]: la escena real obligatoria. Uno o dos párrafos, cada uno con su marca delante. No lleva negritas dentro.
+- [REMATE]: los dos remates del área, el de la herida y el de la fuerza. Cada uno va SOLO en su párrafo, es una frase, no lleva negritas y no comparte párrafo con nada más. Son dos, ni uno ni tres.
+- [PREGUNTA]: la pregunta directa. Va SOLA en su párrafo, es una sola frase y no lleva nada delante ni detrás dentro de ese párrafo. Si el área pide dos preguntas, las dos se marcan igual.
+
+El párrafo de CIERRE es el último del área, va SIN marca ninguna y detrás de él no va nada más: ni un remate, ni una pregunta, ni una despedida.
+Todo lo demás va en párrafos normales, sin marca.
+Entre párrafo y párrafo hay línea en blanco, también entre un párrafo marcado y el siguiente.
+Las marcas solo sirven para maquetar: se quitan al imprimir y el cliente no ve un corchete en su vida. Por eso NUNCA escribes un corchete para ninguna otra cosa.
+Un área que llegue sin sus subtítulos, sin su escena marcada, sin sus dos remates o sin su pregunta NO SE PUBLICA: se tira entera y se vuelve a pedir.
+
 PROHIBICIONES ABSOLUTAS:
 - No repetir el título del área en el texto
 - No causas vagas sin explicar cómo y cuándo
@@ -298,6 +319,8 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO un área que solo diagnostique. Sin el don contado a fondo, el área no vale
 - PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos
 - PROHIBIDO un área que se entienda pero no se sienta. Sin el momento que le toca por dentro, no vale
+- PROHIBIDO entregar un área sin sus marcas de maquetación: los subtítulos, la escena, los dos remates y la pregunta. Sin ellas el área se descarta entera
+- PROHIBIDO usar un corchete para cualquier cosa que no sea una de esas cuatro marcas
 - PROHIBIDO rematar solo la herida. Van los dos remates, el de la herida y el de la fuerza
 - PROHIBIDO un cierre que resuma lo ya contado o que insinúe algo sin llegar a decirlo
 - PROHIBIDA cualquier palabra técnica en el texto del cliente: nombres de planetas, casas, signos, aspectos, "carta natal", "tu signo". Le prometemos un estudio que se entiende sin saber nada de astrología, y una sola de esas palabras rompe esa promesa. La carta guía lo que escribes por dentro; fuera se traduce a su vida`;
@@ -305,6 +328,9 @@ PROHIBICIONES ABSOLUTAS:
   const AREAS = [
     {
       id: 1,
+      // El area 1 va entre 1.100 y 1.300 palabras, las demas entre 850 y 900:
+      // con un subtitulo cada 250 o 300 palabras, aqui salen cuatro.
+      minSub: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí misma.
 
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el planeta que rige su signo, y lo que caiga en la casa 1, con los aspectos del Sol. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
@@ -313,7 +339,7 @@ Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene 
 
 Después de esta viene el ÁREA 2, lo que repite sin darse cuenta: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 2,
@@ -325,7 +351,7 @@ Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene 
 
 Después de esta viene el ÁREA 3, el miedo que gobierna su vida: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 3,
@@ -337,7 +363,7 @@ Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene 
 
 Después de esta viene el ÁREA 4, lo que le sigue doliendo: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 4,
@@ -349,7 +375,7 @@ Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene 
 
 Después de esta viene el ÁREA 5, cómo vive el amor: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 5,
@@ -361,7 +387,7 @@ Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene 
 
 Después de esta viene el ÁREA 6, cómo se vincula fuera de la pareja: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 6,
@@ -373,7 +399,7 @@ Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene 
 
 Después de esta viene el ÁREA 7, su relación con el dinero: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 7,
@@ -385,7 +411,7 @@ Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene 
 
 Esta es la última área del estudio: el cierre no apunta a ninguna otra, cierra el informe entero.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Solo el texto del área, con sus marcas de maquetación en su sitio: los subtítulos, la escena, los dos remates y la pregunta. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
   ];
 
@@ -412,7 +438,7 @@ ${cartaTexto}`;
       ? 'un HOMBRE. Todo en masculino: solo, cansado, el mismo. Nunca en femenino.'
       : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos, dale la vuelta a la frase cuando haga falta.';
 
-  const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS OCHO, QUE SON LAS QUE MAS SE ESCAPAN:
+  const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS NUEVE, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
 2. El nombre "${nombrePila}" aparece UNA vez en el area, dentro de una frase, nunca al empezar
 3. Hay al menos una frase en **negrita**, la que aguanta sola fuera de su parrafo
@@ -420,7 +446,8 @@ ${cartaTexto}`;
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
 7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
-8. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos`;
+8. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos
+9. Estan puestas las marcas, cada una al principio de su parrafo: los [SUBTITULO], el [ESCENA], los DOS [REMATE] y el [PREGUNTA]. El cierre es el ultimo parrafo, sin marca, y detras no va nada`;
 
   // Las 7 areas se piden a la vez, asi que un fallo puntual en una sola tumbaba
   // el informe entero y gastaba un intento del cliente. Ahora cada area se
@@ -429,7 +456,7 @@ ${cartaTexto}`;
   // formada) no se reintentan: no van a mejorar por repetirlos.
   const INTENTOS_POR_AREA = 3;
 
-  async function pedirArea(area) {
+  async function pedirArea(area, aviso) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -462,7 +489,7 @@ ${cartaTexto}`;
         system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
-          content: `${contextoPersona}\n\n${area.prompt}\n\n${recordatorioFinal}`,
+          content: `${contextoPersona}\n\n${area.prompt}\n\n${recordatorioFinal}${aviso ? '\n\n' + aviso : ''}`,
         }],
       }),
     });
@@ -505,16 +532,35 @@ ${cartaTexto}`;
       throw err;
     }
 
+    // El area viene marcada por bloques (subtitulos, escena, remates,
+    // pregunta) y esas marcas son las que la maquetan. Si falta alguna, el PDF
+    // saldria como el muro de texto de antes, que es justo lo que se esta
+    // arreglando, asi que el area no se da por buena: se vuelve a pedir. Es el
+    // mismo trato que se le da a un area que llega cortada.
+    const faltan = revisarBloques(analizarArea(texto), { minSub: area.minSub || 3 });
+    if (faltan.length > 0) {
+      const err = new Error(`Área ${area.id} llegó mal marcada: ${faltan.join('; ')}`);
+      err.temporal = true;
+      err.faltan = faltan;
+      throw err;
+    }
+
     return texto.trim();
   }
 
   async function generarArea(area) {
     let ultimoError;
+    // Lo que le faltaba al intento anterior, para decirselo en el siguiente:
+    // volver a pedir lo mismo tal cual invita al mismo despiste.
+    let aviso = '';
     for (let intento = 1; intento <= INTENTOS_POR_AREA; intento++) {
       try {
-        return await pedirArea(area);
+        return await pedirArea(area, aviso);
       } catch (err) {
         ultimoError = err;
+        aviso = err.faltan
+          ? `AVISO: el intento anterior de esta area se descarto por esto: ${err.faltan.join('; ')}. Escribela entera otra vez y pon todas las marcas en su sitio.`
+          : '';
         // Un corte de red llega sin marca; se trata como temporal.
         const temporal = err.temporal !== false;
         if (!temporal || intento === INTENTOS_POR_AREA) break;
