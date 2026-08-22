@@ -558,7 +558,7 @@ ${cartaTexto}`;
     // ya se ha probado y no funciona; contarlo, si.
     const faltan = revisarBloques(analizarArea(texto), { minSub: area.minSub || 2 });
     if (vecesQueLaLlamaPorSuNombre(texto, nombrePila) < 1) {
-      faltan.push(`el area no la llama por su nombre ni una vez: "${nombrePila}" tiene que aparecer UNA vez llamandola a ella, entre comas dentro de una frase ("y ahi esta, ${nombrePila}, lo que no ves"), nunca al empezar el area ni al abrir un parrafo`);
+      faltan.push(`el area no la llama por su nombre ni una vez: "${nombrePila}" tiene que aparecer UNA vez, hablandole a ella dentro de una frase ("y ahi esta, ${nombrePila}, lo que no ves"), nunca al empezar el area ni al abrir un parrafo`);
     }
     if (faltan.length > 0) {
       const err = new Error(`Área ${area.id} llegó mal marcada: ${faltan.join('; ')}`);
@@ -605,7 +605,7 @@ Reglas de colocacion, que es lo importante:
 
 LAS NEGRITAS, si es una de las cosas que hay que corregir. Se marcan con dos asteriscos a cada lado, **asi**, y no son maquetacion: son lo que esa persona subrayaria con fosforito leyendo esto, la frase en la que se reconoce de golpe o la que le pone nombre a algo que hacia sin saberlo. Nunca la explicacion, ni el ejemplo, ni el piropo. Se marca desde donde empieza a doler hasta donde deja de doler, aunque caiga en mitad de la frase: de tres palabras a una frase, nunca una palabra suelta ni dos lineas seguidas. Van solo en el texto corrido, nunca dentro de la escena, ni en los remates, ni en la pregunta, ni en el cierre. No hay numero: las que pasen eso y ninguna mas. Si sobran, quitas los asteriscos de las que no lo pasen. Poner o quitar asteriscos no es tocar las palabras: las palabras siguen siendo exactamente las mismas.
 
-EL NOMBRE, si es una de las cosas que hay que corregir. Se mete UNA sola vez en toda el area, ENTRE COMAS dentro de una frase que ya existe, que es como se llama a alguien por su nombre en castellano ("y ahi esta, Raquel, lo que no ves"), y donde caiga natural: igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te esta diciendo algo que te toca. No al empezar el area, no abriendo un parrafo, y no dentro de la escena ni de un remate ni de la pregunta. Es meter una palabra entre comas en una frase que ya esta escrita, nada mas: el resto de esa frase se queda igual.
+EL NOMBRE, si es una de las cosas que hay que corregir. Se mete UNA sola vez en toda el area, dentro de una frase que ya existe y hablandole a ella ("y ahi esta, Raquel, lo que no ves"), donde caiga natural: igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te esta diciendo algo que te toca. No al empezar el area, no abriendo un parrafo, y no dentro de la escena ni de un remate ni de la pregunta. Es meter una palabra entre comas en una frase que ya esta escrita, nada mas: el resto de esa frase se queda igual.
 
 Lo unico que escribes tu son los subtitulos, porque no estan en el texto. Todo lo demas ya esta escrito.
 
@@ -649,7 +649,7 @@ ${texto}`;
 
     const faltanAun = revisarBloques(analizarArea(marcado), { minSub: area.minSub || 2 });
     if (vecesQueLaLlamaPorSuNombre(marcado, nombrePila) < 1) {
-      faltanAun.push(`sigue sin llamarla por su nombre: falta "${nombrePila}" entre comas dentro de una frase`);
+      faltanAun.push(`sigue sin llamarla por su nombre: falta "${nombrePila}" dentro de una frase`);
     }
     if (faltanAun.length > 0) {
       throw new Error(`Área ${area.id} sigue mal marcada tras el repaso: ${faltanAun.join('; ')}`);
