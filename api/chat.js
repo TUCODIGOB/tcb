@@ -235,6 +235,8 @@ No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que
 
 CIERRE DE CADA ÁREA (OBLIGATORIO):
 El área termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una imagen contundente, una paradoja, una frase corta que golpea. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz.
+EL CIERRE REVELA, NO RECOGE. Tiene que decir algo que no has dicho todavía en el área: el nombre exacto de lo que le pasa, la consecuencia que ella no ha atado, lo que hay debajo de todo lo anterior. Si el cierre se pudiera escribir habiendo leído solo el primer párrafo, no vale. Y si al leerlo la persona piensa "esto ya me lo has dicho", tampoco.
+NI SE QUEDA A MEDIAS. Un cierre que apunta a algo sin decirlo deja al lector con la sensación de que falta información, y esa sensación es la contraria a la que buscas. Si nombras lo que le pasa, lo nombras entero: no "el colchón nunca fue el problema", sino qué era el problema.
 
 Ejemplos del tono que busco para los cierres:
 - "Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva años esperándote dentro."
@@ -255,6 +257,17 @@ EL DON (OBLIGATORIO EN CADA ÁREA):
 Un informe que solo diagnostica deja a la persona tocada y sin ganas de volver. En cada área tiene que haber una parte que le dé aire: lo que esa misma manera de ser le ha dado, lo que hace mejor que casi nadie por ser así, y por qué esa capacidad es rara de verdad.
 No es un piropo de paso ni una frase amable al final. Se cuenta con el mismo detalle y la misma concreción que lo que le duele, con su situación y su ejemplo, y ocupa un sitio parecido dentro del área.
 No es "pero también tienes cosas buenas". Es la otra cara exacta de lo que acabas de contarle: la misma cualidad que le pesa es la que la hace buena en algo concreto, y tiene que quedar claro que sin esa cualidad no tendría esa capacidad.
+
+QUE LO SIENTA, NO SOLO QUE LO ENTIENDA:
+Un área puede estar perfectamente analizada y dejar al lector frío. Eso es exactamente lo que no sirve: entiende lo que le dices, asiente, pasa de página y no le ha pasado nada por dentro. Tiene que haber un momento en cada área en el que se le encoja algo, ese "por fin alguien lo dice" que hace que se le salten las lágrimas o que tenga que parar de leer un segundo.
+No se consigue subiendo el volumen ni poniendo frases más dramáticas. Se consigue así: en lugar de explicarle el patrón desde fuera, la metes dentro. Presente, no pasado. Su cuerpo, no su psicología: lo que se le tensa, lo que hace con las manos, lo que le pasa en el pecho, lo que dice en voz alta y lo que se calla justo después. Y cuando ya está dentro, una frase corta que le pone nombre a lo que lleva años sintiendo sin saber decirlo.
+La prueba: si lo lees en voz alta y no te cambia la respiración, no está. Y si lo que has escrito se lo podrías leer a otra persona y también le tocaría, tampoco está.
+
+LOS DOS REMATES DE CADA ÁREA:
+Cada área lleva dos frases que rematan, no una.
+La de la HERIDA nombra lo que le duele sin anestesia y sin salida amable. Es la que le escuece leer porque no la puede negar.
+La de la FUERZA nombra lo que tiene de raro y de valioso, con la misma contundencia y sin rebajarla con un "pero" ni con un "aunque". No es un consuelo detrás del golpe: es otro golpe, del otro lado.
+No van seguidas ni en el mismo párrafo, y ninguna de las dos es el cierre del área. Si al terminar el área solo hay una de las dos, está a medias.
 
 EL ARRANQUE DE CADA ÁREA:
 La primera frase decide si sigue leyendo. Las siete áreas van seguidas, así que si todas arrancan igual el informe se lee a plantilla desde la segunda página.
@@ -283,7 +296,10 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO contar en tu área el mismo mecanismo que gobierna otra. Mira la parte de la carta que te toca
 - PROHIBIDO quedarse en el patrón general. Sin un detalle que solo le valga a ella, el área no vale
 - PROHIBIDO un área que solo diagnostique. Sin el don contado a fondo, el área no vale
-- PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos`;
+- PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos
+- PROHIBIDO un área que se entienda pero no se sienta. Sin el momento que le toca por dentro, no vale
+- PROHIBIDO rematar solo la herida. Van los dos remates, el de la herida y el de la fuerza
+- PROHIBIDO un cierre que resuma lo ya contado o que insinúe algo sin llegar a decirlo`;
 
   const AREAS = [
     {
