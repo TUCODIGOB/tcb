@@ -307,7 +307,9 @@ PROHIBICIONES ABSOLUTAS:
       id: 1,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí misma.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el planeta que rige su signo, y lo que caiga en la casa 1, con los aspectos del Sol. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el planeta que rige su signo, y lo que caiga en la casa 1, con los aspectos del Sol. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 Después de esta viene el ÁREA 2, lo que repite sin darse cuenta: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -317,7 +319,9 @@ No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 pa
       id: 2,
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué repite una y otra vez sin darse cuenta.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: los Nodos (el Sur, lo que repite en automatico, y el Norte, hacia donde no va), lo que caiga en la casa 6, y los aspectos tensos que se repiten entre varios planetas a la vez. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: los Nodos (el Sur, lo que repite en automatico, y el Norte, hacia donde no va), lo que caiga en la casa 6, y los aspectos tensos que se repiten entre varios planetas a la vez. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 Después de esta viene el ÁREA 3, el miedo que gobierna su vida: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -327,7 +331,9 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que gobierna su vida sin que lo nombre.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Saturno, Plutón y Neptuno, y lo que caiga en la casa 12, con los aspectos duros de esos tres a los planetas personales. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Saturno, Plutón y Neptuno, y lo que caiga en la casa 12, con los aspectos duros de esos tres a los planetas personales. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 Después de esta viene el ÁREA 4, lo que le sigue doliendo: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -337,7 +343,9 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué le sigue doliendo hoy y cómo le afecta.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Quirón y la Luna, lo que caiga en la casa 4, y los aspectos entre la Luna y Quirón, Saturno o Plutón. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Quirón y la Luna, lo que caiga en la casa 4, y los aspectos entre la Luna y Quirón, Saturno o Plutón. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 Después de esta viene el ÁREA 5, cómo vive el amor: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -347,7 +355,9 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 5,
       prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo vive las relaciones de pareja.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Venus y Marte, y lo que caiga en las casas 5 y 7, con los aspectos entre Venus y Marte. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Venus y Marte, y lo que caiga en las casas 5 y 7, con los aspectos entre Venus y Marte. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 Después de esta viene el ÁREA 6, cómo se vincula fuera de la pareja: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -357,7 +367,9 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 6,
       prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: cómo se vincula con los demás fuera de la pareja.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Mercurio y Urano, y lo que caiga en las casas 3 y 11, con los aspectos de Mercurio. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Mercurio y Urano, y lo que caiga en las casas 3 y 11, con los aspectos de Mercurio. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 Después de esta viene el ÁREA 7, su relación con el dinero: el cierre deja algo abierto hacia ese terreno, sin nombrarlo ni anunciarlo.
 
@@ -367,7 +379,9 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 7,
       prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero.
 
-LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Júpiter, y lo que caiga en las casas 2 y 8, con los aspectos de Júpiter. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona. De ahí sale lo que cuentas. Si el rasgo dominante de la persona asoma aquí, cuéntalo solo como se nota en esta parcela, con situaciones que no se den en las otras seis.
+LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Júpiter, y lo que caiga en las casas 2 y 8, con los aspectos de Júpiter. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 Esta es la última área del estudio: el cierre no apunta a ninguna otra, cierra el informe entero.
 
