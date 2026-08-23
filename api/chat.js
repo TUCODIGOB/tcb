@@ -749,14 +749,23 @@ NO CAMBIES NI UNA PALABRA. Devuelve exactamente los mismos parrafos, en el mismo
     });
     const vuelven = salida?.parrafos;
     if (!Array.isArray(vuelven) || vuelven.length !== textos.length) return null;
-    // La comprobacion que lo hace seguro: sin los ** tiene que ser el mismo
-    // texto, parrafo por parrafo.
-    for (let i = 0; i < textos.length; i++) {
-      if (typeof vuelven[i] !== 'string') return null;
-      if (enPalabras(vuelven[i]).join(' ') !== enPalabras(textos[i]).join(' ')) return null;
-    }
-    const cuantas = vuelven.reduce((n, t) => n + (t.match(/\*\*[\s\S]+?\*\*/g) || []).length, 0);
-    return cuantas >= MIN_NEGRITAS ? vuelven : null;
+
+    // LA COMPROBACION QUE LO HACE SEGURO, Y VA PARRAFO A PARRAFO.
+    //
+    // Sin los ** tiene que ser el mismo texto. El que no coincida se descarta
+    // y se queda como estaba, pero SOLO ese: al principio esto rechazaba los
+    // siete parrafos si uno solo venia cambiado, y basta con que el modelo
+    // corrija una coma en un parrafo para perder el trabajo de los otros seis.
+    // Se comparan solo letras y numeros, asi que un cambio de puntuacion o de
+    // espacios no tira nada; cambiar, quitar o anadir una palabra si.
+    const salvados = textos.map((original, i) => {
+      const t = vuelven[i];
+      if (typeof t !== 'string') return original;
+      return enPalabras(t).join(' ') === enPalabras(original).join(' ') ? t : original;
+    });
+
+    const cuantas = salvados.reduce((n, t) => n + (t.match(/\*\*[\s\S]+?\*\*/g) || []).length, 0);
+    return cuantas >= MIN_NEGRITAS ? salvados : null;
   }
 
   // "ella" de sujeto, la que delata que se ha salido del "tu": "ella nota",
