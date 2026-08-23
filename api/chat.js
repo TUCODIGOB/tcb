@@ -141,6 +141,10 @@ La posición desde la que se escribe cada párrafo es esta: estás sentada delan
 Cómo se nota que hay alguien ahí: te paras a avisarla antes de decirle algo que va a doler ("antes de seguir quiero que te quede clara una cosa"), le pides que piense y le das tiempo ("piénsalo despacio, no de pasada"), le señalas lo que acaba de hacer mientras leía, le das la razón cuando la tiene. No es un narrador que describe desde fuera, es una persona que la acompaña mientras se lo cuenta.
 Sin pasarse: no se abre cada párrafo con una intervención, ni se le habla como en un correo de ventas. Son tres o cuatro momentos en toda el área, puestos donde hacen falta.
 
+TODO SE LE ESCRIBE A ELLA, DE TÚ, DE LA PRIMERA PALABRA A LA ÚLTIMA. Nunca se habla de ella desde fuera: ni "ella", ni "la que", ni un verbo en tercera persona referido a ella. Se escribe "lo que se te rompió", no "lo que se le rompió"; "de pequeña aprendiste", no "de pequeña aprendió"; "vas a descubrir", no "va a descubrir". Esto vale para el área entera, y con más motivo para el primer párrafo y para el cierre, que son los dos sitios donde más se escapa.
+En cuanto una frase habla de ella en tercera persona, el lector deja de ser el destinatario y pasa a ser un tercero que está oyendo cómo la comentan. Da igual lo buena que sea la frase: ahí se rompe todo lo anterior. Si al releer encuentras una sola, se reescribe en segunda persona.
+Cuidado con la excepción falsa: la entradilla que abre el área puede hablar de mucha gente ("hay quien...", "casi nadie..."), y eso es correcto porque no habla de ELLA. Lo que no vale nunca es hablar de ella misma en tercera persona.
+
 PERDONA ANTES DE NOMBRAR:
 Nadie baja la guardia delante de quien le está haciendo una lista de defectos. Antes de nombrar lo que le pesa, se le quita la culpa de encima, y solo entonces se le cuenta.
 Por dentro la forma es siempre la misma: eso que haces no es un defecto tuyo, es lo que aprendiste para que las cosas salieran bien, y te funcionó, por eso sigues haciéndolo. Las palabras las pones tú y cambian en cada área.
@@ -175,12 +179,14 @@ Ejemplos de escenas BUENAS (úsalas de inspiración, no las copies):
 
 Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas ("cuando te sientes mal, piensas cosas"), obvias ("a veces dudas de ti mismo") o vacías.
 
-La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar nunca de que es un ejemplo ni llamarla ejemplo: se presenta como un rato suyo, no como una ilustración de lo que le estás explicando.
-LA ESCENA SE PRESENTA, NO SE SUELTA. Soltada de golpe, el lector se encuentra de pronto en una cocina a las once de la noche sin saber por qué le están contando eso. Delante va una frase que la abre sin explicarla, del tipo "para que veas de qué te hablo, déjame contarte un rato tuyo, uno normal de esos que ni recuerdas al día siguiente". Y detrás, cuando la escena termina, otra frase que recoge lo que acaba de leer y le pone nombre. Esas dos frases van fuera de la escena, en sus propios párrafos, no dentro de la marca.
+La escena ocupa uno o dos párrafos completos, sin avisar nunca de que es un ejemplo ni llamarla ejemplo: se presenta como un rato suyo, no como una ilustración de lo que le estás explicando.
+LA ESCENA SE ESCRIBE EN UN SITIO Y EN UNO SOLO: en la casilla "escena", que se explica en CÓMO SE ENTREGA EL ÁREA. NO la escribas además dentro de "parrafos". Está en su casilla y el código la coloca donde tú digas, así que si además la copias en un párrafo el cliente se la encuentra impresa dos veces seguidas, palabra por palabra. Eso ya ha pasado en tres áreas del mismo informe.
+LA ESCENA SE PRESENTA, NO SE SUELTA. Soltada de golpe, el lector se encuentra de pronto en una cocina a las once de la noche sin saber por qué le están contando eso. Delante va una frase que la abre sin explicarla, del tipo "para que veas de qué te hablo, déjame contarte un rato tuyo, uno normal de esos que ni recuerdas al día siguiente". Y detrás, cuando la escena termina, otra frase que recoge lo que acaba de leer y le pone nombre. Esas dos frases van fuera de la escena, en "parrafos", y no dentro de la casilla "escena".
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
 Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos"). Los subtítulos que sí se escriben son otra cosa distinta y se explican en CÓMO SE ENTREGA EL ÁREA MARCADA: nunca llevan el nombre de una de estas etiquetas.
 El área se lee como una sola conversación seguida, no como seis trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
+Y OJO CON CÓMO ESTÁ ESCRITO LO DE ABAJO: son mis notas para ti, así que hablan de ella en tercera persona ("qué se le rompió", "cómo se comporta", "qué hace hoy"). Eso es como te lo cuento yo, no como se lo cuentas tú. En el texto que ella lee todo eso va en segunda persona: donde pone "qué se le rompió" escribes "qué se te rompió", donde pone "de pequeña aprendió" escribes "de pequeña aprendiste". No copies el punto de vista de estas notas.
 
 HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
 SOLO EN EL ÁREA 1 (IDENTIDAD) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
@@ -304,7 +310,7 @@ CÓMO SE ENTREGA EL ÁREA (ES LO QUE LA MAQUETA):
 El área no se entrega como un texto seguido: se entrega por casillas, y cada casilla se imprime distinta. Novecientas palabras del mismo tamaño y del mismo color son cuatro páginas de muro gris, y el ojo se cansa antes de llegar a lo que la persona ha pagado.
 
 - parrafos: el texto del área, en su orden. AQUÍ, Y SOLO AQUÍ, VAN LAS NEGRITAS, marcadas con dos asteriscos a cada lado, tal como pide RESALTA EN NEGRITA: son frases o medias frases del propio párrafo, nunca una palabra suelta. Cada uno lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras. El PRIMER párrafo nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
-- escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro.
+- escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro. Va escrita aquí y en ningún sitio más: NO la repitas dentro de "parrafos". Y aquí va la escena de verdad, escrita entera: una casilla no se rellena nunca con una palabra de relleno ni con un aviso de que falta algo, porque eso se imprime tal cual en el estudio del cliente.
 - remate_herida y remate_fuerza: las dos frases que rematan, tal como pide LAS FRASES QUE REMATAN. Cada una es UNA frase de treinta palabras como mucho, se imprime grande y centrada, y no lleva negritas.
 - pregunta: la pregunta directa, tal como pide PREGÚNTALE DIRECTAMENTE. Una sola frase, y no lleva negritas.
 - cierre: el último párrafo del área, tal como pide CIERRE DE CADA ÁREA. Va sin nada detrás.
@@ -340,6 +346,8 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos
 - PROHIBIDO un área que se entienda pero no se sienta. Sin el momento que le toca por dentro, no vale
 - PROHIBIDO dejar una casilla vacía: la escena, los dos remates, la pregunta y el cierre van siempre
+- PROHIBIDO rellenar una casilla con una palabra de relleno o con un aviso de que falta algo. Lo que escribas ahí se imprime tal cual en el estudio del cliente
+- PROHIBIDO copiar el texto de la escena dentro de "parrafos". Va en su casilla y solo en su casilla
 - PROHIBIDO escribir corchetes dentro del texto: cada cosa va en su casilla y no hay nada que marcar
 - PROHIBIDO rematar solo la herida. Van los dos remates, el de la herida y el de la fuerza
 - PROHIBIDO un cierre que resuma lo ya contado o que insinúe algo sin llegar a decirlo
@@ -452,7 +460,9 @@ ${cartaTexto}`;
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
 7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
 8. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos
-9. Ninguna casilla se queda vacia: la escena, los dos remates, la pregunta y el cierre van SIEMPRE
+9. Ninguna casilla se queda vacia ni rellena con una palabra de relleno: la escena, los dos remates, la pregunta y el cierre van SIEMPRE y van escritos de verdad
+9b. La escena esta escrita SOLO en su casilla. Repasa "parrafos": si ahi vuelve a estar la escena, la borras de ahi, que si no sale impresa dos veces
+9c. NI UNA FRASE EN TERCERA PERSONA SOBRE ELLA. Relee el primer parrafo y el cierre, que es donde se escapa: si dice "ella", "le", "aprendio", "carga", "va a descubrir" hablando de ella, se reescribe en segunda persona
 10. Y MIRA DONDE LAS HAS PUESTO: ninguna detras del ultimo parrafo, y nunca dos frases grandes detras del mismo parrafo, que entre ellas tiene que quedar texto
 11. Que se note que hay alguien hablandole: tres o cuatro veces en toda el area te paras y le hablas de tu a tu, y antes de nombrarle lo que le pesa le quitas la culpa de encima
 12. El area abre situando el tema desde fuera, no de golpe con una frase seca sobre ella. Y el cierre CIERRA: no presenta la siguiente area, no insinua nada, y deja ver que se le abre`;
@@ -483,15 +493,127 @@ ${cartaTexto}`;
   const MIN_NEGRITAS = 3;
   const REPASOS_POR_ESTILO = 1;
 
+  // Una casilla rellenada por rellenar. En el informe del 22 de agosto la
+  // escena del area 6 llego con la palabra "placeholder" dentro y salio
+  // impresa en dorado y a pagina entera.
+  //
+  // El suelo se queda bajo a proposito: aqui NO se juzga si la escena es buena
+  // ni si es larga, solo se caza lo que no es texto. Una escena corta se lee;
+  // volver a pedirla cuesta dinero y tiempo por algo que no esta roto.
+  const MIN_PALABRAS_ESCENA = 12;
+  const RELLENO = /^(placeholder|lorem|todo|tbd|pendiente|texto|xxx+|n\s*\/?\s*a|\.+|-+)$/;
+
+  // Ocho palabras seguidas iguales no son una casualidad: es la escena copiada.
+  // Paso en tres de las siete areas del mismo informe, y el cliente se la
+  // encontro impresa dos veces seguidas, palabra por palabra.
+  const PALABRAS_IGUALES = 8;
+
+
+  // COMO SE RECONOCE QUE UNA FRASE LE HABLA A ELLA.
+  //
+  // No basta con los pronombres: "por fuera pareces tranquila y por dentro
+  // llevas una maquina que no para" es segunda persona de manual y no lleva
+  // ni un "tu". Asi que van tambien los verbos, y van como palabras enteras y
+  // en una lista cerrada, no por terminacion: "-es" y "-as" valdrian para
+  // "es", "cosas" o "veces", y entonces cualquier frase en tercera persona
+  // pasaria por buena. De las terminaciones solo entran las inconfundibles:
+  // -aste, -iste y -abas.
+  //
+  // Y quedan fuera a proposito los verbos que tambien son sustantivos (notas,
+  // cuentas, cargas, esperas, guardas, miras, preguntas, estas) y las
+  // terminaciones -eras y -aras, que se tragaban "maneras", "raras" y "caras".
+  // Con esas dentro, una frase en tercera persona pasaba por buena solo por
+  // llevar la palabra "notas", y el control dejaba de servir para nada.
+  const VERBO_EN_TU = /(^|[^a-z0-9])(eres|has|tienes|haces|sabes|puedes|vas|quieres|dices|llevas|pareces|sientes|crees|necesitas|acabas|sigues|vives|sueles|vuelves|entras|callas|pides|aguantas|revisas|evitas|eliges|dejas|pagas|cierras|abres|sueltas|repites|cuidas|buscas|piensas|sostienes|controlas|recuerdas|contestas|escondes|ensenas|\w+(?:aste|iste|abas))([^a-z0-9]|$)/;
+
+  // Estos solo valen CON su tilde, que es justo lo que los distingue: "estás"
+  // es hablarle a ella y "estas" es "estas cosas". Por eso se miran sobre el
+  // texto sin quitarle los acentos.
+  const VERBO_CON_TILDE = /(^|[^a-záéíóúñ0-9])(estás|serás|estarás|tendrás|harás|sabrás|podrás|querrás|verás|irás|dirás|darás|vendrás|sentirás|descubrirás)([^a-záéíóúñ0-9]|$)/;
+
+  const PRONOMBRE_TU = /(^|[^a-z0-9])(tu|tus|te|ti|tuyo|tuya|tuyos|tuyas|contigo)([^a-z0-9]|$)/;
+
+  const MARCA_TU = {
+    test: frase => PRONOMBRE_TU.test(sinTildes(frase))
+      || VERBO_EN_TU.test(sinTildes(frase))
+      || VERBO_CON_TILDE.test(String(frase || '').toLowerCase()),
+  };
+
+  // "ella" de sujeto, la que delata que se ha salido del "tu": "ella nota",
+  // "ella tenga", "ella misma". Se pide que detras venga otra palabra a
+  // proposito, porque "ella" al final de la frase suele referirse a una cosa y
+  // no a la persona: en el informe del 22 de agosto, de los cuatro "ella" que
+  // habia, los tres que iban seguidos de verbo estaban mal y el unico bueno
+  // era "y si tiene un fallo, ¿que eres tu sin ella?", hablando de su
+  // maquinaria interna. Asi se cazan los tres y se deja pasar el bueno.
+  const ELLA_DE_SUJETO = /(^|[^a-z0-9])ella\s+[a-z]/;
+
+  const sinTildes = t => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const enPalabras = t => sinTildes(t).replace(/[^a-z0-9]+/g, ' ').split(' ').filter(Boolean);
+
+  // La escena copiada dentro del texto. Se busca una tirada de PALABRAS_IGUALES
+  // palabras de la escena dentro del cuerpo: comparar los textos enteros no
+  // valdria, porque el modelo cambia una coma al copiar y ya no coinciden.
+  function escenaRepetida(escena, cuerpo) {
+    const e = enPalabras(escena);
+    if (e.length < PALABRAS_IGUALES) return false;
+    const donde = ' ' + enPalabras(cuerpo).join(' ') + ' ';
+    for (let i = 0; i + PALABRAS_IGUALES <= e.length; i++) {
+      if (donde.includes(' ' + e.slice(i, i + PALABRAS_IGUALES).join(' ') + ' ')) return true;
+    }
+    return false;
+  }
+
   function loQueLeFaltaAlArea(montada) {
     const flojo = [];
-    const negritas = negritasDe(analizarArea(montada)).length;
+    const bloques = analizarArea(montada);
+
+    const negritas = negritasDe(bloques).length;
     if (negritas < MIN_NEGRITAS) {
       flojo.push(`solo ${negritas} negrita(s) en el cuerpo, hacen falta ${MIN_NEGRITAS}`);
     }
     if (vecesQueLaLlamaPorSuNombre(montada, nombrePila) < 1) {
       flojo.push(`no la llama "${nombrePila}" ni una vez`);
     }
+
+    const escena = bloques.filter(b => b.tipo === 'escena').map(b => b.t).join(' ');
+    const cuerpo = bloques.filter(b => b.tipo !== 'escena' && b.tipo !== 'sub').map(b => b.t).join(' ');
+    const palabrasEscena = enPalabras(escena);
+    if (palabrasEscena.length < MIN_PALABRAS_ESCENA || palabrasEscena.every(p => RELLENO.test(p))) {
+      flojo.push('la escena viene a medias o rellenada por rellenar');
+    } else if (escenaRepetida(escena, cuerpo)) {
+      flojo.push('la escena viene copiada tambien dentro del texto: saldria impresa dos veces');
+    }
+
+    // LE HABLA DE TU O NO LE HABLA. Los ladillos no cuentan (son etiquetas de
+    // tres palabras) y las frases muy cortas tampoco, que casi nunca llevan
+    // marca y dispararian la cuenta sin que pase nada.
+    const frases = (escena + ' ' + cuerpo)
+      .split(/(?<=[.?!])\s+/)
+      .map(f => f.trim())
+      .filter(f => f.split(/\s+/).length >= 6);
+
+    // Y EL NOMBRE, EN FRASE DE TU. Es el mismo fallo que el de arriba, no otro:
+    // en el informe del 22 de agosto el modelo solo escribia su nombre cuando
+    // se salia del "tu" ("adivinaria que Raquel carga con esto", "no es que
+    // Raquel no sepa disfrutar del dinero"). La frase que lleva su nombre
+    // tiene que llevar tambien un "tu", un "te" o un "tus": la unica de las
+    // tres que estaba bien lo llevaba ("no es que no sepas descansar, Raquel,
+    // es que descansar no TE suena a nada").
+    const suNombre = new RegExp('(?<![a-z0-9])' + sinTildes(nombrePila).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![a-z0-9])');
+    const nombreEnTerceraPersona = frases.some(f => {
+      const n = sinTildes(f);
+      return suNombre.test(n) && !MARCA_TU.test(f);
+    });
+    if (nombreEnTerceraPersona) {
+      flojo.push(`escribe "${nombrePila}" en una frase que no le habla de tu`);
+    }
+
+    const ella = frases.find(f => ELLA_DE_SUJETO.test(sinTildes(f)));
+    if (ella) {
+      flojo.push(`habla de ella desde fuera: "${ella.slice(0, 60).trim()}..."`);
+    }
+
     return flojo;
   }
 
