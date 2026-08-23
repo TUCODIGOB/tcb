@@ -122,7 +122,7 @@ ESTILO DE ESCRITURA:
 - LA PRUEBA, Y ES LA QUE MANDA: al terminar el área, lee seguido SOLO lo que has marcado. Tiene que sonar a lo que esa persona le contaría de sí misma a una amiga después de leerlo. Si suena a titulares, has marcado lo que quedaba bien. Si suena al área otra vez pero más corta, has marcado de más. Si no dice nada, has marcado de menos.
 - LA CANTIDAD LA DECIDE EL TEXTO, NO UNA CUOTA. Esto no es un correo de tres párrafos: es un libro sobre ella, y esta área sola ocupa cuatro páginas. Un libro que alguien lee con el fosforito en la mano no se termina con dos frases subrayadas, y tampoco con media página amarilla: de cada página se queda algo. En unas una cosa, en otras tres, y en alguna nada, porque el reparto es irregular igual que es irregular lo que le va pasando por dentro mientras lee. No hay número fijo ni sitio fijo: en un área saldrán tres y en otra siete, las que dé el texto. Lo que no puede pasar, y es lo único que aquí se mide, es que un área entera se quede sin ninguna. Lo que sí está mal es repartirlas a ojo para que queden equilibradas por página: eso se lee a plantilla y se nota.
 - EL FALLO DE VERDAD ES QUEDARSE CORTO, y es el que se comete siempre. Se marca lo más evidente, se dejan cuatro páginas sin nada donde agarrarse, y eso se lee igual de plano que no marcar nada: el lector recorre el muro sin que nada le pare. Cuando termines el área, reléela entera buscando lo que ella releería dos veces. Cada frase que encuentres así y no esté marcada, se marca.
-- EL TAMAÑO ES EL DEL GOLPE, no el de la frase. Se marca desde donde empieza a doler hasta donde deja de doler, aunque eso caiga en mitad de la frase y se lleve por delante una coma: "y mientras asientes, por dentro **estás calculando cuánto has enseñado de más**". Van de tres palabras a media frase, nunca una palabra suelta. Y OJO CON ESTO, que aquí las frases son largas: de una frase de treinta y cinco palabras NO se marca la frase entera, se marca el trozo que duele. Una negrita de más de treinta palabras ya no es una negrita, es un bloque, y deja de resaltar.
+- EL TAMAÑO ES EL DEL GOLPE, no el de la frase. Se marca desde donde empieza a doler hasta donde deja de doler, aunque eso caiga en mitad de la frase y se lleve por delante una coma: "y mientras asientes, por dentro **estás calculando cuánto has enseñado de más**". Van de tres palabras a una frase entera, nunca una palabra suelta, y nunca dos líneas y media seguidas, que ya no es una negrita sino un bloque y deja de resaltar.
 - NO SE MARCAN NUNCA: las explicaciones, los datos, los piropos, ni lo que ya se veía venir dos líneas antes. De un mismo contraste se marca solo la mitad que escuece, nunca las dos, porque marcar las dos se lee a plantilla. Y dos negritas seguidas que dicen lo mismo con otras palabras son una sola: se queda la buena.
 - FUERA DEL TEXTO CORRIDO NO HAY NEGRITAS. Ni dentro de la escena, que se lee del tirón y una marca ahí saca al lector de golpe, ni en los remates, ni en la pregunta, ni en el cierre: esos ya se destacan solos al maquetarlos, y una negrita encima no se ve, se pierde.
 - Los asteriscos van siempre en pareja, dos para abrir y dos para cerrar, y la pareja entera dentro del mismo párrafo. Nunca sueltos, nunca impares y nunca para ninguna otra cosa.
@@ -844,23 +844,54 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // Marcar es envolver: el texto no se sustituye, se rodea. Se descartan las
     // que no aparecen tal cual, las que ya estan marcadas y las que se pisan
     // con otra ya marcada.
-    const marcados = [...textos];
-    let puestas = 0;
+    //
+    // La busqueda se hace SIEMPRE sobre el texto original, no sobre el que ya
+    // lleva marcas, y de cada frase aceptada se apunta el trozo que ocupa. Si
+    // el modelo devuelve dos frases que se pisan (una dentro de la otra), la
+    // segunda se descarta. Buscando sobre el texto ya marcado, la segunda se
+    // metia DENTRO de la primera y la negrita salia partida en dos:
+    // "**estas **calculando cuanto** de mas**". No ha llegado a salir en
+    // ningun informe, pero el modelo puede devolverlas asi.
+    //
+    // Y ya no se usa replace: los asteriscos se meten por posicion. Asi
+    // tampoco hay que acordarse de que un "$&" dentro de la frase corrompe el
+    // parrafo, porque no hay patron que interpretar.
+    const yaMarcado = /\*\*[\s\S]+?\*\*/g;
+    const ocupado = textos.map(t => {
+      const trozos = [];
+      let m;
+      yaMarcado.lastIndex = 0;
+      while ((m = yaMarcado.exec(t)) !== null) trozos.push([m.index, m.index + m[0].length]);
+      return trozos;
+    });
+
+    const puestas = [];
     for (const frase of frases) {
       if (typeof frase !== 'string') continue;
       const f = frase.trim().replace(/^\*+|\*+$/g, '');
       if (enPalabras(f).length < 3 || f.length > LARGO_MAX_NEGRITA) continue;
-      const i = marcados.findIndex(t => t.includes(f));
+      const i = textos.findIndex(t => t.includes(f));
       if (i < 0) continue;
-      if (marcados[i].includes('**' + f) || marcados[i].includes(f + '**')) continue;
-      // Se marca con una funcion, no con un texto: en el segundo argumento de
-      // replace, un "$&" o un "$1" dentro de la frase se interpretarian como
-      // patron y saldria un parrafo corrompido. Con la funcion, lo que se
-      // escribe es exactamente lo que hay.
-      marcados[i] = marcados[i].replace(f, () => '**' + f + '**');
-      puestas++;
+      const desde = textos[i].indexOf(f);
+      const hasta = desde + f.length;
+      if (ocupado[i].some(([a, b]) => desde < b && a < hasta)) continue;
+      ocupado[i].push([desde, hasta]);
+      puestas.push({ i, desde, hasta });
     }
-    return puestas >= MIN_NEGRITAS ? marcados : null;
+    // Lo que se mira es cuantas negritas queda el area EN TOTAL, no cuantas ha
+    // puesto este arreglo: si el area ya traia una del modelo y aqui se anaden
+    // dos, son tres, y tirarlas por no haber puesto tres nuevas seria dejar el
+    // area con una sola habiendo podido dejarla con tres.
+    const yaHabia = textos.reduce((n, t) => n + ((t.match(/\*\*[\s\S]+?\*\*/g) || []).length), 0);
+    if (yaHabia + puestas.length < MIN_NEGRITAS) return null;
+
+    // De atras hacia delante: meter los asteriscos mueve todo lo que va
+    // detras, asi que se empieza por el final y las posiciones siguen valiendo.
+    const marcados = [...textos];
+    for (const { i, desde, hasta } of puestas.sort((a, b) => b.desde - a.desde)) {
+      marcados[i] = marcados[i].slice(0, desde) + '**' + marcados[i].slice(desde, hasta) + '**' + marcados[i].slice(hasta);
+    }
+    return marcados;
   }
 
   // "ella" de sujeto, la que delata que se ha salido del "tu": "ella nota",
