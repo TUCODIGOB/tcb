@@ -492,6 +492,8 @@ ${cartaTexto}`;
   // no decide cuales ni donde, eso lo decide el prompt. Un area de 900 palabras
   // con menos de tres es un muro.
   const MIN_NEGRITAS = 3;
+  // Mas largo que esto ya no resalta; es el mismo tope que aplica el saneado.
+  const LARGO_MAX_NEGRITA = 200;
   const REPASOS_POR_ESTILO = 1;
 
   // Una casilla rellenada por rellenar. En el informe del 22 de agosto la
@@ -511,18 +513,53 @@ ${cartaTexto}`;
 
   // Un solo sitio donde se decide que es "de relleno", para que la comprobacion
   // y el arreglo no puedan discrepar nunca.
-  // Barre el area ya montada y quita los trozos que son solo relleno. No mira
-  // casillas ni marcas: mira lo que se va a imprimir.
-  function sinRellenos(texto, idArea) {
-    const trozos = String(texto || '').split('\n\n');
-    const limpios = trozos.filter(t => {
-      const visible = t.replace(/^\[[A-ZÁÉÍÓÚ]+\]\s*/, '').trim();
-      const p = enPalabras(visible);
-      const esBasura = p.length > 0 && p.length <= 4 && p.every(x => RELLENO.test(x));
-      if (esBasura) console.warn(`Área ${idArea}: se ha quitado un relleno impreso ("${visible.slice(0, 30)}")`);
-      return !esBasura;
+  // ── LO ULTIMO QUE PASA ANTES DE QUE EL TEXTO EXISTA ───────────────
+  //
+  // Aqui no se mira de que casilla viene nada. Se mira lo que se va a
+  // imprimir, y se quita lo que un cliente no puede leer nunca. Existe porque
+  // los guardias por casilla siempre llegan tarde: el 22 de agosto el relleno
+  // salio por la escena, el 23 por el cierre, y el 24 salio otra cosa que no
+  // era relleno sino el modelo hablando solo.
+  //
+  // Tres cosas se van:
+  //   1. los trozos que son solo una palabra de relleno ("placeholder")
+  //   2. todo lo que venga detras de una llave, { o }, que en este texto no
+  //      aparecen jamas y solo salen cuando al modelo se le escapa el JSON
+  //   3. la frase en la que el modelo se disculpa o habla del formato, que en
+  //      el informe del 24 de agosto salio impresa: "...que tu lo fabriques.}
+  //      disculpa, corrijo el formato en la respuesta final.},"
+  const DISCULPA = /\s*[^.?!¿¡]{0,120}(disculp|perdon|perdón|lo siento|corrijo|corregir)[^.?!]{0,120}(formato|respuesta final|json|casilla|instrucciones)[^.?!]*[.?!]?\s*$/i;
+
+  function limpiarLoQueSeImprime(texto, idArea) {
+    const aviso = (que, trozo) => console.warn(`Área ${idArea}: ${que} ("${String(trozo).trim().slice(0, 40)}")`);
+
+    const trozos = String(texto || '').split('\n\n').map(t => {
+      const marca = (/^\[[A-ZÁÉÍÓÚ]+\]\s*/.exec(t) || [''])[0];
+      let cuerpo = t.slice(marca.length);
+
+      // 2) la llave y todo lo que venga detras
+      const llave = cuerpo.search(/[{}]/);
+      if (llave >= 0) {
+        aviso('se ha cortado basura de JSON impresa', cuerpo.slice(llave));
+        cuerpo = cuerpo.slice(0, llave);
+      }
+      // 3) el modelo hablando de su formato
+      if (DISCULPA.test(cuerpo)) {
+        aviso('se ha quitado una disculpa del modelo impresa', cuerpo.match(DISCULPA)[0]);
+        cuerpo = cuerpo.replace(DISCULPA, '');
+      }
+      // lo que quede colgando al cortar
+      cuerpo = cuerpo.replace(/[\s",;:]+$/, '').trim();
+      return { marca, cuerpo };
     });
-    return limpios.join('\n\n');
+
+    // 1) los trozos que son solo relleno
+    return trozos.filter(({ marca, cuerpo }) => {
+      const p = enPalabras(cuerpo);
+      const basura = p.length === 0 || (p.length <= 4 && p.every(x => RELLENO.test(x)));
+      if (basura && cuerpo) aviso('se ha quitado un relleno impreso', cuerpo);
+      return !basura;
+    }).map(({ marca, cuerpo }) => marca + cuerpo).join('\n\n');
   }
 
   function esDeRelleno(texto, minimo) {
@@ -592,7 +629,8 @@ ${cartaTexto}`;
   async function pedirSoloLaCasilla(area, datos, casilla) {
     const loEscrito = (datos?.parrafos || []).map(p => p?.texto).filter(Boolean).join('\n\n');
     const salida = await pedirJson({
-      system: SYSTEM_PROMPT,
+      // El mismo prompt de siempre, asi que se aprovecha la misma cache.
+      system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
       esquema: ESQUEMA_SOLO_ESCENA,
       tope: 800,
       contenido: `${contextoPersona}\n\n${area.prompt}\n\nESTO YA ESTÁ ESCRITO Y NO HAY QUE TOCARLO:\n\n${loEscrito}\n\nLo único que falta es ${QUE_ES_CADA_CASILLA[casilla]}. Escríbelo ahora, hablándole a ella de tú. Devuelve solo eso.`,
@@ -723,47 +761,57 @@ Y no lo pongas siempre en el mismo hueco: puede abrir la frase, cerrarla o ir de
   const ESQUEMA_NEGRITAS = {
     type: 'object',
     properties: {
-      parrafos: {
+      frases: {
         type: 'array',
-        description: 'Los mismos parrafos, en el mismo orden, con los ** anadidos.',
+        description: 'Las frases a resaltar, copiadas del texto tal cual, sin cambiar ni una letra.',
         items: { type: 'string' },
       },
     },
-    required: ['parrafos'],
+    required: ['frases'],
     additionalProperties: false,
   };
 
+  // Pide SOLO las frases a resaltar y los asteriscos los pone el codigo.
+  //
+  // Antes se le pedia que devolviera los parrafos enteros con los ** dentro:
+  // eran dos mil palabras de salida por area, que es lo que se paga caro, y
+  // encima habia que comprobar que no hubiera cambiado ninguna. Pidiendo solo
+  // las frases son sesenta palabras, y como el codigo es quien marca, el texto
+  // del area NO SE TOCA: es imposible que este paso cambie una palabra.
+  //
+  // Una frase que no aparezca tal cual en el texto se ignora y ya.
   async function marcarLasNegritas(parrafos) {
     const textos = parrafos.map(p => (p && typeof p.texto === 'string') ? p.texto : '');
     const salida = await pedirJson({
-      system: `Eres un maquetador. Te dan los parrafos de un capitulo escrito para una mujer, y te los dan numerados y en orden.
-Tu unico trabajo es marcar en negrita, con dos asteriscos a cada lado (**asi**), las frases que ella subrayaria con un fosforito: la que le pone nombre a algo que llevaba anos haciendo sin saberlo, la que se dice por dentro y no ha dicho nunca en voz alta, o la cuenta exacta de lo que le esta costando.
-Se marcan de tres palabras a una frase entera, NUNCA una palabra suelta y nunca dos lineas seguidas. No se marcan las explicaciones, ni los ejemplos, ni los piropos.
-Marca entre TRES y SEIS en total, repartidas de forma irregular: no una por parrafo.
-NO CAMBIES NI UNA PALABRA. Devuelve exactamente los mismos parrafos, en el mismo orden y con el mismo numero, con lo unico anadido siendo los asteriscos. Si quitas, cambias o anades una sola palabra, no sirve.`,
+      system: `Eres un maquetador. Te dan los parrafos de un capitulo escrito para una mujer, numerados y en orden.
+Devuelve las frases que ella subrayaria con un fosforito: la que le pone nombre a algo que llevaba anos haciendo sin saberlo, la que se dice por dentro y no ha dicho nunca en voz alta, o la cuenta exacta de lo que le esta costando.
+De tres palabras a una frase entera. NUNCA una palabra suelta y nunca dos lineas seguidas. No valen las explicaciones, ni los ejemplos, ni los piropos.
+Entre TRES y SEIS en total, y no una por parrafo: el reparto es irregular.
+COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para que se puedan encontrar. No las reescribas ni las arregles.`,
       esquema: ESQUEMA_NEGRITAS,
-      tope: 4000,
+      // Solo devuelve frases sueltas: con esto sobra.
+      tope: 700,
       contenido: textos.map((t, i) => `[${i + 1}]\n${t}`).join('\n\n'),
     });
-    const vuelven = salida?.parrafos;
-    if (!Array.isArray(vuelven) || vuelven.length !== textos.length) return null;
+    const frases = salida?.frases;
+    if (!Array.isArray(frases)) return null;
 
-    // LA COMPROBACION QUE LO HACE SEGURO, Y VA PARRAFO A PARRAFO.
-    //
-    // Sin los ** tiene que ser el mismo texto. El que no coincida se descarta
-    // y se queda como estaba, pero SOLO ese: al principio esto rechazaba los
-    // siete parrafos si uno solo venia cambiado, y basta con que el modelo
-    // corrija una coma en un parrafo para perder el trabajo de los otros seis.
-    // Se comparan solo letras y numeros, asi que un cambio de puntuacion o de
-    // espacios no tira nada; cambiar, quitar o anadir una palabra si.
-    const salvados = textos.map((original, i) => {
-      const t = vuelven[i];
-      if (typeof t !== 'string') return original;
-      return enPalabras(t).join(' ') === enPalabras(original).join(' ') ? t : original;
-    });
-
-    const cuantas = salvados.reduce((n, t) => n + (t.match(/\*\*[\s\S]+?\*\*/g) || []).length, 0);
-    return cuantas >= MIN_NEGRITAS ? salvados : null;
+    // Marcar es envolver: el texto no se sustituye, se rodea. Se descartan las
+    // que no aparecen tal cual, las que ya estan marcadas y las que se pisan
+    // con otra ya marcada.
+    const marcados = [...textos];
+    let puestas = 0;
+    for (const frase of frases) {
+      if (typeof frase !== 'string') continue;
+      const f = frase.trim().replace(/^\*+|\*+$/g, '');
+      if (enPalabras(f).length < 3 || f.length > LARGO_MAX_NEGRITA) continue;
+      const i = marcados.findIndex(t => t.includes(f));
+      if (i < 0) continue;
+      if (marcados[i].includes('**' + f) || marcados[i].includes(f + '**')) continue;
+      marcados[i] = marcados[i].replace(f, '**' + f + '**');
+      puestas++;
+    }
+    return puestas >= MIN_NEGRITAS ? marcados : null;
   }
 
   // "ella" de sujeto, la que delata que se ha salido del "tu": "ella nota",
@@ -876,7 +924,15 @@ NO CAMBIES NI UNA PALABRA. Devuelve exactamente los mismos parrafos, en el mismo
         // peligroso: desde ahora un area que se corte NO se entrega, asi que un
         // tope escaso no cortaria el texto, cortaria la venta.
         max_tokens: 5000,
-        system: SYSTEM_PROMPT,
+        // LA CACHE DEL PROMPT. El prompt de sistema son 22.000 tokens y se
+        // manda 7 veces identico, una por area: casi la mitad de lo que
+        // costaba un informe era reenviar el mismo texto. Marcandolo asi, la
+        // primera vez cuesta igual y las otras seis cuestan una decima parte.
+        // No cambia ni una palabra de lo que se escribe. La marca va DETRAS
+        // del texto que se repite, y todo lo que cambia (la carta, el area,
+        // el repaso) viaja en messages, que va despues: si el prompt cacheado
+        // llevara dentro algo distinto en cada llamada, no acertaria nunca.
+        system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
         messages: [{
           role: 'user',
           content: `${contextoPersona}\n\n${area.prompt}\n\n${recordatorioFinal}${repaso}`,
@@ -1056,7 +1112,7 @@ NO CAMBIES NI UNA PALABRA. Devuelve exactamente los mismos parrafos, en el mismo
     // de que exista como texto, se barre lo que se va a imprimir y se tira
     // cualquier trozo que sea solo una palabra de relleno, venga de donde
     // venga y se llame como se llame la casilla de la que vino.
-    const montada = sinRellenos(montarArea(datos), area.id);
+    const montada = limpiarLoQueSeImprime(montarArea(datos), area.id);
 
     // El area llega montada desde pedirArea, con cada casilla ya en su sitio.
     // mismo trato que se le da a un area que llega cortada.
