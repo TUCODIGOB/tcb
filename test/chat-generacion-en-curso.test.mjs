@@ -99,6 +99,11 @@ let llamadasAlModelo = 0;
 globalThis.fetch = async (url, opts = {}) => {
   const u = String(url);
   if (u.includes('api.anthropic.com')) {
+    // La llamada que calienta la cache: un solo token y sin esquema. No es una
+    // generacion y no cuenta como tal.
+    if (JSON.parse(opts.body || '{}').max_tokens === 1) {
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: 'ok' }] }) };
+    }
     // El repaso de estilo que lee el area es otra llamada distinta de la que
     // escribe el area: se responde "no hay nada que corregir" y no cuenta como
     // generacion, que es lo que mide esta prueba.

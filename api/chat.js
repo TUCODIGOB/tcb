@@ -850,7 +850,11 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       const i = marcados.findIndex(t => t.includes(f));
       if (i < 0) continue;
       if (marcados[i].includes('**' + f) || marcados[i].includes(f + '**')) continue;
-      marcados[i] = marcados[i].replace(f, '**' + f + '**');
+      // Se marca con una funcion, no con un texto: en el segundo argumento de
+      // replace, un "$&" o un "$1" dentro de la frase se interpretarian como
+      // patron y saldria un parrafo corrompido. Con la funcion, lo que se
+      // escribe es exactamente lo que hay.
+      marcados[i] = marcados[i].replace(f, () => '**' + f + '**');
       puestas++;
     }
     return puestas >= MIN_NEGRITAS ? marcados : null;
@@ -1208,6 +1212,41 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     return montada;
   }
 
+  // ── LA CACHE HAY QUE CALENTARLA ANTES ─────────────────────────────
+  //
+  // Un fallo que casi cuela: las siete areas salen A LA VEZ. La cache no
+  // existe hasta que TERMINA la llamada que la escribe, asi que si las siete
+  // arrancan juntas ninguna la encuentra, las siete la escriben, y escribir
+  // cuesta un 25 % MAS que no usar cache. Es decir: sale mas caro que antes,
+  // que es lo contrario de lo que se buscaba.
+  //
+  // Con una llamada minima antes —un solo token de respuesta— la cache queda
+  // escrita y las siete la leen a una decima parte. Cuesta un par de segundos.
+  //
+  // Si falla, no pasa nada: se pierde el ahorro, no el informe.
+  async function calentarLaCache() {
+    try {
+      await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-5',
+          thinking: { type: 'disabled' },
+          // Un token: no queremos texto, queremos que la cache quede escrita.
+          max_tokens: 1,
+          system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
+          messages: [{ role: 'user', content: 'ok' }],
+        }),
+      });
+    } catch (err) {
+      console.warn(`No se pudo calentar la cache (${err.message.slice(0, 60)}): se sigue sin ella`);
+    }
+  }
+
   async function generarArea(area) {
     let ultimoError;
     // LA MEJOR DE LAS QUE HAN LLEGADO, no la primera.
@@ -1255,6 +1294,10 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
 
   try {
     // Lanzar las 7 llamadas en paralelo
+    // Primero se calienta la cache y solo despues salen las siete: ver
+    // calentarLaCache. Sin esto, las siete se pisan y la cache sale cara.
+    await calentarLaCache();
+
     const resultados = await Promise.all(
       AREAS.map(area => generarArea(area))
     );
