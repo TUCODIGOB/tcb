@@ -129,7 +129,7 @@ ESTILO DE ESCRITURA:
 - CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra: se escribe "quiero plátanos, peras y fresas", no "quiero plátanos, peras, y fresas". Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.
 
 REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
-- TECHO ABSOLUTO: ningún párrafo pasa de 130 palabras. Si se te va por encima, pártelo en dos. Y ojo, que 130 es el techo y no el objetivo: un párrafo normal aquí anda por las 80 o 90 palabras, que son unas seis o siete líneas en el PDF.
+- TECHO ABSOLUTO: ningún párrafo pasa de 130 palabras. Medido en el PDF de verdad: 130 palabras son 7 líneas, y 7 líneas es el máximo. Si se te va por encima, pártelo en dos. Y ojo, que 130 es el techo y no el objetivo: un párrafo normal aquí anda por las 80 o 90 palabras, que son cinco líneas.
 - NO HAY MÍNIMO. Los párrafos van de 2 a 10 líneas y tienen que MEZCLARSE sin patrón: uno largo que desarrolla una idea entera sin cortarla, otro de cinco, dos cortos seguidos, uno de dos líneas que remata y duele. Escribe como escribe una persona, no como una máquina que reparte el texto en trozos iguales.
 - Si todos tus párrafos miden parecido, está MAL aunque respeten el techo. Se lee robótico y el lector lo nota aunque no sepa por qué.
 - Un párrafo de dos líneas es la mejor herramienta que tienes para cerrar una idea o dejar caer algo incómodo. Úsalos, y no siempre en el mismo sitio.
