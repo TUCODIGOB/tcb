@@ -885,6 +885,78 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     return false;
   }
 
+  // CUANTO DE UN PARRAFO ESTA COPIADO DE LA ESCENA, de 0 a 1.
+  //
+  // escenaRepetida contesta si hay copia en algun sitio del area, que es lo
+  // que hace falta para avisar. Para BORRAR hace falta otra cosa: saber si
+  // ESE parrafo es la copia o solo un parrafo que la roza. Se cuenta por
+  // ventanas de PALABRAS_IGUALES palabras: cuantas de las del parrafo estan
+  // tal cual dentro de la escena. Una copia entera da 1; un parrafo que
+  // recoge la escena y le pone nombre, citando una frase suelta, se queda
+  // bajo y no se toca.
+  function cuantoSeCopiaDe(escena, parrafo) {
+    const p = enPalabras(parrafo);
+    const ventanas = p.length - PALABRAS_IGUALES + 1;
+    if (ventanas < 1) return 0;
+    const donde = ' ' + enPalabras(escena).join(' ') + ' ';
+    let dentro = 0;
+    for (let i = 0; i < ventanas; i++) {
+      if (donde.includes(' ' + p.slice(i, i + PALABRAS_IGUALES).join(' ') + ' ')) dentro++;
+    }
+    return dentro / ventanas;
+  }
+
+  // A partir de aqui el parrafo ES la escena, no un parrafo que la menciona.
+  // Se deja alto a proposito: lo que no llegue sigue tratandose como hasta
+  // ahora, avisando y volviendo a pedir el area. Preferimos pagar un repaso
+  // de mas antes que borrarle un parrafo bueno al cliente.
+  const COPIA_DE_LA_ESCENA = 0.6;
+  // Por debajo de esto el area se queda sin cuerpo, y un area sin cuerpo es
+  // peor que un area con un parrafo repetido.
+  const MIN_PARRAFOS = 2;
+
+  // Borra de "parrafos" la escena copiada y recoloca lo que iba detras.
+  //
+  // Los numeros "tras_parrafo" dicen detras de que parrafo se lee la escena,
+  // los remates y la pregunta. Al quitar un parrafo, todos los que apuntaban
+  // mas abajo se desplazan uno: si no se corrigen aqui, las frases grandes
+  // salen colocadas donde no toca y el area se lee troceada. Ese es el unico
+  // riesgo real de quitar un parrafo, y se cierra aqui.
+  function quitarLaEscenaDeLosParrafos(datos, id) {
+    const escena = datos && datos.escena && datos.escena.texto;
+    if (typeof escena !== 'string' || !escena.trim()) return;
+    if (!Array.isArray(datos.parrafos)) return;
+
+    const sobran = [];
+    datos.parrafos.forEach((p, i) => {
+      const t = p && typeof p.texto === 'string' ? p.texto : '';
+      if (cuantoSeCopiaDe(escena, t) >= COPIA_DE_LA_ESCENA) sobran.push(i);
+    });
+    if (sobran.length === 0) return;
+
+    if (datos.parrafos.length - sobran.length < MIN_PARRAFOS) {
+      console.warn(`Área ${id}: la escena viene copiada en los párrafos y quitarla dejaría el área sin cuerpo, se deja como está`);
+      return;
+    }
+
+    datos.parrafos = datos.parrafos.filter((_, i) => !sobran.includes(i));
+
+    // sobran son posiciones contando desde 0; tras_parrafo cuenta desde 1.
+    for (const casilla of ['escena', 'remate_herida', 'remate_fuerza', 'pregunta']) {
+      const d = datos[casilla];
+      // Una casilla que se quito por venir de relleno llega aqui como null, y
+      // Number(null) vale 0, que es un numero: sin esta linea se le pondria un
+      // tras_parrafo a una casilla que ya no existe.
+      if (!d) continue;
+      const n = Number(d.tras_parrafo);
+      if (!Number.isFinite(n)) continue;
+      const encima = sobran.filter(i => i + 1 <= Math.round(n)).length;
+      if (encima > 0) datos[casilla] = { ...d, tras_parrafo: Math.round(n) - encima };
+    }
+
+    console.warn(`Área ${id}: la escena venía copiada en ${sobran.length} párrafo(s), se han quitado sin volver a pedir el área`);
+  }
+
   async function loQueLeFaltaAlArea(montada) {
     const flojo = [];
     const bloques = analizarArea(montada);
@@ -1132,10 +1204,29 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       if (casilla.nombre.startsWith('remate')) quitadas.remateOpcional = true;
     }
 
+    // ── LA ESCENA COPIADA SE BORRA, NO SE REESCRIBE EL AREA ────────
+    //
+    // El prompt pide la escena en su casilla y SOLO ahi. Cuando el modelo la
+    // copia ademas dentro de "parrafos", el cliente se la encuentra impresa
+    // dos veces seguidas, palabra por palabra: esta impreso en la pagina 7 del
+    // ultimo informe revisado, en el area 1.
+    //
+    // Hasta ahora esto lo cazaba loQueLeFaltaAlArea, que vuelve a pedir el
+    // AREA ENTERA. Son 900 palabras de salida, que es lo caro, para borrar un
+    // parrafo que ya sabemos cual es. Y solo hay un repaso: si el modelo
+    // vuelve a copiarla, se imprime igual. Por eso se paga y encima sale mal.
+    //
+    // Aqui se borra el parrafo y ya. No cuesta una llamada, no puede fallar
+    // dos veces, y lo que se quita es texto que se sigue leyendo entero en el
+    // bloque de la escena: al cliente no le falta nada.
+    quitarLaEscenaDeLosParrafos(datos, area.id);
+
     // ── Y LO QUE FALTE, SE ARREGLA AQUI ────────────────────────────
     // Las dos comprobaciones son las mismas que hace loQueLeFaltaAlArea
     // despues. La diferencia es que si aqui se arregla, ya no hace falta
     // volver a pedir el area entera: sale mas rapido y mas barato.
+    // Va DESPUES de quitar la escena copiada a proposito: si se pusiera antes,
+    // el nombre o una negrita podrian caer justo en el parrafo que se borra.
     if (vecesQueLaLlamaPorSuNombre(montarArea(datos), nombrePila) < 1) {
       const donde = dondeCabeElNombre(datos.parrafos);
       if (donde >= 0) {
