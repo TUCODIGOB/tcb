@@ -113,6 +113,16 @@ ESTILO DE ESCRITURA:
 - PREGÚNTALE DIRECTAMENTE. De vez en cuando párate y hazle una pregunta de verdad, de las que se quedan un rato dando vueltas. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
 - Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: "¿cuántas veces te has callado algo por no montar un lío?". Las MALAS valen para cualquiera y no dicen nada: "¿te suena?", "¿te identificas con esto?", "¿te ha pasado alguna vez?".
 - No hay número fijo de preguntas: van las que pida el texto y ninguna más. Si un área no pide ninguna, no la fuerces.
+- RESALTA EN NEGRITA, dentro del texto de los párrafos, marcándolo con dos asteriscos a cada lado: **así**. Esto no es opcional y no es un adorno: un área sin una sola negrita es un muro de cuatro páginas donde el ojo no tiene dónde pararse, y es el fallo que más caro sale.
+- LA NEGRITA ES EL FOSFORITO DEL LECTOR. No es maquetación, no es un resumen y no es para que la página quede bonita: es exactamente lo que esa persona subrayaría si estuviera leyendo esto en un libro suyo, con un rotulador en la mano y sin pensárselo. La pregunta que decide cada una es esa: al llegar aquí, ¿pararía y lo subrayaría, o seguiría de largo?
+- SE MARCA LO QUE LA NOMBRA, NO LO QUE LE EXPLICAS. Lo que se subraya es la frase en la que se reconoce de golpe, la que le pone nombre a algo que llevaba años haciendo sin saber que lo hacía, la que ella se dice por dentro y no ha dicho nunca en voz alta, o la cuenta exacta de lo que le está costando. El porqué, el ejemplo, el contexto y la parte amable no se subrayan jamás: son lo que sostiene la frase que sí.
+- LA PRUEBA, Y ES LA QUE MANDA: al terminar el área, lee seguido SOLO lo que has marcado. Tiene que sonar a lo que esa persona le contaría de sí misma a una amiga después de leerlo. Si suena a titulares, has marcado lo que quedaba bien. Si suena al área otra vez pero más corta, has marcado de más. Si no dice nada, has marcado de menos.
+- LA CANTIDAD LA DECIDE EL TEXTO, NO UNA CUOTA. Esto no es un correo de tres párrafos: es un libro sobre ella, y esta área sola ocupa cuatro páginas. Un libro que alguien lee con el fosforito en la mano no se termina con dos frases subrayadas, y tampoco con media página amarilla: de cada página se queda algo. En unas una cosa, en otras tres, y en alguna nada, porque el reparto es irregular igual que es irregular lo que le va pasando por dentro mientras lee. No hay número fijo ni sitio fijo: en un área saldrán tres y en otra siete, las que dé el texto. Lo que no puede pasar, y es lo único que aquí se mide, es que un área entera se quede sin ninguna. Lo que sí está mal es repartirlas a ojo para que queden equilibradas por página: eso se lee a plantilla y se nota.
+- EL FALLO DE VERDAD ES QUEDARSE CORTO, y es el que se comete siempre. Se marca lo más evidente, se dejan cuatro páginas sin nada donde agarrarse, y eso se lee igual de plano que no marcar nada: el lector recorre el muro sin que nada le pare. Cuando termines el área, reléela entera buscando lo que ella releería dos veces. Cada frase que encuentres así y no esté marcada, se marca.
+- EL TAMAÑO ES EL DEL GOLPE, no el de la frase. Se marca desde donde empieza a doler hasta donde deja de doler, aunque eso caiga en mitad de la frase y se lleve por delante una coma: "y mientras asientes, por dentro **estás calculando cuánto has enseñado de más**". Van de tres palabras a una frase entera, nunca una palabra suelta, y nunca dos líneas y media seguidas, que ya no es una negrita sino un bloque y deja de resaltar.
+- NO SE MARCAN NUNCA: las explicaciones, los datos, los piropos, ni lo que ya se veía venir dos líneas antes. De un mismo contraste se marca solo la mitad que escuece, nunca las dos, porque marcar las dos se lee a plantilla. Y dos negritas seguidas que dicen lo mismo con otras palabras son una sola: se queda la buena.
+- FUERA DEL TEXTO CORRIDO NO HAY NEGRITAS. Ni dentro de la escena, que se lee del tirón y una marca ahí saca al lector de golpe, ni en los remates, ni en la pregunta, ni en el cierre: esos ya se destacan solos al maquetarlos, y una negrita encima no se ve, se pierde.
+- Los asteriscos van siempre en pareja, dos para abrir y dos para cerrar, y la pareja entera dentro del mismo párrafo. Nunca sueltos, nunca impares y nunca para ninguna otra cosa.
 - CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra: se escribe "quiero plátanos, peras y fresas", no "quiero plátanos, peras, y fresas". Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.
 
 REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
@@ -121,10 +131,8 @@ REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 - Si todos tus párrafos miden parecido, está MAL aunque respeten el techo. Se lee robótico y el lector lo nota aunque no sepa por qué.
 - Un párrafo de dos líneas es la mejor herramienta que tienes para cerrar una idea o dejar caer algo incómodo. Úsalos, y no siempre en el mismo sitio.
 - Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
-
-EL LARGO DEL ÁREA (QUEDARSE CORTO ES EL ERROR MÁS GRAVE):
-REGLA CRÍTICA DE LONGITUD: cada área tiene OBLIGATORIAMENTE entre 850 y 900 palabras, con UNA excepción: el ÁREA 1 (IDENTIDAD) va entre 1.100 y 1.300 palabras, porque cubre más terreno. No cuentes párrafos ni te marques un número: salen los que salgan. Un área por debajo de su mínimo es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
-SI EL ÁREA TE SOBRA DE LARGO, quita contenido entero: un párrafo, una idea, un ejemplo. NUNCA comprimas lo que ya está escrito apretándolo, porque al apretarlo se pierden las explicaciones, se queda en afirmaciones sueltas y el área acaba leyéndose como un esquema.
+- SI EL ÁREA TE SOBRA DE LARGO, quita contenido entero: un párrafo, una idea, un ejemplo. NUNCA comprimas lo que ya está escrito apretándolo, porque al apretarlo se pierden las explicaciones, se queda en afirmaciones sueltas y el área acaba leyéndose como un esquema.
+- REGLA CRÍTICA DE LONGITUD: cada área tiene OBLIGATORIAMENTE entre 850 y 900 palabras, con UNA excepción: el ÁREA 1 (IDENTIDAD) va entre 1.100 y 1.300 palabras, porque cubre más terreno. No cuentes párrafos ni te marques un número: salen los que salgan. Un área por debajo de su mínimo es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente ella, que por fin alguien se lo explica.
 
@@ -174,10 +182,10 @@ Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo int
 
 La escena ocupa uno o dos párrafos completos, sin avisar nunca de que es un ejemplo ni llamarla ejemplo: se presenta como un rato suyo, no como una ilustración de lo que le estás explicando.
 LA ESCENA SE ESCRIBE EN UN SITIO Y EN UNO SOLO: en la casilla "escena", que se explica en CÓMO SE ENTREGA EL ÁREA. NO la escribas además dentro de "parrafos". Está en su casilla y el código la coloca donde tú digas, así que si además la copias en un párrafo el cliente se la encuentra impresa dos veces seguidas, palabra por palabra. Eso ya ha pasado en tres áreas del mismo informe.
-LA ESCENA SE PRESENTA, NO SE SUELTA. Soltada de golpe, el lector se encuentra de pronto en una cocina a las once de la noche sin saber por qué le están contando eso. Delante va una frase que la abre sin explicarla. Y detrás, cuando la escena termina, otra frase que recoge lo que acaba de leer y le pone nombre. Esas dos frases van fuera de la escena, en "parrafos", y no dentro de la casilla "escena".
+LA ESCENA SE PRESENTA, NO SE SUELTA. Soltada de golpe, el lector se encuentra de pronto en una cocina a las once de la noche sin saber por qué le están contando eso. Delante va una frase que la abre sin explicarla, del tipo "para que veas de qué te hablo, déjame contarte un rato tuyo, uno normal de esos que ni recuerdas al día siguiente". Y detrás, cuando la escena termina, otra frase que recoge lo que acaba de leer y le pone nombre. Esas dos frases van fuera de la escena, en "parrafos", y no dentro de la casilla "escena".
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
-Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos"). Los subtítulos que sí se escriben son otra cosa distinta y se explican en CÓMO SE ENTREGA EL ÁREA: nunca llevan el nombre de una de estas etiquetas.
+Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos"). Los subtítulos que sí se escriben son otra cosa distinta y se explican en CÓMO SE ENTREGA EL ÁREA MARCADA: nunca llevan el nombre de una de estas etiquetas.
 El área se lee como una sola conversación seguida, no como seis trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
 Y FÍJATE EN CÓMO ESTÁ ESCRITO LO DE ABAJO, porque no es casualidad: está en segunda persona, hablándole a ella de tú, que es exactamente como tiene que salir en el texto. "Qué se te rompió", no "qué se le rompió". Mantén esa persona de la primera palabra a la última.
 
@@ -249,8 +257,6 @@ NADA DE FRASES MOLDE:
 Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta al leerlas del tirón. La lógica de fondo se mantiene siempre (qué te pasa, de dónde viene, qué creencia lo sostiene, qué se cae), lo que cambia en cada área es cómo se dice y en qué orden aparece. Quedan PROHIBIDAS estas fórmulas y cualquier variante suya:
 - "el bucle es siempre el mismo", "el patrón es siempre el mismo", "y así una y otra vez"
 - "lo que tienes que soltar es", "lo que te toca soltar es", "toca soltar"
-- "tú eres esa persona", "tú eres de esas", "tú eres de las que": es la manera más fácil de cerrar la entradilla sobre ella, y por eso sale en las siete a la vez. Cada área se estrecha hasta ella de una manera distinta
-- "para que veas de qué te hablo", "déjame contarte un rato tuyo": la frase que presenta la escena se escribe nueva en cada área
 - "el día que ... todo cambia", "el día que ... todo empieza", "cuando entiendas esto, todo cambia". Lo que queda prohibido es la promesa vacía del "todo cambia", no la construcción: "el día que dejes de comprobarlo, vas a descubrir que llevabas años pudiendo descansar" dice algo concreto y vale
 No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que salga de lo que acabas de contar y no de una plantilla.
 
@@ -295,8 +301,8 @@ DÓNDE VA CADA UNA, QUE ES LO QUE MÁS SE FALLA. No se colocan para repartir la 
 No van seguidas ni en el mismo párrafo, y ninguna es el cierre del área. Si al terminar solo hay una de las dos, está a medias.
 
 EL ARRANQUE DE CADA ÁREA:
-Un área se lee como un capítulo, y un capítulo no empieza en mitad de la frase. Pero es un capítulo SIN TÍTULO PROPIO: el título ya va impreso arriba en la página. Empieza por la primera frase de la entradilla. Entrar de golpe con una afirmación seca sobre ella en la primera línea da un frenazo: el lector acaba de pasar de página, todavía no sabe de qué le van a hablar, y ya le están diciendo algo suyo.
-Se abre ancho y se cierra sobre ella. Dos o tres frases que sitúan el tema desde fuera, desde algo que le pasa a mucha gente o desde una situación que cualquiera reconoce, y solo entonces se estrecha hasta ella. Las palabras las pones tú y cambian en cada área.
+Un área se lee como un capítulo, y un capítulo no empieza en mitad de la frase. Pero es un capítulo SIN TÍTULO PROPIO: el título ya va impreso arriba en la página, así que el PRIMER párrafo del área no lleva ladillo nunca. Empieza por la primera frase de la entradilla. Entrar de golpe con una afirmación seca sobre ella en la primera línea da un frenazo: el lector acaba de pasar de página, todavía no sabe de qué le van a hablar, y ya le están diciendo algo suyo.
+Se abre ancho y se cierra sobre ella. Dos o tres frases que sitúan el tema desde fuera, desde algo que le pasa a mucha gente o desde una situación que cualquiera reconoce, y solo entonces se estrecha hasta ella. La forma es esa: "Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen... Tú eres esa persona." Las palabras las pones tú y cambian en cada área.
 Que sitúe no significa que anuncie: sigue estando PROHIBIDO decir lo que vas a contar ("en esta parte vamos a ver", "hay algo que tienes que entender").
 Y es la ÚNICA parte del área donde vale algo que le pasa a mucha gente, precisamente porque en dos frases se estrecha hasta ella y deja de valerle a nadie más. En cuanto has entrado en ella vuelve a mandar la regla de siempre: nada que le pudieras leer a otra persona y también le tocara.
 Las siete van seguidas, así que ninguna abre como otra: una entra por una situación que vive mucha gente, otra por una pregunta, otra por algo que se da por cierto de esa parcela de la vida y no lo es, otra por un momento concreto del día. Y ninguna de las siete empieza por "hay algo", "hay una escena" ni "imagina que".
@@ -304,26 +310,11 @@ Las siete van seguidas, así que ninguna abre como otra: una entra por una situa
 CÓMO SE ENTREGA EL ÁREA (ES LO QUE LA MAQUETA):
 El área no se entrega como un texto seguido: se entrega por casillas, y cada casilla se imprime distinta. Novecientas palabras del mismo tamaño y del mismo color son cuatro páginas de muro gris, y el ojo se cansa antes de llegar a lo que la persona ha pagado.
 
-- parrafos: el texto del área, en su orden. AQUÍ, Y SOLO AQUÍ, VAN LAS NEGRITAS, marcadas con dos asteriscos a cada lado, tal como pide RESALTA EN NEGRITA: son frases o medias frases del propio párrafo, nunca una palabra suelta. Cada uno lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras. Cómo son y cuántos van, en LOS LADILLOS.
-- escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro. Y aquí va la escena de verdad, escrita entera: una casilla no se rellena nunca con una palabra de relleno ni con un aviso de que falta algo, porque eso se imprime tal cual en el estudio del cliente.
+- parrafos: el texto del área, en su orden. AQUÍ, Y SOLO AQUÍ, VAN LAS NEGRITAS, marcadas con dos asteriscos a cada lado, tal como pide RESALTA EN NEGRITA: son frases o medias frases del propio párrafo, nunca una palabra suelta. Cada uno lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras. El PRIMER párrafo nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
+- escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro. Va escrita aquí y en ningún sitio más: NO la repitas dentro de "parrafos". Y aquí va la escena de verdad, escrita entera: una casilla no se rellena nunca con una palabra de relleno ni con un aviso de que falta algo, porque eso se imprime tal cual en el estudio del cliente.
 - remate_herida y remate_fuerza: las dos frases que rematan, tal como pide LAS FRASES QUE REMATAN. Cada una es UNA frase de treinta palabras como mucho, se imprime grande y centrada, y no lleva negritas.
 - pregunta: la pregunta directa, tal como pide PREGÚNTALE DIRECTAMENTE. Una sola frase, y no lleva negritas.
 - cierre: el último párrafo del área, tal como pide CIERRE DE CADA ÁREA. Va sin nada detrás.
-
-LOS LADILLOS (ES LA REGLA QUE MÁS SE FALLA):
-El PRIMER párrafo nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
-
-LAS NEGRITAS DEL TEXTO (ES LA OTRA REGLA QUE MÁS SE FALLA):
-- RESALTA EN NEGRITA, dentro del texto de los párrafos, marcándolo con dos asteriscos a cada lado: **así**. Esto no es opcional y no es un adorno: un área sin una sola negrita es un muro de cuatro páginas donde el ojo no tiene dónde pararse, y es el fallo que más caro sale.
-- LA NEGRITA ES EL FOSFORITO DEL LECTOR. No es maquetación, no es un resumen y no es para que la página quede bonita: es exactamente lo que esa persona subrayaría si estuviera leyendo esto en un libro suyo, con un rotulador en la mano y sin pensárselo. La pregunta que decide cada una es esa: al llegar aquí, ¿pararía y lo subrayaría, o seguiría de largo?
-- SE MARCA LO QUE LA NOMBRA, NO LO QUE LE EXPLICAS. Lo que se subraya es la frase en la que se reconoce de golpe, la que le pone nombre a algo que llevaba años haciendo sin saber que lo hacía, la que ella se dice por dentro y no ha dicho nunca en voz alta, o la cuenta exacta de lo que le está costando. El porqué, el ejemplo, el contexto y la parte amable no se subrayan jamás: son lo que sostiene la frase que sí.
-- LA PRUEBA, Y ES LA QUE MANDA: al terminar el área, lee seguido SOLO lo que has marcado. Tiene que sonar a lo que esa persona le contaría de sí misma a una amiga después de leerlo. Si suena a titulares, has marcado lo que quedaba bien. Si suena al área otra vez pero más corta, has marcado de más. Si no dice nada, has marcado de menos.
-- LA CANTIDAD LA DECIDE EL TEXTO, NO UNA CUOTA. Esto no es un correo de tres párrafos: es un libro sobre ella, y esta área sola ocupa cuatro páginas. Un libro que alguien lee con el fosforito en la mano no se termina con dos frases subrayadas, y tampoco con media página amarilla: de cada página se queda algo. En unas una cosa, en otras tres, y en alguna nada, porque el reparto es irregular igual que es irregular lo que le va pasando por dentro mientras lee. No hay número fijo ni sitio fijo: en un área saldrán tres y en otra siete, las que dé el texto. Lo que no puede pasar, y es lo único que aquí se mide, es que un área baje de TRES. Lo que sí está mal es repartirlas a ojo para que queden equilibradas por página: eso se lee a plantilla y se nota.
-- EL FALLO DE VERDAD ES QUEDARSE CORTO, y es el que se comete siempre. Se marca lo más evidente, se dejan cuatro páginas sin nada donde agarrarse, y eso se lee igual de plano que no marcar nada: el lector recorre el muro sin que nada le pare. Cuando termines el área, reléela entera buscando lo que ella releería dos veces. Cada frase que encuentres así y no esté marcada, se marca.
-- EL TAMAÑO ES EL DEL GOLPE, no el de la frase. Se marca desde donde empieza a doler hasta donde deja de doler, aunque eso caiga en mitad de la frase y se lleve por delante una coma: "y mientras asientes, por dentro **estás calculando cuánto has enseñado de más**". Van de tres palabras a una frase entera, nunca una palabra suelta, y nunca dos líneas y media seguidas, que ya no es una negrita sino un bloque y deja de resaltar.
-- NO SE MARCAN NUNCA: las explicaciones, los datos, los piropos, ni lo que ya se veía venir dos líneas antes. De un mismo contraste se marca solo la mitad que escuece, nunca las dos, porque marcar las dos se lee a plantilla. Y dos negritas seguidas que dicen lo mismo con otras palabras son una sola: se queda la buena.
-- FUERA DEL TEXTO CORRIDO NO HAY NEGRITAS. Ni dentro de la escena, que se lee del tirón y una marca ahí saca al lector de golpe, ni en los remates, ni en la pregunta, ni en el cierre: esos ya se destacan solos al maquetarlos, y una negrita encima no se ve, se pierde.
-- Los asteriscos van siempre en pareja, dos para abrir y dos para cerrar, y la pareja entera dentro del mismo párrafo. Nunca sueltos, nunca impares y nunca para ninguna otra cosa.
 
 DÓNDE VA CADA COSA, QUE ES LA MITAD DEL TRABAJO:
 La escena, los dos remates y la pregunta llevan un número, "tras_parrafo", que dice detrás de qué párrafo se leen. Ese número es tuyo y es donde de verdad se decide cómo se lee el área.
@@ -340,9 +331,27 @@ PROHIBICIONES ABSOLUTAS:
 - No frases de autoayuda ni coaching
 - No decir qué debe hacer la persona: ni pasos, ni ejercicios, ni plan, ni "empieza por". Enseñarle lo que se le abre el día que algo deje de mandarla no es decirle qué hacer, es enseñarle una puerta, y eso sí va
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
+- PROHIBIDO escribir párrafos de más de 7 líneas. Parte en 2 si hace falta
+- PROHIBIDO enumerar o anunciar cuántas cosas vienen ("son tres", "el primero", "la segunda")
+- PROHIBIDO que un párrafo empiece un tema nuevo sin engancharlo con el anterior
+- PROHIBIDO que todas las frases midan parecido. Ni todas largas ni todas cortas
+- PROHIBIDO comprimir el texto para que quepa. Si sobra, se quita contenido entero
+- PROHIBIDO retorcer una frase o usar un verbo raro para que suene literario. Si no lo diría una persona hablando, se reescribe
+- PROHIBIDO apilar varias explicaciones del origen. Una sola, bien desarrollada
+- PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
+- PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
 - PROHIBIDO cerrar un área con una frase suave o vaga. El cierre golpea primero y solo despues abre: el golpe nunca se cambia por la luz, van los dos y en ese orden
+- PROHIBIDO contar en tu área el mismo mecanismo que gobierna otra. Mira la parte de la carta que te toca
+- PROHIBIDO quedarse en el patrón general. Sin un detalle que solo le valga a ella, el área no vale
+- PROHIBIDO un área que solo diagnostique. Sin el don contado a fondo, el área no vale
+- PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos
+- PROHIBIDO un área que se entienda pero no se sienta. Sin el momento que le toca por dentro, no vale
 - PROHIBIDO dejar una casilla vacía: la escena, los dos remates, la pregunta y el cierre van siempre
 - PROHIBIDO rellenar una casilla con una palabra de relleno o con un aviso de que falta algo. Lo que escribas ahí se imprime tal cual en el estudio del cliente
+- PROHIBIDO copiar el texto de la escena dentro de "parrafos". Va en su casilla y solo en su casilla
+- PROHIBIDO escribir corchetes dentro del texto: cada cosa va en su casilla y no hay nada que marcar
+- PROHIBIDO rematar solo la herida. Van los dos remates, el de la herida y el de la fuerza
+- PROHIBIDO un cierre que resuma lo ya contado o que insinúe algo sin llegar a decirlo
 - PROHIBIDA cualquier palabra técnica en el texto del cliente: nombres de planetas, casas, signos, aspectos, "carta natal", "tu signo". Le prometemos un estudio que se entiende sin saber nada de astrología, y una sola de esas palabras rompe esa promesa. La carta guía lo que escribes por dentro; fuera se traduce a su vida`;
 
   const AREAS = [
@@ -446,7 +455,7 @@ ${cartaTexto}`;
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS DIEZ, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
 2. El nombre "${nombrePila}" aparece UNA o DOS veces en el area, dentro de una frase en la que le hablas de tu, nunca en una que hable de ella en tercera persona y nunca al empezar. Ninguna vez no vale
-3. El area lleva negritas dentro del texto de los parrafos, marcadas con **dos asteriscos a cada lado**: frases o medias frases que ella subrayaria con el fosforito, nunca una palabra suelta. Relee solo lo marcado seguido y tiene que sonar a ella contandose a si misma; la que no pase esa prueba se cambia por la que si la pasa, pero el area no se entrega con menos de TRES
+3. El area lleva negritas dentro del texto de los parrafos, marcadas con **dos asteriscos a cada lado**: frases o medias frases que ella subrayaria con el fosforito, nunca una palabra suelta. Relee solo lo marcado seguido y tiene que sonar a ella contandose a si misma; la que no pase esa prueba se cambia por la que si la pasa, pero el area no se entrega sin ninguna
 4. Hay al menos una pregunta directa, salida de lo que acabas de contarle
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
