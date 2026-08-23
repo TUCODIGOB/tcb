@@ -1318,7 +1318,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // lib/estilo.js: ante la duda no se toca, porque una coma quitada donde
     // hacia falta es una falta de ortografia impresa.
     const textoCompleto = resultados
-      .map(t => quitarComaAntesDeY(t).split(SEPARADOR_AREAS).join(''))
+      .map(t => quitarComaAntesDeY(t, nombrePila).split(SEPARADOR_AREAS).join(''))
       .join(SEPARADOR_AREAS);
 
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
