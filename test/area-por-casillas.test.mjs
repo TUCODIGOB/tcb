@@ -77,9 +77,12 @@ globalThis.fetch = async (url, opts = {}) => {
     return { ok: true, status: 201, json: async () => ({}) };
   }
   if (u.includes('api.anthropic.com')) {
-    // La llamada que calienta la cache: un solo token y sin esquema. No es una
-    // generacion y no cuenta como tal.
-    if (JSON.parse(opts.body || '{}').max_tokens === 1) {
+    // La llamada que calienta la cache. Se reconoce por su mensaje, "ok", que
+    // es lo unico suyo que no comparte con las de area: el resto de la
+    // peticion tiene que ser identica a proposito, para que la cache acierte.
+    // Antes se reconocia por max_tokens === 1, y al cambiarlo esta prueba
+    // empezo a contar el arranque como si fuera un area.
+    if (JSON.parse(opts.body || '{}').messages?.[0]?.content === 'ok') {
       return { ok: true, status: 200, json: async () => ({ content: [{ text: 'ok' }] }) };
     }
     // El repaso de estilo que lee el area es otra llamada distinta de la que

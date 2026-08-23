@@ -131,8 +131,10 @@ globalThis.fetch = async (url, opts = {}) => {
     Array.isArray(cuerpo.system) ? (cuerpo.system[0] && cuerpo.system[0].text) || '' : cuerpo.system || ''
   );
 
-  // La llamada que calienta la cache: un token y sin esquema.
-  if (cuerpo.max_tokens === 1) {
+  // La llamada que calienta la cache. Se reconoce por su mensaje, "ok": el
+  // resto de la peticion es identica a la de un area a proposito, para que la
+  // cache acierte, asi que no vale mirar max_tokens ni el esquema.
+  if (cuerpo.messages?.[0]?.content === 'ok') {
     return { ok: true, status: 200, json: async () => ({ content: [{ text: 'ok' }] }) };
   }
   // El repaso de estilo lee el area, no la escribe: no cuenta como generacion.

@@ -1336,7 +1336,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
   // Si falla, no pasa nada: se pierde el ahorro, no el informe.
   async function calentarLaCache() {
     try {
-      await fetch('https://api.anthropic.com/v1/messages', {
+      const respuesta = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1346,12 +1346,38 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
         body: JSON.stringify({
           model: 'claude-sonnet-5',
           thinking: { type: 'disabled' },
-          // Un token: no queremos texto, queremos que la cache quede escrita.
-          max_tokens: 1,
+          // ESTA LLAMADA TIENE QUE SER IGUAL QUE LAS DE LAS AREAS.
+          //
+          // La cache acierta por el principio de la peticion, y el esquema de
+          // casillas va DELANTE del prompt. Sin el, esta llamada guardaba una
+          // cosa y las siete areas pedian otra, asi que ninguna la encontraba:
+          // se escribia siete veces el mismo prompt de 22.000 tokens y no se
+          // leia ni una. En el informe del 23 de agosto eso fueron 268.000
+          // tokens de prompt pagados a precio entero, dos tercios de la
+          // factura. Con el esquema puesto, la peticion empieza igual y las
+          // areas si encuentran lo que dejo esta.
+          //
+          // Si algun dia se le cambia algo a la llamada del area de lo que va
+          // ANTES del prompt, hay que cambiarlo aqui tambien o la cache se
+          // vuelve a quedar sin usar, y eso no se nota mirando el informe: se
+          // nota en la factura.
+          output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREA } },
+          // No queremos texto, queremos que la cache quede escrita. Se deja
+          // sitio para unos pocos tokens porque con el esquema puesto la
+          // respuesta es JSON y un tope de 1 puede rechazarse; lo que se paga
+          // es lo que escriba, y aqui no escribe nada util a proposito.
+          max_tokens: 16,
           system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
           messages: [{ role: 'user', content: 'ok' }],
         }),
       });
+      // Si esta llamada falla, el informe sale igual pero pagando el prompt
+      // siete veces. No rompe nada, asi que no se corta la generacion, pero
+      // tiene que verse en los registros: es la diferencia entre un informe
+      // de 0,90 y uno de 0,50.
+      if (!respuesta.ok) {
+        console.warn(`La cache no se ha podido calentar (HTTP ${respuesta.status}): el informe sale igual, pero el prompt se paga en cada área`);
+      }
     } catch (err) {
       console.warn(`No se pudo calentar la cache (${err.message.slice(0, 60)}): se sigue sin ella`);
     }
