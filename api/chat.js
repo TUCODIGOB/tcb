@@ -511,8 +511,6 @@ ${cartaTexto}`;
   // encontro impresa dos veces seguidas, palabra por palabra.
   const PALABRAS_IGUALES = 8;
 
-  // Un solo sitio donde se decide que es "de relleno", para que la comprobacion
-  // y el arreglo no puedan discrepar nunca.
   // ── LO ULTIMO QUE PASA ANTES DE QUE EL TEXTO EXISTA ───────────────
   //
   // Aqui no se mira de que casilla viene nada. Se mira lo que se va a
@@ -554,10 +552,10 @@ ${cartaTexto}`;
       // pusieron a tu madre" es texto del estudio y se borraba entero.
       'como (una )?(ia|inteligencia artificial|asistente)\\b',
       'como modelo de lenguaje',
-      'no puedo (generar|escribir|crear|completar)',
       'd[ée]jame saber si',
       // y las que solo valen si hablan de lo suyo
-      '(aqu[íi] (tienes|va|est[áa])|a continuaci[óo]n( te)? (tienes|dejo|presento|muestro)|he (escrito|generado|redactado|creado|ajustado|corregido|completado)|voy a (escribir|generar|redactar|corregir)|espero que (esto|est[ao]|te sirva|cumpla|se ajuste)|si necesitas que (ajuste|cambie|modifique|reescriba))[^.?!\\n]{0,40}' + COSA_DEL_MODELO,
+      // "no puedo generar" tambien pide contexto: "No puedo generar mas\n      // excusas, piensas" es texto del estudio.
+      '(aqu[íi] (tienes|va|est[áa])|a continuaci[óo]n( te)? (tienes|dejo|presento|muestro)|no puedo (generar|escribir|crear|completar)|he (escrito|generado|redactado|creado|ajustado|corregido|completado)|voy a (escribir|generar|redactar|corregir)|espero que (esto|est[ao]|te sirva|cumpla|se ajuste)|si necesitas que (ajuste|cambie|modifique|reescriba))[^.?!\\n]{0,40}' + COSA_DEL_MODELO,
     ].join('|') + ')', 'i');
 
   // Restos de formato que aqui no pintan nada: vallas de codigo, titulos de
@@ -567,14 +565,28 @@ ${cartaTexto}`;
   // Limpia UN texto suelto. Lo usan las dos mitades: las casillas antes de
   // montar el area, y la puerta final sobre lo ya montado.
   function limpiarTexto(t) {
-    let cuerpo = String(t || '');
+    const original = String(t || '');
+    let cuerpo = original;
+    let cortado = false;
+
     const llave = cuerpo.search(/[{}]/);
-    if (llave >= 0) cuerpo = cuerpo.slice(0, llave);
-    RESTOS.lastIndex = 0;
-    if (RESTOS.test(cuerpo)) { RESTOS.lastIndex = 0; cuerpo = cuerpo.replace(RESTOS, ' ').replace(/\s{2,}/g, ' '); }
-    if (SE_EXPLICA.test(cuerpo)) cuerpo = '';
-    if (DISCULPA.test(cuerpo)) cuerpo = cuerpo.replace(DISCULPA, '');
-    return cuerpo.replace(/[\s",;:]+$/, '').trim();
+    if (llave >= 0) { cuerpo = cuerpo.slice(0, llave); cortado = true; }
+
+    // RESTOS lleva /g, asi que .test() deja la posicion movida y la siguiente
+    // llamada empezaria donde acabo la anterior. Se usa solo .replace(), que
+    // no arrastra estado, y se compara para saber si toco algo.
+    const sinRestos = cuerpo.replace(RESTOS, ' ').replace(/\s{2,}/g, ' ');
+    if (sinRestos !== cuerpo) { cuerpo = sinRestos; cortado = true; }
+
+    if (SE_EXPLICA.test(cuerpo)) return '';
+
+    if (DISCULPA.test(cuerpo)) { cuerpo = cuerpo.replace(DISCULPA, ''); cortado = true; }
+
+    // El recorte del final SOLO se hace si se ha cortado algo, porque si no
+    // se comia el cierre de un parrafo bueno: 'te dices por dentro: "no puedo
+    // mas"' se quedaba sin la comilla, y un parrafo que acabara en dos puntos,
+    // sin ellos.
+    return cortado ? cuerpo.replace(/[\s",;:]+$/, '').trim() : cuerpo.trim();
   }
 
   function limpiarLoQueSeImprime(texto, idArea) {
@@ -597,14 +609,13 @@ ${cartaTexto}`;
     }).map(({ marca, cuerpo }) => marca + cuerpo).join('\n\n');
   }
 
+  // Un solo sitio donde se decide que es "de relleno", para que la
+  // comprobacion y el arreglo no puedan discrepar nunca.
   function esDeRelleno(texto, minimo) {
     const p = enPalabras(texto);
     return p.length < (minimo || MIN_PALABRAS_ESCENA) || p.every(x => RELLENO.test(x));
   }
 
-  // Pide SOLO la escena, sin volver a escribir el area entera. Es corta,
-  // barata y no toca nada de lo que ya estaba bien. Devuelve null si no sale,
-  // y entonces manda el plan B: el area se entrega sin el bloque de escena.
   // ── UNA SOLA PUERTA PARA LAS LLAMADAS CORTAS ──────────────────────
   //
   // Los arreglos de aqui abajo (la escena, el nombre, las negritas y el
@@ -754,7 +765,7 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
     // primero. Antes se devolvia -1 y el nombre no se ponia: un area de
     // parrafos cortos se quedaba sin el sin que nadie lo intentara.
     for (let i = 1; i < parrafos.length; i++) {
-      if (largo(i) > largo(elegido < 0 ? 1 : elegido) || elegido < 0) elegido = i;
+      if (elegido < 0 || largo(i) > largo(elegido)) elegido = i;
     }
     // Y si el area es de un solo parrafo, ese.
     return elegido >= 0 ? elegido : (parrafos.length > 0 ? 0 : -1);
@@ -789,10 +800,6 @@ Y no lo pongas siempre en el mismo hueco: puede abrir la frase, cerrarla o ir de
     return sinNombre(t) === sinNombre(parrafo) ? t.trim() : null;
   }
 
-  // Marca las negritas sobre los parrafos que YA existen. Vuelven los mismos
-  // parrafos con ** anadidos: se comprueba que el texto sin los ** es
-  // identico al de antes, asi que es imposible que este paso cambie el
-  // contenido del area. Si algo no cuadra, se queda todo como estaba.
   const ESQUEMA_NEGRITAS = {
     type: 'object',
     properties: {
