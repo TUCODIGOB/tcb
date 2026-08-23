@@ -511,9 +511,23 @@ ${cartaTexto}`;
 
   // Un solo sitio donde se decide que es "de relleno", para que la comprobacion
   // y el arreglo no puedan discrepar nunca.
-  function esDeRelleno(texto) {
+  // Barre el area ya montada y quita los trozos que son solo relleno. No mira
+  // casillas ni marcas: mira lo que se va a imprimir.
+  function sinRellenos(texto, idArea) {
+    const trozos = String(texto || '').split('\n\n');
+    const limpios = trozos.filter(t => {
+      const visible = t.replace(/^\[[A-ZÁÉÍÓÚ]+\]\s*/, '').trim();
+      const p = enPalabras(visible);
+      const esBasura = p.length > 0 && p.length <= 4 && p.every(x => RELLENO.test(x));
+      if (esBasura) console.warn(`Área ${idArea}: se ha quitado un relleno impreso ("${visible.slice(0, 30)}")`);
+      return !esBasura;
+    });
+    return limpios.join('\n\n');
+  }
+
+  function esDeRelleno(texto, minimo) {
     const p = enPalabras(texto);
-    return p.length < MIN_PALABRAS_ESCENA || p.every(x => RELLENO.test(x));
+    return p.length < (minimo || MIN_PALABRAS_ESCENA) || p.every(x => RELLENO.test(x));
   }
 
   // Pide SOLO la escena, sin volver a escribir el area entera. Es corta,
@@ -559,49 +573,33 @@ ${cartaTexto}`;
 
   const ESQUEMA_SOLO_ESCENA = {
     type: 'object',
-    properties: { texto: { type: 'string', description: 'La escena, escrita entera.' } },
+    properties: { texto: { type: 'string', description: 'Lo que se pide, escrito entero.' } },
     required: ['texto'],
     additionalProperties: false,
   };
 
-  async function pedirSoloLaEscena(area, datos) {
+  // Pide SOLO una casilla, sin volver a escribir el area entera. Es corta,
+  // barata y no toca nada de lo que ya estaba bien. Devuelve null si no sale,
+  // y entonces manda el plan B: esa casilla se queda fuera.
+  const QUE_ES_CADA_CASILLA = {
+    escena: 'LA ESCENA de esta área, tal como pide ESCENA REAL OBLIGATORIA: uno o dos párrafos, concreta y visual, sin negritas y sin repetir nada de lo que ya está escrito arriba',
+    remate_herida: 'EL REMATE DE LA HERIDA: UNA sola frase, de treinta palabras como mucho, que nombre lo que le duele sin anestesia y sin salida amable, tal como pide LAS FRASES QUE REMATAN',
+    remate_fuerza: 'EL REMATE DE LA FUERZA: UNA sola frase, de treinta palabras como mucho, que nombre lo que tiene de raro y de valioso, sin rebajarlo con un "pero", tal como pide LAS FRASES QUE REMATAN',
+    pregunta: 'LA PREGUNTA DIRECTA: UNA sola frase, salida de lo que se le acaba de contar, tal como pide PREGÚNTALE DIRECTAMENTE',
+    cierre: 'EL CIERRE del área, tal como pide CIERRE DE CADA ÁREA: un párrafo que golpea primero y después le enseña lo que se le abre, que no resuma nada de lo anterior y que no presente lo que viene después',
+  };
+
+  async function pedirSoloLaCasilla(area, datos, casilla) {
     const loEscrito = (datos?.parrafos || []).map(p => p?.texto).filter(Boolean).join('\n\n');
     const salida = await pedirJson({
       system: SYSTEM_PROMPT,
       esquema: ESQUEMA_SOLO_ESCENA,
       tope: 800,
-      contenido: `${contextoPersona}\n\n${area.prompt}\n\nESTO YA ESTÁ ESCRITO Y NO HAY QUE TOCARLO:\n\n${loEscrito}\n\nLo único que falta es LA ESCENA de esta área, que se quedó sin escribir. Escríbela ahora, tal como pide ESCENA REAL OBLIGATORIA: uno o dos párrafos, concreta y visual, hablándole a ella de tú, sin negritas y sin repetir nada de lo que ya está escrito arriba. Devuelve solo la escena.`,
+      contenido: `${contextoPersona}\n\n${area.prompt}\n\nESTO YA ESTÁ ESCRITO Y NO HAY QUE TOCARLO:\n\n${loEscrito}\n\nLo único que falta es ${QUE_ES_CADA_CASILLA[casilla]}. Escríbelo ahora, hablándole a ella de tú. Devuelve solo eso.`,
     });
-    const escena = salida?.texto;
-    // Si lo que vuelve tambien es relleno, no vale y se pasa al plan B.
-    return (typeof escena === 'string' && !esDeRelleno(escena)) ? escena.trim() : null;
+    return typeof salida?.texto === 'string' ? salida.texto.trim() : null;
   }
 
-
-  // ── QUE LE HABLE A ELLA: ESTO SE LEE, NO SE CUENTA ────────────────
-  //
-  // Es la regla que mas caro sale si falla: el estudio se vende como alguien
-  // contandotelo cara a cara, y en cuanto una frase habla de ella desde fuera
-  // el lector deja de ser el destinatario. En el informe del 22 de agosto el
-  // area 4 abria entera en tercera persona y el cierre del area 7 tambien.
-  //
-  // Se probo a cazarlo con expresiones regulares y NO SE PUEDE. La mejor que
-  // salio marcaba 17 frases de ese informe y solo 8 estaban mal. Las otras 9
-  // eran de dos clases, y las dos son insalvables contando letras:
-  //   - la entradilla, que habla de la gente en general a proposito ("hay
-  //     gente que va por la vida cuidando de que todo este hecho")
-  //   - segunda persona con un verbo que no esta en ninguna lista ("la serie
-  //     que QUERIAS ver", "cuando DEPENDES de otra persona", "exige que ESTES
-  //     disponible"). Y no se arregla metiendo las terminaciones -es y -ias,
-  //     porque entonces "la certeza de que la iban a querer sin condiciONES"
-  //     pasa por buena y se pierde justo lo que se venia a buscar.
-  //
-  // Distinguir "hay gente que se levanta pensando" de "de pequena aprendio"
-  // es entender de quien se habla, y eso no es un patron. Asi que el area la
-  // lee el modelo. Es una llamada corta y con respuesta minima.
-  //
-  // SI ESTA COMPROBACION FALLA, EL AREA PASA. Un corte de red no puede tirar
-  // un informe pagado por un repaso de estilo.
   const SISTEMA_REPASO = `Eres un corrector de estilo. Te dan un trozo de un libro escrito para una mujer concreta, que TIENE que estar escrito de principio a fin hablandole a ella de tu, como si alguien se lo estuviera contando cara a cara.
 
 Tu unico trabajo es devolver, copiadas tal cual, las frases que se salen de eso: las que hablan de ELLA desde fuera, en tercera persona.
@@ -968,20 +966,61 @@ NO CAMBIES NI UNA PALABRA. Devuelve exactamente los mismos parrafos, en el mismo
     //
     // Asi que la palabra no tiene por donde llegar al papel, y ningun informe
     // se cae por esto.
-    let sinEscena = false;
-    if (esDeRelleno(datos?.escena?.texto)) {
-      console.warn(`Área ${area.id}: la escena vino de relleno, se pide solo la escena`);
-      const otra = await pedirSoloLaEscena(area, datos);
-      if (otra) {
-        datos.escena = { ...datos.escena, texto: otra };
-      } else {
-        console.warn(`Área ${area.id}: SE ENTREGA SIN ESCENA antes que imprimir un relleno`);
-        datos.escena = null;
-        sinEscena = true;
+    // NINGUNA CASILLA, NI UNA, PUEDE SALIR CON RELLENO.
+    //
+    // La primera version de esto solo miraba la escena, porque fue donde
+    // aparecio "placeholder" el 22 de agosto. El 23 volvio a salir, esta vez
+    // en el CIERRE, impreso en dorado y a pagina entera. Poner el guardia en
+    // una casilla y no en las otras no es un arreglo: es esperar a que el
+    // fallo se mude de sitio. Ahora se miran las cinco.
+    //
+    // Y cada una tiene su plan B si no se puede arreglar, para no perder la
+    // venta: la escena, los remates y la pregunta se pueden quitar y el area
+    // se lee bien sin ellos; y si se quita el cierre, analizarArea toma como
+    // cierre el ultimo parrafo del area, que es lo que hacia antes de que
+    // existieran las casillas.
+    const CASILLAS = [
+      { nombre: 'escena', minimo: MIN_PALABRAS_ESCENA },
+      { nombre: 'remate_herida', minimo: 4 },
+      { nombre: 'remate_fuerza', minimo: 4 },
+      { nombre: 'pregunta', minimo: 4 },
+      { nombre: 'cierre', minimo: 10 },
+    ];
+
+    // Lo que se ha quitado a proposito, para que la revision no tire el area
+    // por echar en falta justo lo que acabamos de decidir no imprimir.
+    const quitadas = {};
+    for (const casilla of CASILLAS) {
+      const dato = datos[casilla.nombre];
+      const texto = casilla.nombre === 'cierre' ? dato : dato?.texto;
+      if (!esDeRelleno(texto, casilla.minimo)) continue;
+
+      console.warn(`Área ${area.id}: ${casilla.nombre} vino de relleno, se pide solo eso`);
+      const otra = await pedirSoloLaCasilla(area, datos, casilla.nombre);
+      if (otra && !esDeRelleno(otra, casilla.minimo)) {
+        datos[casilla.nombre] = casilla.nombre === 'cierre' ? otra : { ...dato, texto: otra };
+        continue;
       }
+      // El cierre no se puede quitar sin mas: el area tiene que terminar en
+      // cierre. Su plan B es ascender el ultimo parrafo, que es exactamente lo
+      // que hacia el codigo antes de que existieran las casillas.
+      if (casilla.nombre === 'cierre') {
+        if (datos.parrafos.length > 1) {
+          datos.cierre = datos.parrafos.pop().texto;
+          console.warn(`Área ${area.id}: cierre de relleno, se asciende el último párrafo a cierre`);
+        } else {
+          datos.cierre = null;
+        }
+        continue;
+      }
+      console.warn(`Área ${area.id}: SE ENTREGA SIN ${casilla.nombre} antes que imprimir un relleno`);
+      datos[casilla.nombre] = null;
+      if (casilla.nombre === 'escena') quitadas.escenaOpcional = true;
+      if (casilla.nombre === 'pregunta') quitadas.preguntaOpcional = true;
+      if (casilla.nombre.startsWith('remate')) quitadas.remateOpcional = true;
     }
 
-    // ── Y AHORA, LO QUE FALTE, SE ARREGLA AQUI ─────────────────────
+    // ── Y LO QUE FALTE, SE ARREGLA AQUI ────────────────────────────
     // Las dos comprobaciones son las mismas que hace loQueLeFaltaAlArea
     // despues. La diferencia es que si aqui se arregla, ya no hace falta
     // volver a pedir el area entera: sale mas rapido y mas barato.
@@ -1009,7 +1048,15 @@ NO CAMBIES NI UNA PALABRA. Devuelve exactamente los mismos parrafos, en el mismo
       }
     }
 
-    const montada = montarArea(datos);
+    // LA ULTIMA RED, Y ES ABSOLUTA.
+    //
+    // Todo lo de arriba depende de que yo haya acertado con la lista de
+    // casillas. El 22 de agosto el guardia estaba en la escena y el relleno
+    // salio por el cierre. Asi que aqui, con el area ya montada y justo antes
+    // de que exista como texto, se barre lo que se va a imprimir y se tira
+    // cualquier trozo que sea solo una palabra de relleno, venga de donde
+    // venga y se llame como se llame la casilla de la que vino.
+    const montada = sinRellenos(montarArea(datos), area.id);
 
     // El area llega montada desde pedirArea, con cada casilla ya en su sitio.
     // mismo trato que se le da a un area que llega cortada.
@@ -1020,7 +1067,7 @@ NO CAMBIES NI UNA PALABRA. Devuelve exactamente los mismos parrafos, en el mismo
     const bloques = analizarArea(montada);
     // Si el area sale a proposito sin escena (ver arriba), se dice aqui: esa
     // decision ya esta tomada y es la buena.
-    const faltan = revisarBloques(bloques, { escenaOpcional: sinEscena });
+    const faltan = revisarBloques(bloques, quitadas);
 
     // Lo que no para el area pero conviene saber. Va a los registros y ya: si
     // llegan mil correos por esto, no se lee ninguno. Si un aviso se repite
