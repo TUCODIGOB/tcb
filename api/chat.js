@@ -873,9 +873,9 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
     // agosto salio CERO veces en las siete areas. Pedirlo otra vez por escrito
     // ya se ha probado y no funciona; contarlo, si.
     const bloques = analizarArea(montada);
-    // Si el area sale a proposito sin escena (ver arriba), que no la tire la
-    // regla que exige la escena: esa decision ya se ha tomado y es la buena.
-    const faltan = revisarBloques(bloques).filter(f => !(sinEscena && f.includes('escena')));
+    // Si el area sale a proposito sin escena (ver arriba), se dice aqui: esa
+    // decision ya esta tomada y es la buena.
+    const faltan = revisarBloques(bloques, { escenaOpcional: sinEscena });
 
     // Lo que no para el area pero conviene saber. Va a los registros y ya: si
     // llegan mil correos por esto, no se lee ninguno. Si un aviso se repite
