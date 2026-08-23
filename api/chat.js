@@ -1195,7 +1195,10 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // informe tras informe, es que algo se esta escapando en el prompt.
     // Las negritas y el nombre ya no se apuntan aqui: tienen su propia
     // comprobacion en loQueLeFaltaAlArea, que ademas vuelve a pedir el area.
-    const avisos = avisosBloques(bloques, { minSub: area.minSub || 2 });
+    // El area 1 es mas larga y el prompt le pide cuatro ladillos; las otras
+    // tres. Antes esto leia area.minSub, que NUNCA se ha definido en ningun
+    // sitio, asi que siempre valia 2 y el aviso no saltaba aunque faltaran.
+    const avisos = avisosBloques(bloques, { minSub: area.id === 1 ? 4 : 3 });
     if (avisos.length > 0) {
       console.warn(`SE ENTREGA CON AVISOS — Área ${area.id}: ${avisos.join('; ')}`);
     }
