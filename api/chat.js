@@ -787,7 +787,8 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
     const salida = await pedirJson({
       system: `Eres un corrector. Te dan un parrafo de un libro escrito para una mujer que se llama ${nombrePila}, hablandole de tu.
 Tu unico trabajo es devolver ESE MISMO parrafo con su nombre metido UNA vez, donde caiga natural, como cuando alguien que te conoce te llama por tu nombre justo al decirte algo que te toca.
-NO cambies ni una palabra mas. NO reescribas, NO resumas, NO mejores nada, NO quites ni anadas ideas. Lo unico que se anade es el nombre y las comas que necesite.
+NO cambies ni una palabra mas. NO reescribas, NO resumas, NO mejores nada, NO quites ni anadas ideas. Lo unico que se anade es el nombre.
+Y VA SIN COMAS ALREDEDOR, pegado a la frase: "por fuera pareces tranquila ${nombrePila} y por dentro llevas", no "por fuera pareces tranquila, ${nombrePila}, y por dentro llevas".
 Y no lo pongas siempre en el mismo hueco: puede abrir la frase, cerrarla o ir dentro.`,
       esquema: ESQUEMA_TEXTO,
       tope: 900,
