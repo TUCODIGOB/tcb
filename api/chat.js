@@ -530,26 +530,40 @@ ${cartaTexto}`;
   //      disculpa, corrijo el formato en la respuesta final.},"
   const DISCULPA = /\s*[^.?!¿¡]{0,120}(disculp|perdon|perdón|lo siento|corrijo|corregir)[^.?!]{0,120}(formato|respuesta final|json|casilla|instrucciones)[^.?!]*[.?!]?\s*$/i;
 
+  // El modelo presentandose o explicando lo que hace. Un parrafo del estudio
+  // NUNCA empieza asi: son maneras de hablar de si mismo, no de hablarle a
+  // ella. Si un parrafo abre con una de estas, el parrafo entero se va.
+  const SE_EXPLICA = /^\s*[«"'(\[]?\s*(aqu[íi] (tienes|va|est[áa])|a continuaci[óo]n|contin[úu]o|he (escrito|generado|redactado|creado)|voy a (escribir|generar)|espero que (esto|te sirva|cumpla)|nota\s*:|nota final|aclaraci[óo]n\s*:|importante\s*:|como (ia|modelo|asistente)|lo siento|disculp|perdona? (que|el|la)|si necesitas|d[ée]jame saber|revisado|corregido)/i;
+  // OJO: aqui NO va \b al final. Con el, "nota:" y "disculp" no coincidian
+  // nunca —detras de los dos puntos no hay letra, y detras de "disculp" hay
+  // una "a"—, asi que la regla existia y no cazaba nada. Se vio en la prueba,
+  // no en el informe de una clienta.
+
+  // Restos de formato que aqui no pintan nada: vallas de codigo, titulos de
+  // markdown, separadores y comillas de cierre sueltas.
+  const RESTOS = /```+|~~~+|^#{1,6}\s|^-{3,}\s*$|^\*{3,}\s*$/gm;
+
+  // Limpia UN texto suelto. Lo usan las dos mitades: las casillas antes de
+  // montar el area, y la puerta final sobre lo ya montado.
+  function limpiarTexto(t) {
+    let cuerpo = String(t || '');
+    const llave = cuerpo.search(/[{}]/);
+    if (llave >= 0) cuerpo = cuerpo.slice(0, llave);
+    RESTOS.lastIndex = 0;
+    if (RESTOS.test(cuerpo)) { RESTOS.lastIndex = 0; cuerpo = cuerpo.replace(RESTOS, ' ').replace(/\s{2,}/g, ' '); }
+    if (SE_EXPLICA.test(cuerpo)) cuerpo = '';
+    if (DISCULPA.test(cuerpo)) cuerpo = cuerpo.replace(DISCULPA, '');
+    return cuerpo.replace(/[\s",;:]+$/, '').trim();
+  }
+
   function limpiarLoQueSeImprime(texto, idArea) {
     const aviso = (que, trozo) => console.warn(`Área ${idArea}: ${que} ("${String(trozo).trim().slice(0, 40)}")`);
 
     const trozos = String(texto || '').split('\n\n').map(t => {
       const marca = (/^\[[A-ZÁÉÍÓÚ]+\]\s*/.exec(t) || [''])[0];
-      let cuerpo = t.slice(marca.length);
-
-      // 2) la llave y todo lo que venga detras
-      const llave = cuerpo.search(/[{}]/);
-      if (llave >= 0) {
-        aviso('se ha cortado basura de JSON impresa', cuerpo.slice(llave));
-        cuerpo = cuerpo.slice(0, llave);
-      }
-      // 3) el modelo hablando de su formato
-      if (DISCULPA.test(cuerpo)) {
-        aviso('se ha quitado una disculpa del modelo impresa', cuerpo.match(DISCULPA)[0]);
-        cuerpo = cuerpo.replace(DISCULPA, '');
-      }
-      // lo que quede colgando al cortar
-      cuerpo = cuerpo.replace(/[\s",;:]+$/, '').trim();
+      const original = t.slice(marca.length);
+      const cuerpo = limpiarTexto(original);
+      if (cuerpo !== original.trim()) aviso('se ha limpiado basura del modelo', original);
       return { marca, cuerpo };
     });
 
@@ -1048,7 +1062,17 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     const quitadas = {};
     for (const casilla of CASILLAS) {
       const dato = datos[casilla.nombre];
-      const texto = casilla.nombre === 'cierre' ? dato : dato?.texto;
+      const crudo = casilla.nombre === 'cierre' ? dato : dato?.texto;
+      // Se limpia ANTES de juzgarla: si lo que queda despues de quitarle la
+      // basura sigue siendo un texto valido, se guarda limpio y no hace falta
+      // pedir nada. Y si al limpiarla no queda nada, es que la casilla era
+      // basura entera y se trata como tal.
+      const texto = limpiarTexto(crudo);
+      if (typeof crudo === 'string' && texto !== crudo.trim() && !esDeRelleno(texto, casilla.minimo)) {
+        console.warn(`Área ${area.id}: se ha limpiado basura del modelo en ${casilla.nombre}`);
+        datos[casilla.nombre] = casilla.nombre === 'cierre' ? texto : { ...dato, texto };
+        continue;
+      }
       if (!esDeRelleno(texto, casilla.minimo)) continue;
 
       console.warn(`Área ${area.id}: ${casilla.nombre} vino de relleno, se pide solo eso`);
@@ -1112,7 +1136,16 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // de que exista como texto, se barre lo que se va a imprimir y se tira
     // cualquier trozo que sea solo una palabra de relleno, venga de donde
     // venga y se llame como se llame la casilla de la que vino.
-    const montada = limpiarLoQueSeImprime(montarArea(datos), area.id);
+    const antesDeLimpiar = montarArea(datos);
+    const montada = limpiarLoQueSeImprime(antesDeLimpiar, area.id);
+
+    // Si al limpiar se ha llevado por delante una pieza entera (porque el
+    // parrafo era el modelo explicandose y no quedaba nada), la revision no
+    // puede tirar el area por echarla en falta: quitarla ha sido la decision
+    // correcta. Se mira que marcas habia antes y cuales quedan.
+    for (const [marca, opcion] of [['[ESCENA]', 'escenaOpcional'], ['[REMATE]', 'remateOpcional'], ['[PREGUNTA]', 'preguntaOpcional']]) {
+      if (antesDeLimpiar.includes(marca) && !montada.includes(marca)) quitadas[opcion] = true;
+    }
 
     // El area llega montada desde pedirArea, con cada casilla ya en su sitio.
     // mismo trato que se le da a un area que llega cortada.
