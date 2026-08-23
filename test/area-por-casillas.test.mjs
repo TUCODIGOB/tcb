@@ -48,9 +48,9 @@ const AREA_BUENA = JSON.stringify({
   parrafos: [
     { ladillo: null, texto: 'Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen, porque en cualquier familia hay una.' },
     { ladillo: 'La cuenta que no llevas', texto: 'Por fuera pareces tranquila, Ana, y por dentro llevas una **maquina que no para de repasar** lo que acabas de decir.' },
-    { ladillo: null, texto: 'En el trabajo se te nota enseguida, revisas una tarea tres veces cuando con una bastaria, y no es que dudes de tu criterio.' },
+    { ladillo: null, texto: 'En el trabajo se te nota enseguida, **revisas una tarea tres veces** cuando con una bastaria, y no es que dudes de tu criterio.' },
     { ladillo: 'Donde aprendiste la cuenta', texto: 'De pequena entendiste que el carino se ganaba haciendo las cosas bien, siendo la que no daba problemas nunca.' },
-    { ladillo: null, texto: 'Y cuarenta anos despues sigues revisando y sigues anticipando, sin que nadie te lo haya pedido jamas.' },
+    { ladillo: null, texto: 'Y cuarenta anos despues sigues revisando y sigues anticipando, **sin que nadie te lo haya pedido** jamas.' },
   ],
   escena: { tras_parrafo: 2, texto: 'Son las once de la noche y sigues con el movil en la mano sin mirar nada en concreto.' },
   remate_herida: { tras_parrafo: 4, texto: 'Te has pasado la vida demostrando que se puede confiar en ti' },

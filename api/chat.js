@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { MAX_INTENTOS, estado, reservar, liberar, compraValida } from '../lib/reserva.js';
-import { analizarArea, revisarBloques, avisosBloques, montarArea, ESQUEMA_AREA } from '../lib/bloques.js';
+import { analizarArea, revisarBloques, avisosBloques, montarArea, negritasDe, ESQUEMA_AREA } from '../lib/bloques.js';
 import { quitarComaAntesDeY, vecesQueLaLlamaPorSuNombre } from '../lib/estilo.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -106,15 +106,17 @@ ESTILO DE ESCRITURA:
 - CADA PÁRRAFO SE ENGANCHA CON EL ANTERIOR. Retomas una palabra, una imagen o una idea del párrafo de antes y sigues tirando del hilo desde ahí. Ningún párrafo empieza un tema nuevo en frío, y ninguno puede leerse suelto sin perder nada. Si quitas un párrafo y el resto se lee igual de bien, es que estaba puesto al lado y no cosido.
 - EL RITMO SE MEZCLA, NI TODO LARGO NI TODO CORTO. La media está en unas veinte palabras por frase, con una coma dentro: ese es el punto en el que se lee a alguien hablando. Por debajo de diez suena a titular y pica; por encima de treinta y cinco el lector se pierde y tiene que releer, que es justo lo que hace que un párrafo no llegue. Se mezclan: una larga que desarrolla una idea entera, otra normal, y de vez en cuando una corta que remata. Lo que no vale es que todas midan parecido.
 - LOS DEFECTOS SE CUENTAN DESDE LA FUERZA QUE LOS ORIGINA, NUNCA CONTRA ELLA. Esto NO es suavizar ni maquillar: el defecto se nombra entero, con su nombre y sin rebajarlo. Lo que cambia es de dónde lo haces salir. Y no vale poner la virtud y el defecto uno al lado del otro como si fueran dos cosas distintas ("eres muy exigente contigo, pero también tienes buen criterio"), porque no son dos cosas: son la misma cualidad, solo que pasada de vueltas ("ese criterio tuyo, pasado de vueltas, es lo que te machaca"). Contado así lo reconoce y no se defiende. Contado como una lista de fallos sueltos, cierra el informe y no vuelve.
-- USA SU NOMBRE UNA VEZ EN EL ÁREA. Una sola, ni más ni menos, y puesta donde caiga natural dentro de una frase, igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te está diciendo algo que te toca. Nunca para empezar el área, nunca para abrir un párrafo, nunca dos veces seguidas.
+- LLÁMALA POR SU NOMBRE UNA O DOS VECES EN EL ÁREA. Nunca ninguna: un área en la que no la nombras suena a informe sobre ella y no a alguien hablándole. Va dentro de una frase, donde caiga natural, igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te está diciendo algo que te toca.
+- Y VA EN UNA FRASE EN LA QUE LE HABLAS DE TÚ. Su nombre y la tercera persona no pueden ir juntos: en cuanto escribes su nombre dentro de una frase que habla de ella desde fuera, deja de ser alguien que le habla y pasa a ser alguien que la comenta con otro. Nunca para empezar el área.
 - EL NOMBRE QUE USAS ES EL DE PILA, el que tienes en "Nombre de pila". Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación. Si al mirar el nombre entero ves claro que el de pila es compuesto (María Carmen, José Luis, Juan José), puedes usar las dos palabras. Ante la duda, la primera palabra sola.
 - PREGÚNTALE DIRECTAMENTE. De vez en cuando párate y hazle una pregunta de verdad, de las que se quedan un rato dando vueltas. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
 - Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: "¿cuántas veces te has callado algo por no montar un lío?". Las MALAS valen para cualquiera y no dicen nada: "¿te suena?", "¿te identificas con esto?", "¿te ha pasado alguna vez?".
 - No hay número fijo de preguntas: van las que pida el texto y ninguna más. Si un área no pide ninguna, no la fuerces.
-- LA NEGRITA ES EL FOSFORITO DEL LECTOR, y se marca con dos asteriscos a cada lado: **así**. No es maquetación, no es un resumen y no es para que la página quede bonita: es exactamente lo que esa persona subrayaría si estuviera leyendo esto en un libro suyo, con un rotulador en la mano y sin pensárselo. La pregunta que decide cada una es esa: al llegar aquí, ¿pararía y lo subrayaría, o seguiría de largo?
+- RESALTA EN NEGRITA, dentro del texto de los párrafos, marcándolo con dos asteriscos a cada lado: **así**. Esto no es opcional y no es un adorno: un área sin una sola negrita es un muro de cuatro páginas donde el ojo no tiene dónde pararse, y es el fallo que más caro sale.
+- LA NEGRITA ES EL FOSFORITO DEL LECTOR. No es maquetación, no es un resumen y no es para que la página quede bonita: es exactamente lo que esa persona subrayaría si estuviera leyendo esto en un libro suyo, con un rotulador en la mano y sin pensárselo. La pregunta que decide cada una es esa: al llegar aquí, ¿pararía y lo subrayaría, o seguiría de largo?
 - SE MARCA LO QUE LA NOMBRA, NO LO QUE LE EXPLICAS. Lo que se subraya es la frase en la que se reconoce de golpe, la que le pone nombre a algo que llevaba años haciendo sin saber que lo hacía, la que ella se dice por dentro y no ha dicho nunca en voz alta, o la cuenta exacta de lo que le está costando. El porqué, el ejemplo, el contexto y la parte amable no se subrayan jamás: son lo que sostiene la frase que sí.
 - LA PRUEBA, Y ES LA QUE MANDA: al terminar el área, lee seguido SOLO lo que has marcado. Tiene que sonar a lo que esa persona le contaría de sí misma a una amiga después de leerlo. Si suena a titulares, has marcado lo que quedaba bien. Si suena al área otra vez pero más corta, has marcado de más. Si no dice nada, has marcado de menos.
-- LA CANTIDAD LA DECIDE EL TEXTO, NO UNA CUOTA. Esto no es un correo de tres párrafos: es un libro sobre ella, y esta área sola ocupa cuatro páginas. Un libro que alguien lee con el fosforito en la mano no se termina con dos frases subrayadas, y tampoco con media página amarilla: de cada página se queda algo. En unas una cosa, en otras tres, y en alguna nada, porque el reparto es irregular igual que es irregular lo que le va pasando por dentro mientras lee. No hay número, ni tres, ni cinco, ni diez. Si te has puesto a repartirlas para que queden equilibradas por la página, están mal puestas TODAS y se quitan.
+- LA CANTIDAD LA DECIDE EL TEXTO, NO UNA CUOTA. Esto no es un correo de tres párrafos: es un libro sobre ella, y esta área sola ocupa cuatro páginas. Un libro que alguien lee con el fosforito en la mano no se termina con dos frases subrayadas, y tampoco con media página amarilla: de cada página se queda algo. En unas una cosa, en otras tres, y en alguna nada, porque el reparto es irregular igual que es irregular lo que le va pasando por dentro mientras lee. No hay número fijo ni sitio fijo: en un área saldrán tres y en otra siete, las que dé el texto. Lo que no puede pasar, y es lo único que aquí se mide, es que un área entera se quede sin ninguna. Lo que sí está mal es repartirlas a ojo para que queden equilibradas por página: eso se lee a plantilla y se nota.
 - EL FALLO DE VERDAD ES QUEDARSE CORTO, y es el que se comete siempre. Se marca lo más evidente, se dejan cuatro páginas sin nada donde agarrarse, y eso se lee igual de plano que no marcar nada: el lector recorre el muro sin que nada le pare. Cuando termines el área, reléela entera buscando lo que ella releería dos veces. Cada frase que encuentres así y no esté marcada, se marca.
 - EL TAMAÑO ES EL DEL GOLPE, no el de la frase. Se marca desde donde empieza a doler hasta donde deja de doler, aunque eso caiga en mitad de la frase y se lleve por delante una coma: "y mientras asientes, por dentro **estás calculando cuánto has enseñado de más**". Van de tres palabras a una frase entera, nunca una palabra suelta, y nunca dos líneas y media seguidas, que ya no es una negrita sino un bloque y deja de resaltar.
 - NO SE MARCAN NUNCA: las explicaciones, los datos, los piropos, ni lo que ya se veía venir dos líneas antes. De un mismo contraste se marca solo la mitad que escuece, nunca las dos, porque marcar las dos se lee a plantilla. Y dos negritas seguidas que dicen lo mismo con otras palabras son una sola: se queda la buena.
@@ -301,7 +303,7 @@ Las siete van seguidas, así que ninguna abre como otra: una entra por una situa
 CÓMO SE ENTREGA EL ÁREA (ES LO QUE LA MAQUETA):
 El área no se entrega como un texto seguido: se entrega por casillas, y cada casilla se imprime distinta. Novecientas palabras del mismo tamaño y del mismo color son cuatro páginas de muro gris, y el ojo se cansa antes de llegar a lo que la persona ha pagado.
 
-- parrafos: el texto del área, en su orden. Cada uno lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras. El PRIMER párrafo nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
+- parrafos: el texto del área, en su orden. AQUÍ, Y SOLO AQUÍ, VAN LAS NEGRITAS, marcadas con dos asteriscos a cada lado, tal como pide RESALTA EN NEGRITA: son frases o medias frases del propio párrafo, nunca una palabra suelta. Cada uno lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras. El PRIMER párrafo nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
 - escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro.
 - remate_herida y remate_fuerza: las dos frases que rematan, tal como pide LAS FRASES QUE REMATAN. Cada una es UNA frase de treinta palabras como mucho, se imprime grande y centrada, y no lleva negritas.
 - pregunta: la pregunta directa, tal como pide PREGÚNTALE DIRECTAMENTE. Una sola frase, y no lleva negritas.
@@ -443,8 +445,8 @@ ${cartaTexto}`;
 
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS DIEZ, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
-2. El nombre "${nombrePila}" aparece UNA vez en el area, dentro de una frase, nunca al empezar
-3. Lo que va en **negrita** es lo que ella subrayaria con fosforito, no lo que suena bien: relee solo lo marcado seguido y tiene que sonar a ella contandose a si misma. Las que no pasen eso, se quitan
+2. El nombre "${nombrePila}" aparece UNA o DOS veces en el area, dentro de una frase en la que le hablas de tu, nunca en una que hable de ella en tercera persona y nunca al empezar. Ninguna vez no vale
+3. El area lleva negritas dentro del texto de los parrafos, marcadas con **dos asteriscos a cada lado**: frases o medias frases que ella subrayaria con el fosforito, nunca una palabra suelta. Relee solo lo marcado seguido y tiene que sonar a ella contandose a si misma; la que no pase esa prueba se cambia por la que si la pasa, pero el area no se entrega sin ninguna
 4. Hay al menos una pregunta directa, salida de lo que acabas de contarle
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
@@ -461,6 +463,37 @@ ${cartaTexto}`;
   // servidor, corte de red). Los fallos permanentes (clave mal, peticion mal
   // formada) no se reintentan: no van a mejorar por repetirlos.
   const INTENTOS_POR_AREA = 3;
+
+  // ── LO QUE HACE QUE UN AREA SE VUELVA A PEDIR AUNQUE HAYA LLEGADO ENTERA ──
+  //
+  // Dos cosas llevan pedidas desde el principio, estan en el prompt y en el
+  // repaso final, y aun asi se colaban: en el informe del 22 de agosto salieron
+  // CERO negritas en las siete areas y el nombre aparecio tres veces en total.
+  // Hasta ahora las dos se apuntaban en un registro que no lee nadie y el area
+  // se entregaba igual. Contarlas y volver a pedir el area es lo unico que ha
+  // funcionado con la coma antes de "y", asi que se hace lo mismo aqui.
+  //
+  // ESTO NO TIRA EL INFORME. Un area sin negritas se lee; una clienta que ha
+  // pagado y no recibe nada, no. Por eso el repaso va acotado a REPASOS_POR_ESTILO
+  // y, si al final sigue floja, se entrega la que hay y se apunta en el registro.
+  //
+  // El minimo de negritas es un suelo para detectar el desastre, no una cuota:
+  // no decide cuales ni donde, eso lo decide el prompt. Un area de 900 palabras
+  // con menos de tres es un muro.
+  const MIN_NEGRITAS = 3;
+  const REPASOS_POR_ESTILO = 1;
+
+  function loQueLeFaltaAlArea(montada) {
+    const flojo = [];
+    const negritas = negritasDe(analizarArea(montada)).length;
+    if (negritas < MIN_NEGRITAS) {
+      flojo.push(`solo ${negritas} negrita(s) en el cuerpo, hacen falta ${MIN_NEGRITAS}`);
+    }
+    if (vecesQueLaLlamaPorSuNombre(montada, nombrePila) < 1) {
+      flojo.push(`no la llama "${nombrePila}" ni una vez`);
+    }
+    return flojo;
+  }
 
 
   async function pedirArea(area) {
@@ -582,10 +615,9 @@ ${cartaTexto}`;
     // Lo que no para el area pero conviene saber. Va a los registros y ya: si
     // llegan mil correos por esto, no se lee ninguno. Si un aviso se repite
     // informe tras informe, es que algo se esta escapando en el prompt.
+    // Las negritas y el nombre ya no se apuntan aqui: tienen su propia
+    // comprobacion en loQueLeFaltaAlArea, que ademas vuelve a pedir el area.
     const avisos = avisosBloques(bloques, { minSub: area.minSub || 2 });
-    if (vecesQueLaLlamaPorSuNombre(montada, nombrePila) < 1) {
-      avisos.push(`no la llama "${nombrePila}" ni una vez`);
-    }
     if (avisos.length > 0) {
       console.warn(`SE ENTREGA CON AVISOS — Área ${area.id}: ${avisos.join('; ')}`);
     }
@@ -604,18 +636,36 @@ ${cartaTexto}`;
 
   async function generarArea(area) {
     let ultimoError;
-    for (let intento = 1; intento <= INTENTOS_POR_AREA; intento++) {
+    // La primera area que llega entera, aunque venga floja de estilo. Si el
+    // repaso no la mejora o se cae por el camino, se entrega esta: vale mas un
+    // area sin negritas que un informe que no llega.
+    let deReserva = null;
+    let fallos = 0;
+    let repasos = 0;
+    while (fallos < INTENTOS_POR_AREA) {
       try {
-        return await pedirArea(area);
+        const montada = await pedirArea(area);
+        const flojo = loQueLeFaltaAlArea(montada);
+        if (flojo.length === 0) return montada;
+        if (deReserva === null) deReserva = montada;
+        if (repasos >= REPASOS_POR_ESTILO) {
+          console.warn(`SE ENTREGA CON AVISOS — Área ${area.id}: ${flojo.join('; ')}`);
+          return deReserva;
+        }
+        repasos++;
+        console.warn(`Área ${area.id} floja (${flojo.join('; ')}): se vuelve a pedir`);
       } catch (err) {
         ultimoError = err;
+        fallos++;
         // Un corte de red llega sin marca; se trata como temporal.
         const temporal = err.temporal !== false;
-        if (!temporal || intento === INTENTOS_POR_AREA) break;
-        console.warn(`Área ${area.id}: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
-        await new Promise(r => setTimeout(r, 1500 * intento));
+        if (!temporal || fallos >= INTENTOS_POR_AREA) break;
+        console.warn(`Área ${area.id}: intento ${fallos} fallido (${err.message.slice(0, 80)}), reintentando`);
+        await new Promise(r => setTimeout(r, 1500 * fallos));
       }
     }
+    // Si en algun momento llego un area entera, se entrega aunque venga floja.
+    if (deReserva !== null) return deReserva;
     throw ultimoError;
   }
 

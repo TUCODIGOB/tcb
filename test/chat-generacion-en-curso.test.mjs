@@ -63,8 +63,8 @@ const AREA_DE_MENTIRA = JSON.stringify({
   parrafos: [
     { ladillo: null, texto: 'Te levantas y lo primero que haces es repasar la lista de lo que tienes pendiente, y eso lo llevas haciendo desde siempre.' },
     { ladillo: 'La cuenta que no llevas', texto: 'Y mientras asientes, Ana, por dentro **estas calculando cuanto has ensenado de mas**, que es un trabajo que no descansa.' },
-    { ladillo: null, texto: 'De ahi sale todo lo demas, que es lo que nadie te ha contado y llevas media vida pagando sin enterarte.' },
-    { ladillo: 'Donde empezo esto', texto: 'Eso no se arregla apretando mas, se arregla mirando de donde viene y quien te enseno a hacerlo asi.' },
+    { ladillo: null, texto: 'De ahi sale todo lo demas, que es lo que nadie te ha contado y **llevas media vida pagando sin enterarte**.' },
+    { ladillo: 'Donde empezo esto', texto: '**Eso no se arregla apretando mas**, se arregla mirando de donde viene y quien te enseno a hacerlo asi.' },
   ],
   escena: { tras_parrafo: 1, texto: 'Son las once de la noche y todavia estas repasando el movil con la luz apagada.' },
   remate_herida: { tras_parrafo: 3, texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
