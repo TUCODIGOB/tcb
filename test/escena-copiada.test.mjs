@@ -254,6 +254,34 @@ try {
   comprobar('se comporta como antes: un repaso por área',
     llamadasAlModelo === 14, llamadasAlModelo + ' llamadas');
 
+  // ── D. UN AREA QUE SE QUEDARIA SIN HUECOS ───────────────────────
+  //
+  // La escena, los dos remates y la pregunta se colocan uno por parrafo. Si
+  // al quitar la copia no quedan parrafos para todos, dos frases grandes
+  // salen pegadas y se leen como un cartel, y con tres o menos llega a
+  // perderse una. Ahi NO se quita nada: se avisa y se hace lo de antes.
+  // Un parrafo repetido es malo; un area descuadrada, peor.
+  console.log('\n  D. un área tan corta que quitar la copia la descuadraría');
+  const d = await generar(JSON.stringify({
+    parrafos: [CUERPO[1], { ladillo: null, texto: ESCENA }, CUERPO[2]],
+    escena: { tras_parrafo: 2, texto: ESCENA },
+    pregunta: { tras_parrafo: 1, texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
+    remate_herida: { tras_parrafo: 3, texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
+    remate_fuerza: { tras_parrafo: 3, texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
+    cierre: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
+  }));
+  comprobar('el informe sale igual', d.code === 200, 'HTTP ' + d.code);
+  const areasD = String(d.body?.texto || '').split(SEPARADOR_AREAS);
+  comprobar('no se queda ningún área sin párrafos',
+    areasD.every(t => analizarArea(t).filter(b => b.tipo === 'texto').length >= 2));
+  comprobar('las cuatro frases grandes siguen estando',
+    areasD.every(t => {
+      const b = analizarArea(t);
+      return b.filter(x => x.tipo === 'escena').length === 1
+        && b.filter(x => x.tipo === 'remate').length === 2
+        && b.filter(x => x.tipo === 'pregunta').length === 1;
+    }));
+
   // ── C. UN AREA LIMPIA ───────────────────────────────────────────
   console.log('\n  C. un área sin copias');
   const c = await generar(areaCon(null));

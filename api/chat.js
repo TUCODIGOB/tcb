@@ -915,6 +915,21 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
   // peor que un area con un parrafo repetido.
   const MIN_PARRAFOS = 2;
 
+  // CUANTOS PARRAFOS HACEN FALTA PARA QUE QUEPAN LAS FRASES GRANDES.
+  //
+  // montarArea reparte la escena, los dos remates y la pregunta uno por
+  // parrafo. Con menos parrafos que frases grandes no le quedan huecos: dos
+  // salen pegadas y se leen como un cartel, y con tres o menos llega a
+  // perderse una. Eso ya era asi antes de esto, pero quitar un parrafo puede
+  // empujar el area hasta ahi, y ese si seria un fallo nuevo. Cuando pasa, no
+  // se quita nada: se avisa y se sigue haciendo lo de antes, que es volver a
+  // pedir el area. Un parrafo repetido es malo; un area descuadrada, peor.
+  function huecosQueHacenFalta(datos) {
+    const grandes = ['escena', 'remate_herida', 'remate_fuerza', 'pregunta']
+      .filter(c => datos[c] && String(datos[c].texto || '').trim()).length;
+    return Math.max(MIN_PARRAFOS, grandes);
+  }
+
   // Borra de "parrafos" la escena copiada y recoloca lo que iba detras.
   //
   // Los numeros "tras_parrafo" dicen detras de que parrafo se lee la escena,
@@ -934,8 +949,9 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     });
     if (sobran.length === 0) return;
 
-    if (datos.parrafos.length - sobran.length < MIN_PARRAFOS) {
-      console.warn(`Área ${id}: la escena viene copiada en los párrafos y quitarla dejaría el área sin cuerpo, se deja como está`);
+    const hacenFalta = huecosQueHacenFalta(datos);
+    if (datos.parrafos.length - sobran.length < hacenFalta) {
+      console.warn(`Área ${id}: la escena viene copiada, pero quitarla dejaría ${datos.parrafos.length - sobran.length} párrafo(s) para ${hacenFalta} hueco(s): se deja como está y se vuelve a pedir el área`);
       return;
     }
 
