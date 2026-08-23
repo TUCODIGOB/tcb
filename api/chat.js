@@ -107,10 +107,8 @@ ESTILO DE ESCRITURA:
 - LAS FRASES SON LARGAS, Y ESO ES LO QUE SUENA A ALGUIEN HABLANDO. La media está en torno a las treinta y cinco palabras, con varias comas dentro, encadenando una idea con la siguiente sin cerrar cada dos por tres. Una frase de veinte palabras es corta aquí, no es la norma. Se mezclan: unas cuantas largas que desarrollan una idea entera, y de vez en cuando una corta que remata y duele, puesta a propósito y no por costumbre. Lo que no vale es que todas midan parecido, y menos aún que todas sean cortas: eso es lo que convierte el texto en una lista de afirmaciones sueltas.
 - LOS DEFECTOS SE CUENTAN DESDE LA FUERZA QUE LOS ORIGINA, NUNCA CONTRA ELLA. Esto NO es suavizar ni maquillar: el defecto se nombra entero, con su nombre y sin rebajarlo. Lo que cambia es de dónde lo haces salir. Y no vale poner la virtud y el defecto uno al lado del otro como si fueran dos cosas distintas ("eres muy exigente contigo, pero también tienes buen criterio"), porque no son dos cosas: son la misma cualidad, solo que pasada de vueltas ("ese criterio tuyo, pasado de vueltas, es lo que te machaca"). Contado así lo reconoce y no se defiende. Contado como una lista de fallos sueltos, cierra el informe y no vuelve.
 - LLÁMALA POR SU NOMBRE UNA O DOS VECES EN EL ÁREA. Nunca ninguna: un área en la que no la nombras suena a informe sobre ella y no a alguien hablándole. Va donde caiga natural, igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te está diciendo algo que te toca.
-- Y NO SIEMPRE DE LA MISMA MANERA, QUE ES LO QUE CANTA. Encajado en mitad de la frase, entre dos comas, es la forma que más se repite y la que se lee a plantilla. Hay otras dos que casi nunca se usan y son las que hacen que suene a alguien hablando:
-- ABRIENDO LA FRASE: "Raquel, eso que haces cuando alguien te pregunta cómo estás...". Ahí el nombre solo lleva coma detrás, no queda encajado entre dos, y es como empieza a hablar una persona cuando va a decirte algo de verdad.
-- Y SIN SER UNA LLAMADA, dentro de la frase como una cosa más de lo que le estás contando: "y ahí conviven dos Raquel que no siempre se hablan entre sí", "sigues siendo Raquel para todo el mundo menos para ti". Así no lleva comas ninguna, y es la que mejor suena de todas. Lo que NO vale es dejar el nombre colgando detrás de un artículo ("la Raquel de siempre", "una Raquel cansada"): ahí ya no la estás nombrando a ella, la estás convirtiendo en una cosa de la que se habla, que es justo lo contrario.
-- La coma delante del nombre, cuando lo estás llamando, es obligatoria en español y va siempre: quitarla es una falta. Lo que se cambia es la forma, no la puntuación.
+- Y VA SIN COMAS ALREDEDOR, QUE ES LO QUE CANTA. Encajado entre dos comas ("por fuera pareces tranquila, Ana, y por dentro llevas...") es la forma que sale siempre, se lee a plantilla, y hablando nadie hace esa pausa. Va pegado a la frase, sin coma delante ni detrás: "por fuera pareces tranquila Ana y por dentro llevas...".
+- Y NO SIEMPRE EN EL MISMO HUECO. Las siete áreas se leen seguidas: unas veces abre la frase ("Ana, eso que haces cuando alguien te pregunta cómo estás"), otras la cierra ("y eso lo sabes de sobra Ana"), y otras va dentro. Lo que no cambia es que no lleva comas.
 - Y VA EN UNA FRASE EN LA QUE LE HABLAS DE TÚ. Su nombre y la tercera persona no pueden ir juntos: en cuanto escribes su nombre dentro de una frase que habla de ella desde fuera, deja de ser alguien que le habla y pasa a ser alguien que la comenta con otro. Nunca para empezar el área.
 - EL NOMBRE QUE USAS ES EL DE PILA, el que tienes en "Nombre de pila". Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación. Si al mirar el nombre entero ves claro que el de pila es compuesto (María Carmen, José Luis, Juan José), puedes usar las dos palabras. Ante la duda, la primera palabra sola.
 - PREGÚNTALE DIRECTAMENTE. De vez en cuando párate y hazle una pregunta de verdad, de las que se quedan un rato dando vueltas. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
@@ -129,8 +127,8 @@ ESTILO DE ESCRITURA:
 - CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra: se escribe "quiero plátanos, peras y fresas", no "quiero plátanos, peras, y fresas". Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.
 
 REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
-- TECHO ABSOLUTO: ningún párrafo pasa de 130 palabras. Medido en el PDF de verdad: 130 palabras son 7 líneas, y 7 líneas es el máximo. Si se te va por encima, pártelo en dos. Y ojo, que 130 es el techo y no el objetivo: un párrafo normal aquí anda por las 80 o 90 palabras, que son cinco líneas.
-- NO HAY MÍNIMO. Los párrafos van de 2 a 7 líneas y tienen que MEZCLARSE sin patrón: uno largo que desarrolla una idea entera sin cortarla, otro de cinco, dos cortos seguidos, uno de dos líneas que remata y duele. Escribe como escribe una persona, no como una máquina que reparte el texto en trozos iguales.
+- TECHO ABSOLUTO: ningún párrafo pasa de 90 palabras. Al maquetarse en el PDF, 90 palabras ocupan 7 líneas, y 7 líneas es el máximo. Si se te va por encima, pártelo en dos. Esto no se negocia nunca.
+- NO HAY MÍNIMO. Los párrafos van de 2 a 7 líneas y tienen que MEZCLARSE sin patrón: uno de siete que desarrolla una idea entera sin cortarla, otro de cinco, dos cortos seguidos, uno de dos líneas que remata y duele. Escribe como escribe una persona, no como una máquina que reparte el texto en trozos iguales.
 - Si todos tus párrafos miden parecido, está MAL aunque respeten el techo. Se lee robótico y el lector lo nota aunque no sepa por qué.
 - Un párrafo de dos líneas es la mejor herramienta que tienes para cerrar una idea o dejar caer algo incómodo. Úsalos, y no siempre en el mismo sitio.
 - Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
@@ -316,7 +314,7 @@ El área no se entrega como un texto seguido: se entrega por casillas, y cada ca
 - parrafos: el texto del área, en su orden. AQUÍ, Y SOLO AQUÍ, VAN LAS NEGRITAS, marcadas con dos asteriscos a cada lado, tal como pide RESALTA EN NEGRITA: son frases o medias frases del propio párrafo, nunca una palabra suelta. Cada uno lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras. El PRIMER párrafo nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
 - escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro. Va escrita aquí y en ningún sitio más: NO la repitas dentro de "parrafos". Y aquí va la escena de verdad, escrita entera: una casilla no se rellena nunca con una palabra de relleno ni con un aviso de que falta algo, porque eso se imprime tal cual en el estudio del cliente.
 - remate_herida y remate_fuerza: las dos frases que rematan, tal como pide LAS FRASES QUE REMATAN. Cada una es UNA frase de treinta palabras como mucho, se imprime grande y centrada, y no lleva negritas.
-- pregunta: la pregunta directa, tal como pide PREGÚNTALE DIRECTAMENTE. Una sola frase, de treinta palabras como mucho porque se imprime grande y centrada, y no lleva negritas.
+- pregunta: la pregunta directa, tal como pide PREGÚNTALE DIRECTAMENTE. Una sola frase, y no lleva negritas.
 - cierre: el último párrafo del área, tal como pide CIERRE DE CADA ÁREA. Va sin nada detrás.
 
 DÓNDE VA CADA COSA, QUE ES LA MITAD DEL TRABAJO:
@@ -366,7 +364,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 130 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 2,
@@ -376,7 +374,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: los Nodos (el Sur, lo que 
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 130 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 3,
@@ -386,7 +384,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Saturno, Plutón y Neptuno
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 130 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 4,
@@ -396,7 +394,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Quirón y la Luna, lo que 
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 130 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 5,
@@ -406,7 +404,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Venus y Marte, y lo que ca
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 130 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 6,
@@ -416,7 +414,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Mercurio y Urano, y lo que
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 130 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 7,
@@ -428,7 +426,7 @@ Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene 
 
 Esta es la última área del estudio, así que su cierre cierra el estudio entero, no solo el área.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 130 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
   ];
 
@@ -457,7 +455,7 @@ ${cartaTexto}`;
 
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
-2. El nombre "${nombrePila}" aparece UNA o DOS veces en el area, en frase de tu y nunca al empezar el area. Ninguna vez no vale. Y MIRA COMO LO HAS PUESTO: si te ha salido encajado entre dos comas en mitad de la frase, cambialo por una de las otras dos formas, abriendo la frase o sin ser una llamada
+2. El nombre "${nombrePila}" aparece UNA o DOS veces en el area, en frase de tu y nunca al empezar el area. Ninguna vez no vale. Y MIRALE LAS COMAS: si te ha salido entre dos comas ("tranquila, ${nombrePila}, y por dentro"), quitaselas y dejalo pegado a la frase ("tranquila ${nombrePila} y por dentro")
 3. El area lleva negritas dentro del texto de los parrafos, marcadas con **dos asteriscos a cada lado**: frases o medias frases que ella subrayaria con el fosforito, nunca una palabra suelta. Relee solo lo marcado seguido y tiene que sonar a ella contandose a si misma; la que no pase esa prueba se cambia por la que si la pasa, pero el area no se entrega sin ninguna
 4. Hay al menos una pregunta directa, salida de lo que acabas de contarle
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
