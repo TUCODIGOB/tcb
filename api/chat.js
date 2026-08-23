@@ -311,7 +311,7 @@ CÓMO SE ENTREGA EL ÁREA (ES LO QUE LA MAQUETA):
 El área no se entrega como un texto seguido: se entrega por casillas, y cada casilla se imprime distinta. Novecientas palabras del mismo tamaño y del mismo color son cuatro páginas de muro gris, y el ojo se cansa antes de llegar a lo que la persona ha pagado.
 
 - parrafos: el texto del área, en su orden. AQUÍ, Y SOLO AQUÍ, VAN LAS NEGRITAS, marcadas con dos asteriscos a cada lado, tal como pide RESALTA EN NEGRITA: son frases o medias frases del propio párrafo, nunca una palabra suelta. Cada uno lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras. El PRIMER párrafo nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
-- escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro. Va escrita aquí y en ningún sitio más: NO la repitas dentro de "parrafos". Y aquí va la escena de verdad, escrita entera: una casilla no se rellena nunca con una palabra de relleno ni con un aviso de que falta algo, porque eso se imprime tal cual en el estudio del cliente.
+- escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro. Y aquí va la escena de verdad, escrita entera: una casilla no se rellena nunca con una palabra de relleno ni con un aviso de que falta algo, porque eso se imprime tal cual en el estudio del cliente.
 - remate_herida y remate_fuerza: las dos frases que rematan, tal como pide LAS FRASES QUE REMATAN. Cada una es UNA frase de treinta palabras como mucho, se imprime grande y centrada, y no lleva negritas.
 - pregunta: la pregunta directa, tal como pide PREGÚNTALE DIRECTAMENTE. Una sola frase, y no lleva negritas.
 - cierre: el último párrafo del área, tal como pide CIERRE DE CADA ÁREA. Va sin nada detrás.
@@ -331,27 +331,9 @@ PROHIBICIONES ABSOLUTAS:
 - No frases de autoayuda ni coaching
 - No decir qué debe hacer la persona: ni pasos, ni ejercicios, ni plan, ni "empieza por". Enseñarle lo que se le abre el día que algo deje de mandarla no es decirle qué hacer, es enseñarle una puerta, y eso sí va
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
-- PROHIBIDO escribir párrafos de más de 7 líneas. Parte en 2 si hace falta
-- PROHIBIDO enumerar o anunciar cuántas cosas vienen ("son tres", "el primero", "la segunda")
-- PROHIBIDO que un párrafo empiece un tema nuevo sin engancharlo con el anterior
-- PROHIBIDO que todas las frases midan parecido. Ni todas largas ni todas cortas
-- PROHIBIDO comprimir el texto para que quepa. Si sobra, se quita contenido entero
-- PROHIBIDO retorcer una frase o usar un verbo raro para que suene literario. Si no lo diría una persona hablando, se reescribe
-- PROHIBIDO apilar varias explicaciones del origen. Una sola, bien desarrollada
-- PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
-- PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
 - PROHIBIDO cerrar un área con una frase suave o vaga. El cierre golpea primero y solo despues abre: el golpe nunca se cambia por la luz, van los dos y en ese orden
-- PROHIBIDO contar en tu área el mismo mecanismo que gobierna otra. Mira la parte de la carta que te toca
-- PROHIBIDO quedarse en el patrón general. Sin un detalle que solo le valga a ella, el área no vale
-- PROHIBIDO un área que solo diagnostique. Sin el don contado a fondo, el área no vale
-- PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos
-- PROHIBIDO un área que se entienda pero no se sienta. Sin el momento que le toca por dentro, no vale
 - PROHIBIDO dejar una casilla vacía: la escena, los dos remates, la pregunta y el cierre van siempre
 - PROHIBIDO rellenar una casilla con una palabra de relleno o con un aviso de que falta algo. Lo que escribas ahí se imprime tal cual en el estudio del cliente
-- PROHIBIDO copiar el texto de la escena dentro de "parrafos". Va en su casilla y solo en su casilla
-- PROHIBIDO escribir corchetes dentro del texto: cada cosa va en su casilla y no hay nada que marcar
-- PROHIBIDO rematar solo la herida. Van los dos remates, el de la herida y el de la fuerza
-- PROHIBIDO un cierre que resuma lo ya contado o que insinúe algo sin llegar a decirlo
 - PROHIBIDA cualquier palabra técnica en el texto del cliente: nombres de planetas, casas, signos, aspectos, "carta natal", "tu signo". Le prometemos un estudio que se entiende sin saber nada de astrología, y una sola de esas palabras rompe esa promesa. La carta guía lo que escribes por dentro; fuera se traduce a su vida`;
 
   const AREAS = [
