@@ -93,22 +93,21 @@ IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresio
 ESTILO DE ESCRITURA:
 - Habla como una persona de confianza, directo y cercano
 - Lenguaje sencillo, que lo entienda cualquier persona aunque no haya leído un libro en años
-- CONECTA IDEAS CON COMAS, NO CON PUNTOS. Ni con guiones largos. Una persona contándote algo encadena, no corta: dice una cosa, la matiza, la lleva a la siguiente, y solo cierra cuando de verdad ha terminado. El punto que llega antes de tiempo es lo que hace que un texto suene a informe y no a alguien hablándote
+- Conecta ideas con comas y no con guiones largos, pero el punto no es el enemigo: una frase que ya ha dicho lo suyo se cierra. Encadenar con comas más allá de eso es lo que produce el párrafo que hay que releer
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos. Los asteriscos tienen un único uso, marcar la negrita que se explica más abajo, y no valen para nada más. Dentro del texto no se escribe nada que no sean sus palabras: la maquetación sale de las casillas, que se explican en CÓMO SE ENTREGA EL ÁREA
 - No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo
 - No empieces dos párrafos con la misma estructura. Varía los arranques
-- Escribe como un humano, no como una IA: frases que fluyen y se encadenan, con su ritmo mezclado, y ni una sola cortada a hachazos
+- Escribe como un humano, no como una IA: frases que fluyen, con su ritmo mezclado, ni todas cosidas con comas ni todas cortadas a hachazos
 - CADA FRASE TIENE QUE SONAR COMO HABLA UNA PERSONA DE VERDAD. Antes de dar una frase por buena, léela en voz alta por dentro: si nadie la diría hablando, está mal y se reescribe. No fuerces la gramática para que suene elaborado, y no cojas un verbo raro cuando el normal dice lo mismo. Lo que suena a literatura no emociona, distrae: el lector tropieza, sale del texto y deja de reconocerse.
 - MAL: "el cariño que no te has ganado con algo no termina de ser de fiar" (construcción retorcida, hay que releerla). BIEN: "del cariño que llega gratis no te puedes fiar".
 - MAL: "enseñar que algo te ha dolido" (verbo forzado). BIEN: "dejar ver que algo te ha dolido".
 - Vigila especialmente la primera frase del área. Si el lector tropieza ahí, ya no entra.
 - PROHIBIDO ENUMERAR. Nunca anuncies cuántas cosas vas a decir ni las numeres: nada de "son tres", "el primero", "la segunda", "y la tercera", "hay dos cosas que". Las ideas se encadenan una detrás de otra, como cuando alguien te cuenta algo hablando, y el lector no necesita saber cuántas quedan. Si el área se pudiera convertir en una lista de viñetas sin perder nada, está mal escrita.
 - CADA PÁRRAFO SE ENGANCHA CON EL ANTERIOR. Retomas una palabra, una imagen o una idea del párrafo de antes y sigues tirando del hilo desde ahí. Ningún párrafo empieza un tema nuevo en frío, y ninguno puede leerse suelto sin perder nada. Si quitas un párrafo y el resto se lee igual de bien, es que estaba puesto al lado y no cosido.
-- LAS FRASES SON LARGAS, Y ESO ES LO QUE SUENA A ALGUIEN HABLANDO. La media está en torno a las treinta y cinco palabras, con varias comas dentro, encadenando una idea con la siguiente sin cerrar cada dos por tres. Una frase de veinte palabras es corta aquí, no es la norma. Se mezclan: unas cuantas largas que desarrollan una idea entera, y de vez en cuando una corta que remata y duele, puesta a propósito y no por costumbre. Lo que no vale es que todas midan parecido, y menos aún que todas sean cortas: eso es lo que convierte el texto en una lista de afirmaciones sueltas.
+- EL RITMO SE MEZCLA, NI TODO LARGO NI TODO CORTO. La media está en unas veinte palabras por frase, con una coma dentro: ese es el punto en el que se lee a alguien hablando. Por debajo de diez suena a titular y pica; por encima de treinta y cinco el lector se pierde y tiene que releer, que es justo lo que hace que un párrafo no llegue. Se mezclan: una larga que desarrolla una idea entera, otra normal, y de vez en cuando una corta que remata. Lo que no vale es que todas midan parecido.
 - LOS DEFECTOS SE CUENTAN DESDE LA FUERZA QUE LOS ORIGINA, NUNCA CONTRA ELLA. Esto NO es suavizar ni maquillar: el defecto se nombra entero, con su nombre y sin rebajarlo. Lo que cambia es de dónde lo haces salir. Y no vale poner la virtud y el defecto uno al lado del otro como si fueran dos cosas distintas ("eres muy exigente contigo, pero también tienes buen criterio"), porque no son dos cosas: son la misma cualidad, solo que pasada de vueltas ("ese criterio tuyo, pasado de vueltas, es lo que te machaca"). Contado así lo reconoce y no se defiende. Contado como una lista de fallos sueltos, cierra el informe y no vuelve.
 - LLÁMALA POR SU NOMBRE UNA O DOS VECES EN EL ÁREA. Nunca ninguna: un área en la que no la nombras suena a informe sobre ella y no a alguien hablándole. Va donde caiga natural, igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te está diciendo algo que te toca.
-- Y VA SIN COMAS ALREDEDOR, QUE ES LO QUE CANTA. Encajado entre dos comas ("por fuera pareces tranquila, Ana, y por dentro llevas...") es la forma que sale siempre, se lee a plantilla, y hablando nadie hace esa pausa. Va pegado a la frase, sin coma delante ni detrás: "por fuera pareces tranquila Ana y por dentro llevas...".
-- Y NO SIEMPRE EN EL MISMO HUECO. Las siete áreas se leen seguidas, así que si el nombre sale siempre en el mismo punto de la frase se lee a plantilla: unas veces va en mitad ("por fuera pareces tranquila Ana y por dentro llevas..."), otras cierra la frase ("y eso lo sabes de sobra Ana"). Sin comas en los dos casos.
+- Y NO SIEMPRE EN EL MISMO SITIO DE LA FRASE. Las siete áreas se leen seguidas, así que si el nombre sale siempre encajado en mitad de la frase se lee a plantilla, por muy bien puesto que esté. Se cambia de sitio en cada área: unas veces abre la frase ("Raquel, eso que haces..."), otras la cierra ("...y eso lo sabes de sobra, Raquel."), y otras va dentro. Lleva sus comas siempre, que es como se escribe en español, pero no siempre en el mismo hueco.
 - Y VA EN UNA FRASE EN LA QUE LE HABLAS DE TÚ. Su nombre y la tercera persona no pueden ir juntos: en cuanto escribes su nombre dentro de una frase que habla de ella desde fuera, deja de ser alguien que le habla y pasa a ser alguien que la comenta con otro. Nunca para empezar el área.
 - EL NOMBRE QUE USAS ES EL DE PILA, el que tienes en "Nombre de pila". Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación. Si al mirar el nombre entero ves claro que el de pila es compuesto (María Carmen, José Luis, Juan José), puedes usar las dos palabras. Ante la duda, la primera palabra sola.
 - PREGÚNTALE DIRECTAMENTE. De vez en cuando párate y hazle una pregunta de verdad, de las que se quedan un rato dando vueltas. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
@@ -453,9 +452,9 @@ ${cartaTexto}`;
       ? 'un HOMBRE. Todo en masculino: solo, cansado, el mismo. Nunca en femenino.'
       : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos, dale la vuelta a la frase cuando haga falta.';
 
-  const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS, QUE SON LAS QUE MAS SE ESCAPAN:
+  const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS DIEZ, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
-2. El nombre "${nombrePila}" aparece UNA o DOS veces en el area, en frase de tu y nunca al empezar el area. Ninguna vez no vale. Y MIRALE LAS COMAS: si te ha salido entre dos comas ("tranquila, ${nombrePila}, y por dentro"), quitaselas y dejalo pegado a la frase ("tranquila ${nombrePila} y por dentro")
+2. El nombre "${nombrePila}" aparece UNA o DOS veces en el area, dentro de una frase en la que le hablas de tu, nunca en una que hable de ella en tercera persona y nunca al empezar. Ninguna vez no vale
 3. El area lleva negritas dentro del texto de los parrafos, marcadas con **dos asteriscos a cada lado**: frases o medias frases que ella subrayaria con el fosforito, nunca una palabra suelta. Relee solo lo marcado seguido y tiene que sonar a ella contandose a si misma; la que no pase esa prueba se cambia por la que si la pasa, pero el area no se entrega sin ninguna
 4. Hay al menos una pregunta directa, salida de lo que acabas de contarle
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
@@ -787,9 +786,8 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
     const salida = await pedirJson({
       system: `Eres un corrector. Te dan un parrafo de un libro escrito para una mujer que se llama ${nombrePila}, hablandole de tu.
 Tu unico trabajo es devolver ESE MISMO parrafo con su nombre metido UNA vez, donde caiga natural, como cuando alguien que te conoce te llama por tu nombre justo al decirte algo que te toca.
-NO cambies ni una palabra mas. NO reescribas, NO resumas, NO mejores nada, NO quites ni anadas ideas. Lo unico que se anade es el nombre.
-Y VA SIN COMAS ALREDEDOR, pegado a la frase: "por fuera pareces tranquila ${nombrePila} y por dentro llevas", no "por fuera pareces tranquila, ${nombrePila}, y por dentro llevas".
-Y no lo pongas siempre en el mismo hueco: unas veces va en mitad de la frase y otras la cierra.`,
+NO cambies ni una palabra mas. NO reescribas, NO resumas, NO mejores nada, NO quites ni anadas ideas. Lo unico que se anade es el nombre y las comas que necesite.
+Y no lo pongas siempre en el mismo hueco: puede abrir la frase, cerrarla o ir dentro.`,
       esquema: ESQUEMA_TEXTO,
       tope: 900,
       contenido: parrafo,
@@ -843,54 +841,23 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // Marcar es envolver: el texto no se sustituye, se rodea. Se descartan las
     // que no aparecen tal cual, las que ya estan marcadas y las que se pisan
     // con otra ya marcada.
-    //
-    // La busqueda se hace SIEMPRE sobre el texto original, no sobre el que ya
-    // lleva marcas, y de cada frase aceptada se apunta el trozo que ocupa. Si
-    // el modelo devuelve dos frases que se pisan (una dentro de la otra), la
-    // segunda se descarta. Buscando sobre el texto ya marcado, la segunda se
-    // metia DENTRO de la primera y la negrita salia partida en dos:
-    // "**estas **calculando cuanto** de mas**". No ha llegado a salir en
-    // ningun informe, pero el modelo puede devolverlas asi.
-    //
-    // Y ya no se usa replace: los asteriscos se meten por posicion. Asi
-    // tampoco hay que acordarse de que un "$&" dentro de la frase corrompe el
-    // parrafo, porque no hay patron que interpretar.
-    const yaMarcado = /\*\*[\s\S]+?\*\*/g;
-    const ocupado = textos.map(t => {
-      const trozos = [];
-      let m;
-      yaMarcado.lastIndex = 0;
-      while ((m = yaMarcado.exec(t)) !== null) trozos.push([m.index, m.index + m[0].length]);
-      return trozos;
-    });
-
-    const puestas = [];
+    const marcados = [...textos];
+    let puestas = 0;
     for (const frase of frases) {
       if (typeof frase !== 'string') continue;
       const f = frase.trim().replace(/^\*+|\*+$/g, '');
       if (enPalabras(f).length < 3 || f.length > LARGO_MAX_NEGRITA) continue;
-      const i = textos.findIndex(t => t.includes(f));
+      const i = marcados.findIndex(t => t.includes(f));
       if (i < 0) continue;
-      const desde = textos[i].indexOf(f);
-      const hasta = desde + f.length;
-      if (ocupado[i].some(([a, b]) => desde < b && a < hasta)) continue;
-      ocupado[i].push([desde, hasta]);
-      puestas.push({ i, desde, hasta });
+      if (marcados[i].includes('**' + f) || marcados[i].includes(f + '**')) continue;
+      // Se marca con una funcion, no con un texto: en el segundo argumento de
+      // replace, un "$&" o un "$1" dentro de la frase se interpretarian como
+      // patron y saldria un parrafo corrompido. Con la funcion, lo que se
+      // escribe es exactamente lo que hay.
+      marcados[i] = marcados[i].replace(f, () => '**' + f + '**');
+      puestas++;
     }
-    // Lo que se mira es cuantas negritas queda el area EN TOTAL, no cuantas ha
-    // puesto este arreglo: si el area ya traia una del modelo y aqui se anaden
-    // dos, son tres, y tirarlas por no haber puesto tres nuevas seria dejar el
-    // area con una sola habiendo podido dejarla con tres.
-    const yaHabia = textos.reduce((n, t) => n + ((t.match(/\*\*[\s\S]+?\*\*/g) || []).length), 0);
-    if (yaHabia + puestas.length < MIN_NEGRITAS) return null;
-
-    // De atras hacia delante: meter los asteriscos mueve todo lo que va
-    // detras, asi que se empieza por el final y las posiciones siguen valiendo.
-    const marcados = [...textos];
-    for (const { i, desde, hasta } of puestas.sort((a, b) => b.desde - a.desde)) {
-      marcados[i] = marcados[i].slice(0, desde) + '**' + marcados[i].slice(desde, hasta) + '**' + marcados[i].slice(hasta);
-    }
-    return marcados;
+    return puestas >= MIN_NEGRITAS ? marcados : null;
   }
 
   // "ella" de sujeto, la que delata que se ha salido del "tu": "ella nota",
@@ -1212,8 +1179,12 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       if (antesDeLimpiar.includes(marca) && !montada.includes(marca)) quitadas[opcion] = true;
     }
 
-    // Ya con el texto definitivo: se parte en bloques y se comprueba que no
-    // falte ninguna pieza obligatoria antes de darla por buena.
+    // El area llega montada desde pedirArea, con cada casilla ya en su sitio.
+    // mismo trato que se le da a un area que llega cortada.
+    // El nombre se revisa aqui, con las marcas, porque falla igual que ellas:
+    // esta pedido en el prompt y en el repaso final, y en el informe del 22 de
+    // agosto salio CERO veces en las siete areas. Pedirlo otra vez por escrito
+    // ya se ha probado y no funciona; contarlo, si.
     const bloques = analizarArea(montada);
     // Si el area sale a proposito sin escena (ver arriba), se dice aqui: esa
     // decision ya esta tomada y es la buena.
