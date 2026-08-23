@@ -508,6 +508,57 @@ ${cartaTexto}`;
   // encontro impresa dos veces seguidas, palabra por palabra.
   const PALABRAS_IGUALES = 8;
 
+  // Un solo sitio donde se decide que es "de relleno", para que la comprobacion
+  // y el arreglo no puedan discrepar nunca.
+  function esDeRelleno(texto) {
+    const p = enPalabras(texto);
+    return p.length < MIN_PALABRAS_ESCENA || p.every(x => RELLENO.test(x));
+  }
+
+  // Pide SOLO la escena, sin volver a escribir el area entera. Es corta,
+  // barata y no toca nada de lo que ya estaba bien. Devuelve null si no sale,
+  // y entonces manda el plan B: el area se entrega sin el bloque de escena.
+  const ESQUEMA_SOLO_ESCENA = {
+    type: 'object',
+    properties: { texto: { type: 'string', description: 'La escena, escrita entera.' } },
+    required: ['texto'],
+    additionalProperties: false,
+  };
+
+  async function pedirSoloLaEscena(area, datos) {
+    const loEscrito = (datos?.parrafos || []).map(p => p?.texto).filter(Boolean).join('\n\n');
+    try {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-5',
+          thinking: { type: 'disabled' },
+          output_config: { format: { type: 'json_schema', schema: ESQUEMA_SOLO_ESCENA } },
+          max_tokens: 800,
+          system: SYSTEM_PROMPT,
+          messages: [{
+            role: 'user',
+            content: `${contextoPersona}\n\n${area.prompt}\n\nESTO YA ESTÁ ESCRITO Y NO HAY QUE TOCARLO:\n\n${loEscrito}\n\nLo único que falta es LA ESCENA de esta área, que se quedó sin escribir. Escríbela ahora, tal como pide ESCENA REAL OBLIGATORIA: uno o dos párrafos, concreta y visual, hablándole a ella de tú, sin negritas y sin repetir nada de lo que ya está escrito arriba. Devuelve solo la escena.`,
+          }],
+        }),
+      });
+      if (!r.ok) return null;
+      const data = await r.json();
+      if (data.stop_reason === 'max_tokens') return null;
+      const txt = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
+      const escena = JSON.parse(txt)?.texto;
+      // Si lo que vuelve tambien es relleno, no vale y se pasa al plan B.
+      return (typeof escena === 'string' && !esDeRelleno(escena)) ? escena.trim() : null;
+    } catch {
+      return null;
+    }
+  }
+
 
   // ── QUE LE HABLE A ELLA: ESTO SE LEE, NO SE CUENTA ────────────────
   //
@@ -639,10 +690,12 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
 
     const escena = bloques.filter(b => b.tipo === 'escena').map(b => b.t).join(' ');
     const cuerpo = bloques.filter(b => b.tipo !== 'escena' && b.tipo !== 'sub').map(b => b.t).join(' ');
-    const palabrasEscena = enPalabras(escena);
-    if (palabrasEscena.length < MIN_PALABRAS_ESCENA || palabrasEscena.every(p => RELLENO.test(p))) {
+    // Si el area viene a proposito sin escena (porque venia de relleno y
+    // tampoco salio al pedirla sola), no se vuelve a pedir el area entera por
+    // eso: ya se decidio, y volver a pedirla solo gasta.
+    if (escena && esDeRelleno(escena)) {
       flojo.push('la escena viene a medias o rellenada por rellenar');
-    } else if (escenaRepetida(escena, cuerpo)) {
+    } else if (escena && escenaRepetida(escena, cuerpo)) {
       flojo.push('la escena viene copiada tambien dentro del texto: saldria impresa dos veces');
     }
 
@@ -779,6 +832,38 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
       throw err;
     }
 
+    // ── LA PALABRA "PLACEHOLDER" NO PUEDE LLEGAR AL PDF. NUNCA ──────
+    //
+    // El 22 de agosto el area 6 llego con la palabra "placeholder" en la
+    // casilla de la escena y salio impresa en dorado y a pagina entera en el
+    // estudio de una clienta que habia pagado 47 euros.
+    //
+    // La causa ya no esta: el prompt pedia la escena en dos sitios a la vez y
+    // el modelo la escribia en el texto y rellenaba la casilla de cualquier
+    // manera. Pero eso es confiar, y esto no se puede confiar. Aqui se cierra
+    // por codigo, y se cierra SIN perder la venta, que es la otra mitad:
+    //
+    //   1. si la escena viene de relleno, se pide SOLO la escena. Es una
+    //      llamada corta y barata, y el area entera no se toca.
+    //   2. si volviera a venir de relleno, el area sale SIN el bloque de la
+    //      escena. Se lee perfectamente sin el; con la palabra "placeholder"
+    //      impresa, no.
+    //
+    // Asi que la palabra no tiene por donde llegar al papel, y ningun informe
+    // se cae por esto.
+    let sinEscena = false;
+    if (esDeRelleno(datos?.escena?.texto)) {
+      console.warn(`Área ${area.id}: la escena vino de relleno, se pide solo la escena`);
+      const otra = await pedirSoloLaEscena(area, datos);
+      if (otra) {
+        datos.escena = { ...datos.escena, texto: otra };
+      } else {
+        console.warn(`Área ${area.id}: SE ENTREGA SIN ESCENA antes que imprimir un relleno`);
+        datos.escena = null;
+        sinEscena = true;
+      }
+    }
+
     const montada = montarArea(datos);
 
     // El area llega montada desde pedirArea, con cada casilla ya en su sitio.
@@ -788,7 +873,9 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
     // agosto salio CERO veces en las siete areas. Pedirlo otra vez por escrito
     // ya se ha probado y no funciona; contarlo, si.
     const bloques = analizarArea(montada);
-    const faltan = revisarBloques(bloques);
+    // Si el area sale a proposito sin escena (ver arriba), que no la tire la
+    // regla que exige la escena: esa decision ya se ha tomado y es la buena.
+    const faltan = revisarBloques(bloques).filter(f => !(sinEscena && f.includes('escena')));
 
     // Lo que no para el area pero conviene saber. Va a los registros y ya: si
     // llegan mil correos por esto, no se lee ninguno. Si un aviso se repite
