@@ -530,14 +530,35 @@ ${cartaTexto}`;
   //      disculpa, corrijo el formato en la respuesta final.},"
   const DISCULPA = /\s*[^.?!¿¡]{0,120}(disculp|perdon|perdón|lo siento|corrijo|corregir)[^.?!]{0,120}(formato|respuesta final|json|casilla|instrucciones)[^.?!]*[.?!]?\s*$/i;
 
-  // El modelo presentandose o explicando lo que hace. Un parrafo del estudio
-  // NUNCA empieza asi: son maneras de hablar de si mismo, no de hablarle a
-  // ella. Si un parrafo abre con una de estas, el parrafo entero se va.
-  const SE_EXPLICA = /^\s*[«"'(\[]?\s*(aqu[íi] (tienes|va|est[áa])|a continuaci[óo]n|contin[úu]o|he (escrito|generado|redactado|creado)|voy a (escribir|generar)|espero que (esto|te sirva|cumpla)|nota\s*:|nota final|aclaraci[óo]n\s*:|importante\s*:|como (ia|modelo|asistente)|lo siento|disculp|perdona? (que|el|la)|si necesitas|d[ée]jame saber|revisado|corregido)/i;
-  // OJO: aqui NO va \b al final. Con el, "nota:" y "disculp" no coincidian
-  // nunca —detras de los dos puntos no hay letra, y detras de "disculp" hay
-  // una "a"—, asi que la regla existia y no cazaba nada. Se vio en la prueba,
-  // no en el informe de una clienta.
+  // EL MODELO PRESENTANDOSE O EXPLICANDO LO QUE HACE.
+  //
+  // Aqui hay que hilar fino, porque esto BORRA UN PARRAFO ENTERO. La primera
+  // version llevaba "lo siento", "perdona que", "si necesitas" y "revisado",
+  // y en este producto esas frases son texto legitimo y de lo mejor que
+  // escribe: "Lo siento en el cuerpo antes que en la cabeza", "Perdona que te
+  // lo diga asi de claro", "Si necesitas que alguien te lo confirme...".
+  // Con aquella lista se habria borrado un parrafo bueno del estudio de una
+  // clienta, que es peor que el fallo que se venia a arreglar.
+  //
+  // Asi que no basta con la formula: tiene que ir acompanada de aquello de lo
+  // que solo habla el modelo —el area, el texto, el formato, las casillas, el
+  // JSON, las instrucciones— o ser algo que nadie diria hablandole a ella.
+  const COSA_DEL_MODELO = '([ée]l |la |lo |los |las |el |este |esta |tu |su )?(area|área|texto|informe|p[áa]rrafo|contenido|formato|casilla|casillas|json|instrucciones|secci[óo]n|apartado|versi[óo]n|respuesta|salida)';
+  const SE_EXPLICA = new RegExp(
+    '^\\s*[«"\'(\\[]?\\s*(' + [
+      // formulas que ya solas no son de este texto
+      'nota\\s*:',
+      'nota final\\s*:',
+      'aclaraci[óo]n\\s*:',
+      // "como modelo" a secas NO vale: "como modelo de mujer fuerte te
+      // pusieron a tu madre" es texto del estudio y se borraba entero.
+      'como (una )?(ia|inteligencia artificial|asistente)\\b',
+      'como modelo de lenguaje',
+      'no puedo (generar|escribir|crear|completar)',
+      'd[ée]jame saber si',
+      // y las que solo valen si hablan de lo suyo
+      '(aqu[íi] (tienes|va|est[áa])|a continuaci[óo]n( te)? (tienes|dejo|presento|muestro)|he (escrito|generado|redactado|creado|ajustado|corregido|completado)|voy a (escribir|generar|redactar|corregir)|espero que (esto|est[ao]|te sirva|cumpla|se ajuste)|si necesitas que (ajuste|cambie|modifique|reescriba))[^.?!\\n]{0,40}' + COSA_DEL_MODELO,
+    ].join('|') + ')', 'i');
 
   // Restos de formato que aqui no pintan nada: vallas de codigo, titulos de
   // markdown, separadores y comillas de cierre sueltas.
