@@ -186,52 +186,52 @@ LA ESCENA SE PRESENTA, NO SE SUELTA. Soltada de golpe, el lector se encuentra de
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
 Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos"). Los subtítulos que sí se escriben son otra cosa distinta y se explican en CÓMO SE ENTREGA EL ÁREA MARCADA: nunca llevan el nombre de una de estas etiquetas.
 El área se lee como una sola conversación seguida, no como seis trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
-Y OJO CON CÓMO ESTÁ ESCRITO LO DE ABAJO: son mis notas para ti, así que hablan de ella en tercera persona ("qué se le rompió", "cómo se comporta", "qué hace hoy"). Eso es como te lo cuento yo, no como se lo cuentas tú. En el texto que ella lee todo eso va en segunda persona: donde pone "qué se le rompió" escribes "qué se te rompió", donde pone "de pequeña aprendió" escribes "de pequeña aprendiste". No copies el punto de vista de estas notas.
+Y FÍJATE EN CÓMO ESTÁ ESCRITO LO DE ABAJO, porque no es casualidad: está en segunda persona, hablándole a ella de tú, que es exactamente como tiene que salir en el texto. "Qué se te rompió", no "qué se le rompió". Mantén esa persona de la primera palabra a la última.
 
-HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
+HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué haces hoy en esta parcela concreta de tu vida, en qué situaciones y con qué gestos. Y también tu fuerza real aquí: lo que esta misma manera de ser te da y que casi seguro no te apuntas como mérito, contada con el mismo detalle y la misma concreción que lo que te pesa, nunca despachada en una frase amable de paso. Es el punto más largo del área, y lo bueno ocupa más o menos lo mismo que lo que te duele.
 SOLO EN EL ÁREA 1 (IDENTIDAD) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué le ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que hace por fuera. Es lo que le pone nombre a su manera de funcionar y lo que se lleva puesto al terminar de leer.
-Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que ella no pondría primero si le preguntaras. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
-Los puntos ciegos que no ve: lo que hace y no registra como un problema, o que registra al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
-Qué muestra, qué oculta y qué contradicciones tiene: la distancia entre la persona que enseña y la que guarda, y las cosas suyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a ella y no a un perfil que le valdría a cualquiera.
+Cómo funcionas por dentro: el mecanismo con el que procesas lo que te pasa, qué te ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que haces por fuera. Es lo que le pone nombre a tu manera de funcionar y lo que se lleva puesto al terminar de leer.
+Lo que se te da bien de verdad: tus fortalezas reales, sobre todo las que tú no pondrías primero si te preguntaran. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
+Los puntos ciegos que no ves: lo que haces y no registras como un problema, o que registras al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
+Qué muestras, qué ocultas y qué contradicciones tienes: la distancia entre la persona que enseñas y la que guardas, y las cosas tuyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a ella y no a un perfil que le valdría a cualquiera.
 Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante.
 SOLO EN EL ÁREA 2 (PATRONES) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuáles son sus patrones: los que de verdad le gobiernan la vida, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera.
-Qué los enciende: la situación exacta que los dispara, la que hace saltar el automatismo antes de que ella se dé cuenta. Es lo que hace que se reconozca al leerlo.
-Dónde acaba siempre: el mismo punto de llegada al que vuelve una vez tras otra, por caminos distintos y con gente distinta. Es donde ve que el patrón existe de verdad.
-Qué gana con ellos: de qué la protegen, qué le evitan, qué se ahorra cada vez que los repite. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
+Cuáles son tus patrones: los que de verdad te gobiernan la vida, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera.
+Qué los enciende: la situación exacta que los dispara, la que hace saltar el automatismo antes de que te des cuenta. Es lo que hace que se reconozca al leerlo.
+Dónde acabas siempre: el mismo punto de llegada al que vuelves una vez tras otra, por caminos distintos y con gente distinta. Es donde ve que el patrón existe de verdad.
+Qué ganas con ellos: de qué te protegen, qué te evitan, qué te ahorras cada vez que los repites. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
 Lo que gana con el patrón va aquí; la creencia que lo sostiene va más adelante, en su sitio, y no se cuenta dos veces.
 SOLO EN EL ÁREA 3 (MIEDOS) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuál es el miedo que gobierna su vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que ella nombraría si le preguntaras, y de qué tiene miedo en el fondo cuando tiene miedo de eso.
-Qué se lo dispara y cómo reacciona cuando aparece: las situaciones concretas que lo encienden, y lo que hace en ese momento sin decidirlo, si se paraliza, si controla más, si se adelanta, si desaparece.
-Qué está evitando por él y qué le ha costado ya: lo que lleva años sin hacer por ese miedo, y el precio que ha pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijo a tiempo.
+Cuál es el miedo que te gobierna la vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que tú nombrarías si te preguntaran, y de qué tienes miedo en el fondo cuando tienes miedo de eso.
+Qué te lo dispara y cómo reaccionas cuando aparece: las situaciones concretas que lo encienden, y lo que haces en ese momento sin decidirlo, si te paralizas, si controlas más, si te adelantas, si desapareces.
+Qué estás evitando por él y qué te ha costado ya: lo que llevas años sin hacer por ese miedo, y el precio que has pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijiste a tiempo.
 SOLO EN EL ÁREA 4 (HERIDA) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuál es la herida y qué la reabre hoy: qué se le rompió y qué le sigue faltando desde entonces, y las situaciones concretas de su vida de ahora que la vuelven a tocar.
-Cómo se protege cuando se reabre, y qué se está perdiendo por protegerse así: lo que hace en ese momento para que no le vuelva a doler, y lo que esa misma protección le está dejando fuera.
-Qué necesita de verdad en ese momento: ponerle nombre a lo que lleva años sintiendo sin saber decirlo, y qué acaba haciendo con esa necesidad.
+Cuál es la herida y qué te la reabre hoy: qué se te rompió y qué te sigue faltando desde entonces, y las situaciones concretas de tu vida de ahora que te la vuelven a tocar.
+Cómo te proteges cuando se reabre, y qué te estás perdiendo por protegerte así: lo que haces en ese momento para que no te vuelva a doler, y lo que esa misma protección te está dejando fuera.
+Qué necesitas de verdad en ese momento: ponerle nombre a lo que llevas años sintiendo sin saber decirlo, y qué acabas haciendo con esa necesidad.
 SOLO EN EL ÁREA 5 (AMOR) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cómo es en el amor: cómo se comporta cuando quiere a alguien de verdad, cómo lo demuestra, cuánto se entrega y cuánto se guarda, y qué le pasa con el deseo y con la intimidad.
-Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que ella no se está dando.
-Qué necesita de la otra persona para sentirse querida y qué le enamora: lo que le hace falta para bajar la guardia, y lo que la engancha de alguien, que no siempre es lo mismo.
-Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué hace ella ahí sin darse cuenta.
-Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que ella da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
+Cómo eres en el amor: cómo te comportas cuando quieres a alguien de verdad, cómo lo demuestras, cuánto te entregas y cuánto te guardas, y qué te pasa con el deseo y con la intimidad.
+Qué tipo de persona atraes y por qué: quién se te acerca una y otra vez, qué tienen en común esas personas, y qué te da alguien así que tú no te estás dando.
+Qué necesitas de la otra persona para sentirte querida y qué te enamora: lo que te hace falta para bajar la guardia, y lo que te engancha de alguien, que no siempre es lo mismo.
+Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué haces tú ahí sin darte cuenta.
+Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
 SOLO EN EL ÁREA 6 (RELACIONES) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
-Qué papel ocupa siempre sin decidirlo: el sitio que acaba ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darse cuenta de que lo ocupa.
-Qué pasa con lo que da y lo que recibe: si la balanza le sale igualada o no, cuánto sostiene ella y cuánto le sostienen a ella, y qué hace cuando esa cuenta no le cuadra.
-En qué dinámicas acaba metida una y otra vez: el tipo de relación que se le repite con gente distinta, y qué se repite dentro de ella cada vez que vuelve a pasar.
+Qué papel ocupas siempre sin decidirlo: el sitio que acabas ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darte cuenta de que lo ocupas.
+Qué pasa con lo que das y lo que recibes: si la balanza te sale igualada o no, cuánto sostienes tú y cuánto te sostienen a ti, y qué haces cuando esa cuenta no te cuadra.
+En qué dinámicas acabas metida una y otra vez: el tipo de relación que se te repite con gente distinta, y qué se repite dentro de ti cada vez que vuelve a pasar.
 SOLO EN EL ÁREA 7 (DINERO) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Qué significa el dinero para ella y qué le mueve a ganarlo: qué representa de verdad en su cabeza, más allá de los números, y qué es lo que la empuja a querer más o a conformarse.
-Qué hace con él cuando lo tiene: cómo lo gasta, cómo toma las decisiones de dinero, y cómo lleva el riesgo cuando hay algo en juego.
-Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo con el que se encuentra una y otra vez, incluido lo que hace en el trabajo cuando toca pedir o cobrar lo que vale, y qué le ocurre justo cuando las cosas empiezan a salirle.
+Qué significa el dinero para ti y qué te mueve a ganarlo: qué representa de verdad en tu cabeza, más allá de los números, y qué es lo que te empuja a querer más o a conformarte.
+Qué haces con él cuando lo tienes: cómo lo gastas, cómo tomas las decisiones de dinero, y cómo llevas el riesgo cuando hay algo en juego.
+Qué te bloquea para ganar más y qué pasa cuando empieza a irte bien: el techo con el que te encuentras una y otra vez, incluido lo que haces en el trabajo cuando toca pedir o cobrar lo que vales, y qué te ocurre justo cuando las cosas empiezan a salirte.
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio. Y en las áreas cuya secuencia empieza por ella, no es lo primero que se lee: delante van igualmente el arranque que sitúa el área y la frase que presenta la escena.
 
-ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendió, con quién, en qué situación, y qué hace hoy exactamente por haberlo aprendido. El razonamiento tiene esta forma: "aprendiste esto de pequeña, y por eso hoy, sin darte cuenta, haces esto otro". La forma es esa, las palabras las pones tú y cambian en cada área.
-UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluyó ella de aquello, y qué hace hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra infancia distinta.
+ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendiste, con quién, en qué situación, y qué haces hoy exactamente por haberlo aprendido. El razonamiento tiene esta forma: "aprendiste esto de pequeña, y por eso hoy, sin darte cuenta, haces esto otro". La forma es esa, las palabras las pones tú y cambian en cada área.
+UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluiste tú de aquello, y qué haces hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en tu vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra infancia distinta.
 
-CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Después de HOY, es el punto que más sitio ocupa.
+CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que das por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Después de HOY, es el punto que más sitio ocupa.
 
-SOLTAR — QUÉ TIENE QUE SOLTAR. Solo NOMBRAR la creencia concreta que tiene que caer. Nada más. Ni pasos, ni ejercicios, ni plan, ni "empieza por", ni por dónde, ni cómo hacerlo. El cómo es otro producto y aquí sobra. Es el punto más corto de todos.
+SOLTAR — QUÉ TIENES QUE SOLTAR. Solo NOMBRAR la creencia concreta que tiene que caer. Nada más. Ni pasos, ni ejercicios, ni plan, ni "empieza por", ni por dónde, ni cómo hacerlo. El cómo es otro producto y aquí sobra. Es el punto más corto de todos.
 
 CIERRE — el cierre, tal como pide la sección CIERRE DE CADA ÁREA. Además tiene que salir del contenido concreto de ESTA área y de ESTA persona: si ese mismo cierre pudiera ir al final de cualquiera de las otras seis áreas, no vale y lo reescribes.
 
@@ -279,17 +279,17 @@ PROHIBIDO que dos áreas expliquen el mismo mecanismo, aunque cambies las palabr
 
 EL DETALLE QUE NO LE VALE A NADIE MÁS:
 Un patrón general ("controla todo", "no pide ayuda", "se exige mucho") le vale a media España y no impresiona a nadie. En cada área tiene que haber al menos un detalle tan concreto y tan raro que la persona piense "esto no lo sabe nadie de mí". No es una frase más intensa: es un dato con grano.
-Se consigue bajando al detalle físico y cotidiano: la hora exacta a la que le pasa, el objeto que tiene en la mano, la frase textual que se dice por dentro, el gesto que hace sin darse cuenta, lo que hace justo después. Sale de cruzar dos cosas de su carta que casi nadie tiene juntas, no de adornar una idea general.
+Se consigue bajando al detalle físico y cotidiano: la hora exacta a la que te pasa, el objeto que tienes en la mano, la frase textual que te dices por dentro, el gesto que haces sin darte cuenta, lo que haces justo después. Sale de cruzar dos cosas de su carta que casi nadie tiene juntas, no de adornar una idea general.
 MAL: "te cuesta pedir ayuda". BIEN: "pides ayuda solo cuando ya lo has resuelto tú, para que quien te la dé no tenga que hacer nada y tú puedas seguir contando que no la necesitaste".
 
 EL DON (OBLIGATORIO EN CADA ÁREA):
-Un informe que solo diagnostica deja a la persona tocada y sin ganas de volver. En cada área tiene que haber una parte que le dé aire: lo que esa misma manera de ser le ha dado, lo que hace mejor que casi nadie por ser así, y por qué esa capacidad es rara de verdad.
+Un informe que solo diagnostica deja a la persona tocada y sin ganas de volver. En cada área tiene que haber una parte que le dé aire: lo que esa misma manera de ser te ha dado, lo que haces mejor que casi nadie por ser así, y por qué esa capacidad es rara de verdad.
 No es un piropo de paso ni una frase amable al final. Se cuenta con el mismo detalle y la misma concreción que lo que le duele, con su situación y su ejemplo, y ocupa un sitio parecido dentro del área.
-No es "pero también tienes cosas buenas". Es la otra cara exacta de lo que acabas de contarle: la misma cualidad que le pesa es la que la hace buena en algo concreto, y tiene que quedar claro que sin esa cualidad no tendría esa capacidad.
+No es "pero también tienes cosas buenas". Es la otra cara exacta de lo que acabas de contarle: esa misma cualidad que te pesa es la que te hace buena en algo concreto, y tiene que quedar claro que sin ella no tendrías esa capacidad.
 
 QUE LO SIENTA, NO SOLO QUE LO ENTIENDA:
 Un área puede estar perfectamente analizada y dejar al lector frío. Eso es exactamente lo que no sirve: entiende lo que le dices, asiente, pasa de página y no le ha pasado nada por dentro. Tiene que haber un momento en cada área en el que se le encoja algo, ese "por fin alguien lo dice" que hace que se le salten las lágrimas o que tenga que parar de leer un segundo.
-No se consigue subiendo el volumen ni poniendo frases más dramáticas. Se consigue así: en lugar de explicarle el patrón desde fuera, la metes dentro. Presente, no pasado. Su cuerpo, no su psicología: lo que se le tensa, lo que hace con las manos, lo que le pasa en el pecho, lo que dice en voz alta y lo que se calla justo después. Y cuando ya está dentro, una frase corta que le pone nombre a lo que lleva años sintiendo sin saber decirlo.
+No se consigue subiendo el volumen ni poniendo frases más dramáticas. Se consigue así: en lugar de explicarle el patrón desde fuera, la metes dentro. Presente, no pasado. Su cuerpo, no su psicología: lo que se te tensa, lo que haces con las manos, lo que te pasa en el pecho, lo que dices en voz alta y lo que te callas justo después. Y cuando ya está dentro, una frase corta que le pone nombre a lo que lleva años sintiendo sin saber decirlo.
 La prueba: si lo lees en voz alta y no te cambia la respiración, no está. Y si lo que has escrito se lo podrías leer a otra persona y también le tocaría, tampoco está.
 
 LAS FRASES QUE REMATAN:
