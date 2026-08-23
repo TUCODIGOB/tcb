@@ -106,7 +106,8 @@ ESTILO DE ESCRITURA:
 - CADA PÁRRAFO SE ENGANCHA CON EL ANTERIOR. Retomas una palabra, una imagen o una idea del párrafo de antes y sigues tirando del hilo desde ahí. Ningún párrafo empieza un tema nuevo en frío, y ninguno puede leerse suelto sin perder nada. Si quitas un párrafo y el resto se lee igual de bien, es que estaba puesto al lado y no cosido.
 - EL RITMO SE MEZCLA, NI TODO LARGO NI TODO CORTO. La media está en unas veinte palabras por frase, con una coma dentro: ese es el punto en el que se lee a alguien hablando. Por debajo de diez suena a titular y pica; por encima de treinta y cinco el lector se pierde y tiene que releer, que es justo lo que hace que un párrafo no llegue. Se mezclan: una larga que desarrolla una idea entera, otra normal, y de vez en cuando una corta que remata. Lo que no vale es que todas midan parecido.
 - LOS DEFECTOS SE CUENTAN DESDE LA FUERZA QUE LOS ORIGINA, NUNCA CONTRA ELLA. Esto NO es suavizar ni maquillar: el defecto se nombra entero, con su nombre y sin rebajarlo. Lo que cambia es de dónde lo haces salir. Y no vale poner la virtud y el defecto uno al lado del otro como si fueran dos cosas distintas ("eres muy exigente contigo, pero también tienes buen criterio"), porque no son dos cosas: son la misma cualidad, solo que pasada de vueltas ("ese criterio tuyo, pasado de vueltas, es lo que te machaca"). Contado así lo reconoce y no se defiende. Contado como una lista de fallos sueltos, cierra el informe y no vuelve.
-- LLÁMALA POR SU NOMBRE UNA O DOS VECES EN EL ÁREA. Nunca ninguna: un área en la que no la nombras suena a informe sobre ella y no a alguien hablándole. Va dentro de una frase, donde caiga natural, igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te está diciendo algo que te toca.
+- LLÁMALA POR SU NOMBRE UNA O DOS VECES EN EL ÁREA. Nunca ninguna: un área en la que no la nombras suena a informe sobre ella y no a alguien hablándole. Va donde caiga natural, igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te está diciendo algo que te toca.
+- Y NO SIEMPRE EN EL MISMO SITIO DE LA FRASE. Las siete áreas se leen seguidas, así que si el nombre sale siempre encajado en mitad de la frase se lee a plantilla, por muy bien puesto que esté. Se cambia de sitio en cada área: unas veces abre la frase ("Raquel, eso que haces..."), otras la cierra ("...y eso lo sabes de sobra, Raquel."), y otras va dentro. Lleva sus comas siempre, que es como se escribe en español, pero no siempre en el mismo hueco.
 - Y VA EN UNA FRASE EN LA QUE LE HABLAS DE TÚ. Su nombre y la tercera persona no pueden ir juntos: en cuanto escribes su nombre dentro de una frase que habla de ella desde fuera, deja de ser alguien que le habla y pasa a ser alguien que la comenta con otro. Nunca para empezar el área.
 - EL NOMBRE QUE USAS ES EL DE PILA, el que tienes en "Nombre de pila". Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación. Si al mirar el nombre entero ves claro que el de pila es compuesto (María Carmen, José Luis, Juan José), puedes usar las dos palabras. Ante la duda, la primera palabra sola.
 - PREGÚNTALE DIRECTAMENTE. De vez en cuando párate y hazle una pregunta de verdad, de las que se quedan un rato dando vueltas. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
@@ -901,10 +902,18 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
 
   async function generarArea(area) {
     let ultimoError;
-    // La primera area que llega entera, aunque venga floja de estilo. Si el
-    // repaso no la mejora o se cae por el camino, se entrega esta: vale mas un
-    // area sin negritas que un informe que no llega.
-    let deReserva = null;
+    // LA MEJOR DE LAS QUE HAN LLEGADO, no la primera.
+    //
+    // Aqui habia un fallo mio que se vio en el informe del 23 de agosto: se
+    // guardaba la PRIMERA area que llegaba y no se actualizaba nunca. Asi que
+    // el repaso se pedia, llegaba un area mejor, y si a esa le faltaba
+    // cualquier otra cosa se tiraba y se entregaba la vieja. El nombre de la
+    // clienta salio en 3 de 7 areas por esto: se pidieron los repasos, se
+    // pagaron, vinieron con el nombre, y se descartaron.
+    //
+    // Ahora se queda la que menos le falta, y en empate la ultima, que es la
+    // que se escribio sabiendo lo que habia fallado.
+    let mejor = null;
     let fallos = 0;
     let repasos = 0;
     let loQueFalloAntes = null;
@@ -913,10 +922,10 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
         const montada = await pedirArea(area, loQueFalloAntes);
         const flojo = await loQueLeFaltaAlArea(montada);
         if (flojo.length === 0) return montada;
-        if (deReserva === null) deReserva = montada;
+        if (mejor === null || flojo.length <= mejor.cuantos) mejor = { montada, cuantos: flojo.length };
         if (repasos >= REPASOS_POR_ESTILO) {
           console.warn(`SE ENTREGA CON AVISOS — Área ${area.id}: ${flojo.join('; ')}`);
-          return deReserva;
+          return mejor.montada;
         }
         repasos++;
         loQueFalloAntes = flojo;
@@ -932,7 +941,7 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
       }
     }
     // Si en algun momento llego un area entera, se entrega aunque venga floja.
-    if (deReserva !== null) return deReserva;
+    if (mejor !== null) return mejor.montada;
     throw ultimoError;
   }
 
