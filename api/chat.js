@@ -509,35 +509,96 @@ ${cartaTexto}`;
   const PALABRAS_IGUALES = 8;
 
 
-  // COMO SE RECONOCE QUE UNA FRASE LE HABLA A ELLA.
+  // ── QUE LE HABLE A ELLA: ESTO SE LEE, NO SE CUENTA ────────────────
   //
-  // No basta con los pronombres: "por fuera pareces tranquila y por dentro
-  // llevas una maquina que no para" es segunda persona de manual y no lleva
-  // ni un "tu". Asi que van tambien los verbos, y van como palabras enteras y
-  // en una lista cerrada, no por terminacion: "-es" y "-as" valdrian para
-  // "es", "cosas" o "veces", y entonces cualquier frase en tercera persona
-  // pasaria por buena. De las terminaciones solo entran las inconfundibles:
-  // -aste, -iste y -abas.
+  // Es la regla que mas caro sale si falla: el estudio se vende como alguien
+  // contandotelo cara a cara, y en cuanto una frase habla de ella desde fuera
+  // el lector deja de ser el destinatario. En el informe del 22 de agosto el
+  // area 4 abria entera en tercera persona y el cierre del area 7 tambien.
   //
-  // Y quedan fuera a proposito los verbos que tambien son sustantivos (notas,
-  // cuentas, cargas, esperas, guardas, miras, preguntas, estas) y las
-  // terminaciones -eras y -aras, que se tragaban "maneras", "raras" y "caras".
-  // Con esas dentro, una frase en tercera persona pasaba por buena solo por
-  // llevar la palabra "notas", y el control dejaba de servir para nada.
-  const VERBO_EN_TU = /(^|[^a-z0-9])(eres|has|tienes|haces|sabes|puedes|vas|quieres|dices|llevas|pareces|sientes|crees|necesitas|acabas|sigues|vives|sueles|vuelves|entras|callas|pides|aguantas|revisas|evitas|eliges|dejas|pagas|cierras|abres|sueltas|repites|cuidas|buscas|piensas|sostienes|controlas|recuerdas|contestas|escondes|ensenas|\w+(?:aste|iste|abas))([^a-z0-9]|$)/;
+  // Se probo a cazarlo con expresiones regulares y NO SE PUEDE. La mejor que
+  // salio marcaba 17 frases de ese informe y solo 8 estaban mal. Las otras 9
+  // eran de dos clases, y las dos son insalvables contando letras:
+  //   - la entradilla, que habla de la gente en general a proposito ("hay
+  //     gente que va por la vida cuidando de que todo este hecho")
+  //   - segunda persona con un verbo que no esta en ninguna lista ("la serie
+  //     que QUERIAS ver", "cuando DEPENDES de otra persona", "exige que ESTES
+  //     disponible"). Y no se arregla metiendo las terminaciones -es y -ias,
+  //     porque entonces "la certeza de que la iban a querer sin condiciONES"
+  //     pasa por buena y se pierde justo lo que se venia a buscar.
+  //
+  // Distinguir "hay gente que se levanta pensando" de "de pequena aprendio"
+  // es entender de quien se habla, y eso no es un patron. Asi que el area la
+  // lee el modelo. Es una llamada corta y con respuesta minima.
+  //
+  // SI ESTA COMPROBACION FALLA, EL AREA PASA. Un corte de red no puede tirar
+  // un informe pagado por un repaso de estilo.
+  const SISTEMA_REPASO = `Eres un corrector de estilo. Te dan un trozo de un libro escrito para una mujer concreta, que TIENE que estar escrito de principio a fin hablandole a ella de tu, como si alguien se lo estuviera contando cara a cara.
 
-  // Estos solo valen CON su tilde, que es justo lo que los distingue: "estás"
-  // es hablarle a ella y "estas" es "estas cosas". Por eso se miran sobre el
-  // texto sin quitarle los acentos.
-  const VERBO_CON_TILDE = /(^|[^a-záéíóúñ0-9])(estás|serás|estarás|tendrás|harás|sabrás|podrás|querrás|verás|irás|dirás|darás|vendrás|sentirás|descubrirás)([^a-záéíóúñ0-9]|$)/;
+Tu unico trabajo es devolver, copiadas tal cual, las frases que se salen de eso: las que hablan de ELLA desde fuera, en tercera persona.
 
-  const PRONOMBRE_TU = /(^|[^a-z0-9])(tu|tus|te|ti|tuyo|tuya|tuyos|tuyas|contigo)([^a-z0-9]|$)/;
+SI son fallo:
+- "de pequena aprendio que el cuidado no venia solo"
+- "lo que se le rompio entonces fue la certeza de que la iban a querer"
+- "alguien le pregunta como esta y ella nota que no sabe que contestar"
+- "no es que Raquel no sepa disfrutar del dinero"
+- "va a descubrir que la seguridad que tanto ha perseguido no estaba ahi"
 
-  const MARCA_TU = {
-    test: frase => PRONOMBRE_TU.test(sinTildes(frase))
-      || VERBO_EN_TU.test(sinTildes(frase))
-      || VERBO_CON_TILDE.test(String(frase || '').toLowerCase()),
+NO son fallo, y es lo que mas se falla al corregir:
+- las frases que hablan de la gente en general, que son la manera normal de abrir: "hay gente que va por la vida cuidando de que todo este hecho", "en cualquier grupo hay alguien que se entera de todo", "nadie les pregunta que les cuesta". Hablan de mucha gente, no de ella.
+- las frases que hablan de OTRA persona: su madre, su pareja, un jefe, una amiga. "cuando dependes de que otra persona cumpla su parte" esta bien.
+- las frases que hablan de cosas: "eso se rompio", "el miedo aparece sin avisar".
+- las frases en segunda persona aunque no lleven la palabra "tu": "la serie que querias ver", "exige que estes siempre disponible", "empieza a pesarte". Estan bien.
+
+Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en el texto. Si no hay ninguna, devuelve la lista vacia.`;
+
+  const ESQUEMA_REPASO = {
+    type: 'object',
+    properties: {
+      frases: {
+        type: 'array',
+        description: 'Las frases que hablan de ella en tercera persona, copiadas tal cual. Vacio si no hay ninguna.',
+        items: { type: 'string' },
+      },
+    },
+    required: ['frases'],
+    additionalProperties: false,
   };
+
+  async function frasesQueHablanDeEllaDesdeFuera(texto) {
+    try {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-5',
+          thinking: { type: 'disabled' },
+          output_config: { format: { type: 'json_schema', schema: ESQUEMA_REPASO } },
+          // Solo tiene que copiar frases sueltas: con esto sobra de largo.
+          max_tokens: 1500,
+          system: SISTEMA_REPASO,
+          messages: [{ role: 'user', content: texto }],
+        }),
+      });
+      if (!r.ok) return [];
+      const data = await r.json();
+      if (data.stop_reason === 'max_tokens') return [];
+      const txt = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
+      const frases = JSON.parse(txt)?.frases;
+      if (!Array.isArray(frases)) return [];
+      // Solo valen las que de verdad estan en el area: si el corrector se
+      // inventa o parafrasea una frase, no se le hace caso.
+      return frases
+        .filter(f => typeof f === 'string' && f.trim().length > 12)
+        .filter(f => enPalabras(texto).join(' ').includes(enPalabras(f).join(' ')));
+    } catch {
+      return [];
+    }
+  }
 
   // "ella" de sujeto, la que delata que se ha salido del "tu": "ella nota",
   // "ella tenga", "ella misma". Se pide que detras venga otra palabra a
@@ -564,7 +625,7 @@ ${cartaTexto}`;
     return false;
   }
 
-  function loQueLeFaltaAlArea(montada) {
+  async function loQueLeFaltaAlArea(montada) {
     const flojo = [];
     const bloques = analizarArea(montada);
 
@@ -585,40 +646,35 @@ ${cartaTexto}`;
       flojo.push('la escena viene copiada tambien dentro del texto: saldria impresa dos veces');
     }
 
-    // LE HABLA DE TU O NO LE HABLA. Los ladillos no cuentan (son etiquetas de
-    // tres palabras) y las frases muy cortas tampoco, que casi nunca llevan
-    // marca y dispararian la cuenta sin que pase nada.
-    const frases = (escena + ' ' + cuerpo)
+    // LE HABLA DE TU O NO LE HABLA. Los ladillos quedan fuera: son etiquetas
+    // de tres palabras y no le hablan a nadie.
+    const leido = escena + ' ' + cuerpo;
+
+    // Lo barato primero, que no gasta llamada: "ella" de sujeto.
+    const ella = leido
       .split(/(?<=[.?!])\s+/)
       .map(f => f.trim())
-      .filter(f => f.split(/\s+/).length >= 6);
-
-    // Y EL NOMBRE, EN FRASE DE TU. Es el mismo fallo que el de arriba, no otro:
-    // en el informe del 22 de agosto el modelo solo escribia su nombre cuando
-    // se salia del "tu" ("adivinaria que Raquel carga con esto", "no es que
-    // Raquel no sepa disfrutar del dinero"). La frase que lleva su nombre
-    // tiene que llevar tambien un "tu", un "te" o un "tus": la unica de las
-    // tres que estaba bien lo llevaba ("no es que no sepas descansar, Raquel,
-    // es que descansar no TE suena a nada").
-    const suNombre = new RegExp('(?<![a-z0-9])' + sinTildes(nombrePila).replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![a-z0-9])');
-    const nombreEnTerceraPersona = frases.some(f => {
-      const n = sinTildes(f);
-      return suNombre.test(n) && !MARCA_TU.test(f);
-    });
-    if (nombreEnTerceraPersona) {
-      flojo.push(`escribe "${nombrePila}" en una frase que no le habla de tu`);
+      .find(f => ELLA_DE_SUJETO.test(sinTildes(f)));
+    if (ella) {
+      flojo.push(`habla de ella desde fuera: "${ella.slice(0, 70).trim()}..."`);
     }
 
-    const ella = frases.find(f => ELLA_DE_SUJETO.test(sinTildes(f)));
-    if (ella) {
-      flojo.push(`habla de ella desde fuera: "${ella.slice(0, 60).trim()}..."`);
+    // Y el repaso que lee, para todo lo que no se puede cazar contando.
+    for (const f of await frasesQueHablanDeEllaDesdeFuera(leido)) {
+      flojo.push(`habla de ella desde fuera: "${f.slice(0, 70).trim()}..."`);
     }
 
     return flojo;
   }
 
 
-  async function pedirArea(area) {
+  // loQueFalloAntes: lo que traia mal el area en el intento anterior. Pedir el
+  // area otra vez a secas es tirar una moneda; decirle que fallo la vez pasada
+  // es lo unico que hace que el repaso sirva para algo.
+  async function pedirArea(area, loQueFalloAntes) {
+    const repaso = (loQueFalloAntes && loQueFalloAntes.length)
+      ? `\n\nESTE AREA YA LA HAS ESCRITO UNA VEZ Y HA VUELTO POR ESTO:\n- ${loQueFalloAntes.join('\n- ')}\nEscribela entera otra vez, arreglando eso y sin estropear lo demas.`
+      : '';
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -655,7 +711,7 @@ ${cartaTexto}`;
         system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
-          content: `${contextoPersona}\n\n${area.prompt}\n\n${recordatorioFinal}`,
+          content: `${contextoPersona}\n\n${area.prompt}\n\n${recordatorioFinal}${repaso}`,
         }],
       }),
     });
@@ -764,10 +820,11 @@ ${cartaTexto}`;
     let deReserva = null;
     let fallos = 0;
     let repasos = 0;
+    let loQueFalloAntes = null;
     while (fallos < INTENTOS_POR_AREA) {
       try {
-        const montada = await pedirArea(area);
-        const flojo = loQueLeFaltaAlArea(montada);
+        const montada = await pedirArea(area, loQueFalloAntes);
+        const flojo = await loQueLeFaltaAlArea(montada);
         if (flojo.length === 0) return montada;
         if (deReserva === null) deReserva = montada;
         if (repasos >= REPASOS_POR_ESTILO) {
@@ -775,6 +832,7 @@ ${cartaTexto}`;
           return deReserva;
         }
         repasos++;
+        loQueFalloAntes = flojo;
         console.warn(`Área ${area.id} floja (${flojo.join('; ')}): se vuelve a pedir`);
       } catch (err) {
         ultimoError = err;

@@ -96,9 +96,15 @@ const AREA_DE_MENTIRA = JSON.stringify({
 
 // ── Contamos lo unico que cuesta dinero: las llamadas al modelo.
 let llamadasAlModelo = 0;
-globalThis.fetch = async (url) => {
+globalThis.fetch = async (url, opts = {}) => {
   const u = String(url);
   if (u.includes('api.anthropic.com')) {
+    // El repaso de estilo que lee el area es otra llamada distinta de la que
+    // escribe el area: se responde "no hay nada que corregir" y no cuenta como
+    // generacion, que es lo que mide esta prueba.
+    if (String(JSON.parse(opts.body || '{}').system || '').startsWith('Eres un corrector')) {
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: '{"frases":[]}' }] }) };
+    }
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
     return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_DE_MENTIRA }] }) };
