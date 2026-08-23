@@ -519,15 +519,17 @@ ${cartaTexto}`;
   // Pide SOLO la escena, sin volver a escribir el area entera. Es corta,
   // barata y no toca nada de lo que ya estaba bien. Devuelve null si no sale,
   // y entonces manda el plan B: el area se entrega sin el bloque de escena.
-  const ESQUEMA_SOLO_ESCENA = {
-    type: 'object',
-    properties: { texto: { type: 'string', description: 'La escena, escrita entera.' } },
-    required: ['texto'],
-    additionalProperties: false,
-  };
-
-  async function pedirSoloLaEscena(area, datos) {
-    const loEscrito = (datos?.parrafos || []).map(p => p?.texto).filter(Boolean).join('\n\n');
+  // ── UNA SOLA PUERTA PARA LAS LLAMADAS CORTAS ──────────────────────
+  //
+  // Los arreglos de aqui abajo (la escena, el nombre, las negritas y el
+  // repaso que lee) hacen todos lo mismo: una llamada pequena con esquema y
+  // la respuesta en JSON. Con el codigo repetido cuatro veces, cambiar algo
+  // obligaba a acordarse de los cuatro sitios. Aqui se hace una vez.
+  //
+  // Devuelve null ante cualquier problema: sin clave, error de red, respuesta
+  // cortada o JSON que no se puede leer. Quien llama decide que hacer con el
+  // null, y en todos los casos la decision es seguir con lo que ya habia.
+  async function pedirJson({ system, contenido, esquema, tope }) {
     try {
       const r = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
@@ -539,25 +541,40 @@ ${cartaTexto}`;
         body: JSON.stringify({
           model: 'claude-sonnet-5',
           thinking: { type: 'disabled' },
-          output_config: { format: { type: 'json_schema', schema: ESQUEMA_SOLO_ESCENA } },
-          max_tokens: 800,
-          system: SYSTEM_PROMPT,
-          messages: [{
-            role: 'user',
-            content: `${contextoPersona}\n\n${area.prompt}\n\nESTO YA ESTÁ ESCRITO Y NO HAY QUE TOCARLO:\n\n${loEscrito}\n\nLo único que falta es LA ESCENA de esta área, que se quedó sin escribir. Escríbela ahora, tal como pide ESCENA REAL OBLIGATORIA: uno o dos párrafos, concreta y visual, hablándole a ella de tú, sin negritas y sin repetir nada de lo que ya está escrito arriba. Devuelve solo la escena.`,
-          }],
+          output_config: { format: { type: 'json_schema', schema: esquema } },
+          max_tokens: tope,
+          system,
+          messages: [{ role: 'user', content: contenido }],
         }),
       });
       if (!r.ok) return null;
       const data = await r.json();
       if (data.stop_reason === 'max_tokens') return null;
       const txt = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
-      const escena = JSON.parse(txt)?.texto;
-      // Si lo que vuelve tambien es relleno, no vale y se pasa al plan B.
-      return (typeof escena === 'string' && !esDeRelleno(escena)) ? escena.trim() : null;
+      return JSON.parse(txt);
     } catch {
       return null;
     }
+  }
+
+  const ESQUEMA_SOLO_ESCENA = {
+    type: 'object',
+    properties: { texto: { type: 'string', description: 'La escena, escrita entera.' } },
+    required: ['texto'],
+    additionalProperties: false,
+  };
+
+  async function pedirSoloLaEscena(area, datos) {
+    const loEscrito = (datos?.parrafos || []).map(p => p?.texto).filter(Boolean).join('\n\n');
+    const salida = await pedirJson({
+      system: SYSTEM_PROMPT,
+      esquema: ESQUEMA_SOLO_ESCENA,
+      tope: 800,
+      contenido: `${contextoPersona}\n\n${area.prompt}\n\nESTO YA ESTÁ ESCRITO Y NO HAY QUE TOCARLO:\n\n${loEscrito}\n\nLo único que falta es LA ESCENA de esta área, que se quedó sin escribir. Escríbela ahora, tal como pide ESCENA REAL OBLIGATORIA: uno o dos párrafos, concreta y visual, hablándole a ella de tú, sin negritas y sin repetir nada de lo que ya está escrito arriba. Devuelve solo la escena.`,
+    });
+    const escena = salida?.texto;
+    // Si lo que vuelve tambien es relleno, no vale y se pasa al plan B.
+    return (typeof escena === 'string' && !esDeRelleno(escena)) ? escena.trim() : null;
   }
 
 
@@ -618,38 +635,128 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
   };
 
   async function frasesQueHablanDeEllaDesdeFuera(texto) {
-    try {
-      const r = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': process.env.ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-5',
-          thinking: { type: 'disabled' },
-          output_config: { format: { type: 'json_schema', schema: ESQUEMA_REPASO } },
-          // Solo tiene que copiar frases sueltas: con esto sobra de largo.
-          max_tokens: 1500,
-          system: SISTEMA_REPASO,
-          messages: [{ role: 'user', content: texto }],
-        }),
-      });
-      if (!r.ok) return [];
-      const data = await r.json();
-      if (data.stop_reason === 'max_tokens') return [];
-      const txt = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
-      const frases = JSON.parse(txt)?.frases;
-      if (!Array.isArray(frases)) return [];
-      // Solo valen las que de verdad estan en el area: si el corrector se
-      // inventa o parafrasea una frase, no se le hace caso.
-      return frases
-        .filter(f => typeof f === 'string' && f.trim().length > 12)
-        .filter(f => enPalabras(texto).join(' ').includes(enPalabras(f).join(' ')));
-    } catch {
-      return [];
+    const salida = await pedirJson({
+      system: SISTEMA_REPASO,
+      esquema: ESQUEMA_REPASO,
+      // Solo tiene que copiar frases sueltas: con esto sobra de largo.
+      tope: 1500,
+      contenido: texto,
+    });
+    const frases = salida?.frases;
+    if (!Array.isArray(frases)) return [];
+    // Solo valen las que de verdad estan en el area: si el corrector se
+    // inventa o parafrasea una frase, no se le hace caso.
+    const enElArea = enPalabras(texto).join(' ');
+    return frases
+      .filter(f => typeof f === 'string' && f.trim().length > 12)
+      .filter(f => enElArea.includes(enPalabras(f).join(' ')));
+  }
+
+  // ── LO QUE FALTA SE ARREGLA, NO SE REESCRIBE EL AREA ENTERA ───────
+  //
+  // Cuando al area le faltaba el nombre o le faltaban negritas, se volvia a
+  // pedir el area ENTERA y se cruzaban los dedos. Eso es tirar una moneda: en
+  // el informe del 23 de agosto el nombre salio en 3 de 7 areas y las
+  // negritas llegaron al minimo en 4 de 7, porque el modelo se volvia a
+  // olvidar. Reescribir 900 palabras para anadir una marca es, ademas, lo
+  // caro y lo lento.
+  //
+  // Aqui se hace lo que si funciono con la escena: se pide SOLO lo que falta,
+  // y el codigo COMPRUEBA lo que vuelve antes de aceptarlo. Si no cuadra, se
+  // descarta y se sigue con lo que habia, que nunca queda peor que antes.
+
+  // El parrafo donde se mete el nombre: uno de en medio y con cuerpo. Nunca
+  // el primero, que el prompt prohibe abrir el area llamandola por su nombre.
+  function dondeCabeElNombre(parrafos) {
+    const largo = i => {
+      const t = parrafos[i] && parrafos[i].texto;
+      return typeof t === 'string' ? t.split(/\s+/).filter(Boolean).length : 0;
+    };
+    // Primero, uno con cuerpo y cerca del medio del area.
+    let elegido = -1;
+    for (let i = 1; i < parrafos.length; i++) {
+      if (largo(i) < 35) continue;
+      if (elegido < 0 || Math.abs(i - parrafos.length / 2) < Math.abs(elegido - parrafos.length / 2)) elegido = i;
     }
+    if (elegido >= 0) return elegido;
+    // Si ninguno llega a 35 palabras, el mas largo de los que no son el
+    // primero. Antes se devolvia -1 y el nombre no se ponia: un area de
+    // parrafos cortos se quedaba sin el sin que nadie lo intentara.
+    for (let i = 1; i < parrafos.length; i++) {
+      if (largo(i) > largo(elegido < 0 ? 1 : elegido) || elegido < 0) elegido = i;
+    }
+    // Y si el area es de un solo parrafo, ese.
+    return elegido >= 0 ? elegido : (parrafos.length > 0 ? 0 : -1);
+  }
+
+  const ESQUEMA_TEXTO = {
+    type: 'object',
+    properties: { texto: { type: 'string' } },
+    required: ['texto'],
+    additionalProperties: false,
+  };
+
+  // Devuelve el parrafo con su nombre metido, o null. Lo que vuelve tiene que
+  // ser EL MISMO parrafo: se le quita el nombre a la respuesta y tiene que
+  // quedar palabra por palabra lo que habia. Asi no puede colarse una
+  // reescritura que cambie el contenido con la excusa de meter el nombre.
+  async function ponerleElNombre(parrafo) {
+    const salida = await pedirJson({
+      system: `Eres un corrector. Te dan un parrafo de un libro escrito para una mujer que se llama ${nombrePila}, hablandole de tu.
+Tu unico trabajo es devolver ESE MISMO parrafo con su nombre metido UNA vez, donde caiga natural, como cuando alguien que te conoce te llama por tu nombre justo al decirte algo que te toca.
+NO cambies ni una palabra mas. NO reescribas, NO resumas, NO mejores nada, NO quites ni anadas ideas. Lo unico que se anade es el nombre y las comas que necesite.
+Y no lo pongas siempre en el mismo hueco: puede abrir la frase, cerrarla o ir dentro.`,
+      esquema: ESQUEMA_TEXTO,
+      tope: 900,
+      contenido: parrafo,
+    });
+    const t = salida?.texto;
+    if (typeof t !== 'string' || vecesQueLaLlamaPorSuNombre(t, nombrePila) < 1) return null;
+    // El mismo parrafo, quitandole el nombre: tiene que coincidir palabra por
+    // palabra con el original. Si no, es que ha reescrito y no vale.
+    const sinNombre = p => enPalabras(p).filter(w => w !== sinTildes(nombrePila)).join(' ');
+    return sinNombre(t) === sinNombre(parrafo) ? t.trim() : null;
+  }
+
+  // Marca las negritas sobre los parrafos que YA existen. Vuelven los mismos
+  // parrafos con ** anadidos: se comprueba que el texto sin los ** es
+  // identico al de antes, asi que es imposible que este paso cambie el
+  // contenido del area. Si algo no cuadra, se queda todo como estaba.
+  const ESQUEMA_NEGRITAS = {
+    type: 'object',
+    properties: {
+      parrafos: {
+        type: 'array',
+        description: 'Los mismos parrafos, en el mismo orden, con los ** anadidos.',
+        items: { type: 'string' },
+      },
+    },
+    required: ['parrafos'],
+    additionalProperties: false,
+  };
+
+  async function marcarLasNegritas(parrafos) {
+    const textos = parrafos.map(p => (p && typeof p.texto === 'string') ? p.texto : '');
+    const salida = await pedirJson({
+      system: `Eres un maquetador. Te dan los parrafos de un capitulo escrito para una mujer, y te los dan numerados y en orden.
+Tu unico trabajo es marcar en negrita, con dos asteriscos a cada lado (**asi**), las frases que ella subrayaria con un fosforito: la que le pone nombre a algo que llevaba anos haciendo sin saberlo, la que se dice por dentro y no ha dicho nunca en voz alta, o la cuenta exacta de lo que le esta costando.
+Se marcan de tres palabras a una frase entera, NUNCA una palabra suelta y nunca dos lineas seguidas. No se marcan las explicaciones, ni los ejemplos, ni los piropos.
+Marca entre TRES y SEIS en total, repartidas de forma irregular: no una por parrafo.
+NO CAMBIES NI UNA PALABRA. Devuelve exactamente los mismos parrafos, en el mismo orden y con el mismo numero, con lo unico anadido siendo los asteriscos. Si quitas, cambias o anades una sola palabra, no sirve.`,
+      esquema: ESQUEMA_NEGRITAS,
+      tope: 4000,
+      contenido: textos.map((t, i) => `[${i + 1}]\n${t}`).join('\n\n'),
+    });
+    const vuelven = salida?.parrafos;
+    if (!Array.isArray(vuelven) || vuelven.length !== textos.length) return null;
+    // La comprobacion que lo hace seguro: sin los ** tiene que ser el mismo
+    // texto, parrafo por parrafo.
+    for (let i = 0; i < textos.length; i++) {
+      if (typeof vuelven[i] !== 'string') return null;
+      if (enPalabras(vuelven[i]).join(' ') !== enPalabras(textos[i]).join(' ')) return null;
+    }
+    const cuantas = vuelven.reduce((n, t) => n + (t.match(/\*\*[\s\S]+?\*\*/g) || []).length, 0);
+    return cuantas >= MIN_NEGRITAS ? vuelven : null;
   }
 
   // "ella" de sujeto, la que delata que se ha salido del "tu": "ella nota",
@@ -862,6 +969,34 @@ Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en 
         console.warn(`Área ${area.id}: SE ENTREGA SIN ESCENA antes que imprimir un relleno`);
         datos.escena = null;
         sinEscena = true;
+      }
+    }
+
+    // ── Y AHORA, LO QUE FALTE, SE ARREGLA AQUI ─────────────────────
+    // Las dos comprobaciones son las mismas que hace loQueLeFaltaAlArea
+    // despues. La diferencia es que si aqui se arregla, ya no hace falta
+    // volver a pedir el area entera: sale mas rapido y mas barato.
+    if (vecesQueLaLlamaPorSuNombre(montarArea(datos), nombrePila) < 1) {
+      const donde = dondeCabeElNombre(datos.parrafos);
+      if (donde >= 0) {
+        const conNombre = await ponerleElNombre(datos.parrafos[donde].texto);
+        if (conNombre) {
+          datos.parrafos[donde] = { ...datos.parrafos[donde], texto: conNombre };
+          console.warn(`Área ${area.id}: le faltaba el nombre, se le ha puesto`);
+        } else {
+          console.warn(`Área ${area.id}: le falta el nombre y no se ha podido poner`);
+        }
+      }
+    }
+
+    const yaMarcadas = datos.parrafos.reduce((n, p) => n + ((p?.texto || '').match(/\*\*[\s\S]+?\*\*/g) || []).length, 0);
+    if (yaMarcadas < MIN_NEGRITAS) {
+      const marcados = await marcarLasNegritas(datos.parrafos);
+      if (marcados) {
+        datos.parrafos = datos.parrafos.map((p, i) => ({ ...p, texto: marcados[i] }));
+        console.warn(`Área ${area.id}: tenía ${yaMarcadas} negrita(s), se han marcado las que faltaban`);
+      } else {
+        console.warn(`Área ${area.id}: tenía ${yaMarcadas} negrita(s) y no se han podido marcar más`);
       }
     }
 

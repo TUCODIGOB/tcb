@@ -80,7 +80,7 @@ globalThis.fetch = async (url, opts = {}) => {
     // El repaso de estilo que lee el area es otra llamada distinta de la que
     // escribe el area. Aqui se responde "no hay nada que corregir" y no se
     // cuenta como generacion, que es lo que miden las comprobaciones de abajo.
-    if (String(JSON.parse(opts.body || '{}').system || '').startsWith('Eres un corrector')) {
+    if (String(JSON.parse(opts.body || '{}').system || '').startsWith('Eres un corrector de estilo')) {
       return { ok: true, status: 200, json: async () => ({ content: [{ text: '{"frases":[]}' }] }) };
     }
     llamadas++;
