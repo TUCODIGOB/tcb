@@ -1,4 +1,4 @@
-import Stripe from 'stripe';
+import Stripe from './.stripe-falso-rasgos.mjs';
 import { MAX_INTENTOS, estado, reservar, liberar, compraValida } from '../lib/reserva.js';
 import { analizarArea, revisarBloques, avisosBloques, montarArea, negritasDe } from '../lib/bloques.js';
 import { quitarComaAntesDeY, vecesQueLaLlamaPorSuNombre } from '../lib/estilo.js';

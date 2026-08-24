@@ -205,6 +205,25 @@ globalThis.fetch = async (url, opts = {}) => {
     vecesQueSeHaPedidoLaLista++;
     encargosDeLaLista.push(String(cuerpo.messages?.[0]?.content || ''));
     if (comoSalePedirLaLista === 'red') throw new Error('fetch failed');
+    // Se cae una vez y a la siguiente va bien: es el caso de verdad, la red
+    // que parpadea o la API saturada un rato.
+    if (comoSalePedirLaLista === 'red_una_vez' && vecesQueSeHaPedidoLaLista === 1) throw new Error('fetch failed');
+    if (comoSalePedirLaLista === 'saturada' && vecesQueSeHaPedidoLaLista === 1) {
+      return { ok: false, status: 529, text: async () => 'overloaded' };
+    }
+    // Cortada DOS veces: aqui se ve si cuenta como fallo (tres intentos) o
+    // como repaso (solo uno). Con una sola vez no se distingue, porque una
+    // lista vacia dispara el repaso igual y las dos formas dan 2 llamadas.
+    if (comoSalePedirLaLista === 'cortada_dos_veces' && vecesQueSeHaPedidoLaLista <= 2) {
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'max_tokens', content: [{ type: 'text', text: JSON.stringify(RASGOS).slice(0, 6991) }] }) };
+    }
+    if (comoSalePedirLaLista === 'cortada_una_vez' && vecesQueSeHaPedidoLaLista === 1) {
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'max_tokens', content: [{ type: 'text', text: JSON.stringify(RASGOS).slice(0, 6991) }] }) };
+    }
+    // Una clave mal puesta o una peticion mal formada no se arregla sola.
+    if (comoSalePedirLaLista === 'clave_mala') {
+      return { ok: false, status: 401, text: async () => 'authentication_error' };
+    }
     if (comoSalePedirLaLista === 'repetido') {
       // La primera vez repite; si se le vuelve a pedir, lo arregla.
       const cuerpoBueno = vecesQueSeHaPedidoLaLista === 1 ? RASGOS_CON_REPETIDO : RASGOS;
@@ -421,6 +440,44 @@ try {
     /uno en cada lista/.test(encargosDeLaLista[1] || ''));
   comprobar('el informe sale bien igualmente',
     cruzado.code === 200 && nombresDe(cruzado.body).length > 0, 'HTTP ' + cruzado.code);
+
+  // (b3) LA LISTA NO SE PUEDE CAER POR UN HIPO DE RED.
+  //
+  // Antes, cualquier fallo de la llamada (red, API saturada, respuesta
+  // cortada) se rendia a la primera y el estudio salia sin lista. El cliente
+  // ha pagado por esa lista. Las siete areas reintentan desde siempre; la
+  // lista tiene que hacer lo mismo.
+  console.log('\n  api/chat.js — la lista no se cae a la primera\n');
+
+  for (const [modo, cuento] of [['red_una_vez', 'se cae la red'], ['saturada', 'la API está saturada (529)'], ['cortada_una_vez', 'la respuesta llega cortada']]) {
+    const r4 = await pedirInforme(modo, 'reint_' + modo);
+    comprobar(`si ${cuento} una vez, se vuelve a intentar`,
+      vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+    comprobar(`y la lista llega entera igualmente`,
+      r4.body?.rasgos?.fortalezas?.length === 14 && r4.body?.rasgos?.desafios?.length === 16,
+      `${r4.body?.rasgos?.fortalezas?.length} + ${r4.body?.rasgos?.desafios?.length}`);
+  }
+
+  const dosVeces = await pedirInforme('cortada_dos_veces', 'cortada2');
+  comprobar('si se corta DOS veces, se intenta una tercera',
+    vecesQueSeHaPedidoLaLista === 3, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+  comprobar('y a la tercera la lista llega entera',
+    dosVeces.body?.rasgos?.fortalezas?.length === 14 && dosVeces.body?.rasgos?.desafios?.length === 16,
+    `${dosVeces.body?.rasgos?.fortalezas?.length} + ${dosVeces.body?.rasgos?.desafios?.length}`);
+
+  // Lo que NO se arregla insistiendo, no se insiste: es tirar tiempo y dinero.
+  const claveMala = await pedirInforme('clave_mala', 'clave');
+  comprobar('una clave mal puesta NO se reintenta',
+    vecesQueSeHaPedidoLaLista === 1, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+  comprobar('y el informe se entrega igual, sin la lista',
+    claveMala.code === 200 && claveMala.body?.rasgos?.fortalezas?.length === 0, 'HTTP ' + claveMala.code);
+
+  // Y si se cae las tres veces, se intenta tres veces antes de rendirse.
+  const siempreCaida = await pedirInforme('red', 'red3');
+  comprobar('si se cae siempre, se intenta 3 veces antes de rendirse',
+    vecesQueSeHaPedidoLaLista === 3, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+  comprobar('y aun así el informe se entrega entero',
+    siempreCaida.code === 200 && String(siempreCaida.body?.texto || '').split('\u001F').filter(x => x.trim()).length === 7);
 
   // (c) Llega corta → se vuelve a pedir.
   const corta = await pedirInforme('corta', 'corta');
