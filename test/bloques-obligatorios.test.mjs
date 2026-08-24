@@ -219,6 +219,25 @@ try {
     c('todos los objetos van con additionalProperties:false, como pide la API',
       objetosSinCerrar.length === 0, objetosSinCerrar.join(', '));
 
+    // ── EL TOPE DE SALIDA TIENE QUE DAR PARA LO QUE EL ESQUEMA PIDE ──
+    //
+    // Si el area no cabe en max_tokens, la API la corta, chat.js la tira y la
+    // vuelve a pedir; tres veces cortada y el cliente se queda sin informe. Al
+    // pasar de una lista de parrafos a huecos con nombre el techo subio, y el
+    // tope se quedo corto: 16 huecos a 90 palabras (el techo que pide el
+    // prompt) son 5.700 tokens y el tope estaba en 5.000. Esta cuenta salta
+    // sola si algun dia se anaden huecos y nadie se acuerda de mirar el tope.
+    const CHARS_POR_TOKEN = 2.15;   // castellano, sacado de los registros
+    const PALABRAS_TOPE = 90;       // "ningun parrafo pasa de 90 palabras"
+    const CHARS_POR_PALABRA = 6.4;
+    const peor = Math.round((
+      (techo * PALABRAS_TOPE + 90 + 30 + 30 + 20 + 100) * CHARS_POR_PALABRA
+      + 60 * techo + 400
+    ) / CHARS_POR_TOKEN);
+    const tope = conEsquema.map(x => x.max_tokens).filter(x => x > 100)[0];
+    c('el tope de salida da para el área más larga que el esquema permite',
+      tope >= peor, 'max_tokens=' + tope + ', el peor caso son ' + peor + ' tokens');
+
     // ── 3. Y EL MISMO EN LAS OCHO LLAMADAS, O LA CACHE NO ACIERTA ──
     const distintos = new Set(conEsquema.map(x => JSON.stringify(x.output_config)));
     c('las 7 áreas y el arranque mandan el MISMO esquema (si no, el prompt se paga 8 veces)',
