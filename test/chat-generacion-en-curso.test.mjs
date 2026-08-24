@@ -59,17 +59,53 @@ globalThis.__TIENDA = TIENDA;
 // con el formato viejo, chat.js lo rechaza por no ser una estructura, se
 // pasa la prueba entera reintentando y acaba en 500 sin haber comprobado
 // nunca la guarda que viene a mirar.
+
+// El area se pide con una casilla por bloque, no con una lista sola: ver
+// ESQUEMA_AREA_POR_BLOQUES en api/chat.js. Esto reparte una lista de parrafos
+// por los cinco bloques en el mismo orden en que el codigo los vuelve a juntar,
+// asi que el texto que sale es identico al de la lista. Los cinco tienen que
+// llevar algo: un bloque vacio es el fallo que esto viene a impedir.
+function porBloques(parrafos) {
+  const nombres = ['arranque', 'hoy', 'origen', 'creencias', 'soltar'];
+  const bloques = {};
+  for (const nombre of nombres) bloques[nombre] = [];
+  parrafos.forEach((p, i) => bloques[nombres[Math.min(i, nombres.length - 1)]].push(p));
+  return { bloques };
+}
+
+// Lo mismo que hace api/chat.js nada mas recibir el area: juntar los bloques y
+// traducir "tras_bloque" a un numero de parrafo. Hace falta aqui para poder
+// comprobar, antes de empezar, que el area de mentira sigue siendo valida.
+function comoLaMonta(json) {
+  const d = JSON.parse(json);
+  const nombres = ['arranque', 'hoy', 'origen', 'creencias', 'soltar'];
+  const parrafos = [];
+  const acaba = {};
+  for (const nombre of nombres) {
+    for (const p of (Array.isArray(d.bloques?.[nombre]) ? d.bloques[nombre] : [])) {
+      if (p && String(p.texto || '').trim()) parrafos.push(p);
+    }
+    acaba[nombre] = parrafos.length;
+  }
+  d.parrafos = parrafos;
+  for (const c of ['escena', 'remate_herida', 'remate_fuerza', 'pregunta']) {
+    if (d[c] && typeof d[c] === 'object') d[c] = { texto: d[c].texto, tras_parrafo: acaba[d[c].tras_bloque] || 1 };
+  }
+  return montarArea(d);
+}
+
 const AREA_DE_MENTIRA = JSON.stringify({
-  parrafos: [
+  ...porBloques([
     { ladillo: null, texto: 'Te levantas y lo primero que haces es repasar la lista de lo que tienes pendiente, y eso lo llevas haciendo desde siempre.' },
     { ladillo: 'La cuenta que no llevas', texto: 'Y mientras asientes, Ana, por dentro **estas calculando cuanto has ensenado de mas**, que es un trabajo que no descansa.' },
     { ladillo: null, texto: 'De ahi sale todo lo demas, que es lo que nadie te ha contado y **llevas media vida pagando sin enterarte**.' },
     { ladillo: 'Donde empezo esto', texto: '**Eso no se arregla apretando mas**, se arregla mirando de donde viene y quien te enseno a hacerlo asi.' },
-  ],
-  escena: { tras_parrafo: 1, texto: 'Son las once de la noche y todavia estas repasando el movil con la luz apagada.' },
-  remate_herida: { tras_parrafo: 3, texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
-  remate_fuerza: { tras_parrafo: 4, texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
-  pregunta: { tras_parrafo: 2, texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
+    { ladillo: null, texto: 'Y cuando por fin te sientas, la cabeza sigue repasando lo que queda para manana como si alguien lo fuera a corregir.' },
+  ]),
+  escena: { tras_bloque: 'arranque', texto: 'Son las once de la noche y todavia estas repasando el movil con la luz apagada.' },
+  remate_herida: { tras_bloque: 'origen', texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
+  remate_fuerza: { tras_bloque: 'creencias', texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
+  pregunta: { tras_bloque: 'hoy', texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
   cierre: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
 });
 
@@ -77,7 +113,7 @@ const AREA_DE_MENTIRA = JSON.stringify({
 // texto de mentira deja de cumplirlo, la prueba lo dice en una linea en vez
 // de morirse reintentando y dejar de vigilar la guarda sin que nadie lo note.
 {
-  const montada = montarArea(JSON.parse(AREA_DE_MENTIRA));
+  const montada = comoLaMonta(AREA_DE_MENTIRA);
   const faltan = revisarBloques(analizarArea(montada));
   // El nombre se revisa aparte de las marcas en api/chat.js, asi que aqui
   // tambien: la primera vez que se exigio, esta prueba se cayo sin que el

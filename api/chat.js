@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { MAX_INTENTOS, estado, reservar, liberar, compraValida } from '../lib/reserva.js';
-import { analizarArea, revisarBloques, avisosBloques, montarArea, negritasDe, ESQUEMA_AREA } from '../lib/bloques.js';
+import { analizarArea, revisarBloques, avisosBloques, montarArea, negritasDe } from '../lib/bloques.js';
 import { quitarComaAntesDeY, vecesQueLaLlamaPorSuNombre } from '../lib/estilo.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -8,6 +8,160 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // Separador entre las 7 areas del informe. Tiene que ser algo que el modelo
 // no pueda escribir nunca; ver la nota donde se usa.
 const SEPARADOR_AREAS = '\u001F';
+
+// ══════════════════════════════════════════════════════════════════
+// CADA BLOQUE DEL AREA, EN SU CASILLA
+//
+// El prompt le pide seis bloques en cada area: el arranque, HOY, ORIGEN,
+// CREENCIAS, SOLTAR y el CIERRE. La escena y el cierre ya tenian casilla
+// propia y no han faltado NUNCA. Los otros iban todos revueltos dentro de una
+// sola casilla, "parrafos", y ahi dentro no habia forma de saber si habia
+// escrito los cuatro o dos.
+//
+// En el informe del 23 de agosto faltaba ORIGEN —"de donde te viene esto"— en
+// CUATRO de las siete areas. Son las palabras que mas valor le dan y nadie lo
+// comprobaba. De ahi salian las dos quejas a la vez: el area se lee corta y
+// cuenta una sola idea.
+//
+// Aqui cada bloque pasa a tener su casilla, igual que la escena y el cierre.
+// Van todas en "required" y con al menos un parrafo dentro, asi que la API no
+// deja terminar la respuesta sin ellas.
+//
+// LO QUE NO SE PUEDE HACER, Y COSTO UN INFORME CAIDO EL 24 DE AGOSTO:
+// obligar tambien al NUMERO de parrafos de cada bloque. Se intento dandole a
+// cada bloque huecos numerados (p1, p2, p3...), unos obligatorios y otros no,
+// y la API lo rechazo de entrada con un 400: "the compiled grammar is too
+// large, simplify your tool schemas". Diecisiete casillas sueltas, y las
+// opcionales multiplicando las combinaciones, es mas de lo que admite. Aqui
+// cada bloque es UNA lista, que es lo mismo que ya funcionaba, solo que ahora
+// hay cinco en vez de una. Cuantos parrafos van dentro lo sigue pidiendo el
+// prompt.
+//
+// Y minItems tampoco sirve para eso: esta API solo admite minItems 0 y 1.
+// El 1 si vale, y es justo lo que hace falta: que el bloque no llegue vacio.
+// ══════════════════════════════════════════════════════════════════
+
+const PARRAFO_DEL_AREA = {
+  type: 'object',
+  properties: {
+    ladillo: { type: ['string', 'null'], description: 'Ladillo de tres a cinco palabras que va ENCIMA de este parrafo, o null si este parrafo no lleva.' },
+    texto: { type: 'string', description: 'El texto del parrafo. Aqui, y solo aqui, van las negritas del area, marcadas con dos asteriscos a cada lado: **asi**. Se marca la frase o la media frase que ella subrayaria con un fosforito, nunca una palabra suelta.' },
+  },
+  required: ['ladillo', 'texto'],
+  additionalProperties: false,
+};
+
+function bloqueDelArea(description) {
+  return { type: 'array', description, minItems: 1, items: PARRAFO_DEL_AREA };
+}
+
+// Las cuatro casillas grandes dicen detras de QUE BLOQUE se leen, no detras de
+// que numero de parrafo: el modelo ya no escribe una lista sola, asi que no
+// puede saber que numero le va a tocar a cada parrafo. Y de paso desaparece el
+// fallo que el propio prompt llama "lo que mas se falla".
+// SOLTAR no esta en la lista a proposito: detras de SOLTAR solo va el cierre.
+const BLOQUES_DONDE_CABEN = ['arranque', 'hoy', 'origen', 'creencias'];
+function casillaGrande(description) {
+  return {
+    type: 'object',
+    description,
+    properties: {
+      tras_bloque: { type: 'string', enum: BLOQUES_DONDE_CABEN, description: 'Detras de que bloque se lee.' },
+      texto: { type: 'string' },
+    },
+    required: ['tras_bloque', 'texto'],
+    additionalProperties: false,
+  };
+}
+
+// Los cinco bloques van DENTRO de una sola casilla, no sueltos.
+//
+// No es por orden: es lo que separa este esquema del que la API rechazo. Lo
+// que le cuesta a la API es la combinatoria de casillas dentro de un mismo
+// sitio, y el intento del 24 de agosto dejaba diez en el primer nivel ademas
+// de diecisiete huecos numerados por debajo. Metiendo los bloques en una, el
+// primer nivel se queda en SEIS, exactamente las mismas que tiene el esquema
+// que lleva funcionando desde el principio: el texto, la escena, los dos
+// remates, la pregunta y el cierre. Lo unico que cambia de verdad es que la
+// casilla del texto, que era una lista, ahora son cinco listas con nombre.
+const ESQUEMA_AREA_POR_BLOQUES = {
+  type: 'object',
+  properties: {
+    bloques: {
+      type: 'object',
+      description: 'El texto del area, repartido por bloques. Los cinco van escritos SIEMPRE.',
+      properties: {
+        arranque: bloqueDelArea('EL ARRANQUE del area: abre ancho, desde algo que le pasa a mucha gente, y solo entonces se estrecha hasta ella.'),
+        hoy: bloqueDelArea('El bloque HOY: como se manifiesta ahora, lo malo Y lo bueno, con el don contado a fondo. Es el bloque mas largo del area.'),
+        origen: bloqueDelArea('El bloque ORIGEN: por que es asi y de donde le viene, uniendo pasado y presente como causa y efecto. UNA sola explicacion, desarrollada a fondo.'),
+        creencias: bloqueDelArea('El bloque CREENCIAS: lo que da por cierto sin haberlo puesto en duda y que hace que todo se repita solo. Aqui va la verdad incomoda. Despues de HOY, el que mas sitio ocupa.'),
+        soltar: bloqueDelArea('El bloque SOLTAR: solo NOMBRA la creencia que tiene que caer. Ni pasos, ni ejercicios, ni plan. Es el bloque mas corto de todos.'),
+      },
+      required: ['arranque', 'hoy', 'origen', 'creencias', 'soltar'],
+      additionalProperties: false,
+    },
+    escena: casillaGrande('La escena concreta y visual. Obligatoria.'),
+    remate_herida: casillaGrande('La frase que nombra lo que le duele, sin anestesia. Va sola y grande.'),
+    remate_fuerza: casillaGrande('La frase que nombra lo que tiene de raro y valioso, con la misma fuerza.'),
+    pregunta: casillaGrande('La pregunta directa que le hace parar y pensar. Obligatoria.'),
+    cierre: { type: 'string', description: 'El ultimo parrafo del area. Revela algo nuevo y no presenta la siguiente area.' },
+  },
+  required: ['bloques', 'escena', 'remate_herida', 'remate_fuerza', 'pregunta', 'cierre'],
+  additionalProperties: false,
+};
+
+// EL ORDEN EN QUE SE LEEN LOS BLOQUES, Y LO PONE EL CODIGO.
+//
+// Antes cada area llevaba su propia secuencia escrita en el prompt. Ya no puede
+// ser: el modelo escribe los bloques en el orden en que estan las casillas, y
+// si el orden de lectura fuera otro estaria escribiendo el enganche de un
+// bloque que todavia no ha escrito. Asi escribe siempre hacia delante, que es
+// como se lee. El orden es el que el propio prompt llama la logica de siempre:
+// que te pasa, de donde viene, que creencia lo sostiene, que se cae.
+//
+// La variedad entre areas no se pierde: sigue estando en donde caen la escena,
+// los dos remates y la pregunta, que es lo que el lector nota.
+const ORDEN_DE_LOS_BLOQUES = ['arranque', 'hoy', 'origen', 'creencias', 'soltar'];
+
+// Junta los cinco bloques en la lista de parrafos que espera todo lo de abajo,
+// y traduce el "tras_bloque" de las casillas grandes al numero de parrafo de
+// siempre. Devuelve los bloques que han llegado sin una sola palabra, que es lo
+// unico que la API no puede garantizar.
+function bloquesAParrafos(datos) {
+  const parrafos = [];
+  const dondeAcabaCadaBloque = {};
+  const vacios = [];
+
+  for (const nombre of ORDEN_DE_LOS_BLOQUES) {
+    const bloque = datos && datos.bloques && datos.bloques[nombre];
+    let puestos = 0;
+    for (const p of (Array.isArray(bloque) ? bloque : [])) {
+      const texto = p && typeof p.texto === 'string' ? p.texto.trim() : '';
+      if (!texto) continue;
+      const ladillo = p && typeof p.ladillo === 'string' && p.ladillo.trim() ? p.ladillo.trim() : null;
+      parrafos.push({ ladillo, texto });
+      puestos++;
+    }
+    if (puestos === 0) vacios.push(nombre);
+    // Contando desde 1, que es como cuenta tras_parrafo. Un bloque vacio se
+    // queda donde acabo el anterior, asi lo que fuera detras no se descoloca.
+    dondeAcabaCadaBloque[nombre] = parrafos.length;
+  }
+
+  datos.parrafos = parrafos;
+
+  for (const casilla of ['escena', 'remate_herida', 'remate_fuerza', 'pregunta']) {
+    const d = datos && datos[casilla];
+    if (!d || typeof d !== 'object') continue;
+    const acaba = dondeAcabaCadaBloque[d.tras_bloque];
+    const { tras_bloque, ...resto } = d;
+    // Sin bloque valido se va al primer parrafo, que es lo que hacia montarArea
+    // con un numero que no entendia.
+    datos[casilla] = { ...resto, tras_parrafo: acaba > 0 ? acaba : 1 };
+  }
+
+  return vacios;
+}
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -132,7 +286,7 @@ REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 - Un párrafo de dos líneas es la mejor herramienta que tienes para cerrar una idea o dejar caer algo incómodo. Úsalos, y no siempre en el mismo sitio.
 - Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
 - SI EL ÁREA TE SOBRA DE LARGO, quita contenido entero: un párrafo, una idea, un ejemplo. NUNCA comprimas lo que ya está escrito apretándolo, porque al apretarlo se pierden las explicaciones, se queda en afirmaciones sueltas y el área acaba leyéndose como un esquema.
-- REGLA CRÍTICA DE LONGITUD: cada área tiene OBLIGATORIAMENTE entre 850 y 900 palabras, con UNA excepción: el ÁREA 1 (IDENTIDAD) va entre 1.100 y 1.300 palabras, porque cubre más terreno. No cuentes párrafos ni te marques un número: salen los que salgan. Un área por debajo de su mínimo es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
+- REGLA CRÍTICA DE LONGITUD: cada área tiene OBLIGATORIAMENTE entre 850 y 900 palabras, con UNA excepción: el ÁREA 1 (IDENTIDAD) va entre 1.100 y 1.300 palabras, porque cubre más terreno. Los párrafos salen de lo que pide cada bloque, y el suelo son once en un área normal. Un área por debajo de su mínimo es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente ella, que por fin alguien se lo explica.
 
@@ -181,8 +335,8 @@ Ejemplos de escenas BUENAS (úsalas de inspiración, no las copies):
 Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas ("cuando te sientes mal, piensas cosas"), obvias ("a veces dudas de ti mismo") o vacías.
 
 La escena ocupa uno o dos párrafos completos, sin avisar nunca de que es un ejemplo ni llamarla ejemplo: se presenta como un rato suyo, no como una ilustración de lo que le estás explicando.
-LA ESCENA SE ESCRIBE EN UN SITIO Y EN UNO SOLO: en la casilla "escena", que se explica en CÓMO SE ENTREGA EL ÁREA. NO la escribas además dentro de "parrafos". Está en su casilla y el código la coloca donde tú digas, así que si además la copias en un párrafo el cliente se la encuentra impresa dos veces seguidas, palabra por palabra. Eso ya ha pasado en tres áreas del mismo informe.
-LA ESCENA SE PRESENTA, NO SE SUELTA. Soltada de golpe, el lector se encuentra de pronto en una cocina a las once de la noche sin saber por qué le están contando eso. Delante va una frase que la abre sin explicarla, del tipo "para que veas de qué te hablo, déjame contarte un rato tuyo, uno normal de esos que ni recuerdas al día siguiente". Y detrás, cuando la escena termina, otra frase que recoge lo que acaba de leer y le pone nombre. Esas dos frases van fuera de la escena, en "parrafos", y no dentro de la casilla "escena".
+LA ESCENA SE ESCRIBE EN UN SITIO Y EN UNO SOLO: en la casilla "escena", que se explica en CÓMO SE ENTREGA EL ÁREA. NO la escribas además dentro de los bloques de texto. Está en su casilla y el código la coloca donde tú digas, así que si además la copias en un párrafo el cliente se la encuentra impresa dos veces seguidas, palabra por palabra. Eso ya ha pasado en tres áreas del mismo informe.
+LA ESCENA SE PRESENTA, NO SE SUELTA. Soltada de golpe, el lector se encuentra de pronto en una cocina a las once de la noche sin saber por qué le están contando eso. Delante va una frase que la abre sin explicarla, del tipo "para que veas de qué te hablo, déjame contarte un rato tuyo, uno normal de esos que ni recuerdas al día siguiente". Y detrás, cuando la escena termina, otra frase que recoge lo que acaba de leer y le pone nombre. Esas dos frases van fuera de la escena, en el bloque de texto que le toque, y no dentro de la casilla "escena".
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
 Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos"). Los subtítulos que sí se escriben son otra cosa distinta y se explican en CÓMO SE ENTREGA EL ÁREA MARCADA: nunca llevan el nombre de una de estas etiquetas.
@@ -225,7 +379,7 @@ Qué significa el dinero para ti y qué te mueve a ganarlo: qué representa de v
 Qué haces con él cuando lo tienes: cómo lo gastas, cómo tomas las decisiones de dinero, y cómo llevas el riesgo cuando hay algo en juego.
 Qué te bloquea para ganar más y qué pasa cuando empieza a irte bien: el techo con el que te encuentras una y otra vez, incluido lo que haces en el trabajo cuando toca pedir o cobrar lo que vales, y qué te ocurre justo cuando las cosas empiezan a salirte.
 
-ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio. Y en las áreas cuya secuencia empieza por ella, no es lo primero que se lee: delante van igualmente el arranque que sitúa el área y la frase que presenta la escena.
+ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va en su casilla, y detrás de qué bloque se lee lo eliges tú en "tras_bloque": en unas áreas pronto y en otras más adelante, nunca en el mismo sitio en las siete. Lo que no es nunca es lo primero que se lee: delante van igualmente el arranque que sitúa el área y la frase que presenta la escena.
 
 ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendiste, con quién, en qué situación, y qué haces hoy exactamente por haberlo aprendido. El razonamiento tiene esta forma: "aprendiste esto de pequeña, y por eso hoy, sin darte cuenta, haces esto otro". La forma es esa, las palabras las pones tú y cambian en cada área.
 UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluiste tú de aquello, y qué haces hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en tu vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra infancia distinta.
@@ -239,22 +393,13 @@ CIERRE — el cierre, tal como pide la sección CIERRE DE CADA ÁREA. Además ti
 SIN SOLAPE ENTRE LOS SEIS BLOQUES:
 Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. El pasado sale únicamente en ORIGEN. La escena lleva delante la frase que la abre y detrás la que la recoge, tal como pide LA ESCENA SE PRESENTA, NO SE SUELTA; lo que no se hace es explicarla ni contar otra vez por dentro lo que acaba de verse. SOLTAR no vuelve a explicar la creencia, solo la nombra. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
 
-EL ORDEN DE LOS SEIS BLOQUES CAMBIA SEGÚN EL ÁREA:
-Las siete áreas se leen seguidas dentro del mismo informe. Si las siete siguen el mismo esqueleto se nota, y el estudio deja de parecer escrito para esa persona y empieza a parecer una plantilla rellenada. Por eso cada área lleva su propia secuencia. El cierre es lo único que va siempre al final, porque es el cierre.
+EL ORDEN DE LOS BLOQUES:
+Los cinco bloques de texto se leen siempre en el mismo orden, y no lo pones tú: lo pone el código. Es el arranque, HOY, ORIGEN, CREENCIAS, SOLTAR, y el CIERRE al final. Es la lógica de siempre: qué te pasa, de dónde te viene, qué creencia lo sostiene, qué se cae. Escribe cada bloque enganchado con el que va antes, porque así es exactamente como se va a leer.
 
-Sigue EXACTAMENTE la secuencia del área que te están pidiendo:
-- ÁREA 1, IDENTIDAD:   HOY, ESCENA, ORIGEN, CREENCIAS, SOLTAR, CIERRE
-- ÁREA 2, PATRONES:    ESCENA, HOY, CREENCIAS, ORIGEN, SOLTAR, CIERRE
-- ÁREA 3, MIEDOS:      ORIGEN, HOY, CREENCIAS, SOLTAR, ESCENA, CIERRE
-- ÁREA 4, HERIDA:      CREENCIAS, HOY, ESCENA, ORIGEN, SOLTAR, CIERRE
-- ÁREA 5, AMOR:        HOY, ESCENA, CREENCIAS, SOLTAR, ORIGEN, CIERRE
-- ÁREA 6, RELACIONES:  ORIGEN, HOY, ESCENA, CREENCIAS, SOLTAR, CIERRE
-- ÁREA 7, DINERO:      ESCENA, CREENCIAS, ORIGEN, HOY, SOLTAR, CIERRE
-
-Cuando un bloque te caiga en un sitio que no es el que pediría la lógica de siempre, engánchalo bien con lo que va antes: el texto tiene que leerse como alguien hablando seguido, nunca como piezas sueltas colocadas en otro orden.
+Lo que cambia de un área a otra, y ahí no puede haber dos iguales, es dónde caen la escena, los dos remates y la pregunta: eso lo eliges tú en "tras_bloque". Las siete áreas se leen seguidas dentro del mismo informe, así que si en todas las pones en el mismo sitio, el estudio deja de parecer escrito para esa persona y empieza a parecer una plantilla rellenada.
 
 NADA DE FRASES MOLDE:
-Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta al leerlas del tirón. La lógica de fondo se mantiene siempre (qué te pasa, de dónde viene, qué creencia lo sostiene, qué se cae), lo que cambia en cada área es cómo se dice y en qué orden aparece. Quedan PROHIBIDAS estas fórmulas y cualquier variante suya:
+Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta al leerlas del tirón. La lógica de fondo se mantiene siempre (qué te pasa, de dónde viene, qué creencia lo sostiene, qué se cae), lo que cambia en cada área es cómo se dice, con qué palabras y con qué ejemplos suyos. Quedan PROHIBIDAS estas fórmulas y cualquier variante suya:
 - "el bucle es siempre el mismo", "el patrón es siempre el mismo", "y así una y otra vez"
 - "lo que tienes que soltar es", "lo que te toca soltar es", "toca soltar"
 - "el día que ... todo cambia", "el día que ... todo empieza", "cuando entiendas esto, todo cambia". Lo que queda prohibido es la promesa vacía del "todo cambia", no la construcción: "el día que dejes de comprobarlo, vas a descubrir que llevabas años pudiendo descansar" dice algo concreto y vale
@@ -310,18 +455,20 @@ Las siete van seguidas, así que ninguna abre como otra: una entra por una situa
 CÓMO SE ENTREGA EL ÁREA (ES LO QUE LA MAQUETA):
 El área no se entrega como un texto seguido: se entrega por casillas, y cada casilla se imprime distinta. Novecientas palabras del mismo tamaño y del mismo color son cuatro páginas de muro gris, y el ojo se cansa antes de llegar a lo que la persona ha pagado.
 
-- parrafos: el texto del área, en su orden. AQUÍ, Y SOLO AQUÍ, VAN LAS NEGRITAS, marcadas con dos asteriscos a cada lado, tal como pide RESALTA EN NEGRITA: son frases o medias frases del propio párrafo, nunca una palabra suelta. Cada uno lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras. El PRIMER párrafo nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
-- escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro. Va escrita aquí y en ningún sitio más: NO la repitas dentro de "parrafos". Y aquí va la escena de verdad, escrita entera: una casilla no se rellena nunca con una palabra de relleno ni con un aviso de que falta algo, porque eso se imprime tal cual en el estudio del cliente.
+- El texto del área va en la casilla "bloques", y dentro hay una lista por cada bloque: arranque, hoy, origen, creencias y soltar. Cada lista son los párrafos de ESE bloque, y ninguna se queda vacía. Dentro de cada una pones los párrafos que ese bloque necesite, con la medida que te piden más abajo. No los ordenas ni los colocas: se leen siempre en ese orden y de eso se encarga el código.
+- CUÁNTOS PÁRRAFOS LLEVA CADA BLOQUE, que es de donde sale que el área llegue a sus palabras: hoy lleva CUATRO o más, que es el bloque más largo; creencias TRES o más; origen DOS o más; el arranque UNO o dos; soltar UNO. Once párrafos es el suelo de un área normal, no el techo: si te faltan palabras, añades párrafos dentro de los bloques que más den de sí, nunca engordando los que ya tienes.
+- AQUÍ, Y SOLO AQUÍ, VAN LAS NEGRITAS, marcadas con dos asteriscos a cada lado, tal como pide RESALTA EN NEGRITA: son frases o medias frases del propio párrafo, nunca una palabra suelta. Cada párrafo lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras. El PRIMER párrafo del área nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
+- escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro. Va escrita aquí y en ningún sitio más: NO la repitas dentro de los bloques de texto. Y aquí va la escena de verdad, escrita entera: una casilla no se rellena nunca con una palabra de relleno ni con un aviso de que falta algo, porque eso se imprime tal cual en el estudio del cliente.
 - remate_herida y remate_fuerza: las dos frases que rematan, tal como pide LAS FRASES QUE REMATAN. Cada una es UNA frase de treinta palabras como mucho, se imprime grande y centrada, y no lleva negritas.
 - pregunta: la pregunta directa, tal como pide PREGÚNTALE DIRECTAMENTE. Una sola frase, y no lleva negritas.
 - cierre: el último párrafo del área, tal como pide CIERRE DE CADA ÁREA. Va sin nada detrás.
 
 DÓNDE VA CADA COSA, QUE ES LA MITAD DEL TRABAJO:
-La escena, los dos remates y la pregunta llevan un número, "tras_parrafo", que dice detrás de qué párrafo se leen. Ese número es tuyo y es donde de verdad se decide cómo se lee el área.
-- Cada uno sale de lo que acabas de contar en el párrafo que tiene delante, y el texto sigue después. El lector viene leyendo, se encuentra la frase, y continúa. Si la quitas, el párrafo de antes y el de después tienen que seguir enganchados igual.
-- Ninguno va detrás del último párrafo: ahí solo va el cierre.
-- No pongas dos frases grandes detrás del mismo párrafo: entre un remate y una pregunta siempre tiene que quedar texto, o se leen como un cartel puesto en medio del área.
-- El orden lo eliges tú, y en cada área sale distinto: la escena puede ir pronto en una y en mitad en otra. Las siete se leen seguidas, así que si todas llevan las cosas en el mismo sitio, el estudio se lee a plantilla.
+La escena, los dos remates y la pregunta llevan "tras_bloque", que dice detrás de qué bloque se leen: arranque, hoy, origen o creencias. Esa elección es tuya y es donde de verdad se decide cómo se lee el área.
+- Cada uno sale de lo que acabas de contar en el bloque que tiene delante, y el texto sigue después. El lector viene leyendo, se encuentra la frase, y continúa. Si la quitas, lo de antes y lo de después tienen que seguir enganchados igual. La de la herida detrás de la creencia que la sostiene, la de la fuerza detrás de haberle enseñado su don.
+- Detrás de SOLTAR no va ninguna: ahí solo va el cierre. Por eso no está entre las opciones.
+- Cada una detrás de un bloque DISTINTO: si pones dos detrás del mismo, entre ellas no queda texto y se leen como un cartel puesto en medio del área.
+- Y en cada área las pones en sitios distintos: la escena puede ir pronto en una y en mitad en otra. Las siete se leen seguidas, así que si todas llevan las cosas en el mismo sitio, el estudio se lee a plantilla.
 
 Las casillas son para maquetar: el cliente no ve ningún nombre de casilla, ve su estudio. Y NUNCA escribas corchetes ni marcas dentro del texto: eso ya no hace falta, cada cosa va en su sitio.
 
@@ -346,9 +493,9 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO un área que solo diagnostique. Sin el don contado a fondo, el área no vale
 - PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos
 - PROHIBIDO un área que se entienda pero no se sienta. Sin el momento que le toca por dentro, no vale
-- PROHIBIDO dejar una casilla vacía: la escena, los dos remates, la pregunta y el cierre van siempre
+- PROHIBIDO dejar una casilla vacía: los cinco bloques de texto, la escena, los dos remates, la pregunta y el cierre van siempre
 - PROHIBIDO rellenar una casilla con una palabra de relleno o con un aviso de que falta algo. Lo que escribas ahí se imprime tal cual en el estudio del cliente
-- PROHIBIDO copiar el texto de la escena dentro de "parrafos". Va en su casilla y solo en su casilla
+- PROHIBIDO copiar el texto de la escena dentro de los bloques de texto. Va en su casilla y solo en su casilla
 - PROHIBIDO escribir corchetes dentro del texto: cada cosa va en su casilla y no hay nada que marcar
 - PROHIBIDO rematar solo la herida. Van los dos remates, el de la herida y el de la fuerza
 - PROHIBIDO un cierre que resuma lo ya contado o que insinúe algo sin llegar a decirlo
@@ -363,7 +510,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 2,
@@ -373,7 +520,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: los Nodos (el Sur, lo que 
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 3,
@@ -383,7 +530,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Saturno, Plutón y Neptuno
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 4,
@@ -393,7 +540,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Quirón y la Luna, lo que 
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 5,
@@ -403,7 +550,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Venus y Marte, y lo que ca
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 6,
@@ -413,7 +560,7 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Mercurio y Urano, y lo que
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 7,
@@ -425,7 +572,7 @@ Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene 
 
 Esta es la última área del estudio, así que su cierre cierra el estudio entero, no solo el área.
 
-No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los párrafos con sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
   ];
 
@@ -460,11 +607,11 @@ ${cartaTexto}`;
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
 7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
-8. Cuenta las palabras del area: si no llega al minimo que te piden, no la entregues, anade parrafos nuevos
+8. Ningun bloque se queda vacio: el arranque, hoy, origen, creencias y soltar llevan todos sus parrafos. Y si el area no llega a las palabras que te piden, anade parrafos dentro de los bloques, nunca engordes los que ya tienes
 9. Ninguna casilla se queda vacia ni rellena con una palabra de relleno: la escena, los dos remates, la pregunta y el cierre van SIEMPRE y van escritos de verdad
-9b. La escena esta escrita SOLO en su casilla. Repasa "parrafos": si ahi vuelve a estar la escena, la borras de ahi, que si no sale impresa dos veces
+9b. La escena esta escrita SOLO en su casilla. Repasa los bloques de texto: si ahi vuelve a estar la escena, la borras de ahi, que si no sale impresa dos veces
 9c. NI UNA FRASE EN TERCERA PERSONA SOBRE ELLA. Relee el primer parrafo y el cierre, que es donde se escapa: si dice "ella", "le", "aprendio", "carga", "va a descubrir" hablando de ella, se reescribe en segunda persona
-10. Y MIRA DONDE LAS HAS PUESTO: ninguna detras del ultimo parrafo, y nunca dos frases grandes detras del mismo parrafo, que entre ellas tiene que quedar texto
+10. Y MIRA DONDE LAS HAS PUESTO: ninguna detras de SOLTAR, y nunca dos detras del mismo bloque, que entre ellas tiene que quedar texto
 11. Que se note que hay alguien hablandole: tres o cuatro veces en toda el area te paras y le hablas de tu a tu, y antes de nombrarle lo que le pesa le quitas la culpa de encima
 12. El area abre situando el tema desde fuera, no de golpe con una frase seca sobre ella. Y el cierre CIERRA: no presenta la siguiente area, no insinua nada, y deja ver que se le abre`;
 
@@ -1047,8 +1194,8 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
         thinking: { type: 'disabled' },
         // El area se pide por casillas y la API le obliga a rellenarlas todas.
         // Antes se le pedia texto seguido con marcas dentro y se le olvidaba
-        // alguna; asi no puede. Ver ESQUEMA_AREA en lib/bloques.js.
-        output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREA } },
+        // alguna; asi no puede. Ver ESQUEMA_AREA_POR_BLOQUES arriba en este archivo.
+        output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREA_POR_BLOQUES } },
         // Tope de seguridad, no un objetivo: solo se paga lo que el modelo
         // escribe, y el largo lo manda el prompt. La cuenta, con la proporcion
         // que se ve en los registros (2,15 caracteres por token en castellano):
@@ -1123,6 +1270,12 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       err.temporal = true;
       throw err;
     }
+    // El area llega por bloques: aqui se juntan en la lista de parrafos de
+    // siempre y el "tras_bloque" pasa a ser el "tras_parrafo" que espera todo
+    // lo de abajo. A partir de esta linea el resto del codigo ve exactamente lo
+    // mismo que veia cuando el modelo mandaba "parrafos".
+    const bloquesVacios = bloquesAParrafos(datos);
+
     const vacias = [
       ['la escena', datos?.escena?.texto],
       ['el remate de la herida', datos?.remate_herida?.texto],
@@ -1131,6 +1284,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       ['el cierre', datos?.cierre],
     ].filter(([, t]) => !t || !String(t).trim()).map(([n]) => n);
     if (!Array.isArray(datos?.parrafos) || datos.parrafos.length === 0) vacias.push('los párrafos');
+    for (const nombre of bloquesVacios) vacias.push(`el bloque ${nombre}`);
     if (vacias.length > 0) {
       const err = new Error(`Área ${area.id} llegó con casillas vacías: ${vacias.join(', ')}`);
       err.temporal = true;
@@ -1361,7 +1515,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
           // ANTES del prompt, hay que cambiarlo aqui tambien o la cache se
           // vuelve a quedar sin usar, y eso no se nota mirando el informe: se
           // nota en la factura.
-          output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREA } },
+          output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREA_POR_BLOQUES } },
           // No queremos texto, queremos que la cache quede escrita. Se deja
           // sitio para unos pocos tokens porque con el esquema puesto la
           // respuesta es JSON y un tope de 1 puede rechazarse; lo que se paga
