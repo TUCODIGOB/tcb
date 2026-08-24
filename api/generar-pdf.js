@@ -845,11 +845,32 @@ export default async function handler(req, res) {
         { titulo: fx('TUS DESAFÍOS'), rasgos: losDesafios },
       ];
 
-      // Lo que ocupa abrir una lista: su titulo, su rayita y la primera ficha
-      // entera. Si no cabe eso, no se abre aqui: un titulo solo al pie de la
-      // pagina, con la lista empezando en la siguiente, se lee como un
-      // descuido de imprenta.
-      var SITIO_PARA_ABRIR_UNA_LISTA = 60;
+      // Lo que ocupa el titulo de una lista con su rayita.
+      var LO_QUE_OCUPA_UN_TITULO = 13 + 3.2 + 9.8;
+
+      // Y lo que ocupa una ficha entera. Se mide de verdad, no a ojo: la
+      // altura depende de en cuantas lineas caiga cada trozo, y de si la
+      // etiqueta del area cabe detras del porque o tiene que bajar sola.
+      //
+      // Hace falta saberlo en DOS sitios: antes de pintar la ficha, para no
+      // partirla entre dos paginas, y antes de abrir la segunda lista, para no
+      // dejar su titulo solo al pie. Con un numero fijo para lo segundo (60 mm)
+      // quedaba una ventana de 9,5 mm en la que el titulo se escribia y la
+      // primera ficha se iba a la pagina siguiente.
+      function loQueOcupaLaFicha(rasgo) {
+        doc.setFont('Roboto', 'normal');
+        doc.setFontSize(12);
+        var lineasD = doc.splitTextToSize(rasgo.descripcion || '', 170).length;
+        doc.setFont('Roboto', 'italic');
+        doc.setFontSize(11);
+        var lineasP = doc.splitTextToSize(rasgo.explicacion || '', 170);
+        var ultimaP = lineasP.length > 0 ? lineasP[lineasP.length - 1] : '';
+        var acaba = 22 + doc.getTextWidth(ultimaP);
+        doc.setFont('Roboto', 'bold');
+        var etiquetaDetras = lineasP.length > 0
+          && (acaba + doc.getTextWidth(' — ' + areaTitles[0].tit)) <= 192;
+        return 6.5 + lineasD * 6.5 + lineasP.length * 6 + (etiquetaDetras ? 0 : 6);
+      }
 
       var primeraLista = true;
       for (var li = 0; li < LAS_DOS_LISTAS.length; li++) {
@@ -864,7 +885,7 @@ export default async function handler(req, res) {
           primeraLista = false;
         } else {
           pyRasgos += 16;
-          cabe(SITIO_PARA_ABRIR_UNA_LISTA);
+          cabe(LO_QUE_OCUPA_UN_TITULO + loQueOcupaLaFicha(laLista.rasgos[0]));
         }
 
         doc.setFont('Roboto', 'bold');
@@ -914,7 +935,12 @@ export default async function handler(req, res) {
 
           // La ficha entera va junta: el nombre de una y la explicacion de
           // otra en paginas distintas se lee como un error de imprenta.
-          cabe(6.5 + dl.length * 6.5 + el.length * 6 + (cabeDetras ? 0 : 6));
+          //
+          // La cuenta la hace loQueOcupaLaFicha y no se repite aqui: escrita
+          // en los dos sitios, el dia que cambie el alto de una linea habria
+          // que acordarse de los dos, y el que se quedara viejo no se notaria
+          // hasta ver un PDF con una ficha partida.
+          cabe(loQueOcupaLaFicha(rasgo));
 
           doc.setFont('Roboto', 'bold');
           doc.setFontSize(12);

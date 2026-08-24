@@ -727,6 +727,12 @@ export default function Stripe() {
       edad: 35, carta: rc.body, areas: Array(7).fill(parrafo),
     };
 
+    const crudoDe = async (extra) => {
+      const rr = resp();
+      await generarPdf({ method: 'POST', body: { ...pedido, ...extra }, }, rr);
+      return Buffer.from(rr.body.pdfBase64.split(',')[1], 'base64').toString('latin1');
+    };
+
     const cuantasPaginas = async (extra) => {
       const r = resp();
       await generarPdf({ method: 'POST', body: { ...pedido, ...extra } }, r);
@@ -899,13 +905,18 @@ export default function Stripe() {
         const x1 = parseFloat(m[1]) / MM, x2 = parseFloat(m[3]) / MM;
         if (x2 > 192.5 || x1 < 17.5) fuera.push(`raya ${x1.toFixed(0)}→${x2.toFixed(0)}`);
       }
+      // Y por abajo: nada puede pasar del tope de la caja de texto. Si la
+      // cuenta de lo que ocupa una ficha se quedara corta, las fichas se
+      // seguirían pintando por debajo del pie de página sin que nada lo diga.
+      // El número de página va a 281 y es el único que baja de ahí.
+      for (const bt of pdfTxt.matchAll(/BT([\s\S]*?)ET/g)) {
+        const tf = /\/\w+\s+([\d.]+)\s+Tf/.exec(bt[1]);
+        const td = /([\d.]+)\s+([\d.]+)\s+Td/.exec(bt[1]);
+        if (!tf || !td || parseFloat(tf[1]) === 9) continue;
+        const y = 297 - parseFloat(td[2]) / MM;
+        if (y > 276.5) fuera.push(`texto por debajo del tope, y=${y.toFixed(0)}`);
+      }
       return fuera;
-    };
-
-    const crudoDe = async (extra) => {
-      const rr = resp();
-      await generarPdf({ method: 'POST', body: { ...pedido, ...extra }, }, rr);
-      return Buffer.from(rr.body.pdfBase64.split(',')[1], 'base64').toString('latin1');
     };
 
     // Explicaciones de largos muy variados, para que la última línea acabe en
@@ -945,11 +956,76 @@ export default function Stripe() {
 
     const seSalenSinLista = loQueSeSale(await crudoDe({}));
     const seSalenConLista = loQueSeSale(await crudoDe({ rasgos: RASGOS_DE_TODOS_LOS_LARGOS }));
-    comprobar('ni la etiqueta ni los separadores se salen del papel',
+    comprobar('nada se sale del papel: ni por los lados ni por abajo',
       seSalenConLista.length === seSalenSinLista.length,
       seSalenConLista.length > seSalenSinLista.length
         ? `añade ${seSalenConLista.length - seSalenSinLista.length}: ${seSalenConLista.slice(seSalenSinLista.length, seSalenSinLista.length + 3).join(', ')} mm`
         : `${seSalenSinLista.length} de antes, ${seSalenConLista.length} ahora`);
+
+    // ── Y QUE NINGÚN TÍTULO SE QUEDE SOLO AL PIE ──────────────────
+    //
+    // Al hacer que la segunda lista siga a la primera, aparece un riesgo que
+    // antes no existía: que el título entre justo al final de la página y su
+    // primera ficha se vaya a la siguiente. Un título solo al pie se lee como
+    // un descuido de imprenta.
+    //
+    // Por eso antes de abrir la lista se mide lo que ocupa el título MÁS su
+    // primera ficha entera, medida de verdad. Con un número fijo quedaba una
+    // ventana estrecha en la que esto pasaba.
+    const FICHA_ALTA = (i) => ({
+      nombre: 'Ficha alta ' + i,
+      descripcion: 'Una frase de descripcion de veinticinco palabras largas que ocupa dos lineas enteras del ancho disponible sin llegar nunca a tres',
+      explicacion: 'De donde le viene contado con sesenta palabras, que es el tope del prompt, para que ocupe cuatro lineas completas del ancho disponible y la ficha sea todo lo alta que puede llegar a ser en el peor de los casos posibles.',
+      area: (i % 7) + 1,
+    });
+    const titulosSolos = (pdfTxt) => {
+      const MM3 = 72 / 25.4;
+      const hojas2 = [...pdfTxt.matchAll(/stream\r?\n([\s\S]*?)\r?\nendstream/g)]
+        .map(m => m[1]).filter(x => !x.startsWith('\xff\xd8'));
+      let solos = 0;
+      for (const hoja of hojas2) {
+        const ev = [...hoja.matchAll(/BT([\s\S]*?)ET/g)].map(m => {
+          const tf = /\/\w+\s+([\d.]+)\s+Tf/.exec(m[1]);
+          const td = /([\d.]+)\s+([\d.]+)\s+Td/.exec(m[1]);
+          return tf && td ? { tam: parseFloat(tf[1]), y: 297 - parseFloat(td[2]) / MM3 } : null;
+        }).filter(Boolean).filter(e => e.tam !== 9);   // fuera el número de página
+        if (!ev.length) continue;
+        ev.sort((a, b) => a.y - b.y);
+        if (ev[ev.length - 1].tam === 13) solos++;     // el título va a 13
+      }
+      return solos;
+    };
+    // La ventana en la que esto pasa es estrecha (unos 9 mm de una página de
+    // 216), así que hay que barrer fino o no se ve: se cambia el número de
+    // fichas Y el largo de la última de la primera lista, que mueve el sitio
+    // donde acaba en saltos de 6 y 6,5 mm. Entre las dos cosas, el final de la
+    // lista 1 cae en casi cualquier altura de la página.
+    let huerfanos = 0, barridos = 0, desbordes = 0;
+    for (const cuantas of [1, 2, 3]) {
+      for (let sobra = 0; sobra <= 7; sobra++) {
+        const ultima = {
+          nombre: 'La ultima de la primera lista',
+          descripcion: 'Descripcion que crece ' + 'palabra '.repeat(sobra * 3),
+          explicacion: 'Un porque que tambien crece ' + 'palabra '.repeat(sobra * 4),
+          area: 1,
+        };
+        barridos++;
+        const crudo = await crudoDe({ rasgos: {
+          fortalezas: [...Array.from({ length: cuantas }, (_, i) => FICHA_ALTA(i)), ultima],
+          desafios: Array.from({ length: 4 }, (_, i) => FICHA_ALTA(i + 40)),
+        } });
+        huerfanos += titulosSolos(crudo);
+        // Ya que están hechos los 24 PDF, se miran también aquí los desbordes:
+        // con un solo reparto la ficha nunca cae en la altura justa en la que
+        // una cuenta mal hecha se nota, y con 24 sí.
+        desbordes += Math.max(0, loQueSeSale(crudo).length - seSalenSinLista.length);
+      }
+    }
+    comprobar('ningún título de lista se queda solo al pie de una página',
+      huerfanos === 0,
+      huerfanos ? huerfanos + ' huérfano(s)' : barridos + ' repartos distintos, con las fichas más altas posibles');
+    comprobar('en ninguno de esos repartos se sale nada del papel',
+      desbordes === 0, desbordes ? desbordes + ' desborde(s)' : barridos + ' repartos revisados');
 
     comprobar('el área de cada ficha se imprime de verdad',
       JSON.stringify(conAreasVariadas) !== JSON.stringify(todasArea1),
