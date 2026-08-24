@@ -603,6 +603,10 @@ export default async function handler(req, res) {
     wrapText(fx('Los aspectos muestran cómo se relacionan esas partes entre sí: los equilibrios, las tensiones y las conexiones que forman tu manera de vincularte, decidir y reaccionar.'),18,py5,175,5.5);
     addPageNum(5);
 
+    // Estado de la maquetacion: en que altura vamos y por que pagina
+    var Y_TOPE = H - 21;
+    var maq = { y: 60, pag: 6, paginas: 1 };
+
     // ── PAG 6 RASGOS ────────────────────────────────────────────────────────
     if (rasgos && (rasgos.fortalezas?.length > 0 || rasgos.desafios?.length > 0)) {
       doc.addPage();
@@ -708,14 +712,6 @@ export default async function handler(req, res) {
       remate:   { size: 13.5, color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.8, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
       cierre:   { size: 16.5, color: [207, 177, 128], x: 18, ancho: 152, alto: 9.5, antes: 19, despues: 8, fuente: 'bold',  centrado: true, juntar: true },
     };
-
-    // Estado de la maquetacion de las areas: en que altura vamos y por que
-    // pagina. Va aparte para que las funciones de abajo puedan moverlo.
-    var maq = { y: 60, pag: 6, paginas: 1 };
-    // El numero de pagina se pinta en H-16. Si el texto pudiera llegar hasta
-    // ahi, la ultima linea le quedaba a la misma altura y una linea larga se
-    // le echaba encima. Se para cinco milimetros antes.
-    var Y_TOPE = H - 21;
 
     function paginaNueva() {
       addPageNum(maq.pag); maq.pag++;
