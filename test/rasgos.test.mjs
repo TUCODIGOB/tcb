@@ -86,15 +86,83 @@ const AREA = JSON.stringify({
 });
 
 // ── LAS DOS LISTAS QUE DEVUELVE EL MODELO DE MENTIRA ───────────────
-const unRasgo = (n, area) => ({
-  nombre: `Rasgo numero ${n}`,
-  descripcion: `La frase que describe el rasgo numero ${n} de esta persona, ni corta ni larga.`,
-  explicacion: `De donde le viene el rasgo numero ${n} segun la carta, contado en una frase o dos que expliquen el por que.`,
+//
+// Tienen que ser rasgos DE VERDAD distintos entre si. Con treinta fichas
+// llamadas "Rasgo numero 1", "Rasgo numero 2"... el detector de repetidos las
+// marca todas, y con razon: dicen exactamente lo mismo. Que la prueba use
+// fichas de mentira no le quita el trabajo de parecerse a las de verdad.
+const CATALOGO = [
+  ['Buscador de verdades', 'Necesitas entender el porque de lo que te pasa antes de poder aceptarlo del todo'],
+  ['Leal hasta el agotamiento', 'Sostienes a los tuyos mucho despues de que a ti ya no te quede nada dentro'],
+  ['Memoria para el detalle', 'Retienes lo que dijo cada uno y en que tono, semanas despues de la conversacion'],
+  ['Instinto para el peligro', 'Hueles el problema mucho antes de que se vea, y casi siempre aciertas'],
+  ['Aguante fuera de lo normal', 'Sigues de pie en sitios donde cualquiera se habria bajado hace tiempo'],
+  ['Talento para ordenar el caos', 'Entras donde todo esta revuelto y en dos dias aquello funciona solo'],
+  ['Palabra que calma', 'Hablas y la gente baja el tono sin darse cuenta de que lo ha bajado'],
+  ['Curiosidad que no se apaga', 'Empiezas algo por saber como funciona y acabas sabiendo mas que nadie'],
+  ['Ojo para el talento ajeno', 'Ves de que es capaz alguien antes de que esa persona lo sepa'],
+  ['Mano para lo practico', 'Coges un problema abstracto y lo conviertes en cuatro pasos que se pueden hacer'],
+  ['Humor que desarma', 'Sueltas la broma justa en el momento en que la tension iba a estallar'],
+  ['Firmeza sin ruido', 'Dices que no sin levantar la voz y sin que nadie se sienta atacado'],
+  ['Paciencia con los procesos lentos', 'Esperas a que las cosas maduren mientras el resto se pone nervioso'],
+  ['Generosidad silenciosa', 'Das sin contarlo y sin que quien lo recibe llegue a enterarse del todo'],
+  ['Cabeza fria en la urgencia', 'Cuando todo se tuerce eres la que piensa mientras los demas gritan'],
+  ['Gusto por el trabajo bien hecho', 'Te niegas a entregar algo que sabes que podria estar mejor rematado'],
+  ['Facilidad para empezar de cero', 'Cierras una etapa y arrancas otra sin arrastrar el peso de la anterior'],
+  ['Lectura rapida de las salas', 'Entras en un sitio y en un minuto sabes quien manda y quien esta incomodo'],
+  ['Miedo a decepcionar', 'Dices que si a cosas que no quieres solo por no ver la cara del otro'],
+  ['Control que no descansa', 'Repasas por dentro lo que ya esta hecho, por si acaso se te escapo algo'],
+  ['Cuenta pendiente con el descanso', 'Te sientas a parar y a los diez minutos ya estas buscando algo que hacer'],
+  ['Dureza contigo que no aplicas a nadie', 'Perdonas a cualquiera un fallo que a ti no te perdonarias nunca'],
+  ['Dificultad para pedir', 'Prefieres cargar tu sola antes que decir en voz alta que necesitas ayuda'],
+  ['Tendencia a explicarte de mas', 'Justificas decisiones tuyas ante gente que no te habia pedido explicaciones'],
+  ['Prisa por resolver el conflicto', 'Cedes rapido con tal de que la tension se acabe cuanto antes'],
+  ['Peso de las expectativas heredadas', 'Mides tu vida con una vara que te dieron y que nunca elegiste'],
+  ['Desconfianza de lo que llega facil', 'Cuando algo sale bien sin esfuerzo buscas donde esta la trampa'],
+  ['Silencio con lo que te duele', 'Cuentas lo tuyo cuando ya esta resuelto, nunca mientras esta pasando'],
+  ['Exigencia con los tiempos', 'Te enfadas contigo por no haber llegado donde creias que ya deberias estar'],
+  ['Culpa al poner un limite', 'Dices que no y te pasas el resto del dia dandole vueltas'],
+  ['Cansancio de ser la fuerte', 'Todos acuden a ti y nadie te pregunta a ti como lo llevas'],
+  ['Postergar lo que te toca a ti', 'Resuelves lo de los demas y lo tuyo se queda para un dia que no llega'],
+  ['Relacion tensa con el dinero', 'Ganas mas y en vez de soltar el aire aprietas todavia un poco mas'],
+  ['Necesidad de tenerlo todo cerrado', 'Lo que queda abierto te ocupa la cabeza aunque no sea urgente'],
+  ['Vergüenza por lo que te ilusiona', 'Rebajas lo que te hace ilusion antes de que otro pueda rebajartelo'],
+  ['Poca costumbre de recibir', 'Te incomoda que te cuiden y cambias de tema en cuanto empieza'],
+];
+
+const unRasgo = (i, area) => ({
+  nombre: CATALOGO[i % CATALOGO.length][0],
+  descripcion: CATALOGO[i % CATALOGO.length][1],
+  explicacion: `De donde le viene esto segun la carta, contado en una frase o dos que expliquen el porque sin nombrar planetas ni casas, que es lo que se pide en el prompt. Ficha ${i}.`,
   area,
 });
+
+// Catorce fortalezas y dieciseis desafios: dentro de la horquilla, y con
+// numeros distintos a proposito, que es lo que se le pide al modelo.
 const RASGOS = {
-  fortalezas: Array.from({ length: 10 }, (_, i) => unRasgo(i + 1, (i % 7) + 1)),
-  desafios: Array.from({ length: 10 }, (_, i) => unRasgo(i + 11, (i % 7) + 1)),
+  fortalezas: Array.from({ length: 14 }, (_, i) => unRasgo(i, (i % 7) + 1)),
+  desafios: Array.from({ length: 16 }, (_, i) => unRasgo(i + 18, (i % 7) + 1)),
+};
+
+// Y una que llega con dos fichas que dicen lo mismo, que es lo que hay que
+// pillar. La segunda no repite ni una palabra entera de la primera: repite
+// las mismas raices, que es como repite un modelo de verdad.
+const RASGOS_CON_REPETIDO = {
+  fortalezas: [
+    ...Array.from({ length: 13 }, (_, i) => unRasgo(i, (i % 7) + 1)),
+    { nombre: 'Instintos para los peligros', descripcion: 'Hueles los problemas mucho antes de que se vean, y casi siempre aciertas', explicacion: 'Esta ficha dice lo mismo que "Instinto para el peligro", que ya esta mas arriba en esta misma lista.', area: 3 },
+  ],
+  desafios: Array.from({ length: 16 }, (_, i) => unRasgo(i + 18, (i % 7) + 1)),
+};
+
+// Y otra con el mismo rasgo en las DOS listas, que es el peor repetido de
+// todos: ademas de decir dos veces lo mismo, se contradice a si mismo.
+const RASGOS_REPETIDO_CRUZADO = {
+  fortalezas: Array.from({ length: 14 }, (_, i) => unRasgo(i, (i % 7) + 1)),
+  desafios: [
+    ...Array.from({ length: 15 }, (_, i) => unRasgo(i + 18, (i % 7) + 1)),
+    { nombre: 'Aguantes fuera de lo normal', descripcion: 'Sigues de pie en los sitios donde cualquiera se habria bajado hace tiempo', explicacion: 'Esto es lo mismo que "Aguante fuera de lo normal", que esta en la lista de fortalezas: el mismo rasgo puesto en las dos listas a la vez.', area: 2 },
+  ],
 };
 
 // ── LA PUERTA QUE DEJA VER SI LA LISTA SALE ANTES O DESPUES ────────
@@ -118,6 +186,9 @@ let laListaYaEstabaPedida = false;
 // Como contesta el modelo cuando se le pide la lista: bien, cortada por
 // haberse quedado sin sitio, o directamente un corte de red.
 let comoSalePedirLaLista = 'bien';
+// Cuantas veces se ha pedido la lista, para ver si se repite el encargo.
+let vecesQueSeHaPedidoLaLista = 0;
+const encargosDeLaLista = [];
 
 const enviadas = [];
 globalThis.fetch = async (url, opts = {}) => {
@@ -129,9 +200,26 @@ globalThis.fetch = async (url, opts = {}) => {
 
   const sistema = String(Array.isArray(cuerpo.system) ? (cuerpo.system[0] || {}).text || '' : cuerpo.system || '');
 
-  if (sistema.startsWith('Eres una experta en astrología que analiza cartas natales')) {
+  if (sistema.startsWith('Eres la misma experta')) {
     laListaYaEstabaPedida = true;
+    vecesQueSeHaPedidoLaLista++;
+    encargosDeLaLista.push(String(cuerpo.messages?.[0]?.content || ''));
     if (comoSalePedirLaLista === 'red') throw new Error('fetch failed');
+    if (comoSalePedirLaLista === 'repetido') {
+      // La primera vez repite; si se le vuelve a pedir, lo arregla.
+      const cuerpoBueno = vecesQueSeHaPedidoLaLista === 1 ? RASGOS_CON_REPETIDO : RASGOS;
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(cuerpoBueno) }] }) };
+    }
+    if (comoSalePedirLaLista === 'cruzado') {
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(RASGOS_REPETIDO_CRUZADO) }] }) };
+    }
+    if (comoSalePedirLaLista === 'repite_siempre') {
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(RASGOS_CON_REPETIDO) }] }) };
+    }
+    if (comoSalePedirLaLista === 'corta') {
+      const pocos = { fortalezas: RASGOS.fortalezas.slice(0, 4), desafios: RASGOS.desafios.slice(0, 3) };
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(pocos) }] }) };
+    }
     if (comoSalePedirLaLista === 'cortada') {
       // Lo que llegaba el 24 de agosto: JSON a medias porque no cabia.
       const aMedias = JSON.stringify(RASGOS).slice(0, 6991);
@@ -194,7 +282,7 @@ try {
   console.log('\n  api/chat.js — la lista de rasgos\n');
   comprobar('el informe sale', r.code === 200, 'HTTP ' + r.code);
 
-  const lista = enviadas.find(c => String(c.system || '').startsWith('Eres una experta en astrología que analiza cartas natales'));
+  const lista = enviadas.find(c => String(c.system || '').startsWith('Eres la misma experta'));
   comprobar('se pide la lista de rasgos', Boolean(lista));
 
   // ── 1. QUE LLEGUE ENTERA ────────────────────────────────────────
@@ -237,14 +325,115 @@ try {
 
   // ── 4. QUE SALGA POR LA PUERTA HACIA EL PDF ─────────────────────
   comprobar('el informe devuelve los rasgos', Boolean(r.body?.rasgos));
-  comprobar('devuelve las dos listas completas',
-    r.body?.rasgos?.fortalezas?.length === 10 && r.body?.rasgos?.desafios?.length === 10,
+  comprobar('devuelve las dos listas enteras',
+    r.body?.rasgos?.fortalezas?.length === 14 && r.body?.rasgos?.desafios?.length === 16,
     `${r.body?.rasgos?.fortalezas?.length} fortalezas, ${r.body?.rasgos?.desafios?.length} desafíos`);
+  comprobar('una lista buena no se pide dos veces',
+    vecesQueSeHaPedidoLaLista === 1, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   const uno = r.body?.rasgos?.fortalezas?.[0];
   comprobar('cada rasgo llega con sus cuatro casillas',
     Boolean(uno?.nombre && uno?.descripcion && uno?.explicacion && uno?.area >= 1 && uno?.area <= 7));
 
-  // ── 5. SI LA LISTA FALLA, EL INFORME SE ENTREGA IGUAL ───────────
+  // ── 5. EL TONO ES EL MISMO QUE EL DE LAS ÁREAS ──────────────────
+  //
+  // No "parecido": el MISMO TEXTO. Las reglas de voz están escritas una vez
+  // en api/chat.js y las usan los dos prompts. Si algún día alguien las copia
+  // y las edita solo en un sitio, la última página del informe empieza a
+  // sonar a otra persona y nadie se entera hasta que lo lee un cliente.
+  console.log('\n  api/chat.js — la lista habla con la voz del estudio\n');
+
+  const areaEnviada = enviadas.find(c => Array.isArray(c.system)
+    && String((c.system[0] || {}).text || '').startsWith('Eres una experta en psicología'));
+  const promptAreas = String((areaEnviada?.system?.[0] || {}).text || '');
+  const promptLista = String(lista?.system || '');
+
+  comprobar('se capturan los dos prompts', promptAreas.length > 1000 && promptLista.length > 1000,
+    `${promptAreas.length} y ${promptLista.length} caracteres`);
+
+  // Las reglas compartidas se sacan del propio fichero, no se copian aquí:
+  // así la prueba no puede quedarse desfasada sin enterarse.
+  const fuente = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
+  const REGLAS = ['ESPANOL_DE_ESPANA', 'SIN_NOMBRAR_PLANETAS', 'FRASES_QUE_SUENAN_HABLADAS',
+                  'DEFECTOS_DESDE_LA_FUERZA', 'COMA_ANTES_DE_Y', 'TODO_DE_TU', 'HABLAR_DE_ELLA_LO_ROMPE', 'PERDONA_ANTES_DE_NOMBRAR'];
+  for (const regla of REGLAS) {
+    const m = fuente.match(new RegExp('const ' + regla + ' = `([^`]*)`'));
+    const texto = m ? m[1] : null;
+    comprobar(`la regla ${regla} está en los DOS prompts, letra por letra`,
+      Boolean(texto) && promptAreas.includes(texto) && promptLista.includes(texto),
+      !texto ? 'no existe esa constante'
+             : !promptAreas.includes(texto) ? 'falta en las áreas'
+             : !promptLista.includes(texto) ? 'falta en la lista' : 'en los dos');
+  }
+
+  // Y la excepción que solo vale para las áreas NO puede estar en la lista:
+  // le daría permiso para escribir fichas en tercera persona.
+  const EXCEPCION = 'Cuidado con la excepción falsa';
+  comprobar('la excepción de la entradilla se queda solo en las áreas',
+    promptAreas.includes(EXCEPCION) && !promptLista.includes(EXCEPCION));
+
+  // ── 6. NI UNO REPETIDO ──────────────────────────────────────────
+  console.log('\n  api/chat.js — ni un rasgo repetido\n');
+
+  const pedirInforme = async (modo, sufijo) => {
+    comoSalePedirLaLista = modo;
+    vecesQueSeHaPedidoLaLista = 0;
+    encargosDeLaLista.length = 0;
+    const SID3 = 'cs_test_rasgos_' + sufijo;
+    TIENDA.set(SID3, {
+      id: SID3, payment_status: 'paid', customer_email: 'cliente@ejemplo.com',
+      customer_details: { email: 'cliente@ejemplo.com' }, metadata: { nombre: 'Ana Ruiz' },
+    });
+    const r3 = { code: 0, body: null };
+    r3.status = c => { r3.code = c; return r3; };
+    r3.json = b => { r3.body = b; return r3; };
+    r3.setHeader = () => {};
+    await chat({ method: 'POST', body: { session_id: SID3, nombre: 'Ana Ruiz', sexo: 'mujer', cartaTexto: 'Sol: Piscis' } }, r3);
+    return r3;
+  };
+
+  const nombresDe = b => [...(b?.rasgos?.fortalezas || []), ...(b?.rasgos?.desafios || [])].map(x => x.nombre);
+
+  // (a) Llega un repetido → se vuelve a pedir la lista, y la buena se entrega.
+  const conRepe = await pedirInforme('repetido', 'repe');
+  comprobar('un repetido hace que se vuelva a pedir la lista',
+    vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+  comprobar('y al volver a pedirla se le dice EXACTAMENTE cuál repite',
+    /dicen lo mismo/.test(encargosDeLaLista[1] || '') && /Instintos para los peligros/.test(encargosDeLaLista[1] || ''));
+  comprobar('la lista que se entrega es la buena, sin repetidos',
+    conRepe.body?.rasgos?.fortalezas?.length === 14 && conRepe.body?.rasgos?.desafios?.length === 16,
+    `${conRepe.body?.rasgos?.fortalezas?.length} + ${conRepe.body?.rasgos?.desafios?.length}`);
+
+  // (b) Repite las dos veces → el repetido se quita, aunque la lista se acorte.
+  const siempreRepe = await pedirInforme('repite_siempre', 'repe2');
+  const nombres = nombresDe(siempreRepe.body);
+  comprobar('si repite las dos veces, el repetido NO sale impreso',
+    !nombres.includes('Instintos para los peligros'), nombres.length + ' fichas entregadas');
+  comprobar('y lo que no repetía se entrega entero',
+    nombres.includes('Instinto para el peligro') && nombres.length === 29, nombres.length + ' fichas');
+  comprobar('ninguna de las fichas entregadas dice lo mismo que otra',
+    new Set(nombres).size === nombres.length);
+
+  // (b2) El mismo rasgo en las DOS listas: el peor de todos.
+  const cruzado = await pedirInforme('cruzado', 'cruzado');
+  comprobar('un rasgo repetido ENTRE las dos listas también se pilla',
+    vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+  comprobar('y se le avisa de que está uno en cada lista',
+    /uno en cada lista/.test(encargosDeLaLista[1] || ''));
+  comprobar('el informe sale bien igualmente',
+    cruzado.code === 200 && nombresDe(cruzado.body).length > 0, 'HTTP ' + cruzado.code);
+
+  // (c) Llega corta → se vuelve a pedir.
+  const corta = await pedirInforme('corta', 'corta');
+  comprobar('una lista corta hace que se vuelva a pedir',
+    vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+  comprobar('y se le dice cuántas faltan',
+    /se piden al menos/.test(encargosDeLaLista[1] || ''));
+  comprobar('el informe sale igual aunque la lista venga corta las dos veces',
+    corta.code === 200, 'HTTP ' + corta.code);
+
+  comoSalePedirLaLista = 'bien';
+
+  // ── 7. SI LA LISTA FALLA, EL INFORME SE ENTREGA IGUAL ───────────
   //
   // La lista es un extra. Las siete areas son lo que el cliente ha pagado, y
   // cuando la lista se pide ya estan escritas: que se caigan por esto seria
@@ -278,7 +467,7 @@ try {
   limpiar();
 }
 
-// ── 6. Y QUE EL NAVEGADOR LA MANDE AL PDF ─────────────────────────
+// ── 8. Y QUE EL NAVEGADOR LA MANDE AL PDF ─────────────────────────
 //
 // El eslabon que faltaba: chat.js puede devolver la lista perfecta, que si
 // generando-informe.html no la mete en la peticion de generar-pdf, alli la
@@ -299,7 +488,7 @@ comprobar('generar-pdf lee los rasgos de la petición',
 comprobar('y pinta la sección cuando vienen',
   /if\s*\(\s*rasgos\s*&&/.test(pdf));
 
-// ── 7. Y QUE LA PAGINA APAREZCA DE VERDAD EN EL PDF ───────────────
+// ── 9. Y QUE LA PAGINA APAREZCA DE VERDAD EN EL PDF ───────────────
 //
 // Todo lo de arriba puede estar bien y la pagina no salir igualmente: es lo
 // que paso el 24 de agosto. Asi que aqui se fabrica el PDF de verdad, con la
@@ -379,7 +568,7 @@ export default function Stripe() {
 
     comprobar('el PDF se genera sin lista (como hasta ahora)', sinLista > 0, sinLista + ' páginas');
     comprobar('el PDF se genera con lista', conLista > 0, conLista + ' páginas');
-    comprobar('los 20 rasgos AÑADEN páginas al informe',
+    comprobar('los 30 rasgos AÑADEN páginas al informe',
       conLista > sinLista,
       conLista > sinLista ? `${sinLista} → ${conLista} páginas`
                           : 'mismas páginas: la lista no se está pintando');

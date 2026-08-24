@@ -149,6 +149,12 @@ globalThis.fetch = async (url, opts = {}) => {
     if (String(JSON.parse(opts.body || '{}').system || '').startsWith('Eres un corrector de estilo')) {
       return { ok: true, status: 200, json: async () => ({ content: [{ text: '{"frases":[]}' }] }) };
     }
+    // La lista de rasgos que cierra el informe es otra llamada, con otro
+    // prompt, y no escribe ninguna area: no cuenta como generacion. Esta
+    // prueba no mide la lista, asi que se le contesta que no y se sigue.
+    if (String(JSON.parse(opts.body || '{}').system || '').startsWith('Eres la misma experta')) {
+      return { ok: false, status: 503, text: async () => 'la lista de rasgos no es lo que mide esta prueba' };
+    }
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
     return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_DE_MENTIRA }] }) };

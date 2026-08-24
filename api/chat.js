@@ -111,6 +111,47 @@ const ESQUEMA_AREA_POR_BLOQUES = {
 };
 
 // ══════════════════════════════════════════════════════════════════
+// LA VOZ, QUE ES LA MISMA EN TODO EL ESTUDIO
+// ══════════════════════════════════════════════════════════════════
+//
+// Estas reglas estaban solo dentro del prompt de las areas. La lista de
+// rasgos tenia las suyas, cuatro lineas escritas aparte, y por eso sonaba a
+// otra persona: mismo informe, misma clienta, y de repente un tono distinto
+// en la ultima pagina.
+//
+// Aqui estan escritas UNA vez y las usan las dos. El prompt de las areas no
+// cambia ni una letra: lo unico que se ha hecho es sacar el texto a una
+// constante y volver a meterlo donde estaba. Lo comprueba test/rasgos.test.mjs
+// letra por letra, porque tocar ese prompt sin querer seria romper el
+// producto entero.
+//
+// No esta todo el prompt de las areas, solo lo que vale para las dos cosas.
+// Lo que habla de parrafos, de negritas, de la escena o de las 900 palabras
+// no pinta nada en una lista de fichas de tres lineas.
+
+const ESPANOL_DE_ESPANA = `IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresiones latinoamericanas. Usa tú, no vos.`;
+
+const SIN_NOMBRAR_PLANETAS = `No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo`;
+
+const FRASES_QUE_SUENAN_HABLADAS = `CADA FRASE TIENE QUE SONAR COMO HABLA UNA PERSONA DE VERDAD. Antes de dar una frase por buena, léela en voz alta por dentro: si nadie la diría hablando, está mal y se reescribe. No fuerces la gramática para que suene elaborado, y no cojas un verbo raro cuando el normal dice lo mismo. Lo que suena a literatura no emociona, distrae: el lector tropieza, sale del texto y deja de reconocerse.
+- MAL: "el cariño que no te has ganado con algo no termina de ser de fiar" (construcción retorcida, hay que releerla). BIEN: "del cariño que llega gratis no te puedes fiar".
+- MAL: "enseñar que algo te ha dolido" (verbo forzado). BIEN: "dejar ver que algo te ha dolido".`;
+
+const DEFECTOS_DESDE_LA_FUERZA = `LOS DEFECTOS SE CUENTAN DESDE LA FUERZA QUE LOS ORIGINA, NUNCA CONTRA ELLA. Esto NO es suavizar ni maquillar: el defecto se nombra entero, con su nombre y sin rebajarlo. Lo que cambia es de dónde lo haces salir. Y no vale poner la virtud y el defecto uno al lado del otro como si fueran dos cosas distintas ("eres muy exigente contigo, pero también tienes buen criterio"), porque no son dos cosas: son la misma cualidad, solo que pasada de vueltas ("ese criterio tuyo, pasado de vueltas, es lo que te machaca"). Contado así lo reconoce y no se defiende. Contado como una lista de fallos sueltos, cierra el informe y no vuelve.`;
+
+const COMA_ANTES_DE_Y = `CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra: se escribe "quiero plátanos, peras y fresas", no "quiero plátanos, peras, y fresas". Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.`;
+
+const TODO_DE_TU = `TODO SE LE ESCRIBE A ELLA, DE TÚ, DE LA PRIMERA PALABRA A LA ÚLTIMA. Nunca se habla de ella desde fuera: ni "ella", ni "la que", ni un verbo en tercera persona referido a ella. Se escribe "lo que se te rompió", no "lo que se le rompió"; "de pequeña aprendiste", no "de pequeña aprendió"; "vas a descubrir", no "va a descubrir".`;
+
+// La segunda mitad de la misma regla: por que romperla lo estropea todo.
+const HABLAR_DE_ELLA_LO_ROMPE = `En cuanto una frase habla de ella en tercera persona, el lector deja de ser el destinatario y pasa a ser un tercero que está oyendo cómo la comentan. Da igual lo buena que sea la frase: ahí se rompe todo lo anterior. Si al releer encuentras una sola, se reescribe en segunda persona.`;
+
+const PERDONA_ANTES_DE_NOMBRAR = `PERDONA ANTES DE NOMBRAR:
+Nadie baja la guardia delante de quien le está haciendo una lista de defectos. Antes de nombrar lo que le pesa, se le quita la culpa de encima, y solo entonces se le cuenta.
+Por dentro la forma es siempre la misma: eso que haces no es un defecto tuyo, es lo que aprendiste para que las cosas salieran bien, y te funcionó, por eso sigues haciéndolo. Las palabras las pones tú y cambian en cada área.
+Sin ese permiso lee a la defensiva y no le entra nada. Con él, se abre, y a partir de ahí le puedes decir cualquier cosa.`;
+
+// ══════════════════════════════════════════════════════════════════
 // RASGOS: CARACTERISTICAS EXTRAIDAS DE LA CARTA NATAL
 // ══════════════════════════════════════════════════════════════════
 
@@ -134,15 +175,23 @@ const RASGO = {
 // lista no llega nunca. Lo unico que el esquema puede garantizar es que la
 // lista no venga vacia, y eso es lo que hace el minItems: 1.
 //
-// Y son diez y diez, no "los que salgan". Pidiendo sin tope, el modelo
+// Y va con horquilla, no "los que salgan". Pidiendo sin tope, el modelo
 // escribia mas de lo que le cabia en la respuesta y llegaba cortada a mitad
-// de una frase: ver TOPE_RASGOS aqui debajo.
-const RASGOS_POR_LISTA = 10;
+// de una frase: ver TOPE_RASGOS aqui debajo. Pero un numero fijo tampoco
+// vale: doce y doce clavados no es lo que da una carta, es una cuota, y para
+// llegar a ella el modelo rellena. La horquilla le deja sacar lo que haya.
+//
+// Las dos listas NO tienen que medir lo mismo. Nadie tiene exactamente
+// tantas cosas buenas como malas, y dos listas del mismo largo se leen a
+// reparto hecho a ojo.
+const RASGOS_MINIMO = 12;
+const RASGOS_MAXIMO = 18;
 
-// El hueco para escribir la respuesta. Veinte rasgos enteros son unos 4.500
-// tokens; se deja al doble porque el tope no se paga (se paga lo que el modelo
-// escriba) y quedarse corto cuesta la lista entera.
-const TOPE_RASGOS = 8000;
+// El hueco para escribir la respuesta. Treinta y seis fichas enteras, que es
+// el techo de la horquilla en las dos listas, son unos 6.500 tokens. Se deja
+// al doble porque el tope no se paga (se paga lo que el modelo escriba) y
+// quedarse corto cuesta la lista entera, que es lo que paso con el de 3.000.
+const TOPE_RASGOS = 12000;
 
 const ESQUEMA_RASGOS = {
   type: 'object',
@@ -151,13 +200,13 @@ const ESQUEMA_RASGOS = {
       type: 'array',
       minItems: 1,
       items: RASGO,
-      description: `Las ${RASGOS_POR_LISTA} fortalezas, dones y habilidades que mas claras se ven en la carta. ${RASGOS_POR_LISTA} exactamente.`
+      description: `Las fortalezas, dones y habilidades que mas claras se ven en la carta. Entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO}.`
     },
     desafios: {
       type: 'array',
       minItems: 1,
       items: RASGO,
-      description: `Los ${RASGOS_POR_LISTA} desafios, dificultades y areas de crecimiento que mas claros se ven en la carta. ${RASGOS_POR_LISTA} exactamente.`
+      description: `Los desafios, dificultades y areas de crecimiento que mas claros se ven en la carta. Entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO}.`
     },
   },
   required: ['fortalezas', 'desafios'],
@@ -218,6 +267,148 @@ function bloquesAParrafos(datos) {
 }
 
 // ══════════════════════════════════════════════════════════════════
+// QUE NO REPITA, Y QUE ESO NO SEA UN DESEO SINO UNA COMPROBACION
+// ══════════════════════════════════════════════════════════════════
+//
+// El prompt pide que no repita. Pedirlo no es garantizarlo: las siete areas
+// tienen toda una maquinaria que las lee y las manda a repasar, y la lista no
+// tenia ninguna. Salia lo que saliera.
+//
+// Y aqui repetir hace mas daño que en ningun otro sitio. Un area repetitiva se
+// nota a medias porque son cuatro paginas de texto corrido; treinta fichas de
+// tres lineas puestas en columna se leen de un vistazo, y dos que dicen lo
+// mismo saltan a la cara. Una lista con repetidos vale menos que no tenerla.
+//
+// LO QUE ESTO PILLA Y LO QUE NO. Pilla el mismo nombre escrito dos veces y
+// pilla lo mismo dicho con palabras parecidas, que es como repite un modelo
+// cuando le has pedido mas fichas de las que da la carta. NO pilla lo mismo
+// dicho con palabras completamente distintas ("Miedo al abandono" y "Terror a
+// que la dejen"): eso no hay manera de verlo contando palabras, y de eso se
+// encargan el prompt, que lo pide con ese ejemplo delante, y el repaso.
+
+const INTENTOS_DE_LA_LISTA = 2;
+
+const listaVacia = () => ({ fortalezas: [], desafios: [] });
+
+// Palabras que aparecen en cualquier frase y no dicen de que va el rasgo. Las
+// de tres letras o menos se caen solas por el filtro de longitud.
+const PALABRAS_QUE_NO_CUENTAN = new Set([
+  'para', 'como', 'pero', 'porque', 'aunque', 'cuando', 'donde', 'entre',
+  'hasta', 'desde', 'antes', 'despues', 'sobre', 'todo', 'toda', 'todos',
+  'todas', 'cada', 'algo', 'nada', 'nadie', 'siempre', 'nunca', 'este',
+  'esta', 'esto', 'estos', 'estas', 'otro', 'otra', 'otros', 'otras',
+  'mismo', 'misma', 'muy', 'mas', 'menos', 'tener', 'tienes', 'tiene',
+  'hacer', 'haces', 'hace', 'eres', 'estar', 'poder', 'puedes', 'puede',
+  'vida', 'gente', 'cosas', 'cosa', 'veces', 'anos', 'demas', 'propio',
+  'propia', 'sino', 'solo', 'aun', 'ese', 'esa', 'esos', 'esas',
+]);
+
+// Sin tildes, en minusculas, sin la "s" del plural y cortada a siete letras.
+// Es una poda basta a proposito: lo que tiene que juntar es "captas" con
+// "capta" y "miedos" con "miedo", que es como se repite de verdad una lista.
+function raizDePalabra(p) {
+  const limpia = p.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const sinPlural = limpia.length > 4 && limpia.endsWith('s') ? limpia.slice(0, -1) : limpia;
+  return sinPlural.slice(0, 7);
+}
+
+function palabrasDelRasgo(rasgo) {
+  return new Set(
+    `${rasgo.nombre} ${rasgo.descripcion}`
+      .split(/[^\p{L}\p{N}]+/u)
+      .filter(p => p.length >= 4)
+      .map(raizDePalabra)
+      .filter(p => !PALABRAS_QUE_NO_CUENTAN.has(p))
+  );
+}
+
+// Cuanto tienen que compartir dos fichas para que sean la misma. Se mide
+// contra la mas corta de las dos: si una ficha entera cabe dentro de otra,
+// es la misma aunque la otra diga ademas alguna cosa.
+const PARECIDO_QUE_YA_ES_REPETIR = 0.6;
+
+function dicenLoMismo(a, b) {
+  const nombreA = raizDeFrase(a.nombre), nombreB = raizDeFrase(b.nombre);
+  if (nombreA && nombreA === nombreB) return true;
+  const pa = palabrasDelRasgo(a), pb = palabrasDelRasgo(b);
+  if (pa.size === 0 || pb.size === 0) return false;
+  let comunes = 0;
+  for (const p of pa) if (pb.has(p)) comunes++;
+  return comunes / Math.min(pa.size, pb.size) >= PARECIDO_QUE_YA_ES_REPETIR;
+}
+
+function raizDeFrase(txt) {
+  return String(txt || '')
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(p => p.length >= 4)
+    .map(raizDePalabra)
+    .join(' ')
+    .trim();
+}
+
+// Las dos listas se miran JUNTAS: el mismo rasgo en fortalezas y en desafios
+// es el peor repetido de todos, porque ademas se contradice.
+function todosLosRasgos(lista) {
+  return [
+    ...lista.fortalezas.map(r => ({ r, en: 'fortalezas' })),
+    ...lista.desafios.map(r => ({ r, en: 'desafios' })),
+  ];
+}
+
+// Devuelve las parejas que dicen lo mismo, cada una una sola vez.
+function losQueSeRepiten(lista) {
+  const todos = todosLosRasgos(lista);
+  const parejas = [];
+  const yaCaido = new Set();
+  for (let i = 0; i < todos.length; i++) {
+    if (yaCaido.has(i)) continue;
+    for (let j = i + 1; j < todos.length; j++) {
+      if (yaCaido.has(j)) continue;
+      if (dicenLoMismo(todos[i].r, todos[j].r)) {
+        parejas.push({ se_queda: todos[i], sobra: todos[j], indice: j });
+        yaCaido.add(j);
+      }
+    }
+  }
+  return parejas;
+}
+
+// Se queda el primero de cada pareja y se va el segundo.
+function sinLosRepetidos(lista) {
+  const sobran = new Set(losQueSeRepiten(lista).map(p => p.sobra.r));
+  return {
+    fortalezas: lista.fortalezas.filter(r => !sobran.has(r)),
+    desafios: lista.desafios.filter(r => !sobran.has(r)),
+  };
+}
+
+// Lo que le falta a la lista, dicho como se le dice al modelo para que lo
+// arregle. Si devuelve vacio, la lista esta bien.
+//
+// Pasarse del maximo NO esta aqui a proposito: que saque veinte en vez de
+// dieciocho no le hace daño a nadie y no merece pagar otra llamada entera.
+// Quedarse corta si, porque una lista de seis no es la pagina que se vendio.
+function loQueLeFaltaALaLista(lista) {
+  const problemas = [];
+
+  for (const [cual, rasgos] of [['fortalezas', lista.fortalezas], ['desafios', lista.desafios]]) {
+    if (rasgos.length < RASGOS_MINIMO) {
+      problemas.push(`la lista de ${cual} ha llegado con ${rasgos.length} y se piden al menos ${RASGOS_MINIMO}`);
+    }
+  }
+
+  for (const { se_queda, sobra } of losQueSeRepiten(lista)) {
+    const mismaLista = se_queda.en === sobra.en;
+    problemas.push(
+      `"${sobra.r.nombre}" (${sobra.en}) y "${se_queda.r.nombre}" (${se_queda.en}) dicen lo mismo`
+      + (mismaLista ? '' : ', y encima uno en cada lista')
+    );
+  }
+
+  return problemas;
+}
+
+// ══════════════════════════════════════════════════════════════════
 // EXTRACCION DE RASGOS DESDE LA CARTA NATAL
 // ══════════════════════════════════════════════════════════════════
 
@@ -226,46 +417,62 @@ async function extraerRasgos(nombrePila, sexo, cartaTexto) {
     ? 'una MUJER. Toda en femenino.'
     : 'un HOMBRE. Todo en masculino.';
 
-  const prompt = `Eres una experta en astrología que analiza cartas natales. Tu tarea es extraer los rasgos, caracteristicas, fortalezas y desafios principales de esta persona, basandote UNICAMENTE en su carta natal.
+  const prompt = `Eres la misma experta en psicología, astrología y neurociencia que ha escrito el estudio entero. Ahora cierras el estudio con dos listas de rasgos sacados UNICAMENTE de su carta natal: se leen despues de las siete areas, en el mismo libro y con la misma voz.
 
-CRITERIO PRINCIPAL:
-El objetivo es crear dos listas equilibradas que el cliente reconozca como suyas.
+${ESPANOL_DE_ESPANA}
+
+QUE SON LAS DOS LISTAS:
+Fichas cortas. Cada una nombra una cosa suya, la dice en una frase y explica de donde le viene. No son un resumen de las areas ni un indice: son cosas que se ven en la carta y que en las areas no ha dado tiempo a nombrar una por una.
 
 FORTALEZAS (lista 1):
-- Caracteristicas positivas, dones, habilidades innatas, ventajas
-- Cosas que hace bien o que otros le envidiarian
-- Capacidades que saca de su carta
+- Dones, habilidades innatas, ventajas, cosas que hace bien sin darse cuenta
+- Lo que otros le envidiarian aunque ella lo tenga por normal
 
 DESAFIOS (lista 2):
-- Areas de crecimiento, dificultades, patrones que pesan
-- Lo que le cuesta, lo que sufre, donde tropieza
-- Desafios que ve la astrologia en su carta
+- Lo que le cuesta, lo que pesa, donde tropieza una y otra vez
+- Areas de crecimiento que se ven en la carta
 
 REGLAS IMPRESCINDIBLES:
-1. EXACTAMENTE ${RASGOS_POR_LISTA} fortalezas y ${RASGOS_POR_LISTA} desafios. Ni uno mas, ni uno menos.
-2. Sin repetir JAMAS un rasgo ya mencionado en la misma lista.
-3. Cada rasgo en UNA sola lista (fortaleza o desafio, nunca los dos).
+1. Entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} en cada lista: los que de verdad salgan de la carta, ni uno mas. Y las dos listas NO tienen que tener el mismo numero: nadie tiene exactamente tantas cosas buenas como malas, asi que si de una salen catorce y de la otra dieciseis, perfecto. Lo que no vale es rellenar para cuadrarlas.
+2. NI UNO REPETIDO, ni dentro de la misma lista ni entre las dos. Y repetido no es solo la misma frase: es la misma cosa dicha con otras palabras. "Miedo al abandono" y "Terror a que la dejen" son el mismo rasgo escrito dos veces, y contar dos veces lo mismo es lo unico que puede hacer que estas listas valgan menos que no estar. Antes de dar una por buena, leela contra todas las anteriores: si dice lo mismo que otra, no la pongas y saca otra distinta.
+3. Cada rasgo en UNA sola lista, nunca en las dos.
 4. Cada rasgo asignado a UNA de 7 areas: 1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero.
-5. Distribucion realista: algunos areas tendran mas rasgos, otros menos. Sigue lo que dice la carta.
+5. Distribucion realista: algunas areas tendran mas rasgos y otras menos. Sigue lo que dice la carta, no repartas a partes iguales.
 
 ESTRUCTURA DE CADA RASGO:
 - "nombre": 3-6 palabras sin articulos. Ejemplos: "Buscador de verdades", "Leal hasta el agotamiento", "Miedo a decepcionar", "Capacidad de liderazgo", "Tendencia al perfeccionismo".
-- "descripcion": UNA SOLA FRASE, 15-25 palabras. Ejemplo: "Necesitas entender el porqu de todo lo que te pasa antes de poder aceptarlo".
-- "explicacion": 1-2 frases (30-60 palabras). Explica de donde viene segun la carta. Ejemplo: "Tu Mercurio en Virgo te hace analizar todo a fondo. Los aspectos duros potencian esta tendencia, haciendo que el paraisis por analisis sea real en tu vida".
-- "area": numero 1-7. Elige el area donde este rasgo es MAS relevante.
+- "descripcion": UNA SOLA FRASE, 15-25 palabras, escrita a ella. Ejemplo: "Necesitas entender el porque de todo lo que te pasa antes de poder aceptarlo".
+- "explicacion": 1-2 frases (30-60 palabras). De donde le viene. Sale de la carta, pero la carta no se nombra. Ejemplo: "Analizas todo a fondo antes de decidir, y cuando algo te importa de verdad, ese analisis no se apaga: le das vueltas de noche a una conversacion de hace tres dias".
+- "area": numero 1-7. El area donde ese rasgo es MAS relevante.
 
-TONO Y ESTILO:
-- Siempre segunda persona: "tu", nunca "ella/el"
-- Lenguaje directo, sin piropos ni falsa positividad
-- Lectura astrologia pura, no psicologia vagil
+LA VOZ ES LA MISMA QUE EN LAS SIETE AREAS, Y ESTO VA ANTES QUE CUALQUIER OTRA REGLA:
+
+${TODO_DE_TU}
+${HABLAR_DE_ELLA_LO_ROMPE}
+
+Aqui se escapa mas facil que en ningun otro sitio, porque una ficha corta tira a sonar a etiqueta de catalogo. "Persona sensible que capta lo invisible" habla de ella desde fuera y esta mal. "Captas lo que nadie ha dicho todavia" le habla a ella y esta bien.
+
+${PERDONA_ANTES_DE_NOMBRAR}
+
+EN LA LISTA DE DESAFIOS ESTO ES LO QUE MAS IMPORTA. Una lista de defectos seguidos, uno detras de otro y sin nada que los sostenga, es lo mas duro que hay en todo el estudio: son ${RASGOS_MINIMO} golpes o mas, uno detras de otro, sin las explicaciones que en las areas los amortiguan. Se lee y se cierra el informe.
+- ${DEFECTOS_DESDE_LA_FUERZA}
+- EL NOMBRE DEL DESAFIO NO ES UNA ETIQUETA. No se le pone una condicion encima como si fuera un diagnostico: nada de "insegura", "dependiente", "controladora", "conflictiva". Se nombra lo que HACE o lo que le PASA, que es lo que ella reconoce y no le hace ponerse a la defensiva: "Te cuesta soltar el control cuando algo te importa" en vez de "Controladora".
+- Y LA EXPLICACION DEL DESAFIO SIEMPRE DEJA UNA PUERTA. No una frase de animo pegada al final: se cuenta de donde viene, y de donde viene algo aprendido es tambien por donde se suelta.
+
+Y EL RESTO DEL TONO, IGUAL QUE EN LAS AREAS:
+- ${FRASES_QUE_SUENAN_HABLADAS}
+- ${SIN_NOMBRAR_PLANETAS}
+- ${COMA_ANTES_DE_Y}
+- Nada de asteriscos, negritas, guiones ni simbolos dentro de las tres casillas: son texto corrido y la maquetacion la pone el PDF.
+- Llamala por su nombre como mucho una o dos veces EN TODA la lista, nunca en cada ficha: un nombre que sale en todas se lee a plantilla.
 
 Carta natal:
 ${cartaTexto}
 
 Persona: ${trato}
-Nombre: ${nombrePila}
+Nombre de pila: ${nombrePila}
 
-IMPORTANTE: ${RASGOS_POR_LISTA} en cada lista, ni uno mas ni uno menos. Elige los ${RASGOS_POR_LISTA} que mas claros se vean en la carta; no rellenes para llegar ni te dejes fuera los evidentes.`;
+IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con numeros distintos, y ni uno repetido. Antes de darla por terminada, lee las dos listas seguidas y quita cualquiera que diga lo mismo que otra.`;
 
   // LA LISTA SE PIDE CON EL ESQUEMA PUESTO, NO PIDIENDO JSON POR ESCRITO.
   //
@@ -279,25 +486,28 @@ IMPORTANTE: ${RASGOS_POR_LISTA} en cada lista, ni uno mas ni uno menos. Elige lo
   // Y va con sonnet, como todo lo demas del informe. Iba con opus, que cuesta
   // cinco veces mas por token: el trabajo dificil es escribir las areas, no
   // sacar veinte titulares de la carta.
-  const body = JSON.stringify({
-    model: 'claude-sonnet-5',
-    thinking: { type: 'disabled' },
-    output_config: { format: { type: 'json_schema', schema: ESQUEMA_RASGOS } },
-    // Ver TOPE_RASGOS. El tope viejo eran 3.000 y por eso llegaba cortada.
-    max_tokens: TOPE_RASGOS,
-    system: prompt,
-    messages: [
-      { role: 'user', content: 'Saca las dos listas de esta carta, siguiendo exactamente la estructura del esquema.' }
-    ],
-  });
+  // LA LISTA SE PIDE CON EL ESQUEMA PUESTO, NO PIDIENDO JSON POR ESCRITO.
+  //
+  // Sin esquema, el modelo escribe el JSON a mano y lo que llega depende de lo
+  // que le quepa. En el informe del 24 de agosto se corto a mitad de una frase
+  // ("Unterminated string in JSON at position 6991"), JSON.parse no pudo
+  // leerlo y la lista entera se fue a la basura: el cliente pago una llamada
+  // de las caras y recibio un PDF sin la pagina de rasgos. Con output_config
+  // lo que llega es JSON valido y con todas sus casillas, igual que las areas.
+  //
+  // Y va con sonnet, como todo lo demas del informe. Iba con opus, que cuesta
+  // cinco veces mas por token: el trabajo dificil es escribir las areas, no
+  // sacar treinta fichas de tres lineas.
+  const pedirLaLista = async (queCorregir) => {
+    const encargo = queCorregir
+      ? `Saca las dos listas de esta carta, siguiendo exactamente la estructura del esquema.
 
-  // Pase lo que pase, de aqui no sale una excepcion. La lista es un extra del
-  // informe: si falla, el PDF sale sin esa pagina, pero las siete areas que el
-  // cliente ha pagado se entregan igual. Antes un corte de red aqui tumbaba el
-  // informe entero cuando ya estaba escrito.
-  const listaVacia = () => ({ fortalezas: [], desafios: [] });
+La vez anterior salio con esto mal, asi que esta vez hay que arreglarlo:
+${queCorregir.map(p => '- ' + p).join('\n')}
 
-  try {
+Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
+      : 'Saca las dos listas de esta carta, siguiendo exactamente la estructura del esquema.';
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -305,13 +515,21 @@ IMPORTANTE: ${RASGOS_POR_LISTA} en cada lista, ni uno mas ni uno menos. Elige lo
         'anthropic-version': '2023-06-01',
         'content-type': 'application/json',
       },
-      body,
+      body: JSON.stringify({
+        model: 'claude-sonnet-5',
+        thinking: { type: 'disabled' },
+        output_config: { format: { type: 'json_schema', schema: ESQUEMA_RASGOS } },
+        // Ver TOPE_RASGOS. El tope viejo eran 3.000 y por eso llegaba cortada.
+        max_tokens: TOPE_RASGOS,
+        system: prompt,
+        messages: [{ role: 'user', content: encargo }],
+      }),
     });
 
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Error extrayendo rasgos:', response.status, errorText.slice(0, 200));
-      return listaVacia();
+      return null;
     }
 
     const data = await response.json();
@@ -321,7 +539,7 @@ IMPORTANTE: ${RASGOS_POR_LISTA} en cada lista, ni uno mas ni uno menos. Elige lo
     // dia la pagina de rasgos vuelve a salir vacia.
     if (data.stop_reason === 'max_tokens') {
       console.error(`Rasgos: la respuesta no cupo en ${TOPE_RASGOS} tokens y ha llegado cortada; el informe sale sin la lista`);
-      return listaVacia();
+      return null;
     }
 
     const texto = (data.content || [])
@@ -330,12 +548,9 @@ IMPORTANTE: ${RASGOS_POR_LISTA} en cada lista, ni uno mas ni uno menos. Elige lo
       .join('') || '{}';
 
     const resultado = JSON.parse(texto);
-
-    // Validar estructura basica
     if (!Array.isArray(resultado.fortalezas)) resultado.fortalezas = [];
     if (!Array.isArray(resultado.desafios)) resultado.desafios = [];
 
-    // Validar y limpiar cada rasgo
     const limpiar = (rasgo) => {
       const area = Number(rasgo.area);
       return {
@@ -345,17 +560,56 @@ IMPORTANTE: ${RASGOS_POR_LISTA} en cada lista, ni uno mas ni uno menos. Elige lo
         area: (area >= 1 && area <= 7) ? area : 1,
       };
     };
+    const valido = r => r && r.nombre && r.descripcion && r.explicacion;
 
-    resultado.fortalezas = resultado.fortalezas
-      .filter(r => r && r.nombre && r.descripcion && r.explicacion)
-      .map(limpiar);
+    return {
+      fortalezas: resultado.fortalezas.filter(valido).map(limpiar),
+      desafios: resultado.desafios.filter(valido).map(limpiar),
+    };
+  };
 
-    resultado.desafios = resultado.desafios
-      .filter(r => r && r.nombre && r.descripcion && r.explicacion)
-      .map(limpiar);
+  // Pase lo que pase, de aqui no sale una excepcion. La lista es un extra del
+  // informe: si falla, el PDF sale sin esa pagina, pero las siete areas que el
+  // cliente ha pagado se entregan igual. Antes un corte de red aqui tumbaba el
+  // informe entero cuando ya estaba escrito.
+  try {
+    let mejor = null;
+    let queCorregir = null;
 
-    console.log(`Rasgos extraidos: ${resultado.fortalezas.length} fortalezas, ${resultado.desafios.length} desafios`);
-    return resultado;
+    for (let intento = 1; intento <= INTENTOS_DE_LA_LISTA; intento++) {
+      const salida = await pedirLaLista(queCorregir);
+      if (salida === null) break;
+
+      const problemas = loQueLeFaltaALaLista(salida);
+      if (problemas.length === 0) {
+        console.log(`Rasgos extraidos: ${salida.fortalezas.length} fortalezas, ${salida.desafios.length} desafios`);
+        return salida;
+      }
+
+      // La que menos le falta, y en empate la ultima, que es la que se
+      // escribio sabiendo lo que habia fallado. Igual que en las areas.
+      if (mejor === null || problemas.length <= mejor.cuantos) mejor = { salida, cuantos: problemas.length };
+
+      if (intento >= INTENTOS_DE_LA_LISTA) break;
+      queCorregir = problemas;
+      console.warn(`Rasgos: ${problemas.join('; ')} — se vuelve a pedir la lista`);
+    }
+
+    if (mejor === null) return listaVacia();
+
+    // Lo que siga repetido despues del repaso se quita, aunque la lista se
+    // quede mas corta. Una lista de veinticinco con tres repetidos vale menos
+    // que una de veintidos sin ninguno: el cliente no cuenta las fichas, pero
+    // se da cuenta enseguida de que le han dicho dos veces lo mismo.
+    const limpia = sinLosRepetidos(mejor.salida);
+    const quitados = (mejor.salida.fortalezas.length + mejor.salida.desafios.length)
+                   - (limpia.fortalezas.length + limpia.desafios.length);
+    if (quitados > 0) console.warn(`SE ENTREGA CON AVISOS — Rasgos: se han quitado ${quitados} repetido(s) que seguian ahi despues del repaso`);
+    for (const aviso of loQueLeFaltaALaLista(limpia)) console.warn(`SE ENTREGA CON AVISOS — Rasgos: ${aviso}`);
+
+    console.log(`Rasgos extraidos: ${limpia.fortalezas.length} fortalezas, ${limpia.desafios.length} desafios`);
+    return limpia;
+
   } catch (err) {
     console.error('Error extrayendo rasgos:', err.message);
     return listaVacia();
@@ -441,24 +695,22 @@ export default async function handler(req, res) {
 
   const SYSTEM_PROMPT = `Eres una experta en psicología, astrología y neurociencia. Generas diagnósticos de autoconocimiento muy personalizados basados en la carta natal.
 
-IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresiones latinoamericanas. Usa tú, no vos.
+${ESPANOL_DE_ESPANA}
 
 ESTILO DE ESCRITURA:
 - Habla como una persona de confianza, directo y cercano
 - Lenguaje sencillo, que lo entienda cualquier persona aunque no haya leído un libro en años
 - Conecta ideas con comas y no con guiones largos, pero el punto no es el enemigo: una frase que ya ha dicho lo suyo se cierra. Encadenar con comas más allá de eso es lo que produce el párrafo que hay que releer
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos. Los asteriscos tienen un único uso, marcar la negrita que se explica más abajo, y no valen para nada más. Dentro del texto no se escribe nada que no sean sus palabras: la maquetación sale de las casillas, que se explican en CÓMO SE ENTREGA EL ÁREA
-- No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo
+- ${SIN_NOMBRAR_PLANETAS}
 - No empieces dos párrafos con la misma estructura. Varía los arranques
 - Escribe como un humano, no como una IA: frases que fluyen, con su ritmo mezclado, ni todas cosidas con comas ni todas cortadas a hachazos
-- CADA FRASE TIENE QUE SONAR COMO HABLA UNA PERSONA DE VERDAD. Antes de dar una frase por buena, léela en voz alta por dentro: si nadie la diría hablando, está mal y se reescribe. No fuerces la gramática para que suene elaborado, y no cojas un verbo raro cuando el normal dice lo mismo. Lo que suena a literatura no emociona, distrae: el lector tropieza, sale del texto y deja de reconocerse.
-- MAL: "el cariño que no te has ganado con algo no termina de ser de fiar" (construcción retorcida, hay que releerla). BIEN: "del cariño que llega gratis no te puedes fiar".
-- MAL: "enseñar que algo te ha dolido" (verbo forzado). BIEN: "dejar ver que algo te ha dolido".
+- ${FRASES_QUE_SUENAN_HABLADAS}
 - Vigila especialmente la primera frase del área. Si el lector tropieza ahí, ya no entra.
 - PROHIBIDO ENUMERAR. Nunca anuncies cuántas cosas vas a decir ni las numeres: nada de "son tres", "el primero", "la segunda", "y la tercera", "hay dos cosas que". Las ideas se encadenan una detrás de otra, como cuando alguien te cuenta algo hablando, y el lector no necesita saber cuántas quedan. Si el área se pudiera convertir en una lista de viñetas sin perder nada, está mal escrita.
 - CADA PÁRRAFO SE ENGANCHA CON EL ANTERIOR. Retomas una palabra, una imagen o una idea del párrafo de antes y sigues tirando del hilo desde ahí. Ningún párrafo empieza un tema nuevo en frío, y ninguno puede leerse suelto sin perder nada. Si quitas un párrafo y el resto se lee igual de bien, es que estaba puesto al lado y no cosido.
 - EL RITMO SE MEZCLA, NI TODO LARGO NI TODO CORTO. La media está en unas veinte palabras por frase, con una coma dentro: ese es el punto en el que se lee a alguien hablando. Por debajo de diez suena a titular y pica; por encima de treinta y cinco el lector se pierde y tiene que releer, que es justo lo que hace que un párrafo no llegue. Se mezclan: una larga que desarrolla una idea entera, otra normal, y de vez en cuando una corta que remata. Lo que no vale es que todas midan parecido.
-- LOS DEFECTOS SE CUENTAN DESDE LA FUERZA QUE LOS ORIGINA, NUNCA CONTRA ELLA. Esto NO es suavizar ni maquillar: el defecto se nombra entero, con su nombre y sin rebajarlo. Lo que cambia es de dónde lo haces salir. Y no vale poner la virtud y el defecto uno al lado del otro como si fueran dos cosas distintas ("eres muy exigente contigo, pero también tienes buen criterio"), porque no son dos cosas: son la misma cualidad, solo que pasada de vueltas ("ese criterio tuyo, pasado de vueltas, es lo que te machaca"). Contado así lo reconoce y no se defiende. Contado como una lista de fallos sueltos, cierra el informe y no vuelve.
+- ${DEFECTOS_DESDE_LA_FUERZA}
 - LLÁMALA POR SU NOMBRE UNA O DOS VECES EN EL ÁREA. Nunca ninguna: un área en la que no la nombras suena a informe sobre ella y no a alguien hablándole. Va donde caiga natural, igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te está diciendo algo que te toca.
 - Y NO SIEMPRE EN EL MISMO SITIO DE LA FRASE. Las siete áreas se leen seguidas, así que si el nombre sale siempre encajado en mitad de la frase se lee a plantilla, por muy bien puesto que esté. Se cambia de sitio en cada área: unas veces abre la frase ("Raquel, eso que haces..."), otras la cierra ("...y eso lo sabes de sobra, Raquel."), y otras va dentro. Lleva sus comas siempre, que es como se escribe en español, pero no siempre en el mismo hueco.
 - Y VA EN UNA FRASE EN LA QUE LE HABLAS DE TÚ. Su nombre y la tercera persona no pueden ir juntos: en cuanto escribes su nombre dentro de una frase que habla de ella desde fuera, deja de ser alguien que le habla y pasa a ser alguien que la comenta con otro. Nunca para empezar el área.
@@ -476,7 +728,7 @@ ESTILO DE ESCRITURA:
 - NO SE MARCAN NUNCA: las explicaciones, los datos, los piropos, ni lo que ya se veía venir dos líneas antes. De un mismo contraste se marca solo la mitad que escuece, nunca las dos, porque marcar las dos se lee a plantilla. Y dos negritas seguidas que dicen lo mismo con otras palabras son una sola: se queda la buena.
 - FUERA DEL TEXTO CORRIDO NO HAY NEGRITAS. Ni dentro de la escena, que se lee del tirón y una marca ahí saca al lector de golpe, ni en los remates, ni en la pregunta, ni en el cierre: esos ya se destacan solos al maquetarlos, y una negrita encima no se ve, se pierde.
 - Los asteriscos van siempre en pareja, dos para abrir y dos para cerrar, y la pareja entera dentro del mismo párrafo. Nunca sueltos, nunca impares y nunca para ninguna otra cosa.
-- CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra: se escribe "quiero plátanos, peras y fresas", no "quiero plátanos, peras, y fresas". Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.
+- ${COMA_ANTES_DE_Y}
 
 REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 - TECHO ABSOLUTO: ningún párrafo pasa de 90 palabras. Al maquetarse en el PDF, 90 palabras ocupan 7 líneas, y 7 líneas es el máximo. Si se te va por encima, pártelo en dos. Esto no se negocia nunca.
@@ -495,14 +747,11 @@ La posición desde la que se escribe cada párrafo es esta: estás sentada delan
 Cómo se nota que hay alguien ahí: te paras a avisarla antes de decirle algo que va a doler ("antes de seguir quiero que te quede clara una cosa"), le pides que piense y le das tiempo ("piénsalo despacio, no de pasada"), le señalas lo que acaba de hacer mientras leía, le das la razón cuando la tiene. No es un narrador que describe desde fuera, es una persona que la acompaña mientras se lo cuenta.
 Sin pasarse: no se abre cada párrafo con una intervención, ni se le habla como en un correo de ventas. Son tres o cuatro momentos en toda el área, puestos donde hacen falta.
 
-TODO SE LE ESCRIBE A ELLA, DE TÚ, DE LA PRIMERA PALABRA A LA ÚLTIMA. Nunca se habla de ella desde fuera: ni "ella", ni "la que", ni un verbo en tercera persona referido a ella. Se escribe "lo que se te rompió", no "lo que se le rompió"; "de pequeña aprendiste", no "de pequeña aprendió"; "vas a descubrir", no "va a descubrir". Esto vale para el área entera, y con más motivo para el primer párrafo y para el cierre, que son los dos sitios donde más se escapa.
-En cuanto una frase habla de ella en tercera persona, el lector deja de ser el destinatario y pasa a ser un tercero que está oyendo cómo la comentan. Da igual lo buena que sea la frase: ahí se rompe todo lo anterior. Si al releer encuentras una sola, se reescribe en segunda persona.
+${TODO_DE_TU} Esto vale para el área entera, y con más motivo para el primer párrafo y para el cierre, que son los dos sitios donde más se escapa.
+${HABLAR_DE_ELLA_LO_ROMPE}
 Cuidado con la excepción falsa: la entradilla que abre el área puede hablar de mucha gente ("hay quien...", "casi nadie..."), y eso es correcto porque no habla de ELLA. Lo que no vale nunca es hablar de ella misma en tercera persona.
 
-PERDONA ANTES DE NOMBRAR:
-Nadie baja la guardia delante de quien le está haciendo una lista de defectos. Antes de nombrar lo que le pesa, se le quita la culpa de encima, y solo entonces se le cuenta.
-Por dentro la forma es siempre la misma: eso que haces no es un defecto tuyo, es lo que aprendiste para que las cosas salieran bien, y te funcionó, por eso sigues haciéndolo. Las palabras las pones tú y cambian en cada área.
-Sin ese permiso lee a la defensiva y no le entra nada. Con él, se abre, y a partir de ahí le puedes decir cualquier cosa.
+${PERDONA_ANTES_DE_NOMBRAR}
 
 EL PUNTO DE LUZ:
 Al cerrar la última página tiene que quedarse con ganas, no hundida. Un estudio que solo diagnostica se lee una vez y no se recomienda a nadie.
