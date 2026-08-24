@@ -34,7 +34,11 @@ const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.join(AQUI, '..');
 
 // Huella del dibujo de la rueda para la carta de abajo. Ver la nota.
-const HUELLA_RUEDA = '8c8d0500661cd9cd';
+// Actualizada al adelgazar el trazo de los simbolos (0,5 y 0,45 -> 0,25 mm).
+// Se miro el PDF antes de tocarla: el cambio son 24 grosores de linea y
+// ninguna coordenada, y los simbolos que se cerraban (Acuario, Mercurio,
+// Escorpio) ya se leen.
+const HUELLA_RUEDA = 'c0d4aa6527d6c363';
 
 const CARTA = { year: 1953, month: 3, day: 15, localHour: 12, localMin: 0,
                 latDeg: 40.4168, lonDeg: -3.7038, tzOffset: 1 };
