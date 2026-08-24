@@ -707,7 +707,19 @@ ${cartaTexto}`;
 
   // Restos de formato que aqui no pintan nada: vallas de codigo, titulos de
   // markdown, separadores y comillas de cierre sueltas.
-  const RESTOS = /```+|~~~+|^#{1,6}\s|^-{3,}\s*$|^\*{3,}\s*$/gm;
+  //
+  // Y los angulos, < y >, que se anadieron el 24 de agosto: en el informe de
+  // ese dia salio impreso un ">" suelto pegado al punto final del area 7, la
+  // ultima frase que lee la clienta ("...te costaba pedir.>"). Es la marca de
+  // cita de markdown, que al modelo se le escapa de vez en cuando y sobre todo
+  // al final, que es lo ultimo que escribe.
+  //
+  // Se quitan siempre, en cualquier sitio, y no hay riesgo de llevarse nada:
+  // en el texto que lee la clienta no hay ni una sola razon para escribir un
+  // angulo. No es HTML, no es codigo, y las comillas de este producto son las
+  // españolas y las dobles. Se comprobo sobre el informe entero: los unicos
+  // < y > que hay en 8.760 palabras son ese resto.
+  const RESTOS = /```+|~~~+|^#{1,6}\s|^-{3,}\s*$|^\*{3,}\s*$|[<>]/gm;
 
   // Limpia UN texto suelto. Lo usan las dos mitades: las casillas antes de
   // montar el area, y la puerta final sobre lo ya montado.
