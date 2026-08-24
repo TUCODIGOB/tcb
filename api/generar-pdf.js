@@ -660,6 +660,11 @@ export default async function handler(req, res) {
     // centradas: dos verdes distintos en la misma pagina se leen como un
     // descuido. El verde oscuro da 11 a 1 de contraste sobre el crema, asi que
     // se lee perfecto tambien impreso.
+    // Lo que separa el filete del cierre de su primera linea. Se usa al
+    // dibujarlo y al centrar el bloque: si fueran dos numeros escritos a mano,
+    // cambiar uno y no el otro descentraria el cierre sin que se notara.
+    var FILETE_SOBRE_EL_CIERRE = 16;
+
     var ESTILOS = {
       texto:    { size: 12,   color: [40, 40, 40],   x: 18, ancho: 175, alto: 7,   antes: 0,  despues: 4,  fuente: 'normal' },
       sub:      { size: 12,   color: [207, 177, 128], x: 18, ancho: 175, alto: 6,   antes: 11, despues: 6,  fuente: 'bold',   mayus: true, filete: true, juntar: true },
@@ -679,9 +684,13 @@ export default async function handler(req, res) {
       //
       // Y si el fichero de la fuente no llegara, el cierre se pinta EXACTAMENTE
       // como estaba antes. Un cierre a 30 puntos en Roboto seria un cartel.
+      // "baja" es lo que la ultima linea cae por debajo de su raya: la letra
+      // que mas baja de las que salen de verdad. Hace falta para centrar el
+      // cierre en la pagina sin que quede alto: si no se contara, el hueco de
+      // abajo seria mayor que el de arriba por esos milimetros.
       cierre: hayItalianno
-        ? { size: 30,   color: [207, 177, 128], x: 18, ancho: 152, alto: 13,  antes: 19, despues: 8, fuente: 'bold', familia: 'Italianno', centrado: true, juntar: true }
-        : { size: 16.5, color: [207, 177, 128], x: 18, ancho: 152, alto: 9.5, antes: 19, despues: 8, fuente: 'bold', centrado: true, juntar: true },
+        ? { size: 30,   color: [207, 177, 128], x: 18, ancho: 152, alto: 13,  antes: 19, despues: 8, baja: 3.7, fuente: 'bold', familia: 'Italianno', centrado: true, juntar: true }
+        : { size: 16.5, color: [207, 177, 128], x: 18, ancho: 152, alto: 9.5, antes: 19, despues: 8, baja: 1.2, fuente: 'bold', centrado: true, juntar: true },
     };
 
     function paginaNueva() {
@@ -741,9 +750,21 @@ export default async function handler(req, res) {
       // El cierre es la frase que el lector se lleva puesta: no se aprieta
       // contra el borde de la pagina. Si no le queda sitio con aire, pasa a la
       // siguiente y se coloca bajo, con la pagina para el.
-      if (bloque.tipo === 'cierre' && maq.y + e.antes + altoBloque + 18 > Y_TOPE) {
+      // ── EL CIERRE VA SOLO EN SU PAGINA, Y CENTRADO ─────────────────
+      //
+      // Es la ultima frase del area, la que el lector se lleva puesta. Antes
+      // se quedaba donde cayera y solo pasaba de pagina si no cabia con aire.
+      //
+      // El filete y la frase se centran JUNTOS, como un solo bloque: la parte
+      // de arriba del bloque es el filete, no la primera linea, y la de abajo
+      // es lo que baja la ultima letra. Centrando solo las lineas, el filete
+      // quedaria fuera de la cuenta y el conjunto se leeria bajo.
+      if (bloque.tipo === 'cierre') {
         paginaNueva();
-        maq.y = 95;
+        var altoConFilete = FILETE_SOBRE_EL_CIERRE
+          + (lineas.length - 1) * e.alto
+          + (e.baja || 0);
+        maq.y = (H - altoConFilete) / 2 + FILETE_SOBRE_EL_CIERRE;
       } else {
         if (maq.y > 60) maq.y += e.antes;
         // Un subtitulo, una pregunta o un remate colgando en la ultima linea de
@@ -760,13 +781,12 @@ export default async function handler(req, res) {
       }
 
       // El cierre lleva un filete corto encima, centrado: separa el golpe del
-      // texto que venia antes y avisa de que el area se acaba aqui. Por arriba
-      // deja los 13 mm de siempre; el aire de mas va todo por debajo, 16 mm
-      // hasta la linea de la frase, porque las mayusculas del dorado suben
-      // desde ahi y con menos el filete se lee pegado a ellas.
+      // texto que venia antes y avisa de que el area se acaba aqui. Va a
+      // FILETE_SOBRE_EL_CIERRE de la primera linea, porque las mayusculas del
+      // dorado suben desde ahi y con menos se lee pegado a ellas.
       if (bloque.tipo === 'cierre') {
         doc.setDrawColor(207, 177, 128); doc.setLineWidth(0.4);
-        doc.line(105 - 16, maq.y - 16, 105 + 16, maq.y - 16);
+        doc.line(105 - 16, maq.y - FILETE_SOBRE_EL_CIERRE, 105 + 16, maq.y - FILETE_SOBRE_EL_CIERRE);
       }
 
       var corte = corteSinLineasSueltas(lineas, e);

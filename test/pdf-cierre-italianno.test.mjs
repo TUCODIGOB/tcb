@@ -227,7 +227,66 @@ try {
       masJuntas >= 11.4, 'la menor separación es ' + (masJuntas === Infinity ? '(una sola línea)' : masJuntas.toFixed(1) + ' mm') + ', hacen falta 11,4');
   }
 
-  // ── 3. SI LA FUENTE NO LLEGA, COMO ANTES ────────────────────────
+  // ── 3. EL CIERRE VA SOLO EN SU PÁGINA Y CENTRADO ────────────────
+  //
+  // El filete y la frase se centran JUNTOS, como un bloque: arriba del bloque
+  // está el filete, no la primera línea, y abajo lo que baja la última letra.
+  // Contando solo las líneas, el conjunto se leería bajo.
+  //
+  // Se prueba con cierres de una, dos y tres líneas, porque el alto del
+  // bloque cambia con cada uno y el centrado tiene que salir en los tres.
+  console.log('\n  el cierre, solo en su página y centrado\n');
+
+  const CIERRES = [
+    'Y ahora ya lo sabes.',
+    'Y hasta que no veas eso, vas a seguir buscando fuera lo que llevaba años esperándote dentro.',
+    'Esa creencia es la que convierte cada relación tuya en un trabajo silencioso, y es ella, y solo ella, la que tiene que caer del todo hoy.',
+  ];
+  const rCentro = resp();
+  await generarPdf({ method: 'POST', body: {
+    session_id: 'x', token: 'tok', nombre: 'Raquel', sexo: 'Mujer',
+    fechaNice: '12 de junio de 1990', hora: '09:30', lugar: 'Madrid, España',
+    edad: 35, carta: rc.body,
+    areas: [0, 1, 2, 0, 1, 2, 0].map(i => AREA.replace('[CIERRE] ' + CIERRE, '[CIERRE] ' + CIERRES[i])),
+  } }, rCentro);
+  comprobar('el PDF con los tres largos de cierre se genera', rCentro.code === 200, 'HTTP ' + rCentro.code);
+
+  if (rCentro.code === 200) {
+    const sC = Buffer.from(rCentro.body.pdfBase64.split(',')[1], 'base64').toString('latin1');
+    const MM = 72 / 25.4, ALTO = 297;
+    const hojas = [...sC.matchAll(/stream\r?\n([\s\S]*?)\r?\nendstream/g)]
+      .map(m => m[1]).filter(x => !x.startsWith('\xff\xd8'));
+    const BAJA = 3.7;   // lo que cae la "g" de Italianno a 30 puntos
+    let paginasDeCierre = 0, descentradas = [], acompanadas = 0;
+    for (const hoja of hojas) {
+      const textos = [...hoja.matchAll(/BT([\s\S]*?)ET/g)].map(m => {
+        const tf = /\/\w+\s+([\d.]+)\s+Tf/.exec(m[1]);
+        const td = /([\d.]+)\s+([\d.]+)\s+Td/.exec(m[1]);
+        return tf && td ? { tam: parseFloat(tf[1]), y: ALTO - parseFloat(td[2]) / MM } : null;
+      }).filter(Boolean);
+      const delCierre = textos.filter(x => x.tam === 30);
+      if (!delCierre.length) continue;
+      paginasDeCierre++;
+      // Nada más en la página: ni texto de área, ni ladillos. El número de
+      // página (9 pt) no cuenta, que va en el margen.
+      if (textos.some(x => x.tam !== 30 && x.tam !== 9)) acompanadas++;
+      const rayas = [...hoja.matchAll(/([\d.]+) ([\d.]+) m\s+([\d.]+) ([\d.]+) l/g)]
+        .map(m => ALTO - parseFloat(m[2]) / MM);
+      const alturas = [...new Set(delCierre.map(x => x.y))].sort((a, b) => a - b);
+      const arriba = Math.min(...rayas);                      // el filete
+      const abajo = ALTO - (alturas[alturas.length - 1] + BAJA);
+      if (Math.abs(arriba - abajo) > 0.5) descentradas.push(`${alturas.length} línea(s): ${arriba.toFixed(1)} arriba / ${abajo.toFixed(1)} abajo`);
+    }
+    comprobar('cada área acaba con su cierre en una página propia',
+      paginasDeCierre === 7, paginasDeCierre + ' de 7');
+    comprobar('y en esa página no hay nada más que el cierre',
+      acompanadas === 0, acompanadas ? acompanadas + ' con más cosas' : 'las 7 limpias');
+    comprobar('el filete y la frase quedan centrados en la página, juntos',
+      descentradas.length === 0,
+      descentradas.length ? descentradas.join(' | ') : 'mismo hueco arriba y abajo en las 7');
+  }
+
+  // ── 4. SI LA FUENTE NO LLEGA, COMO ANTES ────────────────────────
   console.log('\n  y si el fichero de la fuente no llegara\n');
   laFuenteLlega = false;
   // Hace falta OTRA copia del módulo: generar-pdf guarda en memoria los
