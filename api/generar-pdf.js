@@ -787,7 +787,25 @@ export default async function handler(req, res) {
     // de lo que se le acaba de contar, no la entrada. Puestas antes de las
     // areas, el cliente se encontraba treinta fichas sueltas sobre si mismo
     // sin haber leido todavia una sola linea que las explicara.
-    if (rasgos && (rasgos.fortalezas?.length > 0 || rasgos.desafios?.length > 0)) {
+    //
+    // LO QUE LLEGA AQUI VIENE DEL NAVEGADOR, ASI QUE SE MIRA ANTES DE PINTARLO.
+    //
+    // Una sola entrada que no fuera una ficha (un null, un numero suelto) hacia
+    // saltar la generacion entera al leerle el nombre: HTTP 500 y el cliente sin
+    // el informe que ya ha pagado, por una lista que es un extra. Aqui se coge
+    // solo lo que es una ficha de verdad y lo demas se cae solo.
+    function fichasDe(lista) {
+      return (Array.isArray(lista) ? lista : []).filter(function (r) {
+        return r && typeof r === 'object' && String(r.nombre || '').trim();
+      });
+    }
+    var lasFortalezas = fichasDe(rasgos && rasgos.fortalezas);
+    var losDesafios = fichasDe(rasgos && rasgos.desafios);
+
+    // Con las dos vacias no se abre ni una pagina: si se abriera el bloque y
+    // luego no se pintara nada, el numero de pagina de abajo se estamparia dos
+    // veces en la ultima del area 7 y todo lo que viene detras iria corrido.
+    if (lasFortalezas.length > 0 || losDesafios.length > 0) {
       var pyRasgos = 45;
 
       // Abrir pagina nueva de la lista, con su fondo y su numero.
@@ -813,8 +831,8 @@ export default async function handler(req, res) {
       // empezaba lo que pesa. Ahora cada lista empieza pagina y lleva su
       // nombre en ese mismo titulo, en el mismo sitio y del mismo dorado.
       var LAS_DOS_LISTAS = [
-        { titulo: fx('TUS FORTALEZAS'), rasgos: rasgos.fortalezas || [] },
-        { titulo: fx('TUS DESAFÍOS'), rasgos: rasgos.desafios || [] },
+        { titulo: fx('TUS FORTALEZAS'), rasgos: lasFortalezas },
+        { titulo: fx('TUS DESAFÍOS'), rasgos: losDesafios },
       ];
 
       var primeraLista = true;

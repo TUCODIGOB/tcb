@@ -486,7 +486,7 @@ const pdf = fs.readFileSync(path.join(RAIZ, 'api', 'generar-pdf.js'), 'utf8');
 comprobar('generar-pdf lee los rasgos de la petición',
   /const\s*\{[^}]*\brasgos\b[^}]*\}\s*=\s*req\.body/.test(pdf));
 comprobar('y pinta la sección cuando vienen',
-  /if\s*\(\s*rasgos\s*&&/.test(pdf));
+  /if\s*\(lasFortalezas\.length > 0 \|\| losDesafios\.length > 0\)/.test(pdf));
 
 // ── 9. Y QUE LA PAGINA APAREZCA DE VERDAD EN EL PDF ───────────────
 //
@@ -573,7 +573,7 @@ export default function Stripe() {
     // el cliente se encontraba treinta fichas sobre sí mismo antes de haber
     // leído una sola línea que las explicara.
     const iAreas = pdf.indexOf('LAS 7 AREAS');
-    const iRasgos = pdf.indexOf('if (rasgos &&');
+    const iRasgos = pdf.indexOf('LAS DOS LISTAS DE RASGOS');
     const iFrase = pdf.indexOf("img_frase,'JPEG'");
     comprobar('la lista se pinta DESPUÉS de las 7 áreas y ANTES de la página de la frase',
       iAreas > 0 && iRasgos > iAreas && iFrase > iRasgos,
@@ -614,10 +614,17 @@ export default function Stripe() {
     // Las mismas 30 fichas puestas en una sola lista ocupan menos que
     // repartidas en dos, porque cada lista empieza página. Si algún día se
     // vuelven a pegar una detrás de otra, esto se cae.
-    const todoJunto = await cuantasPaginas({ rasgos: { fortalezas: [...RASGOS.fortalezas, ...RASGOS.desafios], desafios: [] } });
-    comprobar('las dos listas van separadas, cada una empieza página',
-      conLista > todoJunto,
-      `30 fichas en una sola lista: ${todoJunto} páginas; repartidas en dos: ${conLista}`);
+    // Una ficha en cada lista tiene que dar DOS páginas, porque cada lista
+    // abre la suya. Si se pegaran, las dos fichas cabrían en una sola y
+    // saldría una. Con listas largas no se ve: la diferencia se la come el
+    // redondeo de las páginas que ya ocupaban, y la comprobación no sirve.
+    const unaEnCadaUna = await cuantasPaginas({ rasgos: {
+      fortalezas: [RASGOS.fortalezas[0]], desafios: [RASGOS.desafios[0]] } });
+    const dosEnUnaSola = await cuantasPaginas({ rasgos: {
+      fortalezas: [RASGOS.fortalezas[0], RASGOS.desafios[0]], desafios: [] } });
+    comprobar('cada lista empieza su propia página',
+      unaEnCadaUna === sinLista + 2 && dosEnUnaSola === sinLista + 1,
+      `una ficha en cada lista: ${unaEnCadaUna - sinLista} págs; las dos en una sola lista: ${dosEnUnaSola - sinLista} pág`);
 
     // ── EL ÁREA DE CADA FICHA SE IMPRIME ────────────────────────────
     //
@@ -636,6 +643,25 @@ export default function Stripe() {
     comprobar('si solo llega una de las dos listas, el PDF sale igualmente',
       soloFortalezas > sinLista && soloDesafios > sinLista,
       `solo fortalezas: ${soloFortalezas} págs, solo desafíos: ${soloDesafios} págs`);
+
+    // ── FICHAS MAL FORMADAS ─────────────────────────────────────────
+    //
+    // Lo que llega a generar-pdf viene del navegador. Una entrada que no sea
+    // una ficha reventaba la generacion entera al leerle el nombre: 500 y el
+    // cliente sin el informe que ya ha pagado, por culpa de un extra.
+    const conBasura = await cuantasPaginas({ rasgos: {
+      fortalezas: [null, 5, {}, { nombre: '   ' }, ...RASGOS.fortalezas],
+      desafios: RASGOS.desafios,
+    } });
+    comprobar('una ficha mal formada no tumba el PDF, se cae ella sola',
+      conBasura === conLista, `${conBasura} páginas, las mismas que sin basura`);
+
+    // Y si TODAS son basura, no se abre ni una página: abrirla y no pintar
+    // nada estamparía dos veces el número en la última página del área 7 y
+    // correría todos los de detrás.
+    const todoBasura = await cuantasPaginas({ rasgos: { fortalezas: [null, 5, {}], desafios: [] } });
+    comprobar('si todas las fichas son basura, el informe sale como si no hubiera lista',
+      todoBasura === sinLista, `${todoBasura} páginas`);
 
     comprobar('el área de cada ficha se imprime de verdad',
       JSON.stringify(conAreasVariadas) !== JSON.stringify(todasArea1),

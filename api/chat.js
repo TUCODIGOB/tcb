@@ -188,7 +188,7 @@ const RASGOS_MINIMO = 12;
 const RASGOS_MAXIMO = 18;
 
 // El hueco para escribir la respuesta. Treinta y seis fichas enteras, que es
-// el techo de la horquilla en las dos listas, son unos 6.500 tokens. Se deja
+// el techo de la horquilla en las dos listas, son unos 6.800 tokens medidos. Se deja
 // al doble porque el tope no se paga (se paga lo que el modelo escriba) y
 // quedarse corto cuesta la lista entera, que es lo que paso con el de 3.000.
 const TOPE_RASGOS = 12000;
@@ -290,18 +290,23 @@ const INTENTOS_DE_LA_LISTA = 2;
 
 const listaVacia = () => ({ fortalezas: [], desafios: [] });
 
-// Palabras que aparecen en cualquier frase y no dicen de que va el rasgo. Las
-// de tres letras o menos se caen solas por el filtro de longitud.
+// Palabras que aparecen en cualquier frase y no dicen de que va el rasgo.
+//
+// Van por la misma poda que las del texto, y no escritas a mano tal cual: si
+// no, la mitad no servian para nada. "veces" se poda a "vece" y "menos" a
+// "meno", asi que puestas enteras aqui no coincidian NUNCA con lo que se
+// comparaba. Las de tres letras se han quitado: el filtro de longitud las tira
+// antes de llegar hasta aqui.
 const PALABRAS_QUE_NO_CUENTAN = new Set([
   'para', 'como', 'pero', 'porque', 'aunque', 'cuando', 'donde', 'entre',
   'hasta', 'desde', 'antes', 'despues', 'sobre', 'todo', 'toda', 'todos',
   'todas', 'cada', 'algo', 'nada', 'nadie', 'siempre', 'nunca', 'este',
   'esta', 'esto', 'estos', 'estas', 'otro', 'otra', 'otros', 'otras',
-  'mismo', 'misma', 'muy', 'mas', 'menos', 'tener', 'tienes', 'tiene',
-  'hacer', 'haces', 'hace', 'eres', 'estar', 'poder', 'puedes', 'puede',
-  'vida', 'gente', 'cosas', 'cosa', 'veces', 'anos', 'demas', 'propio',
-  'propia', 'sino', 'solo', 'aun', 'ese', 'esa', 'esos', 'esas',
-]);
+  'mismo', 'misma', 'menos', 'tener', 'tienes', 'tiene', 'hacer', 'haces',
+  'hace', 'eres', 'estar', 'poder', 'puedes', 'puede', 'vida', 'gente',
+  'cosas', 'cosa', 'veces', 'anos', 'demas', 'propio', 'propia', 'sino',
+  'solo', 'esos', 'esas',
+].map(raizDePalabra));
 
 // Sin tildes, en minusculas, sin la "s" del plural y cortada a siete letras.
 // Es una poda basta a proposito: lo que tiene que juntar es "captas" con
@@ -365,7 +370,7 @@ function losQueSeRepiten(lista) {
     for (let j = i + 1; j < todos.length; j++) {
       if (yaCaido.has(j)) continue;
       if (dicenLoMismo(todos[i].r, todos[j].r)) {
-        parejas.push({ se_queda: todos[i], sobra: todos[j], indice: j });
+        parejas.push({ se_queda: todos[i], sobra: todos[j] });
         yaCaido.add(j);
       }
     }
