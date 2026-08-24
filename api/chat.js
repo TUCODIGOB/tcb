@@ -110,6 +110,44 @@ const ESQUEMA_AREA_POR_BLOQUES = {
   additionalProperties: false,
 };
 
+// ══════════════════════════════════════════════════════════════════
+// RASGOS: CARACTERISTICAS EXTRAIDAS DE LA CARTA NATAL
+// ══════════════════════════════════════════════════════════════════
+
+const RASGO = {
+  type: 'object',
+  properties: {
+    nombre: { type: 'string', description: 'El nombre o titulo del rasgo/caracteristica, 3-6 palabras. Ej: "Buscador de verdades", "Leal instintiva".' },
+    descripcion: { type: 'string', description: 'Una sola frase (15-25 palabras) que lo describe. Ej: "Necesitas entender el por que de todo lo que te pasa".' },
+    explicacion: { type: 'string', description: 'Una o dos frases (30-60 palabras) que explican de donde viene o por que le pasa esto. Sale de la carta natal.' },
+    area: { type: 'number', enum: [1, 2, 3, 4, 5, 6, 7], description: 'A cual de las siete areas corresponde este rasgo (1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero).' },
+  },
+  required: ['nombre', 'descripcion', 'explicacion', 'area'],
+  additionalProperties: false,
+};
+
+const ESQUEMA_RASGOS = {
+  type: 'object',
+  properties: {
+    fortalezas: {
+      type: 'array',
+      minItems: 10,
+      maxItems: 30,
+      items: RASGO,
+      description: 'Los rasgos, habilidades y fortalezas que salen de la carta. Minimo 10, maximo 30. Todos los que salgan de verdad de la carta.'
+    },
+    desafios: {
+      type: 'array',
+      minItems: 10,
+      maxItems: 30,
+      items: RASGO,
+      description: 'Los desafios, dificultades y areas de crecimiento que salen de la carta. Minimo 10, maximo 30. Todos los que salgan de verdad de la carta.'
+    },
+  },
+  required: ['fortalezas', 'desafios'],
+  additionalProperties: false,
+};
+
 // EL ORDEN EN QUE SE LEEN LOS BLOQUES, Y LO PONE EL CODIGO.
 //
 // Antes cada area llevaba su propia secuencia escrita en el prompt. Ya no puede
@@ -161,6 +199,118 @@ function bloquesAParrafos(datos) {
   }
 
   return vacios;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// EXTRACCION DE RASGOS DESDE LA CARTA NATAL
+// ══════════════════════════════════════════════════════════════════
+
+async function extraerRasgos(nombrePila, sexo, cartaTexto) {
+  const trato = sexo === 'mujer'
+    ? 'una MUJER. Toda en femenino.'
+    : 'un HOMBRE. Todo en masculino.';
+
+  const prompt = `Eres una experta en astrología que analiza cartas natales. Tu tarea es extraer los rasgos, caracteristicas, fortalezas y desafios principales de esta persona, basandote UNICAMENTE en su carta natal.
+
+CRITERIO PRINCIPAL:
+El objetivo es crear dos listas equilibradas que el cliente reconozca como suyas.
+
+FORTALEZAS (lista 1):
+- Caracteristicas positivas, dones, habilidades innatas, ventajas
+- Cosas que hace bien o que otros le envidiarian
+- Capacidades que saca de su carta
+
+DESAFIOS (lista 2):
+- Areas de crecimiento, dificultades, patrones que pesan
+- Lo que le cuesta, lo que sufre, donde tropieza
+- Desafios que ve la astrologia en su carta
+
+REGLAS IMPRESCINDIBLES:
+1. Minimo 20 rasgos totales (balance entre ambas listas), pero SIN LIMITE MAXIMO: saca TODOS los que veas de verdad.
+2. Sin repetir JAMAS un rasgo ya mencionado en la misma lista.
+3. Cada rasgo en UNA sola lista (fortaleza o desafio, nunca los dos).
+4. Cada rasgo asignado a UNA de 7 areas: 1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero.
+5. Distribucion realista: algunos areas tendran mas rasgos, otros menos. Sigue lo que dice la carta.
+
+ESTRUCTURA DE CADA RASGO:
+- "nombre": 3-6 palabras sin articulos. Ejemplos: "Buscador de verdades", "Leal hasta el agotamiento", "Miedo a decepcionar", "Capacidad de liderazgo", "Tendencia al perfeccionismo".
+- "descripcion": UNA SOLA FRASE, 15-25 palabras. Ejemplo: "Necesitas entender el porqu de todo lo que te pasa antes de poder aceptarlo".
+- "explicacion": 1-2 frases (30-60 palabras). Explica de donde viene segun la carta. Ejemplo: "Tu Mercurio en Virgo te hace analizar todo a fondo. Los aspectos duros potencian esta tendencia, haciendo que el paraisis por analisis sea real en tu vida".
+- "area": numero 1-7. Elige el area donde este rasgo es MAS relevante.
+
+TONO Y ESTILO:
+- Siempre segunda persona: "tu", nunca "ella/el"
+- Lenguaje directo, sin piropos ni falsa positividad
+- Lectura astrologia pura, no psicologia vagil
+
+Carta natal:
+${cartaTexto}
+
+Persona: ${trato}
+Nombre: ${nombrePila}
+
+IMPORTANTE: Extrae TODOS los rasgos significativos que ves. El minimo es 20 (10 en cada lista), pero puede haber 25, 30 o mas. No te limites.`;
+
+  const body = JSON.stringify({
+    model: 'claude-opus-5',
+    max_tokens: 3000,
+    system: prompt,
+    messages: [
+      { role: 'user', content: 'Devuelve la respuesta UNICAMENTE en formato JSON, siguiendo exactamente la estructura del schema. Nada de explicaciones adicionales, solo JSON puro.' }
+    ],
+  });
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+      'content-type': 'application/json',
+    },
+    body,
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Error extrayendo rasgos:', response.status, errorText.slice(0, 200));
+    return { fortalezas: [], desafios: [] };
+  }
+
+  const data = await response.json();
+  const texto = data.content?.[0]?.text || '{}';
+
+  try {
+    const resultado = JSON.parse(texto);
+
+    // Validar estructura basica
+    if (!Array.isArray(resultado.fortalezas)) resultado.fortalezas = [];
+    if (!Array.isArray(resultado.desafios)) resultado.desafios = [];
+
+    // Validar y limpiar cada rasgo
+    const limpiar = (rasgo) => {
+      const area = Number(rasgo.area);
+      return {
+        nombre: String(rasgo.nombre || '').trim(),
+        descripcion: String(rasgo.descripcion || '').trim(),
+        explicacion: String(rasgo.explicacion || '').trim(),
+        area: (area >= 1 && area <= 7) ? area : 1,
+      };
+    };
+
+    resultado.fortalezas = resultado.fortalezas
+      .filter(r => r && r.nombre && r.descripcion && r.explicacion)
+      .map(limpiar);
+
+    resultado.desafios = resultado.desafios
+      .filter(r => r && r.nombre && r.descripcion && r.explicacion)
+      .map(limpiar);
+
+    console.log(`Rasgos extraidos: ${resultado.fortalezas.length} fortalezas, ${resultado.desafios.length} desafios`);
+    return resultado;
+  } catch (err) {
+    console.error('Error parseando rasgos:', err.message, 'Texto:', texto.slice(0, 200));
+    return { fortalezas: [], desafios: [] };
+  }
 }
 
 export default async function handler(req, res) {
@@ -1655,9 +1805,12 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       .map(t => quitarComaAntesDeY(t, nombrePila).split(SEPARADOR_AREAS).join(''))
       .join(SEPARADOR_AREAS);
 
+    // Extraer rasgos de la carta natal
+    const rasgos = await extraerRasgos(nombrePila, sexo, cartaTexto);
+
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
     // que demuestra que quien pide el PDF es quien tiene la reserva.
-    return res.status(200).json({ texto: textoCompleto, token: reserva.token });
+    return res.status(200).json({ texto: textoCompleto, rasgos, token: reserva.token });
 
   } catch (err) {
     console.error('Error generando áreas:', err.message);
