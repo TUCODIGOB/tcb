@@ -634,7 +634,7 @@ export default async function handler(req, res) {
     // se lee perfecto tambien impreso.
     var ESTILOS = {
       texto:    { size: 12,   color: [40, 40, 40],   x: 18, ancho: 175, alto: 7,   antes: 0,  despues: 4,  fuente: 'normal' },
-      sub:      { size: 10,   color: [207, 177, 128], x: 18, ancho: 175, alto: 6,   antes: 11, despues: 6,  fuente: 'bold',   mayus: true, filete: true, juntar: true },
+      sub:      { size: 12,   color: [207, 177, 128], x: 18, ancho: 175, alto: 7,   antes: 11, despues: 6,  fuente: 'bold',   mayus: true, filete: true, juntar: true },
       escena:   { size: 12,   color: [70, 70, 70],   x: 27, ancho: 157, alto: 7,   antes: 8,  despues: 9,  fuente: 'italic', barra: true },
       pregunta: { size: 13,   color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.4, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
       remate:   { size: 13.5, color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.8, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
@@ -825,19 +825,30 @@ export default async function handler(req, res) {
         primeraLista = false;
 
         doc.setFont('Roboto', 'bold');
-        doc.setFontSize(11);
+        doc.setFontSize(13);
         doc.setTextColor(207, 177, 128);
         doc.text(laLista.titulo, 18, pyRasgos);
-        pyRasgos += 12;
+        pyRasgos += 13;
 
         for (var ri = 0; ri < laLista.rasgos.length; ri++) {
           var rasgo = laLista.rasgos[ri];
+          // CADA TROZO SE MIDE CON SU PROPIA LETRA.
+          //
+          // splitTextToSize parte el texto con el tamaño que este puesto en
+          // ese momento, no con el que se va a pintar. Aqui se median los dos
+          // con la letra que hubiera quedado de la ficha anterior, asi que las
+          // lineas salian calculadas para un tamaño y escritas en otro: con
+          // letra pequeña colaba de milagro, y a 12 se sale del margen.
+          doc.setFont('Roboto', 'normal');
+          doc.setFontSize(12);
           var dl = doc.splitTextToSize(rasgo.descripcion || '', 170);
+          doc.setFont('Roboto', 'italic');
+          doc.setFontSize(11);
           var el = doc.splitTextToSize(rasgo.explicacion || '', 170);
 
           // La ficha entera va junta: el nombre de una y la explicacion de
           // otra en paginas distintas se lee como un error de imprenta.
-          cabe(5 + dl.length * 4 + el.length * 3.5);
+          cabe(6.5 + dl.length * 6.5 + el.length * 6);
 
           // A QUE AREA PERTENECE, que es lo que ata la ficha al informe.
           // Sin esto son treinta frases sueltas sobre ella; con esto, cada
@@ -845,25 +856,25 @@ export default async function handler(req, res) {
           var cual = Number(rasgo.area);
           var elArea = areaTitles[(cual >= 1 && cual <= 7 ? cual : 1) - 1];
           doc.setFont('Roboto', 'bold');
-          doc.setFontSize(7);
+          doc.setFontSize(12);
           doc.setTextColor(207, 177, 128);
           doc.text(elArea.tit, 192, pyRasgos, { align: 'right' });
 
           doc.setFont('Roboto', 'bold');
-          doc.setFontSize(10);
+          doc.setFontSize(12);
           doc.setTextColor(14, 63, 75);
           doc.text('• ' + (rasgo.nombre || ''), 18, pyRasgos);
-          pyRasgos += 5;
+          pyRasgos += 6.5;
 
           doc.setFont('Roboto', 'normal');
-          doc.setFontSize(9);
+          doc.setFontSize(12);
           doc.setTextColor(60, 60, 60);
-          for (var dli = 0; dli < dl.length; dli++) { doc.text(dl[dli], 22, pyRasgos); pyRasgos += 4; }
+          for (var dli = 0; dli < dl.length; dli++) { doc.text(dl[dli], 22, pyRasgos); pyRasgos += 6.5; }
 
           doc.setFont('Roboto', 'italic');
-          doc.setFontSize(8);
+          doc.setFontSize(11);
           doc.setTextColor(100, 100, 100);
-          for (var eli = 0; eli < el.length; eli++) { doc.text(el[eli], 22, pyRasgos); pyRasgos += 3.5; }
+          for (var eli = 0; eli < el.length; eli++) { doc.text(el[eli], 22, pyRasgos); pyRasgos += 6; }
 
           pyRasgos += 4;
         }
