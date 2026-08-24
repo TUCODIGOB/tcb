@@ -286,6 +286,53 @@ try {
       descentradas.length ? descentradas.join(' | ') : 'mismo hueco arriba y abajo en las 7');
   }
 
+  // ── 3bis. UN CIERRE LARGUISIMO NO SE SALE POR ARRIBA ────────────
+  //
+  // Centrar un bloque en la página lo sube tanto como alto sea, así que un
+  // cierre desmedido acabaría con su filete fuera del papel. No lo escribiría
+  // el modelo -tiene su propio límite-, pero el maquetador no debe depender
+  // de eso: aquí se le manda uno imposible y se comprueba que baja entero.
+  const CIERRE_ENORME = Array(40)
+    .fill('Y aquello que aprendiste de niña para que no te doliera')
+    .join(', ') + '.';
+  const rLargo = resp();
+  await generarPdf({ method: 'POST', body: {
+    session_id: 'x', token: 'tok', nombre: 'Raquel', sexo: 'Mujer',
+    fechaNice: '12 de junio de 1990', hora: '09:30', lugar: 'Madrid, España',
+    edad: 35, carta: rc.body,
+    areas: Array(7).fill(AREA.replace('[CIERRE] ' + CIERRE, '[CIERRE] ' + CIERRE_ENORME)),
+  } }, rLargo);
+  comprobar('el PDF con un cierre desmedido se genera', rLargo.code === 200, 'HTTP ' + rLargo.code);
+
+  if (rLargo.code === 200) {
+    const sL = Buffer.from(rLargo.body.pdfBase64.split(',')[1], 'base64').toString('latin1');
+    const MM = 72 / 25.4, ALTO = 297;
+    const hojasL = [...sL.matchAll(/stream\r?\n([\s\S]*?)\r?\nendstream/g)]
+      .map(m => m[1]).filter(x => !x.startsWith('\xff\xd8'));
+    // El filete del cierre: la raya horizontal de 32 mm centrada en x=105.
+    let masArriba = Infinity, lineasFuera = 0;
+    for (const hoja of hojasL) {
+      for (const m of hoja.matchAll(/([\d.]+) ([\d.]+) m\s+([\d.]+) ([\d.]+) l/g)) {
+        const x1 = +m[1] / MM, y1 = ALTO - +m[2] / MM;
+        const x2 = +m[3] / MM, y2 = ALTO - +m[4] / MM;
+        if (Math.abs(y1 - y2) < 0.01 && Math.abs(x2 - x1 - 32) < 0.5 && Math.abs((x1 + x2) / 2 - 105) < 0.5)
+          masArriba = Math.min(masArriba, y1);
+      }
+      for (const bt of hoja.matchAll(/BT([\s\S]*?)ET/g)) {
+        const tf = /\/\w+\s+([\d.]+)\s+Tf/.exec(bt[1]);
+        const td = /([\d.-]+)\s+([\d.-]+)\s+Td/.exec(bt[1]);
+        if (tf && td && parseFloat(tf[1]) === 30) {
+          const y = ALTO - parseFloat(td[2]) / MM;
+          if (y < 0 || y > ALTO) lineasFuera++;
+        }
+      }
+    }
+    comprobar('el filete del cierre no se sale por arriba del papel',
+      masArriba >= 0, 'lo más alto que llega: ' + masArriba.toFixed(1) + ' mm del borde');
+    comprobar('y ninguna línea del cierre cae fuera de la hoja',
+      lineasFuera === 0, lineasFuera ? lineasFuera + ' fuera' : 'todas dentro');
+  }
+
   // ── 4. SI LA FUENTE NO LLEGA, COMO ANTES ────────────────────────
   console.log('\n  y si el fichero de la fuente no llegara\n');
   laFuenteLlega = false;

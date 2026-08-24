@@ -697,8 +697,8 @@ export default async function handler(req, res) {
       // cierre en la pagina sin que quede alto: si no se contara, el hueco de
       // abajo seria mayor que el de arriba por esos milimetros.
       cierre: hayItalianno
-        ? { size: 30,   color: [207, 177, 128], x: 18, ancho: 152, alto: 13,  antes: 19, despues: 8, baja: 3.7, fuente: 'bold', familia: 'Italianno', centrado: true, juntar: true }
-        : { size: 16.5, color: [207, 177, 128], x: 18, ancho: 152, alto: 9.5, antes: 19, despues: 8, baja: 1.2, fuente: 'bold', centrado: true, juntar: true },
+        ? { size: 30,   color: [207, 177, 128], x: 18, ancho: 152, alto: 13,  despues: 8, baja: 3.7, fuente: 'bold', familia: 'Italianno', centrado: true, juntar: true }
+        : { size: 16.5, color: [207, 177, 128], x: 18, ancho: 152, alto: 9.5, despues: 8, baja: 1.2, fuente: 'bold', centrado: true, juntar: true },
     };
 
     function paginaNueva() {
@@ -755,9 +755,6 @@ export default async function handler(req, res) {
 
       var altoBloque = lineas.length * e.alto + (e.filete ? 2.5 : 0);
 
-      // El cierre es la frase que el lector se lleva puesta: no se aprieta
-      // contra el borde de la pagina. Si no le queda sitio con aire, pasa a la
-      // siguiente y se coloca bajo, con la pagina para el.
       // ── EL CIERRE VA SOLO EN SU PAGINA, Y CENTRADO ─────────────────
       //
       // Es la ultima frase del area, la que el lector se lleva puesta. Antes
@@ -772,7 +769,16 @@ export default async function handler(req, res) {
         var altoConFilete = FILETE_SOBRE_EL_CIERRE
           + (lineas.length - 1) * e.alto
           + (e.baja || 0);
-        maq.y = (H - altoConFilete) / 2 + FILETE_SOBRE_EL_CIERRE;
+        var arriba = (H - altoConFilete) / 2;
+        // Centrar un bloque mas alto que la pagina lo empujaria hacia arriba
+        // hasta sacarlo del papel. Con un cierre normal no llega a pasar,
+        // pero si alguna vez llegara uno larguisimo es preferible que baje
+        // entero y se parta por donde se parte cualquier otro bloque, a que
+        // el filete acabe fuera de la hoja. El aire minimo de arriba es el
+        // mismo que la pagina ya deja por abajo, para no inventar otro.
+        var AIRE_MINIMO = H - Y_TOPE;
+        if (arriba < AIRE_MINIMO) arriba = AIRE_MINIMO;
+        maq.y = arriba + FILETE_SOBRE_EL_CIERRE;
       } else {
         if (maq.y > 60) maq.y += e.antes;
         // Un subtitulo, una pregunta o un remate colgando en la ultima linea de
