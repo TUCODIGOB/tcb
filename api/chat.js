@@ -1197,14 +1197,22 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
         // alguna; asi no puede. Ver ESQUEMA_AREA_POR_BLOQUES arriba en este archivo.
         output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREA_POR_BLOQUES } },
         // Tope de seguridad, no un objetivo: solo se paga lo que el modelo
-        // escribe, y el largo lo manda el prompt. La cuenta, con la proporcion
-        // que se ve en los registros (2,15 caracteres por token en castellano):
-        // el AREA 1 en su tope son 1.300 palabras, unos 7.500 caracteres, unos
-        // 3.500 tokens; el resto de areas, unos 2.400. Con 5.000 queda casi la
-        // mitad de margen y ninguna llega a rozarlo. Bajarlo mas seria
-        // peligroso: desde ahora un area que se corte NO se entrega, asi que un
-        // tope escaso no cortaria el texto, cortaria la venta.
-        max_tokens: 5000,
+        // escribe, y el largo lo manda el prompt. Un area que se corte NO se
+        // entrega, asi que un tope escaso no cortaria el texto, cortaria la
+        // venta: tres intentos cortados y el cliente se queda sin informe.
+        //
+        // La cuenta, con la proporcion que se ve en los registros (2,15
+        // caracteres por token en castellano) y con los huecos que pide el
+        // esquema de bloques:
+        //   11 parrafos de 60 palabras (lo normal) .......... 3.300 tokens
+        //   16 parrafos de 60 palabras (todos los huecos) ... 4.300 tokens
+        //   16 parrafos de 90, que es el techo del prompt ... 5.700 tokens
+        // Con 5.000 el ultimo caso se cortaba. Con 8.000 no llega a rozarlo
+        // ninguno. Subirlo no cuesta nada porque solo se paga lo escrito, y
+        // con thinking desactivado la salida no se estira para llenar el tope:
+        // lo que paso el 19 de agosto, que la salida era siempre el tope
+        // exacto, era el razonamiento, y aqui va apagado.
+        max_tokens: 8000,
         // LA CACHE DEL PROMPT. El prompt de sistema son 22.000 tokens y se
         // manda 7 veces identico, una por area: casi la mitad de lo que
         // costaba un informe era reenviar el mismo texto. Marcandolo asi, la
