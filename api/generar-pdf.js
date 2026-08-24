@@ -781,12 +781,18 @@ export default async function handler(req, res) {
       addPageNum(maq.pag); maq.pag++;
     }
 
+    // ── LA PÁGINA DE LA FRASE ────────────────────────────────────────────────
+    //
+    // Cierra las siete areas, asi que va pegada al final del area 7 y no
+    // detras de las listas: es el punto y final del texto, y las listas son
+    // lo que viene despues.
+    doc.addPage(); doc.addImage(img_frase,'JPEG',0,0,W,H); addPageNum(maq.pag); maq.pag++;
+
     // ── LAS DOS LISTAS DE RASGOS ─────────────────────────────────────────────
     //
-    // Van DESPUES del area 7 y antes de la pagina de la frase: son el cierre
-    // de lo que se le acaba de contar, no la entrada. Puestas antes de las
-    // areas, el cliente se encontraba treinta fichas sueltas sobre si mismo
-    // sin haber leido todavia una sola linea que las explicara.
+    // Van detras de las siete areas y de su pagina de cierre. Puestas antes de
+    // las areas, que es donde estaban, el cliente se encontraba treinta fichas
+    // sueltas sobre si mismo sin haber leido una sola linea que las explicara.
     //
     // LO QUE LLEGA AQUI VIENE DEL NAVEGADOR, ASI QUE SE MIRA ANTES DE PINTARLO.
     //
@@ -846,7 +852,13 @@ export default async function handler(req, res) {
         doc.setFontSize(13);
         doc.setTextColor(207, 177, 128);
         doc.text(laLista.titulo, 18, pyRasgos);
-        pyRasgos += 13;
+        // La misma rayita dorada que llevan los ladillos de las areas: 24 mm,
+        // a 3,2 mm por debajo y del mismo grosor. Ver ESTILOS.sub y su filete.
+        pyRasgos += 3.2;
+        doc.setDrawColor(207, 177, 128);
+        doc.setLineWidth(0.4);
+        doc.line(18, pyRasgos, 42, pyRasgos);
+        pyRasgos += 9.8;
 
         for (var ri = 0; ri < laLista.rasgos.length; ri++) {
           var rasgo = laLista.rasgos[ri];
@@ -864,19 +876,26 @@ export default async function handler(req, res) {
           doc.setFontSize(11);
           var el = doc.splitTextToSize(rasgo.explicacion || '', 170);
 
-          // La ficha entera va junta: el nombre de una y la explicacion de
-          // otra en paginas distintas se lee como un error de imprenta.
-          cabe(6.5 + dl.length * 6.5 + el.length * 6);
-
-          // A QUE AREA PERTENECE, que es lo que ata la ficha al informe.
-          // Sin esto son treinta frases sueltas sobre ella; con esto, cada
-          // una remite a las paginas donde eso se le ha contado entero.
+          // A QUE AREA PERTENECE, que es lo que ata la ficha al informe: sin
+          // esto son treinta frases sueltas sobre ella; con esto, cada una
+          // remite a las paginas donde eso se le ha contado entero. Va pegada
+          // al final del porque, en dorado, como " — AMOR".
           var cual = Number(rasgo.area);
           var elArea = areaTitles[(cual >= 1 && cual <= 7 ? cual : 1) - 1];
+          var laEtiqueta = ' — ' + elArea.tit;
+
+          // Y hay que saber ANTES de pintar si le va a caber detras de la
+          // ultima linea, porque de eso depende lo que ocupa la ficha entera.
+          doc.setFont('Roboto', 'italic');
+          doc.setFontSize(11);
+          var ultima = el.length > 0 ? el[el.length - 1] : '';
+          var acabaEn = 22 + doc.getTextWidth(ultima);
           doc.setFont('Roboto', 'bold');
-          doc.setFontSize(12);
-          doc.setTextColor(207, 177, 128);
-          doc.text(elArea.tit, 192, pyRasgos, { align: 'right' });
+          var cabeDetras = el.length > 0 && (acabaEn + doc.getTextWidth(laEtiqueta)) <= 192;
+
+          // La ficha entera va junta: el nombre de una y la explicacion de
+          // otra en paginas distintas se lee como un error de imprenta.
+          cabe(6.5 + dl.length * 6.5 + el.length * 6 + (cabeDetras ? 0 : 6));
 
           doc.setFont('Roboto', 'bold');
           doc.setFontSize(12);
@@ -894,7 +913,34 @@ export default async function handler(req, res) {
           doc.setTextColor(100, 100, 100);
           for (var eli = 0; eli < el.length; eli++) { doc.text(el[eli], 22, pyRasgos); pyRasgos += 6; }
 
+          // La etiqueta, detras de la ultima linea del porque. Si esa linea
+          // llega demasiado a la derecha no cabe, y entonces baja sola a la
+          // linea siguiente pegada al margen: sacarla del papel no es opcion.
+          doc.setFont('Roboto', 'bold');
+          doc.setFontSize(11);
+          doc.setTextColor(207, 177, 128);
+          if (cabeDetras) {
+            doc.text(laEtiqueta, acabaEn, pyRasgos - 6);
+          } else {
+            doc.text(laEtiqueta, 192, pyRasgos, { align: 'right' });
+            pyRasgos += 6;
+          }
+
+          // EL SEPARADOR ENTRE FICHAS. Sin el, treinta fichas seguidas se leen
+          // como un muro y no se ve donde acaba una y empieza la siguiente.
+          // Gris muy claro y de todo el ancho: tiene que separar, no decorar,
+          // asi que se nota sin que se vea.
+          // Detras de la ultima no va: una raya y a continuacion el final de la
+          // pagina se lee como que falta algo. Y si la ficha ha llegado al pie,
+          // tampoco: quedaria una raya suelta en el margen, debajo del texto y
+          // al lado del numero de pagina.
           pyRasgos += 4;
+          if (ri < laLista.rasgos.length - 1 && pyRasgos <= Y_TOPE) {
+            doc.setDrawColor(222, 218, 210);
+            doc.setLineWidth(0.2);
+            doc.line(18, pyRasgos, 192, pyRasgos);
+            pyRasgos += 6;
+          }
         }
       }
 
@@ -903,7 +949,6 @@ export default async function handler(req, res) {
     }
 
     // ── PÁGINAS FINALES ───────────────────────────────────────────────────────
-    doc.addPage(); doc.addImage(img_frase,'JPEG',0,0,W,H); addPageNum(maq.pag); maq.pag++;
     doc.addPage(); doc.addImage(img_proximo,'JPEG',0,0,W,H); addPageNum(maq.pag); maq.pag++;
     doc.addPage(); doc.addImage(img_proximo2,'JPEG',0,0,W,H); addPageNum(maq.pag); maq.pag++;
     doc.addPage(); doc.addImage(img_trasera,'JPEG',0,0,W,H);

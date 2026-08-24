@@ -746,11 +746,14 @@ export default function Stripe() {
     // el cliente se encontraba treinta fichas sobre sí mismo antes de haber
     // leído una sola línea que las explicara.
     const iAreas = pdf.indexOf('LAS 7 AREAS');
-    const iRasgos = pdf.indexOf('LAS DOS LISTAS DE RASGOS');
     const iFrase = pdf.indexOf("img_frase,'JPEG'");
-    comprobar('la lista se pinta DESPUÉS de las 7 áreas y ANTES de la página de la frase',
-      iAreas > 0 && iRasgos > iAreas && iFrase > iRasgos,
-      iRasgos < iAreas ? 'está ANTES de las áreas' : iRasgos > iFrase ? 'está detrás de la frase' : 'en su sitio');
+    const iRasgos = pdf.indexOf('LAS DOS LISTAS DE RASGOS');
+    const iFinales = pdf.indexOf("img_proximo,'JPEG'");
+    comprobar('el orden es: 7 áreas → página de la frase → listas → páginas finales',
+      iAreas > 0 && iFrase > iAreas && iRasgos > iFrase && iFinales > iRasgos,
+      iRasgos < iAreas ? 'la lista está ANTES de las áreas'
+      : iRasgos < iFrase ? 'la lista está antes de la frase'
+      : iFinales < iRasgos ? 'las páginas finales están antes de la lista' : 'en su sitio');
 
     // Y se comprueba también en el PDF hecho: el texto de cada página va en
     // su propio flujo, así que dos PDF que van iguales hasta cierta página
@@ -835,6 +838,106 @@ export default function Stripe() {
     const todoBasura = await cuantasPaginas({ rasgos: { fortalezas: [null, 5, {}], desafios: [] } });
     comprobar('si todas las fichas son basura, el informe sale como si no hubiera lista',
       todoBasura === sinLista, `${todoBasura} páginas`);
+
+    // ── QUE NADA SE SALGA DEL PAPEL ─────────────────────────────────
+    //
+    // La etiqueta del área va pegada al final del porqué, así que dónde cae
+    // depende de dónde acabe esa última línea. Si la cuenta falla, se sale
+    // por el margen derecho, y eso no se ve hasta que alguien abre el PDF.
+    //
+    // No basta con mirar dónde EMPIEZA cada texto: hay que saber dónde acaba,
+    // y para eso se usa la tabla de anchos que el propio PDF lleva dentro. Se
+    // coge el ancho mayor de las tres Roboto para cada letra, así la cuenta
+    // nunca se queda corta (puede sobrar, nunca faltar).
+    const anchoDeCadaLetra = (pdfTxt) => {
+      const anchos = new Map();
+      let i = -1;
+      while ((i = pdfTxt.indexOf('/W', i + 1)) !== -1) {
+        const abre = pdfTxt.indexOf('[', i);
+        if (abre === -1 || abre - i > 4) continue;
+        let prof = 0, fin2 = abre;
+        for (; fin2 < pdfTxt.length; fin2++) {
+          if (pdfTxt[fin2] === '[') prof++;
+          else if (pdfTxt[fin2] === ']') { prof--; if (prof === 0) break; }
+        }
+        const re = /(\d+)\s*\[\s*([\d\s]+?)\]/g;
+        let m;
+        while ((m = re.exec(pdfTxt.slice(abre + 1, fin2)))) {
+          const desde = parseInt(m[1], 10);
+          m[2].trim().split(/\s+/).forEach((w, k) => {
+            const g = desde + k, v = parseInt(w, 10);
+            if (!anchos.has(g) || anchos.get(g) < v) anchos.set(g, v);
+          });
+        }
+      }
+      return anchos;
+    };
+
+    // Se mira SOLO el texto dorado, que es el que puede salirse: la etiqueta
+    // del área es lo único que se coloca a mano en una x calculada. Y además
+    // el dorado va siempre en negrita, que es de donde salen los anchos
+    // mayores de la tabla, así que para él la cuenta es exacta. Medir con esa
+    // tabla un texto en cursiva daría 4% de más y saltarían falsas alarmas.
+    const DORADO = /0\.81\d* 0\.69\d* 0\.50\d* rg/;
+    const loQueSeSale = (pdfTxt) => {
+      const MM = 72 / 25.4, anchos = anchoDeCadaLetra(pdfTxt), fuera = [];
+      for (const bt of pdfTxt.matchAll(/BT([\s\S]*?)ET/g)) {
+        const c = bt[1];
+        if (!DORADO.test(c)) continue;
+        const tf = /\/\w+\s+([\d.]+)\s+Tf/.exec(c);
+        const td = /([\d.]+)\s+([\d.]+)\s+Td/.exec(c);
+        const tj = /<([0-9a-fA-F]+)>\s*Tj/.exec(c);
+        if (!tf || !td || !tj) continue;
+        const tam = parseFloat(tf[1]), x = parseFloat(td[1]) / MM, h = tj[1];
+        let mil = 0;
+        for (let k = 0; k < h.length; k += 4) mil += anchos.get(parseInt(h.slice(k, k + 4), 16)) || 0;
+        const acaba = x + (mil / 1000) * tam / MM;
+        if (acaba > 192.5) fuera.push(`texto ${x.toFixed(0)}→${acaba.toFixed(0)}`);
+      }
+      // Y las rayas (el separador entre fichas y la del título). Aquí no hay
+      // que medir letras: las coordenadas están escritas tal cual, así que la
+      // cuenta es exacta y se miran todas.
+      for (const m of pdfTxt.matchAll(/([\d.]+) ([\d.]+) m\s+([\d.]+) ([\d.]+) l/g)) {
+        const x1 = parseFloat(m[1]) / MM, x2 = parseFloat(m[3]) / MM;
+        if (x2 > 192.5 || x1 < 17.5) fuera.push(`raya ${x1.toFixed(0)}→${x2.toFixed(0)}`);
+      }
+      return fuera;
+    };
+
+    const crudoDe = async (extra) => {
+      const rr = resp();
+      await generarPdf({ method: 'POST', body: { ...pedido, ...extra }, }, rr);
+      return Buffer.from(rr.body.pdfBase64.split(',')[1], 'base64').toString('latin1');
+    };
+
+    // Explicaciones de largos muy variados, para que la última línea acabe en
+    // todas las posiciones posibles y se pruebe también el caso en que la
+    // etiqueta NO cabe detrás y tiene que bajar sola.
+    const RASGOS_DE_TODOS_LOS_LARGOS = {
+      fortalezas: Array.from({ length: 14 }, (_, i) => ({
+        nombre: 'Ficha numero ' + i,
+        descripcion: 'Una frase de descripcion que ocupa lo suyo y cambia de largo ' + 'x'.repeat(i % 9),
+        explicacion: 'De donde le viene contado en frases que cambian de largo para mover el final de la ultima linea ' + 'y'.repeat((i * 7) % 70),
+        area: (i % 7) + 1,
+      })),
+      desafios: Array.from({ length: 16 }, (_, i) => ({
+        nombre: 'Otra ficha ' + i,
+        descripcion: 'Descripcion distinta que tambien cambia de largo ' + 'z'.repeat((i * 3) % 11),
+        explicacion: 'Otro porque distinto, con su largo propio para mover el final de la ultima linea ' + 'w'.repeat((i * 11) % 65),
+        area: (i % 7) + 1,
+      })),
+    };
+
+    // Se compara contra el informe SIN lista: lo que ya se salía (texto
+    // centrado de la rueda, que la cuenta conservadora da por pasado) no es
+    // cosa de la lista. Lo que no puede es AÑADIR ninguno.
+    const seSalenSinLista = loQueSeSale(await crudoDe({}));
+    const seSalenConLista = loQueSeSale(await crudoDe({ rasgos: RASGOS_DE_TODOS_LOS_LARGOS }));
+    comprobar('ni la etiqueta ni los separadores se salen del papel',
+      seSalenConLista.length === seSalenSinLista.length,
+      seSalenConLista.length > seSalenSinLista.length
+        ? `añade ${seSalenConLista.length - seSalenSinLista.length}: ${seSalenConLista.slice(seSalenSinLista.length, seSalenSinLista.length + 3).join(', ')} mm`
+        : `${seSalenSinLista.length} de antes, ${seSalenConLista.length} ahora`);
 
     comprobar('el área de cada ficha se imprime de verdad',
       JSON.stringify(conAreasVariadas) !== JSON.stringify(todasArea1),
