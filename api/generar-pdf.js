@@ -57,7 +57,7 @@ export default async function handler(req, res) {
     }
   }
 
-  const { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas, session_id, token } = req.body;
+  const { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas, rasgos, session_id, token } = req.body;
 
   if (!nombre || !areas || !session_id) {
     return res.status(400).json({ error: 'Faltan parámetros' });
@@ -603,6 +603,82 @@ export default async function handler(req, res) {
     wrapText(fx('Los aspectos muestran cómo se relacionan esas partes entre sí: los equilibrios, las tensiones y las conexiones que forman tu manera de vincularte, decidir y reaccionar.'),18,py5,175,5.5);
     addPageNum(5);
 
+    // Estado de la maquetacion: en que altura vamos y por que pagina
+    var Y_TOPE = H - 21;
+    var maq = { y: 60, pag: 6, paginas: 1 };
+
+    // ── PAG 6 RASGOS ────────────────────────────────────────────────────────
+    if (rasgos && (rasgos.fortalezas?.length > 0 || rasgos.desafios?.length > 0)) {
+      doc.addPage();
+      doc.addImage(img_base, 'JPEG', 0, 0, W, H);
+
+      var pyRasgos = 45;
+
+      doc.setFont('Roboto', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(207, 177, 128);
+      doc.text(fx('RASGOS'), 18, pyRasgos);
+      pyRasgos += 12;
+
+      var todosRasgos = [];
+      if (rasgos.fortalezas) todosRasgos = todosRasgos.concat(rasgos.fortalezas);
+      if (rasgos.desafios) todosRasgos = todosRasgos.concat(rasgos.desafios);
+
+      for (var ri = 0; ri < todosRasgos.length; ri++) {
+        var rasgo = todosRasgos[ri];
+        if (pyRasgos > Y_TOPE - 20) {
+          addPageNum(maq.pag);
+          maq.pag++;
+          doc.addPage();
+          doc.addImage(img_base, 'JPEG', 0, 0, W, H);
+          pyRasgos = 45;
+        }
+
+        doc.setFont('Roboto', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(14, 63, 75);
+        doc.text('• ' + (rasgo.nombre || ''), 18, pyRasgos);
+        pyRasgos += 5;
+
+        doc.setFont('Roboto', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(60, 60, 60);
+        var dl = doc.splitTextToSize(rasgo.descripcion || '', 170);
+        for (var dli = 0; dli < dl.length; dli++) {
+          if (pyRasgos > Y_TOPE - 20) {
+            addPageNum(maq.pag);
+            maq.pag++;
+            doc.addPage();
+            doc.addImage(img_base, 'JPEG', 0, 0, W, H);
+            pyRasgos = 45;
+          }
+          doc.text(dl[dli], 22, pyRasgos);
+          pyRasgos += 4;
+        }
+
+        doc.setFont('Roboto', 'italic');
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        var el = doc.splitTextToSize(rasgo.explicacion || '', 170);
+        for (var eli = 0; eli < el.length; eli++) {
+          if (pyRasgos > Y_TOPE - 20) {
+            addPageNum(maq.pag);
+            maq.pag++;
+            doc.addPage();
+            doc.addImage(img_base, 'JPEG', 0, 0, W, H);
+            pyRasgos = 45;
+          }
+          doc.text(el[eli], 22, pyRasgos);
+          pyRasgos += 3.5;
+        }
+
+        pyRasgos += 4;
+      }
+
+      addPageNum(maq.pag);
+      maq.pag++;
+    }
+
     // ── PAGS 6-19 LAS 7 AREAS ────────────────────────────────────────────────
     var areaTitles=[
       {tit:fx('IDENTIDAD'),sub:fx('Por que eres como eres y por que tu vida es como es')},
@@ -636,14 +712,6 @@ export default async function handler(req, res) {
       remate:   { size: 13.5, color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.8, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
       cierre:   { size: 16.5, color: [207, 177, 128], x: 18, ancho: 152, alto: 9.5, antes: 19, despues: 8, fuente: 'bold',  centrado: true, juntar: true },
     };
-
-    // Estado de la maquetacion de las areas: en que altura vamos y por que
-    // pagina. Va aparte para que las funciones de abajo puedan moverlo.
-    var maq = { y: 60, pag: 6, paginas: 1 };
-    // El numero de pagina se pinta en H-16. Si el texto pudiera llegar hasta
-    // ahi, la ultima linea le quedaba a la misma altura y una linea larga se
-    // le echaba encima. Se para cinco milimetros antes.
-    var Y_TOPE = H - 21;
 
     function paginaNueva() {
       addPageNum(maq.pag); maq.pag++;
