@@ -634,7 +634,7 @@ export default async function handler(req, res) {
     // se lee perfecto tambien impreso.
     var ESTILOS = {
       texto:    { size: 12,   color: [40, 40, 40],   x: 18, ancho: 175, alto: 7,   antes: 0,  despues: 4,  fuente: 'normal' },
-      sub:      { size: 12,   color: [207, 177, 128], x: 18, ancho: 175, alto: 7,   antes: 11, despues: 6,  fuente: 'bold',   mayus: true, filete: true, juntar: true },
+      sub:      { size: 12,   color: [207, 177, 128], x: 18, ancho: 175, alto: 6,   antes: 11, despues: 6,  fuente: 'bold',   mayus: true, filete: true, juntar: true },
       escena:   { size: 12,   color: [70, 70, 70],   x: 27, ancho: 157, alto: 7,   antes: 8,  despues: 9,  fuente: 'italic', barra: true },
       pregunta: { size: 13,   color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.4, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
       remate:   { size: 13.5, color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.8, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
