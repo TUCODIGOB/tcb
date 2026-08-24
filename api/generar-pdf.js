@@ -788,10 +788,24 @@ export default async function handler(req, res) {
     // areas, el cliente se encontraba treinta fichas sueltas sobre si mismo
     // sin haber leido todavia una sola linea que las explicara.
     if (rasgos && (rasgos.fortalezas?.length > 0 || rasgos.desafios?.length > 0)) {
-      doc.addPage();
-      doc.addImage(img_base, 'JPEG', 0, 0, W, H);
-
       var pyRasgos = 45;
+
+      // Abrir pagina nueva de la lista, con su fondo y su numero.
+      function paginaDeRasgos(primera) {
+        if (!primera) { addPageNum(maq.pag); maq.pag++; }
+        doc.addPage();
+        doc.addImage(img_base, 'JPEG', 0, 0, W, H);
+        pyRasgos = 45;
+      }
+
+      // Antes de pintar algo, mirar si cabe. Antes esto estaba escrito tres
+      // veces dentro del bucle, una por cada trozo de la ficha, y era donde
+      // habia que acordarse de tocar las tres si se cambiaba una.
+      function cabe(alto) {
+        if (pyRasgos + alto > Y_TOPE) paginaDeRasgos(false);
+      }
+
+      paginaDeRasgos(true);
 
       doc.setFont('Roboto', 'bold');
       doc.setFontSize(11);
@@ -799,59 +813,69 @@ export default async function handler(req, res) {
       doc.text(fx('RASGOS'), 18, pyRasgos);
       pyRasgos += 12;
 
-      var todosRasgos = [];
-      if (rasgos.fortalezas) todosRasgos = todosRasgos.concat(rasgos.fortalezas);
-      if (rasgos.desafios) todosRasgos = todosRasgos.concat(rasgos.desafios);
+      // LAS DOS LISTAS VAN SEPARADAS Y CADA UNA EN SU PAGINA.
+      //
+      // Antes se pegaba una detras de otra sin nada en medio: las treinta
+      // fichas se leian como una sola lista y no habia manera de ver donde
+      // acababa lo bueno y empezaba lo que pesa. Cada una empieza pagina, que
+      // es lo unico que no se puede confundir.
+      var LAS_DOS_LISTAS = [
+        { titulo: fx('TUS FORTALEZAS'), rasgos: rasgos.fortalezas || [] },
+        { titulo: fx('TUS DESAFÍOS'), rasgos: rasgos.desafios || [] },
+      ];
 
-      for (var ri = 0; ri < todosRasgos.length; ri++) {
-        var rasgo = todosRasgos[ri];
-        if (pyRasgos > Y_TOPE - 20) {
-          addPageNum(maq.pag);
-          maq.pag++;
-          doc.addPage();
-          doc.addImage(img_base, 'JPEG', 0, 0, W, H);
-          pyRasgos = 45;
-        }
+      for (var li = 0; li < LAS_DOS_LISTAS.length; li++) {
+        var laLista = LAS_DOS_LISTAS[li];
+        if (laLista.rasgos.length === 0) continue;
+        if (li > 0) paginaDeRasgos(false);
 
         doc.setFont('Roboto', 'bold');
-        doc.setFontSize(10);
+        doc.setFontSize(12);
         doc.setTextColor(14, 63, 75);
-        doc.text('• ' + (rasgo.nombre || ''), 18, pyRasgos);
-        pyRasgos += 5;
+        doc.text(laLista.titulo, 18, pyRasgos);
+        pyRasgos += 3;
+        doc.setDrawColor(207, 177, 128);
+        doc.setLineWidth(0.4);
+        doc.line(18, pyRasgos, 60, pyRasgos);
+        pyRasgos += 9;
 
-        doc.setFont('Roboto', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(60, 60, 60);
-        var dl = doc.splitTextToSize(rasgo.descripcion || '', 170);
-        for (var dli = 0; dli < dl.length; dli++) {
-          if (pyRasgos > Y_TOPE - 20) {
-            addPageNum(maq.pag);
-            maq.pag++;
-            doc.addPage();
-            doc.addImage(img_base, 'JPEG', 0, 0, W, H);
-            pyRasgos = 45;
-          }
-          doc.text(dl[dli], 22, pyRasgos);
+        for (var ri = 0; ri < laLista.rasgos.length; ri++) {
+          var rasgo = laLista.rasgos[ri];
+          var dl = doc.splitTextToSize(rasgo.descripcion || '', 170);
+          var el = doc.splitTextToSize(rasgo.explicacion || '', 170);
+
+          // La ficha entera va junta: el nombre de una y la explicacion de
+          // otra en paginas distintas se lee como un error de imprenta.
+          cabe(5 + dl.length * 4 + el.length * 3.5);
+
+          // A QUE AREA PERTENECE, que es lo que ata la ficha al informe.
+          // Sin esto son treinta frases sueltas sobre ella; con esto, cada
+          // una remite a las paginas donde eso se le ha contado entero.
+          var cual = Number(rasgo.area);
+          var elArea = areaTitles[(cual >= 1 && cual <= 7 ? cual : 1) - 1];
+          doc.setFont('Roboto', 'bold');
+          doc.setFontSize(7);
+          doc.setTextColor(207, 177, 128);
+          doc.text(elArea.tit, 192, pyRasgos, { align: 'right' });
+
+          doc.setFont('Roboto', 'bold');
+          doc.setFontSize(10);
+          doc.setTextColor(14, 63, 75);
+          doc.text('• ' + (rasgo.nombre || ''), 18, pyRasgos);
+          pyRasgos += 5;
+
+          doc.setFont('Roboto', 'normal');
+          doc.setFontSize(9);
+          doc.setTextColor(60, 60, 60);
+          for (var dli = 0; dli < dl.length; dli++) { doc.text(dl[dli], 22, pyRasgos); pyRasgos += 4; }
+
+          doc.setFont('Roboto', 'italic');
+          doc.setFontSize(8);
+          doc.setTextColor(100, 100, 100);
+          for (var eli = 0; eli < el.length; eli++) { doc.text(el[eli], 22, pyRasgos); pyRasgos += 3.5; }
+
           pyRasgos += 4;
         }
-
-        doc.setFont('Roboto', 'italic');
-        doc.setFontSize(8);
-        doc.setTextColor(100, 100, 100);
-        var el = doc.splitTextToSize(rasgo.explicacion || '', 170);
-        for (var eli = 0; eli < el.length; eli++) {
-          if (pyRasgos > Y_TOPE - 20) {
-            addPageNum(maq.pag);
-            maq.pag++;
-            doc.addPage();
-            doc.addImage(img_base, 'JPEG', 0, 0, W, H);
-            pyRasgos = 45;
-          }
-          doc.text(el[eli], 22, pyRasgos);
-          pyRasgos += 3.5;
-        }
-
-        pyRasgos += 4;
       }
 
       addPageNum(maq.pag);

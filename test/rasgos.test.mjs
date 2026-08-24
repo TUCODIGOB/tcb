@@ -609,6 +609,31 @@ export default function Stripe() {
     comprobar('con la lista vacía el informe sale como siempre, sin páginas en blanco',
       listaVaciaPdf === sinLista, listaVaciaPdf + ' páginas');
 
+    // ── LAS DOS LISTAS, SEPARADAS ───────────────────────────────────
+    //
+    // Las mismas 30 fichas puestas en una sola lista ocupan menos que
+    // repartidas en dos, porque cada lista empieza página. Si algún día se
+    // vuelven a pegar una detrás de otra, esto se cae.
+    const todoJunto = await cuantasPaginas({ rasgos: { fortalezas: [...RASGOS.fortalezas, ...RASGOS.desafios], desafios: [] } });
+    comprobar('las dos listas van separadas, cada una empieza página',
+      conLista > todoJunto,
+      `30 fichas en una sola lista: ${todoJunto} páginas; repartidas en dos: ${conLista}`);
+
+    // ── EL ÁREA DE CADA FICHA SE IMPRIME ────────────────────────────
+    //
+    // Las mismas fichas con las áreas cambiadas tienen que dar un PDF
+    // distinto. Si el área no se pinta, los dos salen calcados: es lo que
+    // pasaba antes, el dato llegaba y no se usaba.
+    const conAreasVariadas = await pdfDe({ rasgos: RASGOS });
+    const todasArea1 = await pdfDe({ rasgos: {
+      fortalezas: RASGOS.fortalezas.map(r => ({ ...r, area: 1 })),
+      desafios: RASGOS.desafios.map(r => ({ ...r, area: 1 })),
+    } });
+    comprobar('el área de cada ficha se imprime de verdad',
+      JSON.stringify(conAreasVariadas) !== JSON.stringify(todasArea1),
+      JSON.stringify(conAreasVariadas) === JSON.stringify(todasArea1)
+        ? 'cambiar el área no cambia el PDF: no se está pintando' : 'cambiar el área cambia el PDF');
+
   } catch (err) {
     console.error('  ✘ la parte del PDF reventó:', err.stack || err.message);
     fallos++;
