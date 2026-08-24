@@ -424,7 +424,7 @@ const PALABRAS_DE_ASTROLOGO = [
   'aries', 'tauro', 'geminis', 'virgo', 'escorpio', 'escorpion',
   'sagitario', 'capricornio', 'acuario', 'piscis',
   'cuadratura', 'cuadraturas', 'trigono', 'trigonos', 'sextil', 'sextiles',
-  'conjuncion', 'oposicion', 'orbe', 'retrogrado', 'retrograda',
+  'conjuncion', 'oposicion', 'aspectos', 'orbe', 'retrogrado', 'retrograda',
   'signo', 'signos', 'angulo', 'angulos', 'carta', 'natal',
   'horoscopo', 'zodiaco', 'zodiacal', 'efemerides', 'astrologia', 'astrologica',
 ];
@@ -538,7 +538,8 @@ EN LA LISTA DE DESAFIOS ESTO ES LO QUE MAS IMPORTA. Una lista de defectos seguid
 
 NI UN NOMBRE DE PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ANGULO. NI UNA VEZ.
 Esto es lo que mas se falla en estas fichas, y la que se falla no vale: la clienta no ha pagado por una lectura tecnica, ha pagado porque le hablen de ella. Vale para las tres casillas, y sobre todo para la explicacion, que es donde se cuela siempre.
-Prohibidas estas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Jupiter, Saturno, Urano, Neptuno, Pluton, Quiron, nodo, ascendente, medio cielo, los doce signos, casa (la astrologica), cuadratura, trigono, sextil, oposicion, conjuncion, aspecto, orbe, retrogrado, carta, carta natal, horoscopo.
+Prohibidas estas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Jupiter, Saturno, Urano, Neptuno, Pluton, Quiron, nodo, ascendente, medio cielo, los doce signos del zodiaco, cuadratura, trigono, sextil, oposicion, conjuncion, aspecto, orbe, retrogrado, carta, carta natal, horoscopo.
+Y "casa" solo cuando es la casa astrologica ("la casa del dinero", "la casa siete"). La casa de vivir se puede decir toda las veces que haga falta: "en tu casa aprendiste", "tienes la casa en orden".
 - MAL: "El sol y Mercurio en la casa del trabajo diario, en un signo que vive para servir, te dan capacidad para detectar que necesita alguien". BIEN: "Detectas lo que le hace falta a alguien antes de que lo pida, y te pones a ello sin esperar a que nadie te lo diga".
 - MAL: "El sol enfrentado a Saturno te hizo crecer sintiendo que el carino habia que ganarselo". BIEN: "Creciste con la sensacion de que el carino habia que ganarselo, y esa vara la sigues usando contigo".
 - MAL: "Tu luna en la zona de tu carta que habla de raices". BIEN: "En tu casa aprendiste que lo de dentro no se ensena".

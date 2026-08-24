@@ -616,6 +616,8 @@ const CASOS = [
   ['Pones las cartas sobre la mesa tarde', null],
   ['Es una decision muy personal', null],
   ['En casa aprendiste que lo de dentro no se ensena', null],
+  ['En ese aspecto eres muy tuya', null],
+  ['Cuidas tu aspecto mas de lo que admites', null],
   // Y lo que salió impreso el 24 de agosto: tiene que caer todo.
   ['El sol y Mercurio en la casa del trabajo', 'sol'],
   ['Tu luna en un signo serio y constante', 'luna'],
@@ -626,6 +628,8 @@ const CASOS = [
   ['Mercurio en angulo armonico con Quiron', 'mercurio'],
   ['Marte y Jupiter juntos, apoyados por Neptuno', 'marte'],
   ['El sol enfrentado a Saturno te hizo crecer', 'sol'],
+  ['Los aspectos duros lo potencian todavia mas', 'aspectos'],
+  ['La casa del dinero pesa en tu carta', 'carta'],
 ];
 let casosMal = 0;
 for (const [frase, esperado] of CASOS) {
