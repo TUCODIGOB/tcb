@@ -1,0 +1,221 @@
+// ═════════════════════════════════════════════════════════════════
+// test/corrector-no-reescribe.test.mjs
+//
+// EL CORRECTOR QUE LEE SE APUNTA, NO CUESTA UN AREA.
+//
+// En el informe del 24 de agosto el repaso de estilo mando reescribir CUATRO
+// areas de siete. Las cuatro volvieron marcadas por lo mismo: cuatro areas de
+// mil trescientas palabras pagadas dos veces para quedarnos igual. Cero de
+// cuatro.
+//
+// Y lo que marcaba casi nunca era un fallo: "Tu llevas esa cuenta, Raquel"
+// (que es de tu), "Hay gente que aprende pronto" (que habla de mucha gente),
+// "el amor hay que ganarselo cada semana" (que no habla de nadie). Las tres
+// cosas estan escritas en SISTEMA_REPASO como que NO son fallo.
+//
+// Asi que ya no vuelve a pedir el area. Se apunta en el registro y se sigue.
+//
+// Lo que se comprueba aqui:
+//   1. una frase marcada por el corrector NO cuesta una llamada de mas
+//   2. pero SI queda apuntada, para no quedarnos ciegos
+//   3. el "ella + verbo", que es una palabra y no una opinion, SIGUE
+//      haciendo que se vuelva a pedir el area
+//   4. y lo demas que si se arregla volviendo a pedir (la escena copiada)
+//      sigue funcionando igual
+//
+// Ejecutar:  node test/corrector-no-reescribe.test.mjs
+// No llama a nadie: intercepta fetch.
+// ═════════════════════════════════════════════════════════════════
+
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const RAIZ = path.join(AQUI, '..');
+const SEPARADOR_AREAS = '';
+
+const TIENDA = new Map();
+globalThis.__TIENDA = TIENDA;
+const STRIPE_FALSO = `
+export default function Stripe() {
+  return { checkout: { sessions: {
+    async retrieve(id) {
+      const s = globalThis.__TIENDA.get(id);
+      return s ? JSON.parse(JSON.stringify(s)) : null;
+    },
+    async update(id, { metadata }) {
+      const s = globalThis.__TIENDA.get(id);
+      s.metadata = {};
+      for (const [k, v] of Object.entries(metadata)) {
+        if (v !== '' && v != null) s.metadata[k] = String(v);
+      }
+      return JSON.parse(JSON.stringify(s));
+    },
+  } } };
+}`;
+
+// El area se pide con una casilla por bloque: ver ESQUEMA_AREA_POR_BLOQUES en
+// api/chat.js. Los cinco bloques llevan algo, que si no el area se rechaza.
+const BLOQUES = ['arranque', 'hoy', 'origen', 'creencias', 'soltar'];
+const ESCENA = 'Son las once de la noche y todavia estas repasando el movil con la luz apagada, sin mirar nada en concreto.';
+
+// Un area sana: lleva el nombre, tres negritas y sus cinco bloques, para que
+// no salte ninguna otra reparacion y lo que se mida sea solo el corrector.
+const P = (t) => ({ ladillo: null, texto: t });
+function areaCon(extra) {
+  const cuerpo = [
+    'Hay gente que llega a cualquier sitio y en diez minutos ya sabe quien necesita algo, y tu eres de esas.',
+    'Y mientras asientes, Ana, por dentro **estas calculando cuanto has ensenado de mas**, que es un trabajo que no descansa nunca.',
+    'De ahi sale todo lo demas, que es lo que nadie te ha contado y **llevas media vida pagando sin enterarte** del precio.',
+    '**Eso no se arregla apretando mas**, se arregla mirando de donde viene y quien te enseno a hacerlo asi de pequena.',
+    'Y cuando por fin te sientas, la cabeza sigue repasando lo que queda para manana como si alguien lo fuera a corregir.',
+  ];
+  if (extra) cuerpo.splice(2, 0, extra);
+  const a = {
+    escena: { tras_bloque: 'hoy', texto: ESCENA },
+    remate_herida: { tras_bloque: 'creencias', texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
+    remate_fuerza: { tras_bloque: 'arranque', texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
+    pregunta: { tras_bloque: 'origen', texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
+    cierre: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
+  };
+  a.bloques = {};
+  cuerpo.forEach((t, i) => {
+    const b = BLOQUES[Math.min(i, BLOQUES.length - 1)];
+    (a.bloques[b] = a.bloques[b] || []).push(P(t));
+  });
+  return JSON.stringify(a);
+}
+
+// La frase que el corrector marca. Esta en el area de verdad, porque el codigo
+// descarta las frases que el corrector se inventa.
+const FRASE_MARCADA = 'Hay gente que llega a cualquier sitio y en diez minutos ya sabe quien necesita algo, y tu eres de esas.';
+// Y un "ella + verbo" de los que si tienen que costar una vuelta.
+const CON_ELLA = 'Ella responde con un gracias, no se que haria sin ti, y se va a seguir con lo suyo.';
+
+let queDevuelve = areaCon(null);
+let marcaElCorrector = [];
+let llamadasDeArea = 0;
+let vecesQueSeLlamaAlCorrector = 0;
+
+globalThis.fetch = async (url, opts = {}) => {
+  if (!String(url).includes('api.anthropic.com')) return { ok: true, status: 200, json: async () => ({}) };
+  const cuerpo = JSON.parse(opts.body || '{}');
+  const sistema = String(Array.isArray(cuerpo.system) ? (cuerpo.system[0] || {}).text || '' : cuerpo.system || '');
+  if (cuerpo.messages && cuerpo.messages[0] && cuerpo.messages[0].content === 'ok') {
+    return { ok: true, status: 200, json: async () => ({ content: [{ text: '{' }] }) };
+  }
+  if (sistema.startsWith('Eres un corrector de estilo')) {
+    vecesQueSeLlamaAlCorrector++;
+    return { ok: true, status: 200, json: async () => ({ content: [{ text: JSON.stringify({ frases: marcaElCorrector }) }] }) };
+  }
+  if (sistema.startsWith('Eres un maquetador') || sistema.startsWith('Eres un corrector.')) {
+    return { ok: true, status: 200, json: async () => ({ content: [{ text: '{"frases":[]}' }] }) };
+  }
+  llamadasDeArea++;
+  return { ok: true, status: 200, json: async () => ({ content: [{ text: queDevuelve }] }) };
+};
+
+const stripeFalsoRuta = path.join(AQUI, '.stripe-falso-corrector.mjs');
+const chatRuta = path.join(AQUI, '.chat-corrector-bajo-prueba.mjs');
+const original = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
+const MARCA = "import Stripe from 'stripe';";
+if (!original.includes(MARCA)) {
+  console.error('✘ api/chat.js ya no importa Stripe como se esperaba; hay que actualizar esta prueba.');
+  process.exit(1);
+}
+fs.writeFileSync(stripeFalsoRuta, STRIPE_FALSO);
+fs.writeFileSync(chatRuta, original.replace(MARCA, "import Stripe from './.stripe-falso-corrector.mjs';"));
+
+process.env.STRIPE_SECRET_KEY = 'sk_test';
+process.env.ANTHROPIC_API_KEY = 'sk-ant-test';
+process.env.BREVO_API_KEY = '';
+
+const limpiar = () => { for (const f of [stripeFalsoRuta, chatRuta]) try { fs.unlinkSync(f); } catch {} };
+
+let fallos = 0;
+const c = (desc, ok, det = '') => {
+  console.log(`  ${ok ? '✔' : '✘ FALLA'}  ${desc}${det ? '  [' + det + ']' : ''}`);
+  if (!ok) fallos++;
+};
+
+// Lo que chat.js escribe en el registro, para comprobar que avisa.
+const apuntes = [];
+const warnOriginal = console.warn;
+console.warn = (...a) => { apuntes.push(a.join(' ')); };
+
+let n = 0;
+try {
+  const { default: chat } = await import(chatRuta);
+
+  const generar = async (devuelve, marca) => {
+    const sid = 'cs_corrector_' + (++n);
+    TIENDA.set(sid, {
+      id: sid, payment_status: 'paid', customer_email: 'cliente@ejemplo.com',
+      customer_details: { email: 'cliente@ejemplo.com' }, metadata: { nombre: 'Ana Ruiz' },
+    });
+    queDevuelve = devuelve;
+    marcaElCorrector = marca;
+    llamadasDeArea = 0;
+    vecesQueSeLlamaAlCorrector = 0;
+    apuntes.length = 0;
+    const r = { code: 0, body: null };
+    r.status = x => { r.code = x; return r; };
+    r.json = b => { r.body = b; return r; };
+    r.setHeader = () => {};
+    await chat({ method: 'POST', body: { session_id: sid, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r);
+    return r;
+  };
+
+  console.log('\n  api/chat.js — el corrector que lee se apunta, no cuesta un área\n');
+
+  // ── A. CONTROL: nada que marcar ─────────────────────────────────
+  console.log('  A. el corrector no marca nada');
+  const a = await generar(areaCon(null), []);
+  c('el informe sale', a.code === 200, 'HTTP ' + a.code);
+  c('siete áreas, siete llamadas', llamadasDeArea === 7, llamadasDeArea + ' llamadas');
+
+  // ── B. LO QUE COSTABA CUATRO AREAS ──────────────────────────────
+  console.log('\n  B. el corrector marca una frase (la del informe del 24 de agosto)');
+  const b = await generar(areaCon(null), [FRASE_MARCADA]);
+  c('el informe sale igual', b.code === 200, 'HTTP ' + b.code);
+  c('NO se vuelve a pedir ni un área: 7 llamadas para 7 áreas',
+    llamadasDeArea === 7, llamadasDeArea + ' llamadas');
+  c('el corrector sí se ha llamado (se sigue mirando)',
+    vecesQueSeLlamaAlCorrector === 7, vecesQueSeLlamaAlCorrector + ' veces');
+  c('y queda apuntado en el registro, que no nos quedamos ciegos',
+    apuntes.some(x => x.includes('habla de ella desde fuera')));
+  c('el apunte dice que no se reescribe por eso',
+    apuntes.some(x => x.includes('volver a pedirla no lo arregla')));
+  c('el texto del área llega entero al cliente',
+    String(b.body?.texto || '').includes(FRASE_MARCADA));
+
+  // ── C. EL "ELLA + VERBO" SÍ CUESTA UNA VUELTA ───────────────────
+  console.log('\n  C. un "ella responde" impreso, que sí es un fallo que se ve');
+  const d = await generar(areaCon(CON_ELLA), []);
+  c('el informe sale', d.code === 200, 'HTTP ' + d.code);
+  c('SÍ se vuelve a pedir el área: 14 llamadas para 7 áreas',
+    llamadasDeArea === 14, llamadasDeArea + ' llamadas');
+  c('y se dice por qué', apuntes.some(x => x.includes('floja') && x.includes('desde fuera')));
+
+  // ── D. LO QUE SÍ SE ARREGLA VOLVIENDO A PEDIR SIGUE IGUAL ───────
+  console.log('\n  D. la escena copiada, que sí se arregla, no se ha tocado');
+  const e = await generar(areaCon(ESCENA), []);
+  c('el informe sale', e.code === 200, 'HTTP ' + e.code);
+  const areasE = String(e.body?.texto || '').split(SEPARADOR_AREAS);
+  const repetida = areasE.filter(t => t.split(ESCENA).length - 1 !== 1).length;
+  c('la escena se lee UNA vez en cada área', repetida === 0, repetida + ' área(s) mal');
+  c('y se ha arreglado sin volver a pedir el área',
+    llamadasDeArea === 7, llamadasDeArea + ' llamadas');
+
+} catch (err) {
+  console.warn = warnOriginal;
+  console.error('\n  ✘ la prueba reventó:', err.stack || err.message);
+  fallos++;
+} finally {
+  console.warn = warnOriginal;
+  limpiar();
+}
+
+console.log(fallos ? `\n  ${fallos} COMPROBACIONES FALLIDAS\n` : '\n  todo pasa\n');
+process.exit(fallos ? 1 : 0);

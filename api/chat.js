@@ -1120,8 +1120,38 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     console.warn(`Área ${id}: la escena venía copiada en ${sobran.length} párrafo(s), se han quitado sin volver a pedir el área`);
   }
 
+  // ── LO QUE HACE QUE SE VUELVA A PEDIR EL AREA, Y LO QUE SOLO SE APUNTA ──
+  //
+  // Devuelve dos listas. "flojo" es lo que se arregla volviendo a pedir el
+  // area. "avisos" es lo que se ve pero NO se arregla asi, y por lo tanto no
+  // justifica pagar el area entera otra vez.
+  //
+  // EL REPASO QUE LEE PASO A AVISO EL 24 DE AGOSTO, Y NO POR CAPRICHO.
+  // En el informe de ese dia mando reescribir cuatro areas de siete, y las
+  // CUATRO volvieron marcadas por lo mismo: se pagaron cuatro areas de mil
+  // trescientas palabras y ninguna quedo mejor. Cero de cuatro.
+  //
+  // Y ademas casi nada de lo que marco era un fallo. Estas son las frases por
+  // las que mando reescribir:
+  //   "Tu llevas esa cuenta, Raquel, y la llevas desde hace tanto..."  -> es de TU
+  //   "guardas una habitacion cerrada que no ensenas ni a quien mas quieres" -> es de TU
+  //   "ahi es tambien donde mas se te nota que llevas la cuenta de todo" -> es de TU
+  //   "Hay una edad, casi siempre muy pronto, en la que cualquier nina..." -> habla de mucha gente
+  //   "Hay gente que aprende pronto que el mundo se sostiene..."      -> habla de mucha gente
+  //   "el amor hay que ganarselo cada semana"                         -> no habla de nadie
+  // Las tres cosas estan escritas en SISTEMA_REPASO como que NO son fallo, y
+  // aun asi las marca. Es un corrector que se equivoca casi siempre y cuyo
+  // arreglo no arregla: las dos mitades fallan, no una.
+  //
+  // Se queda apuntado en el registro para no quedarnos ciegos si algun dia
+  // aparece uno de verdad, pero ya no cuesta un area.
+  //
+  // El "ella" de sujeto NO se toca y sigue haciendo que se vuelva a pedir: no
+  // es un corrector que opina, es una palabra que esta o no esta, y un "ella
+  // responde" impreso lo lee la clienta.
   async function loQueLeFaltaAlArea(montada) {
     const flojo = [];
+    const avisos = [];
     const bloques = analizarArea(montada);
 
     const negritas = negritasDe(bloques).length;
@@ -1156,12 +1186,12 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       flojo.push(`habla de ella desde fuera: "${ella.slice(0, 70).trim()}..."`);
     }
 
-    // Y el repaso que lee, para todo lo que no se puede cazar contando.
+    // Y el repaso que lee. Solo se apunta: ver la nota de arriba.
     for (const f of await frasesQueHablanDeEllaDesdeFuera(leido)) {
-      flojo.push(`habla de ella desde fuera: "${f.slice(0, 70).trim()}..."`);
+      avisos.push(`habla de ella desde fuera: "${f.slice(0, 70).trim()}..."`);
     }
 
-    return flojo;
+    return { flojo, avisos };
   }
 
 
@@ -1557,7 +1587,12 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     while (fallos < INTENTOS_POR_AREA) {
       try {
         const montada = await pedirArea(area, loQueFalloAntes);
-        const flojo = await loQueLeFaltaAlArea(montada);
+        const { flojo, avisos } = await loQueLeFaltaAlArea(montada);
+        // Lo que se ve pero no se arregla volviendo a pedir el area: se apunta
+        // y se sigue. Ver la nota en loQueLeFaltaAlArea.
+        if (avisos.length > 0) {
+          console.warn(`Área ${area.id}: ${avisos.join('; ')} — se entrega así, volver a pedirla no lo arregla`);
+        }
         if (flojo.length === 0) return montada;
         if (mejor === null || flojo.length <= mejor.cuantos) mejor = { montada, cuantos: flojo.length };
         if (repasos >= REPASOS_POR_ESTILO) {
