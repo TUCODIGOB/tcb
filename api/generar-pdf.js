@@ -101,7 +101,7 @@ export default async function handler(req, res) {
       }
     }
 
-    const [regular, bold, italic,
+    const [regular, bold, italic, italianno,
       img_portada, img_indice, img_bienvenido, img_rueda, img_base,
       img_identidad, img_patrones, img_miedos, img_herida, img_amor, img_relaciones, img_dinero,
       img_frase, img_proximo, img_proximo2, img_trasera
@@ -109,6 +109,8 @@ export default async function handler(req, res) {
       loadFontBase64('/fonts/Roboto-Regular.ttf'),
       loadFontBase64('/fonts/Roboto-Bold.ttf'),
       loadFontBase64('/fonts/Roboto-Italic.ttf'),
+      // La caligrafica del cierre de cada area. Ver ESTILOS.cierre.
+      loadFontBase64('/fonts/Italianno-Regular.ttf'),
       loadImageBase64('/images/1-portada-pdf.jpg'),
       loadImageBase64('/images/2-indice-pdf.jpg'),
       loadImageBase64('/images/3-bienvenido-pdf.jpg'),
@@ -137,6 +139,15 @@ export default async function handler(req, res) {
     if (regular) { doc.addFileToVFS('Roboto-Regular.ttf', regular); doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal'); }
     if (bold)    { doc.addFileToVFS('Roboto-Bold.ttf', bold);       doc.addFont('Roboto-Bold.ttf', 'Roboto', 'bold'); }
     if (italic)  { doc.addFileToVFS('Roboto-Italic.ttf', italic);   doc.addFont('Roboto-Italic.ttf', 'Roboto', 'italic'); }
+    // Italianno solo tiene un peso: se registra como 'normal' y no hay negrita
+    // ni cursiva suyas. Si el fichero no llegara, el cierre se pinta con la
+    // Roboto de siempre: ver comoSePinta.
+    var hayItalianno = false;
+    if (italianno) {
+      doc.addFileToVFS('Italianno-Regular.ttf', italianno);
+      doc.addFont('Italianno-Regular.ttf', 'Italianno', 'normal');
+      hayItalianno = true;
+    }
 
     // Si un fondo no se ha podido cargar, esa pagina sale sin fondo en vez de
     // romper el PDF entero. Se envuelve addImage una sola vez para no tener que
@@ -196,23 +207,40 @@ export default async function handler(req, res) {
     // sobre todo el bloque (dentro de una cursiva no cabe una negrita: la
     // fuente negrita-cursiva no esta cargada, y mezclarlas descuadraria la
     // medida de la linea).
-    function anchoPalabra(pal, size, fuenteBase) {
+    // QUE FUENTE TOCA, Y CON QUE PESO.
+    //
+    // Hasta ahora todo se pintaba con Roboto y la familia iba escrita a mano
+    // en cada sitio. El cierre usa Italianno, que solo tiene un peso: pedirle
+    // negrita la dejaria sin dibujar. Aqui se decide una vez, y se decide
+    // igual al medir que al pintar, que es lo que importa: si se midiera con
+    // una fuente y se pintara con otra, las lineas saldrian de otro largo.
+    //
+    // Si el fichero de Italianno no llegara, se cae a Roboto negrita, que es
+    // como estaba antes: un cierre sin fuente no se pinta, y ese es el golpe
+    // final del area.
+    function comoSePinta(fuenteBase, familia, enNegrita) {
+      if (familia === 'Italianno' && hayItalianno) return ['Italianno', 'normal'];
+      return ['Roboto', (fuenteBase === 'normal' && enNegrita) ? 'bold' : fuenteBase];
+    }
+
+    function anchoPalabra(pal, size, fuenteBase, familia) {
       doc.setFontSize(size);
-      doc.setFont('Roboto', (fuenteBase === 'normal' && pal.b) ? 'bold' : fuenteBase);
+      var f = comoSePinta(fuenteBase, familia, pal.b);
+      doc.setFont(f[0], f[1]);
       return doc.getTextWidth(pal.t);
     }
 
-    function anchoLinea(linea, size, fuenteBase) {
+    function anchoLinea(linea, size, fuenteBase, familia) {
       var a = 0;
-      for (var i = 0; i < linea.length; i++) a += anchoPalabra(linea[i], size, fuenteBase);
+      for (var i = 0; i < linea.length; i++) a += anchoPalabra(linea[i], size, fuenteBase, familia);
       return a;
     }
 
     // Lo mismo que splitTextToSize, pero midiendo cada palabra con su fuente.
-    function lineasConNegrita(txt, maxW, size, fuenteBase) {
+    function lineasConNegrita(txt, maxW, size, fuenteBase, familia) {
       var pals = palabrasConNegrita(txt), lineas = [], linea = [], ancho = 0;
       for (var i = 0; i < pals.length; i++) {
-        var w = anchoPalabra(pals[i], size, fuenteBase);
+        var w = anchoPalabra(pals[i], size, fuenteBase, familia);
         if (pals[i].esp) {
           if (linea.length === 0) continue;
           linea.push(pals[i]); ancho += w; continue;
@@ -638,7 +666,22 @@ export default async function handler(req, res) {
       escena:   { size: 12,   color: [70, 70, 70],   x: 27, ancho: 157, alto: 7,   antes: 8,  despues: 9,  fuente: 'italic', barra: true },
       pregunta: { size: 13,   color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.4, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
       remate:   { size: 13.5, color: [14, 63, 75],  x: 30, ancho: 150, alto: 7.8, antes: 10, despues: 10, fuente: 'bold', centrado: true, juntar: true },
-      cierre:   { size: 16.5, color: [207, 177, 128], x: 18, ancho: 152, alto: 9.5, antes: 19, despues: 8, fuente: 'bold',  centrado: true, juntar: true },
+      // EL CIERRE VA EN ITALIANNO, la caligrafica, y por eso lleva su propia
+      // linea aparte de las demas.
+      //
+      // Los numeros no estan puestos a ojo, salen de medir las dos fuentes:
+      //  - 30 puntos, porque la x de Italianno mide 0,273 em y la de Roboto
+      //    negrita 0,528: casi el doble. A 30 los cierres de verdad ocupan las
+      //    mismas lineas que ocupaban a 16,5 con Roboto.
+      //  - 13 mm de interlineado, porque de las letras que salen de verdad la
+      //    que mas sube es la "Á" (0,73 em) y la que mas baja la "g" (-0,35),
+      //    o sea 11,4 mm a este tamaño: por debajo de eso dos lineas se tocan.
+      //
+      // Y si el fichero de la fuente no llegara, el cierre se pinta EXACTAMENTE
+      // como estaba antes. Un cierre a 30 puntos en Roboto seria un cartel.
+      cierre: hayItalianno
+        ? { size: 30,   color: [207, 177, 128], x: 18, ancho: 152, alto: 13,  antes: 19, despues: 8, fuente: 'bold', familia: 'Italianno', centrado: true, juntar: true }
+        : { size: 16.5, color: [207, 177, 128], x: 18, ancho: 152, alto: 9.5, antes: 19, despues: 8, fuente: 'bold', centrado: true, juntar: true },
     };
 
     function paginaNueva() {
@@ -690,7 +733,7 @@ export default async function handler(req, res) {
     function pintarBloque(bloque, siguiente) {
       var e = ESTILOS[bloque.tipo] || ESTILOS.texto;
       var texto = e.mayus ? bloque.t.toUpperCase() : bloque.t;
-      var lineas = lineasConNegrita(fx(texto), e.ancho, e.size, e.fuente);
+      var lineas = lineasConNegrita(fx(texto), e.ancho, e.size, e.fuente, e.familia);
       if (lineas.length === 0) return;
 
       var altoBloque = lineas.length * e.alto + (e.filete ? 2.5 : 0);
@@ -738,7 +781,7 @@ export default async function handler(req, res) {
           doc.setTextColor(e.color[0], e.color[1], e.color[2]);
         }
         var linea = lineas[li];
-        var cx = e.centrado ? (105 - anchoLinea(linea, e.size, e.fuente) / 2) : e.x;
+        var cx = e.centrado ? (105 - anchoLinea(linea, e.size, e.fuente, e.familia) / 2) : e.x;
         // La escena lleva un filete dorado a la izquierda, dibujado linea a
         // linea para que siga a la escena si cambia de pagina. Va en el dorado
         // claro de la marca, el mismo del cierre: en el dorado fuerte, una
@@ -752,10 +795,11 @@ export default async function handler(req, res) {
         }
         for (var wi = 0; wi < linea.length; wi++) {
           if (!linea[wi].esp) {
-            doc.setFont('Roboto', (e.fuente === 'normal' && linea[wi].b) ? 'bold' : e.fuente);
+            var f = comoSePinta(e.fuente, e.familia, linea[wi].b);
+            doc.setFont(f[0], f[1]);
             doc.text(linea[wi].t, cx, maq.y);
           }
-          cx += anchoPalabra(linea[wi], e.size, e.fuente);
+          cx += anchoPalabra(linea[wi], e.size, e.fuente, e.familia);
         }
         maq.y += e.alto;
       }
