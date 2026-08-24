@@ -607,78 +607,6 @@ export default async function handler(req, res) {
     var Y_TOPE = H - 21;
     var maq = { y: 60, pag: 6, paginas: 1 };
 
-    // ── PAG 6 RASGOS ────────────────────────────────────────────────────────
-    if (rasgos && (rasgos.fortalezas?.length > 0 || rasgos.desafios?.length > 0)) {
-      doc.addPage();
-      doc.addImage(img_base, 'JPEG', 0, 0, W, H);
-
-      var pyRasgos = 45;
-
-      doc.setFont('Roboto', 'bold');
-      doc.setFontSize(11);
-      doc.setTextColor(207, 177, 128);
-      doc.text(fx('RASGOS'), 18, pyRasgos);
-      pyRasgos += 12;
-
-      var todosRasgos = [];
-      if (rasgos.fortalezas) todosRasgos = todosRasgos.concat(rasgos.fortalezas);
-      if (rasgos.desafios) todosRasgos = todosRasgos.concat(rasgos.desafios);
-
-      for (var ri = 0; ri < todosRasgos.length; ri++) {
-        var rasgo = todosRasgos[ri];
-        if (pyRasgos > Y_TOPE - 20) {
-          addPageNum(maq.pag);
-          maq.pag++;
-          doc.addPage();
-          doc.addImage(img_base, 'JPEG', 0, 0, W, H);
-          pyRasgos = 45;
-        }
-
-        doc.setFont('Roboto', 'bold');
-        doc.setFontSize(10);
-        doc.setTextColor(14, 63, 75);
-        doc.text('• ' + (rasgo.nombre || ''), 18, pyRasgos);
-        pyRasgos += 5;
-
-        doc.setFont('Roboto', 'normal');
-        doc.setFontSize(9);
-        doc.setTextColor(60, 60, 60);
-        var dl = doc.splitTextToSize(rasgo.descripcion || '', 170);
-        for (var dli = 0; dli < dl.length; dli++) {
-          if (pyRasgos > Y_TOPE - 20) {
-            addPageNum(maq.pag);
-            maq.pag++;
-            doc.addPage();
-            doc.addImage(img_base, 'JPEG', 0, 0, W, H);
-            pyRasgos = 45;
-          }
-          doc.text(dl[dli], 22, pyRasgos);
-          pyRasgos += 4;
-        }
-
-        doc.setFont('Roboto', 'italic');
-        doc.setFontSize(8);
-        doc.setTextColor(100, 100, 100);
-        var el = doc.splitTextToSize(rasgo.explicacion || '', 170);
-        for (var eli = 0; eli < el.length; eli++) {
-          if (pyRasgos > Y_TOPE - 20) {
-            addPageNum(maq.pag);
-            maq.pag++;
-            doc.addPage();
-            doc.addImage(img_base, 'JPEG', 0, 0, W, H);
-            pyRasgos = 45;
-          }
-          doc.text(el[eli], 22, pyRasgos);
-          pyRasgos += 3.5;
-        }
-
-        pyRasgos += 4;
-      }
-
-      addPageNum(maq.pag);
-      maq.pag++;
-    }
-
     // ── PAGS 6-19 LAS 7 AREAS ────────────────────────────────────────────────
     var areaTitles=[
       {tit:fx('IDENTIDAD'),sub:fx('Por que eres como eres y por que tu vida es como es')},
@@ -851,6 +779,83 @@ export default async function handler(req, res) {
       for (var bi = 0; bi < bloques.length; bi++) pintarBloque(bloques[bi], bloques[bi + 1]);
       if(maq.paginas<2){addPageNum(maq.pag);maq.pag++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);}
       addPageNum(maq.pag); maq.pag++;
+    }
+
+    // ── LAS DOS LISTAS DE RASGOS ─────────────────────────────────────────────
+    //
+    // Van DESPUES del area 7 y antes de la pagina de la frase: son el cierre
+    // de lo que se le acaba de contar, no la entrada. Puestas antes de las
+    // areas, el cliente se encontraba treinta fichas sueltas sobre si mismo
+    // sin haber leido todavia una sola linea que las explicara.
+    if (rasgos && (rasgos.fortalezas?.length > 0 || rasgos.desafios?.length > 0)) {
+      doc.addPage();
+      doc.addImage(img_base, 'JPEG', 0, 0, W, H);
+
+      var pyRasgos = 45;
+
+      doc.setFont('Roboto', 'bold');
+      doc.setFontSize(11);
+      doc.setTextColor(207, 177, 128);
+      doc.text(fx('RASGOS'), 18, pyRasgos);
+      pyRasgos += 12;
+
+      var todosRasgos = [];
+      if (rasgos.fortalezas) todosRasgos = todosRasgos.concat(rasgos.fortalezas);
+      if (rasgos.desafios) todosRasgos = todosRasgos.concat(rasgos.desafios);
+
+      for (var ri = 0; ri < todosRasgos.length; ri++) {
+        var rasgo = todosRasgos[ri];
+        if (pyRasgos > Y_TOPE - 20) {
+          addPageNum(maq.pag);
+          maq.pag++;
+          doc.addPage();
+          doc.addImage(img_base, 'JPEG', 0, 0, W, H);
+          pyRasgos = 45;
+        }
+
+        doc.setFont('Roboto', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(14, 63, 75);
+        doc.text('• ' + (rasgo.nombre || ''), 18, pyRasgos);
+        pyRasgos += 5;
+
+        doc.setFont('Roboto', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(60, 60, 60);
+        var dl = doc.splitTextToSize(rasgo.descripcion || '', 170);
+        for (var dli = 0; dli < dl.length; dli++) {
+          if (pyRasgos > Y_TOPE - 20) {
+            addPageNum(maq.pag);
+            maq.pag++;
+            doc.addPage();
+            doc.addImage(img_base, 'JPEG', 0, 0, W, H);
+            pyRasgos = 45;
+          }
+          doc.text(dl[dli], 22, pyRasgos);
+          pyRasgos += 4;
+        }
+
+        doc.setFont('Roboto', 'italic');
+        doc.setFontSize(8);
+        doc.setTextColor(100, 100, 100);
+        var el = doc.splitTextToSize(rasgo.explicacion || '', 170);
+        for (var eli = 0; eli < el.length; eli++) {
+          if (pyRasgos > Y_TOPE - 20) {
+            addPageNum(maq.pag);
+            maq.pag++;
+            doc.addPage();
+            doc.addImage(img_base, 'JPEG', 0, 0, W, H);
+            pyRasgos = 45;
+          }
+          doc.text(el[eli], 22, pyRasgos);
+          pyRasgos += 3.5;
+        }
+
+        pyRasgos += 4;
+      }
+
+      addPageNum(maq.pag);
+      maq.pag++;
     }
 
     // ── PÁGINAS FINALES ───────────────────────────────────────────────────────

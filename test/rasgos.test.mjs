@@ -566,6 +566,40 @@ export default function Stripe() {
     const conLista = await cuantasPaginas({ rasgos: RASGOS });
     const listaVaciaPdf = await cuantasPaginas({ rasgos: { fortalezas: [], desafios: [] } });
 
+    // ── DÓNDE VAN LAS PÁGINAS ───────────────────────────────────────
+    //
+    // No basta con que salgan: tienen que salir DESPUÉS del área 7 y ANTES
+    // de la página de la frase. Puestas al principio, que es donde estaban,
+    // el cliente se encontraba treinta fichas sobre sí mismo antes de haber
+    // leído una sola línea que las explicara.
+    const iAreas = pdf.indexOf('LAS 7 AREAS');
+    const iRasgos = pdf.indexOf('if (rasgos &&');
+    const iFrase = pdf.indexOf("img_frase,'JPEG'");
+    comprobar('la lista se pinta DESPUÉS de las 7 áreas y ANTES de la página de la frase',
+      iAreas > 0 && iRasgos > iAreas && iFrase > iRasgos,
+      iRasgos < iAreas ? 'está ANTES de las áreas' : iRasgos > iFrase ? 'está detrás de la frase' : 'en su sitio');
+
+    // Y se comprueba también en el PDF hecho: el texto de cada página va en
+    // su propio flujo, así que dos PDF que van iguales hasta cierta página
+    // dan los mismos flujos hasta ahí. Si la lista fuera al principio, el
+    // primer flujo distinto sería uno de los primeros.
+    const flujosDeTexto = (buf) => [...buf.toString('latin1')
+      .matchAll(/stream\r?\n([\s\S]*?)\r?\nendstream/g)]
+      .map(m => m[1]).filter(f => !f.startsWith('\xff\xd8')).map(f => f.length);
+
+    const pdfDe = async (extra) => {
+      const r = resp();
+      await generarPdf({ method: 'POST', body: { ...pedido, ...extra } }, r);
+      return flujosDeTexto(Buffer.from(r.body.pdfBase64.split(',')[1], 'base64'));
+    };
+    const flSin = await pdfDe({});
+    const flCon = await pdfDe({ rasgos: RASGOS });
+    let iguales = 0;
+    while (iguales < flSin.length && iguales < flCon.length && flSin[iguales] === flCon[iguales]) iguales++;
+    comprobar('la lista no cambia ni una página de las siete áreas',
+      iguales > flSin.length * 0.5,
+      `las ${iguales} primeras de ${flSin.length} salen exactamente igual que sin lista`);
+
     comprobar('el PDF se genera sin lista (como hasta ahora)', sinLista > 0, sinLista + ' páginas');
     comprobar('el PDF se genera con lista', conLista > 0, conLista + ' páginas');
     comprobar('los 30 rasgos AÑADEN páginas al informe',
