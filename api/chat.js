@@ -126,22 +126,38 @@ const RASGO = {
   additionalProperties: false,
 };
 
+// CUANTOS RASGOS SE PIDEN, Y POR QUE NO LO DICE EL ESQUEMA.
+//
+// El numero se pide en el prompt, no aqui. Esta API solo admite minItems 0 y
+// 1, como ya esta apuntado arriba en el esquema del area: un minItems: 10
+// no lo rechaza el modelo, lo rechaza la API de entrada con un 400 y la
+// lista no llega nunca. Lo unico que el esquema puede garantizar es que la
+// lista no venga vacia, y eso es lo que hace el minItems: 1.
+//
+// Y son diez y diez, no "los que salgan". Pidiendo sin tope, el modelo
+// escribia mas de lo que le cabia en la respuesta y llegaba cortada a mitad
+// de una frase: ver TOPE_RASGOS aqui debajo.
+const RASGOS_POR_LISTA = 10;
+
+// El hueco para escribir la respuesta. Veinte rasgos enteros son unos 4.500
+// tokens; se deja al doble porque el tope no se paga (se paga lo que el modelo
+// escriba) y quedarse corto cuesta la lista entera.
+const TOPE_RASGOS = 8000;
+
 const ESQUEMA_RASGOS = {
   type: 'object',
   properties: {
     fortalezas: {
       type: 'array',
-      minItems: 10,
-      maxItems: 30,
+      minItems: 1,
       items: RASGO,
-      description: 'Los rasgos, habilidades y fortalezas que salen de la carta. Minimo 10, maximo 30. Todos los que salgan de verdad de la carta.'
+      description: `Las ${RASGOS_POR_LISTA} fortalezas, dones y habilidades que mas claras se ven en la carta. ${RASGOS_POR_LISTA} exactamente.`
     },
     desafios: {
       type: 'array',
-      minItems: 10,
-      maxItems: 30,
+      minItems: 1,
       items: RASGO,
-      description: 'Los desafios, dificultades y areas de crecimiento que salen de la carta. Minimo 10, maximo 30. Todos los que salgan de verdad de la carta.'
+      description: `Los ${RASGOS_POR_LISTA} desafios, dificultades y areas de crecimiento que mas claros se ven en la carta. ${RASGOS_POR_LISTA} exactamente.`
     },
   },
   required: ['fortalezas', 'desafios'],
@@ -226,7 +242,7 @@ DESAFIOS (lista 2):
 - Desafios que ve la astrologia en su carta
 
 REGLAS IMPRESCINDIBLES:
-1. Minimo 20 rasgos totales (balance entre ambas listas), pero SIN LIMITE MAXIMO: saca TODOS los que veas de verdad.
+1. EXACTAMENTE ${RASGOS_POR_LISTA} fortalezas y ${RASGOS_POR_LISTA} desafios. Ni uno mas, ni uno menos.
 2. Sin repetir JAMAS un rasgo ya mencionado en la misma lista.
 3. Cada rasgo en UNA sola lista (fortaleza o desafio, nunca los dos).
 4. Cada rasgo asignado a UNA de 7 areas: 1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero.
@@ -249,37 +265,70 @@ ${cartaTexto}
 Persona: ${trato}
 Nombre: ${nombrePila}
 
-IMPORTANTE: Extrae TODOS los rasgos significativos que ves. El minimo es 20 (10 en cada lista), pero puede haber 25, 30 o mas. No te limites.`;
+IMPORTANTE: ${RASGOS_POR_LISTA} en cada lista, ni uno mas ni uno menos. Elige los ${RASGOS_POR_LISTA} que mas claros se vean en la carta; no rellenes para llegar ni te dejes fuera los evidentes.`;
 
+  // LA LISTA SE PIDE CON EL ESQUEMA PUESTO, NO PIDIENDO JSON POR ESCRITO.
+  //
+  // Sin esquema, el modelo escribe el JSON a mano y lo que llega depende de lo
+  // que le quepa. En el informe del 24 de agosto se corto a mitad de una frase
+  // ("Unterminated string in JSON at position 6991"), JSON.parse no pudo
+  // leerlo y la lista entera se fue a la basura: el cliente pago una llamada
+  // de las caras y recibio un PDF sin la pagina de rasgos. Con output_config
+  // lo que llega es JSON valido y con todas sus casillas, igual que las areas.
+  //
+  // Y va con sonnet, como todo lo demas del informe. Iba con opus, que cuesta
+  // cinco veces mas por token: el trabajo dificil es escribir las areas, no
+  // sacar veinte titulares de la carta.
   const body = JSON.stringify({
-    model: 'claude-opus-5',
-    max_tokens: 3000,
+    model: 'claude-sonnet-5',
+    thinking: { type: 'disabled' },
+    output_config: { format: { type: 'json_schema', schema: ESQUEMA_RASGOS } },
+    // Ver TOPE_RASGOS. El tope viejo eran 3.000 y por eso llegaba cortada.
+    max_tokens: TOPE_RASGOS,
     system: prompt,
     messages: [
-      { role: 'user', content: 'Devuelve la respuesta UNICAMENTE en formato JSON, siguiendo exactamente la estructura del schema. Nada de explicaciones adicionales, solo JSON puro.' }
+      { role: 'user', content: 'Saca las dos listas de esta carta, siguiendo exactamente la estructura del esquema.' }
     ],
   });
 
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'x-api-key': process.env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-    },
-    body,
-  });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('Error extrayendo rasgos:', response.status, errorText.slice(0, 200));
-    return { fortalezas: [], desafios: [] };
-  }
-
-  const data = await response.json();
-  const texto = data.content?.[0]?.text || '{}';
+  // Pase lo que pase, de aqui no sale una excepcion. La lista es un extra del
+  // informe: si falla, el PDF sale sin esa pagina, pero las siete areas que el
+  // cliente ha pagado se entregan igual. Antes un corte de red aqui tumbaba el
+  // informe entero cuando ya estaba escrito.
+  const listaVacia = () => ({ fortalezas: [], desafios: [] });
 
   try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+      },
+      body,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Error extrayendo rasgos:', response.status, errorText.slice(0, 200));
+      return listaVacia();
+    }
+
+    const data = await response.json();
+
+    // Si aun asi se quedara sin sitio, lo que llega es JSON cortado. Se dice
+    // aqui y con estas palabras, que es el aviso que hay que buscar si algun
+    // dia la pagina de rasgos vuelve a salir vacia.
+    if (data.stop_reason === 'max_tokens') {
+      console.error(`Rasgos: la respuesta no cupo en ${TOPE_RASGOS} tokens y ha llegado cortada; el informe sale sin la lista`);
+      return listaVacia();
+    }
+
+    const texto = (data.content || [])
+      .filter(b => b && typeof b.text === 'string')
+      .map(b => b.text)
+      .join('') || '{}';
+
     const resultado = JSON.parse(texto);
 
     // Validar estructura basica
@@ -308,8 +357,8 @@ IMPORTANTE: Extrae TODOS los rasgos significativos que ves. El minimo es 20 (10 
     console.log(`Rasgos extraidos: ${resultado.fortalezas.length} fortalezas, ${resultado.desafios.length} desafios`);
     return resultado;
   } catch (err) {
-    console.error('Error parseando rasgos:', err.message, 'Texto:', texto.slice(0, 200));
-    return { fortalezas: [], desafios: [] };
+    console.error('Error extrayendo rasgos:', err.message);
+    return listaVacia();
   }
 }
 
@@ -1785,6 +1834,21 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // calentarLaCache. Sin esto, las siete se pisan y la cache sale cara.
     await calentarLaCache();
 
+    // LA LISTA DE RASGOS SALE AHORA, NO AL FINAL.
+    //
+    // Es otra llamada, con otro prompt, y no depende de una sola palabra de lo
+    // que escriban las areas. Puesta detras de ellas sumaba su espera entera al
+    // informe: 45 segundos el 24 de agosto, con la funcion ya en 3 minutos de
+    // un tope de 5. Puesta aqui cabe dentro del tiempo que las areas tardan de
+    // todas formas y no suma nada. No comparte prompt con ellas, asi que
+    // tampoco les toca la cache que acaba de dejar escrita calentarLaCache.
+    //
+    // Va fuera del Promise.all de las areas a proposito: si el Promise.all se
+    // cae, esta se queda sin esperar, y una promesa sin esperar que reventara
+    // tumbaria el proceso. extraerRasgos no lanza nunca, devuelve las listas
+    // vacias, asi que aqui no puede quedar nada colgando.
+    const laListaDeRasgos = extraerRasgos(nombrePila, sexo, cartaTexto);
+
     const resultados = await Promise.all(
       AREAS.map(area => generarArea(area))
     );
@@ -1805,8 +1869,8 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       .map(t => quitarComaAntesDeY(t, nombrePila).split(SEPARADOR_AREAS).join(''))
       .join(SEPARADOR_AREAS);
 
-    // Extraer rasgos de la carta natal
-    const rasgos = await extraerRasgos(nombrePila, sexo, cartaTexto);
+    // Aqui ya suele estar hecha: se pidio antes que las areas y tarda menos.
+    const rasgos = await laListaDeRasgos;
 
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
     // que demuestra que quien pide el PDF es quien tiene la reserva.
