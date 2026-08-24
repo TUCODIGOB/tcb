@@ -790,17 +790,15 @@ export default function Stripe() {
     // Las mismas 30 fichas puestas en una sola lista ocupan menos que
     // repartidas en dos, porque cada lista empieza página. Si algún día se
     // vuelven a pegar una detrás de otra, esto se cae.
-    // Una ficha en cada lista tiene que dar DOS páginas, porque cada lista
-    // abre la suya. Si se pegaran, las dos fichas cabrían en una sola y
-    // saldría una. Con listas largas no se ve: la diferencia se la come el
-    // redondeo de las páginas que ya ocupaban, y la comprobación no sirve.
+    // La segunda lista sigue donde acaba la primera, no abre página: una
+    // ficha en cada lista tiene que caber en UNA sola página. Antes cada
+    // lista abría la suya y esto daban dos, con media página en blanco en
+    // medio del informe.
     const unaEnCadaUna = await cuantasPaginas({ rasgos: {
       fortalezas: [RASGOS.fortalezas[0]], desafios: [RASGOS.desafios[0]] } });
-    const dosEnUnaSola = await cuantasPaginas({ rasgos: {
-      fortalezas: [RASGOS.fortalezas[0], RASGOS.desafios[0]], desafios: [] } });
-    comprobar('cada lista empieza su propia página',
-      unaEnCadaUna === sinLista + 2 && dosEnUnaSola === sinLista + 1,
-      `una ficha en cada lista: ${unaEnCadaUna - sinLista} págs; las dos en una sola lista: ${dosEnUnaSola - sinLista} pág`);
+    comprobar('la segunda lista no abre página nueva, sigue a la primera',
+      unaEnCadaUna === sinLista + 1,
+      `una ficha en cada lista ocupa ${unaEnCadaUna - sinLista} página(s)`);
 
     // ── EL ÁREA DE CADA FICHA SE IMPRIME ────────────────────────────
     //
@@ -931,6 +929,20 @@ export default function Stripe() {
     // Se compara contra el informe SIN lista: lo que ya se salía (texto
     // centrado de la rueda, que la cuenta conservadora da por pasado) no es
     // cosa de la lista. Lo que no puede es AÑADIR ninguno.
+    // Y que la lista empiece a la misma altura que el texto de las áreas.
+    // Empezaba en 45 y se leía más alto que el resto del libro.
+    const crudoLista = await crudoDe({ rasgos: {
+      fortalezas: [RASGOS.fortalezas[0]], desafios: [RASGOS.desafios[0]] } });
+    const MM2 = 72 / 25.4;
+    const hojas = [...crudoLista.matchAll(/stream\r?\n([\s\S]*?)\r?\nendstream/g)]
+      .map(m => m[1]).filter(x => !x.startsWith('\xff\xd8'));
+    const hojaLista = hojas.find(x => /\/\w+ 13 Tf/.test(x));   // el título va a 13
+    const primeraY = hojaLista
+      ? Math.min(...[...hojaLista.matchAll(/([\d.]+) ([\d.]+) Td/g)].map(m => 297 - parseFloat(m[2]) / MM2))
+      : -1;
+    comprobar('la lista empieza a la misma altura que el texto de las áreas',
+      Math.abs(primeraY - 60) < 0.2, 'la primera línea cae en y = ' + primeraY.toFixed(1) + ' mm (las áreas, en 60)');
+
     const seSalenSinLista = loQueSeSale(await crudoDe({}));
     const seSalenConLista = loQueSeSale(await crudoDe({ rasgos: RASGOS_DE_TODOS_LOS_LARGOS }));
     comprobar('ni la etiqueta ni los separadores se salen del papel',

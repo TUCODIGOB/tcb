@@ -812,14 +812,18 @@ export default async function handler(req, res) {
     // luego no se pintara nada, el numero de pagina de abajo se estamparia dos
     // veces en la ultima del area 7 y todo lo que viene detras iria corrido.
     if (lasFortalezas.length > 0 || losDesafios.length > 0) {
-      var pyRasgos = 45;
+      // La misma altura a la que arranca el texto de las areas (ver maq.y en
+      // paginaNueva y al abrir cada area). Empezaba en 45 y se leia mas alto
+      // que el resto del libro, con la primera linea pegada al borde de arriba.
+      var ARRIBA_DEL_TODO = 60;
+      var pyRasgos = ARRIBA_DEL_TODO;
 
       // Abrir pagina nueva de la lista, con su fondo y su numero.
       function paginaDeRasgos(primera) {
         if (!primera) { addPageNum(maq.pag); maq.pag++; }
         doc.addPage();
         doc.addImage(img_base, 'JPEG', 0, 0, W, H);
-        pyRasgos = 45;
+        pyRasgos = ARRIBA_DEL_TODO;
       }
 
       // Antes de pintar algo, mirar si cabe. Antes esto estaba escrito tres
@@ -841,12 +845,27 @@ export default async function handler(req, res) {
         { titulo: fx('TUS DESAFÍOS'), rasgos: losDesafios },
       ];
 
+      // Lo que ocupa abrir una lista: su titulo, su rayita y la primera ficha
+      // entera. Si no cabe eso, no se abre aqui: un titulo solo al pie de la
+      // pagina, con la lista empezando en la siguiente, se lee como un
+      // descuido de imprenta.
+      var SITIO_PARA_ABRIR_UNA_LISTA = 60;
+
       var primeraLista = true;
       for (var li = 0; li < LAS_DOS_LISTAS.length; li++) {
         var laLista = LAS_DOS_LISTAS[li];
         if (laLista.rasgos.length === 0) continue;
-        paginaDeRasgos(primeraLista);
-        primeraLista = false;
+
+        // La primera abre pagina. La segunda NO: sigue donde acabo la primera,
+        // dejando aire. Una pagina nueva por lista dejaba media pagina en
+        // blanco en medio del informe.
+        if (primeraLista) {
+          paginaDeRasgos(true);
+          primeraLista = false;
+        } else {
+          pyRasgos += 16;
+          cabe(SITIO_PARA_ABRIR_UNA_LISTA);
+        }
 
         doc.setFont('Roboto', 'bold');
         doc.setFontSize(13);
@@ -930,16 +949,22 @@ export default async function handler(req, res) {
           // como un muro y no se ve donde acaba una y empieza la siguiente.
           // Gris muy claro y de todo el ancho: tiene que separar, no decorar,
           // asi que se nota sin que se vea.
-          // Detras de la ultima no va: una raya y a continuacion el final de la
-          // pagina se lee como que falta algo. Y si la ficha ha llegado al pie,
-          // tampoco: quedaria una raya suelta en el margen, debajo del texto y
-          // al lado del numero de pagina.
-          pyRasgos += 4;
+          // EL AIRE, IGUAL POR ARRIBA QUE POR ABAJO.
+          //
+          // No son el mismo numero porque no se mide desde el mismo sitio: por
+          // arriba se cuenta desde la ultima linea del porque, que baja 1,5 mm
+          // por debajo de su raya; por abajo, hasta el nombre de la ficha
+          // siguiente, que sube 3 mm por encima de la suya. Con 8 y 9,5 queda
+          // el mismo hueco blanco a los dos lados. Con 4 y 6, que es lo que
+          // habia, la raya se leia pegada al titulo de abajo.
+          pyRasgos += 2;
           if (ri < laLista.rasgos.length - 1 && pyRasgos <= Y_TOPE) {
-            doc.setDrawColor(222, 218, 210);
+            doc.setDrawColor(234, 231, 225);
             doc.setLineWidth(0.2);
             doc.line(18, pyRasgos, 192, pyRasgos);
-            pyRasgos += 6;
+            pyRasgos += 9.5;
+          } else {
+            pyRasgos += 8;
           }
         }
       }
