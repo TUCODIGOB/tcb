@@ -44,25 +44,43 @@ export default function Stripe() {
 // El area que devuelve el modelo, ya por casillas. La API obliga a que
 // vengan todas, asi que el caso de "se le olvido la escena" ya no existe:
 // lo unico que puede pasar es que llegue en blanco, y eso se prueba abajo.
+
+// El area se pide por bloques con huecos con nombre, no por una lista de
+// parrafos: ver ESQUEMA_AREA_POR_BLOQUES en api/chat.js. Esto reparte una lista
+// de parrafos por los cinco bloques en el mismo orden en que el codigo los
+// vuelve a juntar, asi que el texto que sale es identico al de la lista.
+// Los cinco bloques tienen que llevar algo: uno vacio es justo el fallo que
+// esto viene a impedir, y api/chat.js vuelve a pedir el area.
+function porBloques(parrafos) {
+  const nombres = ['arranque', 'hoy', 'origen', 'creencias', 'soltar'];
+  const bloques = {};
+  for (const nombre of nombres) bloques[nombre] = {};
+  parrafos.forEach((p, i) => {
+    const donde = bloques[nombres[Math.min(i, nombres.length - 1)]];
+    donde['p' + (Object.keys(donde).length + 1)] = p;
+  });
+  return bloques;
+}
+
 const AREA_BUENA = JSON.stringify({
-  parrafos: [
+  ...porBloques([
     { ladillo: null, texto: 'Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen, porque en cualquier familia hay una.' },
     { ladillo: 'La cuenta que no llevas', texto: 'Por fuera pareces tranquila, Ana, y por dentro llevas una **maquina que no para de repasar** lo que acabas de decir.' },
     { ladillo: null, texto: 'En el trabajo se te nota enseguida, **revisas una tarea tres veces** cuando con una bastaria, y no es que dudes de tu criterio.' },
     { ladillo: 'Donde aprendiste la cuenta', texto: 'De pequena entendiste que el carino se ganaba haciendo las cosas bien, siendo la que no daba problemas nunca.' },
     { ladillo: null, texto: 'Y cuarenta anos despues sigues revisando y sigues anticipando, **sin que nadie te lo haya pedido** jamas.' },
-  ],
-  escena: { tras_parrafo: 2, texto: 'Son las once de la noche y sigues con el movil en la mano sin mirar nada en concreto.' },
-  remate_herida: { tras_parrafo: 4, texto: 'Te has pasado la vida demostrando que se puede confiar en ti' },
-  remate_fuerza: { tras_parrafo: 5, texto: 'Muy poca gente sigue sosteniendo cuando ya no la mira nadie' },
-  pregunta: { tras_parrafo: 3, texto: '¿Cuando fue la ultima vez que alguien te dio las gracias por eso?' },
+  ]),
+  escena: { tras_bloque: 'hoy', texto: 'Son las once de la noche y sigues con el movil en la mano sin mirar nada en concreto.' },
+  remate_herida: { tras_bloque: 'creencias', texto: 'Te has pasado la vida demostrando que se puede confiar en ti' },
+  remate_fuerza: { tras_bloque: 'arranque', texto: 'Muy poca gente sigue sosteniendo cuando ya no la mira nadie' },
+  pregunta: { tras_bloque: 'origen', texto: '¿Cuando fue la ultima vez que alguien te dio las gracias por eso?' },
   cierre: 'No estas cansada de hacer cosas, estas cansada de que sea la unica prueba que te vale.',
 });
 
 // Lo mismo pero con la escena en blanco: la API no puede impedirlo.
 const AREA_ESCENA_VACIA = JSON.stringify({
   ...JSON.parse(AREA_BUENA),
-  escena: { tras_parrafo: 2, texto: '   ' },
+  escena: { tras_bloque: 'hoy', texto: '   ' },
 });
 
 let modo = 'buena';

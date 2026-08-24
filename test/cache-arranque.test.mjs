@@ -53,17 +53,36 @@ export default function Stripe() {
   } } };
 }`;
 
+
+// El area se pide por bloques con huecos con nombre, no por una lista de
+// parrafos: ver ESQUEMA_AREA_POR_BLOQUES en api/chat.js. Esto reparte una lista
+// de parrafos por los cinco bloques en el mismo orden en que el codigo los
+// vuelve a juntar, asi que el texto que sale es identico al de la lista.
+// Los cinco bloques tienen que llevar algo: uno vacio es justo el fallo que
+// esto viene a impedir, y api/chat.js vuelve a pedir el area.
+function porBloques(parrafos) {
+  const nombres = ['arranque', 'hoy', 'origen', 'creencias', 'soltar'];
+  const bloques = {};
+  for (const nombre of nombres) bloques[nombre] = {};
+  parrafos.forEach((p, i) => {
+    const donde = bloques[nombres[Math.min(i, nombres.length - 1)]];
+    donde['p' + (Object.keys(donde).length + 1)] = p;
+  });
+  return bloques;
+}
+
 const AREA = JSON.stringify({
-  parrafos: [
+  ...porBloques([
     { ladillo: null, texto: 'Te levantas y lo primero que haces es repasar la lista de lo que tienes pendiente, y eso lo llevas haciendo desde siempre.' },
     { ladillo: 'La cuenta que no llevas', texto: 'Y mientras asientes, Ana, por dentro **estas calculando cuanto has ensenado de mas**, que es un trabajo que no descansa.' },
     { ladillo: null, texto: 'De ahi sale todo lo demas, que es lo que nadie te ha contado y **llevas media vida pagando sin enterarte**.' },
     { ladillo: 'Donde empezo esto', texto: '**Eso no se arregla apretando mas**, se arregla mirando de donde viene y quien te enseno a hacerlo asi.' },
-  ],
-  escena: { tras_parrafo: 1, texto: 'Son las once de la noche y todavia estas repasando el movil con la luz apagada.' },
-  remate_herida: { tras_parrafo: 3, texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
-  remate_fuerza: { tras_parrafo: 4, texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
-  pregunta: { tras_parrafo: 2, texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
+    { ladillo: null, texto: 'Y cuando por fin te sientas, la cabeza sigue repasando lo que queda para manana como si alguien lo fuera a corregir.' },
+  ]),
+  escena: { tras_bloque: 'arranque', texto: 'Son las once de la noche y todavia estas repasando el movil con la luz apagada.' },
+  remate_herida: { tras_bloque: 'origen', texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
+  remate_fuerza: { tras_bloque: 'creencias', texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
+  pregunta: { tras_bloque: 'hoy', texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
   cierre: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
 });
 

@@ -77,7 +77,46 @@ const CUERPO = [
   { ladillo: 'La cuenta que no llevas', texto: 'Y mientras asientes, Ana, por dentro **estas calculando cuanto has ensenado de mas**, que es un trabajo que no descansa.' },
   { ladillo: null, texto: 'De ahi sale todo lo demas, que es lo que nadie te ha contado y **llevas media vida pagando sin enterarte**.' },
   { ladillo: 'Donde empezo esto', texto: '**Eso no se arregla apretando mas**, se arregla mirando de donde viene y quien te enseno a hacerlo asi.' },
+  { ladillo: null, texto: 'Y cuando por fin te sientas, la cabeza sigue repasando lo que queda para manana como si alguien lo fuera a corregir.' },
 ];
+
+// El area se pide por bloques con huecos con nombre, no por una lista de
+// parrafos: ver ESQUEMA_AREA_POR_BLOQUES en api/chat.js. Esto reparte una lista
+// de parrafos por los cinco bloques en el mismo orden en que el codigo los
+// vuelve a juntar, asi que el texto que sale es identico al de la lista.
+// Los cinco bloques tienen que llevar algo: uno vacio es justo el fallo que
+// esto viene a impedir, y api/chat.js vuelve a pedir el area.
+function porBloques(parrafos) {
+  const nombres = ['arranque', 'hoy', 'origen', 'creencias', 'soltar'];
+  const bloques = {};
+  for (const nombre of nombres) bloques[nombre] = {};
+  parrafos.forEach((p, i) => {
+    const donde = bloques[nombres[Math.min(i, nombres.length - 1)]];
+    donde['p' + (Object.keys(donde).length + 1)] = p;
+  });
+  return bloques;
+}
+
+// Lo que api/chat.js hace con los bloques antes de montar el area: juntarlos en
+// una lista de parrafos y cambiar el "tras_bloque" por el numero de parrafo.
+function comoLoVeMontarArea(area) {
+  const nombres = ['arranque', 'hoy', 'origen', 'creencias', 'soltar'];
+  const parrafos = [];
+  const acaba = {};
+  for (const nombre of nombres) {
+    const bloque = area[nombre] || {};
+    for (const hueco of Object.keys(bloque).sort()) parrafos.push(bloque[hueco]);
+    acaba[nombre] = parrafos.length;
+  }
+  const salida = { ...area, parrafos };
+  for (const casilla of ['escena', 'remate_herida', 'remate_fuerza', 'pregunta']) {
+    if (salida[casilla]) {
+      salida[casilla] = { ...salida[casilla], tras_parrafo: acaba[salida[casilla].tras_bloque] || 1 };
+    }
+  }
+  return salida;
+}
+
 
 // El area tal como llega del modelo. "intruso" es el parrafo que se cuela en
 // la posicion 1; con los numeros puestos como los pone el modelo cuando ha
@@ -87,13 +126,12 @@ function areaCon(intruso) {
   const parrafos = intruso === null
     ? [...CUERPO]
     : [CUERPO[0], { ladillo: null, texto: intruso }, ...CUERPO.slice(1)];
-  const hueco = intruso === null ? 0 : 1;
   return JSON.stringify({
-    parrafos,
-    escena: { tras_parrafo: 1 + hueco, texto: ESCENA },
-    pregunta: { tras_parrafo: 2 + hueco, texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
-    remate_herida: { tras_parrafo: 3 + hueco, texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
-    remate_fuerza: { tras_parrafo: 4 + hueco, texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
+    ...porBloques(parrafos),
+    escena: { tras_bloque: 'arranque', texto: ESCENA },
+    pregunta: { tras_bloque: 'hoy', texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
+    remate_herida: { tras_bloque: 'origen', texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
+    remate_fuerza: { tras_bloque: 'creencias', texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
     cierre: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
   });
 }
@@ -102,7 +140,7 @@ function areaCon(intruso) {
 // mentira dejan de cumplirlo, la prueba lo dice en una linea en vez de
 // morirse reintentando y dejar de vigilar lo que viene a vigilar.
 {
-  const montada = montarArea(JSON.parse(areaCon(null)));
+  const montada = montarArea(comoLoVeMontarArea(JSON.parse(areaCon(null))));
   const faltan = revisarBloques(analizarArea(montada));
   if (vecesQueLaLlamaPorSuNombre(montada, 'Ana') < 1) {
     faltan.push('el area de mentira no llama "Ana" a la clienta ni una vez, y api/chat.js lo exige');
@@ -265,11 +303,11 @@ try {
   // Un parrafo repetido es malo; un area descuadrada, peor.
   console.log('\n  D. un área tan corta que quitar la copia la descuadraría');
   const d = await generar(JSON.stringify({
-    parrafos: [CUERPO[1], { ladillo: null, texto: ESCENA }, CUERPO[2]],
-    escena: { tras_parrafo: 2, texto: ESCENA },
-    pregunta: { tras_parrafo: 1, texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
-    remate_herida: { tras_parrafo: 3, texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
-    remate_fuerza: { tras_parrafo: 3, texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
+    ...porBloques([CUERPO[1], { ladillo: null, texto: ESCENA }, { ladillo: null, texto: ESCENA }, CUERPO[2], CUERPO[3]]),
+    escena: { tras_bloque: 'hoy', texto: ESCENA },
+    pregunta: { tras_bloque: 'arranque', texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
+    remate_herida: { tras_bloque: 'origen', texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
+    remate_fuerza: { tras_bloque: 'creencias', texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
     cierre: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
   }));
   comprobar('el informe sale igual', d.code === 200, 'HTTP ' + d.code);
