@@ -805,39 +805,30 @@ export default async function handler(req, res) {
         if (pyRasgos + alto > Y_TOPE) paginaDeRasgos(false);
       }
 
-      paginaDeRasgos(true);
-
-      doc.setFont('Roboto', 'bold');
-      doc.setFontSize(11);
-      doc.setTextColor(207, 177, 128);
-      doc.text(fx('RASGOS'), 18, pyRasgos);
-      pyRasgos += 12;
-
       // LAS DOS LISTAS VAN SEPARADAS Y CADA UNA EN SU PAGINA.
       //
-      // Antes se pegaba una detras de otra sin nada en medio: las treinta
-      // fichas se leian como una sola lista y no habia manera de ver donde
-      // acababa lo bueno y empezaba lo que pesa. Cada una empieza pagina, que
-      // es lo unico que no se puede confundir.
+      // Antes se pegaba una detras de otra sin nada en medio, y con un solo
+      // titulo, RASGOS, encima de las dos: las treinta fichas se leian como
+      // una sola lista y no habia manera de ver donde acababa lo bueno y
+      // empezaba lo que pesa. Ahora cada lista empieza pagina y lleva su
+      // nombre en ese mismo titulo, en el mismo sitio y del mismo dorado.
       var LAS_DOS_LISTAS = [
         { titulo: fx('TUS FORTALEZAS'), rasgos: rasgos.fortalezas || [] },
         { titulo: fx('TUS DESAFÍOS'), rasgos: rasgos.desafios || [] },
       ];
 
+      var primeraLista = true;
       for (var li = 0; li < LAS_DOS_LISTAS.length; li++) {
         var laLista = LAS_DOS_LISTAS[li];
         if (laLista.rasgos.length === 0) continue;
-        if (li > 0) paginaDeRasgos(false);
+        paginaDeRasgos(primeraLista);
+        primeraLista = false;
 
         doc.setFont('Roboto', 'bold');
-        doc.setFontSize(12);
-        doc.setTextColor(14, 63, 75);
+        doc.setFontSize(11);
+        doc.setTextColor(207, 177, 128);
         doc.text(laLista.titulo, 18, pyRasgos);
-        pyRasgos += 3;
-        doc.setDrawColor(207, 177, 128);
-        doc.setLineWidth(0.4);
-        doc.line(18, pyRasgos, 60, pyRasgos);
-        pyRasgos += 9;
+        pyRasgos += 12;
 
         for (var ri = 0; ri < laLista.rasgos.length; ri++) {
           var rasgo = laLista.rasgos[ri];

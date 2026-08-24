@@ -629,6 +629,14 @@ export default function Stripe() {
       fortalezas: RASGOS.fortalezas.map(r => ({ ...r, area: 1 })),
       desafios: RASGOS.desafios.map(r => ({ ...r, area: 1 })),
     } });
+    // Si por lo que sea solo llegara una de las dos listas, el informe no
+    // puede romperse ni dejar una pagina con un titulo y nada debajo.
+    const soloFortalezas = await cuantasPaginas({ rasgos: { fortalezas: RASGOS.fortalezas, desafios: [] } });
+    const soloDesafios = await cuantasPaginas({ rasgos: { fortalezas: [], desafios: RASGOS.desafios } });
+    comprobar('si solo llega una de las dos listas, el PDF sale igualmente',
+      soloFortalezas > sinLista && soloDesafios > sinLista,
+      `solo fortalezas: ${soloFortalezas} págs, solo desafíos: ${soloDesafios} págs`);
+
     comprobar('el área de cada ficha se imprime de verdad',
       JSON.stringify(conAreasVariadas) !== JSON.stringify(todasArea1),
       JSON.stringify(conAreasVariadas) === JSON.stringify(todasArea1)
