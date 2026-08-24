@@ -160,7 +160,7 @@ const RASGO = {
   properties: {
     nombre: { type: 'string', description: 'El nombre o titulo del rasgo/caracteristica, 3-6 palabras. Ej: "Buscador de verdades", "Leal instintiva".' },
     descripcion: { type: 'string', description: 'Una sola frase (15-25 palabras) que lo describe. Ej: "Necesitas entender el por que de todo lo que te pasa".' },
-    explicacion: { type: 'string', description: 'Una o dos frases (30-60 palabras) que explican de donde viene o por que le pasa esto. Sale de la carta natal.' },
+    explicacion: { type: 'string', description: 'Una o dos frases (30-60 palabras) que explican de donde le viene o por que le pasa esto, contado como se lo contaria una persona: de su historia y de su manera de ser. PROHIBIDO nombrar planetas, signos, casas, angulos o la carta. Ej: "Aprendiste pronto que las cosas salian bien si te adelantabas, y aquello funciono: por eso lo sigues haciendo hoy aunque ya no haga falta".' },
     area: { type: 'number', enum: [1, 2, 3, 4, 5, 6, 7], description: 'A cual de las siete areas corresponde este rasgo (1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero).' },
   },
   required: ['nombre', 'descripcion', 'explicacion', 'area'],
@@ -399,6 +399,50 @@ function sinLosRepetidos(lista) {
   };
 }
 
+// ── NI UNA PALABRA DE ASTROLOGO IMPRESA ───────────────────────────
+//
+// En el informe del 24 de agosto salieron 25 fichas de 28 diciendo cosas
+// como "El sol y Mercurio en la casa del trabajo diario, en un signo que vive
+// para servir...". El prompt lo prohibia y aun asi salio en el 89%: la
+// clienta no ha pagado por una lectura tecnica, ha pagado porque le hablen
+// de ella, y ahi se le entrego lo primero.
+//
+// Se arreglaron las dos cosas que empujaban a escribirlo (la casilla del
+// esquema decia "Sale de la carta natal", que el modelo leia como "citala"),
+// pero pedirlo no es garantizarlo: eso ya lo aprendimos con los repetidos.
+// Esto lo comprueba.
+//
+// "casa" NO esta en la lista a proposito, aunque sea de las que mas se cuelan
+// ("la casa del trabajo diario"): es una palabra normal que sale en cualquier
+// frase de una vida ("en casa aprendiste", "la casa en orden") y meterla
+// mandaria a repasar listas que estan bien. Cuando se cuela va acompanada de
+// un planeta o de un "signo", y por ahi cae igual.
+const PALABRAS_DE_ASTROLOGO = [
+  'mercurio', 'venus', 'marte', 'jupiter', 'saturno', 'urano', 'neptuno',
+  'pluton', 'quiron', 'sol', 'luna', 'lunar', 'solar',
+  'ascendente', 'descendente', 'medio cielo', 'nodo', 'nodos',
+  'aries', 'tauro', 'geminis', 'virgo', 'escorpio', 'escorpion',
+  'sagitario', 'capricornio', 'acuario', 'piscis',
+  'cuadratura', 'cuadraturas', 'trigono', 'trigonos', 'sextil', 'sextiles',
+  'conjuncion', 'oposicion', 'orbe', 'retrogrado', 'retrograda',
+  'signo', 'signos', 'angulo', 'angulos', 'carta', 'natal',
+  'horoscopo', 'zodiaco', 'zodiacal', 'efemerides', 'astrologia', 'astrologica',
+];
+
+const CAZA_AL_ASTROLOGO = new RegExp(
+  `(^|[^a-z0-9])(${PALABRAS_DE_ASTROLOGO.join('|')})([^a-z0-9]|$)`
+);
+
+// Devuelve la palabra que se ha colado, o null si la ficha esta limpia. Mira
+// las tres casillas: se cuela sobre todo en la explicacion, pero no solo.
+function laPalabraDeAstrologo(rasgo) {
+  const txt = `${rasgo.nombre} ${rasgo.descripcion} ${rasgo.explicacion}`
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase();
+  const m = CAZA_AL_ASTROLOGO.exec(txt);
+  return m ? m[2] : null;
+}
+
 // Lo que le falta a la lista, dicho como se le dice al modelo para que lo
 // arregle. Si devuelve vacio, la lista esta bien.
 //
@@ -412,6 +456,22 @@ function loQueLeFaltaALaLista(lista) {
     if (rasgos.length < RASGOS_MINIMO) {
       problemas.push(`la lista de ${cual} ha llegado con ${rasgos.length} y se piden al menos ${RASGOS_MINIMO}`);
     }
+  }
+
+  // Todas en un solo aviso: con veinticinco fichas tocadas, una linea por
+  // ficha convierte el encargo del repaso en una pared de texto.
+  const conPalabrota = [];
+  for (const { r } of todosLosRasgos(lista)) {
+    const palabra = laPalabraDeAstrologo(r);
+    if (palabra) conPalabrota.push(`"${r.nombre}" (dice "${palabra}")`);
+  }
+  if (conPalabrota.length > 0) {
+    problemas.push(
+      `${conPalabrota.length} ficha(s) usan palabras de astrologo, que no pueden salir impresas: `
+      + conPalabrota.slice(0, 8).join(', ')
+      + (conPalabrota.length > 8 ? `, y ${conPalabrota.length - 8} mas` : '')
+      + '. Vuelve a escribirlas contando lo mismo desde su vida, sin nombrar planetas, signos, casas, angulos ni la carta'
+    );
   }
 
   for (const { se_queda, sobra } of losQueSeRepiten(lista)) {
@@ -434,7 +494,7 @@ async function extraerRasgos(nombrePila, sexo, cartaTexto) {
     ? 'una MUJER. Toda en femenino.'
     : 'un HOMBRE. Todo en masculino.';
 
-  const prompt = `Eres la misma experta en psicología, astrología y neurociencia que ha escrito el estudio entero. Ahora cierras el estudio con dos listas de rasgos sacados UNICAMENTE de su carta natal: se leen despues de las siete areas, en el mismo libro y con la misma voz.
+  const prompt = `Eres la misma experta en psicología, astrología y neurociencia que ha escrito el estudio entero. Ahora cierras el estudio con dos listas de rasgos suyos. Los sacas UNICAMENTE de su carta natal, pero eso no se nota al leerlas: se leen despues de las siete areas, en el mismo libro y con la misma voz.
 
 ${ESPANOL_DE_ESPANA}
 
@@ -459,7 +519,7 @@ REGLAS IMPRESCINDIBLES:
 ESTRUCTURA DE CADA RASGO:
 - "nombre": 3-6 palabras sin articulos. Ejemplos: "Buscador de verdades", "Leal hasta el agotamiento", "Miedo a decepcionar", "Capacidad de liderazgo", "Tendencia al perfeccionismo".
 - "descripcion": UNA SOLA FRASE, 15-25 palabras, escrita a ella. Ejemplo: "Necesitas entender el porque de todo lo que te pasa antes de poder aceptarlo".
-- "explicacion": 1-2 frases (30-60 palabras). De donde le viene. Sale de la carta, pero la carta no se nombra. Ejemplo: "Analizas todo a fondo antes de decidir, y cuando algo te importa de verdad, ese analisis no se apaga: le das vueltas de noche a una conversacion de hace tres dias".
+- "explicacion": 1-2 frases (30-60 palabras). De donde le viene, contado como se lo contaria una persona: de su historia, de lo que aprendio de pequena, de como funciona por dentro. Sale de la carta, pero de la carta no se dice NADA. Ejemplo: "Analizas todo a fondo antes de decidir, y cuando algo te importa de verdad, ese analisis no se apaga: le das vueltas de noche a una conversacion de hace tres dias".
 - "area": numero 1-7. El area donde ese rasgo es MAS relevante.
 
 LA VOZ ES LA MISMA QUE EN LAS SIETE AREAS, Y ESTO VA ANTES QUE CUALQUIER OTRA REGLA:
@@ -475,6 +535,14 @@ EN LA LISTA DE DESAFIOS ESTO ES LO QUE MAS IMPORTA. Una lista de defectos seguid
 - ${DEFECTOS_DESDE_LA_FUERZA}
 - EL NOMBRE DEL DESAFIO NO ES UNA ETIQUETA. No se le pone una condicion encima como si fuera un diagnostico: nada de "insegura", "dependiente", "controladora", "conflictiva". Se nombra lo que HACE o lo que le PASA, que es lo que ella reconoce y no le hace ponerse a la defensiva: "Te cuesta soltar el control cuando algo te importa" en vez de "Controladora".
 - Y LA EXPLICACION DEL DESAFIO SIEMPRE DEJA UNA PUERTA. No una frase de animo pegada al final: se cuenta de donde viene, y de donde viene algo aprendido es tambien por donde se suelta.
+
+NI UN NOMBRE DE PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ANGULO. NI UNA VEZ.
+Esto es lo que mas se falla en estas fichas, y la que se falla no vale: la clienta no ha pagado por una lectura tecnica, ha pagado porque le hablen de ella. Vale para las tres casillas, y sobre todo para la explicacion, que es donde se cuela siempre.
+Prohibidas estas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Jupiter, Saturno, Urano, Neptuno, Pluton, Quiron, nodo, ascendente, medio cielo, los doce signos, casa (la astrologica), cuadratura, trigono, sextil, oposicion, conjuncion, aspecto, orbe, retrogrado, carta, carta natal, horoscopo.
+- MAL: "El sol y Mercurio en la casa del trabajo diario, en un signo que vive para servir, te dan capacidad para detectar que necesita alguien". BIEN: "Detectas lo que le hace falta a alguien antes de que lo pida, y te pones a ello sin esperar a que nadie te lo diga".
+- MAL: "El sol enfrentado a Saturno te hizo crecer sintiendo que el carino habia que ganarselo". BIEN: "Creciste con la sensacion de que el carino habia que ganarselo, y esa vara la sigues usando contigo".
+- MAL: "Tu luna en la zona de tu carta que habla de raices". BIEN: "En tu casa aprendiste que lo de dentro no se ensena".
+Fijate en lo que hacen los BIEN: dicen exactamente lo mismo, pero contado desde su vida. Eso es lo que hay que escribir.
 
 Y EL RESTO DEL TONO, IGUAL QUE EN LAS AREAS:
 - ${FRASES_QUE_SUENAN_HABLADAS}
@@ -1732,14 +1800,23 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
         // alguna; asi no puede. Ver ESQUEMA_AREA_POR_BLOQUES arriba en este archivo.
         output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREA_POR_BLOQUES } },
         // Tope de seguridad, no un objetivo: solo se paga lo que el modelo
-        // escribe, y el largo lo manda el prompt. La cuenta, con la proporcion
-        // que se ve en los registros (2,15 caracteres por token en castellano):
-        // el AREA 1 en su tope son 1.300 palabras, unos 7.500 caracteres, unos
-        // 3.500 tokens; el resto de areas, unos 2.400. Con 5.000 queda casi la
-        // mitad de margen y ninguna llega a rozarlo. Bajarlo mas seria
-        // peligroso: desde ahora un area que se corte NO se entrega, asi que un
-        // tope escaso no cortaria el texto, cortaria la venta.
-        max_tokens: 5000,
+        // escribe, y el largo lo manda el prompt. Bajarlo seria peligroso: un
+        // area que se corta NO se entrega, asi que un tope escaso no cortaria
+        // el texto, cortaria la venta.
+        //
+        // ESTABA EN 5.000 Y NO LLEGABA. La cuenta de entonces salia de contar
+        // solo las palabras: el AREA 1 en su tope son 1.300 palabras, unos
+        // 3.500 tokens, y el resto unos 2.400, asi que 5.000 parecia el doble
+        // de lo necesario. Lo que esa cuenta no contaba es lo que el area lleva
+        // ademas del texto: los nombres de las casillas, los cinco bloques, los
+        // ladillos y las cuatro casillas grandes, todo en JSON.
+        //
+        // En el informe del 24 de agosto el AREA 7 se planto en 5.000 tokens
+        // clavados, llego cortada y hubo que escribirla ENTERA otra vez: unos
+        // 50 segundos y el coste de un area, tirados. Y no fue mala suerte de
+        // la 7: el tope es el mismo para las siete y la que mas cerca anda es
+        // la 1, que pide 1.300 palabras frente a las 900 de las demas.
+        max_tokens: 6000,
         // LA CACHE DEL PROMPT. El prompt de sistema son 22.000 tokens y se
         // manda 7 veces identico, una por area: casi la mitad de lo que
         // costaba un informe era reenviar el mismo texto. Marcandolo asi, la

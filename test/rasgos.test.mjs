@@ -133,7 +133,9 @@ const CATALOGO = [
 const unRasgo = (i, area) => ({
   nombre: CATALOGO[i % CATALOGO.length][0],
   descripcion: CATALOGO[i % CATALOGO.length][1],
-  explicacion: `De donde le viene esto segun la carta, contado en una frase o dos que expliquen el porque sin nombrar planetas ni casas, que es lo que se pide en el prompt. Ficha ${i}.`,
+  // Sin una sola palabra de astrologo: si el catalogo de mentira las llevara,
+  // el detector saltaria en todas las pruebas y no serviria ninguna.
+  explicacion: `De donde le viene esto, contado en una frase o dos como se lo contaria alguien que la conoce bien y sabe por que hace lo que hace. Ficha ${i}.`,
   area,
 });
 
@@ -162,6 +164,20 @@ const RASGOS_REPETIDO_CRUZADO = {
   desafios: [
     ...Array.from({ length: 15 }, (_, i) => unRasgo(i + 18, (i % 7) + 1)),
     { nombre: 'Aguantes fuera de lo normal', descripcion: 'Sigues de pie en los sitios donde cualquiera se habria bajado hace tiempo', explicacion: 'Esto es lo mismo que "Aguante fuera de lo normal", que esta en la lista de fortalezas: el mismo rasgo puesto en las dos listas a la vez.', area: 2 },
+  ],
+};
+
+// Y una lista escrita como salio de verdad el 24 de agosto: 25 de 28 fichas
+// nombrando planetas, signos y casas. Es lo que la clienta no ha pagado.
+const RASGOS_DE_ASTROLOGO = {
+  fortalezas: [
+    { nombre: 'Sanadora practica del dia a dia', descripcion: 'Tienes un don para arreglar lo que esta roto y cuidar de otros sin que nadie te lo pida', explicacion: 'El sol y Mercurio en la casa del trabajo diario y la salud, en un signo que vive para servir, te dan una capacidad natural para detectar que necesita alguien.', area: 1 },
+    { nombre: 'Intuicion para leer a la gente', descripcion: 'Captas lo que le pasa a alguien antes de que abra la boca', explicacion: 'Venus bien conectada con la luna y con Marte te da una calidez natural en el trato que la gente nota enseguida.', area: 6 },
+    ...Array.from({ length: 12 }, (_, i) => unRasgo(i, (i % 7) + 1)),
+  ],
+  desafios: [
+    { nombre: 'Autocritica que pesa de mas', descripcion: 'Te hablas a ti misma con una dureza que jamas usarias con otra persona', explicacion: 'El sol enfrentado a Saturno te hizo crecer sintiendo que el carino habia que ganarselo a base de esfuerzo.', area: 2 },
+    ...Array.from({ length: 13 }, (_, i) => unRasgo(i + 18, (i % 7) + 1)),
   ],
 };
 
@@ -228,6 +244,12 @@ globalThis.fetch = async (url, opts = {}) => {
       // La primera vez repite; si se le vuelve a pedir, lo arregla.
       const cuerpoBueno = vecesQueSeHaPedidoLaLista === 1 ? RASGOS_CON_REPETIDO : RASGOS;
       return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(cuerpoBueno) }] }) };
+    }
+    if (comoSalePedirLaLista === 'astrologo' && vecesQueSeHaPedidoLaLista === 1) {
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(RASGOS_DE_ASTROLOGO) }] }) };
+    }
+    if (comoSalePedirLaLista === 'astrologo_siempre') {
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(RASGOS_DE_ASTROLOGO) }] }) };
     }
     if (comoSalePedirLaLista === 'cruzado') {
       return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(RASGOS_REPETIDO_CRUZADO) }] }) };
@@ -361,13 +383,24 @@ try {
   // sonar a otra persona y nadie se entera hasta que lo lee un cliente.
   console.log('\n  api/chat.js — la lista habla con la voz del estudio\n');
 
+  // La de calentar la cache lleva el MISMO prompt que las de area a proposito
+  // (si no, la cache no acierta), asi que se distingue por su mensaje, "ok".
   const areaEnviada = enviadas.find(c => Array.isArray(c.system)
-    && String((c.system[0] || {}).text || '').startsWith('Eres una experta en psicología'));
+    && String((c.system[0] || {}).text || '').startsWith('Eres una experta en psicología')
+    && c.messages?.[0]?.content !== 'ok');
   const promptAreas = String((areaEnviada?.system?.[0] || {}).text || '');
   const promptLista = String(lista?.system || '');
 
   comprobar('se capturan los dos prompts', promptAreas.length > 1000 && promptLista.length > 1000,
     `${promptAreas.length} y ${promptLista.length} caracteres`);
+
+  // Esto es de las AREAS, no de la lista, pero la llamada del area ya esta
+  // capturada aqui y no hay mejor sitio. El 24 de agosto el area 7 se planto
+  // en 5.000 tokens clavados, llego cortada y hubo que escribirla entera otra
+  // vez: 50 segundos y el coste de un area, tirados. Si alguien lo vuelve a
+  // bajar, esto se cae.
+  comprobar('las áreas piden hueco de sobra para no llegar cortadas',
+    areaEnviada?.max_tokens >= 6000, 'max_tokens=' + areaEnviada?.max_tokens);
 
   // Las reglas compartidas se sacan del propio fichero, no se copian aquí:
   // así la prueba no puede quedarse desfasada sin enterarse.
@@ -479,6 +512,37 @@ try {
   comprobar('y aun así el informe se entrega entero',
     siempreCaida.code === 200 && String(siempreCaida.body?.texto || '').split('\u001F').filter(x => x.trim()).length === 7);
 
+  // (b4) NI UNA PALABRA DE ASTROLOGO IMPRESA.
+  //
+  // El 24 de agosto salieron 25 fichas de 28 diciendo "El sol y Mercurio en la
+  // casa del trabajo diario, en un signo que vive para servir...". El prompt ya
+  // lo prohibia. Pedirlo no basta: se comprueba.
+  console.log('\n  api/chat.js — ni una palabra de astrólogo impresa\n');
+
+  const astro = await pedirInforme('astrologo', 'astro');
+  comprobar('una ficha que nombra planetas hace repetir la lista',
+    vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+  comprobar('y se le dice cuáles y con qué palabra',
+    /palabras de astrologo/.test(encargosDeLaLista[1] || '')
+    && /Sanadora practica/.test(encargosDeLaLista[1] || ''),
+    (encargosDeLaLista[1] || '').slice(-200).replace(/\n/g, ' '));
+  comprobar('y lo que se entrega es la lista limpia',
+    astro.body?.rasgos?.fortalezas?.length === 14 && astro.body?.rasgos?.desafios?.length === 16,
+    `${astro.body?.rasgos?.fortalezas?.length} + ${astro.body?.rasgos?.desafios?.length}`);
+
+  // Si insiste, se entrega con aviso: es peor quedarse sin lista que con una
+  // lista con pegas, pero tiene que quedar dicho en los registros.
+  const astroSiempre = await pedirInforme('astrologo_siempre', 'astro2');
+  comprobar('si insiste, el informe se entrega igual',
+    astroSiempre.code === 200, 'HTTP ' + astroSiempre.code);
+  comprobar('y se intenta las dos veces antes de darlo por bueno',
+    vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+
+  // Y lo contrario: una lista bien escrita NO puede hacer saltar esto, o
+  // estariamos pagando repasos por listas que estan perfectas.
+  comprobar('una lista bien escrita no dispara ningún repaso',
+    !/palabras de astrologo/.test(encargosDeLaLista[0] || '') && encargosDeLaLista.length >= 1);
+
   // (c) Llega corta → se vuelve a pedir.
   const corta = await pedirInforme('corta', 'corta');
   comprobar('una lista corta hace que se vuelva a pedir',
@@ -523,6 +587,54 @@ try {
 } finally {
   limpiar();
 }
+
+// ── 7b. EL DETECTOR DE PALABRAS DE ASTRÓLOGO, CASO POR CASO ───────
+//
+// Un detector así se rompe por los dos lados: o deja pasar lo que tiene que
+// cazar, o salta con palabras normales y manda a repasar listas que estaban
+// bien (y eso son llamadas pagadas y tiempo). Aquí están los casos que
+// deciden dónde va la raya, y explican por qué "casa", "leo" y "libra" NO
+// están en la lista: son palabras corrientes de cualquier frase de una vida.
+console.log('\n  api/chat.js — el detector no se pasa ni se queda corto\n');
+
+const fuenteChat = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
+const PALABRAS = eval('[' + fuenteChat.match(/const PALABRAS_DE_ASTROLOGO = \[([\s\S]*?)\];/)[1] + ']');
+const CAZA = new RegExp(`(^|[^a-z0-9])(${PALABRAS.join('|')})([^a-z0-9]|$)`);
+const cazaEn = (s) => {
+  const m = CAZA.exec(s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase());
+  return m ? m[2] : null;
+};
+
+const CASOS = [
+  // Frases normales de una vida: NO pueden disparar un repaso.
+  ['Te sientas al girasol de la ventana', null],
+  ['Prefieres cargar sola con todo', null],
+  ['Lo haces solo por no molestar', null],
+  ['Solamente pides ayuda cuando no queda otra', null],
+  ['Los martes te pesan mas que el resto', null],
+  ['Tienes lunares que te avergonzaban de nina', null],
+  ['Pones las cartas sobre la mesa tarde', null],
+  ['Es una decision muy personal', null],
+  ['En casa aprendiste que lo de dentro no se ensena', null],
+  // Y lo que salió impreso el 24 de agosto: tiene que caer todo.
+  ['El sol y Mercurio en la casa del trabajo', 'sol'],
+  ['Tu luna en un signo serio y constante', 'luna'],
+  ['Venus bien conectada con la luna', 'venus'],
+  ['El buen angulo entre Saturno y Urano', 'angulo'],
+  ['La cuadratura entre tu luna y el ascendente', 'cuadratura'],
+  ['En la zona de tu carta que habla de raices', 'carta'],
+  ['Mercurio en angulo armonico con Quiron', 'mercurio'],
+  ['Marte y Jupiter juntos, apoyados por Neptuno', 'marte'],
+  ['El sol enfrentado a Saturno te hizo crecer', 'sol'],
+];
+let casosMal = 0;
+for (const [frase, esperado] of CASOS) {
+  if (cazaEn(frase) !== esperado) {
+    casosMal++;
+    console.log(`      ✘ «${frase}» → ${cazaEn(frase) || 'no salta'}, se esperaba ${esperado || 'que no saltara'}`);
+  }
+}
+comprobar(`los ${CASOS.length} casos del filo caen del lado correcto`, casosMal === 0, casosMal + ' mal');
 
 // ── 8. Y QUE EL NAVEGADOR LA MANDE AL PDF ─────────────────────────
 //
