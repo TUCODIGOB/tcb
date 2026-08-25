@@ -343,6 +343,16 @@ try {
   comprobar('las explicaciones reciben los rasgos numerados',
     /1\. Detectas lo que hace falta/.test(lasExpl.sistema));
   comprobar('la nota del area no lleva \${...} sueltos', !/\$\{/.test(notaDe(1)));
+  // Y lo mismo en las dos piezas que van a las areas, que es donde vive HOY
+  // y donde vive el repaso final: un hueco sin sustituir se manda tal cual.
+  for (const [que, texto] of [
+    ['el prompt de sistema del area', deArea()[0].sistema],
+    ['el mensaje del area', mensajeDelArea(1)],
+  ]) {
+    const sueltos = texto.match(/\$\{[^}]*\}/g) || [];
+    comprobar(`${que} no lleva ningun \${...} sin sustituir`,
+      sueltos.length === 0, sueltos.slice(0, 3).join(' '));
+  }
   comprobar('la nota le dice que no anada ninguno mas',
     notaDe(1).includes('NO ANADES NINGUNO MAS'));
 
@@ -372,14 +382,16 @@ try {
     /NINGUN RASGO MAS/.test(nota1) && !/EN ESTA AREA, Y NADA MAS/.test(nota1));
   comprobar('y ya no pide cada rasgo "contado a fondo" como si fuera un tema suelto',
     !/Van los \d+, cada uno contado a fondo/.test(nota1));
+  comprobar('y ninguno se cae por no encajar en un punto de HOY',
+    /no cae en ninguno de esos puntos, va igual/.test(nota1));
 
   const sist = deArea()[0].sistema;
-  comprobar('HOY dice que sus puntos van todos y ninguno en una frase',
-    /VAN TODAS, Y NINGUNA DESPACHADA EN UNA FRASE/.test(sist));
+  comprobar('HOY dice que sus puntos van todos y ninguno en media linea',
+    /VAN TODAS, Y NINGUNA EN MEDIA LÍNEA/.test(sist));
   comprobar('y que los rasgos los llenan, no se suman a ellos',
     /NO SE SUMAN A ESTOS PUNTOS, LOS LLENAN/.test(sist));
   comprobar('y no deja recortar la escena ni el cierre para hacerles sitio',
-    /nunca se recorta.*escena, los dos remates, la pregunta y el cierre/s.test(sist));
+    /nunca se recorta para que quepan es lo que va en su propia casilla, que es la escena, los dos remates, la pregunta y el cierre/.test(sist));
 
   // El repaso final viaja en el mensaje, no en el prompt de sistema.
   const msg1 = mensajeDelArea(1);
