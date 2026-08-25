@@ -504,25 +504,6 @@ try {
   // "¿Cuantas veces" o "¿Cuanto hace", y dos areas acabaron con la misma
   // pregunta palabra por palabra. Misma causa que las aperturas: un solo
   // ejemplo en el prompt compartido y siete llamadas que no se ven.
-  // Las dos frases grandes eran lo unico del area que no llevaba molde, y se
-  // notaba: en el informe 22, seis de las siete de la herida empezaban por
-  // "Llevas toda la vida" o "Llevas tanto tiempo", y cuatro de las siete de la
-  // fuerza por "Nadie sostiene / Nadie recompone / Nadie mira".
-  const rFuerza = moldes.map(t => (t.match(/la de la fuerza arranca ([^,]+)/) || [])[1]);
-  const rHerida = moldes.map(t => (t.match(/y la de la herida arranca ([^.]+)/) || [])[1]);
-  comprobar('las siete frases de la fuerza arrancan por sitios distintos',
-    new Set(rFuerza).size === 7, new Set(rFuerza).size + ' de 7');
-  comprobar('y las siete de la herida tambien',
-    new Set(rHerida).size === 7, new Set(rHerida).size + ' de 7');
-  comprobar('y a todas se les prohiben las dos formulas que salian solas',
-    moldes.length === 7 && moldes.every(t => t.includes('"Llevas toda la vida..."') && t.includes('"Nadie... como tú"')));
-
-  // Cinco de las siete areas del informe 22 abrieron por "Hay...", aunque cada
-  // una entrara por su puerta: es la forma natural de presentar algo que
-  // existe, asi que los moldes que nombraban un objeto la sacaban sola.
-  comprobar('a todas se les prohibe abrir por "Hay..."',
-    moldes.length === 7 && moldes.every(t => /NO EMPIECES POR "Hay\.\.\."/.test(t)));
-
   const pregunta = moldes.map(t => (t.match(/- LA PREGUNTA VA ([^\n]+)/) || [])[1]);
   comprobar('ninguna pregunta va por donde la de otra',
     new Set(pregunta).size === 7, new Set(pregunta).size + ' formas de 7');
@@ -548,8 +529,6 @@ try {
     ['las invitaciones', entra, /\. Esa media línea.*$/],
     ['los cierres', cierra, /\. Y NO EMPIECES EL CIERRE.*$/],
     ['las preguntas', pregunta, /\. Y NO EMPIEZA por.*$/],
-    ['las frases de la fuerza', rFuerza, /$^/],
-    ['las frases de la herida', rHerida, /\. NINGUNA DE LAS DOS.*$/],
   ]) {
     const suyas = lineas.map(l => soloSuyo(l, comun));
     const gemelas = [];
@@ -579,106 +558,6 @@ try {
     /DE ESOS TRES SE COGE EL CONTENIDO, NO EL ARRANQUE/.test(sistema));
   comprobar('y que del fragmento de tono no se copia la puerta',
     /ancho SÍ, pero por dónde ya te lo dice tu área/.test(sistema));
-  // ── QUE SUENE A QUIEN LA CONOCE, NO A UN INFORME ──────────────
-  //
-  // En el informe 22 las areas explicaban el mecanismo en vez de decirle lo
-  // que le pasa, y siempre con los mismos cuatro tics: "no es X, es Y" veinte
-  // veces, "casi nadie / casi nunca" diecisiete, seis frases que describen la
-  // pieza desde fuera y seis que anuncian lo que viene antes de decirlo.
-  // Y en 9.300 palabras solo habia nueve preguntas, casi todas la de la
-  // casilla: el area le explicaba mucho y no le preguntaba nada.
-  comprobar('se le prohibe contarselo como un aparato en vez de decirselo',
-    /NO SE LO CUENTES COMO UN APARATO: DÍSELO A ELLA/.test(sistema));
-  for (const [que, marca] of [
-    ['corregir el termino', 'NO CORRIJAS EL TÉRMINO'],
-    ['hablar de la pieza', 'NADA DE HABLAR DE LA PIEZA'],
-    ['carraspear antes de decirlo', 'NO CARRASPEES ANTES DE HABLAR'],
-    ['abusar de "casi nadie"', '"CASI NADIE", "CASI NUNCA", "MUY POCA GENTE"'],
-  ]) comprobar(`y se le nombra el tic de ${que}`, sistema.includes(marca));
-  comprobar('dentro del texto van dos o tres preguntas mas, aparte de la casilla',
-    /ADEMÁS DE LA DE SU CASILLA, DENTRO DEL TEXTO VAN DOS O TRES MÁS/.test(sistema));
-  comprobar('y ya no dice que no se fuercen, que era el permiso para no poner ninguna',
-    !/van las que pida el texto y ninguna más/.test(sistema));
-  comprobar('el repaso final tambien las cuenta',
-    /dentro del texto hay DOS O TRES mas/.test(mensajeDelArea(1)));
-
-  // El nombre salia quince veces en 55 paginas, dos por area y juntas. Sube a
-  // dos o tres, y una tiene que caer donde de verdad escuece.
-  comprobar('la nombra dos o tres veces, y una donde mas escuece',
-    /LLÁMALA POR SU NOMBRE DOS O TRES VECES EN EL ÁREA, y una de ellas delante de lo que más le cuesta reconocer/.test(sistema));
-  comprobar('y el repaso final pide lo mismo, no menos',
-    /aparece DOS o TRES veces en el area, y una de ellas delante de lo que mas le cuesta reconocer/.test(mensajeDelArea(1)));
-
-  // El tic de "no es X, es Y" no se puede prohibir a secas: PERDONA ANTES DE
-  // NOMBRAR pide esa misma forma para quitarle la culpa. Lo que sobra es el
-  // otro uso, afinar la definicion de lo que le pasa.
-  comprobar('la regla del "no es X, es Y" respeta el perdon antes de nombrar',
-    /El que se queda es quitarle la culpa antes de nombrarle lo que le pesa, tal como pide PERDONA ANTES DE NOMBRAR/.test(sistema));
-  comprobar('y sigue prohibiendo el otro uso, afinar la definicion',
-    /El que sobra es afinar la definición de lo que le pasa/.test(sistema));
-
-  // Y el mismo cuidado con el carraspeo: el prompt pide en otra regla que la
-  // avise antes de decirle algo que va a doler. Eso la prepara y se queda; lo
-  // que sobra es anunciar que viene algo especial.
-  comprobar('la regla del carraspeo respeta el aviso que si prepara',
-    /Prepararla para algo que va a doler la sostiene, y eso se pide en QUE SE NOTE QUE HAY ALGUIEN AHÍ/.test(sistema));
-  comprobar('y sigue prohibiendo anunciar que viene algo especial',
-    /Anunciar que viene algo especial no prepara nada, solo retrasa/.test(sistema));
-
-  // Y el prompt no puede ensenar lo que prohibe. El fragmento de ASI SUENA
-  // CUANDO ESTA BIEN carraspeaba antes de perdonar ("Y quiero que te quede
-  // clara una cosa antes de seguir"), y la entradilla proponia "casi nadie..."
-  // de ejemplo: puesto uno al lado del otro, gana el ejemplo.
-  const fragmento = sistema.slice(sistema.indexOf('ASÍ SUENA CUANDO ESTÁ BIEN'),
-                                  sistema.indexOf('Fíjate en lo que hace ese fragmento'));
-  comprobar('el fragmento de tono no carraspea antes de decir lo suyo',
-    !/(quiero que te quede clara|aquí hay algo que|ahí aparece algo)/i.test(fragmento));
-  comprobar('y sigue quitandole la culpa, que es lo que vale de el',
-    /no es falsedad, ni es que finjas/.test(fragmento));
-  comprobar('ningun ejemplo del prompt propone "casi nadie" para abrir',
-    !/\("casi nadie\.\.\."/.test(sistema));
-  comprobar('ni pide el don con esa misma formula',
-    !/mejor que casi nadie por ser así/.test(sistema));
-
-  // Barrido: los cuatro tics no pueden estar en NINGUNA parte de lo que lee el
-  // modelo, ni en el prompt de sistema ni en el encargo de cada area, salvo
-  // dentro de su propia regla, que es donde se citan a proposito.
-  const TICS = [
-    ['corregir el termino', /no es que [^,.:]{3,60}[,:] es que/i],
-    ['hablar de la pieza', /(la misma pieza|el mismo filtro|de esa mezcla sale|deja de medir y empieza)/i],
-    ['carraspear', /(aquí hay algo que|ahí aparece algo|quiero que te quede clara una cosa)/i],
-    ['abusar de "casi nadie"', /(casi nadie|casi nunca|muy poca gente)/i],
-  ];
-  // De su cabecera al final de su cuarto punto. Cortarla por la linea que viene
-  // detras la dejaba a merced de que alguien metiera algo en medio.
-  const REGLA = (sistema.match(/- NO SE LO CUENTES COMO UN APARATO[\s\S]*?donde de verdad golpee\./) || [''])[0];
-  comprobar('la regla de los cuatro tics se encuentra entera', REGLA.length > 800, REGLA.length + ' caracteres');
-
-  // Y las palabras con las que la regla manda no pueden significar otra cosa en
-  // el resto del prompt. Se llamaba NO LE EXPLIQUES EL MECANISMO, y "mecanismo"
-  // sale tres veces mas para lo contrario, que es lo que SI hay que contar:
-  // dos ordenes opuestas sobre la misma palabra.
-  // "mecanismo" es la palabra que ya estaba ocupada: el prompt la usa para lo
-  // que SI hay que contar, asi que la regla no puede usarla para lo contrario.
-  comprobar('la regla no usa "mecanismo", que ya significa otra cosa aqui',
-    !/\bmecanismo\b/i.test(REGLA));
-  for (const palabra of ['aparato', 'pieza', 'piezas', 'filtro', 'término']) {
-    const fuera = sistema.replace(REGLA, '');
-    const rx = new RegExp('\\b' + palabra + '\\b', 'i');
-    comprobar(`"${palabra}" no significa otra cosa en el resto del prompt`,
-      !rx.test(fuera), (fuera.match(new RegExp('.{0,45}\\b' + palabra + '\\b.{0,45}', 'i')) || [''])[0]);
-  }
-  for (const [que, rx] of TICS) {
-    // Lo que llega a las areas, quitando el bloque donde los tics se nombran.
-    const fuera = [sistema.replace(REGLA, ''), mensajeDelArea(1), mensajeDelArea(5)]
-      .join('\n')
-      .replace(/Y casi nadie le pregunta nunca cómo lo lleva/, '');  // el del fragmento, uno solo, cabe
-    comprobar(`el prompt no cae en el tic de ${que} fuera de su regla`,
-      !rx.test(fuera), (fuera.match(rx) || []).join(' '));
-  }
-
-  comprobar('el prompt compartido ya no propone "hay quien" para abrir',
-    !/\("hay quien\.\.\."/.test(sistema) && /PROHIBIDO empezar un área por "Hay\.\.\."/.test(sistema));
   comprobar('y que del ejemplo de pregunta no se copia el arranque',
     /De ese ejemplo se coge la pelota que devuelve, no las palabras con las que arranca/.test(sistema));
   comprobar('el repaso final pide texto detras de cada frase grande',
