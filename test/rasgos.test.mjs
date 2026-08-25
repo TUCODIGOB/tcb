@@ -378,7 +378,7 @@ try {
   comprobar('una lista buena no se pide dos veces',
     vecesQueSeHaPedidoLaLista === 1, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   const uno = r.body?.rasgos?.fortalezas?.[0];
-  // Tres, y ninguna mas: el nombre, la frase y su area. Hubo una cuarta, el
+  // Tres, y ninguna mas: el nombre, sus dos frases y su area. Hubo una cuarta, el
   // porque, y se quito porque eso ya lo cuenta entero su area.
   comprobar('cada rasgo llega con sus tres casillas',
     Boolean(uno?.nombre && uno?.descripcion && uno?.area >= 1 && uno?.area <= 7));
@@ -930,9 +930,10 @@ export default function Stripe() {
       return fuera;
     };
 
-    // Frases de largos muy variados, para que la ficha caiga en una línea, en
-    // dos y también en cuatro. Dos es el tope que pide el prompt, pero pedirlo
-    // no es garantizarlo: una frase que se pase no puede descuadrar la página.
+    // Descripciones de largos muy variados, para que la ficha caiga en una
+    // línea, en dos y también en cuatro. Lo normal son dos, que es lo que dan
+    // las dos frases que se piden, pero pedirlo no es garantizarlo: una que se
+    // pase de largo no puede descuadrar la página.
     const RASGOS_DE_TODOS_LOS_LARGOS = {
       fortalezas: Array.from({ length: 14 }, (_, i) => ({
         nombre: 'Ficha numero ' + i,
@@ -984,11 +985,11 @@ export default function Stripe() {
     // primera ficha entera, medida de verdad. Con un número fijo quedaba una
     // ventana estrecha en la que esto pasaba.
     //
-    // La ficha mas alta que cabe pidiendo lo que se pide: treinta palabras,
-    // que es el tope del prompt, y dos lineas impresas.
+    // La ficha mas alta de las normales: las dos frases que se piden, escritas
+    // todo lo largas que se escriben, y sus dos lineas impresas.
     const FICHA_ALTA = (i) => ({
       nombre: 'Ficha alta ' + i,
-      descripcion: 'Una frase de descripcion de treinta palabras justas, que es el tope que pide el prompt, y que ocupa las dos lineas enteras del ancho sin llegar a la tercera',
+      descripcion: 'Las dos frases de una ficha, escritas todo lo largas que se escriben. La segunda dice como se le nota eso en el dia a dia.',
       area: (i % 7) + 1,
     });
     // Y una frase de las lineas que se le pidan, para mover en saltos de 6,5 mm

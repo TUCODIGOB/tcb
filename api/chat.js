@@ -127,7 +127,7 @@ const ESQUEMA_AREA_POR_BLOQUES = {
 //
 // No esta todo el prompt de las areas, solo lo que vale para las dos cosas.
 // Lo que habla de parrafos, de negritas, de la escena o de las 900 palabras
-// no pinta nada en una lista de fichas de dos o tres lineas.
+// no pinta nada en una lista de fichas cortas.
 
 const ESPANOL_DE_ESPANA = `IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresiones latinoamericanas. Usa tú, no vos.`;
 
@@ -159,7 +159,7 @@ const RASGO = {
   type: 'object',
   properties: {
     nombre: { type: 'string', description: 'El nombre o titulo del rasgo/caracteristica, 3-6 palabras. Ej: "Buscador de verdades", "Leal instintiva".' },
-    descripcion: { type: 'string', description: 'Una o dos frases (18-30 palabras) que lo describen, y que impresas no pasan de DOS lineas. Ej: "Necesitas entender el por que de todo lo que te pasa antes de poder aceptarlo, y hasta que no lo entiendes no lo sueltas".' },
+    descripcion: { type: 'string', description: 'DOS frases que lo describen. Dos: ni una sola ni tres. Ej: "Necesitas entender el por que de todo lo que te pasa antes de poder aceptarlo. Mientras no le encuentras el sentido, le sigues dando vueltas de noche".' },
     area: { type: 'number', enum: [1, 2, 3, 4, 5, 6, 7], description: 'A cual de las siete areas corresponde este rasgo (1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero).' },
   },
   required: ['nombre', 'descripcion', 'area'],
@@ -176,7 +176,7 @@ const RASGO = {
 // Hubo una cuarta, la explicacion: un porque de 30-60 palabras que se pedia en
 // una segunda llamada. Se ha quitado. De donde le viene cada cosa ya se cuenta
 // entero en su area, que son cuatro paginas para eso, y repetirlo en la ficha
-// era decir dos veces lo mismo y en peor: tres lineas no explican nada que las
+// era decir dos veces lo mismo y en peor: dos frases no explican nada que las
 // areas no hayan explicado ya.
 
 // EL MINIMO DE RASGOS QUE LLEVA CADA AREA.
@@ -217,8 +217,9 @@ const NOMBRE_DEL_AREA = {
 const RASGOS_MINIMO = 12;
 const RASGOS_MAXIMO = 18;
 
-// El hueco para escribir la respuesta. No llega ni de lejos: treinta y seis
-// fichas con su nombre, su frase y su area son unos 3.500 tokens medidos.
+// El hueco para escribir la respuesta. No llega ni de lejos: las treinta y
+// seis fichas enteras, con su nombre, sus dos frases y su area, son menos de
+// 7.000 caracteres de JSON y no pasan de 2.500 tokens.
 // Se deja de sobra a proposito: el tope no se paga, se paga lo que el modelo
 // escriba, y quedarse corto cuesta la lista entera, que es lo que paso con el
 // de 3.000.
@@ -555,8 +556,8 @@ Con lo que salga de aqui se escriben despues las siete areas: a cada area le toc
 ${ESPANOL_DE_ESPANA}
 
 QUE SON LAS DOS LISTAS:
-Fichas cortas. Cada una nombra una cosa suya y la dice en una o dos frases. No son un resumen de nada: son lo que de verdad se ve en su carta, una cosa por ficha.
-Y son eso y nada mas: el nombre, la frase y su area. De donde le viene no va aqui, va en su area, que son cuatro paginas escritas para eso; repetirlo en tres lineas es decir dos veces lo mismo y la segunda peor.
+Fichas cortas. Cada una nombra una cosa suya y la cuenta debajo, en dos frases. No son un resumen de nada: son lo que de verdad se ve en su carta, una cosa por ficha.
+Y son eso y nada mas: el nombre, sus dos frases y su area. De donde le viene no va aqui, va en su area, que son cuatro paginas escritas para eso; repetirlo en una ficha de dos frases es decir dos veces lo mismo y la segunda peor.
 
 FORTALEZAS (lista 1):
 - Dones, habilidades innatas, ventajas, cosas que hace bien sin darse cuenta
@@ -577,7 +578,7 @@ REGLAS IMPRESCINDIBLES:
 
 ESTRUCTURA DE CADA RASGO:
 - "nombre": 3-6 palabras sin articulos. Ejemplos: "Buscador de verdades", "Leal hasta el agotamiento", "Miedo a decepcionar", "Capacidad de liderazgo", "Tendencia al perfeccionismo".
-- "descripcion": UNA O DOS FRASES, 18-30 palabras, escrita a ella. Ese es el tope y no se pasa: impresa ocupa DOS LINEAS como mucho, y lo que se salga de ahi le descuadra la pagina. Ejemplo: "Necesitas entender el porque de todo lo que te pasa antes de poder aceptarlo, y hasta que no lo entiendes no lo sueltas".
+- "descripcion": DOS FRASES, escrita a ella. Dos, siempre: ni una sola, que se queda en nada y suena a etiqueta de catalogo, ni tres, que ya no es una ficha. La primera nombra lo que le pasa y la segunda dice como se le nota. Ejemplo: "Necesitas entender el porque de todo lo que te pasa antes de poder aceptarlo. Mientras no le encuentras el sentido, le sigues dando vueltas de noche".
 - "area": numero 1-7. El area donde ese rasgo es MAS relevante. Piensalo bien: ese rasgo se va a contar entero en esa area y en ninguna otra, asi que uno puesto donde no va deja su area coja y le roba el sitio a la que si le tocaba.
 
 LA VOZ ES LA MISMA QUE EN LAS SIETE AREAS, Y ESTO VA ANTES QUE CUALQUIER OTRA REGLA:
@@ -1430,7 +1431,7 @@ EMPIEZA POR LOS PUNTOS, NO POR LA LISTA: coges cada punto de HOY, miras cual de 
 ESTO ES QUE CONTAR, NO POR DONDE MIRAR. Para explicar cada uno sigues cruzando todo lo que haga falta de su carta, igual que hasta ahora: no es una valla, es el contenido.
 Y SI UNO DE ESTOS PARECE SALIR DE UNA PARTE DE LA CARTA QUE ARRIBA SE DA A OTRA AREA, MANDA ESTA LISTA. El rasgo esta puesto aqui y aqui se cuenta: no lo dejes fuera por eso, ni lo cuentes a medias. Lo de arriba te dice donde mirar cuando buscas tu solo; esto te dice lo que hay que contar, y ya esta repartido para que no se cuente dos veces.
 Y NO VAN UNO EN CADA BLOQUE. Lo de arriba es HOY, que es donde se cuenta como se le nota; pero un rasgo no se agota ahi. De donde le viene va en ORIGEN y lo que da por cierto por debajo va en CREENCIAS, con los bloques haciendo lo que hacen siempre. Los bloques no cambian de trabajo.
-NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el nombre del rasgo ni su frase se escriben tal cual, ni se presentan como una lista. Lo que ella lee son tus parrafos de siempre.`;
+NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el nombre del rasgo ni sus frases se escriben tal cual, ni se presentan como una lista. Lo que ella lee son tus parrafos de siempre.`;
   }
 
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS, QUE SON LAS QUE MAS SE ESCAPAN:
@@ -2532,7 +2533,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // ninguno mas. Sin listas, un area no sabe de que tiene que hablar.
     //
     // Todo el informe espera por esta llamada, y es la unica de los rasgos que
-    // hay: la ficha es el nombre, su frase y su area, y con eso ya esta escrita
+    // hay: la ficha es el nombre, sus dos frases y su area, y con eso ya esta escrita
     // entera. No queda nada suyo pendiente de una segunda vuelta.
     //
     // Si se cae, devuelve las listas vacias -no lanza nunca- y las siete areas

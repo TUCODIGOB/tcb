@@ -929,9 +929,9 @@ export default async function handler(req, res) {
       // Lo que ocupa el titulo de una lista con su rayita.
       var LO_QUE_OCUPA_UN_TITULO = 13 + 3.2 + 9.8;
 
-      // Y lo que ocupa una ficha entera. Se mide de verdad, no a ojo: la frase
-      // se parte en las lineas que haga falta -dos es lo que se pide, pero
-      // pedirlo no es garantizarlo- y de eso depende el alto.
+      // Y lo que ocupa una ficha entera. Se mide de verdad, no a ojo: las dos
+      // frases se parten en las lineas que hagan falta -suelen ser dos, pero
+      // eso lo decide lo que venga escrito- y de eso depende el alto.
       //
       // Hace falta saberlo en DOS sitios: antes de pintar la ficha, para no
       // partirla entre dos paginas, y antes de abrir la segunda lista, para no
@@ -939,7 +939,7 @@ export default async function handler(req, res) {
       // quedaba una ventana de 9,5 mm en la que el titulo se escribia y la
       // primera ficha se iba a la pagina siguiente.
       //
-      // La ficha son tres cosas, una debajo de otra: el nombre, la frase y su
+      // La ficha son tres cosas, una debajo de otra: el nombre, sus dos frases y su
       // area. Habia una cuarta, el porque, y la etiqueta del area iba pegada al
       // final de su ultima linea o bajaba sola si no cabia. Ya no: el porque se
       // cuenta en su area, que son cuatro paginas para eso, y la etiqueta tiene
@@ -1020,7 +1020,7 @@ export default async function handler(req, res) {
           for (var dli = 0; dli < dl.length; dli++) { doc.text(dl[dli], 22, pyRasgos); pyRasgos += 6.5; }
 
           // La etiqueta del area, en su linea y a la misma sangria que la
-          // frase: el nombre, la frase y el area, una debajo de otra.
+          // frase: el nombre, las dos frases y el area, una debajo de otra.
           doc.setFont('Roboto', 'bold');
           doc.setFontSize(11);
           doc.setTextColor(207, 177, 128);
