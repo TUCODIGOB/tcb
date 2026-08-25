@@ -107,6 +107,7 @@ let listaQueDevuelve = null;
 let listaFalla = null;
 let areaCopiaLaNota = false;
 let explicacionesQueDevuelve = null;
+let explicacionesFallanVeces = 0;
 const llamadas = [];
 
 function quePide(cuerpo) {
@@ -152,13 +153,14 @@ globalThis.fetch = async (url, opts = {}) => {
   llamadas.push({ tipo, sistema, mensaje: String(cuerpo.messages?.[0]?.content || '') });
 
   if (tipo === 'lista') {
-    if (listaFalla) return { ok: false, status: listaFalla };
+    if (listaFalla) return { ok: false, status: listaFalla, text: async () => 'error de prueba' };
     return { ok: true, status: 200, json: async () => ({
       content: [{ type: 'text', text: JSON.stringify(listaQueDevuelve || LISTA_BUENA) }],
       stop_reason: 'end_turn', usage: {},
     }) };
   }
   if (tipo === 'explicaciones') {
+    if (explicacionesFallanVeces > 0) { explicacionesFallanVeces--; return { ok: false, status: 503, text: async () => 'error de prueba' }; }
     return { ok: true, status: 200, json: async () => ({
       content: [{ type: 'text', text: JSON.stringify({ explicaciones: explicacionesQueDevuelve || [] }) }],
       stop_reason: 'end_turn', usage: {},
@@ -379,6 +381,31 @@ try {
   // contar un rasgo suyo por creer que es de otra.
   comprobar('la nota deja claro que ante la duda manda la lista',
     notaDe(1).includes('MANDA ESTA LISTA'));
+
+  // ── 11. LAS EXPLICACIONES REINTENTAN ──────────────────────────
+  //
+  // Corren a la vez que las siete areas, que tardan lo suyo, asi que un
+  // reintento cabe sin retrasar nada. Sin el, un corte de red dejaba las
+  // treinta y tantas fichas sin su linea, y eso se ve en el PDF.
+  explicacionesFallanVeces = 1;
+  explicacionesQueDevuelve = [{ n: 1, explicacion: 'Aprendiste pronto que ser util era una manera segura de tener un sitio.' }];
+  const rReintento = await generar();
+  comprobar('si las explicaciones fallan una vez, se vuelven a pedir',
+    llamadas.filter(l => l.tipo === 'explicaciones').length === 2,
+    llamadas.filter(l => l.tipo === 'explicaciones').length + ' llamada(s)');
+  comprobar('y la explicacion acaba en su ficha',
+    rReintento.body?.rasgos?.fortalezas?.[0]?.explicacion?.startsWith('Aprendiste pronto'));
+
+  // Y si se cae del todo, las fichas salen con su nombre y su frase.
+  explicacionesFallanVeces = 9;
+  const rSinExpl = await generar();
+  explicacionesFallanVeces = 0;
+  explicacionesQueDevuelve = null;
+  comprobar('si se caen del todo, el informe se entrega igual',
+    rSinExpl.code === 200, 'HTTP ' + rSinExpl.code);
+  const fSin = rSinExpl.body?.rasgos?.fortalezas || [];
+  comprobar('y las fichas conservan nombre y frase',
+    fSin.length > 0 && Boolean(fSin[0].nombre) && Boolean(fSin[0].descripcion) && !fSin[0].explicacion);
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);

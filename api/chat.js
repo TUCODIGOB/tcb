@@ -349,6 +349,13 @@ function bloquesAParrafos(datos) {
 // Y no alarga el estudio: la lista se pide a la vez que las areas y termina
 // mucho antes, asi que los reintentos caben dentro de lo que las areas tardan
 // de todas formas.
+// Las explicaciones tambien reintentan, pero menos. Corren a la vez que las
+// siete areas, que tardan lo suyo, asi que un reintento cabe de sobra sin
+// retrasar nada; lo que no puede es alargarse tanto que el informe acabe
+// esperando por ellas. Sin reintento, un corte de red dejaba las treinta y
+// tantas fichas sin su linea, y eso se ve en el PDF.
+const INTENTOS_DE_LAS_EXPLICACIONES = 2;
+
 const INTENTOS_DE_LA_LISTA = 3;
 const REPASOS_DE_LA_LISTA = 1;
 
@@ -867,7 +874,7 @@ Nombre de pila: ${nombrePila}
 LOS RASGOS, NUMERADOS:
 ${numerados}`;
 
-  try {
+  const pedirLasExplicaciones = async () => {
     const respuesta = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -885,7 +892,12 @@ ${numerados}`;
       }),
     });
 
-    if (!respuesta.ok) throw new Error(`HTTP ${respuesta.status}`);
+    if (!respuesta.ok) {
+      const err = new Error(`HTTP ${respuesta.status}`);
+      // Igual que en las areas y en la lista: 429 y 5xx se reintentan, un 401 no.
+      err.temporal = respuesta.status === 429 || respuesta.status >= 500;
+      throw err;
+    }
 
     const datos = await respuesta.json();
     const texto = (datos.content || [])
@@ -893,9 +905,27 @@ ${numerados}`;
       .map(b => b.text)
       .join('') || '{}';
     const salida = JSON.parse(texto);
-    const lista = Array.isArray(salida.explicaciones) ? salida.explicaciones : [];
+    return Array.isArray(salida.explicaciones) ? salida.explicaciones : [];
+  };
 
-    let puestas = 0;
+  try {
+    let lista = null;
+    let fallos = 0;
+    while (fallos < INTENTOS_DE_LAS_EXPLICACIONES) {
+      try {
+        lista = await pedirLasExplicaciones();
+        break;
+      } catch (err) {
+        fallos++;
+        // Un corte de red llega sin marca; se trata como temporal.
+        const temporal = err.temporal !== false;
+        if (!temporal || fallos >= INTENTOS_DE_LAS_EXPLICACIONES) throw err;
+        console.warn(`Explicaciones: intento ${fallos} fallido (${err.message.slice(0, 60)}), reintentando`);
+        await new Promise(r => setTimeout(r, 1500 * fallos));
+      }
+    }
+    if (!lista) return listas;
+
     let conPalabrota = 0;
     for (const e of lista) {
       const n = Number(e && e.n);
@@ -907,16 +937,19 @@ ${numerados}`;
       // su nombre y su frase, que es mejor que impresa con la palabra tecnica.
       if (laPalabraDeAstrologo({ ...destino, explicacion })) { conPalabrota++; continue; }
       destino.explicacion = explicacion;
-      puestas++;
     }
 
     if (conPalabrota > 0) {
       console.warn(`SE ENTREGA CON AVISOS — Explicaciones: ${conPalabrota} nombraban planetas y se han dejado fuera`);
     }
-    if (puestas < todos.length) {
-      console.warn(`SE ENTREGA CON AVISOS — Explicaciones: ${todos.length - puestas} ficha(s) salen sin explicacion`);
+    // Se cuentan las fichas que han acabado CON explicacion, no las veces que
+    // se ha escrito una: si el modelo repitiera un numero, escribiria dos veces
+    // sobre la misma ficha y la cuenta diria que estan todas cuando falta una.
+    const conExplicacion = todos.filter(({ r }) => r.explicacion).length;
+    if (conExplicacion < todos.length) {
+      console.warn(`SE ENTREGA CON AVISOS — Explicaciones: ${todos.length - conExplicacion} ficha(s) salen sin explicacion`);
     }
-    console.log(`Explicaciones escritas: ${puestas} de ${todos.length}`);
+    console.log(`Explicaciones escritas: ${conExplicacion} de ${todos.length}`);
     return listas;
 
   } catch (err) {
