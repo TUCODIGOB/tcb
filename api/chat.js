@@ -167,6 +167,54 @@ const RASGO = {
   additionalProperties: false,
 };
 
+// CUANTOS RASGOS SE LE DAN A CADA AREA, Y POR QUE TRES.
+//
+// El area tiene un tope de palabras que no se toca. Repartidas entre tres
+// rasgos salen unas 280 palabras para cada uno, que da para desarrollarlo;
+// con seis serian 140, y 140 palabras no desarrollan nada, resumen. Los que
+// pasen de tres no se pierden: siguen en las dos listas del final, que es
+// donde viven los rasgos que no da tiempo a contar despacio.
+//
+// Y AL REVES NO SE FUERZA: si de un area salen dos, van dos, y si sale uno,
+// uno. Rellenar un area con un rasgo inventado para llegar a tres se nota al
+// leerlo y es justo lo contrario de lo que estas listas vienen a arreglar.
+const RASGOS_POR_AREA = 3;
+
+// El reparto va DELANTE de las siete areas, o sea que todas esperan por el.
+// Por eso se le pide poco (nombre y una linea, sin la explicacion larga) y
+// por eso reintenta poco: si tarda, retrasa el informe entero. Si no sale,
+// las areas se escriben como se han escrito siempre.
+const INTENTOS_DEL_REPARTO = 2;
+const TOPE_DEL_REPARTO = 4000;
+
+// EL REPARTO: los mismos rasgos, pero en corto y ordenados por area.
+//
+// No lleva "explicacion" a proposito. El area no la necesita -la va a contar
+// ella a su manera y con su sitio- y quitarla es lo que hace que esta llamada
+// sea corta, que es de lo que depende que no retrase el informe.
+const ESQUEMA_REPARTO = {
+  type: 'object',
+  properties: {
+    rasgos: {
+      type: 'array',
+      description: `Los rasgos de la persona, cada uno con el area a la que va. Como mucho ${RASGOS_POR_AREA} por area, y menos si de esa area no salen mas.`,
+      minItems: 1,
+      items: {
+        type: 'object',
+        properties: {
+          nombre: { type: 'string', description: 'El nombre del rasgo, 3-6 palabras sin articulos. Ej: "Leal hasta el agotamiento".' },
+          descripcion: { type: 'string', description: 'UNA sola frase (15-25 palabras) escrita a ella. Ej: "Necesitas entender el porque de todo lo que te pasa antes de poder aceptarlo".' },
+          area: { type: 'number', enum: [1, 2, 3, 4, 5, 6, 7], description: 'A cual de las siete areas va (1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero).' },
+        },
+        required: ['nombre', 'descripcion', 'area'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['rasgos'],
+  additionalProperties: false,
+};
+
 // CUANTOS RASGOS SE PIDEN, Y POR QUE NO LO DICE EL ESQUEMA.
 //
 // El numero se pide en el prompt, no aqui. Esta API solo admite minItems 0 y
@@ -730,6 +778,200 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
   }
 }
 
+// ══════════════════════════════════════════════════════════════════
+// EL REPARTO: QUE RASGOS SUYOS LE TOCAN A CADA AREA
+// ══════════════════════════════════════════════════════════════════
+//
+// POR QUE EXISTE ESTO. Las siete areas se escriben a la vez y ninguna sabe lo
+// que estan escribiendo las otras seis. Cada una lee la carta ENTERA por su
+// cuenta, asi que las siete encuentran el tema mas fuerte de la persona y las
+// siete escriben sobre el. En el estudio del 25 de agosto las siete areas se
+// reducian a tres ideas, y dos de ellas -Miedos y Herida- decian la misma
+// frase con otras palabras. El cliente lo nota: siente que todo le habla de
+// lo mismo y que del resto de su carta no le han contado nada.
+//
+// El arreglo no es pedirle al modelo que no repita, que ya se le pide. Es que
+// alguien reparta ANTES: una llamada lee la carta una vez, saca lo que tiene
+// esta persona y le pone a cada cosa su area. Despues cada area recibe LO
+// SUYO y no lo de las demas.
+//
+// VA DELANTE DE LAS AREAS, y eso cuesta tiempo, asi que se le pide lo minimo:
+// el nombre y una linea. La explicacion larga de cada rasgo la siguen
+// escribiendo las dos listas del final, que van en paralelo como siempre.
+//
+// SI FALLA, NO PASA NADA. Devuelve el reparto vacio y las siete areas se
+// escriben exactamente como se han escrito hasta hoy. Es una mejora del
+// contenido, no una pieza sin la que el informe no exista.
+async function repartirRasgos(nombrePila, sexo, cartaTexto) {
+  const vacio = {};
+  const trato = sexo === 'mujer'
+    ? 'una MUJER. Toda en femenino.'
+    : 'un HOMBRE. Todo en masculino.';
+
+  const prompt = `Eres la misma experta en psicología, astrología y neurociencia que escribe el estudio. Antes de escribir las siete áreas, lees la carta UNA vez y repartes: sacas lo que tiene esta persona y le pones a cada cosa el área donde toca contarla.
+
+${ESPANOL_DE_ESPANA}
+
+PARA QUE SIRVE ESTO: cada una de las siete áreas se escribe por separado y no ve lo que hacen las otras. Si no repartes tú, las siete cuentan lo mismo -lo más llamativo de la carta- y el estudio entero acaba diciendo tres cosas. Tú decides aquí, de una vez, qué se cuenta en cada sitio.
+
+LAS SIETE ÁREAS:
+1 = IDENTIDAD: quién es por dentro y cómo se vive a sí misma
+2 = PATRONES: lo que se le repite en automático una y otra vez
+3 = MIEDOS: lo que la frena, lo que teme, de qué se protege
+4 = HERIDA: lo que le dolió y la marca todavía
+5 = AMOR: cómo quiere y cómo la quieren
+6 = RELACIONES: cómo se relaciona con los demás, dentro y fuera del amor
+7 = DINERO: su relación con el dinero, el valor y lo que se permite
+
+REGLAS:
+1. COMO MUCHO ${RASGOS_POR_AREA} POR ÁREA. Ni uno más. Los que sobren de un área no los pongas: hay dos listas al final del estudio donde caben.
+2. Y NO HAY QUE LLEGAR A ${RASGOS_POR_AREA}. Si de un área salen dos, pon dos. Si sale uno, uno. Si de verdad no sale ninguno, ninguno. INVENTAR UNO PARA CUADRAR ES EL PEOR FALLO QUE PUEDES COMETER AQUÍ: se lee como relleno y estropea justo lo que esto viene a arreglar. Sigue lo que dice la carta, no repartas a partes iguales.
+3. NI UNO REPETIDO, y repetido no es solo la misma frase: es la misma cosa dicha con otras palabras. "Miedo al abandono" y "Terror a que la dejen" son el mismo rasgo escrito dos veces. Y ojo con los que caen en áreas distintas, que es donde más se cuela: si lo que pones en MIEDOS es lo mismo que pusiste en HERIDA, has vuelto a crear el problema que esto arregla.
+4. CADA RASGO EN SU ÁREA, la que de verdad le toca. Un rasgo puesto donde no va deja su área coja y le roba el sitio a otro.
+5. QUE SEAN COSAS DISTINTAS ENTRE SÍ. No siete versiones del mismo tema: lo que buscas es todo lo que esta carta tiene que decir de ella, no lo que más se repite en ella.
+
+CÓMO SE ESCRIBE CADA UNO:
+- "nombre": 3-6 palabras sin artículos. Ej: "Leal hasta el agotamiento", "Miedo a decepcionar".
+- "descripcion": UNA sola frase, 15-25 palabras, escrita a ella. Ej: "Necesitas entender el porqué de todo lo que te pasa antes de poder aceptarlo".
+
+${TODO_DE_TU}
+${HABLAR_DE_ELLA_LO_ROMPE}
+
+${PERDONA_ANTES_DE_NOMBRAR}
+Lo que le pesa se nombra por lo que HACE o lo que le PASA, nunca con una etiqueta encima como si fuera un diagnóstico: "Te cuesta soltar el control cuando algo te importa", no "Controladora".
+
+NI UN NOMBRE DE PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ÁNGULO. NI UNA VEZ.
+La carta es de dónde lo sacas, no lo que escribes. Prohibidas esas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Júpiter, Saturno, Urano, Neptuno, Plutón, Quirón, nodo, ascendente, medio cielo, los doce signos, cuadratura, trígono, sextil, oposición, conjunción, aspecto, orbe, retrógrado, carta, carta natal, horóscopo.
+- MAL: "El Sol enfrentado a Saturno te hizo crecer sintiendo que el cariño había que ganárselo".
+- BIEN: "Creciste con la sensación de que el cariño había que ganárselo, y esa vara la sigues usando contigo".
+
+${SIN_NOMBRAR_PLANETAS}
+${COMA_ANTES_DE_Y}
+Nada de asteriscos, negritas ni guiones dentro del nombre ni de la descripción: son texto corrido.
+No la llames por su nombre en las fichas: aquí no toca.
+
+Carta natal:
+${cartaTexto}
+
+Persona: ${trato}
+Nombre de pila: ${nombrePila}
+
+IMPORTANTE: como mucho ${RASGOS_POR_AREA} por área, sin rellenar las que den menos, y ni uno que diga lo mismo que otro. Antes de darlo por terminado, léelos todos seguidos y quita cualquiera que repita a otro, aunque estén en áreas distintas.`;
+
+  const pedirElReparto = async () => {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-5',
+        max_tokens: TOPE_DEL_REPARTO,
+        thinking: { type: 'disabled' },
+        output_config: { format: { type: 'json_schema', schema: ESQUEMA_REPARTO } },
+        // El prompt va en "system" y el encargo en "messages", igual que la
+        // lista de rasgos: es como se piden en este fichero las llamadas que
+        // no son un area.
+        system: prompt,
+        messages: [{ role: 'user', content: 'Reparte los rasgos de esta carta entre las siete areas, siguiendo exactamente la estructura del esquema.' }],
+      }),
+    });
+
+    if (!response.ok) {
+      const err = new Error(`HTTP ${response.status}`);
+      // Igual que en las areas: 429 y 5xx se reintentan, un 401 no.
+      err.temporal = response.status === 429 || response.status >= 500;
+      throw err;
+    }
+
+    const data = await response.json();
+    if (data.stop_reason === 'max_tokens') {
+      const err = new Error('el reparto se ha cortado por el tope');
+      err.temporal = true;
+      throw err;
+    }
+
+    const texto = (data.content || [])
+      .filter(b => b && typeof b.text === 'string')
+      .map(b => b.text)
+      .join('') || '{}';
+
+    const salida = JSON.parse(texto);
+    return Array.isArray(salida.rasgos) ? salida.rasgos : [];
+  };
+
+  try {
+    let crudos = null;
+    let fallos = 0;
+
+    while (fallos < INTENTOS_DEL_REPARTO) {
+      try {
+        crudos = await pedirElReparto();
+        break;
+      } catch (err) {
+        fallos++;
+        const temporal = err.temporal !== false;
+        if (!temporal || fallos >= INTENTOS_DEL_REPARTO) {
+          console.warn(`Reparto de rasgos: ${err.message.slice(0, 80)} — las areas se escriben sin el`);
+          return vacio;
+        }
+        console.warn(`Reparto de rasgos: intento ${fallos} fallido (${err.message.slice(0, 60)}), reintentando`);
+        await new Promise(r => setTimeout(r, 1200 * fallos));
+      }
+    }
+
+    if (!crudos || crudos.length === 0) return vacio;
+
+    // A partir de aqui no se vuelve a llamar a nadie: lo que no valga se cae.
+    // Un rasgo de menos deja su area como estaba, que es lo de siempre; un
+    // rasgo malo metido dentro de un area estropea el area entera.
+    const limpios = [];
+    for (const crudo of crudos) {
+      const area = Number(crudo && crudo.area);
+      const rasgo = {
+        nombre: String((crudo && crudo.nombre) || '').trim(),
+        descripcion: String((crudo && crudo.descripcion) || '').trim(),
+        area: (area >= 1 && area <= 7) ? area : 0,
+      };
+      if (!rasgo.nombre || !rasgo.descripcion || !rasgo.area) continue;
+
+      // El detector mira las tres casillas de una ficha; aqui no hay
+      // explicacion, asi que se le pasa vacia.
+      const palabra = laPalabraDeAstrologo({ ...rasgo, explicacion: '' });
+      if (palabra) {
+        console.warn(`Reparto de rasgos: fuera "${rasgo.nombre}" por decir "${palabra}"`);
+        continue;
+      }
+      // Repetido contra todos los anteriores, esten en el area que esten: dos
+      // areas contando lo mismo es exactamente lo que esto viene a evitar.
+      if (limpios.some(anterior => dicenLoMismo(anterior, { ...rasgo, explicacion: '' }))) {
+        console.warn(`Reparto de rasgos: fuera "${rasgo.nombre}" por repetir a otro`);
+        continue;
+      }
+      limpios.push(rasgo);
+    }
+
+    // Por area, y con el tope puesto aqui tambien: el esquema lo pide y el
+    // prompt lo pide, pero ninguna de las dos cosas lo garantiza, y un area
+    // con seis rasgos es el resumen que esto viene a evitar.
+    const porArea = {};
+    for (const rasgo of limpios) {
+      if (!porArea[rasgo.area]) porArea[rasgo.area] = [];
+      if (porArea[rasgo.area].length < RASGOS_POR_AREA) porArea[rasgo.area].push(rasgo);
+    }
+
+    const cuenta = Object.keys(porArea).sort().map(a => `${a}:${porArea[a].length}`).join(' ');
+    console.log(`Reparto de rasgos: ${limpios.length} rasgos repartidos (area:cuantos -> ${cuenta})`);
+    return porArea;
+
+  } catch (err) {
+    console.warn(`Reparto de rasgos: ${err.message.slice(0, 80)} — las areas se escriben sin el`);
+    return vacio;
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -1160,6 +1402,28 @@ ${cartaTexto}`;
     : sexo === 'hombre'
       ? 'un HOMBRE. Todo en masculino: solo, cansado, el mismo. Nunca en femenino.'
       : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos, dale la vuelta a la frase cuando haga falta.';
+
+  // LOS RASGOS QUE LE TOCAN A ESTA AREA, escritos para que los lea el modelo.
+  //
+  // Va en el mensaje, NO en el prompt de sistema: el de sistema es identico en
+  // las siete y es el que esta en cache, y meter aqui algo que cambia por area
+  // la dejaria sin usar en las siete. Ver calentarLaCache.
+  //
+  // Si a un area no le toco ninguno, devuelve cadena vacia y el area se escribe
+  // exactamente igual que antes de existir el reparto.
+  function losRasgosDeEstaArea(reparto, id) {
+    const mios = (reparto && reparto[id]) || [];
+    if (mios.length === 0) return '';
+    const fichas = mios.map(r => `- ${r.nombre}: ${r.descripcion}`).join('\n');
+    return `
+
+LO SUYO QUE TE TOCA CONTAR A TI EN ESTA AREA:
+${fichas}
+
+Esto sale de su carta y se ha repartido entre las siete areas para que no se cuente dos veces: lo que ves aqui es TUYO, y lo que no ves aqui lo esta contando otra area ahora mismo. Asi que estos los desarrollas tu a fondo, y no te vas a buscar otro tema por tu cuenta aunque en la carta te llame mas fuerte, porque ese seguramente sea el de otra.
+Van repartidos por los bloques que ya tienes -el arranque, hoy, origen, creencias y soltar- cada uno donde le toque, y contados como cuentas todo lo demas: en su vida, sin decir de donde salen y sin nombrarlos como una lista. NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Lo que lee ella son tus parrafos de siempre.
+Y son ${mios.length}: ni uno menos, cada uno con su sitio y su desarrollo, que es lo que hace que el area cuente varias cosas y no una sola dando vueltas.`;
+  }
 
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS DIEZ, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
@@ -1772,7 +2036,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
   // loQueFalloAntes: lo que traia mal el area en el intento anterior. Pedir el
   // area otra vez a secas es tirar una moneda; decirle que fallo la vez pasada
   // es lo unico que hace que el repaso sirva para algo.
-  async function pedirArea(area, loQueFalloAntes) {
+  async function pedirArea(area, loQueFalloAntes, reparto) {
     const repaso = (loQueFalloAntes && loQueFalloAntes.length)
       ? `\n\nESTE AREA YA LA HAS ESCRITO UNA VEZ Y HA VUELTO POR ESTO:\n- ${loQueFalloAntes.join('\n- ')}\nEscribela entera otra vez, arreglando eso y sin estropear lo demas.`
       : '';
@@ -1829,7 +2093,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
         system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
         messages: [{
           role: 'user',
-          content: `${contextoPersona}\n\n${area.prompt}\n\n${recordatorioFinal}${repaso}`,
+          content: `${contextoPersona}\n\n${area.prompt}${losRasgosDeEstaArea(reparto, area.id)}\n\n${recordatorioFinal}${repaso}`,
         }],
       }),
     });
@@ -2150,7 +2414,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     }
   }
 
-  async function generarArea(area) {
+  async function generarArea(area, reparto) {
     let ultimoError;
     // LA MEJOR DE LAS QUE HAN LLEGADO, no la primera.
     //
@@ -2169,7 +2433,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     let loQueFalloAntes = null;
     while (fallos < INTENTOS_POR_AREA) {
       try {
-        const montada = await pedirArea(area, loQueFalloAntes);
+        const montada = await pedirArea(area, loQueFalloAntes, reparto);
         const { flojo, avisos } = await loQueLeFaltaAlArea(montada);
         // Lo que se ve pero no se arregla volviendo a pedir el area: se apunta
         // y se sigue. Ver la nota en loQueLeFaltaAlArea.
@@ -2221,8 +2485,19 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // vacias, asi que aqui no puede quedar nada colgando.
     const laListaDeRasgos = extraerRasgos(nombrePila, sexo, cartaTexto);
 
+    // EL REPARTO SI VA DELANTE, Y AQUI SE ESPERA A PROPOSITO.
+    //
+    // Es lo unico del informe que las siete areas necesitan ANTES de empezar:
+    // sin el, cada una lee la carta entera por su cuenta y las siete acaban
+    // contando el tema mas fuerte de la persona. Ver repartirRasgos.
+    //
+    // Lo que cuesta es lo que tarde esta llamada, y por eso se le pide poco.
+    // Si se cae, devuelve el reparto vacio -no lanza nunca- y las siete areas
+    // se escriben igual que se han escrito hasta hoy.
+    const reparto = await repartirRasgos(nombrePila, sexo, cartaTexto);
+
     const resultados = await Promise.all(
-      AREAS.map(area => generarArea(area))
+      AREAS.map(area => generarArea(area, reparto))
     );
 
     // Unir con el separador. Es U+001F (Unit Separator), un caracter de

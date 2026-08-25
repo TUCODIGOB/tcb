@@ -216,6 +216,18 @@ globalThis.fetch = async (url, opts = {}) => {
 
   const sistema = String(Array.isArray(cuerpo.system) ? (cuerpo.system[0] || {}).text || '' : cuerpo.system || '');
 
+  // EL REPARTO DE RASGOS ENTRE LAS AREAS, que sale antes que ellas y abre el
+  // prompt con las mismas palabras que la lista. Se distingue por el esquema,
+  // que es lo unico inequivoco: el reparto pide "rasgos" y la lista pide
+  // "fortalezas" y "desafios". Aqui no se mide el reparto -tiene su propia
+  // prueba, test/rasgos-en-areas.test.mjs- y se le contesta vacio para que no
+  // toque nada de lo que esta si mide. Sin esta rama, el reparto caeria en la
+  // rama de la lista y descuadraria su cuenta de llamadas.
+  const pideElReparto = Boolean(cuerpo.output_config?.format?.schema?.properties?.rasgos);
+  if (pideElReparto) {
+    return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: '{"rasgos":[]}' }] }) };
+  }
+
   if (sistema.startsWith('Eres la misma experta')) {
     laListaYaEstabaPedida = true;
     vecesQueSeHaPedidoLaLista++;

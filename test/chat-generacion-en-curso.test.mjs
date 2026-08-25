@@ -213,7 +213,12 @@ try {
 
   // 1. Arranca una generacion legitima y se la deja a medias.
   const enCurso = pedirInforme('Ana Ruiz');
-  await espera(2200);   // pasada la reserva (incluye su confirmacion) y ya generando
+  // Pasada la reserva (incluye su confirmacion) y ya generando. Son 4,5
+  // segundos y no 2,2 porque delante de las siete areas va el reparto de
+  // rasgos, que aqui se responde con un 503 y reintenta antes de rendirse:
+  // hasta que no termina, no sale la primera llamada de area, que es la que
+  // esta cuenta. Ver repartirRasgos en api/chat.js.
+  await espera(4500);
 
   comprobar('la reserva esta cogida y la generacion en marcha',
     Boolean(TIENDA.get(SID).metadata.generacion_token) && llamadasAlModelo > 0,
