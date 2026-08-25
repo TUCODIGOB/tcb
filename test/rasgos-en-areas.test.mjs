@@ -518,6 +518,16 @@ try {
   comprobar('y empezar el cierre con la formula que salia sola',
     moldes.length === 7 && moldes.every(t => t.includes('No es que...')));
 
+  // Las siete preguntas del estudio del 26 de agosto empezaron todas por
+  // "¿Cuantas veces" o "¿Cuanto hace", y dos areas acabaron con la misma
+  // pregunta palabra por palabra. Misma causa que las aperturas: un solo
+  // ejemplo en el prompt compartido y siete llamadas que no se ven.
+  const pregunta = moldes.map(t => (t.match(/- LA PREGUNTA VA ([^\n]+)/) || [])[1]);
+  comprobar('ninguna pregunta va por donde la de otra',
+    new Set(pregunta).size === 7, new Set(pregunta).size + ' formas de 7');
+  comprobar('y a todas se les prohiben las tres que salian solas',
+    moldes.length === 7 && moldes.every(t => t.includes('"¿Cuántas veces..."')));
+
   const cierra = moldes.map(t => (t.match(/- CIERRA ([^\n]+)/) || [])[1]);
   comprobar('ninguna cierra de la misma forma que otra',
     new Set(cierra).size === 7, new Set(cierra).size + ' formas de 7');
@@ -536,6 +546,7 @@ try {
     ['las puertas', abre, /\. Sigues abriendo ancho.*$/],
     ['las invitaciones', entra, /\. Esa media línea.*$/],
     ['los cierres', cierra, /\. Y NO EMPIECES EL CIERRE.*$/],
+    ['las preguntas', pregunta, /\. Y NO EMPIEZA por.*$/],
   ]) {
     const suyas = lineas.map(l => soloSuyo(l, comun));
     const gemelas = [];
@@ -565,6 +576,10 @@ try {
     /DE ESOS TRES SE COGE EL CONTENIDO, NO EL ARRANQUE/.test(sistema));
   comprobar('y que del fragmento de tono no se copia la puerta',
     /ancho SÍ, pero por dónde ya te lo dice tu área/.test(sistema));
+  comprobar('y que del ejemplo de pregunta no se copia el arranque',
+    /De ese ejemplo se coge la pelota que devuelve, no las palabras con las que arranca/.test(sistema));
+  comprobar('el repaso final pide texto detras de cada frase grande',
+    /ninguna va detras del ultimo parrafo, que ahi solo va el cierre/.test(mensajeDelArea(1)));
 
   // El fragmento de ASI SUENA CUANDO ESTA BIEN abre por una puerta concreta.
   // Si ademas se le diera esa misma puerta a un area, esa area podria calcarlo

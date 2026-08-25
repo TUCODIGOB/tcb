@@ -1135,6 +1135,7 @@ ESTILO DE ESCRITURA:
 - EL NOMBRE QUE USAS ES EL DE PILA, el que tienes en "Nombre de pila". Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación. Si al mirar el nombre entero ves claro que el de pila es compuesto (María Carmen, José Luis, Juan José), puedes usar las dos palabras. Ante la duda, la primera palabra sola.
 - PREGÚNTALE DIRECTAMENTE. De vez en cuando párate y hazle una pregunta de verdad, de las que se quedan un rato dando vueltas. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
 - Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: "¿cuántas veces te has callado algo por no montar un lío?". Las MALAS valen para cualquiera y no dicen nada: "¿te suena?", "¿te identificas con esto?", "¿te ha pasado alguna vez?".
+  De ese ejemplo se coge la pelota que devuelve, no las palabras con las que arranca: por dónde empieza la tuya lo lleva escrito tu área, al final de su encargo. Copiándole el arranque pasa lo del 26 de agosto, que las siete preguntas del estudio empezaron por "¿cuántas veces" o "¿cuánto hace", y dos áreas acabaron con la misma pregunta palabra por palabra.
 - No hay número fijo de preguntas: van las que pida el texto y ninguna más. Si un área no pide ninguna, no la fuerces.
 - RESALTA EN NEGRITA, dentro del texto de los párrafos, marcándolo con dos asteriscos a cada lado: **así**. Esto no es opcional y no es un adorno: un área sin una sola negrita es un muro de cuatro páginas donde el ojo no tiene dónde pararse, y es el fallo que más caro sale.
 - LA NEGRITA ES EL FOSFORITO DEL LECTOR. No es maquetación, no es un resumen y no es para que la página quede bonita: es exactamente lo que esa persona subrayaría si estuviera leyendo esto en un libro suyo, con un rotulador en la mano y sin pensárselo. La pregunta que decide cada una es esa: al llegar aquí, ¿pararía y lo subrayaría, o seguiría de largo?
@@ -1496,42 +1497,49 @@ ${cartaTexto}`;
   // sigue mandando el prompt de siempre. Aqui solo se reparte POR DONDE.
   const MOLDES = {
     1: {
+      pregunta: 'poniéndole delante lo que se le abre si deja de hacer eso, en forma de "¿qué pasaría si...?"',
       entra: 'invitándola a mirar un rato suyo cualquiera ("déjame que te enseñe un rato tuyo, de esos que ni recuerdas al día siguiente")',
       abre: 'por lo que se ve de una persona desde fuera antes de conocerla, y lo poco que eso cuenta de ella',
       cuando: 'un día cualquiera entre semana, a media mañana',
       cierra: 'con el golpe seco primero, en una frase corta, y la puerta detrás',
     },
     2: {
+      pregunta: 'llevándola a la última vez concreta que le pasó, no a la cuenta de todas',
       entra: 'pidiéndole que se acuerde de la última vez que le pasó',
       abre: 'por un gesto pequeño que mucha gente hace sin darse cuenta, contado en dos líneas',
       cuando: 'un rato muerto de tarde',
       cierra: 'con una paradoja suya: dos cosas que no encajan entre sí y que sin embargo son la misma',
     },
     3: {
+      pregunta: 'obligándola a elegir entre dos cosas, y que ninguna de las dos sea cómoda',
       entra: 'llevándotela contigo al sitio donde pasa ("ven un momento conmigo")',
       abre: 'por una pregunta directa al lector, y la respuesta llega en la frase siguiente',
       cuando: 'de madrugada, desvelada',
       cierra: 'nombrando lo que de verdad teme, que no es lo que ella cree que teme',
     },
     4: {
+      pregunta: 'preguntándole qué le diría hoy a quien fue de pequeña y aprendió aquello',
       entra: 'avisándole de que lo que viene le va a sonar',
       abre: 'por una frase hecha que todo el mundo repite y casi nadie ha pensado del todo',
       cuando: 'un domingo por la tarde',
       cierra: 'con una imagen concreta que se le quede grabada, no con una explicación',
     },
     5: {
+      pregunta: 'devolviéndole en pregunta la frase exacta que ella se repite por dentro',
       entra: 'diciéndole que mire lo que hace sin darse cuenta',
       abre: 'por dos maneras opuestas de hacer lo mismo, y ella es una de las dos',
       cuando: 'un fin de semana, de día',
       cierra: 'diciéndole en concreto lo que le está costando eso, con nombre y apellidos',
     },
     6: {
+      pregunta: 'preguntándole quién haría por ella lo que ella hace por los demás',
       entra: 'poniéndola a mirarse desde fuera un segundo',
       abre: 'por cómo funciona un grupo cualquiera: una familia, una oficina, unas amigas',
       cuando: 'en mitad de algo, con gente delante',
       cierra: 'poniendo enfrente lo que da y lo que recibe, sin quejarse por ella',
     },
     7: {
+      pregunta: 'con una pregunta que solo se puede responder con una cifra concreta',
       entra: 'para que vea de qué le estás hablando ("para que veas de qué te hablo")',
       abre: 'por un objeto, una cifra o un gesto concreto con dinero',
       cuando: 'a plena luz del día, un día de cobrar o de gastar',
@@ -1548,6 +1556,7 @@ POR DÓNDE VA ESTA ÁREA (las otras seis van por otro sitio, así que no busques
 - ABRE ${m.abre}. Sigues abriendo ancho y estrechándote hasta ella en dos o tres frases, como siempre: lo que cambia es la puerta por la que entras.
 - EL EJEMPLO ENTRA ${m.entra}. Esa media línea es lo PRIMERO que se lee dentro de la casilla "escena", y NO EMPIEZA POR LA HORA: nada de "Son las once de la noche...", "Es domingo por la tarde...". Las palabras las pones tú, pero la puerta es esa.
 - EL EJEMPLO PASA ${m.cuando}. El momento se sitúa detrás de la invitación, nunca delante, y la escena de verdad va después y ocupa lo que tenga que ocupar.
+- LA PREGUNTA VA ${m.pregunta}. Y NO EMPIEZA por "¿Cuántas veces...", "¿Cuándo fue la última vez..." ni "¿Cuánto hace que...": esas tres salen solas. En el estudio del 26 de agosto las siete preguntas empezaron así, y una salió repetida palabra por palabra en dos áreas distintas.
 - CIERRA ${m.cierra}. Y NO EMPIECES EL CIERRE por "No es que...", "No estás cansada de..." ni "No te falta...": esas tres son la forma que sale sola, la usan todas y se lee a plantilla.`;
   }
 
@@ -1602,7 +1611,7 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
 9. Ninguna casilla se queda vacia ni rellena con una palabra de relleno: la escena, los dos remates, la pregunta y el cierre van SIEMPRE y van escritos de verdad
 9b. La escena esta escrita SOLO en su casilla. Repasa los bloques de texto: si ahi vuelve a estar la escena, la borras de ahi, que si no sale impresa dos veces
 9c. NI UNA FRASE EN TERCERA PERSONA SOBRE ELLA. Relee el primer parrafo y el cierre, que es donde se escapa: si dice "ella", "le", "aprendio", "carga", "va a descubrir" hablando de ella, se reescribe en segunda persona
-10. Y MIRA DONDE LAS HAS PUESTO: ninguna detras de SOLTAR, y nunca dos detras del mismo bloque, que entre ellas tiene que quedar texto
+10. Y MIRA DONDE LAS HAS PUESTO: detras de cada una tiene que quedar texto del area, asi que ninguna va detras del ultimo parrafo, que ahi solo va el cierre. Y nunca dos detras del mismo bloque, que entre ellas tambien tiene que quedar texto
 11. Que se note que hay alguien hablandole: tres o cuatro veces en toda el area te paras y le hablas de tu a tu, y antes de nombrarle lo que le pesa le quitas la culpa de encima
 12. El area abre situando el tema desde fuera, no de golpe con una frase seca sobre ella. Y el cierre CIERRA: no presenta la siguiente area, no insinua nada, y deja ver que se le abre`;
 

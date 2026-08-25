@@ -219,6 +219,45 @@ const casillas = (nParrafos, sitio) => ({
   c('las cuatro al mismo sitio, en cualquier sitio y tamano', mal === 0, mal + ' combinaciones mal');
 }
 {
+  // DETRAS DEL ULTIMO PARRAFO SOLO VA EL CIERRE.
+  //
+  // El cierre tambien se imprime grande y centrado. Una frase grande pegada a
+  // el deja dos carteles seguidos sin una linea de texto en medio, y el golpe
+  // del area se pierde porque llega detras de otro igual. Se pedia en el
+  // prompt y no se comprobaba, asi que pasaba.
+  //
+  // Lo estricto vale para las verdes, remate y pregunta, que son las que
+  // compiten con el cierre. La escena va en cursiva gris con su filete y ahi no
+  // hace cartel doble, asi que puede caer en el ultimo cuando no queda hueco.
+  //
+  // Hacen falta cinco parrafos para colocar las cuatro casillas dejando texto
+  // detras de cada una; un area de verdad trae once o mas. Por debajo de cinco
+  // manda no perder ninguna, que es el fallo gordo, y eso se prueba aparte.
+  const VERDES = ['remate', 'pregunta'];
+  let pegadas = 0;
+  for (const n of [5, 6, 8, 12, 20]) {
+    // Incluye pedir el ultimo parrafo, uno de mas y un numero inventado.
+    for (const sitio of [n, n + 1, 99]) {
+      const b = analizarArea(montarArea(casillas(n, sitio)));
+      if (b[b.length - 1].tipo !== 'cierre' || VERDES.includes(b[b.length - 2].tipo)) {
+        pegadas++;
+        if (pegadas === 1) console.log(`        primera pegada: ${n} parrafos, sitio ${sitio}, ${b[b.length - 2].tipo}`);
+      }
+    }
+  }
+  c('ninguna frase verde queda pegada al cierre', pegadas === 0, pegadas + ' pegadas');
+
+  // Y no solo pidiendo el ultimo: en cualquier sitio de cualquier tamano.
+  let mal2 = 0;
+  for (const n of [5, 6, 8, 12, 20]) {
+    for (let sitio = 1; sitio <= n; sitio++) {
+      const b = analizarArea(montarArea(casillas(n, sitio)));
+      if (VERDES.includes(b[b.length - 2].tipo)) mal2++;
+    }
+  }
+  c('tampoco en ninguna otra combinacion', mal2 === 0, mal2 + ' combinaciones con una pegada');
+}
+{
   // Numeros imposibles: el modelo se inventa un parrafo 99 o un -3.
   const raro = { ...casillas(10, 3), escena: { tras_parrafo: 99, texto: 'Son las once.' }, pregunta: { tras_parrafo: -3, texto: '¿Y tu?' } };
   const b = analizarArea(montarArea(raro));
