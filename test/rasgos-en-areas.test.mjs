@@ -479,7 +479,7 @@ try {
   //
   // Las siete las escriben siete llamadas que no se ven entre ellas y todas
   // leen el mismo prompt, asi que si la forma la elige el modelo, las siete
-  // eligen la misma. Paso en los estudios del 25 y el 26 de agosto: las 12
+  // eligen la misma. Paso en los dos ultimos estudios: las 12
   // areas abrieron igual, las 14 escenas empezaron con la hora y los 14
   // cierres calcaron el ejemplo del prompt.
   //
@@ -518,7 +518,7 @@ try {
   comprobar('y empezar el cierre con la formula que salia sola',
     moldes.length === 7 && moldes.every(t => t.includes('No es que...')));
 
-  // Las siete preguntas del estudio del 26 de agosto empezaron todas por
+  // Las siete preguntas del ultimo estudio empezaron todas por
   // "¿Cuantas veces" o "¿Cuanto hace", y dos areas acabaron con la misma
   // pregunta palabra por palabra. Misma causa que las aperturas: un solo
   // ejemplo en el prompt compartido y siete llamadas que no se ven.
