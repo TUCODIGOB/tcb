@@ -340,6 +340,32 @@ try {
       sueltos.length === 0, sueltos.slice(0, 3).join(' '));
   }
   comprobar('la lista pide el minimo por area', /al menos 2/.test(laLista.sistema));
+
+  // ── LA CARTA DA EL MECANISMO, NO LA BIOGRAFIA ─────────────────
+  //
+  // En el informe 22, 24 de las 30 fichas afirmaban una infancia que nadie
+  // sabe: "En tu casa aprendiste que lo de dentro no se ensena", "Creciste
+  // viendo que el carino se demostraba haciendo". La clienta lee algo que no le
+  // paso y deja de creerse el estudio entero.
+  //
+  // Salia del propio prompt, que pedia "lo que aprendio de pequena" y ponia de
+  // EJEMPLO BUENO dos frases de infancia. Una de ellas, "En tu casa aprendiste
+  // que lo de dentro no se ensena", aparecio calcada palabra por palabra.
+  const FABRICA_INFANCIA = /(creciste|de peque|de niñ|en tu casa|desde joven)/i;
+  for (const [que, prompt] of [['la lista', laLista.sistema], ['las explicaciones', lasExpl.sistema]]) {
+    const buenos = (prompt.match(/BIEN: "[^"]+"/g) || []);
+    const inventan = buenos.filter(x => FABRICA_INFANCIA.test(x));
+    comprobar(`ningun ejemplo BUENO de ${que} afirma una infancia`,
+      inventan.length === 0, inventan.join(' | ').slice(0, 120));
+  }
+  comprobar('a las explicaciones se les prohibe inventarse la infancia',
+    /NO TE INVENTES SU INFANCIA/.test(lasExpl.sistema));
+  comprobar('y se les dice por donde si: el mecanismo y lo de hoy',
+    /el mecanismo con el que funciona por dentro y la consecuencia que tiene hoy/.test(lasExpl.sistema));
+  comprobar('y que un origen antiguo va como suposicion, no como dato',
+    /Una suposición se puede no compartir; un dato falso, no/.test(lasExpl.sistema));
+  comprobar('las explicaciones ya no piden "lo que aprendio de pequena"',
+    !/de lo que aprendió de pequeña/.test(lasExpl.sistema));
   comprobar('las explicaciones reciben los rasgos numerados',
     /1\. Detectas lo que hace falta/.test(lasExpl.sistema));
   comprobar('la nota del area no lleva \${...} sueltos', !/\$\{/.test(notaDe(1)));

@@ -141,7 +141,7 @@ const DEFECTOS_DESDE_LA_FUERZA = `LOS DEFECTOS SE CUENTAN DESDE LA FUERZA QUE LO
 
 const COMA_ANTES_DE_Y = `CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra: se escribe "quiero plátanos, peras y fresas", no "quiero plátanos, peras, y fresas". Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.`;
 
-const TODO_DE_TU = `TODO SE LE ESCRIBE A ELLA, DE TÚ, DE LA PRIMERA PALABRA A LA ÚLTIMA. Nunca se habla de ella desde fuera: ni "ella", ni "la que", ni un verbo en tercera persona referido a ella. Se escribe "lo que se te rompió", no "lo que se le rompió"; "de pequeña aprendiste", no "de pequeña aprendió"; "vas a descubrir", no "va a descubrir".`;
+const TODO_DE_TU = `TODO SE LE ESCRIBE A ELLA, DE TÚ, DE LA PRIMERA PALABRA A LA ÚLTIMA. Nunca se habla de ella desde fuera: ni "ella", ni "la que", ni un verbo en tercera persona referido a ella. Se escribe "lo que se te rompió", no "lo que se le rompió"; "cuando te callas", no "cuando se calla"; "vas a descubrir", no "va a descubrir".`;
 
 // La segunda mitad de la misma regla: por que romperla lo estropea todo.
 const HABLAR_DE_ELLA_LO_ROMPE = `En cuanto una frase habla de ella en tercera persona, el lector deja de ser el destinatario y pasa a ser un tercero que está oyendo cómo la comentan. Da igual lo buena que sea la frase: ahí se rompe todo lo anterior. Si al releer encuentras una sola, se reescribe en segunda persona.`;
@@ -625,10 +625,10 @@ EN LA LISTA DE DESAFIOS ESTO ES LO QUE MAS IMPORTA. Una lista de defectos seguid
 NI UN NOMBRE DE PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ANGULO. NI UNA VEZ.
 Esto es lo que mas se falla en estas fichas, y la que se falla no vale: la clienta no ha pagado por una lectura tecnica, ha pagado porque le hablen de ella. Vale para las dos casillas.
 Prohibidas estas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Jupiter, Saturno, Urano, Neptuno, Pluton, Quiron, nodo, ascendente, medio cielo, los doce signos del zodiaco, cuadratura, trigono, sextil, oposicion, conjuncion, aspecto, orbe, retrogrado, carta, carta natal, horoscopo.
-Y "casa" solo cuando es la casa astrologica ("la casa del dinero", "la casa siete"). La casa de vivir se puede decir toda las veces que haga falta: "en tu casa aprendiste", "tienes la casa en orden".
+Y "casa" solo cuando es la casa astrologica ("la casa del dinero", "la casa siete"). La casa de vivir se puede decir toda las veces que haga falta: "tienes la casa en orden", "no le abres la casa a cualquiera".
 - MAL: "El sol y Mercurio en la casa del trabajo diario, en un signo que vive para servir, te dan capacidad para detectar que necesita alguien". BIEN: "Detectas lo que le hace falta a alguien antes de que lo pida, y te pones a ello sin esperar a que nadie te lo diga".
-- MAL: "El sol enfrentado a Saturno te hizo crecer sintiendo que el carino habia que ganarselo". BIEN: "Creciste con la sensacion de que el carino habia que ganarselo, y esa vara la sigues usando contigo".
-- MAL: "Tu luna en la zona de tu carta que habla de raices". BIEN: "En tu casa aprendiste que lo de dentro no se ensena".
+- MAL: "El sol enfrentado a Saturno te hizo crecer sintiendo que el carino habia que ganarselo". BIEN: "Das por hecho que el carino hay que ganarselo, asi que te lo sigues currando incluso cuando ya lo tienes".
+- MAL: "Tu luna en la zona de tu carta que habla de raices". BIEN: "Lo de dentro no se ensena, y te sale solo guardartelo aunque pese".
 Fijate en lo que hacen los BIEN: dicen exactamente lo mismo, pero contado desde su vida. Eso es lo que hay que escribir.
 
 Y EL RESTO DEL TONO, IGUAL QUE EN LAS AREAS:
@@ -841,14 +841,17 @@ async function explicarLosRasgos(nombrePila, sexo, cartaTexto, listas) {
 
 ${ESPANOL_DE_ESPANA}
 
-QUÉ ES CADA EXPLICACIÓN: una o dos frases (30-60 palabras) que cuentan de dónde le viene ese rasgo o por qué le pasa, contado como se lo contaría una persona: de su historia, de lo que aprendió de pequeña, de cómo funciona por dentro. Sale de la carta, pero de la carta no se dice NADA.
+QUÉ ES CADA EXPLICACIÓN: una o dos frases (30-60 palabras) que cuentan por qué le pasa eso: el mecanismo con el que funciona por dentro y la consecuencia que tiene hoy en su vida, contado como se lo contaría una persona. Sale de la carta, pero de la carta no se dice NADA.
 Ejemplo: "Analizas todo a fondo antes de decidir, y cuando algo te importa de verdad, ese análisis no se apaga: le das vueltas de noche a una conversación de hace tres días".
 
 REGLAS:
 1. Una explicación por rasgo, con SU número delante. Ni te saltes ninguno ni cambies el orden.
 2. No repitas la descripción con otras palabras: la descripción dice QUÉ le pasa, tú cuentas DE DÓNDE viene.
 3. Que no se parezcan entre ellas. Treinta explicaciones que empiezan igual se leen de un vistazo y cantan.
-4. LA EXPLICACIÓN DE UN DESAFÍO SIEMPRE DEJA UNA PUERTA. No una frase de ánimo pegada al final: se cuenta de dónde viene, y de dónde viene algo aprendido es también por dónde se suelta.
+4. LA EXPLICACIÓN DE UN DESAFÍO SIEMPRE DEJA UNA PUERTA. No una frase de ánimo pegada al final: se cuenta de dónde le sale, y donde algo se aprendió es también por donde se suelta.
+5. NO TE INVENTES SU INFANCIA, QUE ES LO QUE MÁS SE FALLA AQUÍ. De la carta sale cómo funciona, no lo que le pasó: no sabes cómo era su casa, ni qué vio de pequeña, ni qué le dijeron. Afirmarlo suena precioso hasta que ella lee algo que no le pasó, y entonces deja de creerse el estudio entero.
+   Así que PROHIBIDO abrir con "creciste", "aprendiste de pequeña", "de niña", "en tu casa", "desde joven" o "en algún momento alguien te". Lo que cuentas es lo de ahora: cómo le funciona por dentro y en qué se le nota hoy.
+   Si el origen antiguo hace falta para que se entienda, va como lo que es, una suposición y no un dato: "esto suele venir de...", "a lo mejor viene de...". Una suposición se puede no compartir; un dato falso, no.
 
 ${TODO_DE_TU}
 ${HABLAR_DE_ELLA_LO_ROMPE}
@@ -857,8 +860,8 @@ ${PERDONA_ANTES_DE_NOMBRAR}
 
 NI UN NOMBRE DE PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ÁNGULO. NI UNA VEZ.
 Aquí es donde más se cuela de todo el estudio. La carta es de dónde lo sacas, no lo que escribes. Prohibidas esas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Júpiter, Saturno, Urano, Neptuno, Plutón, Quirón, nodo, ascendente, medio cielo, los doce signos, cuadratura, trígono, sextil, oposición, conjunción, aspecto, orbe, retrógrado, carta, carta natal, horóscopo.
-- MAL: "El Sol enfrentado a Saturno te hizo crecer sintiendo que el cariño había que ganárselo".
-- BIEN: "Creciste con la sensación de que el cariño había que ganárselo, y esa vara la sigues usando contigo".
+- MAL: "Con Marte en tu casa seis, el trabajo te sale por delante de todo".
+- BIEN: "Tienes una vara de medir muy alta y la primera que la pasa eres tú: lo que no te has currado, no te lo crees".
 
 ${SIN_NOMBRAR_PLANETAS}
 ${COMA_ANTES_DE_Y}
