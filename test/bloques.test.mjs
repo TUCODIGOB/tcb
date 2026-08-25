@@ -193,12 +193,25 @@ const casillas = (nParrafos, sitio) => ({
 {
   // El peor caso: el modelo manda las cuatro detras del MISMO parrafo. Si se
   // dejaran pegadas, al sanearlo una frase grande se perderia.
-  for (const n of [14, 8, 5, 4, 3]) {
+  //
+  // Desde cinco parrafos, que es cuando hay huecos para las cuatro dejando
+  // texto detras de cada una. Con menos, las dos reglas chocan: o una comparte
+  // parrafo o alguna se pega al cierre. Manda no pegarse al cierre, que es lo
+  // que ve el cliente, y ese caso se prueba justo debajo. Un area de verdad
+  // trae once parrafos o mas: por debajo ya se rechaza antes de llegar aqui.
+  for (const n of [14, 8, 5]) {
     const b = analizarArea(montarArea(casillas(n, 2)));
     const grandes = b.filter(x => ['remate', 'pregunta'].includes(x.tipo)).length;
     c(`las cuatro al mismo sitio con ${n} parrafos: no se pierde ninguna`,
       grandes === 3 && b.some(x => x.tipo === 'escena') && revisarBloques(b).length === 0,
       grandes + ' grandes, ' + revisarBloques(b).join(' | '));
+  }
+  // Y un area demasiado corta no revienta ni pierde el cierre.
+  for (const n of [1, 2, 3, 4]) {
+    const b = analizarArea(montarArea(casillas(n, 2)));
+    c(`un area de ${n} parrafo(s) se monta y acaba en cierre`,
+      b.length > 0 && b[b.length - 1].tipo === 'cierre',
+      b.length ? 'acaba en ' + b[b.length - 1].tipo : 'vacia');
   }
 }
 {
@@ -206,7 +219,7 @@ const casillas = (nParrafos, sitio) => ({
   // areas de todos los tamanos. El hueco se busca hacia delante y, si no lo
   // hay, hacia atras saltando los ocupados.
   let mal = 0;
-  for (const n of [3, 4, 5, 6, 8, 12, 20]) {
+  for (const n of [5, 6, 8, 12, 20]) {
     for (let sitio = 1; sitio <= n; sitio++) {
       const b = analizarArea(montarArea(casillas(n, sitio)));
       const grandes = b.filter(x => ['remate', 'pregunta'].includes(x.tipo)).length;
@@ -233,7 +246,7 @@ const casillas = (nParrafos, sitio) => ({
   // Hacen falta cinco parrafos para colocar las cuatro casillas dejando texto
   // detras de cada una; un area de verdad trae once o mas. Por debajo de cinco
   // manda no perder ninguna, que es el fallo gordo, y eso se prueba aparte.
-  const VERDES = ['remate', 'pregunta'];
+  const VERDES = ['remate', 'pregunta', 'escena'];
   let pegadas = 0;
   for (const n of [5, 6, 8, 12, 20]) {
     // Incluye pedir el ultimo parrafo, uno de mas y un numero inventado.
@@ -245,7 +258,7 @@ const casillas = (nParrafos, sitio) => ({
       }
     }
   }
-  c('ninguna frase verde queda pegada al cierre', pegadas === 0, pegadas + ' pegadas');
+  c('ninguna casilla queda pegada al cierre', pegadas === 0, pegadas + ' pegadas');
 
   // Y no solo pidiendo el ultimo: en cualquier sitio de cualquier tamano.
   let mal2 = 0;
