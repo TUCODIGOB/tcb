@@ -796,6 +796,78 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
 // SI FALLA, NO PASA NADA. Devuelve el reparto vacio y las siete areas se
 // escriben exactamente como se han escrito hasta hoy. Es una mejora del
 // contenido, no una pieza sin la que el informe no exista.
+// NADA DE LO QUE SE LE DICE AL MODELO PUEDE SALIR IMPRESO.
+//
+// Al area se le mandan cosas que son para ella y no para la clienta: que
+// parte de la carta le toca mirar, y desde el reparto, que rasgos suyos le
+// tocan contar. Si el modelo copiase esos encabezados dentro del texto, la
+// clienta abriria un estudio de 27 euros y leeria las instrucciones internas
+// del producto.
+//
+// Hasta ahora eso se pedia y nada mas. Se pedia bien -en los dos estudios del
+// 25 de agosto no se colo ni una- pero pedir no es garantizar, y lo que de
+// verdad tapaba ese agujero era el detector de palabras de astrologo, que
+// caza "el Sol con Saturno" si se copia. La nota del reparto no lleva ni una
+// palabra de esas, asi que ese detector no la vería: de ahi esta lista.
+//
+// Son frases largas y literales de los encabezados internos. Ninguna la
+// escribiria nadie contandole a una persona como es, asi que no hay riesgo de
+// llevarse por delante texto bueno.
+const MARCAS_QUE_NO_SE_IMPRIMEN = [
+  'lo suyo que te toca contar',
+  'esto es que contar, no por donde mirar',
+  'los bloques no cambian de trabajo',
+  'la parte de la carta que te toca mirar',
+  'informacion interna para ti',
+  'antes de dar el area por terminada',
+];
+
+// LA RED DE ABAJO DEL TODO. El control de mas arriba manda a rehacer el area
+// cuando ve una marca, pero el repaso tiene un tope: si a la segunda vuelve a
+// colarse, el area se entrega con avisos, que es lo correcto para un fallo de
+// estilo y lo peor posible para esto. Antes de entregar, la marca se quita del
+// texto. La clienta se queda sin ver una frase que nunca fue para ella, y no
+// sin su estudio.
+//
+// Se quita solo el encabezado y los dos puntos que lo siguen, no la frase
+// entera: lo que va detras es texto suyo, escrito para ella, y vale.
+function sinLasMarcasInternas(texto) {
+  let salida = String(texto || '');
+  for (const marca of MARCAS_QUE_NO_SE_IMPRIMEN) {
+    // La marca se busca sin tildes, asi que se localiza sobre una copia sin
+    // ellas y se corta por posicion sobre el original, que es el que se
+    // entrega. Las dos cadenas miden lo mismo: quitar tildes no cambia el
+    // numero de letras.
+    for (;;) {
+      const limpio = salida
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      const donde = limpio.indexOf(marca);
+      if (donde < 0) break;
+      // La marca es solo el principio del encabezado ("lo suyo que te toca
+      // contar"), y detras va el resto ("a ti en esta area:"). Se corta hasta
+      // los dos puntos que lo cierran, buscandolos cerca: si no aparecen en
+      // lo que mide un encabezado, se quita solo la marca y no se toca nada
+      // mas, que es mejor que llevarse por delante una frase suya.
+      const CABE_UN_ENCABEZADO = 60;
+      let hasta = donde + marca.length;
+      const dosPuntos = salida.indexOf(':', hasta);
+      if (dosPuntos >= 0 && dosPuntos - hasta <= CABE_UN_ENCABEZADO) hasta = dosPuntos + 1;
+      while (hasta < salida.length && /\s/.test(salida[hasta])) hasta++;
+      salida = salida.slice(0, donde) + salida.slice(hasta);
+    }
+  }
+  return salida;
+}
+
+function laMarcaInternaQueSeHaColado(texto) {
+  // Sin tildes y en minusculas, para que una tilde de mas o de menos en la
+  // copia no lo deje pasar. No usa el sinTildes de mas abajo a proposito:
+  // aquel vive dentro del handler y esto es de fichero.
+  const limpio = String(texto || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  return MARCAS_QUE_NO_SE_IMPRIMEN.find(m => limpio.includes(m)) || null;
+}
+
 async function repartirRasgos(nombrePila, sexo, cartaTexto) {
   const vacio = {};
   const trato = sexo === 'mujer'
@@ -2032,6 +2104,14 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       flojo.push(`habla de ella desde fuera: "${ella.slice(0, 70).trim()}..."`);
     }
 
+    // Una instruccion interna copiada dentro del texto. No se apunta como
+    // aviso: se manda a rehacer el area, porque esto no se puede entregar.
+    // Ver MARCAS_QUE_NO_SE_IMPRIMEN.
+    const marca = laMarcaInternaQueSeHaColado(montada);
+    if (marca) {
+      flojo.push(`ha copiado una instruccion interna dentro del texto: "${marca}"`);
+    }
+
     // Y el repaso que lee. Solo se apunta: ver la nota de arriba.
     for (const f of await frasesQueHablanDeEllaDesdeFuera(leido)) {
       avisos.push(`habla de ella desde fuera: "${f.slice(0, 70).trim()}..."`);
@@ -2520,8 +2600,12 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // quitar sin riesgo, que son las que no llevan sujeto propio detras. Ver
     // lib/estilo.js: ante la duda no se toca, porque una coma quitada donde
     // hacia falta es una falta de ortografia impresa.
+    // sinLasMarcasInternas va aqui, en el ultimo sitio por el que pasa el
+    // texto antes de salir hacia el navegador: pase lo que pase mas arriba,
+    // por aqui no sale una instruccion interna impresa. Ver la nota que
+    // acompaña a MARCAS_QUE_NO_SE_IMPRIMEN.
     const textoCompleto = resultados
-      .map(t => quitarComaAntesDeY(t, nombrePila).split(SEPARADOR_AREAS).join(''))
+      .map(t => sinLasMarcasInternas(quitarComaAntesDeY(t, nombrePila)).split(SEPARADOR_AREAS).join(''))
       .join(SEPARADOR_AREAS);
 
     // Aqui ya suele estar hecha: se pidio antes que las areas y tarda menos.

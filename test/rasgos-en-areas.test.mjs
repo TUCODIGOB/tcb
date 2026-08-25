@@ -83,6 +83,7 @@ const CARTA = `Carta natal calculada:
 
 let repartoQueDevuelve = null;
 let repartoFalla = null;
+let areaCopiaLaNota = false;
 const llamadas = [];
 
 function quePide(cuerpo) {
@@ -106,9 +107,9 @@ function porBloques(parrafos) {
   return { bloques };
 }
 
-const areaEscrita = () => JSON.stringify({
+const areaEscrita = (copiandoLaNota) => JSON.stringify({
   ...porBloques([
-    { ladillo: null, texto: 'Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen, porque en cualquier familia hay una.' },
+    { ladillo: null, texto: (copiandoLaNota ? 'LO SUYO QUE TE TOCA CONTAR A TI EN ESTA AREA: ' : '') + 'Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen, porque en cualquier familia hay una.' },
     { ladillo: 'La cuenta que no llevas', texto: 'Por fuera pareces tranquila, Raquel, y por dentro llevas una **maquina que no para de repasar** lo que acabas de decir.' },
     { ladillo: null, texto: 'En el trabajo se te nota enseguida, **revisas una tarea tres veces** cuando con una bastaria, y no es que dudes de tu criterio.' },
     { ladillo: 'Donde aprendiste la cuenta', texto: 'De pequena entendiste que el carino se ganaba haciendo las cosas bien, siendo la que no daba problemas nunca.' },
@@ -150,7 +151,7 @@ globalThis.fetch = async (url, opts = {}) => {
     }) };
   }
   return { ok: true, status: 200, json: async () => ({
-    content: [{ type: 'text', text: tipo === 'area' ? areaEscrita() : '{}' }],
+    content: [{ type: 'text', text: tipo === 'area' ? areaEscrita(areaCopiaLaNota) : '{}' }],
     stop_reason: 'end_turn', usage: {},
   }) };
 };
@@ -340,6 +341,29 @@ try {
     laNota.includes('sigues cruzando todo lo que haga falta'));
   comprobar('y NO le cambia el trabajo a los bloques',
     laNota.includes('Los bloques no cambian de trabajo'));
+
+  // ── 10. NADA INTERNO SE IMPRIME ───────────────────────────────
+  //
+  // Al area se le manda una nota que es para ella y no para la clienta. Si
+  // el modelo la copiara dentro del texto, la clienta abriria un estudio de
+  // 27 euros y leeria las instrucciones del producto. Se pide que no lo haga,
+  // pero pedir no basta: aqui se comprueba que ademas hay un control que lo
+  // caza y manda a rehacer el area.
+  //
+  // El detector de palabras de astrologo NO cubre esto: la nota del reparto
+  // no lleva ni un planeta dentro.
+  repartoQueDevuelve = [
+    { nombre: 'Leal hasta el agotamiento', descripcion: 'Te quedas sosteniendo mucho despues de que deje de tener sentido quedarte.', area: 1 },
+  ];
+  areaCopiaLaNota = true;
+  const rFuga = await generar();
+  areaCopiaLaNota = false;
+  const intentosDelArea1 = deArea().filter(l => /ÁREA 1 —/.test(l.mensaje)).length;
+  comprobar('un area que copia la nota interna se manda a rehacer',
+    intentosDelArea1 > 1, intentosDelArea1 + ' intentos del area 1');
+  comprobar('y el estudio no se entrega con la instruccion dentro',
+    rFuga.code !== 200 || !String(rFuga.body?.texto || '').includes('LO SUYO QUE TE TOCA'),
+    'HTTP ' + rFuga.code);
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);
