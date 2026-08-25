@@ -623,6 +623,29 @@ try {
     /DE ESOS TRES SE COGE EL CONTENIDO, NO EL ARRANQUE/.test(sistema));
   comprobar('y que del fragmento de tono no se copia la puerta',
     /ancho SÍ, pero por dónde ya te lo dice tu área/.test(sistema));
+  // ── QUE SUENE A QUIEN LA CONOCE, NO A UN INFORME ──────────────
+  //
+  // En el informe 22 las areas explicaban el mecanismo en vez de decirle lo
+  // que le pasa, y siempre con los mismos cuatro tics: "no es X, es Y" veinte
+  // veces, "casi nadie / casi nunca" diecisiete, seis frases que describen la
+  // pieza desde fuera y seis que anuncian lo que viene antes de decirlo.
+  // Y en 9.300 palabras solo habia nueve preguntas, casi todas la de la
+  // casilla: el area le explicaba mucho y no le preguntaba nada.
+  comprobar('se le prohibe explicar el mecanismo en vez de decirlo',
+    /NO LE EXPLIQUES EL MECANISMO: DILE LO QUE LE PASA/.test(sistema));
+  for (const [que, marca] of [
+    ['corregir para explicar', 'NO CORRIJAS PARA EXPLICAR'],
+    ['hablar de la pieza', 'NADA DE HABLAR DE LA PIEZA'],
+    ['carraspear antes de decirlo', 'NO CARRASPEES ANTES DE HABLAR'],
+    ['abusar de "casi nadie"', '"CASI NADIE", "CASI NUNCA", "MUY POCA GENTE"'],
+  ]) comprobar(`y se le nombra el tic de ${que}`, sistema.includes(marca));
+  comprobar('dentro del texto van dos o tres preguntas mas, aparte de la casilla',
+    /ADEMÁS DE LA DE SU CASILLA, DENTRO DEL TEXTO VAN DOS O TRES MÁS/.test(sistema));
+  comprobar('y ya no dice que no se fuercen, que era el permiso para no poner ninguna',
+    !/van las que pida el texto y ninguna más/.test(sistema));
+  comprobar('el repaso final tambien las cuenta',
+    /dentro del texto hay DOS O TRES mas/.test(mensajeDelArea(1)));
+
   comprobar('el prompt compartido ya no propone "hay quien" para abrir',
     !/\("hay quien\.\.\."/.test(sistema) && /PROHIBIDO empezar un área por "Hay\.\.\."/.test(sistema));
   comprobar('y que del ejemplo de pregunta no se copia el arranque',
