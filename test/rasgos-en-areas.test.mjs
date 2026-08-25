@@ -1,24 +1,18 @@
 // ═════════════════════════════════════════════════════════════════
 // test/rasgos-en-areas.test.mjs
 //
-// Vigila el REPARTO: la llamada que sale antes de las siete areas, lee la
-// carta una vez y le dice a cada area cuales de los rasgos de la persona le
-// tocan a ella.
+// Vigila que LAS LISTAS SEAN LA FUENTE DEL ESTUDIO.
 //
-// POR QUE EXISTE. Las siete areas se escriben a la vez y ninguna ve lo que
-// escriben las otras, asi que las siete encuentran el tema mas fuerte de la
-// carta y las siete cuentan lo mismo. En el estudio del 25 de agosto las
-// siete areas se reducian a tres ideas y dos de ellas decian la misma frase.
+// Como funciona: se lee la carta UNA vez y salen las dos listas de rasgos,
+// cada rasgo con su area. Despues cada una de las siete areas se escribe con
+// LOS SUYOS y con ninguno mas. Asi lo que la clienta lee en el area y lo que
+// lee en la lista del final es lo mismo, y un rasgo no puede salir contado en
+// dos areas distintas.
 //
-// LO QUE SE COMPRUEBA AQUI ES QUE EL REPARTO LLEGA DE VERDAD:
-//   - que sale ANTES que las areas (si sale a la vez, no sirve de nada)
-//   - que a cada area le llegan LOS SUYOS y ninguno de los demas
-//   - que un area sin rasgos se escribe igual que antes de existir esto
-//   - que si el reparto se cae, el informe sale igual
-//   - que no se cuela un rasgo con palabras de astrologo
-//   - que ningun area recibe mas de tres
-//   - y que la cache sigue funcionando: los rasgos NO van en el prompt de
-//     sistema, que es el que se guarda y es identico en las siete
+// POR QUE IMPORTA: antes cada area leia la carta entera por su cuenta, las
+// siete encontraban el tema mas fuerte de la persona y las siete escribian
+// sobre el. En el estudio del 25 de agosto las siete areas se reducian a tres
+// ideas. La clienta lo nota: siente que todo le habla de lo mismo.
 //
 // Ejecutar:  node test/rasgos-en-areas.test.mjs
 // Sin red: la API se sustituye por una falsa. No toca produccion.
@@ -39,14 +33,12 @@ const escribir = (nombre, texto) => {
 };
 const limpiar = () => { for (const f of creados) try { fs.unlinkSync(f); } catch {} };
 
-// La tienda de sesiones, igual que en las demas pruebas: update() tiene que
-// guardar de verdad, porque el codigo reserva la sesion escribiendo en ella
-// antes de gastar. Con un update() que no guarda nada, la reserva no se coge
-// y el informe se rechaza con un 409.
+// La tienda de sesiones: update() tiene que guardar de verdad, porque el
+// codigo reserva la sesion escribiendo en ella antes de gastar.
 const TIENDA = new Map();
-globalThis.__TIENDA_REPARTO = TIENDA;
-escribir('.stripe-falso-reparto.mjs', `
-const T = globalThis.__TIENDA_REPARTO;
+globalThis.__TIENDA_RASGOS_AREAS = TIENDA;
+escribir('.stripe-falso-ra.mjs', `
+const T = globalThis.__TIENDA_RASGOS_AREAS;
 export default function Stripe() {
   return { checkout: { sessions: {
     async retrieve(id) { return T.get(id); },
@@ -58,9 +50,9 @@ export default function Stripe() {
   } } };
 }`);
 
-const copiaChat = escribir('.chat-reparto.mjs',
+const copiaChat = escribir('.chat-ra.mjs',
   fs.readFileSync(path.join(RAIZ, 'api/chat.js'), 'utf8')
-    .replace("import Stripe from 'stripe';", "import Stripe from './.stripe-falso-reparto.mjs';"));
+    .replace("import Stripe from 'stripe';", "import Stripe from './.stripe-falso-ra.mjs';"));
 
 process.env.STRIPE_SECRET_KEY = 'sk_test';
 process.env.ANTHROPIC_API_KEY = 'k';
@@ -72,33 +64,61 @@ const comprobar = (desc, ok, detalle = '') => {
   if (!ok) fallos++;
 };
 
-// ── La API falsa ────────────────────────────────────────────────
-// Distingue las llamadas por lo que piden: el arranque de la cache no escribe
-// nada, el reparto pide el esquema del reparto, la lista pide dos listas y el
-// area pide bloques.
 const CARTA = `Carta natal calculada:
 - Ascendente: 6.4 de Libra
 - Sol: 21.4 de Piscis
 - Luna: 13.5 de Capricornio`;
 
-let repartoQueDevuelve = null;
-let repartoFalla = null;
+// ── Una lista completa: 2 rasgos en cada una de las siete areas, que es
+//    justo el minimo que el codigo exige. Repartidos entre las dos listas.
+const rasgo = (n, d, area) => ({ nombre: n, descripcion: d, area });
+const LISTA_BUENA = {
+  fortalezas: [
+    rasgo('Detectas lo que hace falta', 'Ves lo que le falta a otra persona antes de que lo diga y te pones a ello.', 1),
+    rasgo('Cabeza clara bajo presion', 'Cuando todo se complica eres tu la que analiza con calma mientras los demas se aturullan.', 1),
+    rasgo('Constancia que no se nota', 'Sostienes esfuerzos largos sin necesitar que nadie te aplauda por el camino.', 2),
+    rasgo('Rigor que da confianza', 'Cuando dices que algo esta hecho, la gente sabe que puede darlo por bueno.', 2),
+    rasgo('Olfato para el peligro', 'Hueles lo que puede torcerse mucho antes de que se tuerza de verdad.', 3),
+    rasgo('Ternura que no se ve', 'Cuidas de una manera que no se anuncia y que solo nota quien esta muy cerca.', 4),
+    rasgo('Quieres con hechos', 'Demuestras el carino haciendo cosas, no diciendolas, y eso se sostiene en el tiempo.', 5),
+    rasgo('La gente se te acerca', 'Acabas siendo aquella a la que todo el mundo cuenta lo que no cuenta a nadie.', 6),
+    rasgo('Cabeza fria con el dinero', 'No tomas decisiones de dinero a lo loco, miras despacio y calculas.', 7),
+    rasgo('Sabes multiplicar lo que hay', 'Haces rendir lo que ya existe sin necesidad de empezar nada de cero.', 7),
+    rasgo('Aguantas de pie mucho rato', 'Sostienes situaciones largas sin que se te note por fuera lo que pesan.', 3),
+    rasgo('Sabes estar sin invadir', 'Acompanas sin ocupar el sitio de nadie, y eso descansa a quien esta al lado.', 6),
+  ],
+  desafios: [
+    rasgo('Exigencia que no se apaga', 'Te pides a ti misma un nivel que jamas le pedirias a otra persona.', 1),
+    rasgo('Te cuesta soltar el control', 'Revisas lo que ya estaba bien porque parar te deja una sensacion rara.', 2),
+    rasgo('Miedo a dejar de hacer falta', 'Crees que si dejas de ser la que resuelve, dejaras de tener sitio.', 3),
+    rasgo('Vives alerta sin necesidad', 'Sigues vigilando mucho despues de que el peligro se haya ido del todo.', 3),
+    rasgo('Guardarte lo que duele', 'Te callas lo que te pasa para no anadir tu peso al de los demas.', 4),
+    rasgo('Culpa por ponerte primero', 'Atender lo tuyo antes que lo de otro te deja mal cuerpo durante dias.', 4),
+    rasgo('Miedo a no merecer carino', 'No te crees del todo el afecto que llega sin que hayas hecho algo por el.', 5),
+    rasgo('Idealizas lo que no tienes', 'Lo que esta lejos se te agranda y lo que tienes cerca se te encoge.', 5),
+    rasgo('Aguantas mas de la cuenta', 'Sostienes situaciones mucho despues de que hayan dejado de sostenerte a ti.', 6),
+    rasgo('Te cuesta pedir', 'Pedir ayuda te pone en un sitio incomodo y prefieres apanartelas sola.', 6),
+    rasgo('Te comparas con lo que no tienes', 'Miras lo que a otros les sobra en vez de lo que a ti ya te sostiene.', 7),
+    rasgo('Te cuesta cobrar lo tuyo', 'Poner precio a lo que sale de ti te suena casi a traicion y acabas rebajando.', 7),
+  ],
+};
+
+let listaQueDevuelve = null;
+let listaFalla = null;
 let areaCopiaLaNota = false;
+let explicacionesQueDevuelve = null;
 const llamadas = [];
 
 function quePide(cuerpo) {
-  const esquema = cuerpo.output_config?.format?.schema;
-  const props = esquema?.properties || {};
+  const props = cuerpo.output_config?.format?.schema?.properties || {};
   if (cuerpo.max_tokens === 16) return 'cache';
-  if (props.rasgos) return 'reparto';
+  if (props.explicaciones) return 'explicaciones';
   if (props.fortalezas || props.desafios) return 'lista';
   if (props.bloques) return 'area';
   return 'otra';
 }
 
-// Un area que pasa todos los controles de calidad de chat.js: los cinco
-// bloques con parrafos, negritas, el nombre, una pregunta y las cuatro
-// casillas grandes. Copiada en forma de AREA_BUENA de area-por-casillas.
+// Un area que pasa todos los controles de calidad de chat.js.
 function porBloques(parrafos) {
   const nombres = ['arranque', 'hoy', 'origen', 'creencias', 'soltar'];
   const bloques = {};
@@ -106,10 +126,9 @@ function porBloques(parrafos) {
   parrafos.forEach((x, i) => bloques[nombres[Math.min(i, nombres.length - 1)]].push(x));
   return { bloques };
 }
-
 const areaEscrita = (copiandoLaNota) => JSON.stringify({
   ...porBloques([
-    { ladillo: null, texto: (copiandoLaNota ? 'LO SUYO QUE TE TOCA CONTAR A TI EN ESTA AREA: ' : '') + 'Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen, porque en cualquier familia hay una.' },
+    { ladillo: null, texto: (copiandoLaNota ? 'LO QUE TE TOCA CONTAR A TI EN ESTA AREA: ' : '') + 'Antes de contarte nada de ti, quiero que pienses en las personas que sostienen, porque en cualquier familia hay una.' },
     { ladillo: 'La cuenta que no llevas', texto: 'Por fuera pareces tranquila, Raquel, y por dentro llevas una **maquina que no para de repasar** lo que acabas de decir.' },
     { ladillo: null, texto: 'En el trabajo se te nota enseguida, **revisas una tarea tres veces** cuando con una bastaria, y no es que dudes de tu criterio.' },
     { ladillo: 'Donde aprendiste la cuenta', texto: 'De pequena entendiste que el carino se ganaba haciendo las cosas bien, siendo la que no daba problemas nunca.' },
@@ -127,26 +146,21 @@ globalThis.fetch = async (url, opts = {}) => {
   if (u.includes('api.brevo.com')) return { ok: true, status: 201, json: async () => ({}) };
   const cuerpo = JSON.parse(opts.body || '{}');
   const tipo = quePide(cuerpo);
-  const mensaje = cuerpo.messages?.[0]?.content || '';
-  // El area manda "system" como lista de bloques (para poder marcar la cache)
-  // y el reparto lo manda como texto suelto. Leyendo solo la forma de lista,
-  // el prompt del reparto se registraba vacio y todo lo que se comprobara
-  // sobre el pasaba sin comprobar nada.
   const sistema = String(Array.isArray(cuerpo.system)
     ? (cuerpo.system[0] || {}).text || ''
     : cuerpo.system || '');
-  llamadas.push({ tipo, mensaje, sistema, cuando: llamadas.length });
+  llamadas.push({ tipo, sistema, mensaje: String(cuerpo.messages?.[0]?.content || '') });
 
-  if (tipo === 'reparto') {
-    if (repartoFalla) return { ok: false, status: repartoFalla };
+  if (tipo === 'lista') {
+    if (listaFalla) return { ok: false, status: listaFalla };
     return { ok: true, status: 200, json: async () => ({
-      content: [{ type: 'text', text: JSON.stringify({ rasgos: repartoQueDevuelve || [] }) }],
+      content: [{ type: 'text', text: JSON.stringify(listaQueDevuelve || LISTA_BUENA) }],
       stop_reason: 'end_turn', usage: {},
     }) };
   }
-  if (tipo === 'lista') {
+  if (tipo === 'explicaciones') {
     return { ok: true, status: 200, json: async () => ({
-      content: [{ type: 'text', text: JSON.stringify({ fortalezas: [], desafios: [] }) }],
+      content: [{ type: 'text', text: JSON.stringify({ explicaciones: explicacionesQueDevuelve || [] }) }],
       stop_reason: 'end_turn', usage: {},
     }) };
   }
@@ -156,7 +170,7 @@ globalThis.fetch = async (url, opts = {}) => {
   }) };
 };
 
-const { default: chat } = await import('./.chat-reparto.mjs');
+const { default: chat } = await import(copiaChat);
 
 const resp = () => {
   const r = { code: 0, body: null };
@@ -169,11 +183,9 @@ const resp = () => {
 let nSesion = 0;
 async function generar() {
   llamadas.length = 0;
-  // Sesion nueva en cada generacion: una ya usada se rechaza a proposito
-  // (un informe se genera una sola vez), y aqui generamos varias veces.
-  const sid = 'cs_test_reparto_' + (++nSesion);
+  const sid = 'cs_test_ra_' + (++nSesion);
   TIENDA.set(sid, {
-    payment_status: 'paid', customer_email: 'p@e.com',
+    id: sid, payment_status: 'paid', customer_email: 'p@e.com',
     customer_details: { email: 'p@e.com' }, metadata: { nombre: 'Raquel Garcia' },
   });
   const r = resp();
@@ -186,184 +198,162 @@ async function generar() {
 }
 
 const deArea = () => llamadas.filter(l => l.tipo === 'area');
-// El mensaje de cada area lleva dentro "ÁREA N —". Buscar por ahi es lo unico
-// que aguanta si alguna area se reintenta y las posiciones se descolocan.
 const mensajeDelArea = n => {
   const suyas = deArea().filter(l => new RegExp(`ÁREA ${n} —`).test(l.mensaje));
   return suyas.length ? suyas[suyas.length - 1].mensaje : '';
 };
 const areasDistintas = () => new Set(deArea()
   .map(l => (l.mensaje.match(/ÁREA (\d) —/) || [])[1]).filter(Boolean)).size;
+const notaDe = n => {
+  const m = mensajeDelArea(n);
+  const i = m.indexOf('LO QUE TE TOCA CONTAR A TI');
+  return i < 0 ? '' : m.slice(i, m.indexOf('ANTES DE DAR EL AREA POR TERMINADA'));
+};
 
 try {
-  console.log('\n  api/chat.js — el reparto de rasgos entre las areas\n');
+  console.log('\n  api/chat.js — las listas mandan, y cada area cuenta lo suyo\n');
 
-  // ── 1. EL REPARTO SALE ANTES QUE LAS AREAS ────────────────────
-  // Si saliera a la vez, las areas no lo tendrian cuando empiezan a escribir
-  // y todo esto no serviria absolutamente de nada.
-  repartoQueDevuelve = [
-    { nombre: 'Leal hasta el agotamiento', descripcion: 'Te quedas sosteniendo mucho despues de que deje de tener sentido quedarte.', area: 1 },
-    { nombre: 'Cuentas lo que das', descripcion: 'Llevas sin querer la cuenta de lo que pones y de lo que te devuelven.', area: 1 },
-    { nombre: 'Resuelves antes de que te pidan', descripcion: 'Ves lo que hace falta y te pones, sin esperar a que nadie lo diga.', area: 6 },
-  ];
+  // ── 1. LAS LISTAS SALEN ANTES QUE LAS AREAS ───────────────────
+  // Si salieran a la vez, las areas no tendrian sus rasgos al empezar a
+  // escribir y todo esto no serviria de nada.
   const r1 = await generar();
   comprobar('el informe se genera', r1.code === 200, 'HTTP ' + r1.code);
-
-  const iReparto = llamadas.findIndex(l => l.tipo === 'reparto');
-  const iPrimeraArea = llamadas.findIndex(l => l.tipo === 'area');
-  comprobar('el reparto se pide', iReparto >= 0);
-  comprobar('y se pide ANTES de la primera area (si no, no sirve de nada)',
-    iReparto >= 0 && iPrimeraArea > iReparto, `reparto en la ${iReparto}, primera area en la ${iPrimeraArea}`);
+  const iLista = llamadas.findIndex(l => l.tipo === 'lista');
+  const iArea = llamadas.findIndex(l => l.tipo === 'area');
+  comprobar('las listas se piden ANTES que la primera area',
+    iLista >= 0 && iArea > iLista, `lista en la ${iLista}, primera area en la ${iArea}`);
   comprobar('salen las 7 areas', areasDistintas() === 7, areasDistintas() + ' areas distintas');
 
-  // ── 2. A CADA AREA LE LLEGAN LOS SUYOS, Y SOLO LOS SUYOS ──────
-  const a1 = mensajeDelArea(1);
-  const a6 = mensajeDelArea(6);
-  comprobar('al area 1 le llegan sus dos rasgos',
-    a1.includes('Leal hasta el agotamiento') && a1.includes('Cuentas lo que das'));
-  comprobar('y NO le llega el que es del area 6',
-    !a1.includes('Resuelves antes de que te pidan'));
-  comprobar('al area 6 le llega el suyo', a6.includes('Resuelves antes de que te pidan'));
-  comprobar('y NO le llegan los del area 1',
-    !a6.includes('Leal hasta el agotamiento') && !a6.includes('Cuentas lo que das'));
+  // ── 2. LAS EXPLICACIONES NO BLOQUEAN ──────────────────────────
+  // Van despues de la lista pero a la vez que las areas: si esperasen a que
+  // las areas terminen, sumarian su espera entera al informe.
+  const iExpl = llamadas.findIndex(l => l.tipo === 'explicaciones');
+  comprobar('las explicaciones se piden despues de la lista',
+    iExpl > iLista, `explicaciones en la ${iExpl}`);
+  comprobar('y antes de que terminen las areas (van en paralelo)',
+    iExpl < llamadas.map(l => l.tipo).lastIndexOf('area'),
+    `explicaciones en la ${iExpl}, ultima area en la ${llamadas.map(l => l.tipo).lastIndexOf('area')}`);
 
-  // ── 3. UN AREA SIN RASGOS SE ESCRIBE COMO SIEMPRE ─────────────
-  // Nada de rellenar: si de un area no sale ninguno, esa area no debe recibir
-  // ni un encabezado suelto que le haga buscar algo que no hay.
-  const a3 = mensajeDelArea(3);
-  comprobar('un area sin rasgos no recibe ninguna nota de reparto',
-    !a3.includes('LO SUYO QUE TE TOCA CONTAR'), 'area 3, que no tenia ninguno');
+  // ── 3. CADA AREA RECIBE LOS SUYOS Y SOLO LOS SUYOS ────────────
+  const n1 = notaDe(1), n7 = notaDe(7);
+  comprobar('el area 1 recibe sus dos fortalezas y su desafio',
+    n1.includes('Detectas lo que hace falta') && n1.includes('Cabeza clara bajo presion')
+    && n1.includes('Exigencia que no se apaga'));
+  comprobar('y NO recibe ni uno de otra area',
+    !n1.includes('Cabeza fria con el dinero') && !n1.includes('Te cuesta pedir')
+    && !n1.includes('Guardarte lo que duele'));
+  comprobar('el area 7 recibe los suyos', n7.includes('Cabeza fria con el dinero')
+    && n7.includes('Sabes multiplicar lo que hay') && n7.includes('Te comparas con lo que no tienes'));
+  comprobar('y ninguno del area 1', !n7.includes('Detectas lo que hace falta'));
 
-  // ── 4. LA CACHE NO SE ROMPE ───────────────────────────────────
-  // Los rasgos cambian en cada area. Si viajaran en el prompt de sistema, las
-  // siete pedirian un prompt distinto y ninguna encontraria la cache: eso son
-  // 22.000 tokens pagados siete veces.
+  // Ningun rasgo puede estar en dos areas a la vez: es la razon de ser de esto.
+  const todos = [...LISTA_BUENA.fortalezas, ...LISTA_BUENA.desafios];
+  const enVariasAreas = todos.filter(r => {
+    let veces = 0;
+    for (let a = 1; a <= 7; a++) if (notaDe(a).includes(r.nombre)) veces++;
+    return veces > 1;
+  });
+  comprobar('ni un solo rasgo llega a dos areas distintas',
+    enVariasAreas.length === 0,
+    enVariasAreas.length ? enVariasAreas.map(r => r.nombre).join(', ') : 'los 21 en un area cada uno');
+
+  // Y llegan TODOS: si la lista le da tres a un area, el area cuenta tres.
+  const sinRepartir = todos.filter(r => !notaDe(r.area).includes(r.nombre));
+  comprobar('y todos los de la lista llegan a su area',
+    sinRepartir.length === 0,
+    sinRepartir.length ? sinRepartir.map(r => r.nombre).join(', ') : `los ${todos.length} repartidos`);
+
+  // ── 4. SI LAS LISTAS SE CAEN, EL INFORME SALE IGUAL ───────────
+  listaFalla = 500;
+  const r2 = await generar();
+  listaFalla = null;
+  comprobar('con las listas caidas el informe se entrega igual', r2.code === 200, 'HTTP ' + r2.code);
+  comprobar('y salen las 7 areas', areasDistintas() === 7, areasDistintas() + ' areas distintas');
+  comprobar('ninguna area recibe nota de rasgos',
+    deArea().every(l => !l.mensaje.includes('LO QUE TE TOCA CONTAR A TI')));
+
+  // ── 5. NINGUN AREA POR DEBAJO DE DOS ──────────────────────────
+  // Un area con un solo rasgo son cuatro paginas dando vueltas a una cosa.
+  // Cuando pasa, la lista se vuelve a pedir: no es un aviso, es un repaso.
+  listaQueDevuelve = {
+    fortalezas: LISTA_BUENA.fortalezas.filter(r => r.area !== 3),
+    desafios: LISTA_BUENA.desafios.filter(r => r.area !== 3)
+      .concat([rasgo('Vives alerta sin necesidad', 'Sigues vigilando mucho despues de que el peligro se haya ido del todo.', 3)]),
+  };
+  await generar();
+  const vecesQueSePide = llamadas.filter(l => l.tipo === 'lista').length;
+  comprobar('una lista que deja un area con 1 rasgo se vuelve a pedir',
+    vecesQueSePide > 1, vecesQueSePide + ' veces');
+  const encargo = llamadas.filter(l => l.tipo === 'lista')[1]?.mensaje || '';
+  comprobar('y se le dice que area se ha quedado corta',
+    /MIEDOS \(1\)/.test(encargo), encargo.slice(0, 90).replace(/\n/g, ' '));
+  listaQueDevuelve = null;
+
+  // ── 6. LAS EXPLICACIONES SE PEGAN A SU FICHA POR EL NUMERO ────
+  explicacionesQueDevuelve = [
+    { n: 1, explicacion: 'Aprendiste pronto que ser util era una manera segura de tener un sitio.' },
+    { n: 3, explicacion: 'De pequena entendiste que las cosas salian con trabajo callado y no con quejas.' },
+    { n: 2, explicacion: 'Te acostumbraste a poner orden con la cabeza cuando el ambiente se ponia dificil.' },
+  ];
+  const r3 = await generar();
+  const f = r3.body?.rasgos?.fortalezas || [];
+  comprobar('cada explicacion cae en la ficha de su numero',
+    f[0]?.explicacion?.startsWith('Aprendiste pronto')
+    && f[1]?.explicacion?.startsWith('Te acostumbraste')
+    && f[2]?.explicacion?.startsWith('De pequena entendiste'),
+    'se comprueba con los numeros desordenados a proposito');
+  comprobar('las fichas sin explicacion se entregan igual, con su nombre',
+    f.length === LISTA_BUENA.fortalezas.length && !f[3]?.explicacion && Boolean(f[3]?.nombre));
+
+  // Una explicacion con un planeta dentro no se imprime.
+  explicacionesQueDevuelve = [
+    { n: 1, explicacion: 'Tu Sol enfrentado a Saturno te hizo crecer sintiendo que habia que ganarselo.' },
+    { n: 2, explicacion: 'Te acostumbraste a poner orden con la cabeza cuando todo se ponia dificil.' },
+  ];
+  const r4 = await generar();
+  const f4 = r4.body?.rasgos?.fortalezas || [];
+  comprobar('una explicacion que nombra un planeta se cae', !f4[0]?.explicacion);
+  comprobar('y la buena de al lado se queda', f4[1]?.explicacion?.startsWith('Te acostumbraste'));
+  explicacionesQueDevuelve = null;
+
+  // ── 7. LA CACHE NO SE ROMPE ───────────────────────────────────
+  await generar();
   const sistemas = new Set(deArea().map(l => l.sistema));
   comprobar('el prompt de sistema sigue siendo IDENTICO en las 7 areas',
     sistemas.size === 1, sistemas.size + ' prompts distintos de 7');
   comprobar('y los rasgos NO van dentro de el',
-    !deArea()[0].sistema.includes('Leal hasta el agotamiento'));
+    !deArea()[0].sistema.includes('Detectas lo que hace falta'));
   const arranque = llamadas.find(l => l.tipo === 'cache');
   comprobar('el arranque de la cache manda el mismo prompt que las areas',
     Boolean(arranque) && arranque.sistema === deArea()[0].sistema);
 
-  // ── 5. SI EL REPARTO SE CAE, EL INFORME SALE IGUAL ────────────
-  // Es una mejora del contenido, no una pieza sin la que el estudio no exista.
-  repartoFalla = 500;
-  const r2 = await generar();
-  comprobar('con el reparto caido, el informe se entrega igual', r2.code === 200, 'HTTP ' + r2.code);
-  comprobar('y salen las 7 areas', areasDistintas() === 7, areasDistintas() + ' areas distintas');
-  comprobar('ninguna area recibe nota de reparto',
-    deArea().every(l => !l.mensaje.includes('LO SUYO QUE TE TOCA CONTAR')));
-  repartoFalla = null;
+  // ── 8. LOS PROMPTS SE MONTAN ENTEROS ──────────────────────────
+  // Un ${...} sin sustituir se manda al modelo tal cual y no se ve en ningun
+  // sitio hasta que sale un estudio raro.
+  const laLista = llamadas.find(l => l.tipo === 'lista');
+  const lasExpl = llamadas.find(l => l.tipo === 'explicaciones');
+  for (const [que, cual] of [['la lista', laLista], ['las explicaciones', lasExpl]]) {
+    const sueltos = cual.sistema.match(/\$\{[^}]*\}/g) || [];
+    comprobar(`el prompt de ${que} no lleva ningun \${...} sin sustituir`,
+      sueltos.length === 0, sueltos.slice(0, 3).join(' '));
+  }
+  comprobar('la lista pide el minimo por area', /al menos 2/.test(laLista.sistema));
+  comprobar('las explicaciones reciben los rasgos numerados',
+    /1\. Detectas lo que hace falta/.test(lasExpl.sistema));
+  comprobar('la nota del area no lleva \${...} sueltos', !/\$\{/.test(notaDe(1)));
+  comprobar('la nota le dice que no anada ninguno mas',
+    notaDe(1).includes('NO ANADES NINGUNO MAS'));
 
-  // ── 6. NO SE CUELA UN RASGO CON PALABRAS DE ASTROLOGO ─────────
-  repartoQueDevuelve = [
-    { nombre: 'Saturno te pesa encima', descripcion: 'Tu Saturno en la casa cuatro te hizo crecer deprisa.', area: 2 },
-    { nombre: 'Aguantas mas de la cuenta', descripcion: 'Sostienes situaciones mucho despues de que hayan dejado de sostenerte a ti.', area: 2 },
-  ];
-  await generar();
-  const a2 = mensajeDelArea(2);
-  comprobar('el rasgo que nombra un planeta se cae',
-    !a2.includes('Saturno te pesa encima'));
-  comprobar('y el bueno de la misma area sigue llegando',
-    a2.includes('Aguantas mas de la cuenta'));
-
-  // ── 7. NINGUN AREA RECIBE MAS DE TRES ─────────────────────────
-  // El area tiene un tope de palabras: con seis rasgos salen a 140 palabras
-  // cada uno, que es el resumen que esto viene a evitar.
-  repartoQueDevuelve = [
-    { nombre: 'Primero de todo', descripcion: 'Una cosa concreta suya contada en una sola frase entera.', area: 4 },
-    { nombre: 'Segundo distinto', descripcion: 'Otra cosa distinta suya, sin nada que ver con la anterior ni con ninguna.', area: 4 },
-    { nombre: 'Tercero aparte', descripcion: 'Una tercera bien diferente, que no toca nada de lo dicho arriba.', area: 4 },
-    { nombre: 'Cuarto sobrante', descripcion: 'Este ya sobra porque el area no da para tantos desarrollos largos.', area: 4 },
-    { nombre: 'Quinto sobrante', descripcion: 'Y este todavia mas, que ya seria un listado en vez de un area.', area: 4 },
-  ];
-  await generar();
-  const a4 = mensajeDelArea(4);
-  // Solo las lineas de la nota del reparto: el prompt del area trae sus
-  // propias viñetas y contarlas todas no mide nada.
-  const nota = a4.slice(a4.indexOf('LO SUYO QUE TE TOCA CONTAR'));
-  const cuantos = (nota.slice(0, nota.indexOf('\n\n')).match(/^- /gm) || []).length;
-  comprobar('al area le llegan como mucho 3 rasgos', cuantos === 3, cuantos + ' rasgos');
-  comprobar('y son los tres primeros',
-    a4.includes('Primero de todo') && a4.includes('Tercero aparte') && !a4.includes('Cuarto sobrante'));
-
-  // ── 8. NI UNO REPETIDO ENTRE AREAS ────────────────────────────
-  // Es justo el fallo que esto viene a arreglar: Miedos y Herida contando lo
-  // mismo con otras palabras.
-  repartoQueDevuelve = [
-    { nombre: 'Depender es quedar expuesta', descripcion: 'Crees que apoyarte en alguien te deja expuesta y sin defensa ninguna.', area: 3 },
-    { nombre: 'Depender te deja expuesta', descripcion: 'Crees que apoyarte en alguien te deja expuesta y sin defensa alguna.', area: 4 },
-  ];
-  await generar();
-  const tieneA3 = mensajeDelArea(3).includes('Depender es quedar expuesta');
-  const tieneA4 = mensajeDelArea(4).includes('Depender te deja expuesta');
-  comprobar('dos areas NO reciben el mismo rasgo con otras palabras',
-    !(tieneA3 && tieneA4), tieneA3 && tieneA4 ? 'las dos lo tienen' : 'solo una lo tiene');
-
-  // ── 9. EL PROMPT Y LA NOTA SE MONTAN ENTEROS ──────────────────
-  //
-  // Un ${...} sin sustituir no rompe nada: se manda al modelo tal cual, y
-  // lo que lee es basura en vez de la regla. No se ve en ningun sitio hasta
-  // que sale un estudio raro, asi que se mira aqui.
-  repartoQueDevuelve = [
-    { nombre: 'Leal hasta el agotamiento', descripcion: 'Te quedas sosteniendo mucho despues de que deje de tener sentido quedarte.', area: 1 },
-    { nombre: 'Cuentas lo que das', descripcion: 'Llevas sin querer la cuenta de lo que pones y de lo que te devuelven a ti.', area: 1 },
-  ];
-  await generar();
-  const elReparto = llamadas.find(l => l.tipo === 'reparto');
-  const sueltos = (elReparto.sistema.match(/\$\{[^}]*\}/g) || []);
-  comprobar('el prompt del reparto no lleva ningun ${...} sin sustituir',
-    sueltos.length === 0, sueltos.slice(0, 3).join(' '));
-  comprobar('y lleva la carta de la persona dentro', elReparto.sistema.includes(CARTA.split('\n')[1]));
-
-  // El numero que se le pide. Tres es el objetivo en las siete y dos el
-  // suelo: si esto se afloja a "al menos uno", volvemos al estudio de tres
-  // ideas que esto viene a arreglar, y no se notaria hasta leer un PDF.
-  comprobar('pide 3 por area como objetivo, no como techo',
-    /3 POR ÁREA\. Ese es el número/.test(elReparto.sistema));
-  comprobar('y pone el suelo en 2, solo si el tercero seria inventado',
-    /SOLO BAJAS A 2 SI EL TERCERO SERÍA INVENTADO/.test(elReparto.sistema)
-    && /por debajo de 2 no baja ninguna área/.test(elReparto.sistema));
-
-  const conNota = mensajeDelArea(1);
-  const laNota = conNota.slice(conNota.indexOf('LO SUYO QUE TE TOCA'));
-  comprobar('la nota del area tampoco lleva ${...} sueltos',
-    !/\$\{/.test(laNota));
-  comprobar('la nota va antes del recordatorio final, no detras',
-    conNota.indexOf('LO SUYO QUE TE TOCA') < conNota.indexOf('ANTES DE DAR EL AREA POR TERMINADA'));
-
-  // Lo que mas facil se rompe al tocar la nota: que contradiga al prompt del
-  // area, que le dice desde siempre que puede cruzar toda la carta para
-  // explicar lo suyo. Si la nota dijera "no mires otra cosa", se pelearian.
-  comprobar('la nota NO contradice al prompt del area (le deja cruzar la carta)',
-    laNota.includes('sigues cruzando todo lo que haga falta'));
-  comprobar('y NO le cambia el trabajo a los bloques',
-    laNota.includes('Los bloques no cambian de trabajo'));
-
-  // ── 10. NADA INTERNO SE IMPRIME ───────────────────────────────
-  //
-  // Al area se le manda una nota que es para ella y no para la clienta. Si
-  // el modelo la copiara dentro del texto, la clienta abriria un estudio de
-  // 27 euros y leeria las instrucciones del producto. Se pide que no lo haga,
-  // pero pedir no basta: aqui se comprueba que ademas hay un control que lo
-  // caza y manda a rehacer el area.
-  //
-  // El detector de palabras de astrologo NO cubre esto: la nota del reparto
-  // no lleva ni un planeta dentro.
-  repartoQueDevuelve = [
-    { nombre: 'Leal hasta el agotamiento', descripcion: 'Te quedas sosteniendo mucho despues de que deje de tener sentido quedarte.', area: 1 },
-  ];
+  // ── 9. NADA INTERNO SE IMPRIME ────────────────────────────────
+  // Si el modelo copiara la nota dentro del texto, la clienta leeria las
+  // instrucciones internas del producto en un estudio de 27 euros.
   areaCopiaLaNota = true;
   const rFuga = await generar();
   areaCopiaLaNota = false;
-  const intentosDelArea1 = deArea().filter(l => /ÁREA 1 —/.test(l.mensaje)).length;
-  comprobar('un area que copia la nota interna se manda a rehacer',
-    intentosDelArea1 > 1, intentosDelArea1 + ' intentos del area 1');
+  const intentos1 = deArea().filter(l => /ÁREA 1 —/.test(l.mensaje)).length;
+  comprobar('un area que copia la nota se manda a rehacer', intentos1 > 1, intentos1 + ' intentos');
   comprobar('y el estudio no se entrega con la instruccion dentro',
-    rFuga.code !== 200 || !String(rFuga.body?.texto || '').includes('LO SUYO QUE TE TOCA'),
-    'HTTP ' + rFuga.code);
+    !String(rFuga.body?.texto || '').includes('LO QUE TE TOCA CONTAR A TI'));
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);

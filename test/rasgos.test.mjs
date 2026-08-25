@@ -169,14 +169,21 @@ const RASGOS_REPETIDO_CRUZADO = {
 
 // Y una lista escrita como salio de verdad el 24 de agosto: 25 de 28 fichas
 // nombrando planetas, signos y casas. Es lo que la clienta no ha pagado.
+// LAS PALABRAS DE ASTROLOGO VAN EN LA DESCRIPCION, NO EN LA EXPLICACION.
+//
+// La explicacion ya no se pide en esta llamada -llega en una segunda, la de
+// explicarLosRasgos- asi que aqui solo puede colarse un planeta por el nombre
+// o por la descripcion, que es lo unico que el modelo escribe en esta vuelta.
+// El detector de las explicaciones tiene su propia prueba en
+// test/rasgos-en-areas.test.mjs.
 const RASGOS_DE_ASTROLOGO = {
   fortalezas: [
-    { nombre: 'Sanadora practica del dia a dia', descripcion: 'Tienes un don para arreglar lo que esta roto y cuidar de otros sin que nadie te lo pida', explicacion: 'El sol y Mercurio en la casa del trabajo diario y la salud, en un signo que vive para servir, te dan una capacidad natural para detectar que necesita alguien.', area: 1 },
-    { nombre: 'Intuicion para leer a la gente', descripcion: 'Captas lo que le pasa a alguien antes de que abra la boca', explicacion: 'Venus bien conectada con la luna y con Marte te da una calidez natural en el trato que la gente nota enseguida.', area: 6 },
+    { nombre: 'Sanadora practica del dia a dia', descripcion: 'El sol y Mercurio en la casa del trabajo te dan un don para arreglar lo que esta roto', explicacion: '', area: 1 },
+    { nombre: 'Intuicion para leer a la gente', descripcion: 'Venus bien conectada con la luna te da una calidez que la gente nota enseguida', explicacion: '', area: 6 },
     ...Array.from({ length: 12 }, (_, i) => unRasgo(i, (i % 7) + 1)),
   ],
   desafios: [
-    { nombre: 'Autocritica que pesa de mas', descripcion: 'Te hablas a ti misma con una dureza que jamas usarias con otra persona', explicacion: 'El sol enfrentado a Saturno te hizo crecer sintiendo que el carino habia que ganarselo a base de esfuerzo.', area: 2 },
+    { nombre: 'Autocritica que pesa de mas', descripcion: 'El sol enfrentado a Saturno te hizo crecer creyendo que el carino habia que ganarselo', explicacion: '', area: 2 },
     ...Array.from({ length: 13 }, (_, i) => unRasgo(i + 18, (i % 7) + 1)),
   ],
 };
@@ -216,16 +223,16 @@ globalThis.fetch = async (url, opts = {}) => {
 
   const sistema = String(Array.isArray(cuerpo.system) ? (cuerpo.system[0] || {}).text || '' : cuerpo.system || '');
 
-  // EL REPARTO DE RASGOS ENTRE LAS AREAS, que sale antes que ellas y abre el
-  // prompt con las mismas palabras que la lista. Se distingue por el esquema,
-  // que es lo unico inequivoco: el reparto pide "rasgos" y la lista pide
-  // "fortalezas" y "desafios". Aqui no se mide el reparto -tiene su propia
-  // prueba, test/rasgos-en-areas.test.mjs- y se le contesta vacio para que no
-  // toque nada de lo que esta si mide. Sin esta rama, el reparto caeria en la
-  // rama de la lista y descuadraria su cuenta de llamadas.
-  const pideElReparto = Boolean(cuerpo.output_config?.format?.schema?.properties?.rasgos);
-  if (pideElReparto) {
-    return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: '{"rasgos":[]}' }] }) };
+  // LAS EXPLICACIONES DE LAS FICHAS, que se piden en una segunda llamada y
+  // abren el prompt con las mismas palabras que la lista. Se distinguen por el
+  // esquema, que es lo unico inequivoco: las explicaciones piden
+  // "explicaciones" y la lista pide "fortalezas" y "desafios". Aqui no se
+  // miden -tienen su propia prueba, test/rasgos-en-areas.test.mjs- y se les
+  // contesta vacio para que no toquen nada de lo que esta si mide. Sin esta
+  // rama caerian en la rama de la lista y descuadrarian su cuenta de llamadas.
+  const pideLasExplicaciones = Boolean(cuerpo.output_config?.format?.schema?.properties?.explicaciones);
+  if (pideLasExplicaciones) {
+    return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: '{"explicaciones":[]}' }] }) };
   }
 
   if (sistema.startsWith('Eres la misma experta')) {
@@ -384,8 +391,11 @@ try {
   comprobar('una lista buena no se pide dos veces',
     vecesQueSeHaPedidoLaLista === 1, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   const uno = r.body?.rasgos?.fortalezas?.[0];
-  comprobar('cada rasgo llega con sus cuatro casillas',
-    Boolean(uno?.nombre && uno?.descripcion && uno?.explicacion && uno?.area >= 1 && uno?.area <= 7));
+  // Tres, no cuatro: la explicacion ya no se pide aqui. Llega en una segunda
+  // llamada que corre a la vez que las areas, para que estas no esperen por
+  // ella. Ver explicarLosRasgos en api/chat.js.
+  comprobar('cada rasgo llega con sus tres casillas',
+    Boolean(uno?.nombre && uno?.descripcion && uno?.area >= 1 && uno?.area <= 7));
 
   // ── 5. EL TONO ES EL MISMO QUE EL DE LAS ÁREAS ──────────────────
   //
