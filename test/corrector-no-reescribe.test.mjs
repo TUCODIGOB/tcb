@@ -91,7 +91,21 @@ function areaCon(extra) {
 // descarta las frases que el corrector se inventa.
 const FRASE_MARCADA = 'Hay gente que llega a cualquier sitio y en diez minutos ya sabe quien necesita algo, y tu eres de esas.';
 // Y un "ella + verbo" de los que si tienen que costar una vuelta.
-const CON_ELLA = 'Ella responde con un gracias, no se que haria sin ti, y se va a seguir con lo suyo.';
+// UN "ella + verbo" QUE DE VERDAD HABLA DE ELLA. Sin una sola palabra en
+// segunda persona: eso es lo que lo delata, porque una frase que le habla de
+// tu no puede estar hablando de ella desde fuera a la vez.
+//
+// El ejemplo de antes era "Ella responde con un gracias, no se que haria sin
+// ti, y se va a seguir con lo suyo". Ese "ella" es la OTRA persona de la
+// escena -la clienta es el "ti"- asi que la frase estaba bien y el detector
+// la marcaba mal. Es justo el fallo que costo dos areas rehechas en el
+// estudio del 25 de agosto.
+const CON_ELLA = 'Ella aprendio muy pronto que el carino habia que ganarselo, y ella sigue midiendose con esa vara.';
+
+// Y las tres que el detector marcaba mal en los estudios de verdad. Ninguna
+// puede costar una vuelta: las tres estan bien escritas.
+const ELLA_QUE_ES_OTRA = 'Te fijas en lo que le falta a la persona que tienes delante antes de que ella misma lo sepa.';
+const ELLA_QUE_ES_UNA_COSA = 'Una decision que ya has tomado: vuelves sobre ella igual que quien pasa la lengua por un diente roto.';
 
 let queDevuelve = areaCon(null);
 let marcaElCorrector = [];
@@ -203,6 +217,23 @@ try {
   c('SÍ se vuelve a pedir el área: 14 llamadas para 7 áreas',
     llamadasDeArea === 14, llamadasDeArea + ' llamadas');
   c('y se dice por qué', apuntes.some(x => x.includes('floja') && x.includes('desde fuera')));
+
+  // ── C bis. LOS "ella" QUE NO SON ELLA NO CUESTAN NADA ───────────
+  //
+  // Un "ella" suelto no basta para saber que se ha salido del tú. En el
+  // estudio del 25 de agosto el detector marcó dos áreas perfectas y se
+  // rehicieron enteras: 54 segundos y dos llamadas de las caras tiradas.
+  console.log('\n  C bis. un "ella" que es OTRA persona, o una cosa, no cuesta un área');
+  const cb1 = await generar(areaCon(ELLA_QUE_ES_OTRA), []);
+  c('el informe sale', cb1.code === 200, 'HTTP ' + cb1.code);
+  c('"...antes de que ella misma lo sepa" NO cuesta una vuelta',
+    llamadasDeArea === 7, llamadasDeArea + ' llamadas');
+  c('y el texto llega entero al cliente',
+    String(cb1.body?.texto || '').includes(ELLA_QUE_ES_OTRA));
+
+  const cb2 = await generar(areaCon(ELLA_QUE_ES_UNA_COSA), []);
+  c('"vuelves sobre ella" (la decisión) tampoco',
+    llamadasDeArea === 7, llamadasDeArea + ' llamadas');
 
   // ── D. LO QUE SÍ SE ARREGLA VOLVIENDO A PEDIR SIGUE IGUAL ───────
   console.log('\n  D. la escena copiada, que sí se arregla, no se ha tocado');

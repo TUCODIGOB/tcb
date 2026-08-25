@@ -1920,14 +1920,47 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     return puestas >= MIN_NEGRITAS ? marcados : null;
   }
 
-  // "ella" de sujeto, la que delata que se ha salido del "tu": "ella nota",
-  // "ella tenga", "ella misma". Se pide que detras venga otra palabra a
-  // proposito, porque "ella" al final de la frase suele referirse a una cosa y
-  // no a la persona: en el informe del 22 de agosto, de los cuatro "ella" que
-  // habia, los tres que iban seguidos de verbo estaban mal y el unico bueno
-  // era "y si tiene un fallo, ¿que eres tu sin ella?", hablando de su
-  // maquinaria interna. Asi se cazan los tres y se deja pasar el bueno.
-  const ELLA_DE_SUJETO = /(^|[^a-z0-9])ella\s+[a-z]/;
+  // "ELLA" QUE DELATA QUE SE HA SALIDO DEL "TU", Y SOLO ESA.
+  //
+  // Lo que se busca es que el area hable de la clienta en tercera persona
+  // ("ella nota", "ella aprendio"), que rompe el tono de todo el estudio. En
+  // el informe del 22 de agosto habia cuatro "ella" y tres estaban mal.
+  //
+  // Pero un "ella" suelto no basta para saberlo, y cazar de mas sale caro: el
+  // area se manda a rehacer entera. En el estudio del 25 de agosto salto dos
+  // veces sobre frases perfectas y costo 54 segundos y dos llamadas de las
+  // caras. De los tres "ella" que ha marcado en todos los estudios reales,
+  // los tres eran falsa alarma. Por eso se descartan dos casos:
+  //
+  //  1. LA FRASE YA LE HABLA DE TU. Si dice "te", "tu" o "ti", le esta
+  //     hablando A ELLA, asi que el "ella" es OTRA persona:
+  //       "Te fijas en lo que le falta a la persona que tienes delante antes
+  //        de que ella misma lo sepa"   <- la otra persona, no ella
+  //
+  //  2. VA DETRAS DE PREPOSICION. Entonces no es sujeto, es complemento, y
+  //     casi siempre se refiere a una cosa:
+  //       "una decision que ya has tomado: vuelves sobre ella igual que..."
+  //       "y si tiene un fallo, que eres tu sin ella?"   <- su maquinaria
+  //
+  // LO QUE SE DEJA PASAR: una frase que mezcle las dos cosas ("te fijas en
+  // todo, y ella nunca descansa"). Es rara, y encima queda la otra revision
+  // -la que lee el area entera- que la marcaria igual en los registros.
+  const PREPOSICIONES = new Set(['a', 'ante', 'bajo', 'con', 'contra', 'de', 'desde',
+    'en', 'entre', 'hacia', 'hasta', 'para', 'por', 'segun', 'sin', 'sobre', 'tras']);
+  const LE_HABLA_DE_TU = /(^|[^a-z0-9])(te|tu|tus|ti|tuyo|tuya|tuyos|tuyas|contigo)([^a-z0-9]|$)/;
+
+  // La frase llega ya sin tildes y en minusculas.
+  function hablaDeEllaEnTerceraPersona(frase) {
+    if (LE_HABLA_DE_TU.test(frase)) return false;
+    const palabras = frase.split(/[^a-z0-9]+/).filter(Boolean);
+    for (let i = 0; i < palabras.length - 1; i++) {
+      if (palabras[i] !== 'ella') continue;
+      // Detras de preposicion no es sujeto, es complemento.
+      if (i > 0 && PREPOSICIONES.has(palabras[i - 1])) continue;
+      return true;
+    }
+    return false;
+  }
 
   const sinTildes = t => String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
   const enPalabras = t => sinTildes(t).replace(/[^a-z0-9]+/g, ' ').split(' ').filter(Boolean);
@@ -2090,11 +2123,12 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // de tres palabras y no le hablan a nadie.
     const leido = escena + ' ' + cuerpo;
 
-    // Lo barato primero, que no gasta llamada: "ella" de sujeto.
+    // Lo barato primero, que no gasta llamada: "ella" de sujeto, y solo si la
+    // frase no le esta hablando de tu. Ver LE_HABLA_DE_TU.
     const ella = leido
       .split(/(?<=[.?!])\s+/)
       .map(f => f.trim())
-      .find(f => ELLA_DE_SUJETO.test(sinTildes(f)));
+      .find(f => hablaDeEllaEnTerceraPersona(sinTildes(f)));
     if (ella) {
       flojo.push(`habla de ella desde fuera: "${ella.slice(0, 70).trim()}..."`);
     }
