@@ -939,11 +939,11 @@ export default async function handler(req, res) {
       // quedaba una ventana de 9,5 mm en la que el titulo se escribia y la
       // primera ficha se iba a la pagina siguiente.
       //
-      // La ficha son tres cosas, una debajo de otra: el nombre, sus dos frases y su
-      // area. Habia una cuarta, el porque, y la etiqueta del area iba pegada al
-      // final de su ultima linea o bajaba sola si no cabia. Ya no: el porque se
-      // cuenta en su area, que son cuatro paginas para eso, y la etiqueta tiene
-      // su propia linea siempre.
+      // La ficha son tres cosas, una debajo de otra: el nombre, sus dos
+      // frases y su area. Habia una cuarta, el porque, y la etiqueta del area
+      // iba pegada al final de su ultima linea o bajaba sola si no cabia. Ya
+      // no: el porque se cuenta en su area, que son cuatro paginas para eso, y
+      // la etiqueta tiene su propia linea siempre.
       function loQueOcupaLaFicha(rasgo) {
         doc.setFont('Roboto', 'normal');
         doc.setFontSize(12);
@@ -985,9 +985,9 @@ export default async function handler(req, res) {
           //
           // splitTextToSize parte el texto con el tamaño que este puesto en
           // ese momento, no con el que se va a pintar. Aqui se media con la
-          // letra que hubiera quedado de la ficha anterior, asi que las
-          // lineas salian calculadas para un tamaño y escritas en otro: con
-          // letra pequeña colaba de milagro, y a 12 se sale del margen.
+          // letra que hubiera quedado de la ficha anterior, asi que las lineas
+          // salian calculadas para un tamaño y escritas en otro: con letra
+          // pequeña colaba de milagro, y a 12 se sale del margen.
           doc.setFont('Roboto', 'normal');
           doc.setFontSize(12);
           var dl = doc.splitTextToSize(rasgo.descripcion || '', 170);
@@ -999,8 +999,8 @@ export default async function handler(req, res) {
           var cual = Number(rasgo.area);
           var elArea = areaTitles[(cual >= 1 && cual <= 7 ? cual : 1) - 1];
 
-          // La ficha entera va junta: el nombre de una y la frase de
-          // otra en paginas distintas se lee como un error de imprenta.
+          // La ficha entera va junta: el nombre de una y las frases de otra
+          // en paginas distintas se lee como un error de imprenta.
           //
           // La cuenta la hace loQueOcupaLaFicha y no se repite aqui: escrita
           // en los dos sitios, el dia que cambie el alto de una linea habria
@@ -1034,8 +1034,8 @@ export default async function handler(req, res) {
           // EL AIRE, IGUAL POR ARRIBA QUE POR ABAJO.
           //
           // No son el mismo numero porque no se mide desde el mismo sitio: por
-          // arriba se cuenta desde la etiqueta del area, que baja 1,5 mm
-          // por debajo de su raya; por abajo, hasta el nombre de la ficha
+          // arriba se cuenta desde la etiqueta del area, que baja 1,5 mm por
+          // debajo de su raya; por abajo, hasta el nombre de la ficha
           // siguiente, que sube 3 mm por encima de la suya. Con 8 y 9,5 queda
           // el mismo hueco blanco a los dos lados. Con 4 y 6, que es lo que
           // habia, la raya se leia pegada al titulo de abajo.

@@ -220,17 +220,26 @@ try {
   //
   // Habia una segunda llamada, la del porque de cada ficha, que corria a la
   // vez que las areas. El porque se ha quitado -ya se cuenta entero en su
-  // area- y con el esa llamada. Aqui no puede volver a aparecer ninguna que
-  // no sea la cache, la lista y las siete areas.
+  // area- y con el esa llamada.
+  //
+  // Que no vuelva no se mira por el texto del encargo, que cualquiera puede
+  // escribir de otra manera, sino por el esquema: un informe pide TRES formas
+  // distintas y nada mas. La de la lista (fortalezas+desafios), la de un area
+  // (sus seis casillas, que es tambien la que calienta la cache) y la de las
+  // frases que se sacan de cada area. Una llamada nueva al modelo trae una
+  // cuarta forma y aqui se ve.
   const tipos = llamadas.map(l => l.tipo);
   comprobar('la lista se pide una sola vez',
     tipos.filter(t => t === 'lista').length === 1,
     tipos.filter(t => t === 'lista').length + ' llamada(s)');
-  const queEscribenFichas = llamadas.filter(
-    l => /^Saca las dos listas|rasgos, siguiendo exactamente la estructura/.test(l.mensaje));
-  comprobar('y ninguna otra llamada escribe nada de las fichas',
-    queEscribenFichas.length === 1,
-    queEscribenFichas.map(l => l.mensaje.slice(0, 45)).join(' | '));
+  const formas = [...new Set(llamadas
+    .map(l => Object.keys(l.esquema?.properties || {}).sort().join('+')))].sort();
+  comprobar('y en todo el informe solo se piden esas tres formas',
+    formas.length === 3
+    && formas.includes('desafios+fortalezas')
+    && formas.includes('frases')
+    && formas.some(f => f.startsWith('bloques+')),
+    formas.join(' / '));
 
   // Y la ficha que sale por la puerta son sus tres casillas y ninguna mas.
   const ficha1 = r1.body?.rasgos?.fortalezas?.[0];

@@ -378,8 +378,8 @@ try {
   comprobar('una lista buena no se pide dos veces',
     vecesQueSeHaPedidoLaLista === 1, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   const uno = r.body?.rasgos?.fortalezas?.[0];
-  // Tres, y ninguna mas: el nombre, sus dos frases y su area. Hubo una cuarta, el
-  // porque, y se quito porque eso ya lo cuenta entero su area.
+  // Tres, y ninguna mas: el nombre, sus dos frases y su area. Hubo una
+  // cuarta, el porque, y se quito porque eso ya lo cuenta entero su area.
   comprobar('cada rasgo llega con sus tres casillas',
     Boolean(uno?.nombre && uno?.descripcion && uno?.area >= 1 && uno?.area <= 7));
   comprobar('y con ninguna mas',
@@ -894,6 +894,20 @@ export default function Stripe() {
     // exacta. Medir con esa tabla un texto en cursiva daría 4% de más y
     // saltarían falsas alarmas.
     const DORADO = /0\.81\d* 0\.69\d* 0\.50\d* rg/;
+
+    // Y LA ETIQUETA DEL ÁREA NO BAJA DE 270, QUE ES LO QUE PRUEBA QUE LA
+    // CUENTA DEL ALTO DE LA FICHA ES LA BUENA.
+    //
+    // cabe() no deja empezar una ficha si no cabe entera: pyRasgos + alto
+    // <= Y_TOPE, y Y_TOPE es 276. La etiqueta es lo último de la ficha y se
+    // pinta 6 mm por encima de donde acaba, así que nunca puede caer por
+    // debajo de 270. Si loQueOcupaLaFicha se quedara corta —el fallo que no
+    // se ve hasta abrir un PDF— la etiqueta bajaría de ahí y aquí se caza.
+    //
+    // El tope general de abajo (276,5) no vale para esto: un descuadre de
+    // 6 mm deja la etiqueta justo en 276 y pasa por debajo del radar.
+    const TOPE_DE_LA_ETIQUETA = 270;
+
     const loQueSeSale = (pdfTxt) => {
       const MM = 72 / 25.4, anchos = anchoDeCadaLetra(pdfTxt), fuera = [];
       for (const bt of pdfTxt.matchAll(/BT([\s\S]*?)ET/g)) {
@@ -908,6 +922,10 @@ export default function Stripe() {
         for (let k = 0; k < h.length; k += 4) mil += anchos.get(parseInt(h.slice(k, k + 4), 16)) || 0;
         const acaba = x + (mil / 1000) * tam / MM;
         if (acaba > 192.5) fuera.push(`texto ${x.toFixed(0)}→${acaba.toFixed(0)}`);
+        const y = 297 - parseFloat(td[2]) / MM;
+        if (tam === 11 && y > TOPE_DE_LA_ETIQUETA) {
+          fuera.push(`etiqueta a y=${y.toFixed(0)}, y el tope es ${TOPE_DE_LA_ETIQUETA}`);
+        }
       }
       // Y las rayas (el separador entre fichas y la del título). Aquí no hay
       // que medir letras: las coordenadas están escritas tal cual, así que la

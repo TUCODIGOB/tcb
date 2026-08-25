@@ -154,19 +154,8 @@ Sin ese permiso lee a la defensiva y no le entra nada. Con él, se abre, y a par
 // ══════════════════════════════════════════════════════════════════
 // RASGOS: CARACTERISTICAS EXTRAIDAS DE LA CARTA NATAL
 // ══════════════════════════════════════════════════════════════════
-
-const RASGO = {
-  type: 'object',
-  properties: {
-    nombre: { type: 'string', description: 'El nombre o titulo del rasgo/caracteristica, 3-6 palabras. Ej: "Buscador de verdades", "Leal instintiva".' },
-    descripcion: { type: 'string', description: 'DOS frases que lo describen. Dos: ni una sola ni tres. Ej: "Necesitas entender el por que de todo lo que te pasa antes de poder aceptarlo. Mientras no le encuentras el sentido, le sigues dando vueltas de noche".' },
-    area: { type: 'number', enum: [1, 2, 3, 4, 5, 6, 7], description: 'A cual de las siete areas corresponde este rasgo (1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero).' },
-  },
-  required: ['nombre', 'descripcion', 'area'],
-  additionalProperties: false,
-};
-
-// LA FICHA ES TRES COSAS Y NADA MAS: NOMBRE, FRASE Y AREA.
+//
+// LA FICHA ES TRES COSAS Y NADA MAS: NOMBRE, DOS FRASES Y AREA.
 //
 // Las listas mandan: salen ANTES que las siete areas, porque cada area
 // desarrolla los rasgos que le tocan y sin listas no sabe cuales son. Todo el
@@ -178,6 +167,17 @@ const RASGO = {
 // entero en su area, que son cuatro paginas para eso, y repetirlo en la ficha
 // era decir dos veces lo mismo y en peor: dos frases no explican nada que las
 // areas no hayan explicado ya.
+
+const RASGO = {
+  type: 'object',
+  properties: {
+    nombre: { type: 'string', description: 'El nombre o titulo del rasgo/caracteristica, 3-6 palabras. Ej: "Buscador de verdades", "Leal instintiva".' },
+    descripcion: { type: 'string', description: 'DOS frases que lo describen. Dos: ni una sola ni tres. Ej: "Necesitas entender el por que de todo lo que te pasa antes de poder aceptarlo. Mientras no le encuentras el sentido, le sigues dando vueltas de noche".' },
+    area: { type: 'number', enum: [1, 2, 3, 4, 5, 6, 7], description: 'A cual de las siete areas corresponde este rasgo (1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero).' },
+  },
+  required: ['nombre', 'descripcion', 'area'],
+  additionalProperties: false,
+};
 
 // EL MINIMO DE RASGOS QUE LLEVA CADA AREA.
 //
@@ -308,8 +308,8 @@ function bloquesAParrafos(datos) {
 //
 // Y aqui repetir hace mas daño que en ningun otro sitio. Un area repetitiva se
 // nota a medias porque son cuatro paginas de texto corrido; treinta fichas
-// cortas puestas en columna se leen de un vistazo, y dos que dicen lo
-// mismo saltan a la cara. Una lista con repetidos vale menos que no tenerla.
+// cortas puestas en columna se leen de un vistazo, y dos que dicen lo mismo
+// saltan a la cara. Una lista con repetidos vale menos que no tenerla.
 //
 // LO QUE ESTO PILLA Y LO QUE NO. Pilla el mismo nombre escrito dos veces y
 // pilla lo mismo dicho con palabras parecidas, que es como repite un modelo
@@ -468,8 +468,9 @@ const CAZA_AL_ASTROLOGO = new RegExp(
 // Devuelve la palabra que se ha colado, o null si la ficha esta limpia. Mira
 // las dos casillas que se escriben, que son las dos que se imprimen.
 function laPalabraDeAstrologo(rasgo) {
-  // Con el "|| ''" delante: una ficha a medio montar no mete la palabra
-  // "undefined" dentro del texto que se analiza.
+  // El "|| ''" es un seguro. limpiar() ya deja las dos casillas como cadena,
+  // pero sin el, una que llegara vacia meteria la palabra "undefined" dentro
+  // del texto que se analiza.
   const txt = `${rasgo.nombre || ''} ${rasgo.descripcion || ''}`
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
     .toLowerCase();
@@ -2532,9 +2533,9 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // area, y despues cada una de las siete se escribe con LOS SUYOS y con
     // ninguno mas. Sin listas, un area no sabe de que tiene que hablar.
     //
-    // Todo el informe espera por esta llamada, y es la unica de los rasgos que
-    // hay: la ficha es el nombre, sus dos frases y su area, y con eso ya esta escrita
-    // entera. No queda nada suyo pendiente de una segunda vuelta.
+    // Todo el informe espera por esta llamada, y es la unica de los rasgos
+    // que hay: la ficha es el nombre, sus dos frases y su area, y con eso ya
+    // esta escrita entera. No queda nada suyo pendiente de una segunda vuelta.
     //
     // Si se cae, devuelve las listas vacias -no lanza nunca- y las siete areas
     // se escriben como se escribian antes de que las listas existieran.
