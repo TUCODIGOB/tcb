@@ -661,6 +661,21 @@ try {
   comprobar('y sigue prohibiendo el otro uso, afinar la definicion',
     /El que sobra es afinar la definición de lo que le pasa/.test(sistema));
 
+  // Y el prompt no puede ensenar lo que prohibe. El fragmento de ASI SUENA
+  // CUANDO ESTA BIEN carraspeaba antes de perdonar ("Y quiero que te quede
+  // clara una cosa antes de seguir"), y la entradilla proponia "casi nadie..."
+  // de ejemplo: puesto uno al lado del otro, gana el ejemplo.
+  const fragmento = sistema.slice(sistema.indexOf('ASÍ SUENA CUANDO ESTÁ BIEN'),
+                                  sistema.indexOf('Fíjate en lo que hace ese fragmento'));
+  comprobar('el fragmento de tono no carraspea antes de decir lo suyo',
+    !/(quiero que te quede clara|aquí hay algo que|ahí aparece algo)/i.test(fragmento));
+  comprobar('y sigue quitandole la culpa, que es lo que vale de el',
+    /no es falsedad, ni es que finjas/.test(fragmento));
+  comprobar('ningun ejemplo del prompt propone "casi nadie" para abrir',
+    !/\("casi nadie\.\.\."/.test(sistema));
+  comprobar('ni pide el don con esa misma formula',
+    !/mejor que casi nadie por ser así/.test(sistema));
+
   comprobar('el prompt compartido ya no propone "hay quien" para abrir',
     !/\("hay quien\.\.\."/.test(sistema) && /PROHIBIDO empezar un área por "Hay\.\.\."/.test(sistema));
   comprobar('y que del ejemplo de pregunta no se copia el arranque',

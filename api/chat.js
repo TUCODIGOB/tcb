@@ -1177,7 +1177,7 @@ Sin pasarse: no se abre cada párrafo con una intervención, ni se le habla como
 
 ${TODO_DE_TU} Esto vale para el área entera, y con más motivo para el primer párrafo y para el cierre, que son los dos sitios donde más se escapa.
 ${HABLAR_DE_ELLA_LO_ROMPE}
-Cuidado con la excepción falsa: la entradilla que abre el área puede hablar de mucha gente ("casi nadie...", "a mucha gente le pasa que..."), y eso es correcto porque no habla de ELLA. Lo que no vale nunca es hablar de ella misma en tercera persona.
+Cuidado con la excepción falsa: la entradilla que abre el área puede hablar de mucha gente ("a mucha gente le pasa que...", "todo el mundo conoce a alguien que..."), y eso es correcto porque no habla de ELLA. Lo que no vale nunca es hablar de ella misma en tercera persona.
 
 ${PERDONA_ANTES_DE_NOMBRAR}
 
@@ -1192,7 +1192,7 @@ Esto no es contenido, es tono. No copies ni una palabra, ni la situación, ni el
   "Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen. En cualquier familia hay una, en cualquier grupo de amigas hay una, y en el trabajo también. Todo el mundo tiene una cerca. Y casi nadie le pregunta nunca cómo lo lleva.
   Tú eres esa persona.
   Por fuera pareces tranquila, con esa cosa rara de conseguir que cualquier conversación fluya sin que nadie se incomode. Por dentro, mientras tanto, llevas una máquina que no para de repasar lo que acabas de decir.
-  Y quiero que te quede clara una cosa antes de seguir, porque de aquí sale todo lo demás: eso no es falsedad, ni es que finjas. Es que aprendiste a suavizar todo lo que tocas antes de que nadie notara que hacía falta suavizarlo, y lo aprendiste tan pronto que ya ni te acuerdas de haberlo aprendido."
+  Y eso no es falsedad, ni es que finjas: aprendiste a suavizar todo lo que tocas antes de que nadie notara que hacía falta suavizarlo, y lo aprendiste tan pronto que ya ni te acuerdas de haberlo aprendido."
 
 Fíjate en lo que hace ese fragmento, porque es lo que hay que reproducir: abre ancho antes de entrar (ancho SÍ, pero por dónde ya te lo dice tu área, no lo copies de aquí), hay alguien hablándole en primera persona, le quita la culpa antes de nombrarle nada, y mezcla frases largas con una corta que cae sola.
 
@@ -1311,7 +1311,7 @@ Se consigue bajando al detalle físico y cotidiano: la hora exacta a la que te p
 MAL: "te cuesta pedir ayuda". BIEN: "pides ayuda solo cuando ya lo has resuelto tú, para que quien te la dé no tenga que hacer nada y tú puedas seguir contando que no la necesitaste".
 
 EL DON (OBLIGATORIO EN CADA ÁREA):
-Un informe que solo diagnostica deja a la persona tocada y sin ganas de volver. En cada área tiene que haber una parte que le dé aire: lo que esa misma manera de ser te ha dado, lo que haces mejor que casi nadie por ser así, y por qué esa capacidad es rara de verdad.
+Un informe que solo diagnostica deja a la persona tocada y sin ganas de volver. En cada área tiene que haber una parte que le dé aire: lo que esa misma manera de ser te ha dado, lo que haces mejor que la mayoría por ser así, y por qué esa capacidad es rara de verdad.
 No es un piropo de paso ni una frase amable al final. Se cuenta con el mismo detalle y la misma concreción que lo que le duele, con su situación y su ejemplo, y ocupa un sitio parecido dentro del área.
 No es "pero también tienes cosas buenas". Es la otra cara exacta de lo que acabas de contarle: esa misma cualidad que te pesa es la que te hace buena en algo concreto, y tiene que quedar claro que sin ella no tendrías esa capacidad.
 
