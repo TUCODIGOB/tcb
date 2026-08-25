@@ -105,7 +105,7 @@ const LISTA_BUENA = {
 
 let listaQueDevuelve = null;
 let listaFalla = null;
-let areaCopiaLaNota = false;
+let loQueElAreaCopia = null;
 let explicacionesQueDevuelve = null;
 let explicacionesFallanVeces = 0;
 const llamadas = [];
@@ -127,9 +127,9 @@ function porBloques(parrafos) {
   parrafos.forEach((x, i) => bloques[nombres[Math.min(i, nombres.length - 1)]].push(x));
   return { bloques };
 }
-const areaEscrita = (copiandoLaNota) => JSON.stringify({
+const areaEscrita = (loCopiado) => JSON.stringify({
   ...porBloques([
-    { ladillo: null, texto: (copiandoLaNota ? 'LO QUE TE TOCA CONTAR A TI EN ESTA AREA: ' : '') + 'Antes de contarte nada de ti, quiero que pienses en las personas que sostienen, porque en cualquier familia hay una.' },
+    { ladillo: null, texto: (loCopiado ? loCopiado + ' ' : '') + 'Antes de contarte nada de ti, quiero que pienses en las personas que sostienen, porque en cualquier familia hay una.' },
     { ladillo: 'La cuenta que no llevas', texto: 'Por fuera pareces tranquila, Raquel, y por dentro llevas una **maquina que no para de repasar** lo que acabas de decir.' },
     { ladillo: null, texto: 'En el trabajo se te nota enseguida, **revisas una tarea tres veces** cuando con una bastaria, y no es que dudes de tu criterio.' },
     { ladillo: 'Donde aprendiste la cuenta', texto: 'De pequena entendiste que el carino se ganaba haciendo las cosas bien, siendo la que no daba problemas nunca.' },
@@ -167,7 +167,7 @@ globalThis.fetch = async (url, opts = {}) => {
     }) };
   }
   return { ok: true, status: 200, json: async () => ({
-    content: [{ type: 'text', text: tipo === 'area' ? areaEscrita(areaCopiaLaNota) : '{}' }],
+    content: [{ type: 'text', text: tipo === 'area' ? areaEscrita(loQueElAreaCopia) : '{}' }],
     stop_reason: 'end_turn', usage: {},
   }) };
 };
@@ -347,15 +347,23 @@ try {
     notaDe(1).includes('NO ANADES NINGUNO MAS'));
 
   // ── 9. NADA INTERNO SE IMPRIME ────────────────────────────────
-  // Si el modelo copiara la nota dentro del texto, la clienta leeria las
-  // instrucciones internas del producto en un estudio de 27 euros.
-  areaCopiaLaNota = true;
-  const rFuga = await generar();
-  areaCopiaLaNota = false;
-  const intentos1 = deArea().filter(l => /ÁREA 1 —/.test(l.mensaje)).length;
-  comprobar('un area que copia la nota se manda a rehacer', intentos1 > 1, intentos1 + ' intentos');
-  comprobar('y el estudio no se entrega con la instruccion dentro',
-    !String(rFuga.body?.texto || '').includes('LO QUE TE TOCA CONTAR A TI'));
+  // Si el modelo copiara dentro del texto una de las cabeceras que le
+  // hablan a el, la clienta leeria las instrucciones internas del producto
+  // en un estudio de 27 euros. Se prueban las dos que van en el mensaje de
+  // cada area: la de los rasgos que le tocan y la de la forma que lleva.
+  for (const [cabecera, comoSeLlama] of [
+    ['LO QUE TE TOCA CONTAR A TI EN ESTA AREA:', 'la nota de los rasgos'],
+    ['POR DÓNDE VA ESTA ÁREA:', 'la nota de la forma'],
+  ]) {
+    loQueElAreaCopia = cabecera;
+    const rFuga = await generar();
+    loQueElAreaCopia = null;
+    const intentos1 = deArea().filter(l => /ÁREA 1 —/.test(l.mensaje)).length;
+    comprobar(`un area que copia ${comoSeLlama} se manda a rehacer`,
+      intentos1 > 1, intentos1 + ' intentos');
+    comprobar(`y el estudio no se entrega con ${comoSeLlama} dentro`,
+      !String(rFuga.body?.texto || '').includes(cabecera));
+  }
 
   // ── 10. EL PROMPT NO SE CONTRADICE ────────────────────────────
   //
@@ -421,32 +429,66 @@ try {
   const moldes = [];
   for (let n = 1; n <= 7; n++) {
     const m = mensajeDelArea(n);
-    const i = m.indexOf('POR DONDE VA ESTA AREA');
+    const i = m.indexOf('POR DÓNDE VA ESTA ÁREA');
     comprobar(`el area ${n} recibe su forma`, i >= 0);
-    if (i >= 0) moldes.push(m.slice(i, i + 900));
+    if (i < 0) continue;
+    const fin = m.indexOf('LO QUE TE TOCA CONTAR A TI', i);
+    moldes.push(m.slice(i, fin > i ? fin : m.length));
   }
   comprobar('y las siete formas son distintas entre si',
     new Set(moldes).size === 7, new Set(moldes).size + ' distintas de 7');
 
-  const abre = moldes.map(t => (t.match(/- ABRE ([^.]{10,60})/) || [])[1]);
+  const abre = moldes.map(t => (t.match(/- ABRE ([^\n]+)/) || [])[1]);
   comprobar('ninguna abre por la misma puerta que otra',
     new Set(abre).size === 7, new Set(abre).size + ' puertas distintas de 7');
 
-  const cuando = moldes.map(t => (t.match(/EL EJEMPLO PASA ([^.]{5,50})/) || [])[1]);
+  const entra = moldes.map(t => (t.match(/EL EJEMPLO ENTRA ([^\n]+)/) || [])[1]);
+  comprobar('ninguna entra al ejemplo con la misma invitacion',
+    new Set(entra).size === 7, new Set(entra).size + ' invitaciones de 7');
+
+  const cuando = moldes.map(t => (t.match(/EL EJEMPLO PASA ([^\n]+)/) || [])[1]);
   comprobar('el ejemplo de cada area pasa en un momento distinto',
     new Set(cuando).size === 7, new Set(cuando).size + ' momentos de 7');
   comprobar('y no todos de noche',
-    cuando.filter(x => /noche|madrugada/.test(String(x))).length <= 2,
+    cuando.length === 7 && cuando.filter(x => /noche|madrugada/.test(String(x))).length <= 2,
     cuando.filter(x => /noche|madrugada/.test(String(x))).length + ' de noche de 7');
 
   comprobar('a todas se les prohibe empezar el ejemplo por la hora',
-    moldes.every(t => t.includes('NO EMPIEZA POR LA HORA')));
+    moldes.length === 7 && moldes.every(t => t.includes('NO EMPIEZA POR LA HORA')));
   comprobar('y empezar el cierre con la formula que salia sola',
-    moldes.every(t => t.includes('No es que...')));
+    moldes.length === 7 && moldes.every(t => t.includes('No es que...')));
 
-  const cierra = moldes.map(t => (t.match(/- CIERRA ([^.]{10,70})/) || [])[1]);
+  const cierra = moldes.map(t => (t.match(/- CIERRA ([^\n]+)/) || [])[1]);
   comprobar('ninguna cierra de la misma forma que otra',
     new Set(cierra).size === 7, new Set(cierra).size + ' formas de 7');
+
+  // Distintas palabra por palabra no basta: dos moldes pueden decir lo mismo
+  // con una coma de diferencia y las areas salen iguales igual. Se busca el
+  // trozo largo repetido, que es lo que delata al gemelo. Paso con los cierres
+  // del area 1 y el area 7: los dos eran "frase corta y seca, y la puerta
+  // detras". Lo comun de la plantilla no cuenta, solo la parte de cada una.
+  const soloSuyo = (linea, comun) => String(linea).replace(comun, '');
+  const trozos = (t, n = 5) => {
+    const p = String(t).toLowerCase().split(/[^a-záéíóúñ]+/).filter(Boolean);
+    return new Set(p.slice(0, Math.max(0, p.length - n + 1)).map((_, i) => p.slice(i, i + n).join(' ')));
+  };
+  for (const [comoSeLlama, lineas, comun] of [
+    ['las puertas', abre, /\. Sigues abriendo ancho.*$/],
+    ['las invitaciones', entra, /\. Esa media línea.*$/],
+    ['los cierres', cierra, /\. Y NO EMPIECES EL CIERRE.*$/],
+  ]) {
+    const suyas = lineas.map(l => soloSuyo(l, comun));
+    const gemelas = [];
+    for (let a = 0; a < suyas.length; a++) {
+      for (let b = a + 1; b < suyas.length; b++) {
+        const ta = trozos(suyas[a]);
+        const repetido = [...trozos(suyas[b])].find(x => ta.has(x));
+        if (repetido) gemelas.push(`${a + 1}/${b + 1}: "${repetido}"`);
+      }
+    }
+    comprobar(`ninguna pareja de ${comoSeLlama} repite un trozo largo`,
+      gemelas.length === 0, gemelas.join('  '));
+  }
 
   // Y el prompt compartido ya no le dice que elija el la forma, que es lo que
   // hacia que las siete eligieran la misma.
@@ -457,6 +499,18 @@ try {
     /DE AHÍ SE COGE LO QUE HACE, NO CÓMO ESTÁ ARMADO/.test(sistema));
   comprobar('la invitacion de la escena va DENTRO de su casilla',
     /LA INVITACIÓN VA DENTRO DE SU CASILLA/.test(sistema));
+  comprobar('y el prompt compartido no dicta cual es, la manda al molde',
+    /AQUÍ NO PONE CUÁL/.test(sistema) && !/déjame que te enseñe un rato tuyo/.test(sistema));
+  comprobar('y avisa de que los ejemplos de escena no marcan el arranque',
+    /DE ESOS TRES SE COGE EL CONTENIDO, NO EL ARRANQUE/.test(sistema));
+  comprobar('y que del fragmento de tono no se copia la puerta',
+    /ancho SÍ, pero por dónde ya te lo dice tu área/.test(sistema));
+
+  // El fragmento de ASI SUENA CUANDO ESTA BIEN abre por una puerta concreta.
+  // Si ademas se le diera esa misma puerta a un area, esa area podria calcarlo
+  // entero sin desobedecer y las siete acabarian leyendo la misma dos veces.
+  comprobar('ninguna area abre por la puerta del fragmento de tono',
+    abre.every(x => !/familia hay una|todo el mundo tiene cerca/i.test(String(x))));
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);
