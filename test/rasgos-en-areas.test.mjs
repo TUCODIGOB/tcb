@@ -693,8 +693,25 @@ try {
     ['carraspear', /(aquí hay algo que|ahí aparece algo|quiero que te quede clara una cosa)/i],
     ['abusar de "casi nadie"', /(casi nadie|casi nunca|muy poca gente)/i],
   ];
-  const REGLA = sistema.slice(sistema.indexOf('NO SE LO CUENTES COMO UN APARATO'),
-                              sistema.indexOf('- Vigila especialmente la primera frase'));
+  // De su cabecera al final de su cuarto punto. Cortarla por la linea que viene
+  // detras la dejaba a merced de que alguien metiera algo en medio.
+  const REGLA = (sistema.match(/- NO SE LO CUENTES COMO UN APARATO[\s\S]*?donde de verdad golpee\./) || [''])[0];
+  comprobar('la regla de los cuatro tics se encuentra entera', REGLA.length > 800, REGLA.length + ' caracteres');
+
+  // Y las palabras con las que la regla manda no pueden significar otra cosa en
+  // el resto del prompt. Se llamaba NO LE EXPLIQUES EL MECANISMO, y "mecanismo"
+  // sale tres veces mas para lo contrario, que es lo que SI hay que contar:
+  // dos ordenes opuestas sobre la misma palabra.
+  // "mecanismo" es la palabra que ya estaba ocupada: el prompt la usa para lo
+  // que SI hay que contar, asi que la regla no puede usarla para lo contrario.
+  comprobar('la regla no usa "mecanismo", que ya significa otra cosa aqui',
+    !/\bmecanismo\b/i.test(REGLA));
+  for (const palabra of ['aparato', 'pieza', 'piezas', 'filtro', 'término']) {
+    const fuera = sistema.replace(REGLA, '');
+    const rx = new RegExp('\\b' + palabra + '\\b', 'i');
+    comprobar(`"${palabra}" no significa otra cosa en el resto del prompt`,
+      !rx.test(fuera), (fuera.match(new RegExp('.{0,45}\\b' + palabra + '\\b.{0,45}', 'i')) || [''])[0]);
+  }
   for (const [que, rx] of TICS) {
     // Lo que llega a las areas, quitando el bloque donde los tics se nombran.
     const fuera = [sistema.replace(REGLA, ''), mensajeDelArea(1), mensajeDelArea(5)]
