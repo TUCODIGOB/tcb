@@ -104,7 +104,7 @@ export default async function handler(req, res) {
     const [regular, bold, italic, italianno,
       img_portada, img_indice, img_bienvenido, img_rueda, img_base,
       img_identidad, img_patrones, img_miedos, img_herida, img_amor, img_relaciones, img_dinero,
-      img_frase, img_proximo, img_proximo2, img_trasera
+      img_frase, img_proximo, img_proximo2, img_trasera, img_rasgos
     ] = await Promise.all([
       loadFontBase64('/fonts/Roboto-Regular.ttf'),
       loadFontBase64('/fonts/Roboto-Bold.ttf'),
@@ -127,6 +127,7 @@ export default async function handler(req, res) {
       loadImageBase64('/images/8-proximo-paso-pdf.jpg'),
       loadImageBase64('/images/8a-proximo-paso-pdf.jpg'),
       loadImageBase64('/images/9-trasera-pdf.jpg'),
+      loadImageBase64('/images/10-rasgos-pdf.jpg'),
     ]);
 
     // Fondos de la primera pagina de cada area, en el mismo orden que areaTitles
@@ -900,7 +901,9 @@ export default async function handler(req, res) {
       function paginaDeRasgos(primera) {
         if (!primera) { addPageNum(maq.pag); maq.pag++; }
         doc.addPage();
-        doc.addImage(img_base, 'JPEG', 0, 0, W, H);
+        // La lista abre con fondo propio. Si se alarga y pide mas paginas,
+        // esas van con el de siempre, como el resto del libro.
+        doc.addImage(primera ? img_rasgos : img_base, 'JPEG', 0, 0, W, H);
         pyRasgos = ARRIBA_DEL_TODO;
       }
 
