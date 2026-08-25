@@ -1929,8 +1929,12 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
   // Pero un "ella" suelto no basta para saberlo, y cazar de mas sale caro: el
   // area se manda a rehacer entera. En el estudio del 25 de agosto salto dos
   // veces sobre frases perfectas y costo 54 segundos y dos llamadas de las
-  // caras. De los tres "ella" que ha marcado en todos los estudios reales,
-  // los tres eran falsa alarma. Por eso se descartan dos casos:
+  // caras.
+  //
+  // Repasados los estudios que conservamos -1.565 frases- este detector habia
+  // marcado tres, y las tres estaban bien escritas. (Las del 22 de agosto no
+  // se pueden volver a mirar: de aquel informe solo queda la nota de arriba.)
+  // Por eso se descartan dos casos:
   //
   //  1. LA FRASE YA LE HABLA DE TU. Si dice "te", "tu" o "ti", le esta
   //     hablando A ELLA, asi que el "ella" es OTRA persona:

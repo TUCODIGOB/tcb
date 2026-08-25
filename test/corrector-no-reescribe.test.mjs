@@ -18,9 +18,10 @@
 // Lo que se comprueba aqui:
 //   1. una frase marcada por el corrector NO cuesta una llamada de mas
 //   2. pero SI queda apuntada, para no quedarnos ciegos
-//   3. el "ella + verbo", que es una palabra y no una opinion, SIGUE
-//      haciendo que se vuelva a pedir el area
-//   4. y lo demas que si se arregla volviendo a pedir (la escena copiada)
+//   3. el "ella + verbo" que de verdad habla de ella, que es una palabra y
+//      no una opinion, SIGUE haciendo que se vuelva a pedir el area
+//   4. pero un "ella" que es otra persona, o una cosa, NO cuesta una vuelta
+//   5. y lo demas que si se arregla volviendo a pedir (la escena copiada)
 //      sigue funcionando igual
 //
 // Ejecutar:  node test/corrector-no-reescribe.test.mjs
@@ -102,8 +103,10 @@ const FRASE_MARCADA = 'Hay gente que llega a cualquier sitio y en diez minutos y
 // estudio del 25 de agosto.
 const CON_ELLA = 'Ella aprendio muy pronto que el carino habia que ganarselo, y ella sigue midiendose con esa vara.';
 
-// Y las tres que el detector marcaba mal en los estudios de verdad. Ninguna
-// puede costar una vuelta: las tres estan bien escritas.
+// Y las dos que el detector marcaba mal en los estudios de verdad, una por
+// cada motivo: la primera porque la frase ya le habla de tu, la segunda
+// porque el "ella" va detras de preposicion y no es sujeto. Las dos estan
+// bien escritas y ninguna puede costar una vuelta.
 const ELLA_QUE_ES_OTRA = 'Te fijas en lo que le falta a la persona que tienes delante antes de que ella misma lo sepa.';
 const ELLA_QUE_ES_UNA_COSA = 'Una decision que ya has tomado: vuelves sobre ella igual que quien pasa la lengua por un diente roto.';
 
