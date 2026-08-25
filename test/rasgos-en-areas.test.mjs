@@ -661,6 +661,14 @@ try {
   comprobar('y sigue prohibiendo el otro uso, afinar la definicion',
     /El que sobra es afinar la definición de lo que le pasa/.test(sistema));
 
+  // Y el mismo cuidado con el carraspeo: el prompt pide en otra regla que la
+  // avise antes de decirle algo que va a doler. Eso la prepara y se queda; lo
+  // que sobra es anunciar que viene algo especial.
+  comprobar('la regla del carraspeo respeta el aviso que si prepara',
+    /El que se queda es prepararla para algo que va a doler, tal como pide QUE SE NOTE QUE HAY ALGUIEN AHÍ/.test(sistema));
+  comprobar('y sigue prohibiendo anunciar que viene algo especial',
+    /El que sobra es anunciar que viene algo especial/.test(sistema));
+
   // Y el prompt no puede ensenar lo que prohibe. El fragmento de ASI SUENA
   // CUANDO ESTA BIEN carraspeaba antes de perdonar ("Y quiero que te quede
   // clara una cosa antes de seguir"), y la entradilla proponia "casi nadie..."
@@ -675,6 +683,26 @@ try {
     !/\("casi nadie\.\.\."/.test(sistema));
   comprobar('ni pide el don con esa misma formula',
     !/mejor que casi nadie por ser así/.test(sistema));
+
+  // Barrido: los cuatro tics no pueden estar en NINGUNA parte de lo que lee el
+  // modelo, ni en el prompt de sistema ni en el encargo de cada area, salvo
+  // dentro de su propia regla, que es donde se citan a proposito.
+  const TICS = [
+    ['corregir el termino', /no es que [^,.:]{3,60}[,:] es que/i],
+    ['hablar de la pieza', /(la misma pieza|el mismo filtro|de esa mezcla sale|deja de medir y empieza)/i],
+    ['carraspear', /(aquí hay algo que|ahí aparece algo|quiero que te quede clara una cosa)/i],
+    ['abusar de "casi nadie"', /(casi nadie|casi nunca|muy poca gente)/i],
+  ];
+  const REGLA = sistema.slice(sistema.indexOf('NO LE EXPLIQUES EL MECANISMO'),
+                              sistema.indexOf('- Vigila especialmente la primera frase'));
+  for (const [que, rx] of TICS) {
+    // Lo que llega a las areas, quitando el bloque donde los tics se nombran.
+    const fuera = [sistema.replace(REGLA, ''), mensajeDelArea(1), mensajeDelArea(5)]
+      .join('\n')
+      .replace(/Y casi nadie le pregunta nunca cómo lo lleva/, '');  // el del fragmento, uno solo, cabe
+    comprobar(`el prompt no cae en el tic de ${que} fuera de su regla`,
+      !rx.test(fuera), (fuera.match(rx) || []).join(' '));
+  }
 
   comprobar('el prompt compartido ya no propone "hay quien" para abrir',
     !/\("hay quien\.\.\."/.test(sistema) && /PROHIBIDO empezar un área por "Hay\.\.\."/.test(sistema));
