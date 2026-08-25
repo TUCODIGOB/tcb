@@ -548,6 +548,25 @@ try {
   // "¿Cuantas veces" o "¿Cuanto hace", y dos areas acabaron con la misma
   // pregunta palabra por palabra. Misma causa que las aperturas: un solo
   // ejemplo en el prompt compartido y siete llamadas que no se ven.
+  // Las dos frases grandes eran lo unico del area que no llevaba molde, y se
+  // notaba: en el informe 22, seis de las siete de la herida empezaban por
+  // "Llevas toda la vida" o "Llevas tanto tiempo", y cuatro de las siete de la
+  // fuerza por "Nadie sostiene / Nadie recompone / Nadie mira".
+  const rFuerza = moldes.map(t => (t.match(/la de la fuerza arranca ([^,]+)/) || [])[1]);
+  const rHerida = moldes.map(t => (t.match(/y la de la herida arranca ([^.]+)/) || [])[1]);
+  comprobar('las siete frases de la fuerza arrancan por sitios distintos',
+    new Set(rFuerza).size === 7, new Set(rFuerza).size + ' de 7');
+  comprobar('y las siete de la herida tambien',
+    new Set(rHerida).size === 7, new Set(rHerida).size + ' de 7');
+  comprobar('y a todas se les prohiben las dos formulas que salian solas',
+    moldes.length === 7 && moldes.every(t => t.includes('"Llevas toda la vida..."') && t.includes('"Nadie... como tú"')));
+
+  // Cinco de las siete areas del informe 22 abrieron por "Hay...", aunque cada
+  // una entrara por su puerta: es la forma natural de presentar algo que
+  // existe, asi que los moldes que nombraban un objeto la sacaban sola.
+  comprobar('a todas se les prohibe abrir por "Hay..."',
+    moldes.length === 7 && moldes.every(t => /NO EMPIECES POR "Hay\.\.\."/.test(t)));
+
   const pregunta = moldes.map(t => (t.match(/- LA PREGUNTA VA ([^\n]+)/) || [])[1]);
   comprobar('ninguna pregunta va por donde la de otra',
     new Set(pregunta).size === 7, new Set(pregunta).size + ' formas de 7');
@@ -573,6 +592,8 @@ try {
     ['las invitaciones', entra, /\. Esa media línea.*$/],
     ['los cierres', cierra, /\. Y NO EMPIECES EL CIERRE.*$/],
     ['las preguntas', pregunta, /\. Y NO EMPIEZA por.*$/],
+    ['las frases de la fuerza', rFuerza, /$^/],
+    ['las frases de la herida', rHerida, /\. NINGUNA DE LAS DOS.*$/],
   ]) {
     const suyas = lineas.map(l => soloSuyo(l, comun));
     const gemelas = [];
@@ -602,6 +623,8 @@ try {
     /DE ESOS TRES SE COGE EL CONTENIDO, NO EL ARRANQUE/.test(sistema));
   comprobar('y que del fragmento de tono no se copia la puerta',
     /ancho SÍ, pero por dónde ya te lo dice tu área/.test(sistema));
+  comprobar('el prompt compartido ya no propone "hay quien" para abrir',
+    !/\("hay quien\.\.\."/.test(sistema) && /PROHIBIDO empezar un área por "Hay\.\.\."/.test(sistema));
   comprobar('y que del ejemplo de pregunta no se copia el arranque',
     /De ese ejemplo se coge la pelota que devuelve, no las palabras con las que arranca/.test(sistema));
   comprobar('el repaso final pide texto detras de cada frase grande',

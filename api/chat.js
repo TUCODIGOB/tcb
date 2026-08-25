@@ -1171,7 +1171,7 @@ Sin pasarse: no se abre cada párrafo con una intervención, ni se le habla como
 
 ${TODO_DE_TU} Esto vale para el área entera, y con más motivo para el primer párrafo y para el cierre, que son los dos sitios donde más se escapa.
 ${HABLAR_DE_ELLA_LO_ROMPE}
-Cuidado con la excepción falsa: la entradilla que abre el área puede hablar de mucha gente ("hay quien...", "casi nadie..."), y eso es correcto porque no habla de ELLA. Lo que no vale nunca es hablar de ella misma en tercera persona.
+Cuidado con la excepción falsa: la entradilla que abre el área puede hablar de mucha gente ("casi nadie...", "a mucha gente le pasa que..."), y eso es correcto porque no habla de ELLA. Lo que no vale nunca es hablar de ella misma en tercera persona.
 
 ${PERDONA_ANTES_DE_NOMBRAR}
 
@@ -1368,7 +1368,7 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO contar en tu área el mismo mecanismo que gobierna otra. Mira la parte de la carta que te toca
 - PROHIBIDO quedarse en el patrón general. Sin un detalle que solo le valga a ella, el área no vale
 - PROHIBIDO un área que solo diagnostique. Sin el don contado a fondo, el área no vale
-- PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos
+- PROHIBIDO empezar un área por "Hay..." o por "imagina que": ni "hay algo", ni "hay una escena", ni "hay un momento", ni "hay personas que". Por dónde empieza la tuya lo lleva escrito tu área
 - PROHIBIDO un área que se entienda pero no se sienta. Sin el momento que le toca por dentro, no vale
 - PROHIBIDO dejar una casilla vacía: los cinco bloques de texto, la escena, los dos remates, la pregunta y el cierre van siempre
 - PROHIBIDO rellenar una casilla con una palabra de relleno o con un aviso de que falta algo. Lo que escribas ahí se imprime tal cual en el estudio del cliente
@@ -1500,20 +1500,26 @@ ${cartaTexto}`;
   // sigue mandando el prompt de siempre. Aqui solo se reparte POR DONDE.
   const MOLDES = {
     1: {
+      rFuerza: 'nombrando lo que ella da por normal y para cualquiera es raro',
+      rHerida: 'con la cuenta que sigue pagando sin que nadie se la haya pasado',
       pregunta: 'poniéndole delante lo que se le abre si deja de hacer eso, en forma de "¿qué pasaría si...?"',
       entra: 'invitándola a mirar un rato suyo cualquiera ("déjame que te enseñe un rato tuyo, de esos que ni recuerdas al día siguiente")',
-      abre: 'por lo que se ve de una persona desde fuera antes de conocerla, y lo poco que eso cuenta de ella',
+      abre: 'por lo que se ve de alguien desde fuera antes de conocerlo, con esa persona ya en escena desde la primera palabra y sin presentarla',
       cuando: 'un día cualquiera entre semana, a media mañana',
       cierra: 'con el golpe seco primero, en una frase corta, y la puerta detrás',
     },
     2: {
+      rFuerza: 'con las manos: lo que sabe hacer, dicho sin un solo adjetivo',
+      rHerida: 'poniéndole precio en horas o en años',
       pregunta: 'llevándola a la última vez concreta que le pasó, no a la cuenta de todas',
       entra: 'pidiéndole que se acuerde de la última vez que le pasó',
-      abre: 'por un gesto pequeño que mucha gente hace sin darse cuenta, contado en dos líneas',
+      abre: 'por un gesto pequeño que mucha gente hace sin darse cuenta, nombrado en infinitivo y de primeras, como si lo estuvieras haciendo',
       cuando: 'un rato muerto de tarde',
       cierra: 'con una paradoja suya: dos cosas que no encajan entre sí y que sin embargo son la misma',
     },
     3: {
+      rFuerza: 'señalando que va hacia lo que le da miedo en vez de apartarse',
+      rHerida: 'con lo que teme que pase el día que pare',
       pregunta: 'obligándola a elegir entre dos cosas, y que ninguna de las dos sea cómoda',
       entra: 'llevándotela contigo al sitio donde pasa ("ven un momento conmigo")',
       abre: 'por una pregunta directa al lector, y la respuesta llega en la frase siguiente',
@@ -1521,20 +1527,26 @@ ${cartaTexto}`;
       cierra: 'nombrando lo que de verdad teme, que no es lo que ella cree que teme',
     },
     4: {
+      rFuerza: 'con lo que esa herida le dejó a cambio',
+      rHerida: 'por lo que le sigue faltando, no por lo que hace',
       pregunta: 'preguntándole qué le diría hoy a quien fue de pequeña y aprendió aquello',
       entra: 'avisándole de que lo que viene le va a sonar',
-      abre: 'por una frase hecha que todo el mundo repite y casi nadie ha pensado del todo',
+      abre: 'por una frase hecha que todo el mundo repite, dicha tal cual y de entrada, y desmontada en la línea siguiente',
       cuando: 'un domingo por la tarde',
       cierra: 'con una imagen concreta que se le quede grabada, no con una explicación',
     },
     5: {
+      rFuerza: 'desde quien está con ella: lo que recibe y no sabría explicar',
+      rHerida: 'con lo que se calla estando acompañada',
       pregunta: 'devolviéndole en pregunta la frase exacta que ella se repite por dentro',
       entra: 'diciéndole que mire lo que hace sin darse cuenta',
-      abre: 'por dos maneras opuestas de hacer lo mismo, y ella es una de las dos',
+      abre: 'por dos maneras opuestas de hacer lo mismo, empezando por la primera de las dos y sin anunciar que son dos',
       cuando: 'un fin de semana, de día',
       cierra: 'diciéndole en concreto lo que le está costando eso, con nombre y apellidos',
     },
     6: {
+      rFuerza: 'por el efecto que tiene en la gente cuando entra',
+      rHerida: 'nombrando el sitio que ocupa sin haberlo elegido',
       pregunta: 'preguntándole quién haría por ella lo que ella hace por los demás',
       entra: 'poniéndola a mirarse desde fuera un segundo',
       abre: 'por cómo funciona un grupo cualquiera: una familia, una oficina, unas amigas',
@@ -1542,9 +1554,11 @@ ${cartaTexto}`;
       cierra: 'poniendo enfrente lo que da y lo que recibe, sin quejarse por ella',
     },
     7: {
+      rFuerza: 'con su ojo para el valor, contado como un hecho y no como un elogio',
+      rHerida: 'con la cifra que nunca le llega a bastar',
       pregunta: 'con una pregunta que solo se puede responder con una cifra concreta',
       entra: 'para que vea de qué le estás hablando ("para que veas de qué te hablo")',
-      abre: 'por un objeto, una cifra o un gesto concreto con dinero',
+      abre: 'por un objeto o una cifra de dinero, puesta delante en la primera palabra como quien la señala',
       cuando: 'a plena luz del día, un día de cobrar o de gastar',
       cierra: 'dándole la vuelta al asunto: lo que parecía ser cosa de dinero resulta que nunca lo fue',
     },
@@ -1556,9 +1570,10 @@ ${cartaTexto}`;
     return `
 
 POR DÓNDE VA ESTA ÁREA (las otras seis van por otro sitio, así que no busques tú la forma: usa esta):
-- ABRE ${m.abre}. Sigues abriendo ancho y estrechándote hasta ella en dos o tres frases, como siempre: lo que cambia es la puerta por la que entras.
+- ABRE ${m.abre}. Sigues abriendo ancho y estrechándote hasta ella en dos o tres frases, como siempre: lo que cambia es la puerta por la que entras. Y NO EMPIECES POR "Hay...": "Hay personas que", "Hay un gesto", "Hay una frase". Es la forma que sale sola para presentar algo, y con ella las siete áreas arrancan calcadas aunque el tema sea distinto.
 - EL EJEMPLO ENTRA ${m.entra}. Esa media línea es lo PRIMERO que se lee dentro de la casilla "escena", y NO EMPIEZA POR LA HORA: nada de "Son las once de la noche...", "Es domingo por la tarde...". Las palabras las pones tú, pero la puerta es esa.
 - EL EJEMPLO PASA ${m.cuando}. El momento se sitúa detrás de la invitación, nunca delante, y la escena de verdad va después y ocupa lo que tenga que ocupar.
+- LAS DOS FRASES GRANDES: la de la fuerza arranca ${m.rFuerza}, y la de la herida arranca ${m.rHerida}. NINGUNA DE LAS DOS EMPIEZA por "Llevas toda la vida...", "Llevas tanto tiempo..." ni "Nadie... como tú": son las dos que salen solas, y leídas seguidas las siete áreas suenan a la misma frase repetida.
 - LA PREGUNTA VA ${m.pregunta}. Y NO EMPIEZA por "¿Cuántas veces...", "¿Cuándo fue la última vez..." ni "¿Cuánto hace que...": esas tres las escribe cualquiera sin pensar, y por eso se repiten de un área a otra.
 - CIERRA ${m.cierra}. Y NO EMPIECES EL CIERRE por "No es que...", "No estás cansada de..." ni "No te falta...": esas tres son la forma que sale sola, la usan todas y se lee a plantilla.`;
   }
