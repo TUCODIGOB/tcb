@@ -1248,6 +1248,9 @@ Qué significa el dinero para ti y qué te mueve a ganarlo: qué representa de v
 Qué haces con él cuando lo tienes: cómo lo gastas, cómo tomas las decisiones de dinero, y cómo llevas el riesgo cuando hay algo en juego.
 Qué te bloquea para ganar más y qué pasa cuando empieza a irte bien: el techo con el que te encuentras una y otra vez, incluido lo que haces en el trabajo cuando toca pedir o cobrar lo que vales, y qué te ocurre justo cuando las cosas empiezan a salirte.
 
+ESAS TRES O CUATRO COSAS DE TU ÁREA VAN TODAS, Y NINGUNA DESPACHADA EN UNA FRASE. Son lo que la persona ha venido a leer de esta parcela de su vida, y un punto resuelto en media línea es un punto que no está. Sitio hay: HOY es el bloque más largo del área, así que reparte su espacio entre ellas y ninguna se queda en el aire. Lo que nunca se recorta para que quepan es lo que va en su propia casilla, que es la escena, los dos remates, la pregunta y el cierre.
+Y LOS RASGOS QUE TE LLEGAN AL FINAL DEL ENCARGO NO SE SUMAN A ESTOS PUNTOS, LOS LLENAN. No son apartados nuevos que haya que meter además: cada uno de ellos responde a uno de estos puntos, y contándolo por dentro del punto que le toca lo estás contando entero. Un rasgo suyo del amor no es un tema aparte que vaya al lado: es la respuesta a cómo eres en el amor. Por eso caben los dos: son la misma cosa contada una sola vez.
+
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va en su casilla, y detrás de qué bloque se lee lo eliges tú en "tras_bloque": en unas áreas pronto y en otras más adelante, nunca en el mismo sitio en las siete. Lo que no es nunca es lo primero que se lee: delante van igualmente el arranque que sitúa el área y la frase que presenta la escena.
 
 ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendiste, con quién, en qué situación, y qué haces hoy exactamente por haberlo aprendido. El razonamiento tiene esta forma: "aprendiste esto de pequeña, y por eso hoy, sin darte cuenta, haces esto otro". La forma es esa, las palabras las pones tú y cambian en cada área.
@@ -1574,17 +1577,19 @@ POR DÓNDE VA ESTA ÁREA (las otras seis van por otro sitio, así que no busques
 
     return `
 
-LO QUE TE TOCA CONTAR A TI EN ESTA AREA, Y NADA MAS:
+LO QUE TE TOCA CONTAR A TI EN ESTA AREA, Y NINGUN RASGO MAS:
 ${fichas}
 
-Estos ${mios.length} salen de su carta y estan repartidos entre las siete areas: los de aqui son TUYOS y los de las otras seis los estan contando ellas ahora mismo. Van los ${mios.length}, cada uno contado a fondo, y NO ANADES NINGUNO MAS. Si al mirar su carta te llama otro tema con mas fuerza, ese es de otra area: dejalo.
+Estos ${mios.length} salen de su carta y estan repartidos entre las siete areas: los de aqui son TUYOS y los de las otras seis los estan contando ellas ahora mismo. Van los ${mios.length} y NO ANADES NINGUNO MAS. Si al mirar su carta te llama otro tema con mas fuerza, ese es de otra area: dejalo.
+NO SON UN INDICE APARTE, Y ESTO ES LO QUE MAS IMPORTA DE TODA ESTA NOTA. Los puntos que HOY le pide a TU area no se tocan ni se encogen: estos ${mios.length} van POR DENTRO de ellos, cada uno entrando por el punto al que responde. Tratados como temas sueltos que hay que colocar ademas, te comes esos puntos para hacerles sitio y el area pierde lo que la persona ha venido a leer.
+EMPIEZA POR LOS PUNTOS, NO POR LA LISTA: coges cada punto de HOY, miras cual de estos lo responde, y lo cuentas ahi a fondo.
 ESTO ES QUE CONTAR, NO POR DONDE MIRAR. Para explicar cada uno sigues cruzando todo lo que haga falta de su carta, igual que hasta ahora: no es una valla, es el contenido.
 Y SI UNO DE ESTOS PARECE SALIR DE UNA PARTE DE LA CARTA QUE ARRIBA SE DA A OTRA AREA, MANDA ESTA LISTA. El rasgo esta puesto aqui y aqui se cuenta: no lo dejes fuera por eso, ni lo cuentes a medias. Lo de arriba te dice donde mirar cuando buscas tu solo; esto te dice lo que hay que contar, y ya esta repartido para que no se cuente dos veces.
-Y NO VAN UNO EN CADA BLOQUE. Cada uno atraviesa el area entera por donde le toca, con los bloques haciendo lo que hacen siempre: como se le nota hoy va en HOY, de donde le viene va en ORIGEN, lo que da por cierto por debajo va en CREENCIAS. Los bloques no cambian de trabajo.
+Y NO VAN UNO EN CADA BLOQUE. Lo de arriba es HOY, que es donde se cuenta como se le nota; pero un rasgo no se agota ahi. De donde le viene va en ORIGEN y lo que da por cierto por debajo va en CREENCIAS, con los bloques haciendo lo que hacen siempre. Los bloques no cambian de trabajo.
 NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el nombre del rasgo ni su frase se escriben tal cual, ni se presentan como una lista. Lo que ella lee son tus parrafos de siempre.`;
   }
 
-  const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS DIEZ, QUE SON LAS QUE MAS SE ESCAPAN:
+  const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
 2. El nombre "${nombrePila}" aparece UNA o DOS veces en el area, dentro de una frase en la que le hablas de tu, nunca en una que hable de ella en tercera persona y nunca al empezar. Ninguna vez no vale
 3. El area lleva negritas dentro del texto de los parrafos, marcadas con **dos asteriscos a cada lado**: frases o medias frases que ella subrayaria con el fosforito, nunca una palabra suelta. Relee solo lo marcado seguido y tiene que sonar a ella contandose a si misma; la que no pase esa prueba se cambia por la que si la pasa, pero el area no se entrega sin ninguna
@@ -1593,6 +1598,7 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
 7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
 8. Ningun bloque se queda vacio: el arranque, hoy, origen, creencias y soltar llevan todos sus parrafos. Y si el area no llega a las palabras que te piden, anade parrafos dentro de los bloques, nunca engordes los que ya tienes
+8b. ESTAN LAS TRES O CUATRO COSAS QUE HOY LE PIDE A TU AREA, todas, cada una contada de verdad y no resuelta en una frase de paso. Cuentalas una por una antes de entregar: es lo que la persona ha venido a leer. Si alguna se ha quedado en media linea, esa area no esta terminada
 9. Ninguna casilla se queda vacia ni rellena con una palabra de relleno: la escena, los dos remates, la pregunta y el cierre van SIEMPRE y van escritos de verdad
 9b. La escena esta escrita SOLO en su casilla. Repasa los bloques de texto: si ahi vuelve a estar la escena, la borras de ahi, que si no sale impresa dos veces
 9c. NI UNA FRASE EN TERCERA PERSONA SOBRE ELLA. Relee el primer parrafo y el cierre, que es donde se escapa: si dice "ella", "le", "aprendio", "carga", "va a descubrir" hablando de ella, se reescribe en segunda persona

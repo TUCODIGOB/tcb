@@ -346,6 +346,54 @@ try {
   comprobar('la nota le dice que no anada ninguno mas',
     notaDe(1).includes('NO ANADES NINGUNO MAS'));
 
+  // ── 8b. LOS RASGOS NO SE COMEN LOS PUNTOS DE HOY ──────────────
+  //
+  // El area tiene 900 palabras contadas y HOY le pide tres o cuatro cosas
+  // concretas segun cual sea: en el area 5 son como es en el amor, que tipo
+  // de persona atrae, que necesita para sentirse querida y donde se tuerce
+  // siempre. Eso es lo que la clienta ha venido a leer.
+  //
+  // Al repartir los rasgos, la nota llegaba al final del mensaje pidiendo N
+  // temas "cada uno contado a fondo", y encima se titulaba Y NADA MAS. Eran
+  // dos indices peleandose por el mismo hueco, y ganaba el ultimo que se lee.
+  // En el estudio 21 se vio: "que tipo de persona atraes" quedo en dos frases
+  // sueltas sin ladillo, y en el 20 tenia dos parrafos propios.
+  //
+  // El arreglo no quita rasgos ni alarga el area: dice que los rasgos van POR
+  // DENTRO de esos puntos, porque describen lo mismo. Aqui se comprueba que
+  // eso llega dicho, que la nota ya no autoriza a saltarselos, y que el
+  // repaso final los cuenta, que era el unico sitio donde no se miraban.
+  const nota1 = notaDe(1);
+  comprobar('la nota manda empezar por los puntos, no por la lista',
+    /EMPIEZA POR LOS PUNTOS, NO POR LA LISTA/.test(nota1));
+  comprobar('y dice que los rasgos van POR DENTRO de esos puntos',
+    /NO SON UN INDICE APARTE/.test(nota1) && /POR DENTRO/.test(nota1));
+  comprobar('y su titulo ya no dice "y nada mas", que era el permiso para saltarselos',
+    /NINGUN RASGO MAS/.test(nota1) && !/EN ESTA AREA, Y NADA MAS/.test(nota1));
+  comprobar('y ya no pide cada rasgo "contado a fondo" como si fuera un tema suelto',
+    !/Van los \d+, cada uno contado a fondo/.test(nota1));
+
+  const sist = deArea()[0].sistema;
+  comprobar('HOY dice que sus puntos van todos y ninguno en una frase',
+    /VAN TODAS, Y NINGUNA DESPACHADA EN UNA FRASE/.test(sist));
+  comprobar('y que los rasgos los llenan, no se suman a ellos',
+    /NO SE SUMAN A ESTOS PUNTOS, LOS LLENAN/.test(sist));
+  comprobar('y no deja recortar la escena ni el cierre para hacerles sitio',
+    /nunca se recorta.*escena, los dos remates, la pregunta y el cierre/s.test(sist));
+
+  // El repaso final viaja en el mensaje, no en el prompt de sistema.
+  const msg1 = mensajeDelArea(1);
+  comprobar('el repaso final cuenta los puntos de HOY antes de entregar',
+    /ESTAN LAS TRES O CUATRO COSAS QUE HOY LE PIDE A TU AREA/.test(msg1));
+  comprobar('y la lista de repaso ya no promete un numero que no cumple',
+    /REPASA ESTAS, QUE SON LAS QUE MAS SE ESCAPAN/.test(msg1));
+
+  // Lo de antes no se ha caido por el camino.
+  comprobar('los rasgos siguen sin poder quedarse en un solo bloque',
+    /Los bloques no cambian de trabajo/.test(nota1));
+  comprobar('y siguen sin copiarse tal cual en el texto',
+    /NO SE COPIAN/.test(nota1));
+
   // ── 9. NADA INTERNO SE IMPRIME ────────────────────────────────
   // Si el modelo copiara dentro del texto una de las cabeceras que le
   // hablan a el, la clienta leeria las instrucciones internas del producto
