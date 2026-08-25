@@ -355,6 +355,31 @@ try {
   comprobar('y el estudio no se entrega con la instruccion dentro',
     !String(rFuga.body?.texto || '').includes('LO QUE TE TOCA CONTAR A TI'));
 
+  // ── 10. EL PROMPT NO SE CONTRADICE ────────────────────────────
+  //
+  // Las listas pasaron de ser el apendice del final a ser la base del estudio.
+  // Su prompt seguia diciendo que "cierran el estudio", que se leen "despues
+  // de las siete areas" y que recogen lo que "en las areas no ha dado tiempo a
+  // nombrar": justo lo contrario de lo que ahora hacen. Eso no revienta nada,
+  // solo hace que el modelo se las tome como un sobrante y las escriba peor,
+  // y no se ve hasta leer un estudio entero.
+  await generar();
+  const pLista = llamadas.find(l => l.tipo === 'lista').sistema;
+  comprobar('el prompt de la lista dice que es la BASE del estudio',
+    /ESTAS LISTAS SON LA BASE DEL ESTUDIO ENTERO/.test(pLista));
+  comprobar('y no dice ya que sea lo que cierra el estudio',
+    !/cierras el estudio/i.test(pLista) && !/se leen despues de las siete areas/i.test(pLista));
+  comprobar('ni que recoja lo que a las areas no les dio tiempo',
+    !/no ha dado tiempo a nombrar/i.test(pLista));
+  comprobar('ni pide aqui la explicacion, que se pide aparte',
+    !/"explicacion":/.test(pLista));
+
+  // El area recibe dos repartos: el de la carta (que mira) y el de los rasgos
+  // (que cuenta). Si chocan y no se dice cual manda, el area se queda sin
+  // contar un rasgo suyo por creer que es de otra.
+  comprobar('la nota deja claro que ante la duda manda la lista',
+    notaDe(1).includes('MANDA ESTA LISTA'));
+
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);
   console.error(err.stack);

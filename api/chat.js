@@ -203,7 +203,7 @@ const ESQUEMA_EXPLICACIONES = {
 // Las listas son la fuente: de ellas salen los rasgos y a cada uno le toca su
 // area, y despues esa area desarrolla LOS SUYOS y nada mas. Si de un area
 // sale uno solo, esa area se pasa cuatro paginas dando vueltas a una cosa, que
-// es exactamente lo que este reparto viene a arreglar. Dos es el suelo.
+// es exactamente lo que las listas vienen a arreglar. Dos es el suelo.
 //
 // Maximo no hay: si de un area salen seis, el area cuenta seis. Lo que dice la
 // carta manda, y lo que no vale es rellenar para cuadrar.
@@ -215,13 +215,6 @@ const NOMBRE_DEL_AREA = {
   1: 'IDENTIDAD', 2: 'PATRONES', 3: 'MIEDOS', 4: 'HERIDA',
   5: 'AMOR', 6: 'RELACIONES', 7: 'DINERO',
 };
-
-
-// EL REPARTO: los mismos rasgos, pero en corto y ordenados por area.
-//
-// No lleva "explicacion" a proposito. El area no la necesita -la va a contar
-// ella a su manera y con su sitio- y quitarla es lo que hace que esta llamada
-// sea corta, que es de lo que depende que no retrase el informe.
 
 // CUANTOS RASGOS SE PIDEN, Y POR QUE NO LO DICE EL ESQUEMA.
 //
@@ -243,10 +236,13 @@ const NOMBRE_DEL_AREA = {
 const RASGOS_MINIMO = 12;
 const RASGOS_MAXIMO = 18;
 
-// El hueco para escribir la respuesta. Treinta y seis fichas enteras, que es
-// el techo de la horquilla en las dos listas, son unos 6.800 tokens medidos. Se deja
-// al doble porque el tope no se paga (se paga lo que el modelo escriba) y
-// quedarse corto cuesta la lista entera, que es lo que paso con el de 3.000.
+// El hueco para escribir la respuesta, y lo usan las dos llamadas de rasgos:
+// la que saca las listas y la que escribe sus explicaciones. Ninguna de las
+// dos llega ni de lejos -treinta y seis fichas ENTERAS, con explicacion y
+// todo, eran unos 6.800 tokens medidos, y ahora eso va repartido en dos-.
+// Se deja de sobra a proposito: el tope no se paga, se paga lo que el modelo
+// escriba, y quedarse corto cuesta la lista entera, que es lo que paso con el
+// de 3.000.
 const TOPE_RASGOS = 12000;
 
 const ESQUEMA_RASGOS = {
@@ -573,12 +569,16 @@ async function extraerRasgos(nombrePila, sexo, cartaTexto) {
     ? 'una MUJER. Toda en femenino.'
     : 'un HOMBRE. Todo en masculino.';
 
-  const prompt = `Eres la misma experta en psicología, astrología y neurociencia que ha escrito el estudio entero. Ahora cierras el estudio con dos listas de rasgos suyos. Los sacas UNICAMENTE de su carta natal, pero eso no se nota al leerlas: se leen despues de las siete areas, en el mismo libro y con la misma voz.
+  const prompt = `Eres la misma experta en psicología, astrología y neurociencia que escribe el estudio entero. Lo primero que haces es leer su carta y sacar de ella dos listas de rasgos suyos. Los sacas UNICAMENTE de la carta natal, pero eso no se nota al leerlos: van en el mismo libro y con la misma voz que el resto.
+
+ESTAS LISTAS SON LA BASE DEL ESTUDIO ENTERO, NO SU FINAL.
+Con lo que salga de aqui se escriben despues las siete areas: a cada area le tocaran los rasgos que tu le pongas, y esa area contara ESOS y ninguno mas. Un rasgo que no pongas aqui no se cuenta en ningun sitio, y uno puesto en el area que no le toca se cuenta donde no pega. Ademas las dos listas se imprimen enteras al final del estudio, asi que lo que escribas se lee dos veces: desarrollado en su area y en su ficha.
 
 ${ESPANOL_DE_ESPANA}
 
 QUE SON LAS DOS LISTAS:
-Fichas cortas. Cada una nombra una cosa suya, la dice en una frase y explica de donde le viene. No son un resumen de las areas ni un indice: son cosas que se ven en la carta y que en las areas no ha dado tiempo a nombrar una por una.
+Fichas cortas. Cada una nombra una cosa suya y la dice en una frase. No son un resumen de nada: son lo que de verdad se ve en su carta, una cosa por ficha.
+(De donde le viene cada una no se escribe aqui: eso se pide despues, en otra vuelta. Aqui solo el nombre, la frase y su area.)
 
 FORTALEZAS (lista 1):
 - Dones, habilidades innatas, ventajas, cosas que hace bien sin darse cuenta
@@ -1462,6 +1462,7 @@ ${fichas}
 
 Estos ${mios.length} salen de su carta y estan repartidos entre las siete areas: los de aqui son TUYOS y los de las otras seis los estan contando ellas ahora mismo. Van los ${mios.length}, cada uno contado a fondo, y NO ANADES NINGUNO MAS. Si al mirar su carta te llama otro tema con mas fuerza, ese es de otra area: dejalo.
 ESTO ES QUE CONTAR, NO POR DONDE MIRAR. Para explicar cada uno sigues cruzando todo lo que haga falta de su carta, igual que hasta ahora: no es una valla, es el contenido.
+Y SI UNO DE ESTOS PARECE SALIR DE UNA PARTE DE LA CARTA QUE ARRIBA SE DA A OTRA AREA, MANDA ESTA LISTA. El rasgo esta puesto aqui y aqui se cuenta: no lo dejes fuera por eso, ni lo cuentes a medias. Lo de arriba te dice donde mirar cuando buscas tu solo; esto te dice lo que hay que contar, y ya esta repartido para que no se cuente dos veces.
 Y NO VAN UNO EN CADA BLOQUE. Cada uno atraviesa el area entera por donde le toca, con los bloques haciendo lo que hacen siempre: como se le nota hoy va en HOY, de donde le viene va en ORIGEN, lo que da por cierto por debajo va en CREENCIAS. Los bloques no cambian de trabajo.
 NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el nombre del rasgo ni su frase se escriben tal cual, ni se presentan como una lista. Lo que ella lee son tus parrafos de siempre.`;
   }
@@ -2530,11 +2531,17 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // se pide en explicarLosRasgos, que corre a la vez que las areas.
     //
     // Si se cae, devuelve las listas vacias -no lanza nunca- y las siete areas
-    // se escriben como se escribian antes de que existiera el reparto.
+    // se escriben como se escribian antes de que las listas existieran.
     const listas = await extraerRasgos(nombrePila, sexo, cartaTexto);
 
     // Y las explicaciones salen ya, sin esperarlas: corren a la vez que las
     // siete areas y se recogen al final, cuando el texto ya esta escrito.
+    //
+    // Escriben dentro de este mismo "listas", que es el que las siete areas
+    // estan leyendo a la vez. No se pisan: lo unico que tocan es la casilla
+    // "explicacion", y las areas solo leen el nombre, la frase y el area. Si
+    // algun dia la nota del area pasara a usar la explicacion, esto habria que
+    // pensarlo otra vez.
     const lasExplicaciones = explicarLosRasgos(nombrePila, sexo, cartaTexto, listas);
 
     const resultados = await Promise.all(
