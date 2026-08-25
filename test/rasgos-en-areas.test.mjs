@@ -634,7 +634,7 @@ try {
   comprobar('se le prohibe explicar el mecanismo en vez de decirlo',
     /NO LE EXPLIQUES EL MECANISMO: DILE LO QUE LE PASA/.test(sistema));
   for (const [que, marca] of [
-    ['corregir para explicar', 'NO CORRIJAS PARA EXPLICAR'],
+    ['corregir el termino', 'NO CORRIJAS EL TÉRMINO'],
     ['hablar de la pieza', 'NADA DE HABLAR DE LA PIEZA'],
     ['carraspear antes de decirlo', 'NO CARRASPEES ANTES DE HABLAR'],
     ['abusar de "casi nadie"', '"CASI NADIE", "CASI NUNCA", "MUY POCA GENTE"'],
@@ -645,6 +645,21 @@ try {
     !/van las que pida el texto y ninguna más/.test(sistema));
   comprobar('el repaso final tambien las cuenta',
     /dentro del texto hay DOS O TRES mas/.test(mensajeDelArea(1)));
+
+  // El nombre salia quince veces en 55 paginas, dos por area y juntas. Sube a
+  // dos o tres, y una tiene que caer donde de verdad escuece.
+  comprobar('la nombra dos o tres veces, y una donde mas escuece',
+    /LLÁMALA POR SU NOMBRE DOS O TRES VECES EN EL ÁREA, y una de ellas delante de lo que más le cuesta reconocer/.test(sistema));
+  comprobar('y el repaso final pide lo mismo, no menos',
+    /aparece DOS o TRES veces en el area, y una de ellas delante de lo que mas le cuesta reconocer/.test(mensajeDelArea(1)));
+
+  // El tic de "no es X, es Y" no se puede prohibir a secas: PERDONA ANTES DE
+  // NOMBRAR pide esa misma forma para quitarle la culpa. Lo que sobra es el
+  // otro uso, afinar la definicion de lo que le pasa.
+  comprobar('la regla del "no es X, es Y" respeta el perdon antes de nombrar',
+    /El que se queda es quitarle la culpa antes de nombrarle lo que le pesa, tal como pide PERDONA ANTES DE NOMBRAR/.test(sistema));
+  comprobar('y sigue prohibiendo el otro uso, afinar la definicion',
+    /El que sobra es afinar la definición de lo que le pasa/.test(sistema));
 
   comprobar('el prompt compartido ya no propone "hay quien" para abrir',
     !/\("hay quien\.\.\."/.test(sistema) && /PROHIBIDO empezar un área por "Hay\.\.\."/.test(sistema));
