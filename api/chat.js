@@ -175,15 +175,17 @@ const RASGO = {
 // pasen de tres no se pierden: siguen en las dos listas del final, que es
 // donde viven los rasgos que no da tiempo a contar despacio.
 //
-// Y AL REVES NO SE FUERZA: lo normal son dos o tres, y si de un area sale uno
-// bueno va uno. Rellenar un area con un rasgo inventado para llegar a tres se
-// nota al leerlo y es justo lo contrario de lo que esto viene a arreglar.
+// TRES ES EL NUMERO QUE SE BUSCA EN LAS SIETE, no un techo al que se llega si
+// sobra sitio: cada rasgo que un area no cuenta es una cosa que el estudio
+// deja de decirle de ella, que es justo el problema que esto viene a arreglar.
 //
-// LO QUE SI SE ESPERA ES QUE NINGUNA SE QUEDE A CERO: en los dos estudios del
-// 25 de agosto ninguna de las siete bajo de dos rasgos, porque no hay carta
-// que no tenga nada que decir sobre el dinero o sobre el miedo. Un area a cero
-// se avisa en los registros, porque casi seguro es que el modelo no ha mirado
-// bien, no que la persona no tenga nada ahi.
+// Y DOS ES EL SUELO. Se baja a dos por un solo motivo, que el tercero seria
+// inventado, y de ahi no se baja mas. En los dos estudios del 25 de agosto
+// ninguna de las siete areas bajo de dos, porque no hay carta que no tenga
+// nada que decir sobre el dinero o sobre el miedo. Un area por debajo de dos
+// se avisa en los registros: casi seguro es que el modelo no ha mirado bien,
+// no que la persona no tenga nada ahi.
+const MINIMO_POR_AREA = 2;
 const RASGOS_POR_AREA = 3;
 
 // El reparto va DELANTE de las siete areas, o sea que todas esperan por el.
@@ -203,7 +205,7 @@ const ESQUEMA_REPARTO = {
   properties: {
     rasgos: {
       type: 'array',
-      description: `Los rasgos de la persona, cada uno con el area a la que va. De cada una de las siete areas sale al menos uno, y como mucho ${RASGOS_POR_AREA}.`,
+      description: `Los rasgos de la persona, cada uno con el area a la que va. ${RASGOS_POR_AREA} de cada una de las siete areas; ${MINIMO_POR_AREA} solo donde el tercero seria inventado. Nunca menos de ${MINIMO_POR_AREA} ni mas de ${RASGOS_POR_AREA}.`,
       minItems: 1,
       items: {
         type: 'object',
@@ -816,9 +818,9 @@ LAS SIETE ÁREAS:
 7 = DINERO: su relación con el dinero, el valor y lo que se permite
 
 REGLAS:
-1. COMO MUCHO ${RASGOS_POR_AREA} POR ÁREA. Ni uno más. Los que sobren de un área no los pongas: hay dos listas al final del estudio donde caben.
-2. DE CADA UNA DE LAS SIETE SALE AL MENOS UNO. Ninguna carta se queda muda en un área: todo el mundo tiene identidad, algo que se le repite, algo que teme, algo que le dolió, una manera de querer, una manera de tratar a la gente y una relación con el dinero. Un área vacía no es una carta callada, es que no has mirado lo suficiente.
-3. PERO NO HAY QUE LLEGAR A ${RASGOS_POR_AREA}. Lo normal es dos o tres. Si de un área sale uno bueno y el segundo ya sería forzarlo, pon uno. INVENTAR UNO PARA CUADRAR ES EL PEOR FALLO QUE PUEDES COMETER AQUÍ: se lee como relleno y estropea justo lo que esto viene a arreglar. Sigue lo que dice la carta, no repartas a partes iguales.
+1. ${RASGOS_POR_AREA} POR ÁREA. Ese es el número y ese es el que buscas en las siete. Si de un área salen ${RASGOS_POR_AREA}, van los ${RASGOS_POR_AREA}: no te quedes en dos por comodidad, porque cada uno que no pongas es una cosa que el estudio deja de contarle de ella.
+2. Y NUNCA MÁS DE ${RASGOS_POR_AREA}. Los que sobren de un área no los pongas aquí: hay dos listas al final del estudio donde caben.
+3. SOLO BAJAS A ${MINIMO_POR_AREA} SI EL TERCERO SERÍA INVENTADO. Ese es el único motivo, y es el suelo: por debajo de ${MINIMO_POR_AREA} no baja ninguna área. Ninguna carta se queda muda en un área: todo el mundo tiene identidad, algo que se le repite, algo que teme, algo que le dolió, una manera de querer, una manera de tratar a la gente y una relación con el dinero. Un área con uno solo no es una carta callada, es que no has mirado lo suficiente. Pero tampoco pongas un tercero de relleno para cuadrar: eso se lee y estropea justo lo que esto viene a arreglar.
 4. NI UNO REPETIDO, y repetido no es solo la misma frase: es la misma cosa dicha con otras palabras. "Miedo al abandono" y "Terror a que la dejen" son el mismo rasgo escrito dos veces. Y ojo con los que caen en áreas distintas, que es donde más se cuela: si lo que pones en MIEDOS es lo mismo que pusiste en HERIDA, has vuelto a crear el problema que esto arregla.
 5. CADA RASGO EN SU ÁREA, la que de verdad le toca. Un rasgo puesto donde no va deja su área coja y le roba el sitio a otro.
 6. QUE SEAN COSAS DISTINTAS ENTRE SÍ. No siete versiones del mismo tema: lo que buscas es todo lo que esta carta tiene que decir de ella, no lo que más se repite en ella.
@@ -849,7 +851,7 @@ ${cartaTexto}
 Persona: ${trato}
 Nombre de pila: ${nombrePila}
 
-IMPORTANTE: de las siete áreas no puede quedar ninguna vacía, como mucho ${RASGOS_POR_AREA} en cada una, sin rellenar las que den menos, y ni uno que diga lo mismo que otro. Antes de darlo por terminado, léelos todos seguidos y quita cualquiera que repita a otro, aunque estén en áreas distintas.`;
+IMPORTANTE: ${RASGOS_POR_AREA} en cada una de las siete, ${MINIMO_POR_AREA} solo donde el tercero sería inventado, nunca menos de ${MINIMO_POR_AREA}, nunca más de ${RASGOS_POR_AREA}, y ni uno que diga lo mismo que otro. Antes de darlo por terminado, léelos todos seguidos y quita cualquiera que repita a otro, aunque estén en áreas distintas.`;
 
   const pedirElReparto = async () => {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -958,14 +960,15 @@ IMPORTANTE: de las siete áreas no puede quedar ninguna vacía, como mucho ${RAS
     const cuenta = [1, 2, 3, 4, 5, 6, 7].map(a => `${a}:${(porArea[a] || []).length}`).join(' ');
     console.log(`Reparto de rasgos: ${limpios.length} rasgos repartidos (area:cuantos -> ${cuenta})`);
 
-    // Un area a cero no rompe nada -esa area se escribe como se escribia
-    // antes- pero no deberia pasar: no hay carta que no tenga nada que decir
-    // sobre el miedo o sobre el dinero. Si sale en los registros, es que el
-    // modelo no ha mirado bien o que el filtro de arriba se ha llevado por
-    // delante el unico rasgo que tenia esa area.
-    const aCero = [1, 2, 3, 4, 5, 6, 7].filter(a => !porArea[a] || porArea[a].length === 0);
-    if (aCero.length > 0) {
-      console.warn(`SE ENTREGA CON AVISOS — Reparto de rasgos: las areas ${aCero.join(', ')} se han quedado sin ninguno y se escriben sin reparto`);
+    // Un area corta no rompe nada -se escribe igual, solo que contando menos
+    // cosas- pero no deberia pasar: el suelo son MINIMO_POR_AREA y ninguna
+    // carta se queda muda en un area entera. Si sale en los registros, es que
+    // el modelo no ha mirado bien o que el filtro de arriba se ha llevado por
+    // delante lo poco que esa area tenia.
+    const cortas = [1, 2, 3, 4, 5, 6, 7].filter(a => (porArea[a] || []).length < MINIMO_POR_AREA);
+    if (cortas.length > 0) {
+      const detalle = cortas.map(a => `${a} (${(porArea[a] || []).length})`).join(', ');
+      console.warn(`SE ENTREGA CON AVISOS — Reparto de rasgos: las areas ${detalle} no llegan a ${MINIMO_POR_AREA} rasgos`);
     }
 
     return porArea;

@@ -317,6 +317,15 @@ try {
     sueltos.length === 0, sueltos.slice(0, 3).join(' '));
   comprobar('y lleva la carta de la persona dentro', elReparto.sistema.includes(CARTA.split('\n')[1]));
 
+  // El numero que se le pide. Tres es el objetivo en las siete y dos el
+  // suelo: si esto se afloja a "al menos uno", volvemos al estudio de tres
+  // ideas que esto viene a arreglar, y no se notaria hasta leer un PDF.
+  comprobar('pide 3 por area como objetivo, no como techo',
+    /3 POR ÁREA\. Ese es el número/.test(elReparto.sistema));
+  comprobar('y pone el suelo en 2, solo si el tercero seria inventado',
+    /SOLO BAJAS A 2 SI EL TERCERO SERÍA INVENTADO/.test(elReparto.sistema)
+    && /por debajo de 2 no baja ninguna área/.test(elReparto.sistema));
+
   const conNota = mensajeDelArea(1);
   const laNota = conNota.slice(conNota.indexOf('LO SUYO QUE TE TOCA'));
   comprobar('la nota del area tampoco lleva ${...} sueltos',
