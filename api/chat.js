@@ -1556,7 +1556,7 @@ POR DÓNDE VA ESTA ÁREA (las otras seis van por otro sitio, así que no busques
 - ABRE ${m.abre}. Sigues abriendo ancho y estrechándote hasta ella en dos o tres frases, como siempre: lo que cambia es la puerta por la que entras.
 - EL EJEMPLO ENTRA ${m.entra}. Esa media línea es lo PRIMERO que se lee dentro de la casilla "escena", y NO EMPIEZA POR LA HORA: nada de "Son las once de la noche...", "Es domingo por la tarde...". Las palabras las pones tú, pero la puerta es esa.
 - EL EJEMPLO PASA ${m.cuando}. El momento se sitúa detrás de la invitación, nunca delante, y la escena de verdad va después y ocupa lo que tenga que ocupar.
-- LA PREGUNTA VA ${m.pregunta}. Y NO EMPIEZA por "¿Cuántas veces...", "¿Cuándo fue la última vez..." ni "¿Cuánto hace que...": esas tres salen solas. En el estudio del 26 de agosto las siete preguntas empezaron así, y una salió repetida palabra por palabra en dos áreas distintas.
+- LA PREGUNTA VA ${m.pregunta}. Y NO EMPIEZA por "¿Cuántas veces...", "¿Cuándo fue la última vez..." ni "¿Cuánto hace que...": esas tres las escribe cualquiera sin pensar, y por eso se repiten de un área a otra.
 - CIERRA ${m.cierra}. Y NO EMPIECES EL CIERRE por "No es que...", "No estás cansada de..." ni "No te falta...": esas tres son la forma que sale sola, la usan todas y se lee a plantilla.`;
   }
 
