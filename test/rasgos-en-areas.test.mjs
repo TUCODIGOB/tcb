@@ -127,7 +127,13 @@ globalThis.fetch = async (url, opts = {}) => {
   const cuerpo = JSON.parse(opts.body || '{}');
   const tipo = quePide(cuerpo);
   const mensaje = cuerpo.messages?.[0]?.content || '';
-  const sistema = cuerpo.system?.[0]?.text || '';
+  // El area manda "system" como lista de bloques (para poder marcar la cache)
+  // y el reparto lo manda como texto suelto. Leyendo solo la forma de lista,
+  // el prompt del reparto se registraba vacio y todo lo que se comprobara
+  // sobre el pasaba sin comprobar nada.
+  const sistema = String(Array.isArray(cuerpo.system)
+    ? (cuerpo.system[0] || {}).text || ''
+    : cuerpo.system || '');
   llamadas.push({ tipo, mensaje, sistema, cuando: llamadas.length });
 
   if (tipo === 'reparto') {
@@ -294,6 +300,37 @@ try {
   const tieneA4 = mensajeDelArea(4).includes('Depender te deja expuesta');
   comprobar('dos areas NO reciben el mismo rasgo con otras palabras',
     !(tieneA3 && tieneA4), tieneA3 && tieneA4 ? 'las dos lo tienen' : 'solo una lo tiene');
+
+  // ── 9. EL PROMPT Y LA NOTA SE MONTAN ENTEROS ──────────────────
+  //
+  // Un ${...} sin sustituir no rompe nada: se manda al modelo tal cual, y
+  // lo que lee es basura en vez de la regla. No se ve en ningun sitio hasta
+  // que sale un estudio raro, asi que se mira aqui.
+  repartoQueDevuelve = [
+    { nombre: 'Leal hasta el agotamiento', descripcion: 'Te quedas sosteniendo mucho despues de que deje de tener sentido quedarte.', area: 1 },
+    { nombre: 'Cuentas lo que das', descripcion: 'Llevas sin querer la cuenta de lo que pones y de lo que te devuelven a ti.', area: 1 },
+  ];
+  await generar();
+  const elReparto = llamadas.find(l => l.tipo === 'reparto');
+  const sueltos = (elReparto.sistema.match(/\$\{[^}]*\}/g) || []);
+  comprobar('el prompt del reparto no lleva ningun ${...} sin sustituir',
+    sueltos.length === 0, sueltos.slice(0, 3).join(' '));
+  comprobar('y lleva la carta de la persona dentro', elReparto.sistema.includes(CARTA.split('\n')[1]));
+
+  const conNota = mensajeDelArea(1);
+  const laNota = conNota.slice(conNota.indexOf('LO SUYO QUE TE TOCA'));
+  comprobar('la nota del area tampoco lleva ${...} sueltos',
+    !/\$\{/.test(laNota));
+  comprobar('la nota va antes del recordatorio final, no detras',
+    conNota.indexOf('LO SUYO QUE TE TOCA') < conNota.indexOf('ANTES DE DAR EL AREA POR TERMINADA'));
+
+  // Lo que mas facil se rompe al tocar la nota: que contradiga al prompt del
+  // area, que le dice desde siempre que puede cruzar toda la carta para
+  // explicar lo suyo. Si la nota dijera "no mires otra cosa", se pelearian.
+  comprobar('la nota NO contradice al prompt del area (le deja cruzar la carta)',
+    laNota.includes('sigues cruzando todo lo que haga falta'));
+  comprobar('y NO le cambia el trabajo a los bloques',
+    laNota.includes('Los bloques no cambian de trabajo'));
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);

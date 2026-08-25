@@ -175,9 +175,15 @@ const RASGO = {
 // pasen de tres no se pierden: siguen en las dos listas del final, que es
 // donde viven los rasgos que no da tiempo a contar despacio.
 //
-// Y AL REVES NO SE FUERZA: si de un area salen dos, van dos, y si sale uno,
-// uno. Rellenar un area con un rasgo inventado para llegar a tres se nota al
-// leerlo y es justo lo contrario de lo que estas listas vienen a arreglar.
+// Y AL REVES NO SE FUERZA: lo normal son dos o tres, y si de un area sale uno
+// bueno va uno. Rellenar un area con un rasgo inventado para llegar a tres se
+// nota al leerlo y es justo lo contrario de lo que esto viene a arreglar.
+//
+// LO QUE SI SE ESPERA ES QUE NINGUNA SE QUEDE A CERO: en los dos estudios del
+// 25 de agosto ninguna de las siete bajo de dos rasgos, porque no hay carta
+// que no tenga nada que decir sobre el dinero o sobre el miedo. Un area a cero
+// se avisa en los registros, porque casi seguro es que el modelo no ha mirado
+// bien, no que la persona no tenga nada ahi.
 const RASGOS_POR_AREA = 3;
 
 // El reparto va DELANTE de las siete areas, o sea que todas esperan por el.
@@ -197,7 +203,7 @@ const ESQUEMA_REPARTO = {
   properties: {
     rasgos: {
       type: 'array',
-      description: `Los rasgos de la persona, cada uno con el area a la que va. Como mucho ${RASGOS_POR_AREA} por area, y menos si de esa area no salen mas.`,
+      description: `Los rasgos de la persona, cada uno con el area a la que va. De cada una de las siete areas sale al menos uno, y como mucho ${RASGOS_POR_AREA}.`,
       minItems: 1,
       items: {
         type: 'object',
@@ -619,18 +625,6 @@ IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con num
   //
   // Y va con sonnet, como todo lo demas del informe. Iba con opus, que cuesta
   // cinco veces mas por token: el trabajo dificil es escribir las areas, no
-  // sacar veinte titulares de la carta.
-  // LA LISTA SE PIDE CON EL ESQUEMA PUESTO, NO PIDIENDO JSON POR ESCRITO.
-  //
-  // Sin esquema, el modelo escribe el JSON a mano y lo que llega depende de lo
-  // que le quepa. En el informe del 24 de agosto se corto a mitad de una frase
-  // ("Unterminated string in JSON at position 6991"), JSON.parse no pudo
-  // leerlo y la lista entera se fue a la basura: el cliente pago una llamada
-  // de las caras y recibio un PDF sin la pagina de rasgos. Con output_config
-  // lo que llega es JSON valido y con todas sus casillas, igual que las areas.
-  //
-  // Y va con sonnet, como todo lo demas del informe. Iba con opus, que cuesta
-  // cinco veces mas por token: el trabajo dificil es escribir las areas, no
   // sacar treinta fichas de tres lineas.
   const pedirLaLista = async (queCorregir) => {
     const encargo = queCorregir
@@ -757,8 +751,6 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
       return listaVacia();
     }
 
-    if (mejor === null) return listaVacia();
-
     // Lo que siga repetido despues del repaso se quita, aunque la lista se
     // quede mas corta. Una lista de veinticinco con tres repetidos vale menos
     // que una de veintidos sin ninguno: el cliente no cuenta las fichas, pero
@@ -825,10 +817,11 @@ LAS SIETE ÁREAS:
 
 REGLAS:
 1. COMO MUCHO ${RASGOS_POR_AREA} POR ÁREA. Ni uno más. Los que sobren de un área no los pongas: hay dos listas al final del estudio donde caben.
-2. Y NO HAY QUE LLEGAR A ${RASGOS_POR_AREA}. Si de un área salen dos, pon dos. Si sale uno, uno. Si de verdad no sale ninguno, ninguno. INVENTAR UNO PARA CUADRAR ES EL PEOR FALLO QUE PUEDES COMETER AQUÍ: se lee como relleno y estropea justo lo que esto viene a arreglar. Sigue lo que dice la carta, no repartas a partes iguales.
-3. NI UNO REPETIDO, y repetido no es solo la misma frase: es la misma cosa dicha con otras palabras. "Miedo al abandono" y "Terror a que la dejen" son el mismo rasgo escrito dos veces. Y ojo con los que caen en áreas distintas, que es donde más se cuela: si lo que pones en MIEDOS es lo mismo que pusiste en HERIDA, has vuelto a crear el problema que esto arregla.
-4. CADA RASGO EN SU ÁREA, la que de verdad le toca. Un rasgo puesto donde no va deja su área coja y le roba el sitio a otro.
-5. QUE SEAN COSAS DISTINTAS ENTRE SÍ. No siete versiones del mismo tema: lo que buscas es todo lo que esta carta tiene que decir de ella, no lo que más se repite en ella.
+2. DE CADA UNA DE LAS SIETE SALE AL MENOS UNO. Ninguna carta se queda muda en un área: todo el mundo tiene identidad, algo que se le repite, algo que teme, algo que le dolió, una manera de querer, una manera de tratar a la gente y una relación con el dinero. Un área vacía no es una carta callada, es que no has mirado lo suficiente.
+3. PERO NO HAY QUE LLEGAR A ${RASGOS_POR_AREA}. Lo normal es dos o tres. Si de un área sale uno bueno y el segundo ya sería forzarlo, pon uno. INVENTAR UNO PARA CUADRAR ES EL PEOR FALLO QUE PUEDES COMETER AQUÍ: se lee como relleno y estropea justo lo que esto viene a arreglar. Sigue lo que dice la carta, no repartas a partes iguales.
+4. NI UNO REPETIDO, y repetido no es solo la misma frase: es la misma cosa dicha con otras palabras. "Miedo al abandono" y "Terror a que la dejen" son el mismo rasgo escrito dos veces. Y ojo con los que caen en áreas distintas, que es donde más se cuela: si lo que pones en MIEDOS es lo mismo que pusiste en HERIDA, has vuelto a crear el problema que esto arregla.
+5. CADA RASGO EN SU ÁREA, la que de verdad le toca. Un rasgo puesto donde no va deja su área coja y le roba el sitio a otro.
+6. QUE SEAN COSAS DISTINTAS ENTRE SÍ. No siete versiones del mismo tema: lo que buscas es todo lo que esta carta tiene que decir de ella, no lo que más se repite en ella.
 
 CÓMO SE ESCRIBE CADA UNO:
 - "nombre": 3-6 palabras sin artículos. Ej: "Leal hasta el agotamiento", "Miedo a decepcionar".
@@ -856,7 +849,7 @@ ${cartaTexto}
 Persona: ${trato}
 Nombre de pila: ${nombrePila}
 
-IMPORTANTE: como mucho ${RASGOS_POR_AREA} por área, sin rellenar las que den menos, y ni uno que diga lo mismo que otro. Antes de darlo por terminado, léelos todos seguidos y quita cualquiera que repita a otro, aunque estén en áreas distintas.`;
+IMPORTANTE: de las siete áreas no puede quedar ninguna vacía, como mucho ${RASGOS_POR_AREA} en cada una, sin rellenar las que den menos, y ni uno que diga lo mismo que otro. Antes de darlo por terminado, léelos todos seguidos y quita cualquiera que repita a otro, aunque estén en áreas distintas.`;
 
   const pedirElReparto = async () => {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -962,8 +955,19 @@ IMPORTANTE: como mucho ${RASGOS_POR_AREA} por área, sin rellenar las que den me
       if (porArea[rasgo.area].length < RASGOS_POR_AREA) porArea[rasgo.area].push(rasgo);
     }
 
-    const cuenta = Object.keys(porArea).sort().map(a => `${a}:${porArea[a].length}`).join(' ');
+    const cuenta = [1, 2, 3, 4, 5, 6, 7].map(a => `${a}:${(porArea[a] || []).length}`).join(' ');
     console.log(`Reparto de rasgos: ${limpios.length} rasgos repartidos (area:cuantos -> ${cuenta})`);
+
+    // Un area a cero no rompe nada -esa area se escribe como se escribia
+    // antes- pero no deberia pasar: no hay carta que no tenga nada que decir
+    // sobre el miedo o sobre el dinero. Si sale en los registros, es que el
+    // modelo no ha mirado bien o que el filtro de arriba se ha llevado por
+    // delante el unico rasgo que tenia esa area.
+    const aCero = [1, 2, 3, 4, 5, 6, 7].filter(a => !porArea[a] || porArea[a].length === 0);
+    if (aCero.length > 0) {
+      console.warn(`SE ENTREGA CON AVISOS — Reparto de rasgos: las areas ${aCero.join(', ')} se han quedado sin ninguno y se escriben sin reparto`);
+    }
+
     return porArea;
 
   } catch (err) {
@@ -1420,9 +1424,10 @@ ${cartaTexto}`;
 LO SUYO QUE TE TOCA CONTAR A TI EN ESTA AREA:
 ${fichas}
 
-Esto sale de su carta y se ha repartido entre las siete areas para que no se cuente dos veces: lo que ves aqui es TUYO, y lo que no ves aqui lo esta contando otra area ahora mismo. Asi que estos los desarrollas tu a fondo, y no te vas a buscar otro tema por tu cuenta aunque en la carta te llame mas fuerte, porque ese seguramente sea el de otra.
-Van repartidos por los bloques que ya tienes -el arranque, hoy, origen, creencias y soltar- cada uno donde le toque, y contados como cuentas todo lo demas: en su vida, sin decir de donde salen y sin nombrarlos como una lista. NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Lo que lee ella son tus parrafos de siempre.
-Y son ${mios.length}: ni uno menos, cada uno con su sitio y su desarrollo, que es lo que hace que el area cuente varias cosas y no una sola dando vueltas.`;
+Esto sale de su carta y se ha repartido entre las siete areas para que no se cuente dos veces: lo que ves aqui es TUYO, y lo que no ves aqui lo esta contando otra area ahora mismo. Son ${mios.length} y van los ${mios.length}, cada uno contado a fondo: eso es lo que hace que el area diga varias cosas y no una sola dando vueltas.
+ESTO ES QUE CONTAR, NO POR DONDE MIRAR. Para explicar cada uno sigues cruzando todo lo que haga falta de su carta, igual que hasta ahora: no es una valla, es el contenido. Lo unico que se te pide es que no te traigas ademas el tema de otra area, porque lo esta contando ella.
+Y NO VAN UNO EN CADA BLOQUE. Cada uno atraviesa el area entera por donde le toca, con los bloques haciendo lo que hacen siempre: como se le nota hoy va en HOY, de donde le viene va en ORIGEN, lo que da por cierto por debajo va en CREENCIAS. Los bloques no cambian de trabajo.
+NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el nombre del rasgo ni su frase se escriben tal cual, ni se presentan como una lista. Lo que ella lee son tus parrafos de siempre.`;
   }
 
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS DIEZ, QUE SON LAS QUE MAS SE ESCAPAN:
