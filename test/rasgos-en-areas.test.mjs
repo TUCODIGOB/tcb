@@ -631,8 +631,8 @@ try {
   // pieza desde fuera y seis que anuncian lo que viene antes de decirlo.
   // Y en 9.300 palabras solo habia nueve preguntas, casi todas la de la
   // casilla: el area le explicaba mucho y no le preguntaba nada.
-  comprobar('se le prohibe explicar el mecanismo en vez de decirlo',
-    /NO LE EXPLIQUES EL MECANISMO: DILE LO QUE LE PASA/.test(sistema));
+  comprobar('se le prohibe contarselo como un aparato en vez de decirselo',
+    /NO SE LO CUENTES COMO UN APARATO: DÍSELO A ELLA/.test(sistema));
   for (const [que, marca] of [
     ['corregir el termino', 'NO CORRIJAS EL TÉRMINO'],
     ['hablar de la pieza', 'NADA DE HABLAR DE LA PIEZA'],
@@ -665,9 +665,9 @@ try {
   // avise antes de decirle algo que va a doler. Eso la prepara y se queda; lo
   // que sobra es anunciar que viene algo especial.
   comprobar('la regla del carraspeo respeta el aviso que si prepara',
-    /El que se queda es prepararla para algo que va a doler, tal como pide QUE SE NOTE QUE HAY ALGUIEN AHÍ/.test(sistema));
+    /Prepararla para algo que va a doler la sostiene, y eso se pide en QUE SE NOTE QUE HAY ALGUIEN AHÍ/.test(sistema));
   comprobar('y sigue prohibiendo anunciar que viene algo especial',
-    /El que sobra es anunciar que viene algo especial/.test(sistema));
+    /Anunciar que viene algo especial no prepara nada, solo retrasa/.test(sistema));
 
   // Y el prompt no puede ensenar lo que prohibe. El fragmento de ASI SUENA
   // CUANDO ESTA BIEN carraspeaba antes de perdonar ("Y quiero que te quede
@@ -693,7 +693,7 @@ try {
     ['carraspear', /(aquí hay algo que|ahí aparece algo|quiero que te quede clara una cosa)/i],
     ['abusar de "casi nadie"', /(casi nadie|casi nunca|muy poca gente)/i],
   ];
-  const REGLA = sistema.slice(sistema.indexOf('NO LE EXPLIQUES EL MECANISMO'),
+  const REGLA = sistema.slice(sistema.indexOf('NO SE LO CUENTES COMO UN APARATO'),
                               sistema.indexOf('- Vigila especialmente la primera frase'));
   for (const [que, rx] of TICS) {
     // Lo que llega a las areas, quitando el bloque donde los tics se nombran.
