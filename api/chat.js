@@ -1188,6 +1188,7 @@ Fíjate en lo que hace ese fragmento, porque es lo que hay que reproducir: abre 
   "No estás cansada de hacer cosas, eso lo llevas bien y lo has llevado siempre. Estás cansada de que hacerlas sea la única prueba que te vale de que mereces estar donde estás. El día que aceptes una sola prueba más, cualquier otra, vas a descubrir que llevabas años pudiendo descansar."
 
 Ese es un cierre: dice algo que no se había dicho en toda el área, lo dice entero, no presenta nada de lo que viene después, y termina enseñándole lo que se le abre.
+DE AHÍ SE COGE LO QUE HACE, NO CÓMO ESTÁ ARMADO. En los estudios del 25 y el 26 de agosto los catorce cierres calcaron su forma: "No es que X..., el día que Y vas a descubrir Z", los catorce. Leídos seguidos se ve el molde y el golpe se pierde, porque a la cuarta el lector ya sabe cómo va a terminar la frase. Tu área lleva escrita su propia forma de cerrar al final de su encargo, en POR DÓNDE VA ESTA ÁREA.
 
 ESCENA REAL OBLIGATORIA:
 Tienes que incluir una escena concreta, específica y visual que el lector reconozca de inmediato como propia. No vale una situación genérica ni tonta. Debe ser una escena tan concreta que el lector diga "joder, esto me pasa literalmente".
@@ -1199,9 +1200,10 @@ Ejemplos de escenas BUENAS (úsalas de inspiración, no las copies):
 
 Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas ("cuando te sientes mal, piensas cosas"), obvias ("a veces dudas de ti mismo") o vacías.
 
-La escena ocupa uno o dos párrafos completos, sin avisar nunca de que es un ejemplo ni llamarla ejemplo: se presenta como un rato suyo, no como una ilustración de lo que le estás explicando.
+La escena ocupa uno o dos párrafos completos y se presenta como un rato suyo, no como una ilustración de lo que le estás explicando: se la invita a mirarlo, pero no se le llama "ejemplo" ni se anuncia lo que va a demostrar.
 LA ESCENA SE ESCRIBE EN UN SITIO Y EN UNO SOLO: en la casilla "escena", que se explica en CÓMO SE ENTREGA EL ÁREA. NO la escribas además dentro de los bloques de texto. Está en su casilla y el código la coloca donde tú digas, así que si además la copias en un párrafo el cliente se la encuentra impresa dos veces seguidas, palabra por palabra. Eso ya ha pasado en tres áreas del mismo informe.
-LA ESCENA SE PRESENTA, NO SE SUELTA. Soltada de golpe, el lector se encuentra de pronto en una cocina a las once de la noche sin saber por qué le están contando eso. Delante va una frase que la abre sin explicarla, del tipo "para que veas de qué te hablo, déjame contarte un rato tuyo, uno normal de esos que ni recuerdas al día siguiente". Y detrás, cuando la escena termina, otra frase que recoge lo que acaba de leer y le pone nombre. Esas dos frases van fuera de la escena, en el bloque de texto que le toque, y no dentro de la casilla "escena".
+LA ESCENA SE PRESENTA, NO SE SUELTA, Y LA INVITACIÓN VA DENTRO DE SU CASILLA. Soltada de golpe, el lector se encuentra de pronto en una cocina a las once de la noche sin saber por qué le están contando eso. Antes se pedía esa frase de entrada en el bloque de texto de al lado y no llegaba nunca: en los estudios del 25 y el 26 de agosto las catorce escenas empezaban a pelo, con la hora. Así que va DENTRO de la casilla "escena", como su primera media línea, del tipo "déjame que te enseñe un rato tuyo, de esos que ni recuerdas al día siguiente" o "para que veas de qué te hablo". Corta, distinta en cada área, y sin llamarla ejemplo ni explicar lo que va a demostrar.
+Y detrás, cuando la escena termina, otra frase que recoge lo que acaba de leer y le pone nombre. Esa sí va fuera, en el bloque de texto que le toque.
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
 Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos"). Los subtítulos que sí se escriben son otra cosa distinta y se explican en CÓMO SE ENTREGA EL ÁREA MARCADA: nunca llevan el nombre de una de estas etiquetas.
@@ -1315,7 +1317,7 @@ Un área se lee como un capítulo, y un capítulo no empieza en mitad de la fras
 Se abre ancho y se cierra sobre ella. Dos o tres frases que sitúan el tema desde fuera, desde algo que le pasa a mucha gente o desde una situación que cualquiera reconoce, y solo entonces se estrecha hasta ella. La forma es esa: "Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen... Tú eres esa persona." Las palabras las pones tú y cambian en cada área.
 Que sitúe no significa que anuncie: sigue estando PROHIBIDO decir lo que vas a contar ("en esta parte vamos a ver", "hay algo que tienes que entender").
 Y es la ÚNICA parte del área donde vale algo que le pasa a mucha gente, precisamente porque en dos frases se estrecha hasta ella y deja de valerle a nadie más. En cuanto has entrado en ella vuelve a mandar la regla de siempre: nada que le pudieras leer a otra persona y también le tocara.
-Las siete van seguidas, así que ninguna abre como otra: una entra por una situación que vive mucha gente, otra por una pregunta, otra por algo que se da por cierto de esa parcela de la vida y no lo es, otra por un momento concreto del día. Y ninguna de las siete empieza por "hay algo", "hay una escena" ni "imagina que".
+Las siete van seguidas, así que ninguna abre como otra. NO ELIJAS TÚ POR DÓNDE: cada área lleva escrita su puerta al final de su encargo, en POR DÓNDE VA ESTA ÁREA, y es la que usas. Si eliges tú, las siete acaban entrando por el mismo sitio, porque las siete leen esto mismo. Y ninguna empieza por "hay algo", "hay una escena" ni "imagina que".
 
 CÓMO SE ENTREGA EL ÁREA (ES LO QUE LA MAQUETA):
 El área no se entrega como un texto seguido: se entrega por casillas, y cada casilla se imprime distinta. Novecientas palabras del mismo tamaño y del mismo color son cuatro páginas de muro gris, y el ojo se cansa antes de llegar a lo que la persona ha pagado.
@@ -1463,6 +1465,77 @@ ${cartaTexto}`;
     : sexo === 'hombre'
       ? 'un HOMBRE. Todo en masculino: solo, cansado, el mismo. Nunca en femenino.'
       : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos, dale la vuelta a la frase cuando haga falta.';
+
+  // POR DONDE ABRE, POR DONDE ENTRA AL EJEMPLO Y POR DONDE CIERRA CADA AREA.
+  //
+  // EL PROBLEMA. Las siete areas las escriben siete llamadas que no se ven
+  // entre ellas, y todas leen el mismo prompt con el mismo ejemplo. Asi que
+  // las siete eligen la misma forma. En los estudios del 25 y el 26 de agosto:
+  //
+  //   - las 12 areas abrieron con "Hay personas que..." o "Casi todo el mundo..."
+  //   - las 14 escenas empezaron con la hora seca, y 9 de las 14 pasaban a
+  //     las once de la noche
+  //   - los 14 cierres calcaron la forma del ejemplo del prompt: "No es que
+  //     X... el dia que Y, vas a descubrir Z"
+  //
+  // Pedirle que varie no sirve: las siete leen la misma peticion. Por eso a
+  // cada una se le da AQUI su propia forma, y como cada area lee solo la suya,
+  // salen distintas sin tener que fiarse de nada.
+  //
+  // Va en el mensaje, no en el prompt de sistema: cambia por area y el de
+  // sistema tiene que ser identico en las siete para que la cache valga.
+  //
+  // LO QUE NO SE TOCA: que abra ancho y se estreche hasta ella, que la escena
+  // sea concreta y suya, y que el cierre revele y ensene la puerta. Eso lo
+  // sigue mandando el prompt de siempre. Aqui solo se reparte POR DONDE.
+  const MOLDES = {
+    1: {
+      abre: 'por un tipo de persona que cualquiera reconoce de su alrededor ("en cualquier familia hay una que...", "todo el mundo tiene cerca a alguien que...")',
+      cuando: 'un dia cualquiera entre semana, a media manana',
+      cierra: 'con el golpe seco primero, en una frase corta, y la puerta detras',
+    },
+    2: {
+      abre: 'por un gesto pequeno que mucha gente hace sin darse cuenta, contado en dos lineas',
+      cuando: 'un rato muerto de tarde',
+      cierra: 'con una paradoja suya: dos cosas que no encajan entre si y que sin embargo son la misma',
+    },
+    3: {
+      abre: 'por una pregunta directa al lector, y la respuesta llega en la frase siguiente',
+      cuando: 'de madrugada, desvelada',
+      cierra: 'nombrando lo que de verdad teme, que no es lo que ella cree que teme',
+    },
+    4: {
+      abre: 'por una frase hecha que todo el mundo repite y casi nadie ha pensado del todo',
+      cuando: 'un domingo por la tarde',
+      cierra: 'con una imagen concreta que se le quede grabada, no con una explicacion',
+    },
+    5: {
+      abre: 'por dos maneras opuestas de hacer lo mismo, y ella es una de las dos',
+      cuando: 'un fin de semana, de dia',
+      cierra: 'diciendole en concreto lo que le esta costando eso, con nombre y apellidos',
+    },
+    6: {
+      abre: 'por como funciona un grupo cualquiera: una familia, una oficina, unas amigas',
+      cuando: 'en mitad de algo, con gente delante',
+      cierra: 'poniendo enfrente lo que da y lo que recibe, sin quejarse por ella',
+    },
+    7: {
+      abre: 'por un objeto, una cifra o un gesto concreto con dinero',
+      cuando: 'a plena luz del dia, un dia de cobrar o de gastar',
+      cierra: 'cerrando el estudio entero, porque esta es la ultima area que lee',
+    },
+  };
+
+  function losMoldesDeEstaArea(id) {
+    const m = MOLDES[id];
+    if (!m) return '';
+    return `
+
+POR DONDE VA ESTA AREA (las otras seis van por otro sitio, asi que no busques tu la forma: usa esta):
+- ABRE ${m.abre}. Sigue abriendo ancho y estrechandose hasta ella en dos o tres frases, como siempre: lo que cambia es la puerta por la que entras.
+- EL EJEMPLO PASA ${m.cuando}. Y NO EMPIEZA POR LA HORA: nada de "Son las once de la noche...", "Es domingo por la tarde...". Empieza invitandola a mirarlo, en media linea y en su casilla, y solo despues situas el momento. La escena de verdad va detras y ocupa lo que tenga que ocupar.
+- CIERRA ${m.cierra}. Y NO EMPIECES EL CIERRE por "No es que...", "No estas cansada de..." ni "No te falta...": esas tres son la forma que sale sola, la usan todas y se lee a plantilla.`;
+  }
 
   // LOS RASGOS QUE LE TOCAN A ESTA AREA, sacados de las dos listas.
   //
@@ -2214,7 +2287,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
         system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
         messages: [{
           role: 'user',
-          content: `${contextoPersona}\n\n${area.prompt}${losRasgosDeEstaArea(listas, area.id)}\n\n${recordatorioFinal}${repaso}`,
+          content: `${contextoPersona}\n\n${area.prompt}${losMoldesDeEstaArea(area.id)}${losRasgosDeEstaArea(listas, area.id)}\n\n${recordatorioFinal}${repaso}`,
         }],
       }),
     });

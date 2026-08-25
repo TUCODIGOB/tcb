@@ -407,6 +407,57 @@ try {
   comprobar('y las fichas conservan nombre y frase',
     fSin.length > 0 && Boolean(fSin[0].nombre) && Boolean(fSin[0].descripcion) && !fSin[0].explicacion);
 
+  // ── 12. CADA AREA ABRE, ENTRA Y CIERRA POR SU SITIO ───────────
+  //
+  // Las siete las escriben siete llamadas que no se ven entre ellas y todas
+  // leen el mismo prompt, asi que si la forma la elige el modelo, las siete
+  // eligen la misma. Paso en los estudios del 25 y el 26 de agosto: las 12
+  // areas abrieron igual, las 14 escenas empezaron con la hora y los 14
+  // cierres calcaron el ejemplo del prompt.
+  //
+  // Por eso cada area lleva escrita SU forma. Aqui se comprueba que le llega,
+  // que no hay dos areas con la misma, y que sigue prohibido lo que salia solo.
+  await generar();
+  const moldes = [];
+  for (let n = 1; n <= 7; n++) {
+    const m = mensajeDelArea(n);
+    const i = m.indexOf('POR DONDE VA ESTA AREA');
+    comprobar(`el area ${n} recibe su forma`, i >= 0);
+    if (i >= 0) moldes.push(m.slice(i, i + 900));
+  }
+  comprobar('y las siete formas son distintas entre si',
+    new Set(moldes).size === 7, new Set(moldes).size + ' distintas de 7');
+
+  const abre = moldes.map(t => (t.match(/- ABRE ([^.]{10,60})/) || [])[1]);
+  comprobar('ninguna abre por la misma puerta que otra',
+    new Set(abre).size === 7, new Set(abre).size + ' puertas distintas de 7');
+
+  const cuando = moldes.map(t => (t.match(/EL EJEMPLO PASA ([^.]{5,50})/) || [])[1]);
+  comprobar('el ejemplo de cada area pasa en un momento distinto',
+    new Set(cuando).size === 7, new Set(cuando).size + ' momentos de 7');
+  comprobar('y no todos de noche',
+    cuando.filter(x => /noche|madrugada/.test(String(x))).length <= 2,
+    cuando.filter(x => /noche|madrugada/.test(String(x))).length + ' de noche de 7');
+
+  comprobar('a todas se les prohibe empezar el ejemplo por la hora',
+    moldes.every(t => t.includes('NO EMPIEZA POR LA HORA')));
+  comprobar('y empezar el cierre con la formula que salia sola',
+    moldes.every(t => t.includes('No es que...')));
+
+  const cierra = moldes.map(t => (t.match(/- CIERRA ([^.]{10,70})/) || [])[1]);
+  comprobar('ninguna cierra de la misma forma que otra',
+    new Set(cierra).size === 7, new Set(cierra).size + ' formas de 7');
+
+  // Y el prompt compartido ya no le dice que elija el la forma, que es lo que
+  // hacia que las siete eligieran la misma.
+  const sistema = deArea()[0].sistema;
+  comprobar('el prompt compartido manda al molde, no le deja elegir',
+    /NO ELIJAS TÚ POR DÓNDE/.test(sistema));
+  comprobar('y avisa de que el ejemplo de cierre no se calca',
+    /DE AHÍ SE COGE LO QUE HACE, NO CÓMO ESTÁ ARMADO/.test(sistema));
+  comprobar('la invitacion de la escena va DENTRO de su casilla',
+    /LA INVITACIÓN VA DENTRO DE SU CASILLA/.test(sistema));
+
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);
   console.error(err.stack);
