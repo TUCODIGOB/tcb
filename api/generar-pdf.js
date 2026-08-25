@@ -929,28 +929,26 @@ export default async function handler(req, res) {
       // Lo que ocupa el titulo de una lista con su rayita.
       var LO_QUE_OCUPA_UN_TITULO = 13 + 3.2 + 9.8;
 
-      // Y lo que ocupa una ficha entera. Se mide de verdad, no a ojo: la
-      // altura depende de en cuantas lineas caiga cada trozo, y de si la
-      // etiqueta del area cabe detras del porque o tiene que bajar sola.
+      // Y lo que ocupa una ficha entera. Se mide de verdad, no a ojo: la frase
+      // se parte en las lineas que haga falta -dos es lo que se pide, pero
+      // pedirlo no es garantizarlo- y de eso depende el alto.
       //
       // Hace falta saberlo en DOS sitios: antes de pintar la ficha, para no
       // partirla entre dos paginas, y antes de abrir la segunda lista, para no
       // dejar su titulo solo al pie. Con un numero fijo para lo segundo (60 mm)
       // quedaba una ventana de 9,5 mm en la que el titulo se escribia y la
       // primera ficha se iba a la pagina siguiente.
+      //
+      // La ficha son tres cosas, una debajo de otra: el nombre, la frase y su
+      // area. Habia una cuarta, el porque, y la etiqueta del area iba pegada al
+      // final de su ultima linea o bajaba sola si no cabia. Ya no: el porque se
+      // cuenta en su area, que son cuatro paginas para eso, y la etiqueta tiene
+      // su propia linea siempre.
       function loQueOcupaLaFicha(rasgo) {
         doc.setFont('Roboto', 'normal');
         doc.setFontSize(12);
         var lineasD = doc.splitTextToSize(rasgo.descripcion || '', 170).length;
-        doc.setFont('Roboto', 'italic');
-        doc.setFontSize(11);
-        var lineasP = doc.splitTextToSize(rasgo.explicacion || '', 170);
-        var ultimaP = lineasP.length > 0 ? lineasP[lineasP.length - 1] : '';
-        var acaba = 22 + doc.getTextWidth(ultimaP);
-        doc.setFont('Roboto', 'bold');
-        var etiquetaDetras = lineasP.length > 0
-          && (acaba + doc.getTextWidth(' — ' + areaTitles[0].tit)) <= 192;
-        return 6.5 + lineasD * 6.5 + lineasP.length * 6 + (etiquetaDetras ? 0 : 6);
+        return 6.5 + lineasD * 6.5 + 6;
       }
 
       var primeraLista = true;
@@ -983,38 +981,25 @@ export default async function handler(req, res) {
 
         for (var ri = 0; ri < laLista.rasgos.length; ri++) {
           var rasgo = laLista.rasgos[ri];
-          // CADA TROZO SE MIDE CON SU PROPIA LETRA.
+          // LA FRASE SE MIDE CON SU PROPIA LETRA.
           //
           // splitTextToSize parte el texto con el tamaño que este puesto en
-          // ese momento, no con el que se va a pintar. Aqui se median los dos
-          // con la letra que hubiera quedado de la ficha anterior, asi que las
+          // ese momento, no con el que se va a pintar. Aqui se media con la
+          // letra que hubiera quedado de la ficha anterior, asi que las
           // lineas salian calculadas para un tamaño y escritas en otro: con
           // letra pequeña colaba de milagro, y a 12 se sale del margen.
           doc.setFont('Roboto', 'normal');
           doc.setFontSize(12);
           var dl = doc.splitTextToSize(rasgo.descripcion || '', 170);
-          doc.setFont('Roboto', 'italic');
-          doc.setFontSize(11);
-          var el = doc.splitTextToSize(rasgo.explicacion || '', 170);
 
           // A QUE AREA PERTENECE, que es lo que ata la ficha al informe: sin
           // esto son treinta frases sueltas sobre ella; con esto, cada una
-          // remite a las paginas donde eso se le ha contado entero. Va pegada
-          // al final del porque, en dorado, como " — AMOR".
+          // remite a las paginas donde eso se le ha contado entero. Va debajo
+          // de la frase, en su propia linea y en dorado, como "AMOR".
           var cual = Number(rasgo.area);
           var elArea = areaTitles[(cual >= 1 && cual <= 7 ? cual : 1) - 1];
-          var laEtiqueta = ' — ' + elArea.tit;
 
-          // Y hay que saber ANTES de pintar si le va a caber detras de la
-          // ultima linea, porque de eso depende lo que ocupa la ficha entera.
-          doc.setFont('Roboto', 'italic');
-          doc.setFontSize(11);
-          var ultima = el.length > 0 ? el[el.length - 1] : '';
-          var acabaEn = 22 + doc.getTextWidth(ultima);
-          doc.setFont('Roboto', 'bold');
-          var cabeDetras = el.length > 0 && (acabaEn + doc.getTextWidth(laEtiqueta)) <= 192;
-
-          // La ficha entera va junta: el nombre de una y la explicacion de
+          // La ficha entera va junta: el nombre de una y la frase de
           // otra en paginas distintas se lee como un error de imprenta.
           //
           // La cuenta la hace loQueOcupaLaFicha y no se repite aqui: escrita
@@ -1034,23 +1019,13 @@ export default async function handler(req, res) {
           doc.setTextColor(60, 60, 60);
           for (var dli = 0; dli < dl.length; dli++) { doc.text(dl[dli], 22, pyRasgos); pyRasgos += 6.5; }
 
-          doc.setFont('Roboto', 'italic');
-          doc.setFontSize(11);
-          doc.setTextColor(100, 100, 100);
-          for (var eli = 0; eli < el.length; eli++) { doc.text(el[eli], 22, pyRasgos); pyRasgos += 6; }
-
-          // La etiqueta, detras de la ultima linea del porque. Si esa linea
-          // llega demasiado a la derecha no cabe, y entonces baja sola a la
-          // linea siguiente pegada al margen: sacarla del papel no es opcion.
+          // La etiqueta del area, en su linea y a la misma sangria que la
+          // frase: el nombre, la frase y el area, una debajo de otra.
           doc.setFont('Roboto', 'bold');
           doc.setFontSize(11);
           doc.setTextColor(207, 177, 128);
-          if (cabeDetras) {
-            doc.text(laEtiqueta, acabaEn, pyRasgos - 6);
-          } else {
-            doc.text(laEtiqueta, 192, pyRasgos, { align: 'right' });
-            pyRasgos += 6;
-          }
+          doc.text(elArea.tit, 22, pyRasgos);
+          pyRasgos += 6;
 
           // EL SEPARADOR ENTRE FICHAS. Sin el, treinta fichas seguidas se leen
           // como un muro y no se ve donde acaba una y empieza la siguiente.
@@ -1059,7 +1034,7 @@ export default async function handler(req, res) {
           // EL AIRE, IGUAL POR ARRIBA QUE POR ABAJO.
           //
           // No son el mismo numero porque no se mide desde el mismo sitio: por
-          // arriba se cuenta desde la ultima linea del porque, que baja 1,5 mm
+          // arriba se cuenta desde la etiqueta del area, que baja 1,5 mm
           // por debajo de su raya; por abajo, hasta el nombre de la ficha
           // siguiente, que sube 3 mm por encima de la suya. Con 8 y 9,5 queda
           // el mismo hueco blanco a los dos lados. Con 4 y 6, que es lo que

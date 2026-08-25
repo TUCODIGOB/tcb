@@ -159,7 +159,7 @@ globalThis.fetch = async (url, opts = {}) => {
       // area, que es justo la que esta prueba cronometra.
       return { ok: true, status: 200, json: async () => ({
         stop_reason: 'end_turn',
-        content: [{ type: 'text', text: '{"fortalezas":[],"desafios":[],"explicaciones":[]}' }],
+        content: [{ type: 'text', text: '{"fortalezas":[],"desafios":[]}' }],
       }) };
     }
     llamadasAlModelo++;

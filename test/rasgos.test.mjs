@@ -130,12 +130,11 @@ const CATALOGO = [
   ['Poca costumbre de recibir', 'Te incomoda que te cuiden y cambias de tema en cuanto empieza'],
 ];
 
+// Sin una sola palabra de astrologo: si el catalogo de mentira las llevara,
+// el detector saltaria en todas las pruebas y no serviria ninguna.
 const unRasgo = (i, area) => ({
   nombre: CATALOGO[i % CATALOGO.length][0],
   descripcion: CATALOGO[i % CATALOGO.length][1],
-  // Sin una sola palabra de astrologo: si el catalogo de mentira las llevara,
-  // el detector saltaria en todas las pruebas y no serviria ninguna.
-  explicacion: `De donde le viene esto, contado en una frase o dos como se lo contaria alguien que la conoce bien y sabe por que hace lo que hace. Ficha ${i}.`,
   area,
 });
 
@@ -152,7 +151,9 @@ const RASGOS = {
 const RASGOS_CON_REPETIDO = {
   fortalezas: [
     ...Array.from({ length: 13 }, (_, i) => unRasgo(i, (i % 7) + 1)),
-    { nombre: 'Instintos para los peligros', descripcion: 'Hueles los problemas mucho antes de que se vean, y casi siempre aciertas', explicacion: 'Esta ficha dice lo mismo que "Instinto para el peligro", que ya esta mas arriba en esta misma lista.', area: 3 },
+    // Dice lo mismo que "Instinto para el peligro", que ya esta mas arriba
+    // en esta misma lista.
+    { nombre: 'Instintos para los peligros', descripcion: 'Hueles los problemas mucho antes de que se vean, y casi siempre aciertas', area: 3 },
   ],
   desafios: Array.from({ length: 16 }, (_, i) => unRasgo(i + 18, (i % 7) + 1)),
 };
@@ -163,27 +164,25 @@ const RASGOS_REPETIDO_CRUZADO = {
   fortalezas: Array.from({ length: 14 }, (_, i) => unRasgo(i, (i % 7) + 1)),
   desafios: [
     ...Array.from({ length: 15 }, (_, i) => unRasgo(i + 18, (i % 7) + 1)),
-    { nombre: 'Aguantes fuera de lo normal', descripcion: 'Sigues de pie en los sitios donde cualquiera se habria bajado hace tiempo', explicacion: 'Esto es lo mismo que "Aguante fuera de lo normal", que esta en la lista de fortalezas: el mismo rasgo puesto en las dos listas a la vez.', area: 2 },
+    // Lo mismo que "Aguante fuera de lo normal", que esta en la lista de
+    // fortalezas: el mismo rasgo puesto en las dos listas a la vez.
+    { nombre: 'Aguantes fuera de lo normal', descripcion: 'Sigues de pie en los sitios donde cualquiera se habria bajado hace tiempo', area: 2 },
   ],
 };
 
 // Y una lista escrita como salio de verdad el 24 de agosto: 25 de 28 fichas
 // nombrando planetas, signos y casas. Es lo que la clienta no ha pagado.
-// LAS PALABRAS DE ASTROLOGO VAN EN LA DESCRIPCION, NO EN LA EXPLICACION.
 //
-// La explicacion ya no se pide en esta llamada -llega en una segunda, la de
-// explicarLosRasgos- asi que aqui solo puede colarse un planeta por el nombre
-// o por la descripcion, que es lo unico que el modelo escribe en esta vuelta.
-// El detector de las explicaciones tiene su propia prueba en
-// test/rasgos-en-areas.test.mjs.
+// La ficha son dos casillas escritas, el nombre y la frase, asi que por ahi
+// es por donde se puede colar un planeta y por ahi se mira.
 const RASGOS_DE_ASTROLOGO = {
   fortalezas: [
-    { nombre: 'Sanadora practica del dia a dia', descripcion: 'El sol y Mercurio en la casa del trabajo te dan un don para arreglar lo que esta roto', explicacion: '', area: 1 },
-    { nombre: 'Intuicion para leer a la gente', descripcion: 'Venus bien conectada con la luna te da una calidez que la gente nota enseguida', explicacion: '', area: 6 },
+    { nombre: 'Sanadora practica del dia a dia', descripcion: 'El sol y Mercurio en la casa del trabajo te dan un don para arreglar lo que esta roto', area: 1 },
+    { nombre: 'Intuicion para leer a la gente', descripcion: 'Venus bien conectada con la luna te da una calidez que la gente nota enseguida', area: 6 },
     ...Array.from({ length: 12 }, (_, i) => unRasgo(i, (i % 7) + 1)),
   ],
   desafios: [
-    { nombre: 'Autocritica que pesa de mas', descripcion: 'El sol enfrentado a Saturno te hizo crecer creyendo que el carino habia que ganarselo', explicacion: '', area: 2 },
+    { nombre: 'Autocritica que pesa de mas', descripcion: 'El sol enfrentado a Saturno te hizo crecer creyendo que el carino habia que ganarselo', area: 2 },
     ...Array.from({ length: 13 }, (_, i) => unRasgo(i + 18, (i % 7) + 1)),
   ],
 };
@@ -222,18 +221,6 @@ globalThis.fetch = async (url, opts = {}) => {
   enviadas.push(cuerpo);
 
   const sistema = String(Array.isArray(cuerpo.system) ? (cuerpo.system[0] || {}).text || '' : cuerpo.system || '');
-
-  // LAS EXPLICACIONES DE LAS FICHAS, que se piden en una segunda llamada y
-  // abren el prompt con las mismas palabras que la lista. Se distinguen por el
-  // esquema, que es lo unico inequivoco: las explicaciones piden
-  // "explicaciones" y la lista pide "fortalezas" y "desafios". Aqui no se
-  // miden -tienen su propia prueba, test/rasgos-en-areas.test.mjs- y se les
-  // contesta vacio para que no toquen nada de lo que esta si mide. Sin esta
-  // rama caerian en la rama de la lista y descuadrarian su cuenta de llamadas.
-  const pideLasExplicaciones = Boolean(cuerpo.output_config?.format?.schema?.properties?.explicaciones);
-  if (pideLasExplicaciones) {
-    return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: '{"explicaciones":[]}' }] }) };
-  }
 
   if (sistema.startsWith('Eres la misma experta')) {
     laListaYaEstabaPedida = true;
@@ -391,11 +378,13 @@ try {
   comprobar('una lista buena no se pide dos veces',
     vecesQueSeHaPedidoLaLista === 1, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   const uno = r.body?.rasgos?.fortalezas?.[0];
-  // Tres, no cuatro: la explicacion ya no se pide aqui. Llega en una segunda
-  // llamada que corre a la vez que las areas, para que estas no esperen por
-  // ella. Ver explicarLosRasgos en api/chat.js.
+  // Tres, y ninguna mas: el nombre, la frase y su area. Hubo una cuarta, el
+  // porque, y se quito porque eso ya lo cuenta entero su area.
   comprobar('cada rasgo llega con sus tres casillas',
     Boolean(uno?.nombre && uno?.descripcion && uno?.area >= 1 && uno?.area <= 7));
+  comprobar('y con ninguna mas',
+    JSON.stringify(Object.keys(uno || {}).sort()) === JSON.stringify(['area', 'descripcion', 'nombre']),
+    Object.keys(uno || {}).join(', '));
 
   // ── 5. EL TONO ES EL MISMO QUE EL DE LAS ÁREAS ──────────────────
   //
@@ -867,9 +856,9 @@ export default function Stripe() {
 
     // ── QUE NADA SE SALGA DEL PAPEL ─────────────────────────────────
     //
-    // La etiqueta del área va pegada al final del porqué, así que dónde cae
-    // depende de dónde acabe esa última línea. Si la cuenta falla, se sale
-    // por el margen derecho, y eso no se ve hasta que alguien abre el PDF.
+    // Una frase larga se parte en las líneas que hagan falta y la ficha crece
+    // hacia abajo. Si la cuenta de lo que ocupa falla, se sale por el pie o
+    // por el margen, y eso no se ve hasta que alguien abre el PDF.
     //
     // No basta con mirar dónde EMPIEZA cada texto: hay que saber dónde acaba,
     // y para eso se usa la tabla de anchos que el propio PDF lleva dentro. Se
@@ -899,11 +888,11 @@ export default function Stripe() {
       return anchos;
     };
 
-    // Se mira SOLO el texto dorado, que es el que puede salirse: la etiqueta
-    // del área es lo único que se coloca a mano en una x calculada. Y además
-    // el dorado va siempre en negrita, que es de donde salen los anchos
-    // mayores de la tabla, así que para él la cuenta es exacta. Medir con esa
-    // tabla un texto en cursiva daría 4% de más y saltarían falsas alarmas.
+    // Se mira SOLO el texto dorado -los títulos de las dos listas y la
+    // etiqueta del área de cada ficha- porque va siempre en negrita, que es de
+    // donde salen los anchos mayores de la tabla, así que para él la cuenta es
+    // exacta. Medir con esa tabla un texto en cursiva daría 4% de más y
+    // saltarían falsas alarmas.
     const DORADO = /0\.81\d* 0\.69\d* 0\.50\d* rg/;
     const loQueSeSale = (pdfTxt) => {
       const MM = 72 / 25.4, anchos = anchoDeCadaLetra(pdfTxt), fuera = [];
@@ -941,20 +930,20 @@ export default function Stripe() {
       return fuera;
     };
 
-    // Explicaciones de largos muy variados, para que la última línea acabe en
-    // todas las posiciones posibles y se pruebe también el caso en que la
-    // etiqueta NO cabe detrás y tiene que bajar sola.
+    // Frases de largos muy variados, para que la ficha caiga en una línea, en
+    // dos y también en cuatro. Dos es el tope que pide el prompt, pero pedirlo
+    // no es garantizarlo: una frase que se pase no puede descuadrar la página.
     const RASGOS_DE_TODOS_LOS_LARGOS = {
       fortalezas: Array.from({ length: 14 }, (_, i) => ({
         nombre: 'Ficha numero ' + i,
-        descripcion: 'Una frase de descripcion que ocupa lo suyo y cambia de largo ' + 'x'.repeat(i % 9),
-        explicacion: 'De donde le viene contado en frases que cambian de largo para mover el final de la ultima linea ' + 'y'.repeat((i * 7) % 70),
+        descripcion: 'Una frase de descripcion que ocupa lo suyo y cambia de largo '
+          + 'palabra '.repeat((i * 4) % 36),
         area: (i % 7) + 1,
       })),
       desafios: Array.from({ length: 16 }, (_, i) => ({
         nombre: 'Otra ficha ' + i,
-        descripcion: 'Descripcion distinta que tambien cambia de largo ' + 'z'.repeat((i * 3) % 11),
-        explicacion: 'Otro porque distinto, con su largo propio para mover el final de la ultima linea ' + 'w'.repeat((i * 11) % 65),
+        descripcion: 'Descripcion distinta que tambien cambia de largo '
+          + 'palabra '.repeat((i * 7) % 38),
         area: (i % 7) + 1,
       })),
     };
@@ -994,12 +983,17 @@ export default function Stripe() {
     // Por eso antes de abrir la lista se mide lo que ocupa el título MÁS su
     // primera ficha entera, medida de verdad. Con un número fijo quedaba una
     // ventana estrecha en la que esto pasaba.
+    //
+    // La ficha mas alta que cabe pidiendo lo que se pide: treinta palabras,
+    // que es el tope del prompt, y dos lineas impresas.
     const FICHA_ALTA = (i) => ({
       nombre: 'Ficha alta ' + i,
-      descripcion: 'Una frase de descripcion de veinticinco palabras largas que ocupa dos lineas enteras del ancho disponible sin llegar nunca a tres',
-      explicacion: 'De donde le viene contado con sesenta palabras, que es el tope del prompt, para que ocupe cuatro lineas completas del ancho disponible y la ficha sea todo lo alta que puede llegar a ser en el peor de los casos posibles.',
+      descripcion: 'Una frase de descripcion de treinta palabras justas, que es el tope que pide el prompt, y que ocupa las dos lineas enteras del ancho sin llegar a la tercera',
       area: (i % 7) + 1,
     });
+    // Y una frase de las lineas que se le pidan, para mover en saltos de 6,5 mm
+    // el sitio donde acaba la primera lista. Once palabras por linea, medidas.
+    const fraseDe = (lineas) => 'Descripcion que crece ' + 'palabra '.repeat((lineas - 1) * 11);
     const titulosSolos = (pdfTxt) => {
       const MM3 = 72 / 25.4;
       const hojas2 = [...pdfTxt.matchAll(/stream\r?\n([\s\S]*?)\r?\nendstream/g)]
@@ -1019,16 +1013,16 @@ export default function Stripe() {
     };
     // La ventana en la que esto pasa es estrecha (unos 9 mm de una página de
     // 216), así que hay que barrer fino o no se ve: se cambia el número de
-    // fichas Y el largo de la última de la primera lista, que mueve el sitio
-    // donde acaba en saltos de 6 y 6,5 mm. Entre las dos cosas, el final de la
-    // lista 1 cae en casi cualquier altura de la página.
+    // fichas Y las líneas de la última de la primera lista, que mueve el sitio
+    // donde acaba en saltos de 6,5 mm. Una ficha alta con su separador ocupa
+    // 37 mm y las siete líneas barren 39, así que entre las dos cosas el final
+    // de la lista 1 cae en cualquier altura de la página, sin huecos.
     let huerfanos = 0, barridos = 0, desbordes = 0;
     for (const cuantas of [1, 2, 3]) {
-      for (let sobra = 0; sobra <= 7; sobra++) {
+      for (let lineas = 1; lineas <= 7; lineas++) {
         const ultima = {
           nombre: 'La ultima de la primera lista',
-          descripcion: 'Descripcion que crece ' + 'palabra '.repeat(sobra * 3),
-          explicacion: 'Un porque que tambien crece ' + 'palabra '.repeat(sobra * 4),
+          descripcion: fraseDe(lineas),
           area: 1,
         };
         barridos++;
@@ -1037,9 +1031,9 @@ export default function Stripe() {
           desafios: Array.from({ length: 4 }, (_, i) => FICHA_ALTA(i + 40)),
         } });
         huerfanos += titulosSolos(crudo);
-        // Ya que están hechos los 24 PDF, se miran también aquí los desbordes:
+        // Ya que están hechos los 21 PDF, se miran también aquí los desbordes:
         // con un solo reparto la ficha nunca cae en la altura justa en la que
-        // una cuenta mal hecha se nota, y con 24 sí.
+        // una cuenta mal hecha se nota, y con 21 sí.
         desbordes += Math.max(0, loQueSeSale(crudo).length - seSalenSinLista.length);
       }
     }

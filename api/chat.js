@@ -127,7 +127,7 @@ const ESQUEMA_AREA_POR_BLOQUES = {
 //
 // No esta todo el prompt de las areas, solo lo que vale para las dos cosas.
 // Lo que habla de parrafos, de negritas, de la escena o de las 900 palabras
-// no pinta nada en una lista de fichas de tres lineas.
+// no pinta nada en una lista de fichas de dos o tres lineas.
 
 const ESPANOL_DE_ESPANA = `IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresiones latinoamericanas. Usa tú, no vos.`;
 
@@ -159,44 +159,25 @@ const RASGO = {
   type: 'object',
   properties: {
     nombre: { type: 'string', description: 'El nombre o titulo del rasgo/caracteristica, 3-6 palabras. Ej: "Buscador de verdades", "Leal instintiva".' },
-    descripcion: { type: 'string', description: 'Una sola frase (15-25 palabras) que lo describe. Ej: "Necesitas entender el por que de todo lo que te pasa".' },
+    descripcion: { type: 'string', description: 'Una o dos frases (18-30 palabras) que lo describen, y que impresas no pasan de DOS lineas. Ej: "Necesitas entender el por que de todo lo que te pasa antes de poder aceptarlo, y hasta que no lo entiendes no lo sueltas".' },
     area: { type: 'number', enum: [1, 2, 3, 4, 5, 6, 7], description: 'A cual de las siete areas corresponde este rasgo (1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero).' },
   },
   required: ['nombre', 'descripcion', 'area'],
   additionalProperties: false,
 };
 
-// LA EXPLICACION SE PIDE APARTE, Y ESA ES LA CLAVE DE QUE ESTO NO TARDE.
+// LA FICHA ES TRES COSAS Y NADA MAS: NOMBRE, FRASE Y AREA.
 //
 // Las listas mandan: salen ANTES que las siete areas, porque cada area
 // desarrolla los rasgos que le tocan y sin listas no sabe cuales son. Todo el
-// informe espera por esta llamada, asi que se le pide lo minimo -el nombre, una
-// linea y su area- que es lo unico que las areas necesitan.
+// informe espera por esta llamada, asi que lo que se le pide es exactamente lo
+// que se imprime y lo que las areas necesitan, sin una casilla de mas.
 //
-// La explicacion de cada ficha, que son treinta y tantas de 30-60 palabras y es
-// lo que hace larga esta llamada, se pide despues en otra que corre a la vez
-// que las areas y no le hace esperar a nadie. Ver explicarLosRasgos.
-const ESQUEMA_EXPLICACIONES = {
-  type: 'object',
-  properties: {
-    explicaciones: {
-      type: 'array',
-      description: 'La explicacion de cada rasgo, con el mismo numero que tenia en la lista que se te ha dado.',
-      minItems: 1,
-      items: {
-        type: 'object',
-        properties: {
-          n: { type: 'number', description: 'El numero del rasgo, tal y como venia en la lista.' },
-          explicacion: { type: 'string', description: 'Una o dos frases (30-60 palabras) que explican de donde le viene o por que le pasa esto, contado como se lo contaria una persona: de su historia y de su manera de ser. PROHIBIDO nombrar planetas, signos, casas, angulos o la carta. Ej: "Aprendiste pronto que las cosas salian bien si te adelantabas, y aquello funciono: por eso lo sigues haciendo hoy aunque ya no haga falta".' },
-        },
-        required: ['n', 'explicacion'],
-        additionalProperties: false,
-      },
-    },
-  },
-  required: ['explicaciones'],
-  additionalProperties: false,
-};
+// Hubo una cuarta, la explicacion: un porque de 30-60 palabras que se pedia en
+// una segunda llamada. Se ha quitado. De donde le viene cada cosa ya se cuenta
+// entero en su area, que son cuatro paginas para eso, y repetirlo en la ficha
+// era decir dos veces lo mismo y en peor: tres lineas no explican nada que las
+// areas no hayan explicado ya.
 
 // EL MINIMO DE RASGOS QUE LLEVA CADA AREA.
 //
@@ -236,10 +217,8 @@ const NOMBRE_DEL_AREA = {
 const RASGOS_MINIMO = 12;
 const RASGOS_MAXIMO = 18;
 
-// El hueco para escribir la respuesta, y lo usan las dos llamadas de rasgos:
-// la que saca las listas y la que escribe sus explicaciones. Ninguna de las
-// dos llega ni de lejos -treinta y seis fichas ENTERAS, con explicacion y
-// todo, eran unos 6.800 tokens medidos, y ahora eso va repartido en dos-.
+// El hueco para escribir la respuesta. No llega ni de lejos: treinta y seis
+// fichas con su nombre, su frase y su area son unos 3.500 tokens medidos.
 // Se deja de sobra a proposito: el tope no se paga, se paga lo que el modelo
 // escriba, y quedarse corto cuesta la lista entera, que es lo que paso con el
 // de 3.000.
@@ -327,8 +306,8 @@ function bloquesAParrafos(datos) {
 // tenia ninguna. Salia lo que saliera.
 //
 // Y aqui repetir hace mas daño que en ningun otro sitio. Un area repetitiva se
-// nota a medias porque son cuatro paginas de texto corrido; treinta fichas de
-// tres lineas puestas en columna se leen de un vistazo, y dos que dicen lo
+// nota a medias porque son cuatro paginas de texto corrido; treinta fichas
+// cortas puestas en columna se leen de un vistazo, y dos que dicen lo
 // mismo saltan a la cara. Una lista con repetidos vale menos que no tenerla.
 //
 // LO QUE ESTO PILLA Y LO QUE NO. Pilla el mismo nombre escrito dos veces y
@@ -349,13 +328,6 @@ function bloquesAParrafos(datos) {
 // Y no alarga el estudio: la lista se pide a la vez que las areas y termina
 // mucho antes, asi que los reintentos caben dentro de lo que las areas tardan
 // de todas formas.
-// Las explicaciones tambien reintentan, pero menos. Corren a la vez que las
-// siete areas, que tardan lo suyo, asi que un reintento cabe de sobra sin
-// retrasar nada; lo que no puede es alargarse tanto que el informe acabe
-// esperando por ellas. Sin reintento, un corte de red dejaba las treinta y
-// tantas fichas sin su linea, y eso se ve en el PDF.
-const INTENTOS_DE_LAS_EXPLICACIONES = 2;
-
 const INTENTOS_DE_LA_LISTA = 3;
 const REPASOS_DE_LA_LISTA = 1;
 
@@ -493,12 +465,11 @@ const CAZA_AL_ASTROLOGO = new RegExp(
 );
 
 // Devuelve la palabra que se ha colado, o null si la ficha esta limpia. Mira
-// las tres casillas: se cuela sobre todo en la explicacion, pero no solo.
+// las dos casillas que se escriben, que son las dos que se imprimen.
 function laPalabraDeAstrologo(rasgo) {
-  // La explicacion llega en una segunda vuelta, asi que en la primera este
-  // rasgo todavia no la tiene: sin el "|| ''" se colaria la palabra
+  // Con el "|| ''" delante: una ficha a medio montar no mete la palabra
   // "undefined" dentro del texto que se analiza.
-  const txt = `${rasgo.nombre || ''} ${rasgo.descripcion || ''} ${rasgo.explicacion || ''}`
+  const txt = `${rasgo.nombre || ''} ${rasgo.descripcion || ''}`
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
     .toLowerCase();
   const m = CAZA_AL_ASTROLOGO.exec(txt);
@@ -584,8 +555,8 @@ Con lo que salga de aqui se escriben despues las siete areas: a cada area le toc
 ${ESPANOL_DE_ESPANA}
 
 QUE SON LAS DOS LISTAS:
-Fichas cortas. Cada una nombra una cosa suya y la dice en una frase. No son un resumen de nada: son lo que de verdad se ve en su carta, una cosa por ficha.
-(De donde le viene cada una no se escribe aqui: eso se pide despues, en otra vuelta. Aqui solo el nombre, la frase y su area.)
+Fichas cortas. Cada una nombra una cosa suya y la dice en una o dos frases. No son un resumen de nada: son lo que de verdad se ve en su carta, una cosa por ficha.
+Y son eso y nada mas: el nombre, la frase y su area. De donde le viene no va aqui, va en su area, que son cuatro paginas escritas para eso; repetirlo en tres lineas es decir dos veces lo mismo y la segunda peor.
 
 FORTALEZAS (lista 1):
 - Dones, habilidades innatas, ventajas, cosas que hace bien sin darse cuenta
@@ -606,7 +577,7 @@ REGLAS IMPRESCINDIBLES:
 
 ESTRUCTURA DE CADA RASGO:
 - "nombre": 3-6 palabras sin articulos. Ejemplos: "Buscador de verdades", "Leal hasta el agotamiento", "Miedo a decepcionar", "Capacidad de liderazgo", "Tendencia al perfeccionismo".
-- "descripcion": UNA SOLA FRASE, 15-25 palabras, escrita a ella. Ejemplo: "Necesitas entender el porque de todo lo que te pasa antes de poder aceptarlo".
+- "descripcion": UNA O DOS FRASES, 18-30 palabras, escrita a ella. Ese es el tope y no se pasa: impresa ocupa DOS LINEAS como mucho, y lo que se salga de ahi le descuadra la pagina. Ejemplo: "Necesitas entender el porque de todo lo que te pasa antes de poder aceptarlo, y hasta que no lo entiendes no lo sueltas".
 - "area": numero 1-7. El area donde ese rasgo es MAS relevante. Piensalo bien: ese rasgo se va a contar entero en esa area y en ninguna otra, asi que uno puesto donde no va deja su area coja y le roba el sitio a la que si le tocaba.
 
 LA VOZ ES LA MISMA QUE EN LAS SIETE AREAS, Y ESTO VA ANTES QUE CUALQUIER OTRA REGLA:
@@ -657,7 +628,7 @@ IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con num
   //
   // Y va con sonnet, como todo lo demas del informe. Iba con opus, que cuesta
   // cinco veces mas por token: el trabajo dificil es escribir las areas, no
-  // sacar treinta fichas de tres lineas.
+  // sacar treinta fichas cortas.
   const pedirLaLista = async (queCorregir) => {
     const encargo = queCorregir
       ? `Saca las dos listas de esta carta, siguiendo exactamente la estructura del esquema.
@@ -720,15 +691,13 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
     if (!Array.isArray(resultado.fortalezas)) resultado.fortalezas = [];
     if (!Array.isArray(resultado.desafios)) resultado.desafios = [];
 
-    // La explicacion NO se pide aqui: llega despues, en explicarLosRasgos. Se
-    // deja la casilla creada y vacia para que la ficha tenga siempre la misma
-    // forma, la rellene quien la rellene.
+    // La ficha se queda en sus tres casillas y nada mas: lo que llegue de
+    // sobra no viaja hasta el PDF.
     const limpiar = (rasgo) => {
       const area = Number(rasgo.area);
       return {
         nombre: String(rasgo.nombre || '').trim(),
         descripcion: String(rasgo.descripcion || '').trim(),
-        explicacion: '',
         area: (area >= 1 && area <= 7) ? area : 1,
       };
     };
@@ -802,164 +771,6 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
   } catch (err) {
     console.error('Error extrayendo rasgos:', err.message);
     return listaVacia();
-  }
-}
-
-// ══════════════════════════════════════════════════════════════════
-// LAS EXPLICACIONES DE LAS FICHAS, QUE VAN APARTE
-// ══════════════════════════════════════════════════════════════════
-//
-// La lista sale primero y bloquea el informe entero, porque las siete areas
-// necesitan saber que rasgos les tocan. Por eso alli se pide solo el nombre y
-// una linea: lo justo para que las areas arranquen.
-//
-// La explicacion de cada ficha -treinta y tantas de 30 a 60 palabras- es lo
-// que hacia larga aquella llamada. Se pide aqui, y esta corre a la vez que las
-// siete areas, asi que no le hace esperar a nadie.
-//
-// SE LE DAN LOS RASGOS NUMERADOS Y DEVUELVE LOS NUMEROS. Emparejar por orden
-// de llegada seria fiarse de que devuelva exactamente los mismos y en el mismo
-// orden; con el numero delante, una explicacion que falte deja su ficha sin
-// ella y no descoloca a las demas.
-//
-// SI FALLA, LAS FICHAS SALEN SIN EXPLICACION. El PDF las pinta igual con el
-// nombre y su frase: se pierde una linea de cada ficha, no la pagina entera ni
-// el informe.
-async function explicarLosRasgos(nombrePila, sexo, cartaTexto, listas) {
-  const todos = todosLosRasgos(listas);
-  if (todos.length === 0) return listas;
-
-  const trato = sexo === 'mujer'
-    ? 'una MUJER. Toda en femenino.'
-    : 'un HOMBRE. Todo en masculino.';
-
-  const numerados = todos
-    .map(({ r }, i) => `${i + 1}. ${r.nombre} — ${r.descripcion}`)
-    .join('\n');
-
-  const prompt = `Eres la misma experta en psicología, astrología y neurociencia que ha escrito el estudio entero. Las dos listas de rasgos ya están sacadas de su carta. Lo que falta es, de cada una, la frase que explica DE DÓNDE le viene.
-
-${ESPANOL_DE_ESPANA}
-
-QUÉ ES CADA EXPLICACIÓN: una o dos frases (30-60 palabras) que cuentan por qué le pasa eso: el mecanismo con el que funciona por dentro y la consecuencia que tiene hoy en su vida, contado como se lo contaría una persona. Sale de la carta, pero de la carta no se dice NADA.
-Ejemplo: "Analizas todo a fondo antes de decidir, y cuando algo te importa de verdad, ese análisis no se apaga: le das vueltas de noche a una conversación de hace tres días".
-
-REGLAS:
-1. Una explicación por rasgo, con SU número delante. Ni te saltes ninguno ni cambies el orden.
-2. No repitas la descripción con otras palabras: la descripción dice QUÉ le pasa, tú cuentas POR QUÉ le pasa.
-3. Que no se parezcan entre ellas. Treinta explicaciones que empiezan igual se leen de un vistazo y cantan.
-4. LA EXPLICACIÓN DE UN DESAFÍO SIEMPRE DEJA UNA PUERTA. No una frase de ánimo pegada al final: cuentas para qué le sigue sirviendo eso, y ahí mismo se ve por dónde se suelta.
-5. NO TE INVENTES SU INFANCIA. De la carta sale cómo funciona, no lo que le pasó: no sabes cómo era su casa, ni qué vio de pequeña, ni qué le dijeron. Afirmarlo suena precioso hasta que ella lee algo que no le pasó, y entonces deja de creerse el estudio entero.
-   Así que PROHIBIDO abrir con "creciste", "aprendiste de pequeña", "de niña", "en tu casa", "desde joven" o "en algún momento alguien te".
-   Si el origen antiguo hace falta para que se entienda, va como lo que es, una suposición y no un dato: "esto suele venir de...", "a lo mejor viene de...". Una suposición se puede no compartir; un dato falso, no.
-
-${TODO_DE_TU}
-${HABLAR_DE_ELLA_LO_ROMPE}
-
-${PERDONA_ANTES_DE_NOMBRAR}
-
-NI UN NOMBRE DE PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ÁNGULO. NI UNA VEZ.
-Aquí es donde más se cuela de todo el estudio. La carta es de dónde lo sacas, no lo que escribes. Prohibidas esas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Júpiter, Saturno, Urano, Neptuno, Plutón, Quirón, nodo, ascendente, medio cielo, los doce signos, cuadratura, trígono, sextil, oposición, conjunción, aspecto, orbe, retrógrado, carta, carta natal, horóscopo.
-- MAL: "Con Marte en tu casa seis, el trabajo te sale por delante de todo".
-- BIEN: "El trabajo se te pone por delante de todo sin que tú lo decidas, y hasta que no está hecho no te sientas".
-
-${SIN_NOMBRAR_PLANETAS}
-${COMA_ANTES_DE_Y}
-Nada de asteriscos, negritas ni guiones: es texto corrido y la maquetación la pone el PDF.
-No la llames por su nombre en las fichas.
-
-Carta natal:
-${cartaTexto}
-
-Persona: ${trato}
-Nombre de pila: ${nombrePila}
-
-LOS RASGOS, NUMERADOS:
-${numerados}`;
-
-  const pedirLasExplicaciones = async () => {
-    const respuesta = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-5',
-        max_tokens: TOPE_RASGOS,
-        thinking: { type: 'disabled' },
-        output_config: { format: { type: 'json_schema', schema: ESQUEMA_EXPLICACIONES } },
-        system: prompt,
-        messages: [{ role: 'user', content: 'Escribe la explicacion de cada uno de los rasgos, siguiendo exactamente la estructura del esquema.' }],
-      }),
-    });
-
-    if (!respuesta.ok) {
-      const err = new Error(`HTTP ${respuesta.status}`);
-      // Igual que en las areas y en la lista: 429 y 5xx se reintentan, un 401 no.
-      err.temporal = respuesta.status === 429 || respuesta.status >= 500;
-      throw err;
-    }
-
-    const datos = await respuesta.json();
-    const texto = (datos.content || [])
-      .filter(b => b && typeof b.text === 'string')
-      .map(b => b.text)
-      .join('') || '{}';
-    const salida = JSON.parse(texto);
-    return Array.isArray(salida.explicaciones) ? salida.explicaciones : [];
-  };
-
-  try {
-    let lista = null;
-    let fallos = 0;
-    while (fallos < INTENTOS_DE_LAS_EXPLICACIONES) {
-      try {
-        lista = await pedirLasExplicaciones();
-        break;
-      } catch (err) {
-        fallos++;
-        // Un corte de red llega sin marca; se trata como temporal.
-        const temporal = err.temporal !== false;
-        if (!temporal || fallos >= INTENTOS_DE_LAS_EXPLICACIONES) throw err;
-        console.warn(`Explicaciones: intento ${fallos} fallido (${err.message.slice(0, 60)}), reintentando`);
-        await new Promise(r => setTimeout(r, 1500 * fallos));
-      }
-    }
-    if (!lista) return listas;
-
-    let conPalabrota = 0;
-    for (const e of lista) {
-      const n = Number(e && e.n);
-      if (!(n >= 1 && n <= todos.length)) continue;
-      const explicacion = String((e && e.explicacion) || '').trim();
-      if (!explicacion) continue;
-      const destino = todos[n - 1].r;
-      // Una explicacion con un planeta dentro no se entrega: la ficha sale con
-      // su nombre y su frase, que es mejor que impresa con la palabra tecnica.
-      if (laPalabraDeAstrologo({ ...destino, explicacion })) { conPalabrota++; continue; }
-      destino.explicacion = explicacion;
-    }
-
-    if (conPalabrota > 0) {
-      console.warn(`SE ENTREGA CON AVISOS — Explicaciones: ${conPalabrota} nombraban planetas y se han dejado fuera`);
-    }
-    // Se cuentan las fichas que han acabado CON explicacion, no las veces que
-    // se ha escrito una: si el modelo repitiera un numero, escribiria dos veces
-    // sobre la misma ficha y la cuenta diria que estan todas cuando falta una.
-    const conExplicacion = todos.filter(({ r }) => r.explicacion).length;
-    if (conExplicacion < todos.length) {
-      console.warn(`SE ENTREGA CON AVISOS — Explicaciones: ${todos.length - conExplicacion} ficha(s) salen sin explicacion`);
-    }
-    console.log(`Explicaciones escritas: ${conExplicacion} de ${todos.length}`);
-    return listas;
-
-  } catch (err) {
-    // Igual que la lista: de aqui no sale una excepcion. Las fichas se
-    // entregan sin explicacion antes que tumbar un informe ya escrito.
-    console.warn(`Explicaciones: ${err.message.slice(0, 80)} — las fichas salen sin ellas`);
-    return listas;
   }
 }
 
@@ -2720,23 +2531,13 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // area, y despues cada una de las siete se escribe con LOS SUYOS y con
     // ninguno mas. Sin listas, un area no sabe de que tiene que hablar.
     //
-    // Todo el informe espera por esta llamada, y por eso aqui se le pide solo
-    // el nombre y una linea de cada rasgo. La explicacion larga de cada ficha
-    // se pide en explicarLosRasgos, que corre a la vez que las areas.
+    // Todo el informe espera por esta llamada, y es la unica de los rasgos que
+    // hay: la ficha es el nombre, su frase y su area, y con eso ya esta escrita
+    // entera. No queda nada suyo pendiente de una segunda vuelta.
     //
     // Si se cae, devuelve las listas vacias -no lanza nunca- y las siete areas
     // se escriben como se escribian antes de que las listas existieran.
     const listas = await extraerRasgos(nombrePila, sexo, cartaTexto);
-
-    // Y las explicaciones salen ya, sin esperarlas: corren a la vez que las
-    // siete areas y se recogen al final, cuando el texto ya esta escrito.
-    //
-    // Escriben dentro de este mismo "listas", que es el que las siete areas
-    // estan leyendo a la vez. No se pisan: lo unico que tocan es la casilla
-    // "explicacion", y las areas solo leen el nombre, la frase y el area. Si
-    // algun dia la nota del area pasara a usar la explicacion, esto habria que
-    // pensarlo otra vez.
-    const lasExplicaciones = explicarLosRasgos(nombrePila, sexo, cartaTexto, listas);
 
     const resultados = await Promise.all(
       AREAS.map(area => generarArea(area, listas))
@@ -2762,14 +2563,9 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       .map(t => sinLasMarcasInternas(quitarComaAntesDeY(t, nombrePila)).split(SEPARADOR_AREAS).join(''))
       .join(SEPARADOR_AREAS);
 
-    // Las listas ya estan desde el principio; lo que se espera aqui son sus
-    // explicaciones, que han corrido a la vez que las areas y a estas alturas
-    // suelen estar hechas.
-    const rasgos = await lasExplicaciones;
-
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
     // que demuestra que quien pide el PDF es quien tiene la reserva.
-    return res.status(200).json({ texto: textoCompleto, rasgos, token: reserva.token });
+    return res.status(200).json({ texto: textoCompleto, rasgos: listas, token: reserva.token });
 
   } catch (err) {
     console.error('Error generando áreas:', err.message);

@@ -106,14 +106,11 @@ const LISTA_BUENA = {
 let listaQueDevuelve = null;
 let listaFalla = null;
 let loQueElAreaCopia = null;
-let explicacionesQueDevuelve = null;
-let explicacionesFallanVeces = 0;
 const llamadas = [];
 
 function quePide(cuerpo) {
   const props = cuerpo.output_config?.format?.schema?.properties || {};
   if (cuerpo.max_tokens === 16) return 'cache';
-  if (props.explicaciones) return 'explicaciones';
   if (props.fortalezas || props.desafios) return 'lista';
   if (props.bloques) return 'area';
   return 'otra';
@@ -150,19 +147,12 @@ globalThis.fetch = async (url, opts = {}) => {
   const sistema = String(Array.isArray(cuerpo.system)
     ? (cuerpo.system[0] || {}).text || ''
     : cuerpo.system || '');
-  llamadas.push({ tipo, sistema, mensaje: String(cuerpo.messages?.[0]?.content || '') });
+  llamadas.push({ tipo, sistema, mensaje: String(cuerpo.messages?.[0]?.content || ''), esquema: cuerpo.output_config?.format?.schema || null });
 
   if (tipo === 'lista') {
     if (listaFalla) return { ok: false, status: listaFalla, text: async () => 'error de prueba' };
     return { ok: true, status: 200, json: async () => ({
       content: [{ type: 'text', text: JSON.stringify(listaQueDevuelve || LISTA_BUENA) }],
-      stop_reason: 'end_turn', usage: {},
-    }) };
-  }
-  if (tipo === 'explicaciones') {
-    if (explicacionesFallanVeces > 0) { explicacionesFallanVeces--; return { ok: false, status: 503, text: async () => 'error de prueba' }; }
-    return { ok: true, status: 200, json: async () => ({
-      content: [{ type: 'text', text: JSON.stringify({ explicaciones: explicacionesQueDevuelve || [] }) }],
       stop_reason: 'end_turn', usage: {},
     }) };
   }
@@ -226,15 +216,28 @@ try {
     iLista >= 0 && iArea > iLista, `lista en la ${iLista}, primera area en la ${iArea}`);
   comprobar('salen las 7 areas', areasDistintas() === 7, areasDistintas() + ' areas distintas');
 
-  // ── 2. LAS EXPLICACIONES NO BLOQUEAN ──────────────────────────
-  // Van despues de la lista pero a la vez que las areas: si esperasen a que
-  // las areas terminen, sumarian su espera entera al informe.
-  const iExpl = llamadas.findIndex(l => l.tipo === 'explicaciones');
-  comprobar('las explicaciones se piden despues de la lista',
-    iExpl > iLista, `explicaciones en la ${iExpl}`);
-  comprobar('y antes de que terminen las areas (van en paralelo)',
-    iExpl < llamadas.map(l => l.tipo).lastIndexOf('area'),
-    `explicaciones en la ${iExpl}, ultima area en la ${llamadas.map(l => l.tipo).lastIndexOf('area')}`);
+  // ── 2. LOS RASGOS SE PIDEN UNA SOLA VEZ ───────────────────────
+  //
+  // Habia una segunda llamada, la del porque de cada ficha, que corria a la
+  // vez que las areas. El porque se ha quitado -ya se cuenta entero en su
+  // area- y con el esa llamada. Aqui no puede volver a aparecer ninguna que
+  // no sea la cache, la lista y las siete areas.
+  const tipos = llamadas.map(l => l.tipo);
+  comprobar('la lista se pide una sola vez',
+    tipos.filter(t => t === 'lista').length === 1,
+    tipos.filter(t => t === 'lista').length + ' llamada(s)');
+  const queEscribenFichas = llamadas.filter(
+    l => /^Saca las dos listas|rasgos, siguiendo exactamente la estructura/.test(l.mensaje));
+  comprobar('y ninguna otra llamada escribe nada de las fichas',
+    queEscribenFichas.length === 1,
+    queEscribenFichas.map(l => l.mensaje.slice(0, 45)).join(' | '));
+
+  // Y la ficha que sale por la puerta son sus tres casillas y ninguna mas.
+  const ficha1 = r1.body?.rasgos?.fortalezas?.[0];
+  comprobar('cada ficha llega con nombre, frase y area, y con nada mas',
+    Boolean(ficha1) && JSON.stringify(Object.keys(ficha1).sort())
+      === JSON.stringify(['area', 'descripcion', 'nombre']),
+    ficha1 ? Object.keys(ficha1).join(', ') : 'sin fichas');
 
   // ── 3. CADA AREA RECIBE LOS SUYOS Y SOLO LOS SUYOS ────────────
   const n1 = notaDe(1), n7 = notaDe(7);
@@ -291,34 +294,7 @@ try {
     /MIEDOS \(1\)/.test(encargo), encargo.slice(0, 90).replace(/\n/g, ' '));
   listaQueDevuelve = null;
 
-  // ── 6. LAS EXPLICACIONES SE PEGAN A SU FICHA POR EL NUMERO ────
-  explicacionesQueDevuelve = [
-    { n: 1, explicacion: 'Aprendiste pronto que ser util era una manera segura de tener un sitio.' },
-    { n: 3, explicacion: 'De pequena entendiste que las cosas salian con trabajo callado y no con quejas.' },
-    { n: 2, explicacion: 'Te acostumbraste a poner orden con la cabeza cuando el ambiente se ponia dificil.' },
-  ];
-  const r3 = await generar();
-  const f = r3.body?.rasgos?.fortalezas || [];
-  comprobar('cada explicacion cae en la ficha de su numero',
-    f[0]?.explicacion?.startsWith('Aprendiste pronto')
-    && f[1]?.explicacion?.startsWith('Te acostumbraste')
-    && f[2]?.explicacion?.startsWith('De pequena entendiste'),
-    'se comprueba con los numeros desordenados a proposito');
-  comprobar('las fichas sin explicacion se entregan igual, con su nombre',
-    f.length === LISTA_BUENA.fortalezas.length && !f[3]?.explicacion && Boolean(f[3]?.nombre));
-
-  // Una explicacion con un planeta dentro no se imprime.
-  explicacionesQueDevuelve = [
-    { n: 1, explicacion: 'Tu Sol enfrentado a Saturno te hizo crecer sintiendo que habia que ganarselo.' },
-    { n: 2, explicacion: 'Te acostumbraste a poner orden con la cabeza cuando todo se ponia dificil.' },
-  ];
-  const r4 = await generar();
-  const f4 = r4.body?.rasgos?.fortalezas || [];
-  comprobar('una explicacion que nombra un planeta se cae', !f4[0]?.explicacion);
-  comprobar('y la buena de al lado se queda', f4[1]?.explicacion?.startsWith('Te acostumbraste'));
-  explicacionesQueDevuelve = null;
-
-  // ── 7. LA CACHE NO SE ROMPE ───────────────────────────────────
+  // ── 6. LA CACHE NO SE ROMPE ───────────────────────────────────
   await generar();
   const sistemas = new Set(deArea().map(l => l.sistema));
   comprobar('el prompt de sistema sigue siendo IDENTICO en las 7 areas',
@@ -329,14 +305,13 @@ try {
   comprobar('el arranque de la cache manda el mismo prompt que las areas',
     Boolean(arranque) && arranque.sistema === deArea()[0].sistema);
 
-  // ── 8. LOS PROMPTS SE MONTAN ENTEROS ──────────────────────────
+  // ── 7. LOS PROMPTS SE MONTAN ENTEROS ──────────────────────────
   // Un ${...} sin sustituir se manda al modelo tal cual y no se ve en ningun
   // sitio hasta que sale un estudio raro.
   const laLista = llamadas.find(l => l.tipo === 'lista');
-  const lasExpl = llamadas.find(l => l.tipo === 'explicaciones');
-  for (const [que, cual] of [['la lista', laLista], ['las explicaciones', lasExpl]]) {
-    const sueltos = cual.sistema.match(/\$\{[^}]*\}/g) || [];
-    comprobar(`el prompt de ${que} no lleva ningun \${...} sin sustituir`,
+  {
+    const sueltos = laLista.sistema.match(/\$\{[^}]*\}/g) || [];
+    comprobar('el prompt de la lista no lleva ningun \${...} sin sustituir',
       sueltos.length === 0, sueltos.slice(0, 3).join(' '));
   }
   comprobar('la lista pide el minimo por area', /al menos 2/.test(laLista.sistema));
@@ -352,22 +327,12 @@ try {
   // EJEMPLO BUENO dos frases de infancia. Una de ellas, "En tu casa aprendiste
   // que lo de dentro no se ensena", aparecio calcada palabra por palabra.
   const FABRICA_INFANCIA = /(creciste|de peque|de niñ|en tu casa|desde joven)/i;
-  for (const [que, prompt] of [['la lista', laLista.sistema], ['las explicaciones', lasExpl.sistema]]) {
-    const buenos = (prompt.match(/BIEN: "[^"]+"/g) || []);
+  {
+    const buenos = (laLista.sistema.match(/BIEN: "[^"]+"/g) || []);
     const inventan = buenos.filter(x => FABRICA_INFANCIA.test(x));
-    comprobar(`ningun ejemplo BUENO de ${que} afirma una infancia`,
+    comprobar('ningun ejemplo BUENO de la lista afirma una infancia',
       inventan.length === 0, inventan.join(' | ').slice(0, 120));
   }
-  comprobar('a las explicaciones se les prohibe inventarse la infancia',
-    /NO TE INVENTES SU INFANCIA/.test(lasExpl.sistema));
-  comprobar('y se les dice por donde si: el mecanismo y lo de hoy',
-    /el mecanismo con el que funciona por dentro y la consecuencia que tiene hoy/.test(lasExpl.sistema));
-  comprobar('y que un origen antiguo va como suposicion, no como dato',
-    /Una suposición se puede no compartir; un dato falso, no/.test(lasExpl.sistema));
-  comprobar('las explicaciones ya no piden "lo que aprendio de pequena"',
-    !/de lo que aprendió de pequeña/.test(lasExpl.sistema));
-  comprobar('las explicaciones reciben los rasgos numerados',
-    /1\. Detectas lo que hace falta/.test(lasExpl.sistema));
   comprobar('la nota del area no lleva \${...} sueltos', !/\$\{/.test(notaDe(1)));
   // Y lo mismo en las dos piezas que van a las areas, que es donde vive HOY
   // y donde vive el repaso final: un hueco sin sustituir se manda tal cual.
@@ -382,7 +347,7 @@ try {
   comprobar('la nota le dice que no anada ninguno mas',
     notaDe(1).includes('NO ANADES NINGUNO MAS'));
 
-  // ── 8b. LOS RASGOS NO SE COMEN LOS PUNTOS DE HOY ──────────────
+  // ── 7b. LOS RASGOS NO SE COMEN LOS PUNTOS DE HOY ──────────────
   //
   // El area tiene 900 palabras contadas y HOY le pide tres o cuatro cosas
   // concretas segun cual sea: en el area 5 son como es en el amor, que tipo
@@ -432,7 +397,7 @@ try {
   comprobar('y siguen sin copiarse tal cual en el texto',
     /NO SE COPIAN/.test(nota1));
 
-  // ── 9. NADA INTERNO SE IMPRIME ────────────────────────────────
+  // ── 8. NADA INTERNO SE IMPRIME ────────────────────────────────
   // Si el modelo copiara dentro del texto una de las cabeceras que le
   // hablan a el, la clienta leeria las instrucciones internas del producto
   // en un estudio de 27 euros. Se prueban las dos que van en el mensaje de
@@ -451,7 +416,7 @@ try {
       !String(rFuga.body?.texto || '').includes(cabecera));
   }
 
-  // ── 10. EL PROMPT NO SE CONTRADICE ────────────────────────────
+  // ── 9. EL PROMPT NO SE CONTRADICE ────────────────────────────
   //
   // Las listas pasaron de ser el apendice del final a ser la base del estudio.
   // Su prompt seguia diciendo que "cierran el estudio", que se leen "despues
@@ -467,8 +432,15 @@ try {
     !/cierras el estudio/i.test(pLista) && !/se leen despues de las siete areas/i.test(pLista));
   comprobar('ni que recoja lo que a las areas no les dio tiempo',
     !/no ha dado tiempo a nombrar/i.test(pLista));
-  comprobar('ni pide aqui la explicacion, que se pide aparte',
-    !/"explicacion":/.test(pLista));
+  // Y la casilla del porque no esta ni en el prompt ni en el esquema: si
+  // volviera por cualquiera de los dos, la ficha dejaria de ser tres cosas.
+  const casillasDeLaFicha = Object.keys(
+    llamadas.find(l => l.tipo === 'lista').esquema?.properties?.fortalezas?.items?.properties || {}
+  ).sort();
+  comprobar('ni pide el porque de cada ficha, que ya no existe',
+    !/"explicacion"/.test(pLista)
+    && JSON.stringify(casillasDeLaFicha) === JSON.stringify(['area', 'descripcion', 'nombre']),
+    casillasDeLaFicha.join(', '));
 
   // El area recibe dos repartos: el de la carta (que mira) y el de los rasgos
   // (que cuenta). Si chocan y no se dice cual manda, el area se queda sin
@@ -476,32 +448,7 @@ try {
   comprobar('la nota deja claro que ante la duda manda la lista',
     notaDe(1).includes('MANDA ESTA LISTA'));
 
-  // ── 11. LAS EXPLICACIONES REINTENTAN ──────────────────────────
-  //
-  // Corren a la vez que las siete areas, que tardan lo suyo, asi que un
-  // reintento cabe sin retrasar nada. Sin el, un corte de red dejaba las
-  // treinta y tantas fichas sin su linea, y eso se ve en el PDF.
-  explicacionesFallanVeces = 1;
-  explicacionesQueDevuelve = [{ n: 1, explicacion: 'Aprendiste pronto que ser util era una manera segura de tener un sitio.' }];
-  const rReintento = await generar();
-  comprobar('si las explicaciones fallan una vez, se vuelven a pedir',
-    llamadas.filter(l => l.tipo === 'explicaciones').length === 2,
-    llamadas.filter(l => l.tipo === 'explicaciones').length + ' llamada(s)');
-  comprobar('y la explicacion acaba en su ficha',
-    rReintento.body?.rasgos?.fortalezas?.[0]?.explicacion?.startsWith('Aprendiste pronto'));
-
-  // Y si se cae del todo, las fichas salen con su nombre y su frase.
-  explicacionesFallanVeces = 9;
-  const rSinExpl = await generar();
-  explicacionesFallanVeces = 0;
-  explicacionesQueDevuelve = null;
-  comprobar('si se caen del todo, el informe se entrega igual',
-    rSinExpl.code === 200, 'HTTP ' + rSinExpl.code);
-  const fSin = rSinExpl.body?.rasgos?.fortalezas || [];
-  comprobar('y las fichas conservan nombre y frase',
-    fSin.length > 0 && Boolean(fSin[0].nombre) && Boolean(fSin[0].descripcion) && !fSin[0].explicacion);
-
-  // ── 12. CADA AREA ABRE, ENTRA Y CIERRA POR SU SITIO ───────────
+  // ── 10. CADA AREA ABRE, ENTRA Y CIERRA POR SU SITIO ───────────
   //
   // Las siete las escriben siete llamadas que no se ven entre ellas y todas
   // leen el mismo prompt, asi que si la forma la elige el modelo, las siete
