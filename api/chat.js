@@ -1155,7 +1155,7 @@ Esa última frase no es un consejo ni un "tú puedes": es enseñarle la puerta q
 
 Ejemplos del GOLPE que abre el cierre. Ojo, son solo la primera mitad: detrás de cualquiera de estos va todavía la frase que le enseña lo que se le abre, que es lo que remata el cierre de verdad.
 - "Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva años esperándote dentro."
-- "Porque en el fondo lo sabes. Siempre lo has sabido. Solo que mirar para otro lado era más cómodo."
+- "Porque en el fondo lo sabes, siempre lo has sabido, solo que mirar para otro lado era más cómodo."
 - "Llevas media vida demostrando que vales para no tener que averiguar si es verdad."
 Uno entero, con sus dos mitades, es el que ya has visto arriba en ASÍ SUENA CUANDO ESTÁ BIEN: primero el golpe, y detrás la frase que le enseña la puerta.
 

@@ -654,6 +654,16 @@ try {
   comprobar('y el ejemplo de tono no parte ninguna idea con un punto',
     !PICADO.test(ejemploDeTono), (ejemploDeTono.match(PICADO) || ['limpio'])[0]);
 
+  // Los tres ejemplos del golpe del cierre son lo mismo: uno iba picado en
+  // tres frases ("Porque en el fondo lo sabes. Siempre lo has sabido. Solo
+  // que..."), y de ahi salen los cierres de las siete areas.
+  const golpes = (promptAreas.match(/Ejemplos del GOLPE[\s\S]*?Uno entero/) || [''])[0]
+    .split('\n').filter(l => l.startsWith('- "'));
+  comprobar('se capturan los ejemplos del golpe', golpes.length === 3, golpes.length + ' de 3');
+  const picados = golpes.filter(l => (l.match(/[.?!] /g) || []).length > 0);
+  comprobar('y ninguno va picado a puntos', picados.length === 0,
+    picados.length ? picados[0].slice(0, 70) : 'los tres seguidos');
+
   // "Si un area no pide ninguna, no la fuerces" era la puerta de salida: se
   // quedaba con la de la casilla y cumplia.
   comprobar('las preguntas ya no tienen puerta de salida',
