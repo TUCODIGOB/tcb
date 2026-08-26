@@ -559,6 +559,58 @@ try {
     Object.values(encargos).every(e => e.includes('NI UNA FRASE QUE AFIRME SU PASADO')),
     Object.values(encargos).filter(e => e.includes('NI UNA FRASE QUE AFIRME SU PASADO')).length + ' de 7');
 
+  // ── 5d. EL TONO DE LAS AREAS ────────────────────────────────────
+  //
+  // Seis cosas medidas en el informe del 26 de agosto, y todas venian de que
+  // el propio prompt las ensenaba: seis de las siete areas abrieron con la
+  // misma forma ("hay personas que...", "hay gente que...", "hay quien..."),
+  // el que escribe se anunciaba antes de cada escena ("dejame que te ensene",
+  // "ven un momento conmigo"), salio "mecanismo" impreso dos veces, el nombre
+  // 9 veces en todo el estudio y 9 preguntas, una por area, que es la
+  // obligatoria. Se corrigieron los sitios que lo ensenaban.
+  console.log('\n  api/chat.js — el tono de las áreas\n');
+
+  const todoElEncargo = promptAreas + Object.values(encargos).join('\n');
+
+  const SE_ANUNCIA = /d[ée]jame que te ense[nñ]e|ven un momento conmigo|para que veas de qu[ée] te hablo|quiero que te quede clara/i;
+  comprobar('nada le enseña al que escribe a anunciarse antes de la escena',
+    !SE_ANUNCIA.test(todoElEncargo), (todoElEncargo.match(SE_ANUNCIA) || ['limpio'])[0]);
+
+  comprobar('las siete tienen prohibida la forma "hay..." para abrir',
+    promptAreas.includes('ESA FORMA NO SE USA'));
+  // La excepcion de la entradilla la daba por buena con esas palabras
+  // ("hay quien...", "casi nadie..."), y el modelo se quedaba con el ejemplo.
+  comprobar('y la excepción de la entradilla ya no la da por buena',
+    !promptAreas.includes('puede hablar de mucha gente ("hay quien...'),
+    'sus ejemplos ya no usan esa forma');
+
+  // "mecanismo" solo puede salir en un sitio: en la lista de lo que NO se
+  // escribe. Estaba nueve veces mas como instruccion, y de ahi se copiaba.
+  const cuantosMecanismos = (todoElEncargo.match(/mecanismo/gi) || []).length;
+  comprobar('"mecanismo" solo aparece donde se prohíbe',
+    cuantosMecanismos === 7 && !/el mismo mecanismo|contar el mecanismo|el mecanismo con el que/i.test(todoElEncargo),
+    cuantosMecanismos + ' veces, una por encargo, dentro de la lista de prohibidas');
+
+  // El area 1 abre el libro entero, no solo su area. Y solo el area 1: si lo
+  // llevaran las siete, las siete entrarian como si fueran la primera.
+  const abrenElLibro = Object.keys(encargos).filter(n => encargos[n].includes('abre el libro entero'));
+  comprobar('solo el área 1 sabe que abre el libro',
+    abrenElLibro.length === 1 && abrenElLibro[0] === '1', 'lo llevan las áreas ' + abrenElLibro.join(', '));
+
+  // Y lo que las siete leen justo antes de entregar.
+  for (const [eti, trozo] of [
+    ['dos o tres preguntas más, repartidas y dentro de un párrafo', 'hay DOS o TRES mas repartidas por el area'],
+    ['el nombre dos o tres veces, en bloques distintos', 'aparece DOS o TRES veces en el area y en bloques distintos'],
+    ['ni una palabra de terapeuta', 'ni de terapia'],
+  ]) {
+    comprobar(`las siete repasan ${eti}`,
+      Object.values(encargos).every(e => e.includes(trozo)),
+      Object.values(encargos).filter(e => e.includes(trozo)).length + ' de 7');
+  }
+
+  comprobar('y el "no es X, es Y" tiene su tope',
+    promptAreas.includes('NO ABUSES DE "NO ES X, ES Y"'));
+
   // ── 6. NI UNO REPETIDO ──────────────────────────────────────────
   console.log('\n  api/chat.js — ni un rasgo repetido\n');
 

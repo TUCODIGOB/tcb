@@ -1020,12 +1020,12 @@ OBJETIVO: Que la persona lea y piense que eso es exactamente ella, que por fin a
 LA VOZ QUE LE HABLA (ESTO VA ANTES QUE CUALQUIER OTRA REGLA):
 Esto no es un informe sobre ella, es alguien contándole quién es. Y ese alguien tiene que notarse dentro del texto, porque si no se nota, el estudio entero se lee como una radiografía: todo cierto, todo frío, y nadie al otro lado.
 La posición desde la que se escribe cada párrafo es esta: estás sentada delante de ella, la conoces bien, la quieres bien, y le vas a contar cosas que no le ha dicho nadie nunca.
-Cómo se nota que hay alguien ahí: te paras a avisarla antes de decirle algo que va a doler ("antes de seguir quiero que te quede clara una cosa"), le pides que piense y le das tiempo ("piénsalo despacio, no de pasada"), le señalas lo que acaba de hacer mientras leía, le das la razón cuando la tiene. No es un narrador que describe desde fuera, es una persona que la acompaña mientras se lo cuenta.
+Cómo se nota que hay alguien ahí: le quitas la culpa antes de decirle algo que va a doler ("esto no lo elegiste tú"), le pides que piense y le das tiempo ("piénsalo despacio, no de pasada"), le señalas lo que acaba de hacer mientras leía, le das la razón cuando la tiene. No es un narrador que describe desde fuera, es una persona que la acompaña mientras se lo cuenta.
 Sin pasarse: no se abre cada párrafo con una intervención, ni se le habla como en un correo de ventas. Son tres o cuatro momentos en toda el área, puestos donde hacen falta.
 
 ${TODO_DE_TU} Esto vale para el área entera, y con más motivo para el primer párrafo y para el cierre, que son los dos sitios donde más se escapa.
 ${HABLAR_DE_ELLA_LO_ROMPE}
-Cuidado con la excepción falsa: la entradilla que abre el área puede hablar de mucha gente ("hay quien...", "casi nadie..."), y eso es correcto porque no habla de ELLA. Lo que no vale nunca es hablar de ella misma en tercera persona.
+Cuidado con la excepción falsa: la entradilla que abre el área puede hablar de mucha gente ("a casi nadie le pasa...", "todo el mundo conoce a una..."), y eso es correcto porque no habla de ELLA. Lo que no vale nunca es hablar de ella misma en tercera persona.
 
 ${PERDONA_ANTES_DE_NOMBRAR}
 
@@ -1037,16 +1037,17 @@ Esa es la diferencia entre un diagnóstico y un estudio que se lo pasa a una ami
 ASÍ SUENA CUANDO ESTÁ BIEN:
 Esto no es contenido, es tono. No copies ni una palabra, ni la situación, ni el personaje: lo que se coge de aquí es cómo se le habla.
 
-  "Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen. En cualquier familia hay una, en cualquier grupo de amigas hay una, y en el trabajo también. Todo el mundo tiene una cerca. Y casi nadie le pregunta nunca cómo lo lleva.
+  "Piensa un momento en las personas que sostienen. La que se acuerda de los cumpleaños de toda la familia. La que en una oficina nota que alguien está raro antes que nadie. Todo el mundo tiene una cerca. Y casi nadie le pregunta nunca cómo lo lleva.
   Tú eres esa persona.
   Por fuera pareces tranquila, con esa cosa rara de conseguir que cualquier conversación fluya sin que nadie se incomode. Por dentro, mientras tanto, llevas una máquina que no para de repasar lo que acabas de decir.
-  Y quiero que te quede clara una cosa antes de seguir, porque de aquí sale todo lo demás: eso no es falsedad, ni es que finjas. Es que suavizas todo lo que tocas antes de que nadie note que hacía falta suavizarlo, y lo llevas haciendo desde hace tanto que ya ni te das cuenta de que lo estás haciendo."
+  Y esto es lo importante, porque de aquí sale todo lo demás: eso no es falsedad, ni es que finjas. Es que suavizas todo lo que tocas antes de que nadie note que hacía falta suavizarlo, y lo llevas haciendo desde hace tanto que ya ni te das cuenta de que lo estás haciendo."
 
-Fíjate en lo que hace ese fragmento, porque es lo que hay que reproducir: abre ancho antes de entrar (ancho SÍ, pero por dónde ya te lo dice tu área, no lo copies de aquí), hay alguien hablándole en primera persona, le quita la culpa antes de nombrarle nada, y mezcla frases largas con una corta que cae sola.
+Fíjate en lo que hace ese fragmento, porque es lo que hay que reproducir: abre ancho antes de entrar (ancho SÍ, pero por dónde ya te lo dice tu área, no lo copies de aquí), se nota que hay alguien hablándole a ella y no un texto que se explica solo, le quita la culpa antes de nombrarle nada, y mezcla frases largas con una corta que cae sola.
 
-  "No estás cansada de hacer cosas, eso lo llevas bien y lo has llevado siempre. Estás cansada de que hacerlas sea la única prueba que te vale de que mereces estar donde estás. El día que aceptes una sola prueba más, cualquier otra, vas a descubrir que llevabas años pudiendo descansar."
+  "Hacer cosas no te cansa, eso lo llevas bien y lo has llevado siempre. Lo que te cansa es que hacerlas sea la única prueba que te vale de que mereces estar donde estás. El día que aceptes una sola prueba más, cualquier otra, vas a descubrir que llevabas años pudiendo descansar."
 
 Ese es un cierre: dice algo que no se había dicho en toda el área, lo dice entero, no presenta nada de lo que viene después, y termina enseñándole lo que se le abre.
+Y NO ABUSES DE "NO ES X, ES Y". Es una figura buena y de vez en cuando cae sola, pero en cuanto se repite se oye el molde: "no es frialdad, es una fuerza", "no es que dudes, dudas de", "no es desconfianza, es que necesitas". Una vez en el área, como mucho dos, y el resto se dice derecho.
 DE AHÍ SE COGE LO QUE HACE, NO CÓMO ESTÁ ARMADO. En los dos ultimos estudios los catorce cierres calcaron su forma: "No es que X..., el día que Y vas a descubrir Z", los catorce. Leídos seguidos se ve el molde y el golpe se pierde, porque a la cuarta el lector ya sabe cómo va a terminar la frase. Tu área lleva escrita su propia forma de cerrar al final de su encargo, en POR DÓNDE VA ESTA ÁREA.
 
 ESCENA REAL OBLIGATORIA:
@@ -1120,7 +1121,7 @@ Uno entero, con sus dos mitades, es el que ya has visto arriba en ASÍ SUENA CUA
 CADA ÁREA MIRA UNA PARTE DISTINTA DE LA CARTA:
 Las siete áreas se escriben por separado y ninguna sabe lo que dicen las otras, así que todas tienden a coger el rasgo más llamativo de la carta y contarlo otra vez con otras palabras. El lector lo nota enseguida: siente que le han dicho lo mismo siete veces y que ha pagado por un solo retrato repetido. Para que eso no pase, cada área lleva escrito qué parte de la carta le toca mirar, y esa es la que manda.
 Si el rasgo dominante de la persona también asoma en tu área, no lo cuentas otra vez: cuentas SOLO cómo se nota dentro de esta parcela concreta, con situaciones que solo se dan aquí. La misma persona controladora se nota de una manera con el dinero, de otra en la cama y de otra con su madre: eso es lo que tienes que escribir.
-PROHIBIDO que dos áreas expliquen el mismo mecanismo, aunque cambies las palabras. Si al terminar el área te das cuenta de que lo que has escrito valdría casi igual para otra de las siete, está mal y se reescribe entera desde la parte de la carta que te toca.
+PROHIBIDO que dos áreas expliquen lo mismo, aunque cambies las palabras. Si al terminar el área te das cuenta de que lo que has escrito valdría casi igual para otra de las siete, está mal y se reescribe entera desde la parte de la carta que te toca.
 
 EL DETALLE QUE NO LE VALE A NADIE MÁS:
 Un patrón general ("controla todo", "no pide ayuda", "se exige mucho") le vale a media España y no impresiona a nadie. En cada área tiene que haber al menos un detalle tan concreto y tan raro que la persona piense "esto no lo sabe nadie de mí". No es una frase más intensa: es un dato con grano.
@@ -1146,7 +1147,9 @@ No van seguidas ni en el mismo párrafo, y ninguna es el cierre del área. Si al
 
 EL ARRANQUE DE CADA ÁREA:
 Un área se lee como un capítulo, y un capítulo no empieza en mitad de la frase. Pero es un capítulo SIN TÍTULO PROPIO: el título ya va impreso arriba en la página, así que el PRIMER párrafo del área no lleva ladillo nunca. Empieza por la primera frase de la entradilla. Entrar de golpe con una afirmación seca sobre ella en la primera línea da un frenazo: el lector acaba de pasar de página, todavía no sabe de qué le van a hablar, y ya le están diciendo algo suyo.
-Se abre ancho y se cierra sobre ella. Dos o tres frases que sitúan el tema desde fuera y solo entonces se estrechan hasta ella. Lo que NO se dice aquí es por dónde se abre: eso lo lleva escrito cada área en POR DÓNDE VA ESTA ÁREA, y por eso ninguna entra igual que otra. Si aquí se pusiera la puerta, las siete cogerían la misma, que es lo que pasaba: en los dos ultimos estudios las doce áreas abrieron con "hay personas que..." o "casi todo el mundo...".
+Se abre ancho y se cierra sobre ella. Dos o tres frases que sitúan el tema desde fuera y solo entonces se estrechan hasta ella. Lo que NO se dice aquí es por dónde se abre: eso lo lleva escrito cada área en POR DÓNDE VA ESTA ÁREA, y por eso ninguna entra igual que otra. Si aquí se pusiera la puerta, las siete cogerían la misma.
+Y AUN ASÍ SIGUEN ENTRANDO IGUAL, porque lo que se repite no es por dónde abren, es CÓMO. En el último informe seis de las siete abrieron con la misma forma: "hay personas que...", "hay gente que...", "hay quien...", "hay un gesto que...", "en cualquier grupo hay una persona que...". Leídas seguidas son la misma frase con distinto relleno, y para la tercera ya sabe cómo empieza la siguiente.
+Así que ESA FORMA NO SE USA: nada de empezar por "hay" ni por "casi todo el mundo" ni por "la mayoría de la gente". Se abre igual de ancho, pero entrando de otra manera cada vez: por un dicho que todo el mundo repite, por una escena contada en presente, por una pregunta, por dos maneras opuestas de hacer lo mismo, por un objeto o una cifra. Tu área lleva la suya escrita en POR DÓNDE VA ESTA ÁREA.
 Lo que sí vale para las siete es el movimiento: ancho primero, y en dos o tres frases ya estás en ella. Las palabras las pones tú.
 Que sitúe no significa que anuncie: sigue estando PROHIBIDO decir lo que vas a contar ("en esta parte vamos a ver", "hay algo que tienes que entender").
 Y es la ÚNICA parte del área donde vale algo que le pasa a mucha gente, precisamente porque en dos frases se estrecha hasta ella y deja de valerle a nadie más. En cuanto has entrado en ella vuelve a mandar la regla de siempre: nada que le pudieras leer a otra persona y también le tocara.
@@ -1188,10 +1191,10 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
 - PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
 - PROHIBIDO cerrar un área con una frase suave o vaga. El cierre golpea primero y solo despues abre: el golpe nunca se cambia por la luz, van los dos y en ese orden
-- PROHIBIDO contar en tu área el mismo mecanismo que gobierna otra. Mira la parte de la carta que te toca
+- PROHIBIDO contar en tu área lo mismo que gobierna otra. Mira la parte de la carta que te toca
 - PROHIBIDO quedarse en el patrón general. Sin un detalle que solo le valga a ella, el área no vale
 - PROHIBIDO un área que solo diagnostique. Sin el don contado a fondo, el área no vale
-- PROHIBIDO empezar un área con "hay algo", "hay una escena", "hay un momento", "imagina que" o parecidos
+- PROHIBIDO empezar un área con "imagina que" o parecidos. Y por "hay...", tampoco: ver EL ARRANQUE DE CADA ÁREA
 - PROHIBIDO un área que se entienda pero no se sienta. Sin el momento que le toca por dentro, no vale
 - PROHIBIDO dejar una casilla vacía: los cinco bloques de texto, la escena, los dos remates, la pregunta y el cierre van siempre
 - PROHIBIDO rellenar una casilla con una palabra de relleno o con un aviso de que falta algo. Lo que escribas ahí se imprime tal cual en el estudio del cliente
@@ -1207,11 +1210,13 @@ PROHIBICIONES ABSOLUTAS:
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí misma.
 
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el planeta que rige su signo, lo que caiga en la casa 1, y TODOS los aspectos del Sol, incluidos los que hace con Saturno, Pluton y Neptuno: el Sol con Saturno es lo que hace sentir que hay que ganarse el sitio, y contado tambien en el area 3 saldria dos veces en el mismo estudio. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
-Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar lo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
+Esta es la PRIMERA area del estudio, asi que su arranque no abre solo el area: abre el libro entero. Es lo primero que lee de si misma despues de pagar, y ahi decide si esto va a hablar de ella o no. Entra despacio, como entra un libro: se toma su tiempo antes de decirle nada suyo, y cuando por fin se lo dice, ella ya esta dentro. Nada de soltarle una verdad en la primera linea, que esas frases son las unicas del estudio que no tienen nada delante que las sostenga.
+
 LAS CUATRO COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
-Cómo funcionas por dentro: el mecanismo con el que procesas lo que te pasa, qué te ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que haces por fuera. Es lo que le pone nombre a tu manera de funcionar y lo que se lleva puesto al terminar de leer.
+Cómo funcionas por dentro: por dónde te entra lo que te pasa y qué haces con ello, qué te ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que haces por fuera. Es lo que le pone nombre a tu manera de funcionar y lo que se lleva puesto al terminar de leer.
 Lo que se te da bien de verdad: tus fortalezas reales, sobre todo las que tú no pondrías primero si te preguntaran. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
 Los puntos ciegos que no ves: lo que haces y no registras como un problema, o que registras al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
 Qué muestras, qué ocultas y qué contradicciones tienes: la distancia entre la persona que enseñas y la que guardas, y las cosas tuyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a ella y no a un perfil que le valdría a cualquiera.
@@ -1224,7 +1229,7 @@ No pongas título de área ni encabezado: el título ya va impreso en la página
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué repite una y otra vez sin darse cuenta.
 
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: los Nodos (el Sur, lo que repite en automatico, y el Norte, hacia donde no va), lo que caiga en las casas 6 y 9, y las configuraciones en las que un mismo planeta recibe varios aspectos a la vez, que es lo que hace que una cosa se repita sola. La casa 6 es el dia a dia, donde el automatismo se ve funcionando; la casa 9 es lo que da por cierto sobre como va la vida, que es de donde sale que el automatismo no se cuestione nunca. Los aspectos duros de Saturno, Pluton y Neptuno a los planetas personales NO son de aqui, son del area 3. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
-Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar lo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 LAS CUATRO COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
@@ -1241,7 +1246,7 @@ No pongas título de área ni encabezado: el título ya va impreso en la página
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que gobierna su vida sin que lo nombre.
 
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Saturno, Plutón y Neptuno, y lo que caiga en la casa 12, con los aspectos duros de esos tres a los planetas personales, MENOS al Sol y a la Luna: los del Sol con estos tres son del area 1 y los de la Luna son del area 4, y la Luna con Saturno o con Pluton es el aspecto que mas se repite en las cartas duras, asi que si lo cuentas aqui saldra contado dos veces en el mismo estudio. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
-Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar lo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 LAS TRES COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
@@ -1256,7 +1261,7 @@ No pongas título de área ni encabezado: el título ya va impreso en la página
       prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué le sigue doliendo hoy y cómo le afecta.
 
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Quirón y la Luna, lo que caiga en la casa 4, y TODOS los aspectos de la Luna con Quirón, Saturno, Pluton y Neptuno: los cuatro son de esta area y de ninguna otra, para que no se cuenten dos veces. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
-Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar lo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 LAS TRES COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
@@ -1271,7 +1276,7 @@ No pongas título de área ni encabezado: el título ya va impreso en la página
       prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo vive las relaciones de pareja.
 
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Venus y Marte, y lo que caiga en las casas 5 y 7, con los aspectos entre Venus y Marte. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
-Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar lo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 LAS CUATRO COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
@@ -1288,7 +1293,7 @@ No pongas título de área ni encabezado: el título ya va impreso en la página
       prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: cómo se vincula con los demás fuera de la pareja.
 
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Mercurio y Urano, y lo que caiga en las casas 3 y 11, con los aspectos de Mercurio. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
-Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar lo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 LAS TRES COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
@@ -1303,7 +1308,7 @@ No pongas título de área ni encabezado: el título ya va impreso en la página
       prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero.
 
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Júpiter, lo que caiga en las casas 2, 8 y 10, con los aspectos de Júpiter. La casa 10 es su sitio de puertas afuera, lo que hace y por lo que se la conoce, y es de esta area porque el dinero de una persona sale de ahi antes que de ningun otro sitio. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
-Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
+Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar lo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 Esta es la última área del estudio, así que su cierre cierra el estudio entero, no solo el área.
@@ -1365,7 +1370,7 @@ ${cartaTexto}`;
   const MOLDES = {
     1: {
       pregunta: 'poniéndole delante lo que se le abre si deja de hacer eso, en forma de "¿qué pasaría si...?"',
-      entra: 'invitándola a mirar un rato suyo cualquiera ("déjame que te enseñe un rato tuyo, de esos que ni recuerdas al día siguiente")',
+      entra: 'nombrando el rato del que se trata, uno de esos que ni recuerda al día siguiente, y entrando en él sin anunciarlo',
       abre: 'por lo que se ve de una persona desde fuera antes de conocerla, y lo poco que eso cuenta de ella',
       cuando: 'un día cualquiera entre semana, a media mañana',
       cierra: 'con el golpe seco primero, en una frase corta, y la puerta detrás',
@@ -1379,7 +1384,7 @@ ${cartaTexto}`;
     },
     3: {
       pregunta: 'obligándola a elegir entre dos cosas, y que ninguna de las dos sea cómoda',
-      entra: 'llevándotela contigo al sitio donde pasa ("ven un momento conmigo")',
+      entra: 'poniendo la hora y el sitio donde pasa, y ya estamos dentro',
       abre: 'por una pregunta directa al lector, y la respuesta llega en la frase siguiente',
       cuando: 'de madrugada, desvelada',
       cierra: 'nombrando lo que de verdad teme, que no es lo que ella cree que teme',
@@ -1407,7 +1412,7 @@ ${cartaTexto}`;
     },
     7: {
       pregunta: 'con una pregunta que solo se puede responder con una cifra concreta',
-      entra: 'para que vea de qué le estás hablando ("para que veas de qué te hablo")',
+      entra: 'por la cuenta que ella misma se hace, y detrás el día en que se la hizo',
       abre: 'por un objeto, una cifra o un gesto concreto con dinero',
       cuando: 'a plena luz del día, un día de cobrar o de gastar',
       cierra: 'dándole la vuelta al asunto: lo que parecía ser cosa de dinero resulta que nunca lo fue',
@@ -1467,12 +1472,12 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
 
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
-2. El nombre "${nombrePila}" aparece UNA o DOS veces en el area, dentro de una frase en la que le hablas de tu, nunca en una que hable de ella en tercera persona y nunca al empezar. Ninguna vez no vale
+2. El nombre "${nombrePila}" aparece DOS o TRES veces en el area y en bloques distintos, no las dos seguidas, dentro de una frase en la que le hablas de tu, nunca en una que hable de ella en tercera persona y nunca al empezar. Ninguna vez no vale
 3. El area lleva negritas dentro del texto de los parrafos, marcadas con **dos asteriscos a cada lado**: frases o medias frases que ella subrayaria con el fosforito, nunca una palabra suelta. Relee solo lo marcado seguido y tiene que sonar a ella contandose a si misma; la que no pase esa prueba se cambia por la que si la pasa, pero el area no se entrega sin ninguna
-4. Hay al menos una pregunta directa, salida de lo que acabas de contarle
+4. Ademas de la pregunta que va en su casilla, hay DOS o TRES mas repartidas por el area, en bloques distintos, salidas de lo que acabas de contarle. Van DENTRO de un parrafo, entre las demas frases, nunca solas: una pregunta que ocupa un parrafo entera sale impresa en grande, y grande solo va la de la casilla
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
-7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
+7. Ni una palabra tecnica en el texto. Ni de astrologia -Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo, carta natal- ni de terapia -"mecanismo", "patron", "gestionar", "procesar", "vinculo", "autoexigencia", "validacion", "dependencia emocional", "sanar"-. Son tus herramientas, no su vocabulario: si no lo diria ella hablando con una amiga, no va
 7b. NI UNA FRASE QUE AFIRME SU PASADO. De su carta sale como esta hecha, no lo que vivio: si aparece "aprendiste", "de pequena", "en tu casa", "creciste" o un "puede que fuera", se reescribe contando lo que le pasa hoy
 8. Ningun bloque se queda vacio: el arranque, hoy, origen, creencias y soltar llevan todos sus parrafos. Y si el area no llega a las palabras que te piden, anade parrafos dentro de los bloques, nunca engordes los que ya tienes
 8b. ESTAN LAS TRES O CUATRO COSAS QUE HOY LE PIDE A TU AREA, todas, cada una contada de verdad. Cuentalas una por una antes de entregar: si alguna se ha quedado en media linea, esa area no esta terminada
