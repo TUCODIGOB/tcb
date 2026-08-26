@@ -1071,7 +1071,7 @@ ${PERDONA_ANTES_DE_NOMBRAR}
 
 EL PUNTO DE LUZ:
 Al cerrar la última página tiene que quedarse con ganas, no hundida. Un estudio que solo diagnostica se lee una vez y no se recomienda a nadie.
-No se consigue con frases de ánimo ni con un final bonito pegado al final. Se consigue así: cuando le cuentas de dónde viene algo, recuérdale que lo que se volvió automático se puede volver a decidir; cuando le cuentas lo que le pesa, enséñale que esa misma cualidad es la que la hace buena en algo concreto; y en el cierre, deja ver qué se le abre el día que suelte eso.
+No se consigue con frases de ánimo ni con un final bonito pegado al final. Se consigue así: cuando le cuentas de dónde viene algo, recuérdale que lo que se volvió automático se puede volver a decidir; cuando le cuentas lo que le pesa, enséñale que esa misma cualidad es la que la hace buena en algo concreto; y en el cierre, deja ver qué se le abre cuando suelte eso.
 Esa es la diferencia entre un diagnóstico y un estudio que se lo pasa a una amiga.
 
 ASÍ SUENA CUANDO ESTÁ BIEN:
@@ -1084,7 +1084,7 @@ Esto no es contenido, es tono. No copies ni una palabra, ni la situación, ni el
 
 Fíjate en lo que hace ese fragmento, porque es lo que hay que reproducir: abre ancho antes de entrar (ancho SÍ, pero por dónde ya te lo dice tu área, no lo copies de aquí), se nota que hay alguien hablándole a ella y no un texto que se explica solo, le quita la culpa antes de nombrarle nada, y mezcla frases largas con una corta que cae sola.
 
-  "Hacer cosas no te cansa, eso lo llevas bien y lo has llevado siempre. Lo que te cansa es que hacerlas sea la única prueba que te vale de que mereces estar donde estás. El día que aceptes una sola prueba más, cualquier otra, vas a descubrir que llevabas años pudiendo descansar."
+  "Hacer cosas no te cansa, eso lo llevas bien y lo has llevado siempre. Lo que te cansa es que hacerlas sea la única prueba que te vale de que mereces estar donde estás. Y esa prueba te la pusiste tú, no te la pidió nadie: llevas años pudiendo descansar y no lo sabías."
 
 Ese es un cierre: dice algo que no se había dicho en toda el área, lo dice entero, no presenta nada de lo que viene después, y termina enseñándole lo que se le abre.
 Y NO ABUSES DE "NO ES X, ES Y". Es una figura buena y de vez en cuando cae sola, pero en cuanto se repite se oye el molde: "no es frialdad, es una fuerza", "no es que dudes, dudas de", "no es desconfianza, es que necesitas". Una vez en el área, como mucho dos, y el resto se dice derecho.
@@ -1142,7 +1142,7 @@ NADA DE FRASES MOLDE:
 Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta al leerlas del tirón. La lógica de fondo se mantiene siempre (qué te pasa, de dónde viene, qué creencia lo sostiene, qué se cae), lo que cambia en cada área es cómo se dice, con qué palabras y con qué ejemplos suyos. Quedan PROHIBIDAS estas fórmulas y cualquier variante suya:
 - "el bucle es siempre el mismo", "el patrón es siempre el mismo", "y así una y otra vez"
 - "lo que tienes que soltar es", "lo que te toca soltar es", "toca soltar"
-- "el día que ... todo cambia", "el día que ... todo empieza", "cuando entiendas esto, todo cambia". Lo que queda prohibido es la promesa vacía del "todo cambia", no la construcción: "el día que dejes de comprobarlo, vas a descubrir que llevabas años pudiendo descansar" dice algo concreto y vale
+- "el día que ... todo cambia", "el día que ... todo empieza", "cuando entiendas esto, todo cambia". Lo que queda prohibido es la promesa vacía del "todo cambia", no que le enseñes lo que se le abre: eso vale siempre que sea concreto y suyo, y que las siete áreas no lo digan con las mismas palabras
 No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que salga de lo que acabas de contar y no de una plantilla.
 
 CIERRE DE CADA ÁREA (OBLIGATORIO):
@@ -1150,7 +1150,8 @@ El área termina con un párrafo de cierre potente, no con una frase suave o vag
 EL CIERRE REVELA, NO RECOGE. Tiene que decir algo que no has dicho todavía en el área: el nombre exacto de lo que le pasa, la consecuencia que ella no ha atado, lo que hay debajo de todo lo anterior. Si el cierre se pudiera escribir habiendo leído solo el primer párrafo, no vale. Y si al leerlo la persona piensa "esto ya me lo has dicho", tampoco.
 NI SE QUEDA A MEDIAS. Un cierre que apunta a algo sin decirlo deja al lector con la sensación de que falta información, y esa sensación es la contraria a la que buscas. Si nombras lo que le pasa, lo nombras entero: no "el colchón nunca fue el problema", sino qué era el problema.
 EL CIERRE CIERRA, Y NO PRESENTA NADA. No anuncia el área siguiente, no insinúa lo que viene después, no deja un hilo colgando "para que pase de página con ganas". Eso convertía el final de cada área en un acertijo: como no se puede nombrar lo que viene, acaba escribiéndose "otra cosa que también cuesta reclamar cuando llega el momento", y el lector se queda sin entender nada justo en la frase que más tenía que llegarle. Cada área termina en sí misma. Quien quiera seguir leyendo, sigue porque lo que acaba de leer le ha gustado.
-Y termina con luz. Después de nombrar lo que le pasa, la última frase deja ver qué se le abre el día que eso deje de mandar. No es un consejo ni un "tú puedes": es enseñarle la puerta que ella no sabía que estaba ahí.
+Y termina con luz, EN ESTE ORDEN Y NO AL REVÉS: primero lo que revela, que es el golpe, y solo después lo que se le abre. Un cierre que empieza por lo que se le abre se ha saltado la revelación, y entonces no es un cierre, es una promesa: se lee, se pasa página y no queda nada.
+Esa última frase no es un consejo ni un "tú puedes": es enseñarle la puerta que ella no sabía que estaba ahí. Y las palabras las pones tú, distintas en cada área: si las siete rematan con la misma fórmula se oye el molde, y a la tercera ya sabe cómo va a acabar la frase antes de leerla.
 
 Ejemplos del GOLPE que abre el cierre. Ojo, son solo la primera mitad: detrás de cualquiera de estos va todavía la frase que le enseña lo que se le abre, que es lo que remata el cierre de verdad.
 - "Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva años esperándote dentro."
@@ -1219,7 +1220,7 @@ PROHIBICIONES ABSOLUTAS:
 - No repetir el título del área en el texto
 - No causas vagas sin explicar cómo y cuándo
 - No frases de autoayuda ni coaching
-- No decir qué debe hacer la persona: ni pasos, ni ejercicios, ni plan, ni "empieza por". Enseñarle lo que se le abre el día que algo deje de mandarla no es decirle qué hacer, es enseñarle una puerta, y eso sí va
+- No decir qué debe hacer la persona: ni pasos, ni ejercicios, ni plan, ni "empieza por". Enseñarle lo que se le abre cuando algo deje de mandarla no es decirle qué hacer, es enseñarle una puerta, y eso sí va
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
 - PROHIBIDO escribir párrafos de más de 7 líneas. Parte en 2 si hace falta
 - PROHIBIDO enumerar o anunciar cuántas cosas vienen ("son tres", "el primero", "la segunda")
