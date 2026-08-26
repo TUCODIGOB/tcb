@@ -73,6 +73,41 @@ const AREA_BUENA = JSON.stringify({
   cierre: 'No estas cansada de hacer cosas, estas cansada de que sea la unica prueba que te vale.',
 });
 
+// Y la misma con un parrafo del cuerpo cortado a mitad de frase, que es
+// como salio impresa el area 2 el 26 de agosto: "...que mejor esperar un
+// poco mas. Ese", y ahi terminaba, en el PDF de una clienta.
+const AREA_PARRAFO_CORTADO = (() => {
+  const d = JSON.parse(AREA_BUENA);
+  const ultimo = d.bloques.soltar[d.bloques.soltar.length - 1];
+  ultimo.texto = 'Lo que tiene que caer es esa idea de que **lo que vales se mide en lo que resuelves**. Ese';
+  return JSON.stringify(d);
+})();
+
+// Y un area a la mitad de largo que sus hermanas: la que salio el 26 de
+// agosto traia 665 palabras y las otras seis entre 1.163 y 1.446.
+const AREA_A_LA_MITAD = (() => {
+  const d = JSON.parse(AREA_BUENA);
+  d.bloques.arranque = [{ ladillo: null, texto: 'Hay gente que **no para nunca**, Ana.' }];
+  d.bloques.hoy = [{ ladillo: 'La cuenta que no llevas', texto: 'Tu eres de esas y **se te nota en todo**.' }];
+  d.bloques.origen = [{ ladillo: null, texto: 'Viene de lejos y **sigue funcionando**.' }];
+  d.bloques.creencias = [{ ladillo: 'Donde empezo la cuenta', texto: 'Crees que **vales por lo que resuelves**.' }];
+  d.bloques.soltar = [{ ladillo: null, texto: 'Eso es lo que **tiene que caer**.' }];
+  return JSON.stringify(d);
+})();
+
+// Siete areas de tamanos distintos pero normales, como salen de verdad: en
+// el informe del 26 de agosto las seis sanas iban del 91% al 113% de la
+// mediana. Ninguna de estas puede disparar un repaso.
+const AREA_DE_SU_TAMANO = (n) => {
+  const d = JSON.parse(AREA_BUENA);
+  // De 3 a 7 lineas en el bloque mas largo, segun el area: eso mueve el
+  // tamano un 20% arriba y abajo, que es lo que se mueve de verdad.
+  const extra = { 1: 2, 2: -1, 3: 0, 4: 1, 5: -1, 6: 0, 7: 2 }[n] || 0;
+  const uno = d.bloques.hoy[0];
+  d.bloques.hoy = Array.from({ length: Math.max(1, 2 + extra) }, () => ({ ...uno }));
+  return JSON.stringify(d);
+};
+
 // Lo mismo pero con la escena en blanco: la API no puede impedirlo.
 const AREA_ESCENA_VACIA = JSON.stringify({
   ...JSON.parse(AREA_BUENA),
@@ -115,6 +150,19 @@ globalThis.fetch = async (url, opts = {}) => {
     if (modo === 'casilla vacia') {
       return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_ESCENA_VACIA }] }) };
     }
+    // Solo el area 2 viene corta; las otras seis, enteras. Asi se ve si la
+    // comprobacion mide contra las demas o contra un numero inventado.
+    if (modo === 'siete distintas') {
+      const n = Number((String(JSON.parse(opts.body || '{}').messages?.[0]?.content || '').match(/Genera ÚNICAMENTE el ÁREA (\d)/) || [])[1] || 1);
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_DE_SU_TAMANO(n) }] }) };
+    }
+    if (modo === 'una corta') {
+      const suya = /Genera ÚNICAMENTE el ÁREA 2 /.test(String(JSON.parse(opts.body || '{}').messages?.[0]?.content || ''));
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: suya ? AREA_A_LA_MITAD : AREA_BUENA }] }) };
+    }
+    if (modo === 'parrafo cortado') {
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_PARRAFO_CORTADO }] }) };
+    }
     if (modo === 'cortada') {
       return { ok: true, status: 200, json: async () => ({
         stop_reason: 'max_tokens',
@@ -154,6 +202,9 @@ const c = (d, ok, det = '') => {
 const gritos = [];
 const errOriginal = console.error;
 console.error = (...a) => { gritos.push(a.join(' ')); };
+const avisos = [];
+const warnOriginal = console.warn;
+console.warn = (...a) => { avisos.push(a.join(' ')); };
 
 try {
   const { default: chat } = await import(chatRuta);
@@ -197,6 +248,71 @@ try {
   c('se vuelve a pedir en vez de entregarla coja', llamadas > 7, llamadas + ' llamadas');
   c('y no se entrega un area sin escena', r2.code !== 200, 'HTTP ' + r2.code);
 
+  // ── Un parrafo cortado a mitad de frase no se imprime asi ──────────
+  //
+  // Y con el, la otra mitad: los remates y la pregunta acaban sin punto a
+  // proposito, asi que el recorte no puede tocarlos. Si los tocara, se
+  // comeria la ultima palabra de cada frase suelta del informe entero.
+  console.log('\n  el modelo devuelve un parrafo cortado a mitad de frase\n');
+  modo = 'parrafo cortado';
+  llamadas = 0;
+  const SID4 = 'cs_test_parrafo_cortado';
+  TIENDA.set(SID4, { id: SID4, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const r4 = res();
+  await chat({ method: 'POST', body: { session_id: SID4, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r4);
+  const texto4 = String(r4.body?.texto || '');
+  c('el informe sale igual', r4.code === 200 && texto4.length > 3000, 'HTTP ' + r4.code);
+  c('el cabo suelto NO se imprime', !/\bEse\s*$/m.test(texto4),
+    (texto4.match(/.{0,30}\bEse\s*$/m) || [''])[0]);
+  c('pero la frase entera que lo precede se queda',
+    texto4.includes('se mide en lo que resuelves**.'));
+  c('y los remates sin punto final NO se tocan',
+    texto4.includes('Muy poca gente sigue sosteniendo cuando ya no la mira nadie')
+    && texto4.includes('Te has pasado la vida demostrando que se puede confiar en ti'));
+  c('la pregunta tampoco', texto4.includes('¿Cuando fue la ultima vez que alguien te dio las gracias por eso?'));
+
+  // ── Un area a la mitad de largo que las demas se vuelve a pedir ────
+  console.log('\n  una de las siete vuelve a la mitad de largo\n');
+  modo = 'una corta';
+  llamadas = 0;
+  const SID5 = 'cs_test_una_corta';
+  TIENDA.set(SID5, { id: SID5, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const r5 = res();
+  await chat({ method: 'POST', body: { session_id: SID5, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r5);
+  const avisoDeCorta = avisos.find(a => /Área 2 se ha quedado en \d+ palabras y las demas traen/.test(a));
+  c('el área corta se vuelve a pedir, y por corta', Boolean(avisoDeCorta) && llamadas > 7,
+    avisoDeCorta || avisos.slice(-1)[0] || 'ningún aviso');
+  c('y el informe sale igual', r5.code === 200 && String(r5.body?.texto || '').length > 3000, 'HTTP ' + r5.code);
+
+  // Y LO CONTRARIO, que es lo que importa: con las siete del mismo tamano no
+  // se pide ni una vez de mas. Ya lo mide la primera comprobacion de arriba
+  // ("se pidio UNA vez por area, sin repasos", 7 llamadas), asi que aqui solo
+  // se comprueba que sigue siendo verdad despues de todo lo anterior.
+  modo = 'buena';
+  llamadas = 0;
+  const SID6 = 'cs_test_siete_iguales';
+  TIENDA.set(SID6, { id: SID6, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const r6 = res();
+  await chat({ method: 'POST', body: { session_id: SID6, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r6);
+  c('siete áreas del mismo tamaño NO disparan ningún repaso', llamadas === 7, llamadas + ' llamadas');
+
+  // Y con las siete de tamanos distintos pero normales, tampoco: si el liston
+  // estuviera demasiado alto, cada informe pagaria repasos por nada.
+  modo = 'siete distintas';
+  llamadas = 0;
+  avisos.length = 0;
+  const SID7 = 'cs_test_siete_distintas';
+  TIENDA.set(SID7, { id: SID7, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const r7 = res();
+  await chat({ method: 'POST', body: { session_id: SID7, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r7);
+  c('y siete de tamaños distintos pero normales, tampoco',
+    !avisos.some(a => /se ha quedado en \d+ palabras y las demas traen/.test(a)),
+    (avisos.find(a => /se ha quedado en/.test(a)) || 'ninguna se pide dos veces'));
+
   // ── Un area cortada a media frase no se entrega nunca ──────────────
   console.log('\n  el modelo devuelve el area cortada\n');
   modo = 'cortada';
@@ -210,10 +326,12 @@ try {
 
 } catch (err) {
   console.error = errOriginal;
+  console.warn = warnOriginal;
   console.error('\n  X la prueba reventó:', err.message);
   fallos++;
 } finally {
   console.error = errOriginal;
+  console.warn = warnOriginal;
   limpiar();
 }
 

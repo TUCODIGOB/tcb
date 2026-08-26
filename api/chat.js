@@ -1511,6 +1511,10 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
   const LARGO_MAX_NEGRITA = 200;
   const REPASOS_POR_ESTILO = 1;
 
+  // Lo que tiene que medir un area comparada con la mediana de las siete del
+  // mismo informe. Por debajo, se ha quedado sin escribir bloques enteros.
+  const PARTE_QUE_TIENE_QUE_TENER = 0.6;
+
   // Una casilla rellenada por rellenar. En el informe del 22 de agosto la
   // escena del area 6 llego con la palabra "placeholder" dentro y salio
   // impresa en dorado y a pagina entera.
@@ -1616,14 +1620,42 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
     return cortado ? cuerpo.replace(/[\s",;:]+$/, '').trim() : cuerpo.trim();
   }
 
+  // Un parrafo del cuerpo acaba en punto, interrogacion o admiracion, con o
+  // sin comilla o parentesis detras; los dos puntos tambien valen, que a
+  // veces presentan lo que viene. Cualquier otra cosa es que se corto.
+  const ACABA_CORTADO = /[^.?!…:"»)\]]$/;
+
   function limpiarLoQueSeImprime(texto, idArea) {
     const aviso = (que, trozo) => console.warn(`Área ${idArea}: ${que} ("${String(trozo).trim().slice(0, 40)}")`);
 
     const trozos = String(texto || '').split('\n\n').map(t => {
       const marca = (/^\[[A-ZÁÉÍÓÚ]+\]\s*/.exec(t) || [''])[0];
       const original = t.slice(marca.length);
-      const cuerpo = limpiarTexto(original);
+      let cuerpo = limpiarTexto(original);
       if (cuerpo !== original.trim()) aviso('se ha limpiado basura del modelo', original);
+
+      // UN PARRAFO CORTADO A MITAD DE FRASE NO SE IMPRIME ASI.
+      //
+      // El 26 de agosto el area 2 salio con un parrafo que acababa: "...algo
+      // te dice que todavia no, que mejor esperar un poco mas. Ese". Y ahi
+      // terminaba, en el PDF de una clienta que habia pagado. El modelo se
+      // paro a mitad de la frase y nadie lo miraba.
+      //
+      // Un parrafo del cuerpo escrito de verdad acaba en punto, en
+      // interrogacion o en admiracion. El que no, se recorta hasta su ultima
+      // frase entera: se pierde un cabo de cinco palabras que no decia nada y
+      // lo que queda se lee bien. Si no tiene ni una frase entera, no hay nada
+      // que salvar y se va con el resto del relleno, ahi abajo.
+      //
+      // SOLO EL CUERPO. Los remates, la pregunta y la escena van marcados y
+      // muchos acaban sin punto a proposito, que es como se escribe una frase
+      // suelta. Por eso los que llevan marca no se tocan.
+      if (!marca && cuerpo && ACABA_CORTADO.test(cuerpo)) {
+        const entero = cuerpo.replace(/[^.?!…]*$/, '').trim();
+        if (entero) aviso('se ha recortado un parrafo cortado a mitad de frase', cuerpo.slice(-40));
+        else aviso('se ha quitado un parrafo sin una sola frase entera', cuerpo);
+        cuerpo = entero;
+      }
       return { marca, cuerpo };
     });
 
@@ -2520,6 +2552,45 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     const resultados = await Promise.all(
       AREAS.map(area => generarArea(area, listas))
     );
+
+    // UN AREA QUE SE QUEDA A LA MITAD QUE SUS SEIS HERMANAS.
+    //
+    // El 26 de agosto el area 2 salio con 665 palabras y las otras seis del
+    // mismo informe traian entre 1.163 y 1.446. Tres paginas donde las demas
+    // llevan cinco, sin los bloques del final, y se entrego igual: nada
+    // miraba si el area tenia el tamano de un area.
+    //
+    // No se mide contra un numero fijo, se mide contra las otras seis del
+    // mismo informe, que es la unica vara honrada: cada carta da lo que da, y
+    // lo que no es normal es que una se quede en la mitad que el resto. Con
+    // las medidas de ese dia, la rota sale al 52% de la mediana y la
+    // siguiente mas corta al 91%: por debajo del 60% no cabe un area sana.
+    //
+    // Se pide una vez mas, y solo esa. Si la segunda tampoco viene mas larga,
+    // se entrega la que habia: es peor quedarse sin el area que tenerla
+    // corta, y en los registros queda dicho.
+    // Se cuentan SOLO los parrafos del cuerpo, que es donde estan los bloques
+    // que se pierden. La escena, los remates, la pregunta y el cierre van en
+    // sus casillas y ya tienen quien las vigile, y si entraran en la cuenta
+    // taparian el agujero: son las mismas en un area entera y en una coja.
+    const enPalabrasEl = t => analizarArea(String(t || ''))
+      .filter(b => b.tipo === 'texto')
+      .map(b => b.t)
+      .join(' ')
+      .split(/\s+/).filter(Boolean).length;
+    const largos = resultados.map(enPalabrasEl);
+    const mediana = [...largos].sort((a, b) => a - b)[Math.floor(largos.length / 2)];
+    for (let i = 0; i < resultados.length; i++) {
+      if (largos[i] >= mediana * PARTE_QUE_TIENE_QUE_TENER) continue;
+      console.warn(`Área ${AREAS[i].id} se ha quedado en ${largos[i]} palabras y las demas traen ${mediana}: se vuelve a pedir`);
+      const otra = await generarArea(AREAS[i], listas).catch(() => null);
+      if (enPalabrasEl(otra) > largos[i]) {
+        resultados[i] = otra;
+        largos[i] = enPalabrasEl(otra);
+      } else {
+        console.warn(`SE ENTREGA CON AVISOS — Área ${AREAS[i].id}: sigue corta, ${largos[i]} palabras de las ${mediana} que traen las demas`);
+      }
+    }
 
     // Unir con el separador. Es U+001F (Unit Separator), un caracter de
     // control invisible que existe justo para esto y que no aparece en texto
