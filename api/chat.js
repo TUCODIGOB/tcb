@@ -171,7 +171,7 @@ Sin ese permiso lee a la defensiva y no le entra nada. Con él, se abre, y a par
 const RASGO = {
   type: 'object',
   properties: {
-    nombre: { type: 'string', description: 'El titulo de la ficha, de tres a seis palabras, diciendo lo que ella hace o lo que le pasa. Nunca una etiqueta. Ej: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda".' },
+    nombre: { type: 'string', description: 'El titulo de la ficha, corto, de tres a ocho palabras, diciendo lo que ella hace o lo que le pasa. Nunca una etiqueta. Ej: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda".' },
     descripcion: { type: 'string', description: 'Dos lineas contandole eso mismo con detalle, escritas a ella y como se dice hablando, con comas y no picadas en frases secas. Ej: "Ves lo que le hace falta a alguien antes de que lo pida y te pones a ello sin esperar a que nadie te lo diga, muchas veces antes de que la otra persona se haya dado cuenta".' },
     area: { type: 'number', enum: [1, 2, 3, 4, 5, 6, 7], description: 'A cual de las siete areas corresponde este rasgo (1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero).' },
   },
@@ -576,7 +576,7 @@ Y tampoco apareces tu: aqui no hay un "yo" que cuente su experiencia ni que opin
 
 LAS DOS CASILLAS QUE ESCRIBES:
 
-- "nombre": el titulo de la ficha, de tres a seis palabras. No es una etiqueta ni un diagnostico: es lo que ella hace o lo que le pasa, dicho como se dice.
+- "nombre": el titulo de la ficha, corto, de tres a ocho palabras. No es una etiqueta ni un diagnostico: es lo que ella hace o lo que le pasa, dicho como se dice.
   BIEN: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda", "Dices que si sin pensarlo", "Aguantas mas de la cuenta", "Te fias poco de lo que llega facil".
   MAL: "Servicio que cura de verdad", "Dependencia emocional de lo compartido", "Autoexigencia que nunca descansa". Son etiquetas, y al leerlas nadie sabe de que hablan.
 
