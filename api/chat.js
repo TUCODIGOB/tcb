@@ -171,8 +171,8 @@ Sin ese permiso lee a la defensiva y no le entra nada. Con él, se abre, y a par
 const RASGO = {
   type: 'object',
   properties: {
-    nombre: { type: 'string', description: 'El nombre o titulo del rasgo/caracteristica, 3-6 palabras. Ej: "Buscador de verdades", "Leal instintiva".' },
-    descripcion: { type: 'string', description: 'DOS frases que lo describen. Dos: ni una sola ni tres. Ej: "Necesitas entender el por que de todo lo que te pasa antes de poder aceptarlo. Mientras no le encuentras el sentido, le sigues dando vueltas de noche".' },
+    nombre: { type: 'string', description: 'El titulo de la ficha, de tres a seis palabras, diciendo lo que ella hace o lo que le pasa. Nunca una etiqueta. Ej: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda".' },
+    descripcion: { type: 'string', description: 'Dos lineas contandole eso mismo con detalle, escritas a ella y como se dice hablando, con comas y no picadas en frases secas. Ej: "Ves lo que le hace falta a alguien antes de que lo pida y te pones a ello sin esperar a que nadie te lo diga, muchas veces antes de que la otra persona se haya dado cuenta".' },
     area: { type: 'number', enum: [1, 2, 3, 4, 5, 6, 7], description: 'A cual de las siete areas corresponde este rasgo (1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero).' },
   },
   required: ['nombre', 'descripcion', 'area'],
@@ -549,67 +549,62 @@ async function extraerRasgos(nombrePila, sexo, cartaTexto) {
     ? 'una MUJER. Toda en femenino.'
     : 'un HOMBRE. Todo en masculino.';
 
-  const prompt = `Eres la misma experta en psicología, astrología y neurociencia que escribe el estudio entero. Lo primero que haces es leer su carta y sacar de ella dos listas de rasgos suyos. Los sacas UNICAMENTE de la carta natal, pero eso no se nota al leerlos: van en el mismo libro y con la misma voz que el resto.
+  const prompt = `Eres la misma experta que escribe el estudio entero, y ahora te toca escribir sus dos listas de rasgos: lo que tiene a favor y lo que le pesa. Las dos salen de su carta natal, pero eso no se nota al leerlas, porque van escritas con la misma voz que el resto del libro.
 
 ESTAS LISTAS SON LA BASE DEL ESTUDIO ENTERO, NO SU FINAL.
-Con lo que salga de aqui se escriben despues las siete areas: a cada area le tocaran los rasgos que tu le pongas, y esa area contara ESOS y ninguno mas. Un rasgo que no pongas aqui no se cuenta en ningun sitio, y uno puesto en el area que no le toca se cuenta donde no pega. Ademas las dos listas se imprimen enteras al final del estudio, asi que lo que escribas se lee dos veces: desarrollado en su area y en su ficha.
+De aqui salen las siete areas: a cada una le tocan los rasgos que tu le pongas, y esa area contara ESOS y ninguno mas. Un rasgo que no pongas aqui no se cuenta en ningun sitio, y uno puesto donde no le toca se cuenta donde no pega. Ademas las dos listas se imprimen enteras al final del estudio, asi que lo que escribas se lee dos veces.
 
 ${ESPANOL_DE_ESPANA}
 
-QUE SON LAS DOS LISTAS:
-Fichas cortas. Cada una nombra una cosa suya y la cuenta debajo, en dos frases. No son un resumen de nada: son lo que de verdad se ve en su carta, una cosa por ficha.
-Y son eso y nada mas: el nombre, sus dos frases y su area. De donde le viene no va aqui, va en su area, que son cuatro paginas escritas para eso; repetirlo en una ficha de dos frases es decir dos veces lo mismo y la segunda peor.
+COMO SUENA ESTO, Y ESTO VA ANTES QUE NINGUNA OTRA REGLA:
 
-FORTALEZAS (lista 1):
-- Dones, habilidades innatas, ventajas, cosas que hace bien sin darse cuenta
-- Lo que otros le envidiarian aunque ella lo tenga por normal
+Lo va a leer una mujer que no sabe nada de astrologia ni de psicologia, sentada en su sofa. Tiene que entenderlo a la primera, sin releer y sin preguntarse que has querido decir.
 
-DESAFIOS (lista 2):
-- Lo que le cuesta, lo que pesa, donde tropieza una y otra vez
-- Areas de crecimiento que se ven en la carta
+HABLANDO SE USAN COMAS, NO PUNTOS. Una cosa sigue a la otra dentro de la misma frase, enlazada con una coma o con un "que". Picar el texto en trozos secos -frase, punto, frase, punto- suena a ficha de catalogo y no a alguien contandoselo, y es lo que mas se falla aqui.
 
-REGLAS IMPRESCINDIBLES:
-1. Entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} en cada lista: los que de verdad salgan de la carta, ni uno mas. Y las dos listas NO tienen que tener el mismo numero: nadie tiene exactamente tantas cosas buenas como malas, asi que si de una salen catorce y de la otra dieciseis, perfecto. Lo que no vale es rellenar para cuadrarlas.
-2. NI UNO REPETIDO, ni dentro de la misma lista ni entre las dos. Y repetido no es solo la misma frase: es la misma cosa dicha con otras palabras. "Miedo al abandono" y "Terror a que la dejen" son el mismo rasgo escrito dos veces, y contar dos veces lo mismo es lo unico que puede hacer que estas listas valgan menos que no estar. Antes de dar una por buena, leela contra todas las anteriores: si dice lo mismo que otra, no la pongas y saca otra distinta.
-3. Cada rasgo en UNA sola lista, nunca en las dos.
-4. Cada rasgo asignado a UNA de 7 areas: 1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero.
-5. DE CADA UNA DE LAS SIETE AREAS SALEN AL MENOS ${MINIMO_POR_AREA}, contando las dos listas juntas. Esto no es un detalle: cada area del estudio se escribe DESPUES con los rasgos que le hayas puesto aqui y con ninguno mas, asi que un area con uno solo se pasa cuatro paginas dando vueltas a una sola cosa. Ninguna carta se queda muda en un area: todo el mundo tiene identidad, algo que se le repite, algo que teme, algo que le dolio, una manera de querer, una manera de tratar a la gente y una relacion con el dinero.
-6. Maximo no hay. Si de un area salen seis, pon seis. Lo que no vale es rellenar para cuadrar: mejor ${MINIMO_POR_AREA} de verdad que cuatro con dos inventados.
-7. Reparte mirando la carta, no a partes iguales: unas areas tendran mas y otras menos, y eso esta bien mientras ninguna baje de ${MINIMO_POR_AREA}.
+NI UNA PALABRA TECNICA, ni de astrologia ni de terapia. Fuera "mecanismo", "patron", "gestionar", "procesar", "vinculo", "autoexigencia", "validacion", "dependencia emocional", "sanar". Si no la usaria ella hablando con una amiga, no va.
 
-ESTRUCTURA DE CADA RASGO:
-- "nombre": 3-6 palabras sin articulos. Ejemplos: "Buscador de verdades", "Leal hasta el agotamiento", "Miedo a decepcionar", "Capacidad de liderazgo", "Tendencia al perfeccionismo".
-- "descripcion": DOS FRASES, escrita a ella. Dos, siempre: ni una sola, que se queda en nada y suena a etiqueta de catalogo, ni tres, que ya no es una ficha. La primera nombra lo que le pasa y la segunda dice como se le nota. Ejemplo: "Necesitas entender el porque de todo lo que te pasa antes de poder aceptarlo. Mientras no le encuentras el sentido, le sigues dando vueltas de noche".
-- "area": numero 1-7. El area donde ese rasgo es MAS relevante. Piensalo bien: ese rasgo se va a contar entero en esa area y en ninguna otra, asi que uno puesto donde no va deja su area coja y le roba el sitio a la que si le tocaba.
-
-LA VOZ ES LA MISMA QUE EN LAS SIETE AREAS, Y ESTO VA ANTES QUE CUALQUIER OTRA REGLA:
+Y NADA DE FRASES ABSTRACTAS, que es de donde salen las fichas que no significan nada. "Dependencia emocional de lo compartido" no lo entiende nadie. "Te cuesta gastar en ti cuando el dinero es de los dos" si.
 
 ${TODO_DE_TU}
 ${HABLAR_DE_ELLA_LO_ROMPE}
 
-Aqui se escapa mas facil que en ningun otro sitio, porque una ficha corta tira a sonar a etiqueta de catalogo. "Persona sensible que capta lo invisible" habla de ella desde fuera y esta mal. "Captas lo que nadie ha dicho todavia" le habla a ella y esta bien.
+LAS DOS CASILLAS QUE ESCRIBES:
 
-${PERDONA_ANTES_DE_NOMBRAR}
+- "nombre": el titulo de la ficha, de tres a seis palabras. No es una etiqueta ni un diagnostico: es lo que ella hace o lo que le pasa, dicho como se dice.
+  BIEN: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda", "Dices que si sin pensarlo", "Aguantas mas de la cuenta", "Te fias poco de lo que llega facil".
+  MAL: "Servicio que cura de verdad", "Dependencia emocional de lo compartido", "Autoexigencia que nunca descansa". Son etiquetas, y al leerlas nadie sabe de que hablan.
 
-EN LA LISTA DE DESAFIOS ESTO ES LO QUE MAS IMPORTA. Una lista de defectos seguidos, uno detras de otro y sin nada que los sostenga, es lo mas duro que hay en todo el estudio: son ${RASGOS_MINIMO} golpes o mas, uno detras de otro, sin las explicaciones que en las areas los amortiguan. Se lee y se cierra el informe.
+- "descripcion": dos lineas contandole eso mismo con detalle, escritas a ella. Sale una frase larga con sus comas, o dos si el corte suena natural al decirlo en voz alta.
+  BIEN: "Ves lo que le hace falta a alguien antes de que lo pida y te pones a ello sin esperar a que nadie te lo diga, muchas veces antes de que la otra persona se haya dado cuenta de que lo necesitaba."
+  MAL: "Detectas necesidades ajenas con rapidez. Actuas sin que te lo pidan." Eso son dos etiquetas seguidas, no alguien hablando.
+
+- "area": un numero del 1 al 7. 1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero. El area donde ese rasgo pesa mas, porque ahi se contara entero: uno puesto donde no va deja su area coja y le roba el sitio a la que si le tocaba.
+
+LO QUE NO SE TOCA:
+1. Entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} en cada lista, y las dos con numeros distintos: nadie tiene tantas cosas buenas como malas. Los que de verdad salgan de la carta, sin rellenar para cuadrarlas.
+2. NI UNO REPETIDO, ni dentro de una lista ni entre las dos. Repetido no es solo la misma frase, es la misma cosa dicha de otra manera: "Miedo al abandono" y "Terror a que la dejen" son el mismo rasgo escrito dos veces. Antes de dar una ficha por buena, leela contra todas las anteriores.
+3. Cada rasgo en UNA sola lista, nunca en las dos.
+4. De cada una de las siete areas salen al menos ${MINIMO_POR_AREA}, contando las dos listas juntas. Cada area se escribe DESPUES solo con los suyos, asi que un area con uno solo se pasa cuatro paginas dando vueltas a una cosa. Nadie se queda mudo en un area: todo el mundo tiene identidad, algo que se le repite, algo que teme, algo que le dolio, una manera de querer, una manera de tratar a la gente y una relacion con el dinero.
+5. Maximo por area no hay: si de una salen seis, pon seis. Reparte mirando la carta, no a partes iguales.
+
+LA LISTA DE LO QUE LE PESA ES LA DELICADA. Son ${RASGOS_MINIMO} golpes seguidos o mas, sin las paginas que en las areas los amortiguan: mal escrita, se lee y se cierra el informe.
 - ${DEFECTOS_DESDE_LA_FUERZA}
-- EL NOMBRE DEL DESAFIO NO ES UNA ETIQUETA. No se le pone una condicion encima como si fuera un diagnostico: nada de "insegura", "dependiente", "controladora", "conflictiva". Se nombra lo que HACE o lo que le PASA, que es lo que ella reconoce y no le hace ponerse a la defensiva: "Te cuesta soltar el control cuando algo te importa" en vez de "Controladora".
+- ${PERDONA_ANTES_DE_NOMBRAR}
 
-NI UN NOMBRE DE PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ANGULO. NI UNA VEZ.
-Esto es lo que mas se falla en estas fichas, y la que se falla no vale: la clienta no ha pagado por una lectura tecnica, ha pagado porque le hablen de ella. Vale para las dos casillas.
-Prohibidas estas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Jupiter, Saturno, Urano, Neptuno, Pluton, Quiron, nodo, ascendente, medio cielo, los doce signos del zodiaco, cuadratura, trigono, sextil, oposicion, conjuncion, aspecto, orbe, retrogrado, carta, carta natal, horoscopo.
-Y "casa" solo cuando es la casa astrologica ("la casa del dinero", "la casa siete"). La casa de vivir se puede decir toda las veces que haga falta: "tienes la casa en orden", "no le abres la casa a cualquiera".
-- MAL: "El sol y Mercurio en la casa del trabajo diario, en un signo que vive para servir, te dan capacidad para detectar que necesita alguien". BIEN: "Detectas lo que le hace falta a alguien antes de que lo pida, y te pones a ello sin esperar a que nadie te lo diga".
-- MAL: "El sol enfrentado a Saturno te hizo crecer sintiendo que el carino habia que ganarselo". BIEN: "Das por hecho que el carino hay que ganarselo, asi que te lo sigues currando incluso cuando ya lo tienes".
-- MAL: "Tu luna en la zona de tu carta que habla de raices". BIEN: "Lo de dentro no se ensena, y te sale solo guardartelo aunque pese".
-Fijate en lo que hacen los BIEN: dicen exactamente lo mismo, pero contado desde su vida. Eso es lo que hay que escribir.
+NI UN PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ANGULO. NI UNA VEZ.
+La carta es de donde lo sacas, no lo que escribes. Prohibidas estas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Jupiter, Saturno, Urano, Neptuno, Pluton, Quiron, nodo, ascendente, medio cielo, los doce signos, cuadratura, trigono, sextil, oposicion, conjuncion, aspecto, orbe, retrogrado, carta, carta natal, horoscopo.
+Y "casa" solo cuando es la casa astrologica ("la casa del dinero", "la casa siete"); la casa de vivir se dice todas las veces que haga falta.
+- MAL: "El sol y Mercurio en la casa del trabajo diario te dan capacidad para detectar que necesita alguien". BIEN: "Notas lo que le hace falta a alguien antes de que lo diga y te pones a ello sin que nadie te lo pida, aunque nadie te lo agradezca despues."
+- MAL: "El sol enfrentado a Saturno te hizo sentir que el carino habia que ganarselo". BIEN: "Das por hecho que el carino hay que ganarselo, asi que te lo sigues currando incluso cuando ya lo tienes de sobra y nadie te lo esta pidiendo."
+Los dos BIEN dicen exactamente lo mismo que los MAL, pero contado desde su vida y con palabras suyas. Eso es lo que hay que escribir.
 
 Y EL RESTO DEL TONO, IGUAL QUE EN LAS AREAS:
 - ${FRASES_QUE_SUENAN_HABLADAS}
 - ${SIN_NOMBRAR_PLANETAS}
 - ${COMA_ANTES_DE_Y}
-- Nada de asteriscos, negritas, guiones ni simbolos dentro de las dos casillas: son texto corrido y la maquetacion la pone el PDF.
-- Llamala por su nombre como mucho una o dos veces EN TODA la lista, nunca en cada ficha: un nombre que sale en todas se lee a plantilla.
+- Nada de asteriscos, negritas, guiones ni simbolos dentro de las dos casillas: es texto corrido y la maquetacion la pone el PDF.
+- Llamala por su nombre una o dos veces EN TODA la lista, nunca en cada ficha: un nombre que sale en todas se lee a plantilla.
 
 Carta natal:
 ${cartaTexto}
@@ -617,7 +612,7 @@ ${cartaTexto}
 Persona: ${trato}
 Nombre de pila: ${nombrePila}
 
-IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con numeros distintos, ni uno repetido, y de cada una de las siete areas al menos ${MINIMO_POR_AREA}. Antes de darla por terminada, lee las dos listas seguidas y quita cualquiera que diga lo mismo que otra.`;
+IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con numeros distintos, ni uno repetido, y de cada una de las siete areas al menos ${MINIMO_POR_AREA}. Y antes de entregar, lee las dos listas seguidas en voz alta: la ficha que suene a etiqueta, o que este picada en frases secas, se reescribe.`;
 
   // LA LISTA SE PIDE CON EL ESQUEMA PUESTO, NO PIDIENDO JSON POR ESCRITO.
   //
