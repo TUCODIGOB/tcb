@@ -258,11 +258,8 @@ try {
   comprobar('y NO recibe ni uno de otra area',
     !n1.includes('Cabeza fría con el dinero') && !n1.includes('Te cuesta pedir')
     && !n1.includes('Guardarte lo que duele'));
-  // El area 7 tiene cuatro en la lista, dos de cada lado, asi que desarrolla
-  // tres: los dos que pesan y uno bueno. El cuarto se lee en la lista final.
-  comprobar('el area 7 recibe los dos que pesan y uno de los buenos',
-    n7.includes('Te comparas con lo que no tienes') && n7.includes('Te cuesta cobrar lo tuyo')
-    && n7.includes('Cabeza fría con el dinero') && !n7.includes('Sabes multiplicar lo que hay'));
+  comprobar('el area 7 recibe los suyos', n7.includes('Cabeza fría con el dinero')
+    && n7.includes('Sabes multiplicar lo que hay') && n7.includes('Te comparas con lo que no tienes'));
   comprobar('y ninguno del area 1', !n7.includes('Detectas lo que hace falta'));
 
   // Ningun rasgo puede estar en dos areas a la vez: es la razon de ser de esto.
@@ -276,86 +273,11 @@ try {
     enVariasAreas.length === 0,
     enVariasAreas.length ? enVariasAreas.map(r => r.nombre).join(', ') : 'los 21 en un area cada uno');
 
-  // ── 3b. DOS O TRES POR AREA, Y DE LOS DOS LADOS ───────────────
-  //
-  // El 27 de agosto la lista dio 34 rasgos y el area 2 se quedo con ocho. Con
-  // ocho cosas que meter en mil cuatrocientas palabras el area deja de
-  // contarlas y las lista: 179 palabras por rasgo, cuando las demas les
-  // dedican de 250 a 440. Ahora cada area desarrolla dos o tres; los demas se
-  // leen enteros en la lista del final del estudio, que se imprime completa.
-  const cuantosLleva = a => (notaDe(a).match(/^- .+ \((fortaleza|desafio)\):/gm) || []);
-  const pasadas = [];
-  for (let a = 1; a <= 7; a++) {
-    const llevan = cuantosLleva(a);
-    if (llevan.length < 2 || llevan.length > 3) pasadas.push(`area ${a}: ${llevan.length}`);
-  }
-  comprobar('cada área desarrolla DOS o TRES, nunca más',
-    pasadas.length === 0, pasadas.join('; ') || 'las siete con dos o tres');
-
-  // Y DE LOS DOS LADOS. Un area entera de cosas buenas se lee a halago y una
-  // entera de las que pesan se cierra a la mitad.
-  const descompensadas = [];
-  for (let a = 1; a <= 7; a++) {
-    const hayF = todos.some(r => Number(r.area) === a && LISTA_BUENA.fortalezas.includes(r));
-    const hayD = todos.some(r => Number(r.area) === a && LISTA_BUENA.desafios.includes(r));
-    if (!hayF || !hayD) continue;   // si su carta solo da de un lado, no hay nada que compensar
-    const llevan = cuantosLleva(a).join(' ');
-    if (!llevan.includes('(fortaleza)') || !llevan.includes('(desafio)')) descompensadas.push('area ' + a);
-  }
-  comprobar('y de los dos lados: de lo que tiene a favor y de lo que le pesa',
-    descompensadas.length === 0, descompensadas.join(', ') || 'las siete compensadas');
-
-  // Y CUANDO HAY QUE TIRAR PARA UN LADO, SE TIRA PARA EL QUE PESA. Tres es
-  // impar, asi que uno de los dos lados se lleva dos: se los lleva el desafio,
-  // porque la clienta paga esto por sus dudas y sus dudas no son lo bueno.
-  // Solo cuando su carta le da un unico desafio en esa parcela repite el bueno.
-  const alReves = [];
-  for (let a = 1; a <= 7; a++) {
-    const llevan = cuantosLleva(a);
-    if (llevan.length < 3) continue;
-    const nP = llevan.filter(x => x.includes('(desafio)')).length;
-    const hayDosQuePesan = LISTA_BUENA.desafios.filter(r => Number(r.area) === a).length >= 2;
-    if (hayDosQuePesan && nP < 2) alReves.push(`area ${a}: solo ${nP} que pesa(n)`);
-  }
-  comprobar('y de los tres, dos son de los que pesan siempre que su carta los dé',
-    alReves.length === 0, alReves.join('; ') || 'ninguna tira para el lado bueno');
-
-  // Los que no se desarrollan NO se cuelan en ninguna area: se leen en la
-  // lista del final, y esa se imprime entera.
-  const fuera = todos.filter(r => !notaDe(Number(r.area)).includes(r.nombre));
-  const coladosEnOtra = fuera.filter(r => {
-    for (let a = 1; a <= 7; a++) if (notaDe(a).includes(r.nombre)) return true;
-    return false;
-  });
-  comprobar('y los que no se desarrollan no aparecen en ninguna área',
-    coladosEnOtra.length === 0 && fuera.length > 0,
-    `${fuera.length} se quedan solo en la lista del final`);
-
-  // Y EL CASO DE VERDAD: el 27 de agosto el area 2 se quedo con OCHO. Con la
-  // lista cargada de un lado, el tope tiene que seguir en tres y la mezcla
-  // tiene que seguir saliendo de los dos lados.
-  listaQueDevuelve = {
-    fortalezas: [
-      ...LISTA_BUENA.fortalezas,
-      rasgo('Escuchas mas de lo que hablas', 'Te quedas con la fecha exacta y con la frase que uso.', 2),
-      rasgo('Encuentras la palabra exacta', 'Dices justo lo que quieres decir y te entienden a la primera.', 2),
-      rasgo('Sabes esperar sin desesperarte', 'Aguantas el tiempo que haga falta sin tirar la toalla.', 2),
-      rasgo('Construyes con lo que tienes', 'No necesitas condiciones perfectas para ponerte a levantar algo.', 2),
-    ],
-    desafios: [
-      ...LISTA_BUENA.desafios,
-      rasgo('Repites el metodo aunque falle', 'Te agarras a lo que te funciono una vez aunque ya no encaje.', 2),
-      rasgo('Necesitas controlar los detalles', 'Revisas lo mismo dos y tres veces para quedarte tranquila.', 2),
-    ],
-  };
-  await generar();
-  listaQueDevuelve = null;
-  const conOcho = cuantosLleva(2);
-  comprobar('un área con ocho rasgos sigue desarrollando solo TRES',
-    conOcho.length === 3, conOcho.length + ' en la nota del área 2');
-  comprobar('y esos tres siguen saliendo de los dos lados',
-    conOcho.join(' ').includes('(fortaleza)') && conOcho.join(' ').includes('(desafio)'),
-    conOcho.join(' | ').replace(/:.*$/gm, ''));
+  // Y llegan TODOS: si la lista le da tres a un area, el area cuenta tres.
+  const sinRepartir = todos.filter(r => !notaDe(r.area).includes(r.nombre));
+  comprobar('y todos los de la lista llegan a su area',
+    sinRepartir.length === 0,
+    sinRepartir.length ? sinRepartir.map(r => r.nombre).join(', ') : `los ${todos.length} repartidos`);
 
   // ── 4. SI LAS LISTAS SE CAEN, EL INFORME SALE IGUAL ───────────
   listaFalla = 500;
