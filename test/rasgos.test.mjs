@@ -190,6 +190,25 @@ const RASGOS_DE_ASTROLOGO = {
   ],
 };
 
+// Y una lista escrita como salio de verdad el 26 de agosto: las
+// descripciones cortadas por la mitad con un punto, en vez de ir seguidas y
+// unidas con comas. La ficha se lee de un vistazo y ahi el punto de mas se
+// nota mas que en ninguna otra parte del estudio.
+const picar = (d) => {
+  const trozos = String(d).split(' ');
+  const corte = Math.ceil(trozos.length / 2);
+  const cola = trozos.slice(corte).join(' ');
+  return trozos.slice(0, corte).join(' ') + '. ' + cola.charAt(0).toUpperCase() + cola.slice(1);
+};
+
+// Las `cuantas` primeras fichas llegan picadas y el resto bien escritas, que
+// es como llega de verdad: nunca todas, nunca ninguna.
+const listaPicada = (cuantas) => {
+  const todas = [...RASGOS.fortalezas, ...RASGOS.desafios].map(r => ({ ...r }));
+  todas.slice(0, cuantas).forEach(r => { r.descripcion = picar(r.descripcion); });
+  return { fortalezas: todas.slice(0, 14), desafios: todas.slice(14) };
+};
+
 // ── LA PUERTA QUE DEJA VER SI LA LISTA SALE ANTES O DESPUES ────────
 //
 // Las siete areas se quedan paradas en la puerta sin contestar. Cuando ya
@@ -265,6 +284,17 @@ globalThis.fetch = async (url, opts = {}) => {
     }
     if (comoSalePedirLaLista === 'repite_siempre') {
       return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(RASGOS_CON_REPETIDO) }] }) };
+    }
+    if (comoSalePedirLaLista === 'picada' && vecesQueSeHaPedidoLaLista === 1) {
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(listaPicada(20)) }] }) };
+    }
+    if (comoSalePedirLaLista === 'picada_siempre') {
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(listaPicada(20)) }] }) };
+    }
+    // Diez de treinta es justo un tercio: el limite por abajo. Aqui NO puede
+    // saltar, o estariamos pagando un repaso por una lista que esta bien.
+    if (comoSalePedirLaLista === 'algun_punto') {
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(listaPicada(10)) }] }) };
     }
     if (comoSalePedirLaLista === 'corta') {
       const pocos = { fortalezas: RASGOS.fortalezas.slice(0, 4), desafios: RASGOS.desafios.slice(0, 3) };
@@ -579,6 +609,53 @@ try {
     /se piden al menos/.test(encargosDeLaLista[1] || ''));
   comprobar('el informe sale igual aunque la lista venga corta las dos veces',
     corta.code === 200, 'HTTP ' + corta.code);
+
+  // (d) LAS DESCRIPCIONES PICADAS EN DOS FRASES.
+  //
+  // El 26 de agosto llegaron 19 de 29 cortadas por la mitad con un punto. El
+  // prompt ya pedia comas: no basto, porque sus propios ejemplos iban
+  // partidos con punto y el modelo copia la forma del ejemplo antes que la
+  // regla. Los ejemplos ya estan arreglados; esto es lo que lo asegura.
+  console.log('\n  api/chat.js — las descripciones van seguidas, no picadas\n');
+
+  const picada = await pedirInforme('picada', 'picada');
+  comprobar('una lista con las descripciones picadas se vuelve a pedir',
+    vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+  comprobar('y se le dice cuántas son y qué tiene que hacer',
+    /20 de 30 descripciones van picadas/.test(encargosDeLaLista[1] || '')
+    && /seguidas y unidas con comas/.test(encargosDeLaLista[1] || ''),
+    (encargosDeLaLista[1] || '').slice(-190).replace(/\n/g, ' '));
+  comprobar('y lo que se entrega es la lista bien escrita',
+    [...(picada.body?.rasgos?.fortalezas || []), ...(picada.body?.rasgos?.desafios || [])]
+      .every(f => !/[.?!]\s+[A-ZÁÉÍÓÚÑ]/.test(f.descripcion)),
+    [...(picada.body?.rasgos?.fortalezas || []), ...(picada.body?.rasgos?.desafios || [])].length + ' fichas');
+
+  // Si insiste, se entrega igual: es peor quedarse sin la pagina de rasgos
+  // que con una pagina que tiene mas puntos de la cuenta.
+  const picadaSiempre = await pedirInforme('picada_siempre', 'picada2');
+  comprobar('si insiste, el informe se entrega igual',
+    picadaSiempre.code === 200
+    && picadaSiempre.body?.rasgos?.fortalezas?.length === 14, 'HTTP ' + picadaSiempre.code);
+  comprobar('y se intenta las dos veces antes de darlo por bueno',
+    vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+
+  // Y LO CONTRARIO, QUE ES LO QUE HUNDIO AL CORRECTOR QUE SE QUITO EL 26 DE
+  // AGOSTO: la falsa alarma. Un punto suelto no es un fallo, a veces la frase
+  // se acaba de verdad ahi. Diez de treinta es justo un tercio, el limite: si
+  // saltara aqui, estariamos pagando una llamada por una lista que esta bien.
+  const algunPunto = await pedirInforme('algun_punto', 'punto');
+  comprobar('un tercio de puntos NO dispara ningún repaso',
+    vecesQueSeHaPedidoLaLista === 1, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+  comprobar('y esa lista se entrega tal cual, sin tocarle nada',
+    algunPunto.body?.rasgos?.fortalezas?.length === 14
+    && algunPunto.body?.rasgos?.desafios?.length === 16,
+    `${algunPunto.body?.rasgos?.fortalezas?.length} + ${algunPunto.body?.rasgos?.desafios?.length}`);
+
+  // Y una lista bien escrita del todo, tampoco.
+  const limpia = await pedirInforme('bien', 'limpia');
+  comprobar('una lista bien escrita tampoco lo dispara',
+    vecesQueSeHaPedidoLaLista === 1 && limpia.code === 200,
+    vecesQueSeHaPedidoLaLista + ' llamada(s)');
 
   comoSalePedirLaLista = 'bien';
 

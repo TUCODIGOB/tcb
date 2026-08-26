@@ -484,6 +484,10 @@ function laPalabraDeAstrologo(rasgo) {
 // Pasarse del maximo NO esta aqui a proposito: que saque veinte en vez de
 // dieciocho no le hace daño a nadie y no merece pagar otra llamada entera.
 // Quedarse corta si, porque una lista de seis no es la pagina que se vendio.
+// Un punto en mitad de la descripcion: final de frase y mayuscula detras.
+// En estas fichas no hay abreviaturas ni cifras, asi que no confunde ninguna.
+const VA_PICADA = /[.?!]\s+[A-ZÁÉÍÓÚÑ¿¡]/;
+
 function loQueLeFaltaALaLista(lista) {
   const problemas = [];
 
@@ -526,6 +530,33 @@ function loQueLeFaltaALaLista(lista) {
       + conPalabrota.slice(0, 8).join(', ')
       + (conPalabrota.length > 8 ? `, y ${conPalabrota.length - 8} mas` : '')
       + '. Vuelve a escribirlas contando lo mismo desde su vida, sin nombrar planetas, signos, casas, angulos ni la carta'
+    );
+  }
+
+  // LAS DESCRIPCIONES PICADAS EN DOS FRASES.
+  //
+  // En el informe del 26 de agosto, 19 de las 29 descripciones llegaron
+  // cortadas por la mitad con un punto ("...le das una vuelta antes. Cuando
+  // explicas algo..."). Asi no suena a alguien hablando, suena a ficha de
+  // catalogo, y la pagina de rasgos se lee entera de un vistazo: el punto de
+  // mas se ve ahi mas que en ningun otro sitio del estudio.
+  //
+  // El prompt ya lo pedia. No basto, porque los ejemplos que tenia delante
+  // iban partidos con punto y el modelo copia la forma del ejemplo antes que
+  // la regla. Los ejemplos ya estan arreglados; esto es lo que lo asegura.
+  //
+  // SE MIRA LA LISTA ENTERA, NO FICHA POR FICHA. Un punto suelto en una
+  // descripcion no es un fallo -a veces la frase se acaba de verdad ahi-; lo
+  // que se lee mal es la pagina llena de ellos. Por eso el limite no es
+  // "ninguna", es "que no sea la norma": salta pasado un tercio. Asi no puede
+  // dar la falsa alarma que daba el corrector que se quito el 26 de agosto,
+  // porque esto no juzga lo que dice la frase, solo cuenta puntos.
+  const cuantas = todosLosRasgos(lista).length;
+  const picadas = todosLosRasgos(lista).filter(({ r }) => VA_PICADA.test(String(r.descripcion || '')));
+  if (cuantas > 0 && picadas.length * 3 > cuantas) {
+    problemas.push(
+      `${picadas.length} de ${cuantas} descripciones van picadas en dos frases con un punto en medio, `
+      + `y asi no suenan a alguien hablando: escribelas seguidas y unidas con comas`
     );
   }
 
