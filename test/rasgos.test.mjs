@@ -139,6 +139,10 @@ const CATALOGO = [
 const unRasgo = (i, area) => ({
   nombre: CATALOGO[i % CATALOGO.length][0],
   descripcion: CATALOGO[i % CATALOGO.length][1],
+  // La cuarta casilla, el porque: es la que leen las siete areas y la unica
+  // que no se imprime. Aqui va con una frase reconocible para poder mirar que
+  // no aparece en lo que sale por la puerta.
+  porque: 'Por dentro te va a distinto ritmo lo que quieres y lo que te permites.',
   area,
 });
 
@@ -428,13 +432,19 @@ try {
   comprobar('una lista buena no se pide dos veces',
     vecesQueSeHaPedidoLaLista === 1, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   const uno = r.body?.rasgos?.fortalezas?.[0];
-  // Tres, y ninguna mas: el nombre, sus dos frases y su area. Hubo una
-  // cuarta, el porque, y se quito porque eso ya lo cuenta entero su area.
+  // Tres, y ninguna mas: el nombre, sus dos frases y su area.
+  //
+  // Dentro del servidor la ficha tiene una cuarta, el porque, que es la que
+  // leen las siete areas para contarle de donde le viene cada cosa. Esa no
+  // sale de aqui: si saliera estaria en el navegador, de ahi en la peticion
+  // del PDF, y a una linea de imprimirse debajo de la ficha. Ver sinElPorque.
   comprobar('cada rasgo llega con sus tres casillas',
     Boolean(uno?.nombre && uno?.descripcion && uno?.area >= 1 && uno?.area <= 7));
   comprobar('y con ninguna mas',
     JSON.stringify(Object.keys(uno || {}).sort()) === JSON.stringify(['area', 'descripcion', 'nombre']),
     Object.keys(uno || {}).join(', '));
+  comprobar('el porque se queda dentro y no viaja al navegador',
+    !JSON.stringify(r.body?.rasgos || {}).includes('a distinto ritmo'));
 
   // LA COMA ANTES DE "Y" SE LE QUITA A LAS FICHAS, IGUAL QUE AL TEXTO.
   //

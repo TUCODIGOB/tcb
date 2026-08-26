@@ -93,7 +93,7 @@ const ESQUEMA_AREA_POR_BLOQUES = {
       properties: {
         arranque: bloqueDelArea('EL ARRANQUE del area: abre ancho, desde algo que le pasa a mucha gente, y solo entonces se estrecha hasta ella.'),
         hoy: bloqueDelArea('El bloque HOY: como se manifiesta ahora, lo malo Y lo bueno, con el don contado a fondo. Es el bloque mas largo del area.'),
-        origen: bloqueDelArea('El bloque ORIGEN: por que es asi y de donde le viene, uniendo el porque con lo que hace hoy como causa y efecto. Viene de como esta hecha desde que nacio, NUNCA de un pasado que se le invente. UNA sola explicacion, desarrollada a fondo.'),
+        origen: bloqueDelArea('El bloque ORIGEN: por que es asi y de donde le viene, uniendo el porque con lo que hace hoy como causa y efecto. Viene de como esta hecha desde que nacio, NUNCA de un pasado que se le invente. UNA sola explicacion, desarrollada a fondo: es la raiz del area entera, y el motivo de cada rasgo suelto va pegado al rasgo, donde se cuenta.'),
         creencias: bloqueDelArea('El bloque CREENCIAS: lo que da por cierto sin haberlo puesto en duda y que hace que todo se repita solo. Aqui va la verdad incomoda. Despues de HOY, el que mas sitio ocupa.'),
         soltar: bloqueDelArea('El bloque SOLTAR: solo NOMBRA la creencia que tiene que caer. Ni pasos, ni ejercicios, ni plan. Es el bloque mas corto de todos.'),
       },
@@ -173,9 +173,10 @@ const RASGO = {
   properties: {
     nombre: { type: 'string', description: 'El titulo de la ficha, corto, de tres a ocho palabras, diciendo lo que ella hace o lo que le pasa. Nunca una etiqueta. Ej: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda".' },
     descripcion: { type: 'string', description: 'Dos lineas contandole eso mismo con detalle, escritas a ella y como se dice hablando. Van seguidas y unidas con comas, nunca partidas en dos frases con un punto en medio, y acaban en punto. Con tildes y enes, que es un texto que se imprime. Ej, para el titulo "Ves lo que le falta a la gente": "Notas lo que le hace falta a alguien antes de que lo pida y te pones a resolverlo sin esperar a que nadie te lo diga, muchas veces antes de que esa persona se haya dado cuenta."' },
+    porque: { type: 'string', description: 'De donde le viene esto: que hay dentro de ella que lo produce, en una linea y escrita a ella de tu. NOTA INTERNA PARA LAS SIETE AREAS, NO SE IMPRIME. Sale de cruzar lo que dice su carta y va traducida a su vida: sin planetas, sin signos, sin casas, sin angulos, y sin afirmar nada de su pasado. Ej, para "Ves lo que le falta a la gente": "Lo que necesitas y lo que te permites pedir no te van a la vez, así que aprendes a leer a los demás para conseguir por el lado de fuera lo que no sabes pedir de frente."' },
     area: { type: 'number', enum: [1, 2, 3, 4, 5, 6, 7], description: 'A cual de las siete areas corresponde este rasgo (1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero).' },
   },
-  required: ['nombre', 'descripcion', 'area'],
+  required: ['nombre', 'descripcion', 'porque', 'area'],
   additionalProperties: false,
 };
 
@@ -218,8 +219,9 @@ const RASGOS_MINIMO = 12;
 const RASGOS_MAXIMO = 18;
 
 // El hueco para escribir la respuesta. No llega ni de lejos: las treinta y
-// seis fichas enteras, con su nombre, sus dos frases y su area, son menos de
-// 7.000 caracteres de JSON y no pasan de 2.500 tokens.
+// seis fichas enteras -su nombre, sus dos frases, su porque y su area- no
+// pasan de 4.000 tokens. La cuenta subio el dia que la ficha estreno el
+// porque: eran 2.500 con tres casillas, y la cuarta anade una linea por ficha.
 // Se deja de sobra a proposito: el tope no se paga, se paga lo que el modelo
 // escriba, y quedarse corto cuesta la lista entera, que es lo que paso con el
 // de 3.000.
@@ -431,6 +433,27 @@ function sinLosRepetidos(lista) {
   };
 }
 
+// EL PORQUE NO SALE DE AQUI, Y ESTE ES EL SITIO DONDE SE QUEDA.
+//
+// La cuarta casilla de la ficha es una nota interna: las siete areas la leen
+// para contarle de donde le viene cada cosa CON SUS PALABRAS, dentro del
+// texto. En la pagina de rasgos no pinta nada -alli la ficha son sus tres
+// cosas, el nombre, la frase y su area- y en el navegador tampoco.
+//
+// Asi que la lista que se devuelve sale sin el. No es que generar-pdf no lo
+// pinte -que no lo pinta-, es que no llega a tenerlo: lo que no sale por la
+// puerta no se puede imprimir por accidente el dia que alguien toque el PDF.
+function sinElPorque(listas) {
+  const pelar = r => {
+    const { porque, ...resto } = r;
+    return resto;
+  };
+  return {
+    fortalezas: (listas.fortalezas || []).map(pelar),
+    desafios: (listas.desafios || []).map(pelar),
+  };
+}
+
 // ── NI UNA PALABRA DE ASTROLOGO IMPRESA ───────────────────────────
 //
 // En el informe del 24 de agosto salieron 25 fichas de 28 diciendo cosas
@@ -466,7 +489,10 @@ const CAZA_AL_ASTROLOGO = new RegExp(
 );
 
 // Devuelve la palabra que se ha colado, o null si la ficha esta limpia. Mira
-// las dos casillas que se escriben, que son las dos que se imprimen.
+// las dos casillas que se IMPRIMEN, que son las dos que le llegan a la
+// clienta en su libro. La tercera que se escribe, el porque, no se imprime y
+// se mira en otro sitio y de otra manera: ver elPorqueQueSePuedeUsar. Alli no
+// se vuelve a pedir la lista por una nota interna, se deja fuera y ya.
 function laPalabraDeAstrologo(rasgo) {
   // El "|| ''" es un seguro. limpiar() ya deja las dos casillas como cadena,
   // pero sin el, una que llegara vacia meteria la palabra "undefined" dentro
@@ -617,7 +643,7 @@ Ha pagado por leer lo suyo, no algo que le valdria a cualquiera. En cuanto lee u
 De su carta sale COMO funciona, no lo que vivio: no sabes como era su casa, ni que vio de pequena, ni que le dijeron. Asi que su pasado no se afirma NUNCA -nada de "aprendiste", "creciste", "de pequena", "en tu casa", "desde joven"-, se cuenta lo que le pasa HOY, que es lo unico que puede reconocer.
 
 ESTAS LISTAS SON LA BASE DEL ESTUDIO ENTERO, NO SU FINAL.
-De aqui salen las siete areas: a cada una le tocan los rasgos que tu le pongas, y esa area contara ESOS y ninguno mas. Un rasgo que no pongas aqui no se cuenta en ningun sitio. Ademas las dos listas se imprimen enteras al final, asi que lo que escribas se lee dos veces.
+De aqui salen las siete areas: a cada una le tocan los rasgos que tu le pongas, y esa area contara ESOS y ninguno mas. Un rasgo que no pongas aqui no se cuenta en ningun sitio. Ademas las dos listas se imprimen enteras al final -el nombre y la descripcion de cada ficha; el porque no, que es una nota para las areas-, asi que lo que escribas se lee dos veces.
 
 ${ESPANOL_DE_ESPANA}
 
@@ -636,7 +662,7 @@ ${TODO_DE_TU}
 ${HABLAR_DE_ELLA_LO_ROMPE}
 Y tampoco apareces tu: aqui no hay un "yo" que cuente su experiencia ni que opine. Solo ella.
 
-LAS DOS CASILLAS QUE ESCRIBES:
+LAS TRES CASILLAS QUE ESCRIBES:
 
 - "nombre": el titulo de la ficha, corto, de tres a ocho palabras. No es una etiqueta, ni un diagnostico, ni una cualidad suelta: es una cosa concreta que ella hace o que le pasa, dicha como se dice hablando. Al leerlo se tiene que ver QUE hace; si solo suena bien y no se ve nada, esta mal y se reescribe.
   BIEN: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda", "Dices que sí sin pensarlo", "Aguantas más de la cuenta", "Te fías poco de lo que llega fácil".
@@ -646,6 +672,14 @@ LAS DOS CASILLAS QUE ESCRIBES:
   Y va SEGUIDA, unida con comas, nunca partida en dos frases con un punto en medio. El punto del final si va: una frase sin punto esta sin acabar.
   BIEN, para el titulo "Ves lo que le falta a la gente": "Notas lo que le hace falta a alguien antes de que lo pida y te pones a resolverlo sin esperar a que te lo diga nadie, muchas veces antes de que esa persona sepa siquiera qué le pasaba."
   MAL: "Detectas necesidades ajenas con rapidez. Actúas sin que te lo pidan." Dice el titulo otra vez y en mas tecnico, va picada en dos y no anade ni un detalle.
+
+- "porque": de donde le viene eso, en UNA linea y hablandole de tu. Es la casilla que decide el valor del estudio entero: el nombre y la descripcion le dicen COMO es, y esta le dice POR QUE es asi, que es lo que ha venido a entender. Como es ya lo sabe.
+  Sale de cruzar lo que ves en su carta -lo que dentro de ella va a distinto ritmo y lo que se apoya-, y se escribe traducido a su vida, igual que el resto: ni un planeta, ni un signo, ni una casa, ni un angulo.
+  Y no se afirma nada de su pasado, que la carta no lo dice. El porque que si es verdad es como esta hecha por dentro, y lo que le sale de estar hecha asi.
+  BIEN, para "Ves lo que le falta a la gente": "Lo que necesitas y lo que te permites pedir no te van a la vez, así que aprendes a leer a los demás para conseguir por el lado de fuera lo que no sabes pedir de frente."
+  MAL: "De pequeña tuviste que estar pendiente de los demás." Es un pasado inventado, y su carta no dice nada de eso.
+  MAL: "Mercurio en la casa del trabajo te da esa capacidad." Es la carta sin traducir.
+  ESTA CASILLA NO SE IMPRIME, y por eso va en corto y a lo que va, sin decorar: la leen las siete areas para contarle el porque con sus palabras, dentro del texto.
 
 - "area": un numero del 1 al 7. 1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero. El area donde ese rasgo pesa mas, porque ahi se contara entero: uno puesto donde no va deja su area coja y le roba el sitio a la que si le tocaba.
 
@@ -671,7 +705,7 @@ Y EL RESTO DEL TONO, IGUAL QUE EN LAS AREAS:
 - ${FRASES_QUE_SUENAN_HABLADAS}
 - ${SIN_NOMBRAR_PLANETAS}
 - ${COMA_ANTES_DE_Y}
-- Nada de asteriscos, negritas, guiones ni simbolos dentro de las dos casillas: es texto corrido y la maquetacion la pone el PDF.
+- Nada de asteriscos, negritas, guiones ni simbolos dentro de las tres casillas: es texto corrido y la maquetacion la pone el PDF.
 - Llamala por su nombre una o dos veces EN TODA la lista, nunca en cada ficha: un nombre que sale en todas se lee a plantilla.
 
 Carta natal:
@@ -680,7 +714,7 @@ ${cartaTexto}
 Persona: ${trato}
 Nombre de pila: ${nombrePila}
 
-IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con numeros distintos, ni uno repetido, y de cada una de las siete areas al menos ${MINIMO_POR_AREA}. Y antes de entregar, lee las dos listas seguidas en voz alta: la ficha que suene a etiqueta, la que haya que releer para entenderla, la que vaya picada en dos frases secas en vez de ir seguida y la que afirme algo de su vida que la carta no dice, se reescriben.`;
+IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con numeros distintos, ni uno repetido, de cada una de las siete areas al menos ${MINIMO_POR_AREA}, y NI UNA SOLA FICHA SIN SU PORQUE. Y antes de entregar, lee las dos listas seguidas en voz alta: la ficha que suene a etiqueta, la que haya que releer para entenderla, la que vaya picada en dos frases secas en vez de ir seguida y la que afirme algo de su vida que la carta no dice, se reescriben.`;
 
   // LA LISTA SE PIDE CON EL ESQUEMA PUESTO, NO PIDIENDO JSON POR ESCRITO.
   //
@@ -756,8 +790,12 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
     if (!Array.isArray(resultado.fortalezas)) resultado.fortalezas = [];
     if (!Array.isArray(resultado.desafios)) resultado.desafios = [];
 
-    // La ficha se queda en sus tres casillas y nada mas: lo que llegue de
-    // sobra no viaja hasta el PDF.
+    // La ficha se queda en sus cuatro casillas y nada mas: lo que llegue de
+    // sobra se cae aqui.
+    //
+    // Tres de las cuatro se imprimen. La cuarta, el porque, NO: es la nota que
+    // leen las siete areas para contarle de donde le viene cada cosa, y sale
+    // de la ficha antes de que la lista viaje al navegador. Ver sinElPorque.
     //
     // Y pasa por el mismo cepillo de la coma antes de "y" que el texto de las
     // areas. El prompt la lleva pedida desde siempre y se sigue colando; alli
@@ -780,6 +818,9 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
       return {
         nombre: sinLaComa(rasgo.nombre),
         descripcion: conPuntoFinal(sinLaComa(rasgo.descripcion)),
+        // Sin cepillar: no se imprime, asi que no tiene que quedar bonito,
+        // tiene que decir la causa. Lo unico que se le quita son los bordes.
+        porque: String(rasgo.porque || '').trim(),
         area: (area >= 1 && area <= 7) ? area : 1,
       };
     };
@@ -877,6 +918,8 @@ const MARCAS_QUE_NO_SE_IMPRIMEN = [
   'lo que te toca contar a ti en esta area',
   'esto es que contar, no por donde mirar',
   'los bloques no cambian de trabajo',
+  'por que es asi, y esto no se copia',
+  'cada rasgo llega con su',
   'la parte de la carta que te toca mirar',
   'por donde va esta area',
   'informacion interna para ti',
@@ -1122,7 +1165,7 @@ ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBL
 ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir que es así: hay que unir el porqué con lo que hace hoy, como causa y efecto, para que entienda el PORQUÉ y no solo el qué.
 Y AQUÍ ES DONDE SE JUEGA EL PRODUCTO ENTERO. Su carta dice CÓMO está hecha, no lo que le pasó: no sabes cómo era su casa, ni qué vio de pequeña, ni qué le dijeron, ni a qué edad. Así que su pasado NO SE AFIRMA NUNCA, ni siquiera con un "puede que fuera": nada de "aprendiste", "de pequeña", "creciste", "en tu casa", "tu madre", "esa niña de siete años". Ha pagado por leer lo suyo, y en cuanto lee una frase de una vida que no ha vivido deja de creerse el estudio entero y no vuelve a comprar.
 El origen que sí es verdad es este: viene de serie con ella, es la manera en la que está montada desde que llegó al mundo. Y el puente hasta hoy tiene esta forma: "esto lo traes puesto de siempre, te funcionó, y de tanto funcionarte se volvió automático, hasta el punto de que hoy lo haces sin decidirlo". La forma es esa, las palabras las pones tú y cambian en cada área.
-UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluiste tú de aquello, y qué haces hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en tu vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra explicación distinta.
+UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluiste tú de aquello, y qué haces hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en tu vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra explicación distinta. Esto manda dentro de ORIGEN, que es donde se desarrolla la raíz, y en ningún caso te prohíbe darle su motivo a cada cosa que le nombras en los demás bloques: eso va pegado a cada cosa, en su misma frase, y es lo que separa un diagnóstico de un estudio.
 
 CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que das por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Después de HOY, es el punto que más sitio ocupa.
 
@@ -1131,7 +1174,7 @@ SOLTAR — QUÉ TIENES QUE SOLTAR. Solo NOMBRAR la creencia concreta que tiene q
 CIERRE — el cierre, tal como pide la sección CIERRE DE CADA ÁREA. Además tiene que salir del contenido concreto de ESTA área y de ESTA persona: si ese mismo cierre pudiera ir al final de cualquiera de las otras seis áreas, no vale y lo reescribes.
 
 SIN SOLAPE ENTRE LOS SEIS BLOQUES:
-Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. El pasado sale únicamente en ORIGEN. La escena lleva delante la frase que la abre y detrás la que la recoge, tal como pide LA ESCENA SE PRESENTA, NO SE SUELTA; lo que no se hace es explicarla ni contar otra vez por dentro lo que acaba de verse. SOLTAR no vuelve a explicar la creencia, solo la nombra. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
+Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. El pasado sale únicamente en ORIGEN. El motivo que acompaña a cada cosa que le nombras no es pasado ni es solape: es el porqué de esa cosa, va pegado a ella y no tiene nada que ver con la raíz que desarrolla ORIGEN. La escena lleva delante la frase que la abre y detrás la que la recoge, tal como pide LA ESCENA SE PRESENTA, NO SE SUELTA; lo que no se hace es explicarla ni contar otra vez por dentro lo que acaba de verse. SOLTAR no vuelve a explicar la creencia, solo la nombra. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
 
 EL ORDEN DE LOS BLOQUES:
 Los cinco bloques de texto se leen siempre en el mismo orden, y no lo pones tú: lo pone el código. Es el arranque, HOY, ORIGEN, CREENCIAS, SOLTAR, y el CIERRE al final. Es la lógica de siempre: qué te pasa, de dónde te viene, qué creencia lo sostiene, qué se cae. Escribe cada bloque enganchado con el que va antes, porque así es exactamente como se va a leer.
@@ -1474,6 +1517,35 @@ POR DÓNDE VA ESTA ÁREA (las otras seis van por otro sitio, así que no busques
 - CIERRA ${m.cierra}. Y NO EMPIECES EL CIERRE por "No es que...", "No estás cansada de..." ni "No te falta...": esas tres son la forma que sale sola, la usan todas y se lee a plantilla.`;
   }
 
+  // EL PORQUE DE UN RASGO, O NADA.
+  //
+  // El porque no se imprime, pero SI viaja dentro del encargo del area, y de
+  // ahi al texto que lee la clienta. Asi que antes de pasarlo se mira igual
+  // que se mira lo que se imprime: un porque que nombre un planeta metido en
+  // el encargo es una palabra de astrologo a un copiado de distancia del
+  // papel, y eso ya paso una vez con las fichas.
+  //
+  // No se vuelve a pedir la lista por esto -son cincuenta segundos y la lista
+  // entera por una nota que no sale impresa-: ese rasgo se cuenta sin su
+  // porque, como se contaba antes de que el porque existiera, y queda dicho en
+  // los registros. Si el aviso sale informe tras informe, lo que falla es el
+  // prompt de la lista, no la ficha de ese dia.
+  function elPorqueQueSePuedeUsar(r, id) {
+    const porque = String((r && r.porque) || '').trim();
+    if (!porque) {
+      console.warn(`Área ${id}: el rasgo "${(r && r.nombre) || '?'}" llega sin su porqué y se cuenta sin él`);
+      return '';
+    }
+    // Se le pasa como si fuera la descripcion: es el mismo detector y la
+    // misma lista de palabras que vigila lo que se imprime.
+    const palabra = laPalabraDeAstrologo({ nombre: '', descripcion: porque });
+    if (palabra) {
+      console.warn(`Área ${id}: el porqué de "${r.nombre}" dice "${palabra}", no se le pasa al área`);
+      return '';
+    }
+    return porque;
+  }
+
   // LOS RASGOS QUE LE TOCAN A ESTA AREA, sacados de las dos listas.
   //
   // Las listas son la fuente del estudio: se sacan de la carta ANTES que las
@@ -1495,7 +1567,11 @@ POR DÓNDE VA ESTA ÁREA (las otras seis van por otro sitio, así que no busques
     if (mios.length === 0) return '';
 
     const fichas = mios
-      .map(({ r, cual }) => `- ${r.nombre} (${cual === 'fortalezas' ? 'fortaleza' : 'desafio'}): ${r.descripcion}`)
+      .map(({ r, cual }) => {
+        const ficha = `- ${r.nombre} (${cual === 'fortalezas' ? 'fortaleza' : 'desafio'}): ${r.descripcion}`;
+        const porque = elPorqueQueSePuedeUsar(r, id);
+        return porque ? `${ficha}\n  POR QUE ES ASI, Y ESTO NO SE COPIA: ${porque}` : ficha;
+      })
       .join('\n');
 
     return `
@@ -1508,8 +1584,10 @@ NO SON UN INDICE APARTE, Y ESTO ES LO QUE MAS IMPORTA DE TODA ESTA NOTA. Los pun
 EMPIEZA POR LOS PUNTOS, NO POR LA LISTA: coges cada punto de HOY, miras cual de estos lo responde, y lo cuentas ahi a fondo. Y si alguno de estos no cae en ninguno de esos puntos, va igual: entra por el bloque que le toque, pero fuera no se queda.
 ESTO ES QUE CONTAR, NO POR DONDE MIRAR. Para explicar cada uno sigues cruzando todo lo que haga falta de su carta, igual que hasta ahora: no es una valla, es el contenido.
 Y SI UNO DE ESTOS PARECE SALIR DE UNA PARTE DE LA CARTA QUE ARRIBA SE DA A OTRA AREA, MANDA ESTA LISTA. El rasgo esta puesto aqui y aqui se cuenta: no lo dejes fuera por eso, ni lo cuentes a medias. Lo de arriba te dice donde mirar cuando buscas tu solo; esto te dice lo que hay que contar, y ya esta repartido para que no se cuente dos veces.
-Y NO VAN UNO EN CADA BLOQUE. Lo de arriba es HOY, que es donde se cuenta como se le nota; pero un rasgo no se agota ahi. De donde le viene va en ORIGEN y lo que da por cierto por debajo va en CREENCIAS, con los bloques haciendo lo que hacen siempre. Los bloques no cambian de trabajo.
-NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el nombre del rasgo ni sus frases se escriben tal cual, ni se presentan como una lista. Lo que ella lee son tus parrafos de siempre.`;
+Y NO VAN UNO EN CADA BLOQUE. Lo de arriba es HOY, que es donde se cuenta como se le nota; pero un rasgo no se agota ahi. Lo que da por cierto por debajo va en CREENCIAS, y en ORIGEN se desarrolla a fondo la raiz que explica el area entera, con los bloques haciendo lo que hacen siempre. Los bloques no cambian de trabajo.
+CADA RASGO LLEGA CON SU "DE DONDE LE VIENE", Y ESO SE CUENTA, NO SE GUARDA. Es lo que ella ha venido a entender: sin eso le estas diciendo COMO es, y como es ya lo sabe; con eso le estas diciendo POR QUE es asi, que no lo sabe nadie mas. Un rasgo contado sin su porque es medio rasgo.
+VA PEGADO AL RASGO, no en un parrafo aparte ni al final del area: donde le cuentas la cosa, ahi mismo, en la misma frase o en la de al lado, va el motivo. Y NO ES EL BLOQUE ORIGEN NI LE QUITA SITIO: ORIGEN sigue siendo una sola raiz desarrollada a fondo, la del area entera; esto son los motivos de cada cosa que le nombras, y van donde se nombra cada cosa. Que un rasgo lleve el suyo dentro de HOY no es adelantar ORIGEN ni repetirlo.
+NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el nombre del rasgo, ni sus frases, ni su porque se escriben tal cual, ni se presentan como una lista: el porque esta puesto en corto y para que tu lo entiendas, y lo que ella lee es eso mismo dicho con tus palabras, dentro de tus parrafos y una sola vez en el area. Lo que ella lee son tus parrafos de siempre.`;
   }
 
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS, QUE SON LAS QUE MAS SE ESCAPAN:
@@ -1530,7 +1608,7 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
 11. Que se note que hay alguien hablandole: tres o cuatro veces en toda el area te paras y le hablas de tu a tu, y antes de nombrarle lo que le pesa le quitas la culpa de encima
 12. El area abre situando el tema desde fuera, no de golpe con una frase seca sobre ella. Y el cierre CIERRA: no presenta la siguiente area, no insinua nada, y deja ver que se le abre
 13. NI UN PUNTO EN MITAD DE UNA IDEA. Relee el area entera: donde haya un punto y lo de detras sea lo mismo que venias diciendo, no son dos frases, es una partida en dos, y ahi va una coma
-14. CADA COSA QUE LE CUENTAS LLEVA SU MOTIVO PEGADO, en la misma frase, para que entienda por que le pasa y no solo que le pasa. Y ese motivo es como esta hecha ella por dentro, nunca algo que le pasara`;
+14. CADA COSA QUE LE CUENTAS LLEVA SU MOTIVO PEGADO, en la misma frase, para que entienda por que le pasa y no solo que le pasa. Y ese motivo es como esta hecha ella por dentro, nunca algo que le pasara. Los rasgos que te llegan al final del encargo ya traen el suyo escrito: ninguno se cuenta sin el`;
 
   // Las 7 areas se piden a la vez, asi que un fallo puntual en una sola tumbaba
   // el informe entero y gastaba un intento del cliente. Ahora cada area se
@@ -2742,7 +2820,8 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
 
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
     // que demuestra que quien pide el PDF es quien tiene la reserva.
-    return res.status(200).json({ texto: textoCompleto, rasgos: listas, token: reserva.token });
+    // La lista sale SIN el porque de cada ficha: ver sinElPorque.
+    return res.status(200).json({ texto: textoCompleto, rasgos: sinElPorque(listas), token: reserva.token });
 
   } catch (err) {
     console.error('Error generando áreas:', err.message);

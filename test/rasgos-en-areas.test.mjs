@@ -71,7 +71,15 @@ const CARTA = `Carta natal calculada:
 
 // ── Una lista completa: 2 rasgos en cada una de las siete areas, que es
 //    justo el minimo que el codigo exige. Repartidos entre las dos listas.
-const rasgo = (n, d, area) => ({ nombre: n, descripcion: d, area });
+// El porque es la cuarta casilla: no se imprime, y es la que cada area lee
+// para contarle de donde le viene cada cosa. Cada uno sale distinto para poder
+// seguirle la pista desde la lista hasta el encargo del area.
+const rasgo = (n, d, area, porque) => ({
+  nombre: n,
+  descripcion: d,
+  porque: porque || `Por dentro te va a distinto ritmo lo que quieres y lo que te permites, y de ahí sale que ${n.toLowerCase()}.`,
+  area,
+});
 const LISTA_BUENA = {
   fortalezas: [
     rasgo('Detectas lo que hace falta', 'Ves lo que le falta a otra persona antes de que lo diga y te pones a ello.', 1),
@@ -219,8 +227,10 @@ try {
   // ── 2. LOS RASGOS SE PIDEN UNA SOLA VEZ ───────────────────────
   //
   // Habia una segunda llamada, la del porque de cada ficha, que corria a la
-  // vez que las areas. El porque se ha quitado -ya se cuenta entero en su
-  // area- y con el esa llamada.
+  // vez que las areas y escribia un porque para IMPRIMIR debajo de cada ficha.
+  // Esa se quito, y no vuelve: el porque de ahora es una casilla mas de la
+  // misma lista -no se imprime y no cuesta una llamada-, asi que el numero de
+  // formas distintas que se piden tiene que seguir siendo el mismo.
   //
   // Que no vuelva no se mira por el texto del encargo, que cualquiera puede
   // escribir de otra manera, sino por el esquema: un informe limpio pide DOS
@@ -244,11 +254,18 @@ try {
     formas.join(' / '));
 
   // Y la ficha que sale por la puerta son sus tres casillas y ninguna mas.
+  //
+  // Dentro son cuatro: el porque viaja con ella hasta el encargo de las siete
+  // areas. Lo que no hace es salir de aqui. Si saliera, estaria en el
+  // navegador y de ahi en la peticion del PDF, a una linea de distancia de
+  // imprimirse debajo de la ficha el dia que alguien toque esa pagina.
   const ficha1 = r1.body?.rasgos?.fortalezas?.[0];
   comprobar('cada ficha llega con nombre, frase y area, y con nada mas',
     Boolean(ficha1) && JSON.stringify(Object.keys(ficha1).sort())
       === JSON.stringify(['area', 'descripcion', 'nombre']),
     ficha1 ? Object.keys(ficha1).join(', ') : 'sin fichas');
+  comprobar('y el porque no sale por la puerta ni una vez',
+    !JSON.stringify(r1.body?.rasgos || {}).includes('a distinto ritmo'));
 
   // ── 3. CADA AREA RECIBE LOS SUYOS Y SOLO LOS SUYOS ────────────
   const n1 = notaDe(1), n7 = notaDe(7);
@@ -413,9 +430,16 @@ try {
   // hablan a el, la clienta leeria las instrucciones internas del producto
   // en un estudio de 27 euros. Se prueban las dos que van en el mensaje de
   // cada area: la de los rasgos que le tocan y la de la forma que lleva.
+  //
+  // Y la del porque, que es la mas facil de copiar de las tres: no encabeza la
+  // nota, va pegada DEBAJO DE CADA FICHA y justo delante del texto que el area
+  // tiene que contar, que es el sitio donde una cabecera se arrastra sin
+  // querer. Por eso esta escrita como una frase que nadie pondria en un libro.
   for (const [cabecera, comoSeLlama] of [
     ['LO QUE TE TOCA CONTAR A TI EN ESTA AREA:', 'la nota de los rasgos'],
     ['POR DÓNDE VA ESTA ÁREA:', 'la nota de la forma'],
+    ['POR QUE ES ASI, Y ESTO NO SE COPIA:', 'la cabecera del porqué'],
+    ['CADA RASGO LLEGA CON SU "DE DONDE LE VIENE"', 'la orden del porqué'],
   ]) {
     loQueElAreaCopia = cabecera;
     const rFuga = await generar();
@@ -443,15 +467,92 @@ try {
     !/cierras el estudio/i.test(pLista) && !/se leen despues de las siete areas/i.test(pLista));
   comprobar('ni que recoja lo que a las areas no les dio tiempo',
     !/no ha dado tiempo a nombrar/i.test(pLista));
-  // Y la casilla del porque no esta ni en el prompt ni en el esquema: si
-  // volviera por cualquiera de los dos, la ficha dejaria de ser tres cosas.
+  // ── EL PORQUE: LLEGA A LAS SIETE AREAS Y NO LLEGA AL PAPEL ────
+  //
+  // Es la casilla que separa un estudio que dice COMO eres de uno que dice POR
+  // QUE eres asi, que es lo que la clienta ha venido a entender: el como ya lo
+  // sabe. Sin ella, cada area tenia que deducir el porque por su cuenta, siete
+  // veces y sin verse entre ellas: unas acertaban y otras se lo inventaban.
+  //
+  // Hubo una casilla parecida hasta el 25 de agosto, "explicacion", y no es
+  // esta: aquella se IMPRIMIA debajo de cada ficha -diciendo por segunda vez
+  // lo que el area ya contaba- y costaba una llamada aparte. Esta ni se
+  // imprime ni cuesta una llamada. Por eso se sigue mirando que la vieja no
+  // vuelva con su nombre.
   const casillasDeLaFicha = Object.keys(
     llamadas.find(l => l.tipo === 'lista').esquema?.properties?.fortalezas?.items?.properties || {}
   ).sort();
-  comprobar('ni pide el porque de cada ficha, que ya no existe',
-    !/"explicacion"/.test(pLista)
-    && JSON.stringify(casillasDeLaFicha) === JSON.stringify(['area', 'descripcion', 'nombre']),
+  comprobar('la ficha se pide con sus cuatro casillas, el porque entre ellas',
+    JSON.stringify(casillasDeLaFicha) === JSON.stringify(['area', 'descripcion', 'nombre', 'porque']),
     casillasDeLaFicha.join(', '));
+  comprobar('y no vuelve la casilla vieja, la que se imprimia',
+    !/"explicacion"/.test(pLista));
+  comprobar('el prompt de la lista explica el porque y avisa de que NO se imprime',
+    /"porque"/.test(pLista) && /ESTA CASILLA NO SE IMPRIME/.test(pLista));
+  comprobar('y le prohibe inventarle un pasado justo en esa casilla',
+    /Es un pasado inventado/.test(pLista));
+
+  // El porque tiene que llegar al encargo del area, que es lo unico para lo
+  // que existe, y con las instrucciones de que hacer con el.
+  {
+    const n1 = notaDe(1);
+    comprobar('el area recibe el porque de cada rasgo suyo',
+      n1.includes('POR QUE ES ASI, Y ESTO NO SE COPIA:')
+      && n1.includes('de ahí sale que detectas lo que hace falta'));
+    comprobar('y se le dice que va PEGADO al rasgo, no en un parrafo aparte',
+      /VA PEGADO AL RASGO/.test(n1));
+    comprobar('y que eso no es el bloque ORIGEN ni le quita su sitio',
+      /NO ES EL BLOQUE ORIGEN NI LE QUITA SITIO/.test(n1));
+    comprobar('y que el porque no se copia tal cual, se cuenta con sus palabras',
+      /ni su porque se escriben tal cual/.test(n1));
+  }
+
+  // El prompt de las areas ya no puede decir lo contrario en otro sitio: hasta
+  // hoy pedia el motivo pegado a cada cosa y dos parrafos mas abajo dejaba el
+  // porque encerrado en ORIGEN y limitado a UNA sola explicacion. Con esas dos
+  // a la vez, el area nombraba varios rasgos y explicaba uno.
+  {
+    const sistema = deArea()[0].sistema;
+    comprobar('el prompt del area dice que el motivo pegado no es solape',
+      /no es pasado ni es solape/.test(sistema));
+    comprobar('y que la explicacion unica manda dentro de ORIGEN, no fuera',
+      /Esto manda dentro de ORIGEN/.test(sistema));
+  }
+
+  // ── UN PORQUE CON UN PLANETA DENTRO NO LLEGA AL AREA ──────────
+  //
+  // El porque no se imprime, pero viaja dentro del encargo, y de ahi puede
+  // acabar copiado en el texto. El 24 de agosto salieron 25 fichas de 28
+  // diciendo cosas como "el Sol en la casa del trabajo": esa palabra no puede
+  // volver a tener un camino abierto hasta el papel.
+  //
+  // Y no se vuelve a pedir la lista por esto: son cincuenta segundos y una
+  // lista entera por una nota que no sale impresa. Ese rasgo se cuenta sin su
+  // porque, como se contaba antes de que el porque existiera, y queda en los
+  // registros.
+  const conBasura = JSON.parse(JSON.stringify(LISTA_BUENA));
+  conBasura.fortalezas[0].porque = 'Saturno en la casa del trabajo te da esa manera de mirar.';
+  conBasura.fortalezas[1].porque = '';
+  listaQueDevuelve = conBasura;
+  await generar();
+  {
+    const n1 = notaDe(1);
+    comprobar('un porque que nombra un planeta no entra en el encargo',
+      !/saturno/i.test(n1));
+    comprobar('y su rasgo sigue estando, contado sin el porque',
+      n1.includes('Detectas lo que hace falta'));
+    comprobar('un rasgo que llega sin porque tampoco rompe el encargo',
+      n1.includes('Cabeza clara bajo presión'));
+    const cuantos = (n1.match(/POR QUE ES ASI, Y ESTO NO SE COPIA:/g) || []).length;
+    comprobar('y el tercer rasgo del area conserva el suyo',
+      cuantos === 1, cuantos + ' porqué(s) en el área 1');
+    // generar() vacia el registro de llamadas, asi que aqui se cuentan las de
+    // ESTA generacion: una sola lista quiere decir que no hubo repaso.
+    const pedidas = llamadas.filter(l => l.tipo === 'lista').length;
+    comprobar('la lista no se vuelve a pedir por un porque sucio',
+      pedidas === 1, pedidas + ' llamada(s) de lista');
+  }
+  listaQueDevuelve = null;
 
   // El area recibe dos repartos: el de la carta (que mira) y el de los rasgos
   // (que cuenta). Si chocan y no se dice cual manda, el area se queda sin
