@@ -616,7 +616,7 @@ try {
 
   // Y lo que las siete leen justo antes de entregar.
   for (const [eti, trozo] of [
-    ['más preguntas repartidas por el texto y dentro de un párrafo', 'hay mas preguntas repartidas por el texto'],
+    ['tres o cuatro preguntas mas repartidas por el texto y dentro de un párrafo', 'hay tres o cuatro mas repartidas por el texto'],
     ['ni una palabra de terapeuta', 'ni de terapia'],
   ]) {
     comprobar(`las siete repasan ${eti}`,
@@ -626,6 +626,60 @@ try {
 
   comprobar('y el "no es X, es Y" tiene su tope',
     promptAreas.includes('NO ABUSES DE "NO ES X, ES Y"'));
+
+  // ── 5e. EL PUNTO, LAS PREGUNTAS Y EL PORQUE ─────────────────────
+  //
+  // Las tres cosas ya se pedian y las tres salian mal en los estudios 25, 26
+  // y 26_1: 56, 59 y 57 puntos partiendo una idea por la mitad, 10 preguntas
+  // en 43 paginas (una por area, la de la casilla) y el porque cayendo de 7 a
+  // 5 por cada mil palabras. No fallaban por falta de reglas: el prompt
+  // llevaba dentro lo contrario de lo que pedia.
+  console.log('\n  api/chat.js — el punto, las preguntas y el porqué\n');
+
+  const DEFIENDE_EL_PUNTO = /el punto no es el enemigo|ni todas cosidas con comas|EL PUNTO QUE SOBRA/;
+  comprobar('nada le defiende ya el punto que parte una idea',
+    !DEFIENDE_EL_PUNTO.test(promptAreas),
+    (promptAreas.match(DEFIENDE_EL_PUNTO) || ['limpio'])[0]);
+  comprobar('y la regla está una sola vez, no repetida en tres sitios',
+    (promptAreas.match(/UNA IDEA NO SE PARTE CON UN PUNTO/g) || []).length === 1);
+
+  // De un ejemplo se copia la puntuacion antes que el contenido, asi que el
+  // ejemplo de tono no puede llevar dentro justo el defecto que se persigue.
+  const ejemploDeTono = (promptAreas.match(/ASÍ SUENA CUANDO ESTÁ BIEN:[\s\S]*?Y NO ABUSES/) || [''])[0];
+  comprobar('se captura el ejemplo de tono', ejemploDeTono.length > 500,
+    ejemploDeTono.length + ' caracteres');
+  // Dentro de la misma linea: un parrafo NUEVO que arranca por "Y" es otra
+  // cosa, eso se dice hablando y no parte nada.
+  const PICADO = /[.?!] +(Y |Pero |Porque |Es que |Aunque |Así que )/;
+  comprobar('y el ejemplo de tono no parte ninguna idea con un punto',
+    !PICADO.test(ejemploDeTono), (ejemploDeTono.match(PICADO) || ['limpio'])[0]);
+
+  // "Si un area no pide ninguna, no la fuerces" era la puerta de salida: se
+  // quedaba con la de la casilla y cumplia.
+  comprobar('las preguntas ya no tienen puerta de salida',
+    !promptAreas.includes('no la fuerces'));
+  comprobar('y saben en qué momento del texto va cada una',
+    promptAreas.includes('cada vez que le pones nombre a algo que le cuesta'));
+
+  comprobar('el porqué va pegado a lo que le cuenta, no aparte',
+    promptAreas.includes('EL PORQUÉ VA PEGADO, NO APARTE'));
+  // Sin reabrir el agujero de siempre: el motivo no puede ser un pasado
+  // inventado, que es de donde salieron 31 frases en el estudio 25.
+  comprobar('y ese porqué no puede ser algo que le pasara',
+    /EL PORQUÉ VA PEGADO[\s\S]{0,700}?nunca algo que le pasara/.test(promptAreas));
+  // Y sin formula fija, que es como se hizo el molde de los cierres.
+  comprobar('y no se cose siempre con la misma palabra',
+    /EL PORQUÉ VA PEGADO[\s\S]{0,900}?se oye el molde/.test(promptAreas));
+
+  // Y lo que las siete leen justo antes de entregar.
+  for (const [eti, trozo] of [
+    ['ni un punto en mitad de una idea', 'NI UN PUNTO EN MITAD DE UNA IDEA'],
+    ['que cada cosa lleva su motivo pegado', 'LLEVA SU MOTIVO PEGADO'],
+  ]) {
+    comprobar(`las siete repasan ${eti}`,
+      Object.values(encargos).every(e => e.includes(trozo)),
+      Object.values(encargos).filter(e => e.includes(trozo)).length + ' de 7');
+  }
 
   // ── 6. NI UNO REPETIDO ──────────────────────────────────────────
   console.log('\n  api/chat.js — ni un rasgo repetido\n');
