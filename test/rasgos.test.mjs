@@ -481,6 +481,84 @@ try {
   comprobar('la excepción de la entradilla se queda solo en las áreas',
     promptAreas.includes(EXCEPCION) && !promptLista.includes(EXCEPCION));
 
+  // ── 5b. CADA AREA VE SUS PUNTOS DE HOY, Y SOLO LOS SUYOS ────────
+  //
+  // HOY le pide a cada area tres o cuatro cosas concretas, distintas en cada
+  // una: son lo que la clienta ha venido a leer de esa parcela de su vida.
+  //
+  // Las siete listas estaban juntas dentro del prompt compartido, asi que
+  // cada area recibia los 24 puntos de las siete y tenia que encontrar los
+  // suyos ahi dentro. En el informe del 26 de agosto salieron 21,5 de 24: se
+  // perdieron "que ganas con ellos" (Patrones) y "que te bloquea para ganar
+  // mas" (Dinero), los mismos dos que ya se habian perdido el informe
+  // anterior. Ahora cada area lleva los suyos en su propio encargo.
+  console.log('\n  api/chat.js — cada área ve sus puntos de HOY y solo los suyos\n');
+
+  const PUNTOS = {
+    1: ['Cómo funcionas por dentro', 'Lo que se te da bien de verdad', 'Los puntos ciegos que no ves', 'Qué muestras, qué ocultas'],
+    2: ['Cuáles son tus patrones', 'Qué los enciende', 'Dónde acabas siempre', 'Qué ganas con ellos'],
+    3: ['Cuál es el miedo que te gobierna', 'Qué te lo dispara', 'Qué estás evitando por él'],
+    4: ['Cuál es la herida y qué te la reabre', 'Cómo te proteges cuando se reabre', 'Qué necesitas de verdad'],
+    5: ['Cómo eres en el amor', 'Qué tipo de persona atraes', 'Qué necesitas de la otra persona', 'Dónde falla siempre'],
+    6: ['Qué papel ocupas siempre', 'Qué pasa con lo que das y lo que recibes', 'En qué dinámicas acabas metida'],
+    7: ['Qué significa el dinero para ti', 'Qué haces con él cuando lo tienes', 'Qué te bloquea para ganar más'],
+  };
+
+  const encargos = {};
+  for (const c of enviadas) {
+    if (!Array.isArray(c.system)) continue;
+    if (!String((c.system[0] || {}).text || '').startsWith('Eres una experta en psicología')) continue;
+    const msg = String(c.messages?.[0]?.content || '');
+    const cual = msg.match(/Genera ÚNICAMENTE el ÁREA (\d)/);
+    if (cual) encargos[cual[1]] = msg;
+  }
+  comprobar('se capturan los encargos de las siete áreas',
+    Object.keys(encargos).length === 7, Object.keys(encargos).length + ' encargo(s)');
+
+  const sinSusPuntos = Object.keys(PUNTOS).filter(n => !PUNTOS[n].every(p => (encargos[n] || '').includes(p)));
+  comprobar('cada área lleva TODOS sus puntos de HOY en su propio encargo',
+    sinSusPuntos.length === 0,
+    sinSusPuntos.length ? 'les faltan puntos a las áreas ' + sinSusPuntos.join(', ') : '24 puntos repartidos');
+
+  // Y NINGUNA LLEVA LOS DE OTRA: si le llegan los 24, vuelve a tener que
+  // buscar los suyos, que es justo lo que hacia que se perdieran.
+  const conPuntosAjenos = [];
+  for (const n of Object.keys(PUNTOS)) {
+    for (const otra of Object.keys(PUNTOS)) {
+      if (otra === n) continue;
+      // el primer punto de cada area, que no se parece al de ninguna otra
+      if ((encargos[n] || '').includes(PUNTOS[otra][0])) conPuntosAjenos.push(`${n} lleva los de ${otra}`);
+    }
+  }
+  comprobar('y ninguna área lleva los puntos de otra',
+    conPuntosAjenos.length === 0, conPuntosAjenos.slice(0, 4).join('; ') || 'cada una con los suyos');
+
+  comprobar('el prompt compartido ya no reparte las siete listas',
+    !promptAreas.includes('SOLO EN EL ÁREA'), 'quedan repartidas en los encargos');
+
+  // ── 5c. NI UN PASADO INVENTADO, EN NINGUNO DE LOS DOS PROMPTS ───
+  //
+  // De la carta sale COMO esta hecha, no lo que vivio. El bloque ORIGEN
+  // pedia literalmente lo contrario -"aprendiste esto de pequena, y por eso
+  // hoy..."- y por eso el informe del 26 de agosto le afirmaba su infancia
+  // 31 veces, incluso adivinando en voz alta ("puede que fuera un padre
+  // serio"). Es lo que rompe el producto: si no se reconoce, no vuelve.
+  console.log('\n  api/chat.js — a nadie se le inventa su pasado\n');
+
+  const ENSENA_EL_PASADO = /aprendiste esto de peque|qué aprendiste, con quién|lo que aprendiste para que|se aprendió se puede desaprender|quien fue de pequeña/;
+  for (const [texto, cual] of [[promptAreas, 'áreas'], [promptLista, 'lista']]) {
+    comprobar(`el prompt de las ${cual} no enseña a inventarle el pasado`,
+      !ENSENA_EL_PASADO.test(texto), (texto.match(ENSENA_EL_PASADO) || ['limpio'])[0]);
+  }
+  // La prohibicion va en los dos sitios: en el bloque ORIGEN del prompt
+  // compartido, y otra vez en el repaso que cada area lee al final, justo
+  // antes de entregar, que es donde se mira lo que mas se escapa.
+  comprobar('el bloque ORIGEN lo prohíbe con todas las letras',
+    promptAreas.includes('su pasado NO SE AFIRMA NUNCA'));
+  comprobar('y las siete lo repasan otra vez antes de entregar',
+    Object.values(encargos).every(e => e.includes('NI UNA FRASE QUE AFIRME SU PASADO')),
+    Object.values(encargos).filter(e => e.includes('NI UNA FRASE QUE AFIRME SU PASADO')).length + ' de 7');
+
   // ── 6. NI UNO REPETIDO ──────────────────────────────────────────
   console.log('\n  api/chat.js — ni un rasgo repetido\n');
 

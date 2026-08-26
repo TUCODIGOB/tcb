@@ -93,7 +93,7 @@ const ESQUEMA_AREA_POR_BLOQUES = {
       properties: {
         arranque: bloqueDelArea('EL ARRANQUE del area: abre ancho, desde algo que le pasa a mucha gente, y solo entonces se estrecha hasta ella.'),
         hoy: bloqueDelArea('El bloque HOY: como se manifiesta ahora, lo malo Y lo bueno, con el don contado a fondo. Es el bloque mas largo del area.'),
-        origen: bloqueDelArea('El bloque ORIGEN: por que es asi y de donde le viene, uniendo pasado y presente como causa y efecto. UNA sola explicacion, desarrollada a fondo.'),
+        origen: bloqueDelArea('El bloque ORIGEN: por que es asi y de donde le viene, uniendo el porque con lo que hace hoy como causa y efecto. Viene de como esta hecha desde que nacio, NUNCA de un pasado que se le invente. UNA sola explicacion, desarrollada a fondo.'),
         creencias: bloqueDelArea('El bloque CREENCIAS: lo que da por cierto sin haberlo puesto en duda y que hace que todo se repita solo. Aqui va la verdad incomoda. Despues de HOY, el que mas sitio ocupa.'),
         soltar: bloqueDelArea('El bloque SOLTAR: solo NOMBRA la creencia que tiene que caer. Ni pasos, ni ejercicios, ni plan. Es el bloque mas corto de todos.'),
       },
@@ -148,7 +148,7 @@ const HABLAR_DE_ELLA_LO_ROMPE = `En cuanto una frase habla de ella en tercera pe
 
 const PERDONA_ANTES_DE_NOMBRAR = `PERDONA ANTES DE NOMBRAR:
 Nadie baja la guardia delante de quien le está haciendo una lista de defectos. Antes de nombrar lo que le pesa, se le quita la culpa de encima, y solo entonces se le cuenta.
-Por dentro la forma es siempre la misma: eso que haces no es un defecto tuyo, es lo que aprendiste para que las cosas salieran bien, y te funcionó, por eso sigues haciéndolo. Las palabras las pones tú y cambian en cada área.
+Por dentro la forma es siempre la misma: eso que haces no es un defecto tuyo, es lo que te ha servido para que las cosas salieran bien, y te funcionó, por eso sigues haciéndolo. Las palabras las pones tú y cambian en cada área.
 Sin ese permiso lee a la defensiva y no le entra nada. Con él, se abre, y a partir de ahí le puedes decir cualquier cosa.`;
 
 // ══════════════════════════════════════════════════════════════════
@@ -1031,7 +1031,7 @@ ${PERDONA_ANTES_DE_NOMBRAR}
 
 EL PUNTO DE LUZ:
 Al cerrar la última página tiene que quedarse con ganas, no hundida. Un estudio que solo diagnostica se lee una vez y no se recomienda a nadie.
-No se consigue con frases de ánimo ni con un final bonito pegado al final. Se consigue así: cuando le cuentas de dónde viene algo, recuérdale que lo que se aprendió se puede desaprender; cuando le cuentas lo que le pesa, enséñale que esa misma cualidad es la que la hace buena en algo concreto; y en el cierre, deja ver qué se le abre el día que suelte eso.
+No se consigue con frases de ánimo ni con un final bonito pegado al final. Se consigue así: cuando le cuentas de dónde viene algo, recuérdale que lo que se volvió automático se puede volver a decidir; cuando le cuentas lo que le pesa, enséñale que esa misma cualidad es la que la hace buena en algo concreto; y en el cierre, deja ver qué se le abre el día que suelte eso.
 Esa es la diferencia entre un diagnóstico y un estudio que se lo pasa a una amiga.
 
 ASÍ SUENA CUANDO ESTÁ BIEN:
@@ -1040,7 +1040,7 @@ Esto no es contenido, es tono. No copies ni una palabra, ni la situación, ni el
   "Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen. En cualquier familia hay una, en cualquier grupo de amigas hay una, y en el trabajo también. Todo el mundo tiene una cerca. Y casi nadie le pregunta nunca cómo lo lleva.
   Tú eres esa persona.
   Por fuera pareces tranquila, con esa cosa rara de conseguir que cualquier conversación fluya sin que nadie se incomode. Por dentro, mientras tanto, llevas una máquina que no para de repasar lo que acabas de decir.
-  Y quiero que te quede clara una cosa antes de seguir, porque de aquí sale todo lo demás: eso no es falsedad, ni es que finjas. Es que aprendiste a suavizar todo lo que tocas antes de que nadie notara que hacía falta suavizarlo, y lo aprendiste tan pronto que ya ni te acuerdas de haberlo aprendido."
+  Y quiero que te quede clara una cosa antes de seguir, porque de aquí sale todo lo demás: eso no es falsedad, ni es que finjas. Es que suavizas todo lo que tocas antes de que nadie note que hacía falta suavizarlo, y lo llevas haciendo desde hace tanto que ya ni te das cuenta de que lo estás haciendo."
 
 Fíjate en lo que hace ese fragmento, porque es lo que hay que reproducir: abre ancho antes de entrar (ancho SÍ, pero por dónde ya te lo dice tu área, no lo copies de aquí), hay alguien hablándole en primera persona, le quita la culpa antes de nombrarle nada, y mezcla frases largas con una corta que cae sola.
 
@@ -1071,48 +1071,17 @@ El área se lee como una sola conversación seguida, no como seis trozos pegados
 Y FÍJATE EN CÓMO ESTÁ ESCRITO LO DE ABAJO, porque no es casualidad: está en segunda persona, hablándole a ella de tú, que es exactamente como tiene que salir en el texto. "Qué se te rompió", no "qué se le rompió". Mantén esa persona de la primera palabra a la última.
 
 HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué haces hoy en esta parcela concreta de tu vida, en qué situaciones y con qué gestos. Y también tu fuerza real aquí: lo que esta misma manera de ser te da y que casi seguro no te apuntas como mérito, contada con el mismo detalle y la misma concreción que lo que te pesa, nunca despachada en una frase amable de paso. Es el punto más largo del área, y lo bueno ocupa más o menos lo mismo que lo que te duele.
-SOLO EN EL ÁREA 1 (IDENTIDAD) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cómo funcionas por dentro: el mecanismo con el que procesas lo que te pasa, qué te ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que haces por fuera. Es lo que le pone nombre a tu manera de funcionar y lo que se lleva puesto al terminar de leer.
-Lo que se te da bien de verdad: tus fortalezas reales, sobre todo las que tú no pondrías primero si te preguntaran. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
-Los puntos ciegos que no ves: lo que haces y no registras como un problema, o que registras al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
-Qué muestras, qué ocultas y qué contradicciones tienes: la distancia entre la persona que enseñas y la que guardas, y las cosas tuyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a ella y no a un perfil que le valdría a cualquiera.
-Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante.
-SOLO EN EL ÁREA 2 (PATRONES) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuáles son tus patrones: los que de verdad te gobiernan la vida, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera.
-Qué los enciende: la situación exacta que los dispara, la que hace saltar el automatismo antes de que te des cuenta. Es lo que hace que se reconozca al leerlo.
-Dónde acabas siempre: el mismo punto de llegada al que vuelves una vez tras otra, por caminos distintos y con gente distinta. Es donde ve que el patrón existe de verdad.
-Qué ganas con ellos: de qué te protegen, qué te evitan, qué te ahorras cada vez que los repites. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
-Lo que gana con el patrón va aquí; la creencia que lo sostiene va más adelante, en su sitio, y no se cuenta dos veces.
-SOLO EN EL ÁREA 3 (MIEDOS) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuál es el miedo que te gobierna la vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que tú nombrarías si te preguntaran, y de qué tienes miedo en el fondo cuando tienes miedo de eso.
-Qué te lo dispara y cómo reaccionas cuando aparece: las situaciones concretas que lo encienden, y lo que haces en ese momento sin decidirlo, si te paralizas, si controlas más, si te adelantas, si desapareces.
-Qué estás evitando por él y qué te ha costado ya: lo que llevas años sin hacer por ese miedo, y el precio que has pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijiste a tiempo.
-SOLO EN EL ÁREA 4 (HERIDA) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuál es la herida y qué te la reabre hoy: qué se te rompió y qué te sigue faltando desde entonces, y las situaciones concretas de tu vida de ahora que te la vuelven a tocar.
-Cómo te proteges cuando se reabre, y qué te estás perdiendo por protegerte así: lo que haces en ese momento para que no te vuelva a doler, y lo que esa misma protección te está dejando fuera.
-Qué necesitas de verdad en ese momento: ponerle nombre a lo que llevas años sintiendo sin saber decirlo, y qué acabas haciendo con esa necesidad.
-SOLO EN EL ÁREA 5 (AMOR) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cómo eres en el amor: cómo te comportas cuando quieres a alguien de verdad, cómo lo demuestras, cuánto te entregas y cuánto te guardas, y qué te pasa con el deseo y con la intimidad.
-Qué tipo de persona atraes y por qué: quién se te acerca una y otra vez, qué tienen en común esas personas, y qué te da alguien así que tú no te estás dando.
-Qué necesitas de la otra persona para sentirte querida y qué te enamora: lo que te hace falta para bajar la guardia, y lo que te engancha de alguien, que no siempre es lo mismo.
-Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué haces tú ahí sin darte cuenta.
-Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
-SOLO EN EL ÁREA 6 (RELACIONES) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
-Qué papel ocupas siempre sin decidirlo: el sitio que acabas ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darte cuenta de que lo ocupas.
-Qué pasa con lo que das y lo que recibes: si la balanza te sale igualada o no, cuánto sostienes tú y cuánto te sostienen a ti, y qué haces cuando esa cuenta no te cuadra.
-En qué dinámicas acabas metida una y otra vez: el tipo de relación que se te repite con gente distinta, y qué se repite dentro de ti cada vez que vuelve a pasar.
-SOLO EN EL ÁREA 7 (DINERO) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Qué significa el dinero para ti y qué te mueve a ganarlo: qué representa de verdad en tu cabeza, más allá de los números, y qué es lo que te empuja a querer más o a conformarte.
-Qué haces con él cuando lo tienes: cómo lo gastas, cómo tomas las decisiones de dinero, y cómo llevas el riesgo cuando hay algo en juego.
-Qué te bloquea para ganar más y qué pasa cuando empieza a irte bien: el techo con el que te encuentras una y otra vez, incluido lo que haces en el trabajo cuando toca pedir o cobrar lo que vales, y qué te ocurre justo cuando las cosas empiezan a salirte.
+Las tres o cuatro cosas que HOY tiene que contar en TU area van escritas en tu encargo, al final. Son esas y no otras.
 
 ESAS TRES O CUATRO COSAS DE TU ÁREA VAN TODAS, Y NINGUNA EN MEDIA LÍNEA. Son lo que la persona ha venido a leer de esta parcela de su vida, y un punto resuelto de paso es un punto que no está. Sitio hay: el espacio que ocupa HOY se reparte entre ellas y ninguna se queda en el aire. Lo que nunca se recorta para que quepan es lo que va en su propia casilla, que es la escena, los dos remates, la pregunta y el cierre.
 Y LOS RASGOS QUE TE LLEGAN AL FINAL DEL ENCARGO NO SE SUMAN A ESTOS PUNTOS, LOS LLENAN. No son apartados nuevos que haya que meter además: cada uno de ellos responde a uno de estos puntos, y contándolo por dentro del punto que le toca lo estás contando entero. Un rasgo suyo del amor no es un tema aparte que vaya al lado: es la respuesta a cómo eres en el amor. Por eso caben los dos: son la misma cosa contada una sola vez.
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va en su casilla, y detrás de qué bloque se lee lo eliges tú en "tras_bloque": en unas áreas pronto y en otras más adelante, nunca en el mismo sitio en las siete. Lo que no es nunca es lo primero que se lee: delante van igualmente el arranque que sitúa el área y la frase que presenta la escena.
 
-ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendiste, con quién, en qué situación, y qué haces hoy exactamente por haberlo aprendido. El razonamiento tiene esta forma: "aprendiste esto de pequeña, y por eso hoy, sin darte cuenta, haces esto otro". La forma es esa, las palabras las pones tú y cambian en cada área.
-UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluiste tú de aquello, y qué haces hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en tu vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra infancia distinta.
+ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir que es así: hay que unir el porqué con lo que hace hoy, como causa y efecto, para que entienda el PORQUÉ y no solo el qué.
+Y AQUÍ ES DONDE SE JUEGA EL PRODUCTO ENTERO. Su carta dice CÓMO está hecha, no lo que le pasó: no sabes cómo era su casa, ni qué vio de pequeña, ni qué le dijeron, ni a qué edad. Así que su pasado NO SE AFIRMA NUNCA, ni siquiera con un "puede que fuera": nada de "aprendiste", "de pequeña", "creciste", "en tu casa", "tu madre", "esa niña de siete años". Ha pagado por leer lo suyo, y en cuanto lee una frase de una vida que no ha vivido deja de creerse el estudio entero y no vuelve a comprar.
+El origen que sí es verdad es este: viene de serie con ella, es la manera en la que está montada desde que llegó al mundo. Y el puente hasta hoy tiene esta forma: "esto lo traes puesto de siempre, te funcionó, y de tanto funcionarte se volvió automático, hasta el punto de que hoy lo haces sin decidirlo". La forma es esa, las palabras las pones tú y cambian en cada área.
+UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluiste tú de aquello, y qué haces hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en tu vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra explicación distinta.
 
 CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que das por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Después de HOY, es el punto que más sitio ocupa.
 
@@ -1241,6 +1210,13 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
+LAS CUATRO COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
+Cómo funcionas por dentro: el mecanismo con el que procesas lo que te pasa, qué te ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que haces por fuera. Es lo que le pone nombre a tu manera de funcionar y lo que se lleva puesto al terminar de leer.
+Lo que se te da bien de verdad: tus fortalezas reales, sobre todo las que tú no pondrías primero si te preguntaran. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
+Los puntos ciegos que no ves: lo que haces y no registras como un problema, o que registras al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
+Qué muestras, qué ocultas y qué contradicciones tienes: la distancia entre la persona que enseñas y la que guardas, y las cosas tuyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a ella y no a un perfil que le valdría a cualquiera.
+Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante.
+
 No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
@@ -1250,6 +1226,13 @@ No pongas título de área ni encabezado: el título ya va impreso en la página
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: los Nodos (el Sur, lo que repite en automatico, y el Norte, hacia donde no va), lo que caiga en las casas 6 y 9, y las configuraciones en las que un mismo planeta recibe varios aspectos a la vez, que es lo que hace que una cosa se repita sola. La casa 6 es el dia a dia, donde el automatismo se ve funcionando; la casa 9 es lo que da por cierto sobre como va la vida, que es de donde sale que el automatismo no se cuestione nunca. Los aspectos duros de Saturno, Pluton y Neptuno a los planetas personales NO son de aqui, son del area 3. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
+
+LAS CUATRO COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
+Cuáles son tus patrones: los que de verdad te gobiernan la vida, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera.
+Qué los enciende: la situación exacta que los dispara, la que hace saltar el automatismo antes de que te des cuenta. Es lo que hace que se reconozca al leerlo.
+Dónde acabas siempre: el mismo punto de llegada al que vuelves una vez tras otra, por caminos distintos y con gente distinta. Es donde ve que el patrón existe de verdad.
+Qué ganas con ellos: de qué te protegen, qué te evitan, qué te ahorras cada vez que los repites. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
+Lo que gana con el patrón va aquí; la creencia que lo sostiene va más adelante, en su sitio, y no se cuenta dos veces.
 
 No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
@@ -1261,6 +1244,11 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Saturno, Plutón y Neptuno
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
+LAS TRES COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
+Cuál es el miedo que te gobierna la vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que tú nombrarías si te preguntaran, y de qué tienes miedo en el fondo cuando tienes miedo de eso.
+Qué te lo dispara y cómo reaccionas cuando aparece: las situaciones concretas que lo encienden, y lo que haces en ese momento sin decidirlo, si te paralizas, si controlas más, si te adelantas, si desapareces.
+Qué estás evitando por él y qué te ha costado ya: lo que llevas años sin hacer por ese miedo, y el precio que has pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijiste a tiempo.
+
 No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
@@ -1270,6 +1258,11 @@ No pongas título de área ni encabezado: el título ya va impreso en la página
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Quirón y la Luna, lo que caiga en la casa 4, y TODOS los aspectos de la Luna con Quirón, Saturno, Pluton y Neptuno: los cuatro son de esta area y de ninguna otra, para que no se cuenten dos veces. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
+
+LAS TRES COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
+Cuál es la herida y qué te la reabre hoy: qué se te rompió y qué te sigue faltando desde entonces, y las situaciones concretas de tu vida de ahora que te la vuelven a tocar.
+Cómo te proteges cuando se reabre, y qué te estás perdiendo por protegerte así: lo que haces en ese momento para que no te vuelva a doler, y lo que esa misma protección te está dejando fuera.
+Qué necesitas de verdad en ese momento: ponerle nombre a lo que llevas años sintiendo sin saber decirlo, y qué acabas haciendo con esa necesidad.
 
 No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
@@ -1281,6 +1274,13 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Venus y Marte, y lo que ca
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
+LAS CUATRO COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
+Cómo eres en el amor: cómo te comportas cuando quieres a alguien de verdad, cómo lo demuestras, cuánto te entregas y cuánto te guardas, y qué te pasa con el deseo y con la intimidad.
+Qué tipo de persona atraes y por qué: quién se te acerca una y otra vez, qué tienen en común esas personas, y qué te da alguien así que tú no te estás dando.
+Qué necesitas de la otra persona para sentirte querida y qué te enamora: lo que te hace falta para bajar la guardia, y lo que te engancha de alguien, que no siempre es lo mismo.
+Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué haces tú ahí sin darte cuenta.
+Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
+
 No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
@@ -1290,6 +1290,11 @@ No pongas título de área ni encabezado: el título ya va impreso en la página
 LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: Mercurio y Urano, y lo que caiga en las casas 3 y 11, con los aspectos de Mercurio. Esto es informacion interna para ti, no un contenido: te dice DE DONDE sacas lo que cuentas, y esas palabras no se escriben nunca en el texto que lee la persona.
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar el mecanismo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
+
+LAS TRES COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
+Qué papel ocupas siempre sin decidirlo: el sitio que acabas ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darte cuenta de que lo ocupas.
+Qué pasa con lo que das y lo que recibes: si la balanza te sale igualada o no, cuánto sostienes tú y cuánto te sostienen a ti, y qué haces cuando esa cuenta no te cuadra.
+En qué dinámicas acabas metida una y otra vez: el tipo de relación que se te repite con gente distinta, y qué se repite dentro de ti cada vez que vuelve a pasar.
 
 No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
@@ -1302,6 +1307,11 @@ Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga fa
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
 Esta es la última área del estudio, así que su cierre cierra el estudio entero, no solo el área.
+
+LAS TRES COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
+Qué significa el dinero para ti y qué te mueve a ganarlo: qué representa de verdad en tu cabeza, más allá de los números, y qué es lo que te empuja a querer más o a conformarte.
+Qué haces con él cuando lo tienes: cómo lo gastas, cómo tomas las decisiones de dinero, y cómo llevas el riesgo cuando hay algo en juego.
+Qué te bloquea para ganar más y qué pasa cuando empieza a irte bien: el techo con el que te encuentras una y otra vez, incluido lo que haces en el trabajo cuando toca pedir o cobrar lo que vales, y qué te ocurre justo cuando las cosas empiezan a salirte.
 
 No pongas título de área ni encabezado: el título ya va impreso en la página. Rellena todas las casillas: los cinco bloques de texto con sus párrafos y sus ladillos, la escena, los dos remates, la pregunta y el cierre. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
@@ -1375,7 +1385,7 @@ ${cartaTexto}`;
       cierra: 'nombrando lo que de verdad teme, que no es lo que ella cree que teme',
     },
     4: {
-      pregunta: 'preguntándole qué le diría hoy a quien fue de pequeña y aprendió aquello',
+      pregunta: 'preguntándole qué le diría a alguien a quien quiere si hiciera exactamente lo que hace ella',
       entra: 'avisándole de que lo que viene le va a sonar',
       abre: 'por una frase hecha que todo el mundo repite y casi nadie ha pensado del todo',
       cuando: 'un domingo por la tarde',
@@ -1463,6 +1473,7 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
 7. Ni una palabra tecnica en el texto: ni Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo ni carta natal. La astrologia es tu fuente, no tu vocabulario
+7b. NI UNA FRASE QUE AFIRME SU PASADO. De su carta sale como esta hecha, no lo que vivio: si aparece "aprendiste", "de pequena", "en tu casa", "creciste" o un "puede que fuera", se reescribe contando lo que le pasa hoy
 8. Ningun bloque se queda vacio: el arranque, hoy, origen, creencias y soltar llevan todos sus parrafos. Y si el area no llega a las palabras que te piden, anade parrafos dentro de los bloques, nunca engordes los que ya tienes
 8b. ESTAN LAS TRES O CUATRO COSAS QUE HOY LE PIDE A TU AREA, todas, cada una contada de verdad. Cuentalas una por una antes de entregar: si alguna se ha quedado en media linea, esa area no esta terminada
 9. Ninguna casilla se queda vacia ni rellena con una palabra de relleno: la escena, los dos remates, la pregunta y el cierre van SIEMPRE y van escritos de verdad
