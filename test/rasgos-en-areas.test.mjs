@@ -223,21 +223,23 @@ try {
   // area- y con el esa llamada.
   //
   // Que no vuelva no se mira por el texto del encargo, que cualquiera puede
-  // escribir de otra manera, sino por el esquema: un informe pide TRES formas
-  // distintas y nada mas. La de la lista (fortalezas+desafios), la de un area
-  // (sus seis casillas, que es tambien la que calienta la cache) y la de las
-  // frases que se sacan de cada area. Una llamada nueva al modelo trae una
-  // cuarta forma y aqui se ve.
+  // escribir de otra manera, sino por el esquema: un informe limpio pide DOS
+  // formas distintas y nada mas. La de la lista (fortalezas+desafios) y la de
+  // un area (sus seis casillas, que es tambien la que calienta la cache). Una
+  // llamada nueva al modelo trae una tercera forma y aqui se ve.
+  //
+  // Eran tres hasta el 26 de agosto: habia una cuarta llamada por area, la
+  // del corrector que leia, con un esquema de "frases". Se quito, y por eso
+  // aqui bajan de tres a dos.
   const tipos = llamadas.map(l => l.tipo);
   comprobar('la lista se pide una sola vez',
     tipos.filter(t => t === 'lista').length === 1,
     tipos.filter(t => t === 'lista').length + ' llamada(s)');
   const formas = [...new Set(llamadas
     .map(l => Object.keys(l.esquema?.properties || {}).sort().join('+')))].sort();
-  comprobar('y en todo el informe solo se piden esas tres formas',
-    formas.length === 3
+  comprobar('y en todo el informe solo se piden esas dos formas',
+    formas.length === 2
     && formas.includes('desafios+fortalezas')
-    && formas.includes('frases')
     && formas.some(f => f.startsWith('bloques+')),
     formas.join(' / '));
 

@@ -1,25 +1,29 @@
 // ═════════════════════════════════════════════════════════════════
 // test/corrector-no-reescribe.test.mjs
 //
-// EL CORRECTOR QUE LEE SE APUNTA, NO CUESTA UN AREA.
+// EL CORRECTOR QUE LEIA SE QUITO. LO QUE CAZA POR PALABRAS SE QUEDA.
 //
-// En el informe del 24 de agosto el repaso de estilo mando reescribir CUATRO
-// areas de siete. Las cuatro volvieron marcadas por lo mismo: cuatro areas de
-// mil trescientas palabras pagadas dos veces para quedarnos igual. Cero de
-// cuatro.
+// Habia un repaso que leia cada area con OTRA llamada al modelo buscando
+// frases que hablaran de ella desde fuera. Siete llamadas por informe.
 //
-// Y lo que marcaba casi nunca era un fallo: "Tu llevas esa cuenta, Raquel"
-// (que es de tu), "Hay gente que aprende pronto" (que habla de mucha gente),
-// "el amor hay que ganarselo cada semana" (que no habla de nadie). Las tres
-// cosas estan escritas en SISTEMA_REPASO como que NO son fallo.
+// Primero mandaba reescribir, y el 24 de agosto mando CUATRO areas de siete:
+// las cuatro volvieron marcadas por lo mismo. Cuatro areas de mil trescientas
+// palabras pagadas dos veces para quedarnos igual. Cero de cuatro.
 //
-// Asi que ya no vuelve a pedir el area. Se apunta en el registro y se sigue.
+// Entonces se bajo a aviso. Pero en el informe del 25 marco seis frases y
+// CUATRO estaban bien escritas, "Tu no tienes ese problema, Raquel" entre
+// ellas, que es de tu y lleva su nombre delante. Un aviso que se equivoca
+// cuatro de cada seis veces entierra el de verdad, y ademas nunca cambiaba el
+// informe: solo escribia en el registro. Asi que el 26 de agosto se quito.
+//
+// Lo que se queda es el "ella + verbo", que no es una opinion: es una palabra
+// que esta o no esta.
 //
 // Lo que se comprueba aqui:
-//   1. una frase marcada por el corrector NO cuesta una llamada de mas
-//   2. pero SI queda apuntada, para no quedarnos ciegos
-//   3. el "ella + verbo" que de verdad habla de ella, que es una palabra y
-//      no una opinion, SIGUE haciendo que se vuelva a pedir el area
+//   1. sin nada que marcar, siete areas son siete llamadas
+//   2. el corrector que leia NO se llama ni una vez, ni deja apuntes
+//   3. el "ella + verbo" que de verdad habla de ella SIGUE haciendo que se
+//      vuelva a pedir el area
 //   4. pero un "ella" que es otra persona, o una cosa, NO cuesta una vuelta
 //   5. y lo demas que si se arregla volviendo a pedir (la escena copiada)
 //      sigue funcionando igual
@@ -190,7 +194,7 @@ try {
     return r;
   };
 
-  console.log('\n  api/chat.js — el corrector que lee se apunta, no cuesta un área\n');
+  console.log('\n  api/chat.js — el corrector que leía ya no está; lo que caza por palabras, sí\n');
 
   // ── A. CONTROL: nada que marcar ─────────────────────────────────
   console.log('  A. el corrector no marca nada');
@@ -198,18 +202,26 @@ try {
   c('el informe sale', a.code === 200, 'HTTP ' + a.code);
   c('siete áreas, siete llamadas', llamadasDeArea === 7, llamadasDeArea + ' llamadas');
 
-  // ── B. LO QUE COSTABA CUATRO AREAS ──────────────────────────────
-  console.log('\n  B. el corrector marca una frase (la del informe del 24 de agosto)');
+  // ── B. EL CORRECTOR QUE LEIA YA NO EXISTE ───────────────────────
+  //
+  // Se quito el 26 de agosto. Costaba una llamada por area -siete por
+  // informe- y en el informe del 25 marco seis frases de las que CUATRO
+  // estaban bien escritas, "Tu no tienes ese problema, Raquel" entre ellas.
+  // Aqui se vigila que no vuelva: si alguien lo reenchufa, esta prueba se
+  // cae y se ven las siete llamadas de mas.
+  //
+  // La frase que marcaba se le sigue dando al informe, para comprobar que
+  // sale entera hacia el cliente sin que nadie la toque.
+  console.log('\n  B. el corrector que leía ya no existe');
   const b = await generar(areaCon(null), [FRASE_MARCADA]);
   c('el informe sale igual', b.code === 200, 'HTTP ' + b.code);
   c('NO se vuelve a pedir ni un área: 7 llamadas para 7 áreas',
     llamadasDeArea === 7, llamadasDeArea + ' llamadas');
-  c('el corrector sí se ha llamado (se sigue mirando)',
-    vecesQueSeLlamaAlCorrector === 7, vecesQueSeLlamaAlCorrector + ' veces');
-  c('y queda apuntado en el registro, que no nos quedamos ciegos',
-    apuntes.some(x => x.includes('habla de ella desde fuera')));
-  c('el apunte dice que no se reescribe por eso',
-    apuntes.some(x => x.includes('volver a pedirla no lo arregla')));
+  c('y al corrector no se le llama NI UNA vez',
+    vecesQueSeLlamaAlCorrector === 0, vecesQueSeLlamaAlCorrector + ' veces');
+  c('ni queda ningún apunte suyo en el registro',
+    !apuntes.some(x => x.includes('habla de ella desde fuera')),
+    apuntes.filter(x => x.includes('habla de ella desde fuera')).join(' | ').slice(0, 80));
   c('el texto del área llega entero al cliente',
     String(b.body?.texto || '').includes(FRASE_MARCADA));
 

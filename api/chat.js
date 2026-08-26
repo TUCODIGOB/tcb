@@ -1659,56 +1659,6 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
     return typeof salida?.texto === 'string' ? salida.texto.trim() : null;
   }
 
-  const SISTEMA_REPASO = `Eres un corrector de estilo. Te dan un trozo de un libro escrito para una mujer concreta, que TIENE que estar escrito de principio a fin hablandole a ella de tu, como si alguien se lo estuviera contando cara a cara.
-
-Tu unico trabajo es devolver, copiadas tal cual, las frases que se salen de eso: las que hablan de ELLA desde fuera, en tercera persona.
-
-SI son fallo:
-- "de pequena aprendio que el cuidado no venia solo"
-- "lo que se le rompio entonces fue la certeza de que la iban a querer"
-- "alguien le pregunta como esta y ella nota que no sabe que contestar"
-- "no es que Raquel no sepa disfrutar del dinero"
-- "va a descubrir que la seguridad que tanto ha perseguido no estaba ahi"
-
-NO son fallo, y es lo que mas se falla al corregir:
-- las frases que hablan de la gente en general, que son la manera normal de abrir: "hay gente que va por la vida cuidando de que todo este hecho", "en cualquier grupo hay alguien que se entera de todo", "nadie les pregunta que les cuesta". Hablan de mucha gente, no de ella.
-- las frases que hablan de OTRA persona: su madre, su pareja, un jefe, una amiga. "cuando dependes de que otra persona cumpla su parte" esta bien.
-- las frases que hablan de cosas: "eso se rompio", "el miedo aparece sin avisar".
-- las frases en segunda persona aunque no lleven la palabra "tu": "la serie que querias ver", "exige que estes siempre disponible", "empieza a pesarte". Estan bien.
-
-Copia cada frase entera y sin cambiar ni una letra, para que se pueda buscar en el texto. Si no hay ninguna, devuelve la lista vacia.`;
-
-  const ESQUEMA_REPASO = {
-    type: 'object',
-    properties: {
-      frases: {
-        type: 'array',
-        description: 'Las frases que hablan de ella en tercera persona, copiadas tal cual. Vacio si no hay ninguna.',
-        items: { type: 'string' },
-      },
-    },
-    required: ['frases'],
-    additionalProperties: false,
-  };
-
-  async function frasesQueHablanDeEllaDesdeFuera(texto) {
-    const salida = await pedirJson({
-      system: SISTEMA_REPASO,
-      esquema: ESQUEMA_REPASO,
-      // Solo tiene que copiar frases sueltas: con esto sobra de largo.
-      tope: 1500,
-      contenido: texto,
-    });
-    const frases = salida?.frases;
-    if (!Array.isArray(frases)) return [];
-    // Solo valen las que de verdad estan en el area: si el corrector se
-    // inventa o parafrasea una frase, no se le hace caso.
-    const enElArea = enPalabras(texto).join(' ');
-    return frases
-      .filter(f => typeof f === 'string' && f.trim().length > 12)
-      .filter(f => enElArea.includes(enPalabras(f).join(' ')));
-  }
-
   // ── LO QUE FALTA SE ARREGLA, NO SE REESCRIBE EL AREA ENTERA ───────
   //
   // Cuando al area le faltaba el nombre o le faltaban negritas, se volvia a
@@ -1985,38 +1935,43 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     console.warn(`Área ${id}: la escena venía copiada en ${sobran.length} párrafo(s), se han quitado sin volver a pedir el área`);
   }
 
-  // ── LO QUE HACE QUE SE VUELVA A PEDIR EL AREA, Y LO QUE SOLO SE APUNTA ──
+  // ── LO QUE HACE QUE SE VUELVA A PEDIR EL AREA ──────────────────────
   //
-  // Devuelve dos listas. "flojo" es lo que se arregla volviendo a pedir el
-  // area. "avisos" es lo que se ve pero NO se arregla asi, y por lo tanto no
-  // justifica pagar el area entera otra vez.
+  // Devuelve la lista de lo que trae mal y se arregla volviendo a pedirla.
   //
-  // EL REPASO QUE LEE PASO A AVISO EL 24 DE AGOSTO, Y NO POR CAPRICHO.
-  // En el informe de ese dia mando reescribir cuatro areas de siete, y las
-  // CUATRO volvieron marcadas por lo mismo: se pagaron cuatro areas de mil
-  // trescientas palabras y ninguna quedo mejor. Cero de cuatro.
+  // AQUI HUBO UN CORRECTOR QUE LEIA EL AREA CON OTRA LLAMADA AL MODELO, Y SE
+  // HA QUITADO. Costaba una llamada por area -siete por informe- y se
+  // equivocaba casi siempre.
   //
-  // Y ademas casi nada de lo que marco era un fallo. Estas son las frases por
-  // las que mando reescribir:
+  // Primero mandaba reescribir, y el 24 de agosto mando cuatro areas de
+  // siete: las CUATRO volvieron marcadas por lo mismo. Cuatro areas de mil
+  // trescientas palabras pagadas dos veces para quedarnos igual.
+  //
+  // Entonces se bajo a aviso, que es como estaba. Pero en el informe del 25
+  // de agosto marco seis frases y CUATRO estaban bien escritas, entre ellas
+  // "Tu no tienes ese problema, Raquel", que es de tu y lleva su nombre
+  // delante. Un aviso que se equivoca cuatro de cada seis veces no avisa de
+  // nada: entierra el de verdad. Y ninguno cambiaba el informe, porque solo
+  // se escribia en el registro.
+  //
+  // Estas son las frases por las que llego a mandar reescribir:
   //   "Tu llevas esa cuenta, Raquel, y la llevas desde hace tanto..."  -> es de TU
   //   "guardas una habitacion cerrada que no ensenas ni a quien mas quieres" -> es de TU
   //   "ahi es tambien donde mas se te nota que llevas la cuenta de todo" -> es de TU
   //   "Hay una edad, casi siempre muy pronto, en la que cualquier nina..." -> habla de mucha gente
   //   "Hay gente que aprende pronto que el mundo se sostiene..."      -> habla de mucha gente
   //   "el amor hay que ganarselo cada semana"                         -> no habla de nadie
-  // Las tres cosas estan escritas en SISTEMA_REPASO como que NO son fallo, y
-  // aun asi las marca. Es un corrector que se equivoca casi siempre y cuyo
-  // arreglo no arregla: las dos mitades fallan, no una.
+  // Su propio prompt decia que esas tres cosas NO son fallo, y aun asi las
+  // marcaba. Es un corrector que se equivoca casi siempre y cuyo arreglo no
+  // arregla: las dos mitades fallan, no una.
   //
-  // Se queda apuntado en el registro para no quedarnos ciegos si algun dia
-  // aparece uno de verdad, pero ya no cuesta un area.
-  //
-  // El "ella" de sujeto NO se toca y sigue haciendo que se vuelva a pedir: no
-  // es un corrector que opina, es una palabra que esta o no esta, y un "ella
-  // responde" impreso lo lee la clienta.
-  async function loQueLeFaltaAlArea(montada) {
+  // LO QUE SI SE QUEDA es el "ella" de sujeto, que esta aqui debajo: no es un
+  // corrector que opina, es una palabra que esta o no esta, y un "ella
+  // responde" impreso lo lee la clienta. Ese tambien marco de mas en su dia
+  // y por eso lleva dos excepciones escritas: ver su nota, en
+  // hablaDeEllaEnTerceraPersona.
+  function loQueLeFaltaAlArea(montada) {
     const flojo = [];
-    const avisos = [];
     const bloques = analizarArea(montada);
 
     const negritas = negritasDe(bloques).length;
@@ -2060,12 +2015,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       flojo.push(`ha copiado una instruccion interna dentro del texto: "${marca}"`);
     }
 
-    // Y el repaso que lee. Solo se apunta: ver la nota de arriba.
-    for (const f of await frasesQueHablanDeEllaDesdeFuera(leido)) {
-      avisos.push(`habla de ella desde fuera: "${f.slice(0, 70).trim()}..."`);
-    }
-
-    return { flojo, avisos };
+    return flojo;
   }
 
 
@@ -2470,12 +2420,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     while (fallos < INTENTOS_POR_AREA) {
       try {
         const montada = await pedirArea(area, loQueFalloAntes, listas);
-        const { flojo, avisos } = await loQueLeFaltaAlArea(montada);
-        // Lo que se ve pero no se arregla volviendo a pedir el area: se apunta
-        // y se sigue. Ver la nota en loQueLeFaltaAlArea.
-        if (avisos.length > 0) {
-          console.warn(`Área ${area.id}: ${avisos.join('; ')} — se entrega así, volver a pedirla no lo arregla`);
-        }
+        const flojo = loQueLeFaltaAlArea(montada);
         if (flojo.length === 0) return montada;
         if (mejor === null || flojo.length <= mejor.cuantos) mejor = { montada, cuantos: flojo.length };
         if (repasos >= REPASOS_POR_ESTILO) {
