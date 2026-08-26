@@ -1513,19 +1513,23 @@ POR DÓNDE VA ESTA ÁREA (las otras seis van por otro sitio, así que no busques
     const fuertes = suyos('fortalezas');
     const pesan = suyos('desafios');
 
-    // UNO DE CADA LADO, ALTERNANDO, EMPEZANDO POR EL QUE TENGA MAS.
+    // UNO DE CADA LADO, ALTERNANDO, Y EMPEZANDO POR LO QUE LE PESA.
     //
-    // Un area entera de cosas buenas se lee a halago y una entera de las que
-    // pesan se lee y se cierra el informe. Alternando, mientras su carta de de
-    // los dos lados, aqui salen de los dos. Y se respeta el orden en que
-    // llegaron, que es el que la lista puso: lo primero que escribio es lo que
-    // vio con mas fuerza. En empate abre el lado bueno, que un area que
-    // arranca por lo que le pesa se lee a la defensiva desde la primera linea.
-    const [largo, corto] = fuertes.length >= pesan.length ? [fuertes, pesan] : [pesan, fuertes];
+    // Siempre de los dos lados mientras su carta de de los dos: un area entera
+    // de cosas buenas se lee a halago y una entera de golpes se lee y se
+    // cierra el informe. Si solo le tocan dos, va uno de cada.
+    //
+    // Y como tres es impar, uno de los dos lados se lleva dos. Se los lleva el
+    // que le pesa: la clienta paga esto porque tiene dudas, y sus dudas no son
+    // las cosas buenas. Si su carta solo le da un desafio en esta parcela,
+    // entonces el que repite es el bueno, porque no hay otro.
+    //
+    // Se respeta el orden en que llegaron, que es el que la lista puso: lo
+    // primero que escribio es lo que vio con mas fuerza.
     const elegidos = [];
-    for (let i = 0; elegidos.length < CUANTOS_DESARROLLA_UN_AREA && (i < largo.length || i < corto.length); i++) {
-      if (i < largo.length && elegidos.length < CUANTOS_DESARROLLA_UN_AREA) elegidos.push(largo[i]);
-      if (i < corto.length && elegidos.length < CUANTOS_DESARROLLA_UN_AREA) elegidos.push(corto[i]);
+    for (let i = 0; elegidos.length < CUANTOS_DESARROLLA_UN_AREA && (i < pesan.length || i < fuertes.length); i++) {
+      if (i < pesan.length && elegidos.length < CUANTOS_DESARROLLA_UN_AREA) elegidos.push(pesan[i]);
+      if (i < fuertes.length && elegidos.length < CUANTOS_DESARROLLA_UN_AREA) elegidos.push(fuertes[i]);
     }
     if (elegidos.length === 0) return '';
 

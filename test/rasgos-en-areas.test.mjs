@@ -258,8 +258,11 @@ try {
   comprobar('y NO recibe ni uno de otra area',
     !n1.includes('Cabeza fría con el dinero') && !n1.includes('Te cuesta pedir')
     && !n1.includes('Guardarte lo que duele'));
-  comprobar('el area 7 recibe los suyos', n7.includes('Cabeza fría con el dinero')
-    && n7.includes('Sabes multiplicar lo que hay') && n7.includes('Te comparas con lo que no tienes'));
+  // El area 7 tiene cuatro en la lista, dos de cada lado, asi que desarrolla
+  // tres: los dos que pesan y uno bueno. El cuarto se lee en la lista final.
+  comprobar('el area 7 recibe los dos que pesan y uno de los buenos',
+    n7.includes('Te comparas con lo que no tienes') && n7.includes('Te cuesta cobrar lo tuyo')
+    && n7.includes('Cabeza fría con el dinero') && !n7.includes('Sabes multiplicar lo que hay'));
   comprobar('y ninguno del area 1', !n7.includes('Detectas lo que hace falta'));
 
   // Ningun rasgo puede estar en dos areas a la vez: es la razon de ser de esto.
@@ -301,6 +304,21 @@ try {
   }
   comprobar('y de los dos lados: de lo que tiene a favor y de lo que le pesa',
     descompensadas.length === 0, descompensadas.join(', ') || 'las siete compensadas');
+
+  // Y CUANDO HAY QUE TIRAR PARA UN LADO, SE TIRA PARA EL QUE PESA. Tres es
+  // impar, asi que uno de los dos lados se lleva dos: se los lleva el desafio,
+  // porque la clienta paga esto por sus dudas y sus dudas no son lo bueno.
+  // Solo cuando su carta le da un unico desafio en esa parcela repite el bueno.
+  const alReves = [];
+  for (let a = 1; a <= 7; a++) {
+    const llevan = cuantosLleva(a);
+    if (llevan.length < 3) continue;
+    const nP = llevan.filter(x => x.includes('(desafio)')).length;
+    const hayDosQuePesan = LISTA_BUENA.desafios.filter(r => Number(r.area) === a).length >= 2;
+    if (hayDosQuePesan && nP < 2) alReves.push(`area ${a}: solo ${nP} que pesa(n)`);
+  }
+  comprobar('y de los tres, dos son de los que pesan siempre que su carta los dé',
+    alReves.length === 0, alReves.join('; ') || 'ninguna tira para el lado bueno');
 
   // Los que no se desarrollan NO se cuelan en ninguna area: se leen en la
   // lista del final, y esa se imprime entera.
