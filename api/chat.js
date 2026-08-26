@@ -549,10 +549,14 @@ async function extraerRasgos(nombrePila, sexo, cartaTexto) {
     ? 'una MUJER. Toda en femenino.'
     : 'un HOMBRE. Todo en masculino.';
 
-  const prompt = `Eres la misma experta que escribe el estudio entero, y ahora te toca escribir sus dos listas de rasgos: lo que tiene a favor y lo que le pesa. Las dos salen de su carta natal, pero eso no se nota al leerlas, porque van escritas con la misma voz que el resto del libro.
+  const prompt = `Eres la misma experta que escribe el estudio entero, y ahora te toca escribir sus dos listas de rasgos: lo que tiene a favor y lo que le pesa. Los sacas UNICAMENTE de su carta natal, pero eso no se nota al leerlos, porque van escritos con la misma voz que el resto del libro.
+
+LO QUE NO ESTA EN SU CARTA NO SE ESCRIBE, Y ESTA ES LA REGLA QUE SOSTIENE EL PRODUCTO.
+Ha pagado por leer lo suyo, no algo que le valdria a cualquiera. En cuanto lee una sola cosa que no le ha pasado deja de creerse el estudio entero, y no vuelve a comprar.
+De su carta sale COMO funciona, no lo que vivio: no sabes como era su casa, ni que vio de pequena, ni que le dijeron. Asi que su pasado no se afirma NUNCA -nada de "aprendiste", "creciste", "de pequena", "en tu casa", "desde joven"-, se cuenta lo que le pasa HOY, que es lo unico que puede reconocer.
 
 ESTAS LISTAS SON LA BASE DEL ESTUDIO ENTERO, NO SU FINAL.
-De aqui salen las siete areas: a cada una le tocan los rasgos que tu le pongas, y esa area contara ESOS y ninguno mas. Un rasgo que no pongas aqui no se cuenta en ningun sitio, y uno puesto donde no le toca se cuenta donde no pega. Ademas las dos listas se imprimen enteras al final del estudio, asi que lo que escribas se lee dos veces.
+De aqui salen las siete areas: a cada una le tocan los rasgos que tu le pongas, y esa area contara ESOS y ninguno mas. Un rasgo que no pongas aqui no se cuenta en ningun sitio. Ademas las dos listas se imprimen enteras al final, asi que lo que escribas se lee dos veces.
 
 ${ESPANOL_DE_ESPANA}
 
@@ -568,6 +572,7 @@ Y NADA DE FRASES ABSTRACTAS, que es de donde salen las fichas que no significan 
 
 ${TODO_DE_TU}
 ${HABLAR_DE_ELLA_LO_ROMPE}
+Y tampoco apareces tu: aqui no hay un "yo" que cuente su experiencia ni que opine. Solo ella.
 
 LAS DOS CASILLAS QUE ESCRIBES:
 
@@ -585,7 +590,7 @@ LO QUE NO SE TOCA:
 1. Entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} en cada lista, y las dos con numeros distintos: nadie tiene tantas cosas buenas como malas. Los que de verdad salgan de la carta, sin rellenar para cuadrarlas.
 2. NI UNO REPETIDO, ni dentro de una lista ni entre las dos. Repetido no es solo la misma frase, es la misma cosa dicha de otra manera: "Miedo al abandono" y "Terror a que la dejen" son el mismo rasgo escrito dos veces. Antes de dar una ficha por buena, leela contra todas las anteriores.
 3. Cada rasgo en UNA sola lista, nunca en las dos.
-4. De cada una de las siete areas salen al menos ${MINIMO_POR_AREA}, contando las dos listas juntas. Cada area se escribe DESPUES solo con los suyos, asi que un area con uno solo se pasa cuatro paginas dando vueltas a una cosa. Nadie se queda mudo en un area: todo el mundo tiene identidad, algo que se le repite, algo que teme, algo que le dolio, una manera de querer, una manera de tratar a la gente y una relacion con el dinero.
+4. De cada una de las siete areas salen al menos ${MINIMO_POR_AREA}, contando las dos listas juntas. Cada area se escribe DESPUES solo con los suyos, asi que un area con uno solo se pasa cuatro paginas dando vueltas a una cosa. Ninguna carta se queda muda en un area.
 5. Maximo por area no hay: si de una salen seis, pon seis. Reparte mirando la carta, no a partes iguales.
 
 LA LISTA DE LO QUE LE PESA ES LA DELICADA. Son ${RASGOS_MINIMO} golpes seguidos o mas, sin las paginas que en las areas los amortiguan: mal escrita, se lee y se cierra el informe.
@@ -593,8 +598,8 @@ LA LISTA DE LO QUE LE PESA ES LA DELICADA. Son ${RASGOS_MINIMO} golpes seguidos 
 - ${PERDONA_ANTES_DE_NOMBRAR}
 
 NI UN PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ANGULO. NI UNA VEZ.
-La carta es de donde lo sacas, no lo que escribes. Prohibidas estas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Jupiter, Saturno, Urano, Neptuno, Pluton, Quiron, nodo, ascendente, medio cielo, los doce signos, cuadratura, trigono, sextil, oposicion, conjuncion, aspecto, orbe, retrogrado, carta, carta natal, horoscopo.
-Y "casa" solo cuando es la casa astrologica ("la casa del dinero", "la casa siete"); la casa de vivir se dice todas las veces que haga falta.
+Prohibidas estas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Jupiter, Saturno, Urano, Neptuno, Pluton, Quiron, nodo, ascendente, medio cielo, los doce signos, cuadratura, trigono, sextil, oposicion, conjuncion, aspecto, orbe, retrogrado, carta, carta natal, horoscopo.
+Y "casa" solo cuando es la casa astrologica ("la casa del dinero"); la casa de vivir se dice las veces que haga falta.
 - MAL: "El sol y Mercurio en la casa del trabajo diario te dan capacidad para detectar que necesita alguien". BIEN: "Notas lo que le hace falta a alguien antes de que lo diga y te pones a ello sin que nadie te lo pida, aunque nadie te lo agradezca despues."
 - MAL: "El sol enfrentado a Saturno te hizo sentir que el carino habia que ganarselo". BIEN: "Das por hecho que el carino hay que ganarselo, asi que te lo sigues currando incluso cuando ya lo tienes de sobra y nadie te lo esta pidiendo."
 Los dos BIEN dicen exactamente lo mismo que los MAL, pero contado desde su vida y con palabras suyas. Eso es lo que hay que escribir.
@@ -612,7 +617,7 @@ ${cartaTexto}
 Persona: ${trato}
 Nombre de pila: ${nombrePila}
 
-IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con numeros distintos, ni uno repetido, y de cada una de las siete areas al menos ${MINIMO_POR_AREA}. Y antes de entregar, lee las dos listas seguidas en voz alta: la ficha que suene a etiqueta, o que este picada en frases secas, se reescribe.`;
+IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con numeros distintos, ni uno repetido, y de cada una de las siete areas al menos ${MINIMO_POR_AREA}. Y antes de entregar, lee las dos listas seguidas en voz alta: la ficha que suene a etiqueta, la que este picada en frases secas y la que afirme algo de su vida que la carta no dice, se reescriben.`;
 
   // LA LISTA SE PIDE CON EL ESQUEMA PUESTO, NO PIDIENDO JSON POR ESCRITO.
   //
