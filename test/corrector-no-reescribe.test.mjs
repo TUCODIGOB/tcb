@@ -72,7 +72,7 @@ function areaCon(extra) {
   const cuerpo = [
     'Hay gente que llega a cualquier sitio y en diez minutos ya sabe quien necesita algo, y tu eres de esas.',
     'Y mientras asientes, Ana, por dentro **estas calculando cuanto has ensenado de mas**, que es un trabajo que no descansa nunca.',
-    'De ahi sale todo lo demas, que es lo que nadie te ha contado y **llevas media vida pagando sin enterarte** del precio.',
+    'De ahi sale todo lo demas, que es lo que nadie te ha contado y **llevas media vida pagando sin enterarte** del precio. ¿Cuando fue la ultima vez que soltaste algo sin repasarlo? Piensalo despacio.',
     '**Eso no se arregla apretando mas**, se arregla mirando de donde viene y quien te enseno a hacerlo asi de pequena.',
     'Y cuando por fin te sientas, la cabeza sigue repasando lo que queda para manana como si alguien lo fuera a corregir.',
   ];
@@ -82,7 +82,7 @@ function areaCon(extra) {
     remate_herida: { tras_bloque: 'creencias', texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
     remate_fuerza: { tras_bloque: 'arranque', texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
     pregunta: { tras_bloque: 'origen', texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
-    cierre: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
+    cierre: { revela: 'que la prueba se la puso ella y nadie se la pidio', texto: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.' },
   };
   a.bloques = {};
   cuerpo.forEach((t, i) => {

@@ -62,7 +62,7 @@ const AREA_BUENA = JSON.stringify({
   ...porBloques([
     { ladillo: null, texto: 'Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen, porque en cualquier familia hay una.' },
     { ladillo: 'La cuenta que no llevas', texto: 'Por fuera pareces tranquila, Ana, y por dentro llevas una **maquina que no para de repasar** lo que acabas de decir.' },
-    { ladillo: null, texto: 'En el trabajo se te nota enseguida, **revisas una tarea tres veces** cuando con una bastaria, y no es que dudes de tu criterio.' },
+    { ladillo: null, pregunta: '¿cuantas veces has vuelto sobre algo que ya estaba bien?', texto: 'En el trabajo se te nota enseguida, **revisas una tarea tres veces** cuando con una bastaria, y no es que dudes de tu criterio. ¿Cuantas veces has vuelto sobre algo que ya estaba bien? Casi nunca te lo has preguntado.' },
     { ladillo: 'Donde aprendiste la cuenta', texto: 'De pequena entendiste que el carino se ganaba haciendo las cosas bien, siendo la que no daba problemas nunca.' },
     { ladillo: null, texto: 'Y cuarenta anos despues sigues revisando y sigues anticipando, **sin que nadie te lo haya pedido** jamas.' },
   ]),
@@ -70,7 +70,7 @@ const AREA_BUENA = JSON.stringify({
   remate_herida: { tras_bloque: 'creencias', texto: 'Te has pasado la vida demostrando que se puede confiar en ti' },
   remate_fuerza: { tras_bloque: 'arranque', texto: 'Muy poca gente sigue sosteniendo cuando ya no la mira nadie' },
   pregunta: { tras_bloque: 'origen', texto: '¿Cuando fue la ultima vez que alguien te dio las gracias por eso?' },
-  cierre: 'No estas cansada de hacer cosas, estas cansada de que sea la unica prueba que te vale.',
+  cierre: { revela: 'que la prueba se la puso ella y nadie se la pidio', texto: 'Hacer cosas no te cansa, lo que te cansa es que sea la unica prueba que te vale de que mereces estar donde estas, y esa prueba te la pusiste tu.' },
 });
 
 // Y la misma con un parrafo del cuerpo cortado a mitad de frase, que es
@@ -94,7 +94,7 @@ const AREA_NEGRITA_AL_FINAL = (() => {
   const textos = [
     'Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen, porque en cualquier familia **siempre hay una.**',
     'Por fuera pareces tranquila, Ana, y por dentro llevas **una maquina que no para de repasar lo que acabas de decir.**',
-    'En el trabajo revisas una tarea tres veces cuando con una bastaria, y **no es que dudes de tu criterio.**',
+    'En el trabajo revisas una tarea tres veces cuando con una bastaria. ¿Cuantas veces has vuelto sobre algo que ya estaba bien? Y **no es que dudes de tu criterio.**',
     'De pequena entendiste que el carino se ganaba haciendo las cosas bien, **siendo la que no daba problemas nunca.**',
     'Y cuarenta anos despues sigues revisando y sigues anticipando, **sin que nadie te lo haya pedido jamas.**',
   ];
@@ -135,11 +135,48 @@ const AREA_CON_PORQUERIA = (() => {
   d.bloques.creencias = [{ ladillo: null, texto: 'Y por debajo hay una cuenta que **nunca has puesto en duda**. Este texto no deberia llevar negritas fuera de los bloques, corrijo: el cierre no lleva negrita. Y tu sigues pagandola.' }];
   // Acaba EN comilla, y con su pareja: es el caso que no se puede tocar.
   d.bloques.soltar = [{ ladillo: null, texto: 'Y te dices por dentro, **aunque sigas pudiendo**: "no puedo mas."' }];
-  d.cierre = 'No estas cansada de hacer cosas, estas cansada de que sea la unica prueba que te vale."';
+  d.cierre = { revela: 'que la prueba se la puso ella y nadie se la pidio', texto: 'Hacer cosas no te cansa, lo que te cansa es que sea la unica prueba que te vale de que mereces estar donde estas, y esa prueba te la pusiste tu."' };
   return JSON.stringify(d);
 })();
 
 // Lo mismo pero con la escena en blanco: la API no puede impedirlo.
+const AREA_SIN_PREGUNTAS = (() => {
+  const d = JSON.parse(AREA_BUENA);
+  // Se le quita la unica que va dentro del texto. La de su casilla se queda:
+  // esa se imprime grande y sale siempre, y no es la que faltaba.
+  const p = d.bloques.origen[0];
+  p.pregunta = null;
+  p.texto = 'En el trabajo se te nota enseguida, **revisas una tarea tres veces** cuando con una bastaria, y no es que dudes de tu criterio.';
+  return JSON.stringify(d);
+})();
+
+// Un cierre empezado por una de las tres formulas que el propio encargo del
+// area prohibe. Salen solas, y con las siete areas leidas seguidas se oye el
+// molde: a la tercera ya sabe como va a acabar la frase antes de leerla.
+const AREA_CIERRE_DE_MOLDE = (() => {
+  const d = JSON.parse(AREA_BUENA);
+  d.cierre = { revela: 'que la prueba se la puso ella', texto: 'No es que no sepas descansar, es que descansar nunca te ha parecido algo que hubieras terminado de ganarte.' };
+  return JSON.stringify(d);
+})();
+
+// Y un cierre con una frase que la limpieza se lleva entera. Es lo que paso
+// el 26 de agosto en las areas 3 y 6: "se ha limpiado basura del modelo en
+// cierre", y se entregaba lo que quedaba. Como el cierre son dos mitades -el
+// golpe y lo que se le abre-, si la que se va es la segunda, lo que se
+// imprime es medio cierre. Dos de siete.
+const AREA_CIERRE_MUTILADO = (() => {
+  const d = JSON.parse(AREA_BUENA);
+  // De paso, un parrafo que anota una pregunta en su casilla y NO la escribe
+  // dentro del texto: esa casilla es donde el modelo decide, no algo que se
+  // imprima. Si saliera, la clienta leeria el andamio.
+  d.bloques.creencias[0].pregunta = 'nota interna que no se imprime nunca';
+  d.cierre = {
+    revela: 'que la prueba se la puso ella',
+    texto: 'Hacer cosas no te cansa, lo que te cansa es que sea la unica prueba que te vale de que mereces estar donde estas. He puesto las negritas donde tocaba.',
+  };
+  return JSON.stringify(d);
+})();
+
 const AREA_ESCENA_VACIA = JSON.stringify({
   ...JSON.parse(AREA_BUENA),
   escena: { tras_bloque: 'hoy', texto: '   ' },
@@ -193,6 +230,20 @@ globalThis.fetch = async (url, opts = {}) => {
     if (modo === 'una corta') {
       const suya = /Genera ÚNICAMENTE el ÁREA 2 /.test(String(JSON.parse(opts.body || '{}').messages?.[0]?.content || ''));
       return { ok: true, status: 200, json: async () => ({ content: [{ text: suya ? AREA_A_LA_MITAD : AREA_BUENA }] }) };
+    }
+    if (modo === 'cierre de molde') {
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_CIERRE_DE_MOLDE }] }) };
+    }
+    if (modo === 'cierre mutilado') {
+      // La segunda llamada de una casilla suelta trae el cierre entero.
+      if (String(JSON.parse(opts.body || '{}').messages?.[0]?.content || '').includes('Lo único que falta es')) {
+        llamadas--; // no es una generacion de area
+        return { ok: true, status: 200, json: async () => ({ content: [{ text: JSON.stringify({ texto: 'Hacer cosas no te cansa, lo que te cansa es que sea la unica prueba que te vale, y llevas anos pudiendo descansar sin saberlo.' }) }] }) };
+      }
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_CIERRE_MUTILADO }] }) };
+    }
+    if (modo === 'sin preguntas') {
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_SIN_PREGUNTAS }] }) };
     }
     if (modo === 'negrita al final') {
       return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_NEGRITA_AL_FINAL }] }) };
@@ -364,6 +415,83 @@ try {
   const r6 = res();
   await chat({ method: 'POST', body: { session_id: SID6, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r6);
   c('siete áreas del mismo tamaño NO disparan ningún repaso', llamadas === 7, llamadas + ' llamadas');
+
+  // ── SIN UNA SOLA PREGUNTA DENTRO DEL TEXTO ────────────────────────
+  //
+  // LAS PREGUNTAS DEL TEXTO SON LAS QUE HACEN QUE SE PARE A MIRARSE, y son
+  // las que no salian: en el estudio de 21 paginas hubo CUATRO en todo el
+  // informe, y las cuatro eran la de la casilla de cada area.
+  //
+  // Ahora cada parrafo tiene su casilla para decidir si ahi toca, y aqui se
+  // comprueba el suelo: un area que llega con todas a null y sin una sola
+  // pregunta en cuatro paginas no es un area con pocas, es un area que no lo
+  // ha hecho, igual que una sin una sola negrita.
+  //
+  // Y se comprueba con la pregunta de su casilla PUESTA, que es lo que hace
+  // que la prueba valga: si el contador la contara, un area asi pasaria y
+  // seguiriamos con cuatro preguntas por informe.
+  console.log('\n  un area sin una sola pregunta dentro del texto\n');
+  modo = 'sin preguntas';
+  llamadas = 0;
+  avisos.length = 0;
+  const SID_P = 'cs_test_sin_preguntas';
+  TIENDA.set(SID_P, { id: SID_P, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const rP = res();
+  await chat({ method: 'POST', body: { session_id: SID_P, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, rP);
+  c('un área sin preguntas en el texto se vuelve a pedir', llamadas > 7, llamadas + ' llamadas');
+  c('y la pregunta de su casilla NO cuenta como una del texto',
+    avisos.some(a => /no le preguntas nada en todo el texto/.test(a)),
+    avisos.find(a => /no le preguntas/.test(a)) || avisos.slice(-1)[0] || 'ningún aviso');
+  c('y se le dice donde van, dentro del parrafo',
+    avisos.some(a => /DENTRO del parrafo, entre las demas frases/.test(a)));
+  c('el informe sale igual', rP.code === 200, 'HTTP ' + rP.code);
+
+  // ── EL CIERRE ────────────────────────────────────────────────────
+  //
+  // De los siete cierres del ultimo estudio, dos no revelaban nada. Aqui se
+  // miran las dos cosas que si se pueden mirar por codigo: que no empiece por
+  // una de las tres formulas que su propia area le prohibe, y que la limpieza
+  // no lo entregue a medias.
+  console.log('\n  el cierre\n');
+  modo = 'cierre de molde';
+  llamadas = 0;
+  avisos.length = 0;
+  const SID_C1 = 'cs_test_cierre_molde';
+  TIENDA.set(SID_C1, { id: SID_C1, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const rC1 = res();
+  await chat({ method: 'POST', body: { session_id: SID_C1, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, rC1);
+  c('un cierre empezado por "No es que..." se vuelve a pedir', llamadas > 7, llamadas + ' llamadas');
+  c('y se le dice que esa es una de las tres que tiene prohibidas',
+    avisos.some(a => /el cierre empieza por "no es que", que es una de las tres formas/i.test(a)),
+    avisos.find(a => /el cierre empieza/i.test(a)) || avisos.slice(-1)[0] || 'ningún aviso');
+
+  // Y la limpieza que deja medio cierre impreso.
+  modo = 'cierre mutilado';
+  llamadas = 0;
+  avisos.length = 0;
+  const SID_C2 = 'cs_test_cierre_mutilado';
+  TIENDA.set(SID_C2, { id: SID_C2, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const rC2 = res();
+  await chat({ method: 'POST', body: { session_id: SID_C2, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, rC2);
+  const textoC2 = String(rC2.body?.texto || '');
+  c('un cierre al que la limpieza le quita una frase se vuelve a pedir',
+    avisos.some(a => /la limpieza le ha quitado una frase entera a cierre/.test(a)),
+    avisos.find(a => /limpieza le ha quitado/.test(a)) || avisos.slice(-1)[0] || 'ningún aviso');
+  c('y lo que se imprime es el cierre entero, no el trozo que quedaba',
+    textoC2.includes('llevas anos pudiendo descansar sin saberlo'));
+  c('sin volver a escribir el área entera', llamadas === 7, llamadas + ' llamadas');
+  c('y la frase del modelo no llega al papel',
+    !/negritas donde tocaba/i.test(textoC2));
+
+  // La nota con la que encuentra la revelacion es para el modelo, no para
+  // ella: si se imprimiera, la clienta leeria el andamio del producto.
+  c('la nota "revela" no sale impresa en ningún sitio',
+    !/que la prueba se la puso ella/i.test(textoC2));
+  c('ni la casilla "pregunta" de cada párrafo',
+    !/nota interna que no se imprime nunca/i.test(textoC2));
 
   // Y con las siete de tamanos distintos pero normales, tampoco: si el liston
   // estuviera demasiado alto, cada informe pagaria repasos por nada.

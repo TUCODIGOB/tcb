@@ -135,7 +135,7 @@ function porBloques(parrafos) {
 const areaEscrita = (loCopiado) => JSON.stringify({
   ...porBloques([
     { ladillo: null, texto: (loCopiado ? loCopiado + ' ' : '') + 'Antes de contarte nada de ti, quiero que pienses en las personas que sostienen, porque en cualquier familia hay una.' },
-    { ladillo: 'La cuenta que no llevas', texto: 'Por fuera pareces tranquila, Raquel, y por dentro llevas una **maquina que no para de repasar** lo que acabas de decir.' },
+    { ladillo: 'La cuenta que no llevas', pregunta: '¿cuanto hace que no dices algo sin repasarlo antes?', texto: 'Por fuera pareces tranquila, Raquel, y por dentro llevas una **maquina que no para de repasar** lo que acabas de decir. ¿Cuanto hace que no dices algo sin repasarlo antes? Casi nunca lo cuentas.' },
     { ladillo: null, texto: 'En el trabajo se te nota enseguida, **revisas una tarea tres veces** cuando con una bastaria, y no es que dudes de tu criterio.' },
     { ladillo: 'Donde aprendiste la cuenta', texto: 'De pequena entendiste que el carino se ganaba haciendo las cosas bien, siendo la que no daba problemas nunca.' },
     { ladillo: null, texto: 'Y cuarenta anos despues sigues revisando y sigues anticipando, **sin que nadie te lo haya pedido** jamas.' },
@@ -144,7 +144,7 @@ const areaEscrita = (loCopiado) => JSON.stringify({
   remate_herida: { tras_bloque: 'creencias', texto: 'Te has pasado la vida demostrando que se puede confiar en ti' },
   remate_fuerza: { tras_bloque: 'arranque', texto: 'Muy poca gente sigue sosteniendo cuando ya no la mira nadie' },
   pregunta: { tras_bloque: 'origen', texto: '¿Cuando fue la ultima vez que alguien te dio las gracias por eso?' },
-  cierre: 'No estas cansada de hacer cosas, estas cansada de que sea la unica prueba que te vale.',
+  cierre: { revela: 'que la prueba se la puso ella y nadie se la pidio', texto: 'Hacer cosas no te cansa, lo que te cansa es que sea la unica prueba que te vale de que mereces estar donde estas, y esa prueba te la pusiste tu.' },
 });
 
 globalThis.fetch = async (url, opts = {}) => {
@@ -517,6 +517,38 @@ try {
       /no es pasado ni es solape/.test(sistema));
     comprobar('y que la explicacion unica manda dentro de ORIGEN, no fuera',
       /Esto manda dentro de ORIGEN/.test(sistema));
+  }
+
+  // ── LAS DOS CASILLAS NUEVAS DEL AREA ─────────────────────────
+  //
+  // Lo que tiene casilla sale siempre; lo que solo esta pedido, no. Esa es la
+  // leccion de este producto entero, y estas dos son las que faltaban.
+  {
+    const esq = llamadas.find(l => l.tipo === 'area')?.esquema?.properties || {};
+    const delParrafo = Object.keys(
+      esq.bloques?.properties?.hoy?.items?.properties || {}
+    ).sort();
+    // Cada parrafo decide si ahi toca pregunta. No es un cupo: en la mayoria
+    // va null. En el estudio de 21 paginas salieron CUATRO preguntas en todo
+    // el informe, y las cuatro eran las de las casillas grandes.
+    comprobar('cada parrafo se pide con su ladillo, su pregunta y su texto',
+      JSON.stringify(delParrafo) === JSON.stringify(['ladillo', 'pregunta', 'texto']),
+      delParrafo.join(', '));
+    // Y el cierre nombra su revelacion antes de escribirse. "Revela algo
+    // nuevo" estaba pedido y dos de los siete recogian lo de arriba.
+    const delCierre = Object.keys(esq.cierre?.properties || {}).sort();
+    comprobar('el cierre se pide con su revelacion y su texto',
+      JSON.stringify(delCierre) === JSON.stringify(['revela', 'texto']),
+      delCierre.join(', ') || 'el cierre sigue siendo una cadena suelta');
+
+    const sistema = deArea()[0].sistema;
+    comprobar('el prompt dice donde se decide cada pregunta del texto',
+      /CADA PÁRRAFO TIENE SU CASILLA "pregunta"/.test(sistema));
+    comprobar('y que la revelacion se escribe ANTES que el cierre',
+      /Y ESO SE ESCRIBE ANTES QUE EL CIERRE/.test(sistema));
+    comprobar('y que ninguna de las dos notas se imprime',
+      /No se imprime, es para ti/.test(sistema)
+      && /la casilla solo la anota/.test(sistema));
   }
 
   // ── LA FRASE DE RELLENO NO PUEDE OCUPAR EL SITIO DEL PORQUE ──

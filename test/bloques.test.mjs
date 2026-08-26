@@ -182,7 +182,7 @@ const casillas = (nParrafos, sitio) => ({
   remate_herida: { tras_parrafo: sitio, texto: 'Llevas media vida pidiendo permiso' },
   remate_fuerza: { tras_parrafo: sitio, texto: 'Nadie aguanta tanto sin que eso sea una fuerza' },
   pregunta: { tras_parrafo: sitio, texto: '¿Cuantas veces te has callado algo?' },
-  cierre: 'El cierre del area, que golpea y abre.',
+  cierre: { revela: 'que la prueba se la puso ella y nadie se la pidio', texto: 'El cierre del area, que golpea y abre.' },
 });
 {
   const b = analizarArea(montarArea(casillas(12, 4)));

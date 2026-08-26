@@ -83,7 +83,7 @@ const AREA = JSON.stringify({
   remate_herida: { tras_bloque: 'origen', texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
   remate_fuerza: { tras_bloque: 'creencias', texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
   pregunta: { tras_bloque: 'hoy', texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
-  cierre: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
+  cierre: { revela: 'que la prueba se la puso ella y nadie se la pidio', texto: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.' },
 });
 
 // ── LAS DOS LISTAS QUE DEVUELVE EL MODELO DE MENTIRA ───────────────

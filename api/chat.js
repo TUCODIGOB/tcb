@@ -45,9 +45,10 @@ const PARRAFO_DEL_AREA = {
   type: 'object',
   properties: {
     ladillo: { type: ['string', 'null'], description: 'Ladillo de tres a cinco palabras que va ENCIMA de este parrafo, o null si este parrafo no lleva.' },
+    pregunta: { type: ['string', 'null'], description: 'La pregunta que sale de ESTE parrafo, copiada aqui, o null si aqui no toca. Toca donde acabas de ponerle nombre a algo que le cuesta o a algo que hace sin darse cuenta: ahi te paras y se lo preguntas. La mayoria de los parrafos van a null. NO SE IMPRIME: la pregunta va escrita DENTRO del texto de este parrafo, entre las demas frases, y aqui solo se anota cual es.' },
     texto: { type: 'string', description: 'El texto del parrafo. Aqui, y solo aqui, van las negritas del area, marcadas con dos asteriscos a cada lado: **asi**. Se marca la frase o la media frase que ella subrayaria con un fosforito, nunca una palabra suelta.' },
   },
-  required: ['ladillo', 'texto'],
+  required: ['ladillo', 'pregunta', 'texto'],
   additionalProperties: false,
 };
 
@@ -104,7 +105,32 @@ const ESQUEMA_AREA_POR_BLOQUES = {
     remate_herida: casillaGrande('La frase que nombra lo que le duele, sin anestesia. Va sola y grande.'),
     remate_fuerza: casillaGrande('La frase que nombra lo que tiene de raro y valioso, con la misma fuerza.'),
     pregunta: casillaGrande('La pregunta directa que le hace parar y pensar. Obligatoria.'),
-    cierre: { type: 'string', description: 'El ultimo parrafo del area. Revela algo nuevo y no presenta la siguiente area.' },
+    // EL CIERRE SE PIDE EN DOS CASILLAS, Y LA PRIMERA NO SE IMPRIME.
+    //
+    // "Revela algo nuevo" estaba pedido y no se cumplia: en el ultimo estudio
+    // dos de los siete recogian lo que ya estaba contado arriba. Pedirlo no
+    // basta -esa es la leccion de este producto entero-, y "revela" no es
+    // algo que el codigo pueda medir leyendo el parrafo.
+    //
+    // Lo que si se puede es obligarle a NOMBRAR la revelacion antes de
+    // escribirla. Al tener que decir en una linea que cosa nueva dice este
+    // cierre, o la encuentra o se le ve el hueco. Es lo mismo que se hizo con
+    // el porque de cada rasgo, y por el mismo motivo.
+    //
+    // Va en dos casillas y no en una nueva de primer nivel: el primer nivel
+    // se queda en SEIS, que es el numero con el que este esquema funciona
+    // -ver la nota de ESQUEMA_AREA_POR_BLOQUES-, y la forma de dos casillas
+    // es la misma que ya tienen la escena, los remates y la pregunta.
+    cierre: {
+      type: 'object',
+      description: 'El ultimo parrafo del area.',
+      properties: {
+        revela: { type: 'string', description: 'PARA TI, NO SE IMPRIME: en una linea, que cosa suya dice este cierre que NO este ya contada en el area. Escribela antes que el cierre: si al escribirla ves que eso ya esta dicho arriba, este cierre no revela nada y hay que buscar otra cosa.' },
+        texto: { type: 'string', description: 'El cierre, tal como pide CIERRE DE CADA AREA: primero lo que revela, que es el golpe, y solo despues lo que se le abre. No resume nada de lo anterior y no presenta la siguiente area.' },
+      },
+      required: ['revela', 'texto'],
+      additionalProperties: false,
+    },
   },
   required: ['bloques', 'escena', 'remate_herida', 'remate_fuerza', 'pregunta', 'cierre'],
   additionalProperties: false,
@@ -536,6 +562,21 @@ function laPalabraDeAstrologo(rasgo) {
 // impresas y sus formas mas cercanas. Ninguna la escribe nadie contandole a
 // una persona de donde le viene algo, asi que no puede saltar sobre texto
 // bueno.
+const ARRANQUES_DE_CIERRE_PROHIBIDOS = [
+  'no es que ',
+  'no estas cansada de',
+  'no estas cansado de',
+  'no te falta',
+];
+
+function elArranqueDeMoldeDelCierre(texto) {
+  const limpio = String(texto || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/^[^a-z0-9¿¡]+/, '');
+  return ARRANQUES_DE_CIERRE_PROHIBIDOS.find(a => limpio.startsWith(a)) || null;
+}
+
 const MULETILLAS_DEL_PORQUE = [
   'no te lo enseno nadie',
   'no te lo ensenaron',
@@ -1130,6 +1171,7 @@ ESTILO DE ESCRITURA:
 - Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: "¿cuántas veces te has callado algo por no montar un lío?". Las MALAS valen para cualquiera y no dicen nada: "¿te suena?", "¿te identificas con esto?", "¿te ha pasado alguna vez?".
   De ese ejemplo se coge la pelota que devuelve, no las palabras con las que arranca: por dónde empieza la tuya lo lleva escrito tu área, al final de su encargo. Copiándole el arranque pasa lo del último estudio, donde las siete preguntas empezaron por "¿cuántas veces" o "¿cuánto hace", y dos áreas acabaron con la misma pregunta palabra por palabra.
 - Y EL SITIO DE CADA UNA LO MARCA EL TEXTO: cada vez que le pones nombre a algo que le cuesta, o a algo que hace sin darse cuenta de que lo hace, ahí te paras y se lo preguntas. En un área hay tres o cuatro momentos así y ninguno se deja pasar. Si todas las preguntas se quedan en la casilla, lo que ella lee es un informe sobre ella y no alguien hablándole.
+- ESO SE DECIDE PÁRRAFO A PÁRRAFO, Y CADA PÁRRAFO TIENE SU CASILLA "pregunta" PARA DECIRLO. En el párrafo donde acabas de ponerle nombre a algo así, escribes la pregunta DENTRO de su texto y la anotas en esa casilla; en los demás va null, que es lo que va en la mayoría. No es un cupo que haya que llenar: en unos párrafos toca y en otros no, y quien lo dice es lo que acabas de escribir. Lo que no puede pasar es que un área entera vaya con todas a null.
 - RESALTA EN NEGRITA, dentro del texto de los párrafos, marcándolo con dos asteriscos a cada lado: **así**. Esto no es opcional y no es un adorno: un área sin una sola negrita es un muro de cuatro páginas donde el ojo no tiene dónde pararse, y es el fallo que más caro sale.
 - LA NEGRITA ES EL FOSFORITO DEL LECTOR. No es maquetación, no es un resumen y no es para que la página quede bonita: es exactamente lo que esa persona subrayaría si estuviera leyendo esto en un libro suyo, con un rotulador en la mano y sin pensárselo. La pregunta que decide cada una es esa: al llegar aquí, ¿pararía y lo subrayaría, o seguiría de largo?
 - SE MARCA LO QUE LA NOMBRA, NO LO QUE LE EXPLICAS. Lo que se subraya es la frase en la que se reconoce de golpe, la que le pone nombre a algo que llevaba años haciendo sin saber que lo hacía, la que ella se dice por dentro y no ha dicho nunca en voz alta, o la cuenta exacta de lo que le está costando. El porqué, el ejemplo, el contexto y la parte amable no se subrayan jamás: son lo que sostiene la frase que sí.
@@ -1249,7 +1291,8 @@ No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que
 
 CIERRE DE CADA ÁREA (OBLIGATORIO):
 El área termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una imagen contundente, una paradoja, una frase corta que golpea. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz.
-EL CIERRE REVELA, NO RECOGE. Tiene que decir algo que no has dicho todavía en el área: el nombre exacto de lo que le pasa, la consecuencia que ella no ha atado, lo que hay debajo de todo lo anterior. Si el cierre se pudiera escribir habiendo leído solo el primer párrafo, no vale. Y si al leerlo la persona piensa "esto ya me lo has dicho", tampoco.
+EL CIERRE REVELA, NO RECOGE. Tiene que decir algo que no has dicho todavía en el área: el nombre exacto de lo que le pasa, la consecuencia que ella no ha atado, lo que hay debajo de todo lo anterior.
+Y ESO SE ESCRIBE ANTES QUE EL CIERRE, en la casilla "revela" que va a su lado: una línea diciendo qué cosa suya dice este cierre que no esté ya contada arriba. No se imprime, es para ti, y es la que decide si hay cierre o no lo hay: si al escribirla ves que eso ya está dicho en el área, no busques cómo redactarlo mejor, busca otra cosa que decirle. Un cierre que recoge no se arregla con palabras. Si el cierre se pudiera escribir habiendo leído solo el primer párrafo, no vale. Y si al leerlo la persona piensa "esto ya me lo has dicho", tampoco.
 NI SE QUEDA A MEDIAS. Un cierre que apunta a algo sin decirlo deja al lector con la sensación de que falta información, y esa sensación es la contraria a la que buscas. Si nombras lo que le pasa, lo nombras entero: no "el colchón nunca fue el problema", sino qué era el problema.
 EL CIERRE CIERRA, Y NO PRESENTA NADA. No anuncia el área siguiente, no insinúa lo que viene después, no deja un hilo colgando "para que pase de página con ganas". Eso convertía el final de cada área en un acertijo: como no se puede nombrar lo que viene, acaba escribiéndose "otra cosa que también cuesta reclamar cuando llega el momento", y el lector se queda sin entender nada justo en la frase que más tenía que llegarle. Cada área termina en sí misma. Quien quiera seguir leyendo, sigue porque lo que acaba de leer le ha gustado.
 Y termina con luz, EN ESTE ORDEN Y NO AL REVÉS: primero lo que revela, que es el golpe, y solo después lo que se le abre. Un cierre que empieza por lo que se le abre se ha saltado la revelación, y entonces no es un cierre, es una promesa: se lee, se pasa página y no queda nada.
@@ -1303,11 +1346,11 @@ El área no se entrega como un texto seguido: se entrega por casillas, y cada ca
 
 - El texto del área va en la casilla "bloques", y dentro hay una lista por cada bloque: arranque, hoy, origen, creencias y soltar. Cada lista son los párrafos de ESE bloque, y ninguna se queda vacía. Dentro de cada una pones los párrafos que ese bloque necesite, con la medida que te piden más abajo. No los ordenas ni los colocas: se leen siempre en ese orden y de eso se encarga el código.
 - CUÁNTOS PÁRRAFOS LLEVA CADA BLOQUE, que es de donde sale que el área llegue a sus palabras: hoy lleva CUATRO o más, que es el bloque más largo; creencias TRES o más; origen DOS o más; el arranque UNO o dos; soltar UNO. Once párrafos es el suelo de un área normal, no el techo: si te faltan palabras, añades párrafos dentro de los bloques que más den de sí, nunca engordando los que ya tienes.
-- AQUÍ, Y SOLO AQUÍ, VAN LAS NEGRITAS, marcadas con dos asteriscos a cada lado, tal como pide RESALTA EN NEGRITA: son frases o medias frases del propio párrafo, nunca una palabra suelta. Cada párrafo lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras. El PRIMER párrafo del área nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
+- AQUÍ, Y SOLO AQUÍ, VAN LAS NEGRITAS, marcadas con dos asteriscos a cada lado, tal como pide RESALTA EN NEGRITA: son frases o medias frases del propio párrafo, nunca una palabra suelta. Cada párrafo lleva su texto y, si le toca, un ladillo encima de tres a cinco palabras y la pregunta que sale de él, tal como pide PREGÚNTALE DIRECTAMENTE. La pregunta se escribe DENTRO del texto, entre las demás frases, y la casilla solo la anota: una pregunta que ocupe ella sola un párrafo sale impresa en grande, y grande solo va la de su casilla. El PRIMER párrafo del área nunca lleva ladillo: la página ya trae el título del área impreso arriba. Un ladillo cada 250 o 300 palabras, así que en un área normal llevan ladillo tres de ellos y en el ÁREA 1, que es más larga, cuatro. El ladillo sale del párrafo que tiene justo debajo y de nadie más: coge la imagen, el gesto o la frase concreta que acabas de contar de ESTA persona y la dice en pequeño. NO es el nombre de un bloque ("HOY", "EL ORIGEN") y NO anuncia lo que viene. Si ese mismo ladillo pudiera ir en el área de otro cliente, no vale.
 - escena: la escena real obligatoria, tal como pide ESCENA REAL OBLIGATORIA. No lleva negritas dentro. Va escrita aquí y en ningún sitio más: NO la repitas dentro de los bloques de texto. Y aquí va la escena de verdad, escrita entera: una casilla no se rellena nunca con una palabra de relleno ni con un aviso de que falta algo, porque eso se imprime tal cual en el estudio del cliente.
 - remate_herida y remate_fuerza: las dos frases que rematan, tal como pide LAS FRASES QUE REMATAN. Cada una es UNA frase de treinta palabras como mucho, se imprime grande y centrada, y no lleva negritas.
 - pregunta: la pregunta directa, tal como pide PREGÚNTALE DIRECTAMENTE. Una sola frase, y no lleva negritas.
-- cierre: el último párrafo del área, tal como pide CIERRE DE CADA ÁREA. Va sin nada detrás.
+- cierre: dos casillas. Primero "revela", que es para ti y no se imprime: en una línea, qué cosa suya dice este cierre que no esté ya contada en el área. Y después "texto", el último párrafo del área, tal como pide CIERRE DE CADA ÁREA. Va sin nada detrás.
 
 DÓNDE VA CADA COSA, QUE ES LA MITAD DEL TRABAJO:
 La escena, los dos remates y la pregunta llevan "tras_bloque", que dice detrás de qué bloque se leen: arranque, hoy, origen o creencias. Esa elección es tuya y es donde de verdad se decide cómo se lee el área.
@@ -1934,6 +1977,10 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
     }).map(({ marca, cuerpo }) => marca + cuerpo).join('\n\n');
   }
 
+  // Cuantas frases tiene un texto. Se usa para saber si al limpiarlo se ha
+  // ido una entera, que en el cierre es la mitad del golpe.
+  const cuantasFrases = t => (String(t || '').match(/[.?!]/g) || []).length;
+
   // Un solo sitio donde se decide que es "de relleno", para que la
   // comprobacion y el arreglo no puedan discrepar nunca.
   function esDeRelleno(texto, minimo) {
@@ -2320,6 +2367,14 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
   // responde" impreso lo lee la clienta. Ese tambien marco de mas en su dia
   // y por eso lleva dos excepciones escritas: ver su nota, en
   // hablaDeEllaEnTerceraPersona.
+  // Las preguntas que van dentro del texto corrido, que son las que se
+  // echaban en falta: la de la casilla se imprime grande y sale siempre.
+  function preguntasDentroDelTexto(bloques) {
+    return bloques
+      .filter(b => b.tipo === 'texto' || b.tipo === 'cierre')
+      .reduce((n, b) => n + (String(b.t || '').match(/\?/g) || []).length, 0);
+  }
+
   function loQueLeFaltaAlArea(montada) {
     const flojo = [];
     const bloques = analizarArea(montada);
@@ -2327,6 +2382,15 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     const negritas = negritasDe(bloques).length;
     if (negritas < MIN_NEGRITAS) {
       flojo.push(`solo ${negritas} negrita(s) en el cuerpo, hacen falta ${MIN_NEGRITAS}`);
+    }
+
+    // Ni una pregunta en cuatro paginas. Ver preguntasDentroDelTexto.
+    if (preguntasDentroDelTexto(bloques) === 0) {
+      flojo.push(
+        'no le preguntas nada en todo el texto: ademas de la pregunta de su casilla, '
+        + 'cada vez que le pones nombre a algo que le cuesta o a algo que hace sin darse cuenta, '
+        + 'ahi te paras y se lo preguntas DENTRO del parrafo, entre las demas frases'
+      );
     }
     if (vecesQueLaLlamaPorSuNombre(montada, nombrePila) < 1) {
       flojo.push(`no la llama "${nombrePila}" ni una vez`);
@@ -2355,6 +2419,18 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       .find(f => hablaDeEllaEnTerceraPersona(sinTildes(f)));
     if (ella) {
       flojo.push(`habla de ella desde fuera: "${ella.slice(0, 70).trim()}..."`);
+    }
+
+    // El cierre empezado por la formula que su propia area le prohibe. Es lo
+    // mismo que la muletilla del porque: pedido en el encargo y sin nadie que
+    // lo mirara. Ver ARRANQUES_DE_CIERRE_PROHIBIDOS.
+    const elCierre = bloques.filter(b => b.tipo === 'cierre').map(b => b.t).join(' ');
+    const arranque = elArranqueDeMoldeDelCierre(elCierre);
+    if (arranque) {
+      flojo.push(
+        `el cierre empieza por "${arranque.trim()}", que es una de las tres formas que tu area te prohibe: `
+        + `esas salen solas y las siete acaban leyendose iguales`
+      );
     }
 
     // La frase de relleno donde iba la causa. Ver MULETILLAS_DEL_PORQUE.
@@ -2503,7 +2579,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       ['el remate de la herida', datos?.remate_herida?.texto],
       ['el remate de la fuerza', datos?.remate_fuerza?.texto],
       ['la pregunta', datos?.pregunta?.texto],
-      ['el cierre', datos?.cierre],
+      ['el cierre', datos?.cierre?.texto],
     ].filter(([, t]) => !t || !String(t).trim()).map(([n]) => n);
     if (!Array.isArray(datos?.parrafos) || datos.parrafos.length === 0) vacias.push('los párrafos');
     for (const nombre of bloquesVacios) vacias.push(`el bloque ${nombre}`);
@@ -2558,7 +2634,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     const quitadas = {};
     for (const casilla of CASILLAS) {
       const dato = datos[casilla.nombre];
-      const crudo = casilla.nombre === 'cierre' ? dato : dato?.texto;
+      const crudo = dato?.texto;
       // Se limpia ANTES de juzgarla: si lo que queda despues de quitarle la
       // basura sigue siendo un texto valido, se guarda limpio y no hace falta
       // pedir nada. Y si al limpiarla no queda nada, es que la casilla era
@@ -2566,7 +2642,18 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       const texto = limpiarTexto(crudo);
       if (typeof crudo === 'string' && texto !== crudo.trim() && !esDeRelleno(texto, casilla.minimo)) {
         console.warn(`Área ${area.id}: se ha limpiado basura del modelo en ${casilla.nombre}`);
-        datos[casilla.nombre] = casilla.nombre === 'cierre' ? texto : { ...dato, texto };
+        datos[casilla.nombre] = { ...dato, texto };
+        // Y si la limpieza se ha llevado una frase entera, lo que queda puede
+        // ser media casilla: se pide solo esa. Ver la nota de arriba.
+        if (cuantasFrases(texto) < cuantasFrases(crudo)) {
+          console.warn(`Área ${area.id}: la limpieza le ha quitado una frase entera a ${casilla.nombre}, se pide solo eso`);
+          const entera = await pedirSoloLaCasilla(area, datos, casilla.nombre);
+          if (entera && !esDeRelleno(entera, casilla.minimo)) {
+            datos[casilla.nombre] = { ...dato, texto: entera };
+          } else {
+            console.warn(`SE ENTREGA CON AVISOS — Área ${area.id}: ${casilla.nombre} se queda como estaba, sin la frase que se limpio`);
+          }
+        }
         continue;
       }
       if (!esDeRelleno(texto, casilla.minimo)) continue;
@@ -2574,7 +2661,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       console.warn(`Área ${area.id}: ${casilla.nombre} vino de relleno, se pide solo eso`);
       const otra = await pedirSoloLaCasilla(area, datos, casilla.nombre);
       if (otra && !esDeRelleno(otra, casilla.minimo)) {
-        datos[casilla.nombre] = casilla.nombre === 'cierre' ? otra : { ...dato, texto: otra };
+        datos[casilla.nombre] = { ...dato, texto: otra };
         continue;
       }
       // El cierre no se puede quitar sin mas: el area tiene que terminar en
@@ -2582,7 +2669,9 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       // que hacia el codigo antes de que existieran las casillas.
       if (casilla.nombre === 'cierre') {
         if (datos.parrafos.length > 1) {
-          datos.cierre = datos.parrafos.pop().texto;
+          // El plan B no tiene revelacion que nombrar: es un parrafo que ya
+          // estaba escrito y que se asciende para que el area no acabe en el aire.
+          datos.cierre = { revela: '', texto: datos.parrafos.pop().texto };
           console.warn(`Área ${area.id}: cierre de relleno, se asciende el último párrafo a cierre`);
         } else {
           datos.cierre = null;

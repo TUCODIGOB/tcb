@@ -98,7 +98,7 @@ const AREA_DE_MENTIRA = JSON.stringify({
   ...porBloques([
     { ladillo: null, texto: 'Te levantas y lo primero que haces es repasar la lista de lo que tienes pendiente, y eso lo llevas haciendo desde siempre.' },
     { ladillo: 'La cuenta que no llevas', texto: 'Y mientras asientes, Ana, por dentro **estas calculando cuanto has ensenado de mas**, que es un trabajo que no descansa.' },
-    { ladillo: null, texto: 'De ahi sale todo lo demas, que es lo que nadie te ha contado y **llevas media vida pagando sin enterarte**.' },
+    { ladillo: null, pregunta: '¿cuando fue la ultima vez que soltaste algo sin repasarlo?', texto: 'De ahi sale todo lo demas, que es lo que nadie te ha contado y **llevas media vida pagando sin enterarte**. ¿Cuando fue la ultima vez que soltaste algo sin repasarlo? Piensalo despacio.' },
     { ladillo: 'Donde empezo esto', texto: '**Eso no se arregla apretando mas**, se arregla mirando de donde viene y quien te enseno a hacerlo asi.' },
     { ladillo: null, texto: 'Y cuando por fin te sientas, la cabeza sigue repasando lo que queda para manana como si alguien lo fuera a corregir.' },
   ]),
@@ -106,7 +106,7 @@ const AREA_DE_MENTIRA = JSON.stringify({
   remate_herida: { tras_bloque: 'origen', texto: 'Llevas media vida pidiendo permiso para ocupar tu propio sitio' },
   remate_fuerza: { tras_bloque: 'creencias', texto: 'Nadie aguanta tanto tiempo de pie sin que eso sea una fuerza' },
   pregunta: { tras_bloque: 'hoy', texto: '¿Cuantas veces te has callado algo por no montar un lio?' },
-  cierre: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.',
+  cierre: { revela: 'que la prueba se la puso ella y nadie se la pidio', texto: 'Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva anos esperandote dentro.' },
 });
 
 // Y aqui esta el aviso. Si algun dia se le pide al area algo mas y este
