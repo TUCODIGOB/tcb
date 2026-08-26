@@ -129,7 +129,8 @@ const ESQUEMA_AREA_POR_BLOQUES = {
 // Lo que habla de parrafos, de negritas, de la escena o de las 900 palabras
 // no pinta nada en una lista de fichas cortas.
 
-const ESPANOL_DE_ESPANA = `IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresiones latinoamericanas. Usa tú, no vos.`;
+const ESPANOL_DE_ESPANA = `IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresiones latinoamericanas. Usa tú, no vos.
+Y con su ortografía entera: tildes, eñes y signos de abrir la interrogación. Esto se imprime tal cual en un libro que ha pagado, así que "café", "día", "años", "pequeño", "después", "¿por qué?". Si estas instrucciones las lees sin tildes es porque son para ti, no para ella: lo que escribes tú SÍ las lleva.`;
 
 const SIN_NOMBRAR_PLANETAS = `No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo`;
 
@@ -172,7 +173,7 @@ const RASGO = {
   type: 'object',
   properties: {
     nombre: { type: 'string', description: 'El titulo de la ficha, corto, de tres a ocho palabras, diciendo lo que ella hace o lo que le pasa. Nunca una etiqueta. Ej: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda".' },
-    descripcion: { type: 'string', description: 'Dos lineas que le ensenan DONDE se le nota eso, en una escena suya de todos los dias, nunca el titulo repetido con otras palabras. Van seguidas y enlazadas con comas, no cortadas en dos frases con un punto en medio. Ej, para el titulo "Ves lo que le falta a la gente": "Llegas a una comida familiar, en cinco minutos sabes quien esta incomodo y acabas siendo tu la que lo arregla, sin que nadie te lo haya pedido".' },
+    descripcion: { type: 'string', description: 'Dos lineas contandole eso mismo con detalle, escritas a ella y como se dice hablando. Van seguidas y unidas con comas, nunca partidas en dos frases con un punto en medio, y acaban en punto. Con tildes y enes, que es un texto que se imprime. Ej, para el titulo "Ves lo que le falta a la gente": "Notas lo que le hace falta a alguien antes de que lo pida y te pones a resolverlo sin esperar a que nadie te lo diga, muchas veces antes de que esa persona se haya dado cuenta."' },
     area: { type: 'number', enum: [1, 2, 3, 4, 5, 6, 7], description: 'A cual de las siete areas corresponde este rasgo (1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero).' },
   },
   required: ['nombre', 'descripcion', 'area'],
@@ -488,6 +489,10 @@ function laPalabraDeAstrologo(rasgo) {
 // En estas fichas no hay abreviaturas ni cifras, asi que no confunde ninguna.
 const VA_PICADA = /[.?!]\s+[A-ZÁÉÍÓÚÑ¿¡]/;
 
+// Un texto en espanol trae entre seis y ocho tildes por cada cien palabras.
+// La lista que salio mal traia 0,2. Ver loQueLeFaltaALaLista.
+const TILDES_POR_CIEN = 1.5;
+
 function loQueLeFaltaALaLista(lista) {
   const problemas = [];
 
@@ -560,6 +565,32 @@ function loQueLeFaltaALaLista(lista) {
     );
   }
 
+  // LA PAGINA ENTERA ESCRITA SIN TILDES.
+  //
+  // El 27 de agosto salio impresa asi: "le acercas un cafe", "dentro de un
+  // ano", "los detalles pequenos", "los demas". Dos tildes en 1.128 palabras,
+  // cuando el informe anterior traia 71. Las areas, en cambio, salieron con
+  // 687: la diferencia es que el prompt de las areas se escribe con tildes y
+  // el de la lista no, porque es texto para el modelo. El modelo copio la
+  // ortografia que tenia delante.
+  //
+  // Los ejemplos del prompt ya van escritos con tildes. Esto es lo que lo
+  // asegura, y no se puede arreglar aqui: donde va cada tilde no lo sabe el
+  // codigo, hay que volver a pedir la lista.
+  //
+  // Se mira la lista entera y con mucho margen: un texto en espanol trae
+  // entre seis y ocho tildes por cada cien palabras, y el que salio mal traia
+  // 0,2. El liston en ${TILDES_POR_CIEN} no roza a ninguna lista bien escrita.
+  const escrito = todosLosRasgos(lista).map(({ r }) => `${r.nombre} ${r.descripcion}`).join(' ');
+  const cuantasPalabras = escrito.split(/\s+/).filter(Boolean).length;
+  const cuantasTildes = (escrito.match(/[\u00e1\u00e9\u00ed\u00f3\u00fa\u00f1\u00fc\u00c1\u00c9\u00cd\u00d3\u00da\u00d1]/g) || []).length;
+  if (cuantasPalabras >= 100 && cuantasTildes * 100 < cuantasPalabras * TILDES_POR_CIEN) {
+    problemas.push(
+      `la lista viene escrita sin tildes (${cuantasTildes} en ${cuantasPalabras} palabras): `
+      + `se imprime tal cual en su libro, asi que va con su ortografia entera, con tildes y enes`
+    );
+  }
+
   for (const { se_queda, sobra } of losQueSeRepiten(lista)) {
     const mismaLista = se_queda.en === sobra.en;
     problemas.push(
@@ -596,11 +627,11 @@ Y ASI ES COMO SUENA, QUE ES LO QUE DECIDE SI LO SIGUE LEYENDO O LO CIERRA:
 Lo va a leer una mujer que no sabe nada de astrologia ni de psicologia, sentada en su sofa. Tiene que entenderlo a la primera, sin releer y sin preguntarse que has querido decir.
 
 SE TIENE QUE ENTENDER A LA PRIMERA, con palabras de todos los dias. Si al llegar al final de una frase hay que volver atras, esta mal: no la partas en dos, reescribela mas simple.
-Lo que tampoco vale es el otro extremo, el trozo seco de telegrama -"Aguantas mucho. Luego explotas."-, que suena a ficha de catalogo. Hablando no vamos cortando: las cosas van seguidas y unidas con comas; el punto se gasta poco, solo cuando de verdad se acaba una idea.
+Lo que tampoco vale es el otro extremo, el trozo seco de telegrama -"Aguantas mucho. Luego explotas."-, que suena a ficha de catalogo. Hablando no vamos cortando: DENTRO de la frase las cosas van seguidas y unidas con comas, en vez de partidas en dos con un punto en medio. El punto del FINAL va siempre, que una frase sin punto esta sin acabar.
 
 NI UNA PALABRA TECNICA, ni de astrologia ni de terapia. Fuera "mecanismo", "patron", "gestionar", "procesar", "vinculo", "autoexigencia", "validacion", "dependencia emocional", "sanar". Si no la usaria ella hablando con una amiga, no va.
 
-Y NADA DE FRASES ABSTRACTAS, que es de donde salen las fichas que no significan nada. "Dependencia emocional de lo compartido" no lo entiende nadie. "Te cuesta gastar en ti cuando el dinero es de los dos" si.
+Y NADA DE FRASES ABSTRACTAS, que es de donde salen las fichas que no significan nada. "Dependencia emocional de lo compartido" no lo entiende nadie. "Te cuesta gastar en ti cuando el dinero es de los dos" sí.
 
 ${TODO_DE_TU}
 ${HABLAR_DE_ELLA_LO_ROMPE}
@@ -609,13 +640,14 @@ Y tampoco apareces tu: aqui no hay un "yo" que cuente su experiencia ni que opin
 LAS DOS CASILLAS QUE ESCRIBES:
 
 - "nombre": el titulo de la ficha, corto, de tres a ocho palabras. No es una etiqueta ni un diagnostico: es lo que ella hace o lo que le pasa, dicho como se dice.
-  BIEN: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda", "Dices que si sin pensarlo", "Aguantas mas de la cuenta", "Te fias poco de lo que llega facil".
-  MAL: "Servicio que cura de verdad", "Dependencia emocional de lo compartido", "Autoexigencia que nunca descansa". Son etiquetas, y al leerlas nadie sabe de que hablan.
+  BIEN: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda", "Dices que sí sin pensarlo", "Aguantas más de la cuenta", "Te fías poco de lo que llega fácil".
+  MAL, por etiqueta: "Servicio que cura de verdad", "Dependencia emocional de lo compartido", "Autoexigencia que nunca descansa". Al leerlas nadie sabe de que hablan.
+  MAL, por vago: "Sabes calmar sin decir gran cosa", "Tienes buen ojo para el dinero que dura". Suenan a algo y no dicen nada: le valen a cualquiera y no se reconoce en ellas.
 
-- "descripcion": dos lineas que ANADEN algo al titulo, nunca que lo repiten con otras palabras. El titulo dice QUE le pasa; aqui le ensenas DONDE se le nota, en una escena de su dia a dia que ella reconozca al leerla, del tipo "eso lo hago yo".
-  Y va SEGUIDA, enlazada con comas, no cortada en dos frases con un punto en medio.
-  BIEN, para el titulo "Ves lo que le falta a la gente": "Llegas a una comida familiar, en cinco minutos sabes quien esta incomodo y acabas siendo tu la que lo arregla, sin que nadie te lo haya pedido."
-  MAL: "Detectas necesidades ajenas con rapidez. Actuas sin que te lo pidan." Repite el titulo con palabras mas tecnicas, va picada en dos y no le cuenta nada que no supiera.
+- "descripcion": dos lineas contandole eso mismo con detalle. El titulo lo dice en corto; aqui se lo cuentas entero, con sus palabras, para que al leerlo se reconozca. Nada de ejemplos ni de escenas montadas: es lo suyo contado, sin decorar.
+  Y va SEGUIDA, unida con comas, nunca partida en dos frases con un punto en medio. El punto del final si va: una frase sin punto esta sin acabar.
+  BIEN, para el titulo "Ves lo que le falta a la gente": "Notas lo que le hace falta a alguien antes de que lo pida y te pones a resolverlo sin esperar a que te lo diga nadie, muchas veces antes de que esa persona sepa siquiera qué le pasaba."
+  MAL: "Detectas necesidades ajenas con rapidez. Actúas sin que te lo pidan." Repite el titulo con palabras mas tecnicas, va picada en dos y no le cuenta nada que no supiera.
 
 - "area": un numero del 1 al 7. 1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero. El area donde ese rasgo pesa mas, porque ahi se contara entero: uno puesto donde no va deja su area coja y le roba el sitio a la que si le tocaba.
 
@@ -633,8 +665,8 @@ LA LISTA DE LO QUE LE PESA ES LA DELICADA. Son ${RASGOS_MINIMO} golpes seguidos 
 NI UN PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ANGULO. NI UNA VEZ.
 Prohibidas estas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Jupiter, Saturno, Urano, Neptuno, Pluton, Quiron, nodo, ascendente, medio cielo, los doce signos, cuadratura, trigono, sextil, oposicion, conjuncion, aspecto, orbe, retrogrado, carta, carta natal, horoscopo.
 Y "casa" solo cuando es la casa astrologica ("la casa del dinero"); la casa de vivir se dice las veces que haga falta.
-- MAL: "El sol y Mercurio en la casa del trabajo diario te dan capacidad para detectar que necesita alguien". BIEN: "En una reunion notas quien no esta de acuerdo aunque diga que si, asi que luego se lo preguntas a solas, en el pasillo."
-- MAL: "El sol enfrentado a Saturno te hizo sentir que el carino habia que ganarselo". BIEN: "Cuando alguien te quiere bien y sin mas, te cuesta creertelo, asi que sigues currandotelo por si acaso, aunque ya lo tengas."
+- MAL: "El sol y Mercurio en la casa del trabajo diario te dan capacidad para detectar qué necesita alguien". BIEN: "Notas quién no está de acuerdo aunque diga que sí, y lo notas por el tono antes que por lo que dice."
+- MAL: "El sol enfrentado a Saturno te hizo sentir que el cariño había que ganárselo". BIEN: "Cuando alguien te quiere bien y sin más, te cuesta creértelo, así que sigues currándotelo por si acaso, aunque ya lo tengas."
 Los dos BIEN dicen exactamente lo mismo que los MAL, pero contado desde su vida y con palabras suyas. Eso es lo que hay que escribir.
 
 Y EL RESTO DEL TONO, IGUAL QUE EN LAS AREAS:
@@ -736,11 +768,20 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
     // Ver quitarComaAntesDeY en lib/estilo.js: ante la duda no toca nada,
     // porque una coma quitada donde hacia falta es una falta impresa.
     const sinLaComa = t => quitarComaAntesDeY(String(t || '').trim(), nombrePila);
+    // LA DESCRIPCION ACABA EN PUNTO, SIEMPRE.
+    //
+    // El 27 de agosto salieron las 28 sin el: "...respira mejor sin saber muy
+    // bien por que", y ahi terminaba. El prompt pedia menos puntos DENTRO de
+    // la frase y el modelo se llevo tambien el del final. Ya esta dicho en el
+    // prompt, y aqui se cierra: esto no merece una llamada, se arregla solo.
+    // El titulo no lleva punto, que es un titulo.
+    const conPuntoFinal = t => (t && !/[.?!]$/.test(t)) ? t + '.' : t;
+
     const limpiar = (rasgo) => {
       const area = Number(rasgo.area);
       return {
         nombre: sinLaComa(rasgo.nombre),
-        descripcion: sinLaComa(rasgo.descripcion),
+        descripcion: conPuntoFinal(sinLaComa(rasgo.descripcion)),
         area: (area >= 1 && area <= 7) ? area : 1,
       };
     };
@@ -979,7 +1020,7 @@ ESTILO DE ESCRITURA:
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos. Los asteriscos tienen un único uso, marcar la negrita que se explica más abajo, y no valen para nada más. Dentro del texto no se escribe nada que no sean sus palabras: la maquetación sale de las casillas, que se explican en CÓMO SE ENTREGA EL ÁREA
 - ${SIN_NOMBRAR_PLANETAS}
 - No empieces dos párrafos con la misma estructura. Varía los arranques
-- Escribe como un humano, no como una IA: frases que fluyen, con su ritmo mezclado, ni todas cosidas con comas ni todas cortadas a hachazos
+- Escribe como un humano, no como una IA: frases que fluyen, con su ritmo mezclado, ni todas cosidas con comas ni todas cortadas a hachazos. Y hay un punto que se escapa siempre: el que parte una idea por la mitad. "Y lo eres. Pero también significa que casi nunca..." y "Tú lo sabes. Sabes que no era por eso. Pero..." son una sola frase cada una, y hablando se dicen del tirón, con comas. El punto se pone cuando la idea se acaba, no en mitad de ella
 - ${FRASES_QUE_SUENAN_HABLADAS}
 - Vigila especialmente la primera frase del área. Si el lector tropieza ahí, ya no entra.
 - PROHIBIDO ENUMERAR. Nunca anuncies cuántas cosas vas a decir ni las numeres: nada de "son tres", "el primero", "la segunda", "y la tercera", "hay dos cosas que". Las ideas se encadenan una detrás de otra, como cuando alguien te cuenta algo hablando, y el lector no necesita saber cuántas quedan. Si el área se pudiera convertir en una lista de viñetas sin perder nada, está mal escrita.
@@ -990,7 +1031,7 @@ ESTILO DE ESCRITURA:
 - Y NO SIEMPRE EN EL MISMO SITIO DE LA FRASE. Las siete áreas se leen seguidas, así que si el nombre sale siempre encajado en mitad de la frase se lee a plantilla, por muy bien puesto que esté. Se cambia de sitio en cada área: unas veces abre la frase ("Raquel, eso que haces..."), otras la cierra ("...y eso lo sabes de sobra, Raquel."), y otras va dentro. Lleva sus comas siempre, que es como se escribe en español, pero no siempre en el mismo hueco.
 - Y VA EN UNA FRASE EN LA QUE LE HABLAS DE TÚ. Su nombre y la tercera persona no pueden ir juntos: en cuanto escribes su nombre dentro de una frase que habla de ella desde fuera, deja de ser alguien que le habla y pasa a ser alguien que la comenta con otro. Nunca para empezar el área.
 - EL NOMBRE QUE USAS ES EL DE PILA, el que tienes en "Nombre de pila". Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación. Si al mirar el nombre entero ves claro que el de pila es compuesto (María Carmen, José Luis, Juan José), puedes usar las dos palabras. Ante la duda, la primera palabra sola.
-- PREGÚNTALE DIRECTAMENTE. De vez en cuando párate y hazle una pregunta de verdad, de las que se quedan un rato dando vueltas. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
+- PREGÚNTALE DIRECTAMENTE, y no una sola vez. Tres o cuatro veces a lo largo del área te paras y le haces una pregunta de verdad, de las que se quedan un rato dando vueltas y la obligan a mirarse por dentro. Una va en su casilla; las otras van DENTRO de un párrafo, entre las demás frases, saliendo de lo que le acabas de contar, y siguen con el párrafo después. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
 - Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: "¿cuántas veces te has callado algo por no montar un lío?". Las MALAS valen para cualquiera y no dicen nada: "¿te suena?", "¿te identificas con esto?", "¿te ha pasado alguna vez?".
   De ese ejemplo se coge la pelota que devuelve, no las palabras con las que arranca: por dónde empieza la tuya lo lleva escrito tu área, al final de su encargo. Copiándole el arranque pasa lo del último estudio, donde las siete preguntas empezaron por "¿cuántas veces" o "¿cuánto hace", y dos áreas acabaron con la misma pregunta palabra por palabra.
 - No hay número fijo de preguntas: van las que pida el texto y ninguna más. Si un área no pide ninguna, no la fuerces.
@@ -1213,7 +1254,8 @@ LA PARTE DE LA CARTA QUE TE TOCA MIRAR EN ESTA ÁREA: el Sol, el Ascendente y el
 Eso es el EJE del area, no una valla. Para explicarlo cruzas todo lo que haga falta del resto de su carta, igual que se hace de verdad: un rasgo casi nunca sale de un solo sitio, sale de dos o tres cosas que se combinan. Lo que no puedes es contar lo que gobierna otra area, ni repetir aqui lo que alli se explica entero. La regla es sencilla: si lo que escribes habla de ESTA parcela de su vida, entra, venga de donde venga en la carta.
 Y el area no se sostiene sobre un solo rasgo repetido con otras palabras. Tiene que haber varias cosas distintas de ella dentro, que no se solapen entre si, porque una persona no es una sola cosa: si todo el area gira sobre la misma idea, se lee corta aunque tenga las palabras justas.
 
-Esta es la PRIMERA area del estudio, asi que su arranque no abre solo el area: abre el libro entero. Es lo primero que lee de si misma despues de pagar, y ahi decide si esto va a hablar de ella o no. Entra despacio, como entra un libro: se toma su tiempo antes de decirle nada suyo, y cuando por fin se lo dice, ella ya esta dentro. Nada de soltarle una verdad en la primera linea, que esas frases son las unicas del estudio que no tienen nada delante que las sostenga.
+Esta es la PRIMERA area del estudio, asi que su arranque no abre solo el area: abre el libro entero. Es lo primero que lee de si misma despues de pagar, y ahi decide si sigue leyendo o lo deja.
+Asi que EMPIEZA COMO EMPIEZA UNA HISTORIA QUE LE VAS A CONTAR, no como empieza un informe. Se entra despacio, por lo que se ve, contandolo y dejandola mirar, sin decirle todavia que va de ella. Cuando lleve unas lineas dentro y ya se haya olvidado de que esta leyendo, entonces si: entonces le dices que esa de la que hablas es ella. Nada de soltarle una verdad suya en la primera linea, que ahi no hay nada delante que la sostenga y le pega un frenazo.
 
 LAS CUATRO COSAS QUE HOY TIENE QUE CONTAR EN ESTA AREA, cada una sacada de su carta y ninguna afirmada de pasada:
 Cómo funcionas por dentro: por dónde te entra lo que te pasa y qué haces con ello, qué te ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que haces por fuera. Es lo que le pone nombre a tu manera de funcionar y lo que se lleva puesto al terminar de leer.

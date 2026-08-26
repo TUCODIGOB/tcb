@@ -75,29 +75,29 @@ const rasgo = (n, d, area) => ({ nombre: n, descripcion: d, area });
 const LISTA_BUENA = {
   fortalezas: [
     rasgo('Detectas lo que hace falta', 'Ves lo que le falta a otra persona antes de que lo diga y te pones a ello.', 1),
-    rasgo('Cabeza clara bajo presion', 'Cuando todo se complica eres tu la que analiza con calma mientras los demas se aturullan.', 1),
+    rasgo('Cabeza clara bajo presión', 'Cuando todo se complica eres tú la que analiza con calma mientras los demás se aturullan.', 1),
     rasgo('Constancia que no se nota', 'Sostienes esfuerzos largos sin necesitar que nadie te aplauda por el camino.', 2),
-    rasgo('Rigor que da confianza', 'Cuando dices que algo esta hecho, la gente sabe que puede darlo por bueno.', 2),
+    rasgo('Rigor que da confianza', 'Cuando dices que algo está hecho, la gente sabe que puede darlo por bueno.', 2),
     rasgo('Olfato para el peligro', 'Hueles lo que puede torcerse mucho antes de que se tuerza de verdad.', 3),
-    rasgo('Ternura que no se ve', 'Cuidas de una manera que no se anuncia y que solo nota quien esta muy cerca.', 4),
-    rasgo('Quieres con hechos', 'Demuestras el carino haciendo cosas, no diciendolas, y eso se sostiene en el tiempo.', 5),
+    rasgo('Ternura que no se ve', 'Cuidas de una manera que no se anuncia y que solo nota quien está muy cerca.', 4),
+    rasgo('Quieres con hechos', 'Demuestras el cariño haciendo cosas, no diciéndolas, y eso se sostiene en el tiempo.', 5),
     rasgo('La gente se te acerca', 'Acabas siendo aquella a la que todo el mundo cuenta lo que no cuenta a nadie.', 6),
-    rasgo('Cabeza fria con el dinero', 'No tomas decisiones de dinero a lo loco, miras despacio y calculas.', 7),
+    rasgo('Cabeza fría con el dinero', 'No tomas decisiones de dinero a lo loco, miras despacio y calculas.', 7),
     rasgo('Sabes multiplicar lo que hay', 'Haces rendir lo que ya existe sin necesidad de empezar nada de cero.', 7),
     rasgo('Aguantas de pie mucho rato', 'Sostienes situaciones largas sin que se te note por fuera lo que pesan.', 3),
-    rasgo('Sabes estar sin invadir', 'Acompanas sin ocupar el sitio de nadie, y eso descansa a quien esta al lado.', 6),
+    rasgo('Sabes estar sin invadir', 'Acompañas sin ocupar el sitio de nadie, y eso descansa a quien está al lado.', 6),
   ],
   desafios: [
-    rasgo('Exigencia que no se apaga', 'Te pides a ti misma un nivel que jamas le pedirias a otra persona.', 1),
-    rasgo('Te cuesta soltar el control', 'Revisas lo que ya estaba bien porque parar te deja una sensacion rara.', 2),
-    rasgo('Miedo a dejar de hacer falta', 'Crees que si dejas de ser la que resuelve, dejaras de tener sitio.', 3),
-    rasgo('Vives alerta sin necesidad', 'Sigues vigilando mucho despues de que el peligro se haya ido del todo.', 3),
-    rasgo('Guardarte lo que duele', 'Te callas lo que te pasa para no anadir tu peso al de los demas.', 4),
-    rasgo('Culpa por ponerte primero', 'Atender lo tuyo antes que lo de otro te deja mal cuerpo durante dias.', 4),
-    rasgo('Miedo a no merecer carino', 'No te crees del todo el afecto que llega sin que hayas hecho algo por el.', 5),
-    rasgo('Idealizas lo que no tienes', 'Lo que esta lejos se te agranda y lo que tienes cerca se te encoge.', 5),
-    rasgo('Aguantas mas de la cuenta', 'Sostienes situaciones mucho despues de que hayan dejado de sostenerte a ti.', 6),
-    rasgo('Te cuesta pedir', 'Pedir ayuda te pone en un sitio incomodo y prefieres apanartelas sola.', 6),
+    rasgo('Exigencia que no se apaga', 'Te pides a ti misma un nivel que jamás le pedirías a otra persona.', 1),
+    rasgo('Te cuesta soltar el control', 'Revisas lo que ya estaba bien porque parar te deja una sensación rara.', 2),
+    rasgo('Miedo a dejar de hacer falta', 'Crees que si dejas de ser la que resuelve, dejarás de tener sitio.', 3),
+    rasgo('Vives alerta sin necesidad', 'Sigues vigilando mucho después de que el peligro se haya ido del todo.', 3),
+    rasgo('Guardarte lo que duele', 'Te callas lo que te pasa para no añadir tu peso al de los demás.', 4),
+    rasgo('Culpa por ponerte primero', 'Atender lo tuyo antes que lo de otro te deja mal cuerpo durante días.', 4),
+    rasgo('Miedo a no merecer cariño', 'No te crees del todo el afecto que llega sin que hayas hecho algo por el.', 5),
+    rasgo('Idealizas lo que no tienes', 'Lo que está lejos se te agranda y lo que tienes cerca se te encoge.', 5),
+    rasgo('Aguantas más de la cuenta', 'Sostienes situaciones mucho después de que hayan dejado de sostenerte a ti.', 6),
+    rasgo('Te cuesta pedir', 'Pedir ayuda te pone en un sitio incómodo y prefieres apañártelas sola.', 6),
     rasgo('Te comparas con lo que no tienes', 'Miras lo que a otros les sobra en vez de lo que a ti ya te sostiene.', 7),
     rasgo('Te cuesta cobrar lo tuyo', 'Poner precio a lo que sale de ti te suena casi a traicion y acabas rebajando.', 7),
   ],
@@ -253,12 +253,12 @@ try {
   // ── 3. CADA AREA RECIBE LOS SUYOS Y SOLO LOS SUYOS ────────────
   const n1 = notaDe(1), n7 = notaDe(7);
   comprobar('el area 1 recibe sus dos fortalezas y su desafio',
-    n1.includes('Detectas lo que hace falta') && n1.includes('Cabeza clara bajo presion')
+    n1.includes('Detectas lo que hace falta') && n1.includes('Cabeza clara bajo presión')
     && n1.includes('Exigencia que no se apaga'));
   comprobar('y NO recibe ni uno de otra area',
-    !n1.includes('Cabeza fria con el dinero') && !n1.includes('Te cuesta pedir')
+    !n1.includes('Cabeza fría con el dinero') && !n1.includes('Te cuesta pedir')
     && !n1.includes('Guardarte lo que duele'));
-  comprobar('el area 7 recibe los suyos', n7.includes('Cabeza fria con el dinero')
+  comprobar('el area 7 recibe los suyos', n7.includes('Cabeza fría con el dinero')
     && n7.includes('Sabes multiplicar lo que hay') && n7.includes('Te comparas con lo que no tienes'));
   comprobar('y ninguno del area 1', !n7.includes('Detectas lo que hace falta'));
 
@@ -294,7 +294,7 @@ try {
   listaQueDevuelve = {
     fortalezas: LISTA_BUENA.fortalezas.filter(r => r.area !== 3),
     desafios: LISTA_BUENA.desafios.filter(r => r.area !== 3)
-      .concat([rasgo('Vives alerta sin necesidad', 'Sigues vigilando mucho despues de que el peligro se haya ido del todo.', 3)]),
+      .concat([rasgo('Vives alerta sin necesidad', 'Sigues vigilando mucho después de que el peligro se haya ido del todo.', 3)]),
   };
   await generar();
   const vecesQueSePide = llamadas.filter(l => l.tipo === 'lista').length;

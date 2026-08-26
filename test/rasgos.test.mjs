@@ -93,45 +93,46 @@ const AREA = JSON.stringify({
 // marca todas, y con razon: dicen exactamente lo mismo. Que la prueba use
 // fichas de mentira no le quita el trabajo de parecerse a las de verdad.
 const CATALOGO = [
-  ['Buscador de verdades', 'Necesitas entender el porque de lo que te pasa antes de poder aceptarlo del todo'],
-  ['Leal hasta el agotamiento', 'Sostienes a los tuyos mucho despues de que a ti ya no te quede nada dentro'],
+  ['Buscador de verdades', 'Necesitas entender el porqué de lo que te pasa antes de poder aceptarlo del todo'],
+  ['Leal hasta el agotamiento', 'Sostienes a los tuyos mucho después de que a ti ya no te quede nada dentro'],
   // Esta lleva a proposito la coma antes de "y" que el cepillo quita: sin
   // una asi, la comprobacion de mas abajo pasaria sin mirar nada.
-  ['Memoria para el detalle', 'Retienes lo que dijo cada uno y en que tono, y por dentro sigues dandole vueltas semanas despues'],
+  ['Memoria para el detalle', 'Retienes lo que dijo cada uno y en qué tono, y por dentro sigues dándole vueltas semanas después'],
   ['Instinto para el peligro', 'Hueles el problema mucho antes de que se vea, y casi siempre aciertas'],
-  ['Aguante fuera de lo normal', 'Sigues de pie en sitios donde cualquiera se habria bajado hace tiempo'],
-  ['Talento para ordenar el caos', 'Entras donde todo esta revuelto y en dos dias aquello funciona solo'],
+  ['Aguante fuera de lo normal', 'Sigues de pie en sitios donde cualquiera se habría bajado hace tiempo'],
+  ['Talento para ordenar el caos', 'Entras donde todo está revuelto y en dos días aquello funciona solo'],
   ['Palabra que calma', 'Hablas y la gente baja el tono sin darse cuenta de que lo ha bajado'],
-  ['Curiosidad que no se apaga', 'Empiezas algo por saber como funciona y acabas sabiendo mas que nadie'],
-  ['Ojo para el talento ajeno', 'Ves de que es capaz alguien antes de que esa persona lo sepa'],
-  ['Mano para lo practico', 'Coges un problema abstracto y lo conviertes en cuatro pasos que se pueden hacer'],
-  ['Humor que desarma', 'Sueltas la broma justa en el momento en que la tension iba a estallar'],
+  ['Curiosidad que no se apaga', 'Empiezas algo por saber cómo funciona y acabas sabiendo más que nadie'],
+  ['Ojo para el talento ajeno', 'Ves de qué es capaz alguien antes de que esa persona lo sepa'],
+  ['Mano para lo práctico', 'Coges un problema abstracto y lo conviertes en cuatro pasos que se pueden hacer'],
+  ['Humor que desarma', 'Sueltas la broma justa en el momento en que la tensión iba a estallar'],
   ['Firmeza sin ruido', 'Dices que no sin levantar la voz y sin que nadie se sienta atacado'],
   ['Paciencia con los procesos lentos', 'Esperas a que las cosas maduren mientras el resto se pone nervioso'],
   ['Generosidad silenciosa', 'Das sin contarlo y sin que quien lo recibe llegue a enterarse del todo'],
-  ['Cabeza fria en la urgencia', 'Cuando todo se tuerce eres la que piensa mientras los demas gritan'],
-  ['Gusto por el trabajo bien hecho', 'Te niegas a entregar algo que sabes que podria estar mejor rematado'],
+  ['Cabeza fría en la urgencia', 'Cuando todo se tuerce eres la que piensa mientras los demás gritan'],
+  ['Gusto por el trabajo bien hecho', 'Te niegas a entregar algo que sabes que podría estar mejor rematado'],
   ['Facilidad para empezar de cero', 'Cierras una etapa y arrancas otra sin arrastrar el peso de la anterior'],
-  ['Lectura rapida de las salas', 'Entras en un sitio y en un minuto sabes quien manda y quien esta incomodo'],
-  ['Miedo a decepcionar', 'Dices que si a cosas que no quieres solo por no ver la cara del otro'],
-  ['Control que no descansa', 'Repasas por dentro lo que ya esta hecho, por si acaso se te escapo algo'],
-  ['Cuenta pendiente con el descanso', 'Te sientas a parar y a los diez minutos ya estas buscando algo que hacer'],
-  ['Dureza contigo que no aplicas a nadie', 'Perdonas a cualquiera un fallo que a ti no te perdonarias nunca'],
-  ['Dificultad para pedir', 'Prefieres cargar tu sola antes que decir en voz alta que necesitas ayuda'],
-  ['Tendencia a explicarte de mas', 'Justificas decisiones tuyas ante gente que no te habia pedido explicaciones'],
-  ['Prisa por resolver el conflicto', 'Cedes rapido con tal de que la tension se acabe cuanto antes'],
+  ['Lectura rápida de las salas', 'Entras en un sitio y en un minuto sabes quién manda y quién está incómodo'],
+  ['Miedo a decepcionar', 'Dices que sí a cosas que no quieres solo por no ver la cara del otro'],
+  ['Control que no descansa', 'Repasas por dentro lo que ya está hecho, por si acaso se te escapó algo'],
+  ['Cuenta pendiente con el descanso', 'Te sientas a parar y a los diez minutos ya estás buscando algo que hacer'],
+  ['Dureza contigo que no aplicas a nadie', 'Perdonas a cualquiera un fallo que a ti no te perdonarías nunca'],
+  ['Dificultad para pedir', 'Prefieres cargar tú sola antes que decir en voz alta que necesitas ayuda'],
+  ['Tendencia a explicarte de más', 'Justificas decisiones tuyas ante gente que no te había pedido explicaciones'],
+  ['Prisa por resolver el conflicto', 'Cedes rápido con tal de que la tensión se acabe cuanto antes'],
   ['Peso de las expectativas heredadas', 'Mides tu vida con una vara que te dieron y que nunca elegiste'],
-  ['Desconfianza de lo que llega facil', 'Cuando algo sale bien sin esfuerzo buscas donde esta la trampa'],
-  ['Silencio con lo que te duele', 'Cuentas lo tuyo cuando ya esta resuelto, nunca mientras esta pasando'],
-  ['Exigencia con los tiempos', 'Te enfadas contigo por no haber llegado donde creias que ya deberias estar'],
-  ['Culpa al poner un limite', 'Dices que no y te pasas el resto del dia dandole vueltas'],
-  ['Cansancio de ser la fuerte', 'Todos acuden a ti y nadie te pregunta a ti como lo llevas'],
-  ['Postergar lo que te toca a ti', 'Resuelves lo de los demas y lo tuyo se queda para un dia que no llega'],
-  ['Relacion tensa con el dinero', 'Ganas mas y en vez de soltar el aire aprietas todavia un poco mas'],
+  ['Desconfianza de lo que llega fácil', 'Cuando algo sale bien sin esfuerzo buscas dónde está la trampa'],
+  ['Silencio con lo que te duele', 'Cuentas lo tuyo cuando ya está resuelto, nunca mientras está pasando'],
+  ['Exigencia con los tiempos', 'Te enfadas contigo por no haber llegado donde creías que ya deberías estar'],
+  ['Culpa al poner un límite', 'Dices que no y te pasas el resto del día dándole vueltas'],
+  ['Cansancio de ser la fuerte', 'Todos acuden a ti y nadie te pregunta a ti cómo lo llevas'],
+  ['Postergar lo que te toca a ti', 'Resuelves lo de los demás y lo tuyo se queda para un día que no llega'],
+  ['Relación tensa con el dinero', 'Ganas más y en vez de soltar el aire aprietas todavía un poco más'],
   ['Necesidad de tenerlo todo cerrado', 'Lo que queda abierto te ocupa la cabeza aunque no sea urgente'],
-  ['Vergüenza por lo que te ilusiona', 'Rebajas lo que te hace ilusion antes de que otro pueda rebajartelo'],
+  ['Vergüenza por lo que te ilusiona', 'Rebajas lo que te hace ilusión antes de que otro pueda rebajártelo'],
   ['Poca costumbre de recibir', 'Te incomoda que te cuiden y cambias de tema en cuanto empieza'],
 ];
+
 
 // Sin una sola palabra de astrologo: si el catalogo de mentira las llevara,
 // el detector saltaria en todas las pruebas y no serviria ninguna.
@@ -209,6 +210,15 @@ const listaPicada = (cuantas) => {
   return { fortalezas: todas.slice(0, 14), desafios: todas.slice(14) };
 };
 
+// Y las dos formas en que llego escrita el 27 de agosto: la pagina entera
+// sin tildes ("un cafe", "dentro de un ano", "los detalles pequenos") y las
+// 28 descripciones sin el punto del final.
+const sinTildes = t => String(t).normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const listaEscritaAsi = (toca) => {
+  const uno = r => ({ ...r, nombre: toca(r.nombre), descripcion: toca(r.descripcion) });
+  return { fortalezas: RASGOS.fortalezas.map(uno), desafios: RASGOS.desafios.map(uno) };
+};
+
 // ── LA PUERTA QUE DEJA VER SI LA LISTA SALE ANTES O DESPUES ────────
 //
 // Las siete areas se quedan paradas en la puerta sin contestar. Cuando ya
@@ -284,6 +294,13 @@ globalThis.fetch = async (url, opts = {}) => {
     }
     if (comoSalePedirLaLista === 'repite_siempre') {
       return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(RASGOS_CON_REPETIDO) }] }) };
+    }
+    if (comoSalePedirLaLista === 'sin tildes' && vecesQueSeHaPedidoLaLista === 1) {
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(listaEscritaAsi(sinTildes)) }] }) };
+    }
+    if (comoSalePedirLaLista === 'sin punto') {
+      const quitarPunto = t => String(t).replace(/[.?!]+$/, '');
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(listaEscritaAsi(quitarPunto)) }] }) };
     }
     if (comoSalePedirLaLista === 'picada' && vecesQueSeHaPedidoLaLista === 1) {
       return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify(listaPicada(20)) }] }) };
@@ -786,6 +803,41 @@ try {
   comprobar('una lista bien escrita tampoco lo dispara',
     vecesQueSeHaPedidoLaLista === 1 && limpia.code === 200,
     vecesQueSeHaPedidoLaLista + ' llamada(s)');
+
+  // (e) LA PAGINA ESCRITA SIN TILDES Y SIN EL PUNTO DEL FINAL.
+  //
+  // El 27 de agosto la pagina de rasgos salio impresa con "un cafe", "dentro
+  // de un ano" y "los detalles pequenos": 2 tildes en 1.128 palabras, cuando
+  // el informe anterior traia 71. Y las 28 descripciones acabaron sin punto.
+  // Las dos cosas venian de copiar el prompt, que va sin tildes porque es
+  // texto para el modelo, y de pedirle menos puntos dentro de la frase.
+  console.log('\n  api/chat.js — con su ortografía entera y su punto final\n');
+
+  const sinT = await pedirInforme('sin tildes', 'tildes');
+  comprobar('una lista escrita sin tildes se vuelve a pedir',
+    vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+  comprobar('y se le dice que se imprime tal cual en su libro',
+    /viene escrita sin tildes/.test(encargosDeLaLista[1] || ''),
+    (encargosDeLaLista[1] || '').slice(-170).replace(/\n/g, ' '));
+  comprobar('y lo que se entrega es la lista bien escrita',
+    /[áéíóúñ]/.test(JSON.stringify(sinT.body?.rasgos || {})),
+    'con sus tildes');
+
+  // Y LO CONTRARIO: una lista bien escrita no puede pagar un repaso. Todas
+  // las demas pruebas de este fichero usan el catalogo normal, que trae 50
+  // tildes en 645 palabras, y ninguna dispara esto.
+  const bienEscrita = await pedirInforme('bien', 'ortografia');
+  comprobar('una lista con sus tildes NO dispara ningún repaso',
+    vecesQueSeHaPedidoLaLista === 1, vecesQueSeHaPedidoLaLista + ' llamada(s)');
+
+  // El punto del final no merece una llamada: se pone aqui y ya esta.
+  const sinP = await pedirInforme('sin punto', 'punto');
+  const conPunto = [...(sinP.body?.rasgos?.fortalezas || []), ...(sinP.body?.rasgos?.desafios || [])];
+  comprobar('una descripción sin punto final se le pone, sin volver a pedir nada',
+    vecesQueSeHaPedidoLaLista === 1 && conPunto.length > 0 && conPunto.every(f => /\.$/.test(f.descripcion)),
+    `${vecesQueSeHaPedidoLaLista} llamada(s), ${conPunto.filter(f => /\.$/.test(f.descripcion)).length} de ${conPunto.length} con punto`);
+  comprobar('y el título sigue sin punto, que es un título',
+    conPunto.every(f => !/[.?!]$/.test(f.nombre)), conPunto.length + ' títulos');
 
   comoSalePedirLaLista = 'bien';
 
