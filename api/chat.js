@@ -564,8 +564,8 @@ Y ASI ES COMO SUENA, QUE ES LO QUE DECIDE SI LO SIGUE LEYENDO O LO CIERRA:
 
 Lo va a leer una mujer que no sabe nada de astrologia ni de psicologia, sentada en su sofa. Tiene que entenderlo a la primera, sin releer y sin preguntarse que has querido decir.
 
-SE TIENE QUE ENTENDER A LA PRIMERA, con palabras de todos los dias y sin releer. Si al llegar al final de una frase hay que volver atras, esta mal: no la partas en dos, reescribela mas simple.
-Lo que tampoco vale es el otro extremo, el trozo seco de telegrama -"Detectas necesidades ajenas. Actuas rapido."-, que suena a ficha de catalogo. Hablando no vamos cortando: las cosas van seguidas y unidas con comas, y el punto se gasta poco, solo cuando de verdad se acaba una idea.
+SE TIENE QUE ENTENDER A LA PRIMERA, con palabras de todos los dias. Si al llegar al final de una frase hay que volver atras, esta mal: no la partas en dos, reescribela mas simple.
+Lo que tampoco vale es el otro extremo, el trozo seco de telegrama -"Aguantas mucho. Luego explotas."-, que suena a ficha de catalogo. Hablando no vamos cortando: las cosas van seguidas y unidas con comas; el punto se gasta poco, solo cuando de verdad se acaba una idea.
 
 NI UNA PALABRA TECNICA, ni de astrologia ni de terapia. Fuera "mecanismo", "patron", "gestionar", "procesar", "vinculo", "autoexigencia", "validacion", "dependencia emocional", "sanar". Si no la usaria ella hablando con una amiga, no va.
 
@@ -581,7 +581,7 @@ LAS DOS CASILLAS QUE ESCRIBES:
   BIEN: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda", "Dices que si sin pensarlo", "Aguantas mas de la cuenta", "Te fias poco de lo que llega facil".
   MAL: "Servicio que cura de verdad", "Dependencia emocional de lo compartido", "Autoexigencia que nunca descansa". Son etiquetas, y al leerlas nadie sabe de que hablan.
 
-- "descripcion": dos lineas que ANADEN algo al titulo, nunca que lo repiten con otras palabras. El titulo dice QUE le pasa; aqui le ensenas DONDE se le nota, en una escena de su dia a dia que ella reconozca al leerla, del tipo "eso lo hago yo". Con un detalle concreto dentro -un sitio, un momento, un numero-, que es lo que hace que la vea; sin ese detalle se queda en un cumplido que no le dice nada.
+- "descripcion": dos lineas que ANADEN algo al titulo, nunca que lo repiten con otras palabras. El titulo dice QUE le pasa; aqui le ensenas DONDE se le nota, en una escena de su dia a dia que ella reconozca al leerla, del tipo "eso lo hago yo".
   Y va SEGUIDA, enlazada con comas, no cortada en dos frases con un punto en medio.
   BIEN, para el titulo "Ves lo que le falta a la gente": "Llegas a una comida familiar, en cinco minutos sabes quien esta incomodo y acabas siendo tu la que lo arregla, sin que nadie te lo haya pedido."
   MAL: "Detectas necesidades ajenas con rapidez. Actuas sin que te lo pidan." Repite el titulo con palabras mas tecnicas, va picada en dos y no le cuenta nada que no supiera.
