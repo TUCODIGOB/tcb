@@ -616,8 +616,7 @@ try {
 
   // Y lo que las siete leen justo antes de entregar.
   for (const [eti, trozo] of [
-    ['dos o tres preguntas más, repartidas y dentro de un párrafo', 'hay DOS o TRES mas repartidas por el area'],
-    ['el nombre dos o tres veces, en bloques distintos', 'aparece DOS o TRES veces en el area y en bloques distintos'],
+    ['más preguntas repartidas por el texto y dentro de un párrafo', 'hay mas preguntas repartidas por el texto'],
     ['ni una palabra de terapeuta', 'ni de terapia'],
   ]) {
     comprobar(`las siete repasan ${eti}`,

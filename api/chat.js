@@ -129,8 +129,7 @@ const ESQUEMA_AREA_POR_BLOQUES = {
 // Lo que habla de parrafos, de negritas, de la escena o de las 900 palabras
 // no pinta nada en una lista de fichas cortas.
 
-const ESPANOL_DE_ESPANA = `IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresiones latinoamericanas. Usa tú, no vos.
-Y con su ortografía entera: tildes, eñes y signos de abrir la interrogación. Esto se imprime tal cual en un libro que ha pagado, así que "café", "día", "años", "pequeño", "después", "¿por qué?". Si estas instrucciones las lees sin tildes es porque son para ti, no para ella: lo que escribes tú SÍ las lleva.`;
+const ESPANOL_DE_ESPANA = `IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresiones latinoamericanas. Usa tú, no vos.`;
 
 const SIN_NOMBRAR_PLANETAS = `No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo`;
 
@@ -639,15 +638,14 @@ Y tampoco apareces tu: aqui no hay un "yo" que cuente su experiencia ni que opin
 
 LAS DOS CASILLAS QUE ESCRIBES:
 
-- "nombre": el titulo de la ficha, corto, de tres a ocho palabras. No es una etiqueta ni un diagnostico: es lo que ella hace o lo que le pasa, dicho como se dice.
+- "nombre": el titulo de la ficha, corto, de tres a ocho palabras. No es una etiqueta, ni un diagnostico, ni una cualidad suelta: es una cosa concreta que ella hace o que le pasa, dicha como se dice hablando. Al leerlo se tiene que ver QUE hace; si solo suena bien y no se ve nada, esta mal y se reescribe.
   BIEN: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda", "Dices que sí sin pensarlo", "Aguantas más de la cuenta", "Te fías poco de lo que llega fácil".
-  MAL, por etiqueta: "Servicio que cura de verdad", "Dependencia emocional de lo compartido", "Autoexigencia que nunca descansa". Al leerlas nadie sabe de que hablan.
-  MAL, por vago: "Sabes calmar sin decir gran cosa", "Tienes buen ojo para el dinero que dura". Suenan a algo y no dicen nada: le valen a cualquiera y no se reconoce en ellas.
+  MAL: "Servicio que cura de verdad", "Dependencia emocional de lo compartido", "Autoexigencia que nunca descansa". Son etiquetas, y al leerlas nadie sabe de que hablan.
 
 - "descripcion": dos lineas contandole eso mismo con detalle. El titulo lo dice en corto; aqui se lo cuentas entero, con sus palabras, para que al leerlo se reconozca. Nada de ejemplos ni de escenas montadas: es lo suyo contado, sin decorar.
   Y va SEGUIDA, unida con comas, nunca partida en dos frases con un punto en medio. El punto del final si va: una frase sin punto esta sin acabar.
   BIEN, para el titulo "Ves lo que le falta a la gente": "Notas lo que le hace falta a alguien antes de que lo pida y te pones a resolverlo sin esperar a que te lo diga nadie, muchas veces antes de que esa persona sepa siquiera qué le pasaba."
-  MAL: "Detectas necesidades ajenas con rapidez. Actúas sin que te lo pidan." Repite el titulo con palabras mas tecnicas, va picada en dos y no le cuenta nada que no supiera.
+  MAL: "Detectas necesidades ajenas con rapidez. Actúas sin que te lo pidan." Dice el titulo otra vez y en mas tecnico, va picada en dos y no anade ni un detalle.
 
 - "area": un numero del 1 al 7. 1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero. El area donde ese rasgo pesa mas, porque ahi se contara entero: uno puesto donde no va deja su area coja y le roba el sitio a la que si le tocaba.
 
@@ -682,7 +680,7 @@ ${cartaTexto}
 Persona: ${trato}
 Nombre de pila: ${nombrePila}
 
-IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con numeros distintos, ni uno repetido, y de cada una de las siete areas al menos ${MINIMO_POR_AREA}. Y antes de entregar, lee las dos listas seguidas en voz alta: la ficha que suene a etiqueta, la que haya que releer para entenderla, la que vaya picada en dos frases secas en vez de ir seguida, la que solo repita el titulo sin ensenarle donde se le nota y la que afirme algo de su vida que la carta no dice, se reescriben.`;
+IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con numeros distintos, ni uno repetido, y de cada una de las siete areas al menos ${MINIMO_POR_AREA}. Y antes de entregar, lee las dos listas seguidas en voz alta: la ficha que suene a etiqueta, la que haya que releer para entenderla, la que vaya picada en dos frases secas en vez de ir seguida y la que afirme algo de su vida que la carta no dice, se reescriben.`;
 
   // LA LISTA SE PIDE CON EL ESQUEMA PUESTO, NO PIDIENDO JSON POR ESCRITO.
   //
@@ -1020,7 +1018,8 @@ ESTILO DE ESCRITURA:
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos. Los asteriscos tienen un único uso, marcar la negrita que se explica más abajo, y no valen para nada más. Dentro del texto no se escribe nada que no sean sus palabras: la maquetación sale de las casillas, que se explican en CÓMO SE ENTREGA EL ÁREA
 - ${SIN_NOMBRAR_PLANETAS}
 - No empieces dos párrafos con la misma estructura. Varía los arranques
-- Escribe como un humano, no como una IA: frases que fluyen, con su ritmo mezclado, ni todas cosidas con comas ni todas cortadas a hachazos. Y hay un punto que se escapa siempre: el que parte una idea por la mitad. "Y lo eres. Pero también significa que casi nunca..." y "Tú lo sabes. Sabes que no era por eso. Pero..." son una sola frase cada una, y hablando se dicen del tirón, con comas. El punto se pone cuando la idea se acaba, no en mitad de ella
+- Escribe como un humano, no como una IA: frases que fluyen, con su ritmo mezclado, ni todas cosidas con comas ni todas cortadas a hachazos
+- Y CUIDADO CON EL PUNTO QUE SOBRA, que es el que parte una idea por la mitad y obliga a arrancar otra vez. Lo que va seguido en la cabeza va seguido en el papel, unido con comas; el punto se pone cuando la idea se acaba de verdad, no en mitad de ella. Léelo en voz alta: si al llegar al punto te frenas y tienes que coger carrerilla para lo que viene detrás, ahí iba una coma. Tiene que leerse del tirón, como cuando alguien te lo está contando
 - ${FRASES_QUE_SUENAN_HABLADAS}
 - Vigila especialmente la primera frase del área. Si el lector tropieza ahí, ya no entra.
 - PROHIBIDO ENUMERAR. Nunca anuncies cuántas cosas vas a decir ni las numeres: nada de "son tres", "el primero", "la segunda", "y la tercera", "hay dos cosas que". Las ideas se encadenan una detrás de otra, como cuando alguien te cuenta algo hablando, y el lector no necesita saber cuántas quedan. Si el área se pudiera convertir en una lista de viñetas sin perder nada, está mal escrita.
@@ -1031,7 +1030,7 @@ ESTILO DE ESCRITURA:
 - Y NO SIEMPRE EN EL MISMO SITIO DE LA FRASE. Las siete áreas se leen seguidas, así que si el nombre sale siempre encajado en mitad de la frase se lee a plantilla, por muy bien puesto que esté. Se cambia de sitio en cada área: unas veces abre la frase ("Raquel, eso que haces..."), otras la cierra ("...y eso lo sabes de sobra, Raquel."), y otras va dentro. Lleva sus comas siempre, que es como se escribe en español, pero no siempre en el mismo hueco.
 - Y VA EN UNA FRASE EN LA QUE LE HABLAS DE TÚ. Su nombre y la tercera persona no pueden ir juntos: en cuanto escribes su nombre dentro de una frase que habla de ella desde fuera, deja de ser alguien que le habla y pasa a ser alguien que la comenta con otro. Nunca para empezar el área.
 - EL NOMBRE QUE USAS ES EL DE PILA, el que tienes en "Nombre de pila". Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación. Si al mirar el nombre entero ves claro que el de pila es compuesto (María Carmen, José Luis, Juan José), puedes usar las dos palabras. Ante la duda, la primera palabra sola.
-- PREGÚNTALE DIRECTAMENTE, y no una sola vez. Tres o cuatro veces a lo largo del área te paras y le haces una pregunta de verdad, de las que se quedan un rato dando vueltas y la obligan a mirarse por dentro. Una va en su casilla; las otras van DENTRO de un párrafo, entre las demás frases, saliendo de lo que le acabas de contar, y siguen con el párrafo después. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
+- PREGÚNTALE DIRECTAMENTE, y no una sola vez. A lo largo del área te paras y le haces preguntas de verdad, de las que se quedan dando vueltas y la obligan a mirarse por dentro. Una va en su casilla; las demás van repartidas por el texto, DENTRO de un párrafo y entre las otras frases, saliendo de lo que le acabas de contar, y el párrafo sigue después. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
 - Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: "¿cuántas veces te has callado algo por no montar un lío?". Las MALAS valen para cualquiera y no dicen nada: "¿te suena?", "¿te identificas con esto?", "¿te ha pasado alguna vez?".
   De ese ejemplo se coge la pelota que devuelve, no las palabras con las que arranca: por dónde empieza la tuya lo lleva escrito tu área, al final de su encargo. Copiándole el arranque pasa lo del último estudio, donde las siete preguntas empezaron por "¿cuántas veces" o "¿cuánto hace", y dos áreas acabaron con la misma pregunta palabra por palabra.
 - No hay número fijo de preguntas: van las que pida el texto y ninguna más. Si un área no pide ninguna, no la fuerces.
@@ -1514,9 +1513,9 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
 
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
-2. El nombre "${nombrePila}" aparece DOS o TRES veces en el area y en bloques distintos, no las dos seguidas, dentro de una frase en la que le hablas de tu, nunca en una que hable de ella en tercera persona y nunca al empezar. Ninguna vez no vale
+2. El nombre "${nombrePila}" aparece UNA o DOS veces en el area, dentro de una frase en la que le hablas de tu, nunca en una que hable de ella en tercera persona y nunca al empezar. Ninguna vez no vale
 3. El area lleva negritas dentro del texto de los parrafos, marcadas con **dos asteriscos a cada lado**: frases o medias frases que ella subrayaria con el fosforito, nunca una palabra suelta. Relee solo lo marcado seguido y tiene que sonar a ella contandose a si misma; la que no pase esa prueba se cambia por la que si la pasa, pero el area no se entrega sin ninguna
-4. Ademas de la pregunta que va en su casilla, hay DOS o TRES mas repartidas por el area, en bloques distintos, salidas de lo que acabas de contarle. Van DENTRO de un parrafo, entre las demas frases, nunca solas: una pregunta que ocupa un parrafo entera sale impresa en grande, y grande solo va la de la casilla
+4. Ademas de la pregunta que va en su casilla, hay mas preguntas repartidas por el texto, en bloques distintos, salidas de lo que acabas de contarle. Van DENTRO de un parrafo, entre las demas frases, nunca solas: una pregunta que ocupa un parrafo entero sale impresa en grande, y grande solo va la de la casilla
 5. Ni una coma antes de "y" salvo que detras venga otra frase con su propio sujeto
 6. Hay un detalle que solo le vale a ella, y esta el don contado a fondo
 7. Ni una palabra tecnica en el texto. Ni de astrologia -Sol, Luna, Saturno, Venus, Quiron, ascendente, casa 4, cuadratura, trigono, signo, carta natal- ni de terapia -"mecanismo", "patron", "gestionar", "procesar", "vinculo", "autoexigencia", "validacion", "dependencia emocional", "sanar"-. Son tus herramientas, no su vocabulario: si no lo diria ella hablando con una amiga, no va
