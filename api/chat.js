@@ -507,6 +507,55 @@ function laPalabraDeAstrologo(rasgo) {
   return m ? m[2] : null;
 }
 
+// ── LA FRASE DE RELLENO QUE SE COME EL PORQUE ─────────────────────
+//
+// El estudio del 26 de agosto traia la misma frase, casi calcada, en SEIS de
+// las siete areas, y siempre en el mismo sitio: justo donde tenia que ir de
+// donde le viene.
+//
+//   "Esto no viene de nada que te pasara, viene de como estas hecha por
+//    dentro desde el principio."
+//   "Esto no te lo enseno nadie ni lo aprendiste en ningun sitio: es la
+//    manera en que estas hecha por dentro..."
+//   "Esto no te lo has inventado tu ni te lo ha metido nadie en la cabeza..."
+//
+// Leidas seguidas se ve el molde, y una frase que vale para cualquier persona
+// en cualquier area no explica nada: es relleno ocupando el sitio de la causa.
+//
+// No era un descuido del modelo, era lo que el prompt le ensenaba: le daba
+// esa misma frase como ejemplo y ademas le prohibia afirmar el pasado, cosa
+// que el resolvia ANUNCIANDO que no lo afirmaba. Las dos ya estan arregladas
+// arriba, en ORIGEN y en la casilla del porque.
+//
+// Esto es lo que lo comprueba, porque pedirlo no es garantizarlo: es la
+// leccion que este producto lleva aprendida con los planetas, con el nombre y
+// con las negritas. El area que la traiga se vuelve a pedir, y se le dice
+// cual ha sido y que va en su sitio.
+//
+// La lista es corta y literal a proposito: son las frases que salieron
+// impresas y sus formas mas cercanas. Ninguna la escribe nadie contandole a
+// una persona de donde le viene algo, asi que no puede saltar sobre texto
+// bueno.
+const MULETILLAS_DEL_PORQUE = [
+  'no te lo enseno nadie',
+  'no te lo ensenaron',
+  'no lo aprendiste',
+  'no viene de nada que te pasara',
+  'no te lo has inventado',
+  'no te lo ha metido nadie',
+  'estas hecha por dentro',
+  'estas hecha desde el principio',
+  'estas montada desde',
+  'lo traes puesto de siempre',
+];
+
+function laMuletillaDelPorque(texto) {
+  return MULETILLAS_DEL_PORQUE.find(m => String(texto || '')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .includes(m)) || null;
+}
+
 // Lo que le falta a la lista, dicho como se le dice al modelo para que lo
 // arregle. Si devuelve vacio, la lista esta bien.
 //
@@ -678,7 +727,8 @@ LAS TRES CASILLAS QUE ESCRIBES:
 
 - "porque": de donde le viene eso, en UNA linea y hablandole de tu. Es la casilla que decide el valor del estudio entero: el nombre y la descripcion le dicen COMO es, y esta le dice POR QUE es asi, que es lo que ha venido a entender. Como es ya lo sabe.
   Sale de cruzar lo que ves en su carta -lo que dentro de ella va a distinto ritmo y lo que se apoya-, y se escribe traducido a su vida, igual que el resto: ni un planeta, ni un signo, ni una casa, ni un angulo.
-  Y no se afirma nada de su pasado, que la carta no lo dice. El porque que si es verdad es como esta hecha por dentro, y lo que le sale de estar hecha asi.
+  Y no se afirma nada de su pasado, que la carta no lo dice, ni se anuncia que no lo es: nada de "esto no te lo enseño nadie" ni de "es como estas hecha por dentro". Esas dos valen para cualquier persona y dejan sin llenar el hueco de la causa, que es justo lo que esta casilla viene a llenar. Se va derecho a la pieza suya que lo produce.
+  MAL: "Es cómo estás hecha por dentro desde el principio." Vale para cualquiera y en cualquier área: no dice nada.
   BIEN, para "Ves lo que le falta a la gente": "Lo que necesitas y lo que te permites pedir no te van a la vez, así que aprendes a leer a los demás para conseguir por el lado de fuera lo que no sabes pedir de frente."
   MAL: "De pequeña tuviste que estar pendiente de los demás." Es un pasado inventado, y su carta no dice nada de eso.
   MAL: "Mercurio en la casa del trabajo te da esa capacidad." Es la carta sin traducir.
@@ -1167,8 +1217,14 @@ ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBL
 
 ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir que es así: hay que unir el porqué con lo que hace hoy, como causa y efecto, para que entienda el PORQUÉ y no solo el qué.
 Y AQUÍ ES DONDE SE JUEGA EL PRODUCTO ENTERO. Su carta dice CÓMO está hecha, no lo que le pasó: no sabes cómo era su casa, ni qué vio de pequeña, ni qué le dijeron, ni a qué edad. Así que su pasado NO SE AFIRMA NUNCA, ni siquiera con un "puede que fuera": nada de "aprendiste", "de pequeña", "creciste", "en tu casa", "tu madre", "esa niña de siete años". Ha pagado por leer lo suyo, y en cuanto lee una frase de una vida que no ha vivido deja de creerse el estudio entero y no vuelve a comprar.
-El origen que sí es verdad es este: viene de serie con ella, es la manera en la que está montada desde que llegó al mundo. Y el puente hasta hoy tiene esta forma: "esto lo traes puesto de siempre, te funcionó, y de tanto funcionarte se volvió automático, hasta el punto de que hoy lo haces sin decidirlo". La forma es esa, las palabras las pones tú y cambian en cada área.
-UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluiste tú de aquello, y qué haces hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en tu vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra explicación distinta. Esto manda dentro de ORIGEN, que es donde se desarrolla la raíz, y en ningún caso te prohíbe darle su motivo a cada cosa que le nombras en los demás bloques: eso va pegado a cada cosa, en su misma frase, y es lo que separa un diagnóstico de un estudio.
+Y NO SE ANUNCIA QUE NO ES PASADO, QUE ES LO QUE SALE SOLO AL LEER LO DE ARRIBA. Está prohibido escribirle que no se lo enseñó nadie, que no lo aprendió en ningún sitio, que no viene de nada que le pasara o que no se lo ha inventado ella. Eso es hablar de lo que NO es: ocupa el sitio de la causa, suena a excusa y encima le mete el pasado en la cabeza por la puerta de atrás. Su pasado no se menciona, ni para afirmarlo ni para negarlo. Se va derecho a la causa.
+El origen que sí es verdad no está en su historia, está en su manera de funcionar: algo suyo que va a un ritmo distinto del resto, o dos cosas suyas que tiran hacia sitios que no casan. Eso es lo que produce lo que hace hoy, y eso es lo que hay que nombrarle.
+PERO ESO ES LO QUE TÚ TIENES QUE SABER, NO LO QUE ELLA TIENE QUE LEER. Escribírselo con esas palabras -"viene de cómo estás hecha por dentro", "es la manera en que estás hecha desde el principio"- es rellenar con una frase el hueco donde iba la causa: sirve para cualquier persona y para cualquiera de las siete áreas, así que no le explica nada y encima se nota, porque las siete se leen seguidas. Tu trabajo es el de traducir: coges lo que ves en su carta y lo conviertes en UNA pieza concreta suya, y esa pieza es lo que se escribe.
+MAL, y es lo que sale solo si no te paras a traducir: "Esto no te lo enseñó nadie, viene de cómo estás hecha por dentro desde el principio, y por eso hoy te adelantas a todo."
+BIEN: "Necesitas ver el terreno entero antes de pisarlo, y como eso te ha ahorrado disgustos desde siempre, hoy llegas a todo con la jugada pensada de antes."
+La diferencia es exacta: la buena NOMBRA la pieza que produce el efecto, la mala solo dice que hay piezas.
+Y el puente hasta hoy es siempre el mismo movimiento: eso le viene puesto, le funcionó, y de tanto funcionarle se volvió automático, hasta que hoy lo hace sin decidirlo. El movimiento es ese; las palabras las pones tú y cambian en cada área, porque escrito con las mismas en las siete se lee a plantilla.
+UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la pieza concreta suya, lo que esa pieza le resuelve, y lo que hace hoy por llevarla puesta. Nunca una situación de su pasado ni lo que concluyó de ella, que eso no lo dice su carta y ya está prohibido más arriba. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en tu vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra explicación distinta. Esto manda dentro de ORIGEN, que es donde se desarrolla la raíz, y en ningún caso te prohíbe darle su motivo a cada cosa que le nombras en los demás bloques: eso va pegado a cada cosa, en su misma frase, y es lo que separa un diagnóstico de un estudio.
 
 CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que das por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Después de HOY, es el punto que más sitio ocupa.
 
@@ -2300,6 +2356,15 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       .find(f => hablaDeEllaEnTerceraPersona(sinTildes(f)));
     if (ella) {
       flojo.push(`habla de ella desde fuera: "${ella.slice(0, 70).trim()}..."`);
+    }
+
+    // La frase de relleno donde iba la causa. Ver MULETILLAS_DEL_PORQUE.
+    const muletilla = laMuletillaDelPorque(leido);
+    if (muletilla) {
+      flojo.push(
+        `el porque sale con la frase de relleno "${muletilla}", que vale para cualquier persona y para cualquier area: `
+        + `en su sitio va la pieza concreta de ella que produce eso, traducida de su carta, y sin nombrar ni negar su pasado`
+      );
     }
 
     // Una instruccion interna copiada dentro del texto. No se apunta como

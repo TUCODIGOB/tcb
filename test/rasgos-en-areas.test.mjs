@@ -519,6 +519,74 @@ try {
       /Esto manda dentro de ORIGEN/.test(sistema));
   }
 
+  // ── LA FRASE DE RELLENO NO PUEDE OCUPAR EL SITIO DEL PORQUE ──
+  //
+  // Estas seis salieron IMPRESAS en el estudio del 26 de agosto, una por
+  // area, casi calcadas y siempre en el mismo sitio: donde tenia que ir de
+  // donde le viene. Leidas seguidas se ve el molde, y una frase que vale para
+  // cualquier persona no explica nada.
+  //
+  // Se prueban las seis literales, tal como salieron, porque una lista de
+  // frases prohibidas que no caza las que ya salieron no vale para nada.
+  const LAS_QUE_SALIERON = [
+    'Esto no viene de nada que te pasara, viene de cómo estás hecha por dentro desde el principio.',
+    'Esto no te lo enseñó nadie ni lo aprendiste en ningún sitio: es la manera en que estás hecha por dentro.',
+    'Esto no te lo enseñó nadie con palabras, es más bien cómo estás hecha por dentro desde el principio.',
+    'Esto no te lo enseñó nadie, viene de cómo procesas lo que pasa a tu alrededor.',
+    'Esto no te lo enseñó nadie, viene de cómo estás hecha desde el principio.',
+    'Esto no te lo has inventado tú ni te lo ha metido nadie en la cabeza: es la manera en la que estás hecha por dentro.',
+  ];
+  const fuenteChat = fs.readFileSync(path.join(RAIZ, 'api/chat.js'), 'utf8');
+  const LISTA_MULETILLAS = eval('[' + fuenteChat.match(/const MULETILLAS_DEL_PORQUE = \[([\s\S]*?)\];/)[1] + ']');
+  const sinTildesTest = t => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  const caza = f => LISTA_MULETILLAS.some(m => sinTildesTest(f).includes(m));
+  const escapan = LAS_QUE_SALIERON.filter(f => !caza(f));
+  comprobar('las seis frases de relleno que salieron impresas se cazan todas',
+    escapan.length === 0, escapan.join(' | ').slice(0, 110));
+
+  // Y no puede saltar sobre texto bueno, que seria peor: un area rehecha son
+  // cincuenta segundos y una llamada, y un porque de verdad tirado.
+  const PORQUES_BUENOS = [
+    'Necesitas ver el terreno entero antes de pisarlo, y como eso te ha ahorrado disgustos, hoy llegas a todo con la jugada pensada.',
+    'Lo que quieres y lo que te permites pedir no te van a la vez, así que aprendiste a leer a los demás para conseguirlo por el lado de fuera.',
+    'Registras el tono de una habitación antes que las palabras, y por eso sales de casi cualquier sitio sabiendo quién estaba incómodo.',
+  ];
+  const falsasAlarmas = PORQUES_BUENOS.filter(caza);
+  comprobar('y ninguna salta sobre un porque escrito de verdad',
+    falsasAlarmas.length === 0, falsasAlarmas.join(' | ').slice(0, 110));
+
+  // Y el prompt ya no le ensena la frase que luego se le prohibe: era su
+  // propio ejemplo de ORIGEN el que la fabricaba.
+  {
+    const sistema = deArea()[0].sistema;
+    comprobar('el prompt del area ya no lleva dentro la frase hecha',
+      !/es la manera en la que está montada desde que llegó al mundo/.test(sistema)
+      && !/lo traes puesto de siempre/.test(sistema));
+    // Y tampoco le pide un pasado que dos parrafos antes le prohibe escribir:
+    // pedirle algo que no puede poner es la otra manera de empujarle al relleno.
+    comprobar('y ya no le pide la situacion de su pasado dentro de ORIGEN',
+      !/qué concluiste tú de aquello/.test(sistema));
+    comprobar('y le prohibe anunciar que no es pasado, que es de donde salia',
+      /NO SE ANUNCIA QUE NO ES PASADO/.test(sistema));
+    comprobar('y le ensena a traducir la carta a una pieza concreta suya',
+      /NOMBRA la pieza que produce el efecto/.test(sistema));
+  }
+
+  // Y un area que la traiga se vuelve a pedir, igual que se hace con las
+  // negritas o con el nombre: lo que el codigo no cuenta, no sale.
+  loQueElAreaCopia = 'Esto no te lo enseñó nadie, viene de cómo estás hecha por dentro desde el principio.';
+  await generar();
+  loQueElAreaCopia = null;
+  {
+    const intentos1 = deArea().filter(l => /ÁREA 1 —/.test(l.mensaje)).length;
+    comprobar('un area que rellena el porque con la frase hecha se manda a rehacer',
+      intentos1 > 1, intentos1 + ' intentos');
+    const encargo = deArea().filter(l => /ÁREA 1 —/.test(l.mensaje))[1]?.mensaje || '';
+    comprobar('y se le dice cual es y que va en su sitio',
+      /frase de relleno/.test(encargo) && /pieza concreta de ella/.test(encargo),
+      encargo.slice(-140).replace(/\n/g, ' '));
+  }
+
   // ── UN PORQUE CON UN PLANETA DENTRO NO LLEGA AL AREA ──────────
   //
   // El porque no se imprime, pero viaja dentro del encargo, y de ahi puede
