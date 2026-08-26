@@ -108,6 +108,18 @@ const AREA_DE_SU_TAMANO = (n) => {
   return JSON.stringify(d);
 };
 
+// Y un area con las dos porquerias que salieron impresas de verdad: la
+// comilla que cierra sin haberse abierto (areas 6 y 7 del 26 de agosto) y el
+// modelo discutiendo consigo mismo dentro del cierre (24 de agosto).
+const AREA_CON_PORQUERIA = (() => {
+  const d = JSON.parse(AREA_BUENA);
+  d.bloques.creencias = [{ ladillo: null, texto: 'Y por debajo hay una cuenta que **nunca has puesto en duda**. Este texto no deberia llevar negritas fuera de los bloques, corrijo: el cierre no lleva negrita. Y tu sigues pagandola.' }];
+  // Acaba EN comilla, y con su pareja: es el caso que no se puede tocar.
+  d.bloques.soltar = [{ ladillo: null, texto: 'Y te dices por dentro, **aunque sigas pudiendo**: "no puedo mas."' }];
+  d.cierre = 'No estas cansada de hacer cosas, estas cansada de que sea la unica prueba que te vale."';
+  return JSON.stringify(d);
+})();
+
 // Lo mismo pero con la escena en blanco: la API no puede impedirlo.
 const AREA_ESCENA_VACIA = JSON.stringify({
   ...JSON.parse(AREA_BUENA),
@@ -152,6 +164,9 @@ globalThis.fetch = async (url, opts = {}) => {
     }
     // Solo el area 2 viene corta; las otras seis, enteras. Asi se ve si la
     // comprobacion mide contra las demas o contra un numero inventado.
+    if (modo === 'porqueria') {
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_CON_PORQUERIA }] }) };
+    }
     if (modo === 'siete distintas') {
       const n = Number((String(JSON.parse(opts.body || '{}').messages?.[0]?.content || '').match(/Genera ÚNICAMENTE el ÁREA (\d)/) || [])[1] || 1);
       return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_DE_SU_TAMANO(n) }] }) };
@@ -312,6 +327,28 @@ try {
   c('y siete de tamaños distintos pero normales, tampoco',
     !avisos.some(a => /se ha quedado en \d+ palabras y las demas traen/.test(a)),
     (avisos.find(a => /se ha quedado en/.test(a)) || 'ninguna se pide dos veces'));
+
+  // ── Ni una comilla suelta ni una instruccion del modelo impresas ───
+  console.log('\n  el modelo mete una comilla suelta y una nota suya\n');
+  modo = 'porqueria';
+  llamadas = 0;
+  const SID8 = 'cs_test_porqueria';
+  TIENDA.set(SID8, { id: SID8, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const r8 = res();
+  await chat({ method: 'POST', body: { session_id: SID8, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r8);
+  const texto8 = String(r8.body?.texto || '');
+  c('el informe sale igual', r8.code === 200 && texto8.length > 3000, 'HTTP ' + r8.code);
+  c('la nota del modelo NO se imprime',
+    !/negrita/i.test(texto8) && !/corrijo/i.test(texto8),
+    (texto8.match(/.{0,45}(negrita|corrijo).{0,45}/i) || ['limpio'])[0]);
+  c('pero el texto bueno que iba pegado a ella se queda',
+    texto8.includes('nunca has puesto en duda') && texto8.includes('Y tu sigues pagandola.'));
+  c('la comilla que cierra sin abrirse NO se imprime',
+    !/prueba que te vale\."/.test(texto8),
+    (texto8.match(/.{0,40}prueba que te vale.{0,6}/) || [''])[0]);
+  c('y la que acaba en comilla CON pareja se queda entera',
+    texto8.includes('"no puedo mas."'), 'con sus dos comillas');
 
   // ── Un area cortada a media frase no se entrega nunca ──────────────
   console.log('\n  el modelo devuelve el area cortada\n');

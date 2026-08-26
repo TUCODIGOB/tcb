@@ -1593,6 +1593,56 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
   // < y > que hay en 8.760 palabras son ese resto.
   const RESTOS = /```+|~~~+|^#{1,6}\s|^-{3,}\s*$|^\*{3,}\s*$|[<>]/gm;
 
+  // PALABRAS QUE SOLO EXISTEN EN EL ENCARGO, NUNCA EN EL ESTUDIO.
+  //
+  // El 24 de agosto salio impreso, dentro del cierre de un area y en el PDF
+  // de una clienta: "Este texto no deberia llevar negritas fuera de los
+  // bloques, corrijo: el cierre no lleva negrita. Ignora la nota anterior, es
+  // un error de formato." El modelo discutiendo consigo mismo.
+  //
+  // SE_EXPLICA, que es quien caza esto, va anclada al principio del parrafo
+  // porque ahi es donde el modelo se presenta ("Aqui tienes el area..."). Esto
+  // se colo al FINAL, detras de texto bueno, asi que por ahi no pasaba.
+  //
+  // Estas palabras son de la maquetacion y de la conversacion conmigo. En un
+  // texto escrito para ella no hay ninguna razon para decir "negrita",
+  // "ladillo" o "error de formato": si aparecen, la frase entera es del
+  // encargo y no suya. Se quita la frase, no el parrafo, que lo de al lado es
+  // texto bueno.
+  const VOCABULARIO_DEL_ENCARGO = /(\bnegrit[ao]s?\b|\bladillos?\b|\basteriscos?\b|error de formato|ignora la nota|la nota anterior|corrijo:)/i;
+
+  // UNA COMILLA QUE CIERRA SIN HABERSE ABIERTO.
+  //
+  // En el informe del 26 de agosto los cierres de las areas 6 y 7 acabaron
+  // asi: "...no solo pedirte que sostengas.'" y "...la misma persona en todas
+  // partes."". Una comilla suelta pegada a la ultima palabra que lee la
+  // clienta, sin nada que la abriera.
+  //
+  // Se mira solo en los extremos del parrafo, que es donde se cuelan, y solo
+  // se quita la que no tiene pareja: un parrafo con una frase entrecomillada
+  // de verdad no se toca, porque sus dos comillas se encuentran.
+  const ABREN = '\u201c\u00ab\u2018';
+  const CIERRAN = '\u201d\u00bb\u2019';
+  function sinComillaHuerfana(t) {
+    let cuerpo = String(t || '').trim();
+    for (;;) {
+      const fin = cuerpo.slice(-1);
+      const resto = cuerpo.slice(0, -1);
+      if (CIERRAN.includes(fin) && !new RegExp('[' + ABREN + ']').test(resto)) { cuerpo = resto.trim(); continue; }
+      // Las rectas no distinguen abrir de cerrar: si van impares, sobra una.
+      if ((fin === '"' || fin === "'") && (cuerpo.split(fin).length - 1) % 2 === 1) { cuerpo = resto.trim(); continue; }
+      break;
+    }
+    for (;;) {
+      const ini = cuerpo.slice(0, 1);
+      const resto = cuerpo.slice(1);
+      if (ABREN.includes(ini) && !new RegExp('[' + CIERRAN + ']').test(resto)) { cuerpo = resto.trim(); continue; }
+      if ((ini === '"' || ini === "'") && (cuerpo.split(ini).length - 1) % 2 === 1) { cuerpo = resto.trim(); continue; }
+      break;
+    }
+    return cuerpo;
+  }
+
   // Limpia UN texto suelto. Lo usan las dos mitades: las casillas antes de
   // montar el area, y la puerta final sobre lo ya montado.
   function limpiarTexto(t) {
@@ -1613,11 +1663,22 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
 
     if (DISCULPA.test(cuerpo)) { cuerpo = cuerpo.replace(DISCULPA, ''); cortado = true; }
 
+    // La frase que habla de la maquetacion, no de ella. Ver mas arriba.
+    if (VOCABULARIO_DEL_ENCARGO.test(cuerpo)) {
+      const frases = cuerpo.split(/(?<=[.?!])\s+/);
+      cuerpo = frases.filter(f => !VOCABULARIO_DEL_ENCARGO.test(f)).join(' ');
+      cortado = true;
+    }
+
     // El recorte del final SOLO se hace si se ha cortado algo, porque si no
-    // se comia el cierre de un parrafo bueno: 'te dices por dentro: "no puedo
-    // mas"' se quedaba sin la comilla, y un parrafo que acabara en dos puntos,
-    // sin ellos.
-    return cortado ? cuerpo.replace(/[\s",;:]+$/, '').trim() : cuerpo.trim();
+    // se comia el cierre de un parrafo bueno: un parrafo que acabara en dos
+    // puntos se quedaba sin ellos.
+    // Las comillas ya no van en ese recorte: las mira sinComillaHuerfana, que
+    // distingue la que sobra de la que tiene pareja, y las miraba a lo bruto
+    // se comia el cierre de 'te dices por dentro: "no puedo mas"'.
+    // La comilla huerfana se mira siempre, se haya cortado algo o no: llega
+    // en parrafos que por lo demas estan perfectos.
+    return sinComillaHuerfana(cortado ? cuerpo.replace(/[\s,;:]+$/, '') : cuerpo);
   }
 
   // Un parrafo del cuerpo acaba en punto, interrogacion o admiracion, con o
