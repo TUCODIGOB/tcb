@@ -1786,6 +1786,19 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
   // veces presentan lo que viene. Cualquier otra cosa es que se corto.
   const ACABA_CORTADO = /[^.?!…:"»)\]]$/;
 
+  // PERO LOS ASTERISCOS DE CERRAR UNA NEGRITA VAN DETRAS DEL PUNTO.
+  //
+  // Una negrita que remata el parrafo acaba asi: "...cuanto has ensenado de
+  // mas.**". Ese parrafo esta entero, pero su ultimo caracter es un asterisco
+  // y aqui se daba por cortado: se recortaba hasta el punto, el ** de cerrar
+  // se iba con el recorte y quedaba el de abrir solo. Sin pareja, el PDF los
+  // limpia, asi que la negrita desaparecia del estudio impreso.
+  // El 26 de agosto le paso al area 6 en siete parrafos seguidos: se quedo
+  // sin una sola negrita, salto "el area se queda plana" y el codigo volvio a
+  // pedir el area entera. 39 segundos y una llamada de mas por parrafos que
+  // estaban perfectos. Asi que para decidir si se corto se miran quitados.
+  const sinElCierreDeLaNegrita = t => t.replace(/\*+$/, '').trim();
+
   function limpiarLoQueSeImprime(texto, idArea) {
     const aviso = (que, trozo) => console.warn(`Área ${idArea}: ${que} ("${String(trozo).trim().slice(0, 40)}")`);
 
@@ -1811,8 +1824,13 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
       // SOLO EL CUERPO. Los remates, la pregunta y la escena van marcados y
       // muchos acaban sin punto a proposito, que es como se escribe una frase
       // suelta. Por eso los que llevan marca no se tocan.
-      if (!marca && cuerpo && ACABA_CORTADO.test(cuerpo)) {
-        const entero = cuerpo.replace(/[^.?!…]*$/, '').trim();
+      const desnudo = sinElCierreDeLaNegrita(cuerpo);
+      if (!marca && desnudo && ACABA_CORTADO.test(desnudo)) {
+        let entero = desnudo.replace(/[^.?!…]*$/, '').trim();
+        // Y si el corte cae DENTRO de una negrita, su ** de abrir se queda
+        // solo y pasa lo mismo: el PDF lo borra y el marcado se pierde. Se
+        // cierra detras del punto, que es donde el modelo iba a cerrarlo.
+        if (entero && (entero.match(/\*\*/g) || []).length % 2) entero += '**';
         if (entero) aviso('se ha recortado un parrafo cortado a mitad de frase', cuerpo.slice(-40));
         else aviso('se ha quitado un parrafo sin una sola frase entera', cuerpo);
         cuerpo = entero;

@@ -83,6 +83,25 @@ const AREA_PARRAFO_CORTADO = (() => {
   return JSON.stringify(d);
 })();
 
+// Y la misma con la negrita rematando cada parrafo, que es como salio el
+// area 6 el 26 de agosto: "...te llamarian igual sin necesitar nada.**". El
+// parrafo esta entero, pero acaba en asterisco, y el recorte lo daba por
+// cortado: se llevaba el ** de cerrar, quedaba el de abrir solo, el PDF lo
+// limpiaba y la negrita desaparecia del estudio. Siete parrafos asi dejaron
+// el area sin ninguna, y el codigo la volvio a pedir entera.
+const AREA_NEGRITA_AL_FINAL = (() => {
+  const d = JSON.parse(AREA_BUENA);
+  const textos = [
+    'Antes de contarte nada de ti, quiero que pienses un momento en las personas que sostienen, porque en cualquier familia **siempre hay una.**',
+    'Por fuera pareces tranquila, Ana, y por dentro llevas **una maquina que no para de repasar lo que acabas de decir.**',
+    'En el trabajo revisas una tarea tres veces cuando con una bastaria, y **no es que dudes de tu criterio.**',
+    'De pequena entendiste que el carino se ganaba haciendo las cosas bien, **siendo la que no daba problemas nunca.**',
+    'Y cuarenta anos despues sigues revisando y sigues anticipando, **sin que nadie te lo haya pedido jamas.**',
+  ];
+  ['arranque', 'hoy', 'origen', 'creencias', 'soltar'].forEach((b, i) => { d.bloques[b][0].texto = textos[i]; });
+  return JSON.stringify(d);
+})();
+
 // Y un area a la mitad de largo que sus hermanas: la que salio el 26 de
 // agosto traia 665 palabras y las otras seis entre 1.163 y 1.446.
 const AREA_A_LA_MITAD = (() => {
@@ -174,6 +193,9 @@ globalThis.fetch = async (url, opts = {}) => {
     if (modo === 'una corta') {
       const suya = /Genera ÚNICAMENTE el ÁREA 2 /.test(String(JSON.parse(opts.body || '{}').messages?.[0]?.content || ''));
       return { ok: true, status: 200, json: async () => ({ content: [{ text: suya ? AREA_A_LA_MITAD : AREA_BUENA }] }) };
+    }
+    if (modo === 'negrita al final') {
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_NEGRITA_AL_FINAL }] }) };
     }
     if (modo === 'parrafo cortado') {
       return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_PARRAFO_CORTADO }] }) };
@@ -286,6 +308,35 @@ try {
     texto4.includes('Muy poca gente sigue sosteniendo cuando ya no la mira nadie')
     && texto4.includes('Te has pasado la vida demostrando que se puede confiar en ti'));
   c('la pregunta tampoco', texto4.includes('¿Cuando fue la ultima vez que alguien te dio las gracias por eso?'));
+
+  // ── Un parrafo que acaba en negrita NO esta cortado ───────────────
+  console.log('\n  el modelo remata cada parrafo con una negrita\n');
+  modo = 'negrita al final';
+  llamadas = 0;
+  avisos.length = 0;
+  const SIDN = 'cs_test_negrita_al_final';
+  TIENDA.set(SIDN, { id: SIDN, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const rN = res();
+  await chat({ method: 'POST', body: { session_id: SIDN, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, rN);
+  const textoN = String(rN.body?.texto || '');
+  c('el informe sale', rN.code === 200 && textoN.length > 3000, 'HTTP ' + rN.code);
+  c('no se recorta ni un parrafo',
+    !avisos.some(a => /se ha recortado un parrafo cortado/.test(a)),
+    (avisos.find(a => /se ha recortado/.test(a)) || 'ninguno recortado'));
+  c('las negritas que rematan el parrafo llegan enteras al PDF',
+    textoN.includes('**una maquina que no para de repasar lo que acabas de decir.**')
+    && textoN.includes('**sin que nadie te lo haya pedido jamas.**'));
+  c('y no queda ni un asterisco sin pareja',
+    (textoN.match(/\*\*/g) || []).length % 2 === 0,
+    (textoN.match(/\*\*/g) || []).length + ' marcas');
+  // Lo que costaba el fallo: el area se quedaba sin negritas, saltaba "el
+  // area se queda plana" y se volvia a pedir entera. 39 segundos y una
+  // llamada de mas por siete parrafos que estaban perfectos.
+  c('el área NO se vuelve a pedir: 7 llamadas para 7 áreas', llamadas === 7, llamadas + ' llamadas');
+  c('y no salta el aviso de área plana',
+    !avisos.some(a => /se queda plana/.test(a)),
+    (avisos.find(a => /se queda plana/.test(a)) || 'ninguno'));
 
   // ── Un area a la mitad de largo que las demas se vuelve a pedir ────
   console.log('\n  una de las siete vuelve a la mitad de largo\n');
