@@ -564,7 +564,7 @@ COMO SUENA ESTO, Y ESTO VA ANTES QUE NINGUNA OTRA REGLA:
 
 Lo va a leer una mujer que no sabe nada de astrologia ni de psicologia, sentada en su sofa. Tiene que entenderlo a la primera, sin releer y sin preguntarse que has querido decir.
 
-HABLANDO SE USAN COMAS, NO PUNTOS. Una cosa sigue a la otra dentro de la misma frase, enlazada con una coma o con un "que". Picar el texto en trozos secos -frase, punto, frase, punto- suena a ficha de catalogo y no a alguien contandoselo, y es lo que mas se falla aqui.
+HABLANDO NO SE PICA EL TEXTO EN TROZOS. Una cosa sigue a la otra dentro de la misma frase, enganchada con un "que", un "porque", un "aunque" o un "asi que". Cortarla en frases secas -frase, punto, frase, punto- suena a ficha de catalogo y no a alguien contandoselo, y es lo que mas se falla aqui.
 
 NI UNA PALABRA TECNICA, ni de astrologia ni de terapia. Fuera "mecanismo", "patron", "gestionar", "procesar", "vinculo", "autoexigencia", "validacion", "dependencia emocional", "sanar". Si no la usaria ella hablando con una amiga, no va.
 
@@ -580,9 +580,9 @@ LAS DOS CASILLAS QUE ESCRIBES:
   BIEN: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda", "Dices que si sin pensarlo", "Aguantas mas de la cuenta", "Te fias poco de lo que llega facil".
   MAL: "Servicio que cura de verdad", "Dependencia emocional de lo compartido", "Autoexigencia que nunca descansa". Son etiquetas, y al leerlas nadie sabe de que hablan.
 
-- "descripcion": dos lineas contandole eso mismo con detalle, escritas a ella. Sale una frase larga con sus comas, o dos si el corte suena natural al decirlo en voz alta.
-  BIEN: "Ves lo que le hace falta a alguien antes de que lo pida y te pones a ello sin esperar a que nadie te lo diga, muchas veces antes de que la otra persona se haya dado cuenta de que lo necesitaba."
-  MAL: "Detectas necesidades ajenas con rapidez. Actuas sin que te lo pidan." Eso son dos etiquetas seguidas, no alguien hablando.
+- "descripcion": dos lineas que ANADEN algo al titulo, nunca que lo repiten con otras palabras. El titulo dice QUE le pasa; aqui le ensenas DONDE se le nota, en un momento concreto que ella pueda reconocer al leerlo, del tipo "eso lo hago yo". Escrita a ella y de un tiron, sin cortarla.
+  BIEN, para el titulo "Ves lo que le falta a la gente": "En una comida familiar sabes quien se esta aburriendo y quien va a saltar antes de que abran la boca, asi que te levantas a arreglarlo sin que nadie te lo pida."
+  MAL: "Detectas necesidades ajenas con rapidez. Actuas sin que te lo pidan." Repite el titulo con palabras mas tecnicas, en dos trozos secos, y no le cuenta nada que no supiera.
 
 - "area": un numero del 1 al 7. 1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero. El area donde ese rasgo pesa mas, porque ahi se contara entero: uno puesto donde no va deja su area coja y le roba el sitio a la que si le tocaba.
 
@@ -695,11 +695,19 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
 
     // La ficha se queda en sus tres casillas y nada mas: lo que llegue de
     // sobra no viaja hasta el PDF.
+    //
+    // Y pasa por el mismo cepillo de la coma antes de "y" que el texto de las
+    // areas. El prompt la lleva pedida desde siempre y se sigue colando; alli
+    // se quitan las que se pueden quitar sin riesgo desde el primer dia, y
+    // aqui no, que era un olvido: las fichas salian con ", y" donde el area no.
+    // Ver quitarComaAntesDeY en lib/estilo.js: ante la duda no toca nada,
+    // porque una coma quitada donde hacia falta es una falta impresa.
+    const sinLaComa = t => quitarComaAntesDeY(String(t || '').trim(), nombrePila);
     const limpiar = (rasgo) => {
       const area = Number(rasgo.area);
       return {
-        nombre: String(rasgo.nombre || '').trim(),
-        descripcion: String(rasgo.descripcion || '').trim(),
+        nombre: sinLaComa(rasgo.nombre),
+        descripcion: sinLaComa(rasgo.descripcion),
         area: (area >= 1 && area <= 7) ? area : 1,
       };
     };

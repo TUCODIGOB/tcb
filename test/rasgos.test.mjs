@@ -30,6 +30,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { quitarComaAntesDeY } from '../lib/estilo.js';
 
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.join(AQUI, '..');
@@ -94,7 +95,9 @@ const AREA = JSON.stringify({
 const CATALOGO = [
   ['Buscador de verdades', 'Necesitas entender el porque de lo que te pasa antes de poder aceptarlo del todo'],
   ['Leal hasta el agotamiento', 'Sostienes a los tuyos mucho despues de que a ti ya no te quede nada dentro'],
-  ['Memoria para el detalle', 'Retienes lo que dijo cada uno y en que tono, semanas despues de la conversacion'],
+  // Esta lleva a proposito la coma antes de "y" que el cepillo quita: sin
+  // una asi, la comprobacion de mas abajo pasaria sin mirar nada.
+  ['Memoria para el detalle', 'Retienes lo que dijo cada uno y en que tono, y por dentro sigues dandole vueltas semanas despues'],
   ['Instinto para el peligro', 'Hueles el problema mucho antes de que se vea, y casi siempre aciertas'],
   ['Aguante fuera de lo normal', 'Sigues de pie en sitios donde cualquiera se habria bajado hace tiempo'],
   ['Talento para ordenar el caos', 'Entras donde todo esta revuelto y en dos dias aquello funciona solo'],
@@ -385,6 +388,20 @@ try {
   comprobar('y con ninguna mas',
     JSON.stringify(Object.keys(uno || {}).sort()) === JSON.stringify(['area', 'descripcion', 'nombre']),
     Object.keys(uno || {}).join(', '));
+
+  // LA COMA ANTES DE "Y" SE LE QUITA A LAS FICHAS, IGUAL QUE AL TEXTO.
+  //
+  // El prompt la lleva pedida desde siempre y se sigue colando. El texto de
+  // las siete areas pasa por quitarComaAntesDeY desde el primer dia; las
+  // fichas no pasaban, asi que salian con ", y" donde el area no. Aqui se
+  // comprueba que ya pasan, con una frase que el cepillo si toca.
+  // Se mira en las fichas que SALEN por la puerta, no llamando a la funcion
+  // suelta: el dia que alguien quite esa llamada de chat.js, esto se cae.
+  const salen = [...(r.body?.rasgos?.fortalezas || []), ...(r.body?.rasgos?.desafios || [])];
+  const sinCepillar = salen.filter(f => quitarComaAntesDeY(f.descripcion, 'Ana') !== f.descripcion);
+  comprobar('a las fichas se les quita la coma antes de "y", como al texto',
+    salen.length > 0 && sinCepillar.length === 0,
+    sinCepillar.length ? sinCepillar[0].descripcion.slice(0, 60) : salen.length + ' fichas cepilladas');
 
   // ── 5. EL TONO ES EL MISMO QUE EL DE LAS ÁREAS ──────────────────
   //
