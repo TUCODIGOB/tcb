@@ -444,8 +444,11 @@ function sinLosRepetidos(lista) {
 // pinte -que no lo pinta-, es que no llega a tenerlo: lo que no sale por la
 // puerta no se puede imprimir por accidente el dia que alguien toque el PDF.
 function sinElPorque(listas) {
+  // El "|| {}" es lo mismo que se hace en generar-pdf con esta misma lista: a
+  // estas alturas el informe ya esta escrito y pagado, y una ficha rara aqui
+  // no puede tumbarlo al ir a devolverlo.
   const pelar = r => {
-    const { porque, ...resto } = r;
+    const { porque, ...resto } = r || {};
     return resto;
   };
   return {
@@ -494,9 +497,9 @@ const CAZA_AL_ASTROLOGO = new RegExp(
 // se mira en otro sitio y de otra manera: ver elPorqueQueSePuedeUsar. Alli no
 // se vuelve a pedir la lista por una nota interna, se deja fuera y ya.
 function laPalabraDeAstrologo(rasgo) {
-  // El "|| ''" es un seguro. limpiar() ya deja las dos casillas como cadena,
-  // pero sin el, una que llegara vacia meteria la palabra "undefined" dentro
-  // del texto que se analiza.
+  // El "|| ''" es un seguro. limpiar() ya deja como cadena las dos que se
+  // miran aqui, pero sin el, una que llegara vacia meteria la palabra
+  // "undefined" dentro del texto que se analiza.
   const txt = `${rasgo.nombre || ''} ${rasgo.descripcion || ''}`
     .normalize('NFD').replace(/[̀-ͯ]/g, '')
     .toLowerCase();
@@ -1586,7 +1589,9 @@ ESTO ES QUE CONTAR, NO POR DONDE MIRAR. Para explicar cada uno sigues cruzando t
 Y SI UNO DE ESTOS PARECE SALIR DE UNA PARTE DE LA CARTA QUE ARRIBA SE DA A OTRA AREA, MANDA ESTA LISTA. El rasgo esta puesto aqui y aqui se cuenta: no lo dejes fuera por eso, ni lo cuentes a medias. Lo de arriba te dice donde mirar cuando buscas tu solo; esto te dice lo que hay que contar, y ya esta repartido para que no se cuente dos veces.
 Y NO VAN UNO EN CADA BLOQUE. Lo de arriba es HOY, que es donde se cuenta como se le nota; pero un rasgo no se agota ahi. Lo que da por cierto por debajo va en CREENCIAS, y en ORIGEN se desarrolla a fondo la raiz que explica el area entera, con los bloques haciendo lo que hacen siempre. Los bloques no cambian de trabajo.
 CADA RASGO LLEGA CON SU "DE DONDE LE VIENE", Y ESO SE CUENTA, NO SE GUARDA. Es lo que ella ha venido a entender: sin eso le estas diciendo COMO es, y como es ya lo sabe; con eso le estas diciendo POR QUE es asi, que no lo sabe nadie mas. Un rasgo contado sin su porque es medio rasgo.
-VA PEGADO AL RASGO, no en un parrafo aparte ni al final del area: donde le cuentas la cosa, ahi mismo, en la misma frase o en la de al lado, va el motivo. Y NO ES EL BLOQUE ORIGEN NI LE QUITA SITIO: ORIGEN sigue siendo una sola raiz desarrollada a fondo, la del area entera; esto son los motivos de cada cosa que le nombras, y van donde se nombra cada cosa. Que un rasgo lleve el suyo dentro de HOY no es adelantar ORIGEN ni repetirlo.
+VA PEGADO AL RASGO, no en un parrafo aparte ni al final del area: donde le cuentas la cosa, ahi mismo, en la misma frase o en la de al lado, va de donde le viene.
+Y SON DOS COSAS DISTINTAS, Y LAS DOS VAN PEGADAS. Una es PARA QUE le sirve eso hoy, que es la que te pide EL PORQUE VA PEGADO, NO APARTE. La otra es DE DONDE le viene, que es la que te llega escrita aqui. La primera dice que gana haciendolo, la segunda dice por que salio asi. Ninguna vale por la otra, y es con las dos cuando piensa "claro, por eso".
+Y ESTO NO ES EL BLOQUE ORIGEN NI LE QUITA SITIO: ORIGEN sigue siendo una sola raiz desarrollada a fondo, la del area entera; esto es de donde le viene cada cosa que le nombras, y va donde se nombra cada cosa. Que un rasgo lleve el suyo dentro de HOY no es adelantar ORIGEN ni repetirlo.
 NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el nombre del rasgo, ni sus frases, ni su porque se escriben tal cual, ni se presentan como una lista: el porque esta puesto en corto y para que tu lo entiendas, y lo que ella lee es eso mismo dicho con tus palabras, dentro de tus parrafos y una sola vez en el area. Lo que ella lee son tus parrafos de siempre.`;
   }
 

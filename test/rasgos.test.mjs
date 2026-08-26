@@ -181,8 +181,10 @@ const RASGOS_REPETIDO_CRUZADO = {
 // Y una lista escrita como salio de verdad el 24 de agosto: 25 de 28 fichas
 // nombrando planetas, signos y casas. Es lo que la clienta no ha pagado.
 //
-// La ficha son dos casillas escritas, el nombre y la frase, asi que por ahi
-// es por donde se puede colar un planeta y por ahi se mira.
+// De las tres casillas escritas, aqui se miran las dos que se IMPRIMEN, el
+// nombre y la frase: son las que le llegan a la clienta en su libro. La
+// tercera, el porque, no se imprime y tiene su propia red donde se usa, que
+// se prueba en rasgos-en-areas.test.mjs.
 const RASGOS_DE_ASTROLOGO = {
   fortalezas: [
     { nombre: 'Sanadora practica del dia a dia', descripcion: 'El sol y Mercurio en la casa del trabajo te dan un don para arreglar lo que esta roto', area: 1 },
