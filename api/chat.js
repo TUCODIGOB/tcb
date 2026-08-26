@@ -564,7 +564,8 @@ Y ASI ES COMO SUENA, QUE ES LO QUE DECIDE SI LO SIGUE LEYENDO O LO CIERRA:
 
 Lo va a leer una mujer que no sabe nada de astrologia ni de psicologia, sentada en su sofa. Tiene que entenderlo a la primera, sin releer y sin preguntarse que has querido decir.
 
-HABLANDO NO SE PICA EL TEXTO EN TROZOS. Una cosa sigue a la otra dentro de la misma frase, enganchada con un "que", un "porque", un "aunque" o un "asi que". Cortarla en frases secas -frase, punto, frase, punto- suena a ficha de catalogo y no a alguien contandoselo, y es lo que mas se falla aqui.
+SE TIENE QUE ENTENDER A LA PRIMERA. Frases cortas y palabras de todos los dias. Nunca encadenes tres cosas dentro de la misma frase: si al leerla hay que volver atras, esta mal y se parte.
+Lo que tampoco vale es el otro extremo, el trozo seco de telegrama -"Detectas necesidades ajenas. Actuas rapido."-, que suena a ficha de catalogo. El punto medio es como se lo contarias en voz alta.
 
 NI UNA PALABRA TECNICA, ni de astrologia ni de terapia. Fuera "mecanismo", "patron", "gestionar", "procesar", "vinculo", "autoexigencia", "validacion", "dependencia emocional", "sanar". Si no la usaria ella hablando con una amiga, no va.
 
@@ -580,9 +581,9 @@ LAS DOS CASILLAS QUE ESCRIBES:
   BIEN: "Ves lo que le falta a la gente", "Te cuesta pedir ayuda", "Dices que si sin pensarlo", "Aguantas mas de la cuenta", "Te fias poco de lo que llega facil".
   MAL: "Servicio que cura de verdad", "Dependencia emocional de lo compartido", "Autoexigencia que nunca descansa". Son etiquetas, y al leerlas nadie sabe de que hablan.
 
-- "descripcion": dos lineas que ANADEN algo al titulo, nunca que lo repiten con otras palabras. El titulo dice QUE le pasa; aqui le ensenas DONDE se le nota, en un momento concreto que ella pueda reconocer al leerlo, del tipo "eso lo hago yo". Escrita a ella y de un tiron, sin cortarla.
-  BIEN, para el titulo "Ves lo que le falta a la gente": "En una comida familiar sabes quien se esta aburriendo y quien va a saltar antes de que abran la boca, asi que te levantas a arreglarlo sin que nadie te lo pida."
-  MAL: "Detectas necesidades ajenas con rapidez. Actuas sin que te lo pidan." Repite el titulo con palabras mas tecnicas, en dos trozos secos, y no le cuenta nada que no supiera.
+- "descripcion": dos lineas que ANADEN algo al titulo, nunca que lo repiten con otras palabras. El titulo dice QUE le pasa; aqui le ensenas DONDE se le nota, en una escena de su dia a dia que ella reconozca al leerla, del tipo "eso lo hago yo".
+  BIEN, para el titulo "Ves lo que le falta a la gente": "Llegas a una comida familiar y en cinco minutos sabes quien esta incomodo. Y acabas siendo tu la que lo arregla, sin que nadie te lo pida."
+  MAL: "Detectas necesidades ajenas con rapidez. Actuas sin que te lo pidan." Repite el titulo con palabras mas tecnicas y no le cuenta nada que no supiera.
 
 - "area": un numero del 1 al 7. 1=Identidad, 2=Patrones, 3=Miedos, 4=Herida, 5=Amor, 6=Relaciones, 7=Dinero. El area donde ese rasgo pesa mas, porque ahi se contara entero: uno puesto donde no va deja su area coja y le roba el sitio a la que si le tocaba.
 
@@ -600,8 +601,8 @@ LA LISTA DE LO QUE LE PESA ES LA DELICADA. Son ${RASGOS_MINIMO} golpes seguidos 
 NI UN PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ANGULO. NI UNA VEZ.
 Prohibidas estas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Jupiter, Saturno, Urano, Neptuno, Pluton, Quiron, nodo, ascendente, medio cielo, los doce signos, cuadratura, trigono, sextil, oposicion, conjuncion, aspecto, orbe, retrogrado, carta, carta natal, horoscopo.
 Y "casa" solo cuando es la casa astrologica ("la casa del dinero"); la casa de vivir se dice las veces que haga falta.
-- MAL: "El sol y Mercurio en la casa del trabajo diario te dan capacidad para detectar que necesita alguien". BIEN: "En una reunion notas quien no esta de acuerdo aunque asienta, asi que acabas preguntandoselo tu en el pasillo diez minutos despues."
-- MAL: "El sol enfrentado a Saturno te hizo sentir que el carino habia que ganarselo". BIEN: "Cuando alguien te trata bien sin motivo te quedas esperando la factura, asi que sigues currandotelo aunque ya lo tengas de sobra."
+- MAL: "El sol y Mercurio en la casa del trabajo diario te dan capacidad para detectar que necesita alguien". BIEN: "En una reunion notas quien no esta de acuerdo aunque diga que si. Luego se lo preguntas a solas, en el pasillo."
+- MAL: "El sol enfrentado a Saturno te hizo sentir que el carino habia que ganarselo". BIEN: "Cuando alguien te quiere bien y sin mas, te cuesta creertelo. Sigues currandotelo por si acaso, aunque ya lo tengas."
 Los dos BIEN dicen exactamente lo mismo que los MAL, pero contado desde su vida y con palabras suyas. Eso es lo que hay que escribir.
 
 Y EL RESTO DEL TONO, IGUAL QUE EN LAS AREAS:
@@ -617,7 +618,7 @@ ${cartaTexto}
 Persona: ${trato}
 Nombre de pila: ${nombrePila}
 
-IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con numeros distintos, ni uno repetido, y de cada una de las siete areas al menos ${MINIMO_POR_AREA}. Y antes de entregar, lee las dos listas seguidas en voz alta: la ficha que suene a etiqueta, la que este picada en frases secas y la que afirme algo de su vida que la carta no dice, se reescriben.`;
+IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con numeros distintos, ni uno repetido, y de cada una de las siete areas al menos ${MINIMO_POR_AREA}. Y antes de entregar, lee las dos listas seguidas en voz alta: la ficha que suene a etiqueta, la que haya que releer para entenderla y la que afirme algo de su vida que la carta no dice, se reescriben.`;
 
   // LA LISTA SE PIDE CON EL ESQUEMA PUESTO, NO PIDIENDO JSON POR ESCRITO.
   //
