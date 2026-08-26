@@ -500,7 +500,7 @@ try {
       n1.includes('POR QUE ES ASI, Y ESTO NO SE COPIA:')
       && n1.includes('de ahí sale que detectas lo que hace falta'));
     comprobar('y se le dice que va PEGADO al rasgo, no en un parrafo aparte',
-      /VA PEGADO AL RASGO/.test(n1));
+      /VA CONTADO Y PEGADO/.test(n1));
     comprobar('y que eso no es el bloque ORIGEN ni le quita su sitio',
       /NO ES EL BLOQUE ORIGEN NI LE QUITA SITIO/.test(n1));
     comprobar('y que el porque no se copia tal cual, se cuenta con sus palabras',
