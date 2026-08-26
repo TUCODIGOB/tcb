@@ -1498,7 +1498,7 @@ POR DÓNDE VA ESTA ÁREA (las otras seis van por otro sitio, así que no busques
   //
   // Asi que la lista sigue dando los rasgos que de verdad salgan de su carta
   // -eso no se toca, es de donde sale el valor- y lo que cambia es cuantos
-  // desarrolla cada area: dos o tres. Los demas los lee entera en la lista del
+  // desarrolla cada area: dos o tres. Los demas los lee enteros en la lista del
   // final del estudio, que se imprime completa.
   //
   // LOS ELIGE EL CODIGO, NO EL MODELO, por dos razones: para que la mezcla no
@@ -1519,7 +1519,8 @@ POR DÓNDE VA ESTA ÁREA (las otras seis van por otro sitio, así que no busques
     // pesan se lee y se cierra el informe. Alternando, mientras su carta de de
     // los dos lados, aqui salen de los dos. Y se respeta el orden en que
     // llegaron, que es el que la lista puso: lo primero que escribio es lo que
-    // vio con mas fuerza.
+    // vio con mas fuerza. En empate abre el lado bueno, que un area que
+    // arranca por lo que le pesa se lee a la defensiva desde la primera linea.
     const [largo, corto] = fuertes.length >= pesan.length ? [fuertes, pesan] : [pesan, fuertes];
     const elegidos = [];
     for (let i = 0; elegidos.length < CUANTOS_DESARROLLA_UN_AREA && (i < largo.length || i < corto.length); i++) {
@@ -1551,7 +1552,7 @@ Y NO ANADES NINGUNO MAS. Si al mirar su carta te llama otro tema con fuerza, o e
 NO SON UN INDICE APARTE, Y ESTO ES LO QUE MAS IMPORTA DE TODA ESTA NOTA. Los puntos que HOY le pide a TU area no se tocan ni se encogen: estos ${n} van POR DENTRO de ellos, cada uno entrando por el punto al que responde. Tratados como temas sueltos que hay que colocar ademas, te comes esos puntos para hacerles sitio y el area se queda sin la mitad de lo que tenia que contar.
 EMPIEZA POR LOS PUNTOS, NO POR LA LISTA: coges cada punto de HOY, miras cual de estos lo responde, y lo cuentas ahi a fondo. Y si alguno de estos no cae en ninguno de esos puntos, va igual: entra por el bloque que le toque, pero fuera no se queda.
 ESTO ES QUE CONTAR, NO POR DONDE MIRAR. Para explicar cada uno sigues cruzando todo lo que haga falta de su carta, igual que hasta ahora: no es una valla, es el contenido.
-Y SI UNO DE ESTOS PARECE SALIR DE UNA PARTE DE LA CARTA QUE ARRIBA SE DA A OTRA AREA, MANDA ESTA LISTA. El rasgo esta puesto aqui y aqui se cuenta: no lo dejes fuera por eso, ni lo cuentes a medias.
+Y SI UNO DE ESTOS PARECE SALIR DE UNA PARTE DE LA CARTA QUE ARRIBA SE DA A OTRA AREA, MANDA ESTA LISTA. El rasgo esta puesto aqui y aqui se cuenta: no lo dejes fuera por eso, ni lo cuentes a medias. Lo de arriba te dice donde mirar cuando buscas tu solo; esto te dice lo que hay que contar, y ya esta repartido para que no se cuente dos veces.
 Y NO VAN UNO EN CADA BLOQUE. Lo de arriba es HOY, que es donde se cuenta como se le nota; pero un rasgo no se agota ahi. De donde le viene va en ORIGEN y lo que da por cierto por debajo va en CREENCIAS, con los bloques haciendo lo que hacen siempre. Los bloques no cambian de trabajo.
 NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el nombre del rasgo ni sus frases se escriben tal cual, ni se presentan como una lista. Lo que ella lee son tus parrafos de siempre.`;
   }
