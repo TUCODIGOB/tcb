@@ -516,7 +516,7 @@ function loQueLeFaltaALaLista(lista) {
   if (cortas.length > 0) {
     problemas.push(
       `las areas ${cortas.map(n => `${NOMBRE_DEL_AREA[n]} (${porArea[n] || 0})`).join(', ')} `
-      + `no llegan a ${MINIMO_POR_AREA} rasgos, y cada area del estudio se escribe solo con los suyos: `
+      + `no llegan a ${MINIMO_POR_AREA} rasgos, y cada area del estudio escribe con dos o tres de los suyos y con ninguno mas: `
       + `saca mas rasgos de esas areas mirando otra vez la carta, sin quitar los que ya tienes`
     );
   }
@@ -617,7 +617,7 @@ Ha pagado por leer lo suyo, no algo que le valdria a cualquiera. En cuanto lee u
 De su carta sale COMO funciona, no lo que vivio: no sabes como era su casa, ni que vio de pequena, ni que le dijeron. Asi que su pasado no se afirma NUNCA -nada de "aprendiste", "creciste", "de pequena", "en tu casa", "desde joven"-, se cuenta lo que le pasa HOY, que es lo unico que puede reconocer.
 
 ESTAS LISTAS SON LA BASE DEL ESTUDIO ENTERO, NO SU FINAL.
-De aqui salen las siete areas: a cada una le tocan los rasgos que tu le pongas, y esa area contara ESOS y ninguno mas. Un rasgo que no pongas aqui no se cuenta en ningun sitio. Ademas las dos listas se imprimen enteras al final, asi que lo que escribas se lee dos veces.
+De aqui salen las siete areas: a cada una le tocan los rasgos que tu le pongas, y de esos desarrollara dos o tres a fondo, nunca uno de otra area. Un rasgo que no pongas aqui no existe en ningun sitio. Y las dos listas se imprimen enteras al final, asi que todo lo que escribas se lee, lo desarrolle su area o no.
 
 ${ESPANOL_DE_ESPANA}
 
@@ -653,7 +653,7 @@ LO QUE NO SE TOCA:
 1. Entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} en cada lista, y las dos con numeros distintos: nadie tiene tantas cosas buenas como malas. Los que de verdad salgan de la carta, sin rellenar para cuadrarlas.
 2. NI UNO REPETIDO, ni dentro de una lista ni entre las dos. Repetido no es solo la misma frase, es la misma cosa dicha de otra manera: "Miedo al abandono" y "Terror a que la dejen" son el mismo rasgo escrito dos veces. Antes de dar una ficha por buena, leela contra todas las anteriores.
 3. Cada rasgo en UNA sola lista, nunca en las dos.
-4. De cada una de las siete areas salen al menos ${MINIMO_POR_AREA}, contando las dos listas juntas. Cada area se escribe DESPUES solo con los suyos, asi que un area con uno solo se pasa cuatro paginas dando vueltas a una cosa. Ninguna carta se queda muda en un area.
+4. De cada una de las siete areas salen al menos ${MINIMO_POR_AREA}, contando las dos listas juntas. Cada area escribe DESPUES con dos o tres de los suyos y con ninguno mas, asi que un area con uno solo se pasa cuatro paginas dando vueltas a una cosa. Ninguna carta se queda muda en un area.
 5. Maximo por area no hay: si de una salen seis, pon seis. Reparte mirando la carta, no a partes iguales.
 
 LA LISTA DE LO QUE LE PESA ES LA DELICADA. Son ${RASGOS_MINIMO} golpes seguidos o mas, sin las paginas que en las areas los amortiguan: mal escrita, se lee y se cierra el informe.
@@ -1484,32 +1484,78 @@ POR DÓNDE VA ESTA ÁREA (las otras seis van por otro sitio, así que no busques
   // Va en el mensaje, NO en el prompt de sistema: el de sistema es identico en
   // las siete y es el que esta en cache, y meter aqui algo que cambia por area
   // la dejaria sin usar en las siete. Ver calentarLaCache.
-  function losRasgosDeEstaArea(listas, id) {
-    const mios = [];
-    for (const cual of ['fortalezas', 'desafios']) {
-      for (const r of (listas && listas[cual]) || []) {
-        if (Number(r.area) === id) mios.push({ r, cual });
-      }
-    }
-    if (mios.length === 0) return '';
+  // CADA AREA ESCRIBE CON DOS O TRES RASGOS, NO CON TODOS LOS SUYOS.
+  //
+  // En el informe del 27 de agosto la lista dio 34 rasgos y el area 2 se
+  // quedo con ocho. Con ocho cosas que meter en mil cuatrocientas palabras, el
+  // area deja de contarlas y empieza a listarlas: 179 palabras por rasgo
+  // cuando las demas areas les dedican de 250 a 440. Se ve en el texto, y se
+  // midio contra el informe anterior: "el segundo patron", "esas cuatro cosas
+  // juntas" y demas enumeraciones pasaron de 2 a 8, los anuncios de lo que
+  // viene de 6 a 12, y la explicacion del porque bajo de 7 a 5 por cada mil
+  // palabras. Eso es lo que se lee como un informe y no como alguien
+  // contandotelo.
+  //
+  // Asi que la lista sigue dando los rasgos que de verdad salgan de su carta
+  // -eso no se toca, es de donde sale el valor- y lo que cambia es cuantos
+  // desarrolla cada area: dos o tres. Los demas los lee entera en la lista del
+  // final del estudio, que se imprime completa.
+  //
+  // LOS ELIGE EL CODIGO, NO EL MODELO, por dos razones: para que la mezcla no
+  // dependa de que obedezca, y porque el que elige no puede ser el mismo que
+  // luego decide que le apetece contar.
+  const CUANTOS_DESARROLLA_UN_AREA = 3;
 
-    const fichas = mios
-      .map(({ r, cual }) => `- ${r.nombre} (${cual === 'fortalezas' ? 'fortaleza' : 'desafio'}): ${r.descripcion}`)
+  function losRasgosDeEstaArea(listas, id) {
+    const suyos = cual => ((listas && listas[cual]) || [])
+      .filter(r => Number(r.area) === id)
+      .map(r => ({ r, cual: cual === 'fortalezas' ? 'fortaleza' : 'desafio' }));
+    const fuertes = suyos('fortalezas');
+    const pesan = suyos('desafios');
+
+    // UNO DE CADA LADO, ALTERNANDO, EMPEZANDO POR EL QUE TENGA MAS.
+    //
+    // Un area entera de cosas buenas se lee a halago y una entera de las que
+    // pesan se lee y se cierra el informe. Alternando, mientras su carta de de
+    // los dos lados, aqui salen de los dos. Y se respeta el orden en que
+    // llegaron, que es el que la lista puso: lo primero que escribio es lo que
+    // vio con mas fuerza.
+    const [largo, corto] = fuertes.length >= pesan.length ? [fuertes, pesan] : [pesan, fuertes];
+    const elegidos = [];
+    for (let i = 0; elegidos.length < CUANTOS_DESARROLLA_UN_AREA && (i < largo.length || i < corto.length); i++) {
+      if (i < largo.length && elegidos.length < CUANTOS_DESARROLLA_UN_AREA) elegidos.push(largo[i]);
+      if (i < corto.length && elegidos.length < CUANTOS_DESARROLLA_UN_AREA) elegidos.push(corto[i]);
+    }
+    if (elegidos.length === 0) return '';
+
+    const n = elegidos.length;
+    const enLaLista = fuertes.length + pesan.length;
+    const fichas = elegidos
+      .map(({ r, cual }) => `- ${r.nombre} (${cual}): ${r.descripcion}`)
       .join('\n');
+    const mezcla = elegidos.some(e => e.cual === 'fortaleza') && elegidos.some(e => e.cual === 'desafio')
+      ? 'Van de los dos lados a proposito, de lo que tiene a favor y de lo que le pesa: un area entera de halagos no se cree y un area entera de golpes se cierra a la mitad.'
+      : 'Su carta solo da de un lado en esta parcela, asi que estos son los que hay.';
+    const losOtros = enLaLista > n
+      ? ` De esta area salieron ${enLaLista} en total; los otros ${enLaLista - n} los lee enteros en la lista del final del estudio, que se imprime completa, asi que aqui no hay que meterlos.`
+      : '';
 
     return `
 
 LO QUE TE TOCA CONTAR A TI EN ESTA AREA, Y NINGUN RASGO MAS:
 ${fichas}
 
-Estos ${mios.length} salen de su carta y estan repartidos entre las siete areas: los de aqui son TUYOS y los de las otras seis los estan contando ellas ahora mismo. Van los ${mios.length} y NO ANADES NINGUNO MAS. Si al mirar su carta te llama otro tema con mas fuerza, ese es de otra area: dejalo.
-NO SON UN INDICE APARTE, Y ESTO ES LO QUE MAS IMPORTA DE TODA ESTA NOTA. Los puntos que HOY le pide a TU area no se tocan ni se encogen: estos ${mios.length} van POR DENTRO de ellos, cada uno entrando por el punto al que responde. Tratados como temas sueltos que hay que colocar ademas, te comes esos puntos para hacerles sitio y el area se queda sin la mitad de lo que tenia que contar.
+Son ${n}, y son ${n} a proposito. ${mezcla}${losOtros}
+POCOS Y A FONDO, QUE ES LO QUE HACE QUE SE RECONOZCA. Con ${n} tienes sitio para contarlos de verdad: donde se le nota, con que gesto, y por que le pasa. Metiendo mas, ninguno se cuenta entero y el area se lee como un indice de temas, que es exactamente lo que no puede pasar.
+Y NO ANADES NINGUNO MAS. Si al mirar su carta te llama otro tema con fuerza, o es de otra area y lo esta contando ella ahora mismo, o esta en la lista del final. Dejalo.
+NO SON UN INDICE APARTE, Y ESTO ES LO QUE MAS IMPORTA DE TODA ESTA NOTA. Los puntos que HOY le pide a TU area no se tocan ni se encogen: estos ${n} van POR DENTRO de ellos, cada uno entrando por el punto al que responde. Tratados como temas sueltos que hay que colocar ademas, te comes esos puntos para hacerles sitio y el area se queda sin la mitad de lo que tenia que contar.
 EMPIEZA POR LOS PUNTOS, NO POR LA LISTA: coges cada punto de HOY, miras cual de estos lo responde, y lo cuentas ahi a fondo. Y si alguno de estos no cae en ninguno de esos puntos, va igual: entra por el bloque que le toque, pero fuera no se queda.
 ESTO ES QUE CONTAR, NO POR DONDE MIRAR. Para explicar cada uno sigues cruzando todo lo que haga falta de su carta, igual que hasta ahora: no es una valla, es el contenido.
-Y SI UNO DE ESTOS PARECE SALIR DE UNA PARTE DE LA CARTA QUE ARRIBA SE DA A OTRA AREA, MANDA ESTA LISTA. El rasgo esta puesto aqui y aqui se cuenta: no lo dejes fuera por eso, ni lo cuentes a medias. Lo de arriba te dice donde mirar cuando buscas tu solo; esto te dice lo que hay que contar, y ya esta repartido para que no se cuente dos veces.
+Y SI UNO DE ESTOS PARECE SALIR DE UNA PARTE DE LA CARTA QUE ARRIBA SE DA A OTRA AREA, MANDA ESTA LISTA. El rasgo esta puesto aqui y aqui se cuenta: no lo dejes fuera por eso, ni lo cuentes a medias.
 Y NO VAN UNO EN CADA BLOQUE. Lo de arriba es HOY, que es donde se cuenta como se le nota; pero un rasgo no se agota ahi. De donde le viene va en ORIGEN y lo que da por cierto por debajo va en CREENCIAS, con los bloques haciendo lo que hacen siempre. Los bloques no cambian de trabajo.
 NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el nombre del rasgo ni sus frases se escriben tal cual, ni se presentan como una lista. Lo que ella lee son tus parrafos de siempre.`;
   }
+
 
   const recordatorioFinal = `ANTES DE DAR EL AREA POR TERMINADA, REPASA ESTAS, QUE SON LAS QUE MAS SE ESCAPAN:
 1. Escribes para ${trato}
