@@ -560,7 +560,7 @@ De aqui salen las siete areas: a cada una le tocan los rasgos que tu le pongas, 
 
 ${ESPANOL_DE_ESPANA}
 
-COMO SUENA ESTO, Y ESTO VA ANTES QUE NINGUNA OTRA REGLA:
+Y ASI ES COMO SUENA, QUE ES LO QUE DECIDE SI LO SIGUE LEYENDO O LO CIERRA:
 
 Lo va a leer una mujer que no sabe nada de astrologia ni de psicologia, sentada en su sofa. Tiene que entenderlo a la primera, sin releer y sin preguntarse que has querido decir.
 
@@ -600,8 +600,8 @@ LA LISTA DE LO QUE LE PESA ES LA DELICADA. Son ${RASGOS_MINIMO} golpes seguidos 
 NI UN PLANETA, NI UN SIGNO, NI UNA CASA, NI UN ANGULO. NI UNA VEZ.
 Prohibidas estas palabras y todas sus parientes: Sol, Luna, Mercurio, Venus, Marte, Jupiter, Saturno, Urano, Neptuno, Pluton, Quiron, nodo, ascendente, medio cielo, los doce signos, cuadratura, trigono, sextil, oposicion, conjuncion, aspecto, orbe, retrogrado, carta, carta natal, horoscopo.
 Y "casa" solo cuando es la casa astrologica ("la casa del dinero"); la casa de vivir se dice las veces que haga falta.
-- MAL: "El sol y Mercurio en la casa del trabajo diario te dan capacidad para detectar que necesita alguien". BIEN: "Notas lo que le hace falta a alguien antes de que lo diga y te pones a ello sin que nadie te lo pida, aunque nadie te lo agradezca despues."
-- MAL: "El sol enfrentado a Saturno te hizo sentir que el carino habia que ganarselo". BIEN: "Das por hecho que el carino hay que ganarselo, asi que te lo sigues currando incluso cuando ya lo tienes de sobra y nadie te lo esta pidiendo."
+- MAL: "El sol y Mercurio en la casa del trabajo diario te dan capacidad para detectar que necesita alguien". BIEN: "En una reunion notas quien no esta de acuerdo aunque asienta, asi que acabas preguntandoselo tu en el pasillo diez minutos despues."
+- MAL: "El sol enfrentado a Saturno te hizo sentir que el carino habia que ganarselo". BIEN: "Cuando alguien te trata bien sin motivo te quedas esperando la factura, asi que sigues currandotelo aunque ya lo tengas de sobra."
 Los dos BIEN dicen exactamente lo mismo que los MAL, pero contado desde su vida y con palabras suyas. Eso es lo que hay que escribir.
 
 Y EL RESTO DEL TONO, IGUAL QUE EN LAS AREAS:
