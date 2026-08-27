@@ -1118,6 +1118,27 @@ function sinLasMarcasInternas(texto) {
   return salida;
 }
 
+// ¿Ya dice el parrafo lo que dice la pregunta anotada?
+//
+// Se miran las palabras con carga -las largas, sin tildes y en minusculas- y
+// se pregunta cuantas de las de la pregunta estan ya en el parrafo. Con dos
+// tercios se da por escrita: el modelo la reescribe con alguna palabra
+// distinta ("parecia menor" por "parecia menos importante"), asi que exigir
+// que coincidan todas seria no cazar ninguna.
+function yaLaTraeElParrafo(pregunta, texto) {
+  const enPalabrasCargadas = t => new Set(
+    String(t || '')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+      .match(/[a-zñ]+/g)?.filter(w => w.length > 3) || []
+  );
+  const suyas = [...enPalabrasCargadas(pregunta)];
+  if (suyas.length < 4) return false;
+  const enElParrafo = enPalabrasCargadas(texto);
+  const coinciden = suyas.filter(w => enElParrafo.has(w)).length;
+  return coinciden / suyas.length >= 0.6;
+}
+
+
 function laMarcaInternaQueSeHaColado(texto) {
   // Sin tildes y en minusculas, para que una tilde de mas o de menos en la
   // copia no lo deje pasar. No usa el sinTildes de mas abajo a proposito:
@@ -2848,6 +2869,21 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       if (!anotada) continue;
       const texto = String((p && p.texto) || '').trim();
       if (!texto || /\?/.test(texto)) continue;
+      // Y TAMPOCO SI YA LA HA ESCRITO, PERO SIN LOS SIGNOS.
+      //
+      // El guardia de arriba busca un "?" en el parrafo. Cuando el modelo
+      // escribe la pregunta DENTRO del texto pero la deja en forma de frase
+      // -"Asi que cuantas veces has apagado algo que te dolia..."- no hay
+      // interrogante que ver, asi que esto la daba por no escrita y pegaba la
+      // anotada detras. En el informe del 29 paso dos veces en el area de
+      // relaciones: la version sin signos dentro del parrafo y la buena
+      // pegada justo debajo, diciendo lo mismo con dos lineas de diferencia.
+      //
+      // Se compara lo que DICEN, no como estan puntuadas: si el parrafo ya
+      // trae la mayor parte de las palabras de la pregunta, la pregunta ya
+      // esta hecha y lo unico que falta es la puntuacion, que no justifica
+      // repetirla entera.
+      if (yaLaTraeElParrafo(anotada, texto)) continue;
       let preg = anotada;
       if (!preg.startsWith('¿')) preg = '¿' + preg.replace(/^[¿\s]+/, '');
       if (!/[?!]$/.test(preg)) preg = preg.replace(/[.\s]+$/, '') + '?';
