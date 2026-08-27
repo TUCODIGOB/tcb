@@ -2085,7 +2085,24 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
   };
 
   async function pedirSoloLaCasilla(area, datos, casilla) {
-    const loEscrito = (datos?.parrafos || []).map(p => p?.texto).filter(Boolean).join('\n\n');
+    // TODO LO QUE YA ESTA ESCRITO DEL AREA, NO SOLO SUS PARRAFOS.
+    //
+    // Aqui iban unicamente los parrafos del cuerpo, y las otras cuatro
+    // casillas -la escena, los dos remates y la pregunta- se quedaban fuera.
+    // Pidiendo asi un cierre, el modelo no veia lo que ya se habia dicho en
+    // ellas y podia repetirlo, que es justo lo unico que un cierre no puede
+    // hacer: lo suyo es decir algo que no este dicho en el area.
+    //
+    // Van sin etiqueta, uno detras de otro. Aqui no hace falta saber cual es
+    // cual -lo que hace falta es saber que ya esta dicho- y una etiqueta es
+    // una palabra mas que el modelo podria copiar dentro del texto.
+    const yaEscrito = [(datos?.parrafos || []).map(p => p?.texto).filter(Boolean).join('\n\n')];
+    for (const otra of ['escena', 'remate_herida', 'remate_fuerza', 'pregunta', 'cierre']) {
+      if (otra === casilla) continue; // esa es justo la que falta
+      const t = datos && datos[otra] && datos[otra].texto;
+      if (typeof t === 'string' && t.trim()) yaEscrito.push(t.trim());
+    }
+    const loEscrito = yaEscrito.filter(Boolean).join('\n\n');
     const salida = await pedirJson({
       // El mismo prompt de siempre, asi que se aprovecha la misma cache.
       system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],

@@ -199,6 +199,9 @@ const AREA_ESCENA_VACIA = JSON.stringify({
 });
 
 let modo = 'buena';
+// Lo que se le manda al pedir SOLO el cierre. Un cierre tiene que revelar algo
+// que no este ya dicho en el area, asi que ahi tiene que ir el area entera.
+let encargoDelCierre = '';
 let llamadas = 0;
 let correoRevienta = false;
 const correos = [];
@@ -260,6 +263,7 @@ globalThis.fetch = async (url, opts = {}) => {
     if (modo === 'cierre de molde') {
       if (String(JSON.parse(opts.body || '{}').messages?.[0]?.content || '').includes('Lo único que falta es')) {
         llamadas--; // una casilla suelta no es una generacion de area
+        encargoDelCierre = String(JSON.parse(opts.body || '{}').messages?.[0]?.content || '');
         return { ok: true, status: 200, json: async () => ({ content: [{ text: JSON.stringify({ texto: 'Hacer cosas no te cansa, lo que te cansa es que sea la unica prueba que te vale, y llevas anos pudiendo descansar sin saberlo.' }) }] }) };
       }
       return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_CIERRE_DE_MOLDE }] }) };
@@ -539,6 +543,19 @@ try {
   c('el cierre de molde NO sale impreso',
     !/No es que no sepas descansar/.test(textoC1));
   c('y el que se pidió sí', textoC1.includes('llevas anos pudiendo descansar sin saberlo'));
+  // UN CIERRE TIENE QUE REVELAR ALGO QUE NO ESTE YA DICHO, asi que al pedirlo
+  // solo hay que enseñarle TODO lo que ya esta escrito. Antes se le mandaban
+  // solo los parrafos del cuerpo: la escena, los dos remates y la pregunta se
+  // quedaban fuera, y podia repetir lo que estuviera solo en una de ellas.
+  c('al pedir solo el cierre se le manda el cuerpo del área',
+    /revisas una tarea tres veces/.test(encargoDelCierre));
+  c('y también la escena, los remates y la pregunta',
+    /sigues con el movil en la mano/.test(encargoDelCierre)
+    && /Te has pasado la vida demostrando/.test(encargoDelCierre)
+    && /alguien te dio las gracias por eso/.test(encargoDelCierre),
+    encargoDelCierre ? 'se le manda' : 'no se ha pedido ningún cierre suelto');
+  c('y no el cierre viejo, que es justo lo que falta',
+    !/No es que no sepas descansar/.test(encargoDelCierre));
 
   // Y la limpieza que deja medio cierre impreso.
   modo = 'cierre mutilado';
