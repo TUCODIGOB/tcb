@@ -297,7 +297,9 @@ try {
     enVariasAreas.length === 0,
     enVariasAreas.length ? enVariasAreas.map(r => r.nombre).join(', ') : 'los 21 en un area cada uno');
 
-  // Y llegan TODOS: si la lista le da tres a un area, el area cuenta tres.
+  // Los desafios llegan TODOS, y las fortalezas hasta el tope de dos. En esta
+  // lista ninguna area pasa de dos fortalezas, asi que aqui llegan todos: si
+  // algun dia se le anade a una area una tercera, esta comprobacion lo dira.
   const sinRepartir = todos.filter(r => !notaDe(r.area).includes(r.nombre));
   comprobar('y todos los de la lista llegan a su area',
     sinRepartir.length === 0,
@@ -505,9 +507,15 @@ try {
   // que existe, y con las instrucciones de que hacer con el.
   {
     const n1 = notaDe(1);
-    comprobar('el area recibe el porque de cada rasgo suyo',
+    comprobar('el area recibe el porque de sus DESAFIOS',
       n1.includes('POR QUE ES ASI, Y ESTO NO SE COPIA:')
-      && n1.includes('de ahí sale que detectas lo que hace falta'));
+      && n1.includes('de ahí sale que exigencia que no se apaga'));
+    // Y las fortalezas ya no lo llevan. Con el porque en las dos, el area tenia
+    // que explicar la causa de todo lo que nombraba y cada explicacion pide su
+    // imagen: eso es lo que dejaba el texto amontonado. Ver TOPE_FORTALEZAS_POR_AREA.
+    comprobar('y NO el de sus fortalezas, que ya no lo llevan',
+      !n1.includes('de ahí sale que detectas lo que hace falta')
+      && !n1.includes('de ahí sale que cabeza clara bajo presión'));
     comprobar('y se le dice que va PEGADO al rasgo, no en un parrafo aparte',
       /VA CONTADO Y PEGADO/.test(n1));
     comprobar('y que eso no es el bloque ORIGEN ni le quita su sitio',

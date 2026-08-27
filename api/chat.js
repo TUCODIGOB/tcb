@@ -213,9 +213,30 @@ const RASGO = {
 // sale uno solo, esa area se pasa cuatro paginas dando vueltas a una cosa, que
 // es exactamente lo que las listas vienen a arreglar. Dos es el suelo.
 //
-// Maximo no hay: si de un area salen seis, el area cuenta seis. Lo que dice la
-// carta manda, y lo que no vale es rellenar para cuadrar.
+// La lista no tiene maximo: si de un area salen seis, la lista saca seis y los
+// seis se imprimen en su pagina. Lo que dice la carta manda, y lo que no vale
+// es rellenar para cuadrar.
 const MINIMO_POR_AREA = 2;
+
+// LO QUE EL AREA DESARROLLA NO ES TODO LO QUE LA LISTA LE DA.
+//
+// Distinto del minimo de arriba, que es de la lista. Esto es el techo de lo que
+// entra en el TEXTO del area, y solo afecta a las fortalezas.
+//
+// El informe del 27 de agosto traia 31 rasgos y los 31 salian explicados, cada
+// uno con su nombre, su porque y su imagen, dentro de las mismas paginas de
+// siempre. Tres areas llevaban tres fortalezas. Leido del tiron no se entiende
+// nada: cada dos parrafos hay que cambiar de tema y estrenar una imagen, y el
+// lector se cansa antes de que le llegue lo que ha venido a entender.
+//
+// Con dos fortalezas por area queda sitio para que los desafios se cuenten
+// despacio, que es lo que el cliente paga: saber POR QUE le pasa lo que le
+// pasa. Lo bueno ya lo sabe.
+//
+// Las que se quedan fuera NO se pierden: la lista viaja entera al navegador y
+// se imprimen todas en su pagina, con su nombre y su frase. Lo unico que no
+// llevan es cuatro paginas de desarrollo dentro del area.
+const TOPE_FORTALEZAS_POR_AREA = 2;
 
 // Los nombres de las siete, en un solo sitio: se usan al pedir la lista, al
 // avisar de lo que le falta y al decirle a cada area cuales son los suyos.
@@ -1700,17 +1721,32 @@ POR DÓNDE VA ESTA ÁREA (las otras seis van por otro sitio, así que no busques
   // las siete y es el que esta en cache, y meter aqui algo que cambia por area
   // la dejaria sin usar en las siete. Ver calentarLaCache.
   function losRasgosDeEstaArea(listas, id) {
-    const mios = [];
-    for (const cual of ['fortalezas', 'desafios']) {
-      for (const r of (listas && listas[cual]) || []) {
-        if (Number(r.area) === id) mios.push({ r, cual });
-      }
-    }
+    const suyos = cual => ((listas && listas[cual]) || []).filter(r => Number(r.area) === id);
+
+    // Las fortalezas se cortan en TOPE_FORTALEZAS_POR_AREA y los desafios van
+    // todos: son los desafios los que traen el porque, que es lo que se ha
+    // venido a entender. Se cogen las primeras de la lista, sin elegir: el
+    // orden lo puso quien saco la lista de la carta, y una eleccion "por
+    // importancia" la haria el modelo distinta en cada informe y sin un
+    // criterio que se pueda defender.
+    const fortalezas = suyos('fortalezas').slice(0, TOPE_FORTALEZAS_POR_AREA);
+    const desafios = suyos('desafios');
+    const mios = [
+      ...fortalezas.map(r => ({ r, cual: 'fortalezas' })),
+      ...desafios.map(r => ({ r, cual: 'desafios' })),
+    ];
     if (mios.length === 0) return '';
 
     const fichas = mios
       .map(({ r, cual }) => {
         const ficha = `- ${r.nombre} (${cual === 'fortalezas' ? 'fortaleza' : 'desafio'}): ${r.descripcion}`;
+        // EL PORQUE SOLO VA CON LOS DESAFIOS.
+        //
+        // Con el en las dos, el area tenia que explicar la causa de siete cosas
+        // distintas en cuatro paginas, y cada explicacion pide su imagen: eso es
+        // lo que amontonaba el texto. Una fortaleza se cuenta y se entiende sola;
+        // un desafio sin su causa es medio desafio, porque el COMO ya lo sabe.
+        if (cual === 'fortalezas') return ficha;
         const porque = elPorqueQueSePuedeUsar(r, id);
         return porque ? `${ficha}\n  POR QUE ES ASI, Y ESTO NO SE COPIA: ${porque}` : ficha;
       })
@@ -1727,8 +1763,10 @@ EMPIEZA POR LOS PUNTOS, NO POR LA LISTA: coges cada punto de HOY, miras cual de 
 ESTO ES QUE CONTAR, NO POR DONDE MIRAR. Para explicar cada uno sigues cruzando todo lo que haga falta de su carta, igual que hasta ahora: no es una valla, es el contenido.
 Y SI UNO DE ESTOS PARECE SALIR DE UNA PARTE DE LA CARTA QUE ARRIBA SE DA A OTRA AREA, MANDA ESTA LISTA. El rasgo esta puesto aqui y aqui se cuenta: no lo dejes fuera por eso, ni lo cuentes a medias. Lo de arriba te dice donde mirar cuando buscas tu solo; esto te dice lo que hay que contar, y ya esta repartido para que no se cuente dos veces.
 Y NO VAN UNO EN CADA BLOQUE. Lo de arriba es HOY, que es donde se cuenta como se le nota; pero un rasgo no se agota ahi. Lo que da por cierto por debajo va en CREENCIAS, y en ORIGEN se desarrolla a fondo la raiz que explica el area entera, con los bloques haciendo lo que hacen siempre. Los bloques no cambian de trabajo.
-CADA RASGO LLEGA CON SU "DE DONDE LE VIENE", Y VA CONTADO Y PEGADO: en la frase donde le cuentas la cosa, no en un parrafo aparte. Un rasgo sin su porque es medio rasgo, porque el COMO ya lo sabe.
+CADA DESAFIO LLEGA CON SU "DE DONDE LE VIENE", Y VA CONTADO Y PEGADO: en la frase donde le cuentas la cosa, no en un parrafo aparte. Un desafio sin su porque es medio desafio, porque el COMO ya lo sabe.
 SON DOS Y VAN LAS DOS: PARA QUE le sirve hoy, que te pide EL PORQUE VA PEGADO, NO APARTE, y DE DONDE le viene, que te llega escrito aqui. Ninguna vale por la otra.
+LAS FORTALEZAS NO LLEVAN PORQUE Y NO HAY QUE BUSCARSELO. Se cuentan y ya esta: lo que se le da bien ya lo sabe, y no ha pagado por que se lo expliquen. Aqui no le buscas la causa, no la desarrollas a fondo y no le montas una imagen para explicarla.
+Y EL SITIO QUE SE AHORRA AHI ES DE LOS DESAFIOS, DE NADIE MAS. No es sitio para estirar la fortaleza, ni para meter otra idea, ni para dar mas vueltas a lo mismo con otras palabras. Va entero a que cada desafio se cuente DESPACIO: su causa explicada con calma y con las frases que haga falta, hasta que ella lo entienda de verdad. Eso es lo que ha venido a saber, y es lo unico que puede ocupar ese hueco.
 Y NO ES EL BLOQUE ORIGEN NI LE QUITA SITIO: alli va UNA raiz a fondo, la del area entera; esto es el porque de cada cosa que le nombras, y va donde la nombras.
 NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el nombre del rasgo, ni sus frases, ni su porque se escriben tal cual, ni se presentan como una lista: el porque esta puesto en corto y para que tu lo entiendas, y lo que ella lee es eso mismo dicho con tus palabras, dentro de tus parrafos y una sola vez en el area. Lo que ella lee son tus parrafos de siempre.`;
   }
