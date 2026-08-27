@@ -177,6 +177,18 @@ const AREA_CIERRE_MUTILADO = (() => {
   return JSON.stringify(d);
 })();
 
+const CIERRE_EN_TROZOS = [
+  'Y el dia que dejes de medir lo que das, vas a descubrir que tambien se puede querer sin cargar con todo el peso encima.',
+  '4o menos.',
+  'No estas cansada de dar, estas cansada de dar sin que nadie note que tambien hace falta darte a ti.',
+].join('\n');
+
+const AREA_CIERRE_EN_TROZOS = (() => {
+  const d = JSON.parse(AREA_BUENA);
+  d.cierre = { revela: 'que la prueba se la puso ella', texto: CIERRE_EN_TROZOS };
+  return JSON.stringify(d);
+})();
+
 const AREA_ESCENA_VACIA = JSON.stringify({
   ...JSON.parse(AREA_BUENA),
   escena: { tras_bloque: 'hoy', texto: '   ' },
@@ -230,6 +242,16 @@ globalThis.fetch = async (url, opts = {}) => {
     if (modo === 'una corta') {
       const suya = /Genera ÚNICAMENTE el ÁREA 2 /.test(String(JSON.parse(opts.body || '{}').messages?.[0]?.content || ''));
       return { ok: true, status: 200, json: async () => ({ content: [{ text: suya ? AREA_A_LA_MITAD : AREA_BUENA }] }) };
+    }
+    if (modo === 'cierre en trozos' || modo === 'cierre en trozos sin arreglo') {
+      if (String(JSON.parse(opts.body || '{}').messages?.[0]?.content || '').includes('Lo único que falta es')) {
+        llamadas--; // una casilla suelta no es una generacion de area
+        if (modo === 'cierre en trozos sin arreglo') {
+          return { ok: false, status: 500, text: async () => 'no sale' };
+        }
+        return { ok: true, status: 200, json: async () => ({ content: [{ text: JSON.stringify({ texto: 'Y el dia que dejes de medir lo que das, vas a descubrir que tambien se puede querer sin cargar con todo el peso encima.' }) }] }) };
+      }
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_CIERRE_EN_TROZOS }] }) };
     }
     if (modo === 'cierre de molde') {
       return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_CIERRE_DE_MOLDE }] }) };
@@ -492,6 +514,50 @@ try {
     !/que la prueba se la puso ella/i.test(textoC2));
   c('ni la casilla "pregunta" de cada párrafo',
     !/nota interna que no se imprime nunca/i.test(textoC2));
+
+  // ── EL CIERRE QUE LLEGA EN TROZOS ────────────────────────────────
+  //
+  // Tal como salio impreso el 28 de agosto en el area de AMOR: la casilla
+  // traia DOS cierres y "4o menos." entre medias, y se pinto todo junto en
+  // dorado y a pagina entera.
+  console.log('\n  el cierre llega en trozos\n');
+  modo = 'cierre en trozos';
+  llamadas = 0;
+  avisos.length = 0;
+  const SID_C3 = 'cs_test_cierre_trozos';
+  TIENDA.set(SID_C3, { id: SID_C3, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const rC3 = res();
+  await chat({ method: 'POST', body: { session_id: SID_C3, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, rC3);
+  const textoC3 = String(rC3.body?.texto || '');
+  c('un cierre que llega en trozos se pide otra vez', 
+    avisos.some(a => /el cierre ha llegado en 3 trozos/.test(a)),
+    avisos.find(a => /ha llegado en/.test(a)) || avisos.slice(-1)[0] || 'ningún aviso');
+  c('y "4o menos." NO sale impreso', !/4o menos/.test(textoC3));
+  c('ni el segundo cierre pegado detrás del primero',
+    !/No estas cansada de dar/.test(textoC3));
+  c('el cierre bueno sí sale', textoC3.includes('sin cargar con todo el peso encima'));
+  c('y no se ha reescrito el área entera', llamadas === 7, llamadas + ' llamadas');
+
+  // Y SI EL REINTENTO NO SALE, la basura tampoco se imprime: se van los
+  // trozos que no llegan ni a una frase. Lo que NO se hace nunca es quedarse
+  // con un solo trozo, que es como se pierde media pagina de cierre.
+  modo = 'cierre en trozos sin arreglo';
+  llamadas = 0;
+  avisos.length = 0;
+  const SID_C4 = 'cs_test_cierre_trozos_2';
+  TIENDA.set(SID_C4, { id: SID_C4, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const rC4 = res();
+  await chat({ method: 'POST', body: { session_id: SID_C4, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, rC4);
+  const textoC4 = String(rC4.body?.texto || '');
+  c('sin reintento, el trozo suelto tampoco se imprime', !/4o menos/.test(textoC4));
+  c('y no se pierde ninguna de las dos mitades escritas',
+    textoC4.includes('sin cargar con todo el peso encima')
+    && textoC4.includes('hace falta darte a ti'));
+  c('y queda dicho en los registros',
+    avisos.some(a => /el cierre se queda con 2 de sus 3 trozos/.test(a)),
+    avisos.find(a => /se queda con/.test(a)) || 'ningún aviso');
 
   // Y con las siete de tamanos distintos pero normales, tampoco: si el liston
   // estuviera demasiado alto, cada informe pagaria repasos por nada.

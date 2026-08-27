@@ -2629,6 +2629,45 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       { nombre: 'cierre', minimo: 10 },
     ];
 
+    // ── EL CIERRE ES UN PARRAFO, NO UN CAJON ──────────────────────
+    //
+    // El 28 de agosto la casilla del cierre del area de AMOR llego con DOS
+    // cierres y un trozo suelto entre medias -"4o menos."- y se imprimio todo
+    // junto, en dorado y a pagina entera, en el estudio de una clienta.
+    //
+    // Nada lo miraba, y por dos motivos que se tapan el uno al otro:
+    //   - el guardia que caza al modelo hablandose a si mismo (SE_EXPLICA)
+    //     esta anclado al PRINCIPIO de la casilla, asi que lo que se cuela en
+    //     medio pasa entero
+    //   - y el aviso del arranque de molde tampoco salto, aunque el segundo
+    //     cierre empezaba por "No estas cansada de...", que es una de las tres
+    //     formas que el area tiene prohibidas: mira como EMPIEZA el cierre, y
+    //     esa frase iba detras del primero
+    //
+    // El cierre es UN parrafo. Si llega en varios:
+    //   1. se pide SOLO el cierre otra vez. Es corto, es barato y no toca ni
+    //      una palabra del area.
+    //   2. y si eso no sale, se tiran los trozos que no llegan ni a una frase,
+    //      que es por donde entra la basura, y el resto se une. NUNCA se
+    //      recorta a un solo trozo: el cierre tiene dos mitades -el golpe y lo
+    //      que se le abre- y quedarse con una es el fallo del 26 de agosto.
+    const minimoDelCierre = CASILLAS.find(c => c.nombre === 'cierre').minimo;
+    const PALABRAS_DE_UNA_FRASE = 6;
+    const trozosDelCierre = String(datos?.cierre?.texto || '')
+      .split(/\n+/).map(t => t.trim()).filter(Boolean);
+    if (trozosDelCierre.length > 1) {
+      console.warn(`Área ${area.id}: el cierre ha llegado en ${trozosDelCierre.length} trozos, se pide solo el cierre`);
+      const entero = await pedirSoloLaCasilla(area, datos, 'cierre');
+      if (entero && !esDeRelleno(entero, minimoDelCierre) && !/\n/.test(entero)) {
+        datos.cierre = { ...datos.cierre, texto: entero };
+      } else {
+        const sanos = trozosDelCierre.filter(t => enPalabras(t).length >= PALABRAS_DE_UNA_FRASE);
+        const sale = (sanos.length > 0 ? sanos : trozosDelCierre).join(' ');
+        console.warn(`SE ENTREGA CON AVISOS — Área ${area.id}: el cierre se queda con ${sanos.length} de sus ${trozosDelCierre.length} trozos`);
+        datos.cierre = { ...datos.cierre, texto: sale };
+      }
+    }
+
     // Lo que se ha quitado a proposito, para que la revision no tire el area
     // por echar en falta justo lo que acabamos de decidir no imprimir.
     const quitadas = {};
