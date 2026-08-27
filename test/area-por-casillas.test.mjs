@@ -166,10 +166,6 @@ const AREA_CIERRE_DE_MOLDE = (() => {
 // imprime es medio cierre. Dos de siete.
 const AREA_CIERRE_MUTILADO = (() => {
   const d = JSON.parse(AREA_BUENA);
-  // De paso, un parrafo que anota una pregunta en su casilla y NO la escribe
-  // dentro del texto: esa casilla es donde el modelo decide, no algo que se
-  // imprima. Si saliera, la clienta leeria el andamio.
-  d.bloques.creencias[0].pregunta = 'nota interna que no se imprime nunca';
   d.cierre = {
     revela: 'que la prueba se la puso ella',
     texto: 'Hacer cosas no te cansa, lo que te cansa es que sea la unica prueba que te vale de que mereces estar donde estas. He puesto las negritas donde tocaba.',
@@ -186,6 +182,14 @@ const CIERRE_EN_TROZOS = [
 const AREA_CIERRE_EN_TROZOS = (() => {
   const d = JSON.parse(AREA_BUENA);
   d.cierre = { revela: 'que la prueba se la puso ella', texto: CIERRE_EN_TROZOS };
+  return JSON.stringify(d);
+})();
+
+const AREA_PREGUNTA_ANOTADA = (() => {
+  const d = JSON.parse(AREA_BUENA);
+  const p = d.bloques.origen[0];
+  p.pregunta = 'cuantas veces has vuelto sobre algo que ya estaba bien';
+  p.texto = 'En el trabajo se te nota enseguida, **revisas una tarea tres veces** cuando con una bastaria, y no es que dudes de tu criterio.';
   return JSON.stringify(d);
 })();
 
@@ -266,6 +270,9 @@ globalThis.fetch = async (url, opts = {}) => {
     }
     if (modo === 'sin preguntas') {
       return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_SIN_PREGUNTAS }] }) };
+    }
+    if (modo === 'pregunta anotada') {
+      return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_PREGUNTA_ANOTADA }] }) };
     }
     if (modo === 'negrita al final') {
       return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_NEGRITA_AL_FINAL }] }) };
@@ -461,13 +468,42 @@ try {
     customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
   const rP = res();
   await chat({ method: 'POST', body: { session_id: SID_P, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, rP);
-  c('un área sin preguntas en el texto se vuelve a pedir', llamadas > 7, llamadas + ' llamadas');
-  c('y la pregunta de su casilla NO cuenta como una del texto',
-    avisos.some(a => /no le preguntas nada en todo el texto/.test(a)),
-    avisos.find(a => /no le preguntas/.test(a)) || avisos.slice(-1)[0] || 'ningún aviso');
-  c('y se le dice donde van, dentro del parrafo',
-    avisos.some(a => /DENTRO del parrafo, entre las demas frases/.test(a)));
+  // Y NO SE VUELVE A PEDIR EL AREA POR ESTO, que es lo que costo el informe
+  // del 27 de agosto: salto en cinco areas, se pidieron las cinco otra vez
+  // -cincuenta segundos cada una- y volvieron las cinco IGUAL. Doscientos
+  // cincuenta segundos tirados y la clienta sin informe en el minuto cinco.
+  c('un área sin preguntas NO se vuelve a pedir', llamadas === 7, llamadas + ' llamadas');
+  c('pero queda dicho en los registros',
+    avisos.some(a => /ni una pregunta dentro del texto/.test(a)),
+    avisos.find(a => /ni una pregunta/.test(a)) || avisos.slice(-1)[0] || 'ningún aviso');
+  c('y la pregunta de su casilla no lo tapa',
+    avisos.some(a => /solo la de su casilla/.test(a)));
   c('el informe sale igual', rP.code === 200, 'HTTP ' + rP.code);
+
+  // ── LA PREGUNTA ANOTADA Y NO ESCRITA ─────────────────────────────
+  //
+  // El modelo la pone en su casilla y da el trabajo por hecho, asi que la
+  // casilla trae la frase y el parrafo no. Volver a pedir el area no lo
+  // arregla -se probo, cinco veces, el 27 de agosto-: lo arregla el codigo,
+  // que es lo que ya se hace con el nombre y con las negritas.
+  console.log('\n  la pregunta anotada y no escrita\n');
+  modo = 'pregunta anotada';
+  llamadas = 0;
+  avisos.length = 0;
+  const SID_PA = 'cs_test_pregunta_anotada';
+  TIENDA.set(SID_PA, { id: SID_PA, payment_status: 'paid', customer_email: 'c@e.com',
+    customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
+  const rPA = res();
+  await chat({ method: 'POST', body: { session_id: SID_PA, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, rPA);
+  const textoPA = String(rPA.body?.texto || '');
+  c('la pregunta anotada acaba escrita en su párrafo',
+    textoPA.includes('¿Cuantas veces has vuelto sobre algo que ya estaba bien?'));
+  c('y va detrás de la última frase, dentro del párrafo',
+    textoPA.includes('no es que dudes de tu criterio. ¿Cuantas veces'));
+  c('sin costar ni una llamada de más', llamadas === 7, llamadas + ' llamadas');
+  c('y sin dejar el área sin preguntas',
+    !avisos.some(a => /ni una pregunta dentro del texto/.test(a)),
+    avisos.find(a => /ni una pregunta/.test(a)) || 'ninguno');
 
   // ── EL CIERRE ────────────────────────────────────────────────────
   //
@@ -512,8 +548,7 @@ try {
   // ella: si se imprimiera, la clienta leeria el andamio del producto.
   c('la nota "revela" no sale impresa en ningún sitio',
     !/que la prueba se la puso ella/i.test(textoC2));
-  c('ni la casilla "pregunta" de cada párrafo',
-    !/nota interna que no se imprime nunca/i.test(textoC2));
+
 
   // ── EL CIERRE QUE LLEGA EN TROZOS ────────────────────────────────
   //

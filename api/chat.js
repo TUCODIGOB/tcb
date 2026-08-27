@@ -45,7 +45,7 @@ const PARRAFO_DEL_AREA = {
   type: 'object',
   properties: {
     ladillo: { type: ['string', 'null'], description: 'Ladillo de tres a cinco palabras que va ENCIMA de este parrafo, o null si este parrafo no lleva.' },
-    pregunta: { type: ['string', 'null'], description: 'La pregunta que sale de ESTE parrafo, copiada aqui, o null si aqui no toca. Toca donde acabas de ponerle nombre a algo que le cuesta o a algo que hace sin darse cuenta: ahi te paras y se lo preguntas. La mayoria de los parrafos van a null. NO SE IMPRIME: la pregunta va escrita DENTRO del texto de este parrafo, entre las demas frases, y aqui solo se anota cual es.' },
+    pregunta: { type: ['string', 'null'], description: 'La pregunta que sale de ESTE parrafo, copiada aqui, o null si aqui no toca. Toca donde acabas de ponerle nombre a algo que le cuesta o a algo que hace sin darse cuenta: ahi te paras y se lo preguntas. En un area hay TRES O CUATRO parrafos asi y en todos ellos va escrita; en los demas va null. NO SE IMPRIME: la pregunta va escrita DENTRO del texto de este parrafo, entre las demas frases, y aqui solo se anota cual es.' },
     texto: { type: 'string', description: 'El texto del parrafo. Aqui, y solo aqui, van las negritas del area, marcadas con dos asteriscos a cada lado: **asi**. Se marca la frase o la media frase que ella subrayaria con un fosforito, nunca una palabra suelta.' },
   },
   required: ['ladillo', 'pregunta', 'texto'],
@@ -302,7 +302,14 @@ function bloquesAParrafos(datos) {
       const texto = p && typeof p.texto === 'string' ? p.texto.trim() : '';
       if (!texto) continue;
       const ladillo = p && typeof p.ladillo === 'string' && p.ladillo.trim() ? p.ladillo.trim() : null;
-      parrafos.push({ ladillo, texto });
+      // LA PREGUNTA DEL PARRAFO VIAJA CON EL.
+      //
+      // Aqui se armaba el parrafo con dos casillas y la tercera se caia por el
+      // camino, asi que el modelo rellenaba la casilla de la pregunta y el
+      // codigo la tiraba antes de que nadie pudiera usarla. La casilla existia
+      // para nada y las preguntas seguian sin salir.
+      const pregunta = p && typeof p.pregunta === 'string' && p.pregunta.trim() ? p.pregunta.trim() : null;
+      parrafos.push({ ladillo, pregunta, texto });
       puestos++;
     }
     if (puestos === 0) vacios.push(nombre);
@@ -2384,14 +2391,16 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       flojo.push(`solo ${negritas} negrita(s) en el cuerpo, hacen falta ${MIN_NEGRITAS}`);
     }
 
-    // Ni una pregunta en cuatro paginas. Ver preguntasDentroDelTexto.
-    if (preguntasDentroDelTexto(bloques) === 0) {
-      flojo.push(
-        'no le preguntas nada en todo el texto: ademas de la pregunta de su casilla, '
-        + 'cada vez que le pones nombre a algo que le cuesta o a algo que hace sin darse cuenta, '
-        + 'ahi te paras y se lo preguntas DENTRO del parrafo, entre las demas frases'
-      );
-    }
+    // NI UNA PREGUNTA EN CUATRO PAGINAS, Y ESTO NO VUELVE A PEDIR EL AREA.
+    //
+    // Lo hizo, un dia: el 27 de agosto salto en cinco areas, se pidieron las
+    // cinco otra vez y volvieron las cinco igual. Volver a pedir no lo
+    // arregla porque el modelo no se olvida de la pregunta, la anota en su
+    // casilla y no la escribe, y eso ya lo pone el codigo mas arriba. Lo que
+    // queda aqui es el aviso: si sale informe tras informe, lo que falla es
+    // la casilla, no el area de ese dia.
+    // El aviso se da abajo, con los demas del area, que es donde se sabe de
+    // que area se habla. Aqui no vuelve a pedirse nada por esto.
     if (vecesQueLaLlamaPorSuNombre(montada, nombrePila) < 1) {
       flojo.push(`no la llama "${nombrePila}" ni una vez`);
     }
@@ -2741,6 +2750,37 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // bloque de la escena: al cliente no le falta nada.
     quitarLaEscenaDeLosParrafos(datos, area.id);
 
+    // ── LA PREGUNTA QUE ANOTA Y NO ESCRIBE, LA PONE EL CODIGO ──────
+    //
+    // El 27 de agosto CINCO de las siete areas llegaron sin una sola pregunta
+    // dentro del texto. Se pidieron las cinco otra vez -cincuenta segundos
+    // cada una- y volvieron IGUAL: las cinco se entregaron con el mismo
+    // aviso. Doscientos cincuenta segundos tirados, el informe se paso de los
+    // trescientos que da Vercel y la clienta se quedo sin nada.
+    //
+    // La leccion es la del nombre y la de las negritas, y esta escrita ahi
+    // arriba: lo que se puede arreglar por codigo NO se vuelve a pedir. El
+    // modelo anota la pregunta en su casilla y da el trabajo por hecho, asi
+    // que la casilla trae la frase y el parrafo no. Aqui se pone donde iba.
+    //
+    // Va al final del parrafo, detras de la ultima frase: es donde uno se
+    // para a preguntar, y el parrafo lleva otras frases delante, asi que no
+    // se convierte en una de las preguntas grandes (ver esPreguntaSuelta).
+    // Si el parrafo ya trae una pregunta escrita, no se toca: la suya vale.
+    for (const p of (datos.parrafos || [])) {
+      const anotada = String((p && p.pregunta) || '').trim();
+      if (!anotada) continue;
+      const texto = String((p && p.texto) || '').trim();
+      if (!texto || /\?/.test(texto)) continue;
+      let preg = anotada;
+      if (!preg.startsWith('¿')) preg = '¿' + preg.replace(/^[¿\s]+/, '');
+      if (!/[?!]$/.test(preg)) preg = preg.replace(/[.\s]+$/, '') + '?';
+      // Detras de un punto empieza en mayuscula, como cualquier otra frase.
+      preg = preg.charAt(0) + preg.charAt(1).toUpperCase() + preg.slice(2);
+      p.texto = `${texto} ${preg}`;
+      console.warn(`Área ${area.id}: la pregunta estaba anotada y no escrita, se ha puesto en su parrafo`);
+    }
+
     // ── Y LO QUE FALTE, SE ARREGLA AQUI ────────────────────────────
     // Las dos comprobaciones son las mismas que hace loQueLeFaltaAlArea
     // despues. La diferencia es que si aqui se arregla, ya no hace falta
@@ -2810,6 +2850,11 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // tres. Antes esto leia area.minSub, que NUNCA se ha definido en ningun
     // sitio, asi que siempre valia 2 y el aviso no saltaba aunque faltaran.
     const avisos = avisosBloques(bloques, { minSub: area.id === 1 ? 4 : 3 });
+    // Ni una pregunta dentro del texto. Es un aviso y no un repaso: ver la
+    // nota de loQueLeFaltaAlArea.
+    if (preguntasDentroDelTexto(bloques) === 0) {
+      avisos.push('ni una pregunta dentro del texto, solo la de su casilla');
+    }
     if (avisos.length > 0) {
       console.warn(`SE ENTREGA CON AVISOS — Área ${area.id}: ${avisos.join('; ')}`);
     }
@@ -2986,7 +3031,19 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     for (let i = 0; i < resultados.length; i++) {
       if (largos[i] >= mediana * PARTE_QUE_TIENE_QUE_TENER) continue;
       console.warn(`Área ${AREAS[i].id} se ha quedado en ${largos[i]} palabras y las demas traen ${mediana}: se vuelve a pedir`);
-      const otra = await generarArea(AREAS[i], listas).catch(() => null);
+      // UNA SOLA LLAMADA, Y ESTO ES LO QUE SALVA EL INFORME.
+      //
+      // Esto va DESPUES de las siete y en fila, asi que su tiempo se suma
+      // entero al del informe. Con generarArea se pedia el area y, si la
+      // nueva venia floja de estilo, se pedia OTRA vez: dos llamadas de
+      // cincuenta segundos pegadas al final. El 27 de agosto fue exactamente
+      // eso lo que se comio los ultimos cien segundos y dejo a la clienta sin
+      // informe en el minuto cinco.
+      //
+      // Aqui solo se busca que el area no salga a la mitad de largo que sus
+      // hermanas. Con una llamada basta: si la que llega tampoco es mas
+      // larga, se entrega la que habia y queda dicho en los registros.
+      const otra = await pedirArea(AREAS[i], null, listas).catch(() => null);
       if (enPalabrasEl(otra) > largos[i]) {
         resultados[i] = otra;
         largos[i] = enPalabrasEl(otra);
