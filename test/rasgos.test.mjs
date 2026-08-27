@@ -247,7 +247,17 @@ let laListaYaEstabaPedida = false;
 // haberse quedado sin sitio, o directamente un corte de red.
 let comoSalePedirLaLista = 'bien';
 // Cuantas veces se ha pedido la lista, para ver si se repite el encargo.
+// LA LISTA SE PIDE EN DOS MITADES QUE SALEN A LA VEZ.
+//
+// Lo que cuenta para todo lo de aqui abajo es la VUELTA, no la llamada: una
+// vuelta son las dos mitades, las fortalezas y los desafios. Se parte asi
+// porque la lista es lo unico que el informe entero espera parado, y escrita
+// del tiron eran 71 segundos en el informe del 27 de agosto.
+let llamadasDeLista = 0;
 let vecesQueSeHaPedidoLaLista = 0;
+// El encargo con el que se pide el REPASO: el de la vuelta 2 en adelante. La
+// vuelta 1 son las dos mitades, asi que ya no es "el segundo encargo".
+const elEncargoDelRepaso = () => encargosDeLaLista.slice(2).join('\n');
 const encargosDeLaLista = [];
 
 const enviadas = [];
@@ -262,7 +272,8 @@ globalThis.fetch = async (url, opts = {}) => {
 
   if (sistema.startsWith('Eres la misma experta')) {
     laListaYaEstabaPedida = true;
-    vecesQueSeHaPedidoLaLista++;
+    llamadasDeLista++;
+    vecesQueSeHaPedidoLaLista = Math.ceil(llamadasDeLista / 2);
     encargosDeLaLista.push(String(cuerpo.messages?.[0]?.content || ''));
     if (comoSalePedirLaLista === 'red') throw new Error('fetch failed');
     // Se cae una vez y a la siguiente va bien: es el caso de verdad, la red
@@ -395,8 +406,16 @@ try {
       lista.output_config ? 'con esquema' : 'SIN esquema: el JSON puede llegar cortado');
 
     const esquema = lista.output_config?.format?.schema;
-    comprobar('el esquema es el de los rasgos',
-      Boolean(esquema?.properties?.fortalezas && esquema?.properties?.desafios));
+    // Cada vuelta son DOS llamadas que salen a la vez, una por lista, asi que
+    // cada esquema trae SU mitad y solo esa. Juntas siguen siendo la lista de
+    // siempre: lo comprueba la comparacion de mas abajo con lo que llega.
+    const mitades = enviadas
+      .filter(c => String(Array.isArray(c.system) ? (c.system[0] || {}).text || '' : c.system || '').startsWith('Eres la misma experta'))
+      .map(c => Object.keys(c.output_config?.format?.schema?.properties || {}).join(''));
+    comprobar('el esquema es el de los rasgos, una lista en cada mitad',
+      Boolean(esquema?.properties?.fortalezas || esquema?.properties?.desafios)
+      && mitades.includes('fortalezas') && mitades.includes('desafios'),
+      mitades.join(' / '));
 
     // Esta API solo admite minItems 0 y 1. Un minItems: 10 lo rechaza de
     // entrada con un 400 y la lista no llega nunca.
@@ -708,6 +727,7 @@ try {
 
   const pedirInforme = async (modo, sufijo) => {
     comoSalePedirLaLista = modo;
+    llamadasDeLista = 0;
     vecesQueSeHaPedidoLaLista = 0;
     encargosDeLaLista.length = 0;
     const SID3 = 'cs_test_rasgos_' + sufijo;
@@ -730,7 +750,7 @@ try {
   comprobar('un repetido hace que se vuelva a pedir la lista',
     vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   comprobar('y al volver a pedirla se le dice EXACTAMENTE cuál repite',
-    /dicen lo mismo/.test(encargosDeLaLista[1] || '') && /Instintos para los peligros/.test(encargosDeLaLista[1] || ''));
+    /dicen lo mismo/.test(elEncargoDelRepaso()) && /Instintos para los peligros/.test(elEncargoDelRepaso()));
   comprobar('la lista que se entrega es la buena, sin repetidos',
     conRepe.body?.rasgos?.fortalezas?.length === 14 && conRepe.body?.rasgos?.desafios?.length === 16,
     `${conRepe.body?.rasgos?.fortalezas?.length} + ${conRepe.body?.rasgos?.desafios?.length}`);
@@ -750,7 +770,7 @@ try {
   comprobar('un rasgo repetido ENTRE las dos listas también se pilla',
     vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   comprobar('y se le avisa de que está uno en cada lista',
-    /uno en cada lista/.test(encargosDeLaLista[1] || ''));
+    /uno en cada lista/.test(elEncargoDelRepaso()));
   comprobar('el informe sale bien igualmente',
     cruzado.code === 200 && nombresDe(cruzado.body).length > 0, 'HTTP ' + cruzado.code);
 
@@ -803,9 +823,9 @@ try {
   comprobar('una ficha que nombra planetas hace repetir la lista',
     vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   comprobar('y se le dice cuáles y con qué palabra',
-    /palabras de astrologo/.test(encargosDeLaLista[1] || '')
-    && /Sanadora practica/.test(encargosDeLaLista[1] || ''),
-    (encargosDeLaLista[1] || '').slice(-200).replace(/\n/g, ' '));
+    /palabras de astrologo/.test(elEncargoDelRepaso())
+    && /Sanadora practica/.test(elEncargoDelRepaso()),
+    (elEncargoDelRepaso()).slice(-200).replace(/\n/g, ' '));
   comprobar('y lo que se entrega es la lista limpia',
     astro.body?.rasgos?.fortalezas?.length === 14 && astro.body?.rasgos?.desafios?.length === 16,
     `${astro.body?.rasgos?.fortalezas?.length} + ${astro.body?.rasgos?.desafios?.length}`);
@@ -828,7 +848,7 @@ try {
   comprobar('una lista corta hace que se vuelva a pedir',
     vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   comprobar('y se le dice cuántas faltan',
-    /se piden al menos/.test(encargosDeLaLista[1] || ''));
+    /se piden al menos/.test(elEncargoDelRepaso()));
   comprobar('el informe sale igual aunque la lista venga corta las dos veces',
     corta.code === 200, 'HTTP ' + corta.code);
 
@@ -844,9 +864,9 @@ try {
   comprobar('una lista con las descripciones picadas se vuelve a pedir',
     vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   comprobar('y se le dice cuántas son y qué tiene que hacer',
-    /20 de 30 descripciones van picadas/.test(encargosDeLaLista[1] || '')
-    && /seguidas y unidas con comas/.test(encargosDeLaLista[1] || ''),
-    (encargosDeLaLista[1] || '').slice(-190).replace(/\n/g, ' '));
+    /20 de 30 descripciones van picadas/.test(elEncargoDelRepaso())
+    && /seguidas y unidas con comas/.test(elEncargoDelRepaso()),
+    (elEncargoDelRepaso()).slice(-190).replace(/\n/g, ' '));
   comprobar('y lo que se entrega es la lista bien escrita',
     [...(picada.body?.rasgos?.fortalezas || []), ...(picada.body?.rasgos?.desafios || [])]
       .every(f => !/[.?!]\s+[A-ZÁÉÍÓÚÑ]/.test(f.descripcion)),
@@ -892,8 +912,8 @@ try {
   comprobar('una lista escrita sin tildes se vuelve a pedir',
     vecesQueSeHaPedidoLaLista === 2, vecesQueSeHaPedidoLaLista + ' llamada(s)');
   comprobar('y se le dice que se imprime tal cual en su libro',
-    /viene escrita sin tildes/.test(encargosDeLaLista[1] || ''),
-    (encargosDeLaLista[1] || '').slice(-170).replace(/\n/g, ' '));
+    /viene escrita sin tildes/.test(elEncargoDelRepaso()),
+    (elEncargoDelRepaso()).slice(-170).replace(/\n/g, ' '));
   comprobar('y lo que se entrega es la lista bien escrita',
     /[áéíóúñ]/.test(JSON.stringify(sinT.body?.rasgos || {})),
     'con sus tildes');

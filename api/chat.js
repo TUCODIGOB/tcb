@@ -284,6 +284,25 @@ const ESQUEMA_RASGOS = {
 //
 // La variedad entre areas no se pierde: sigue estando en donde caen la escena,
 // los dos remates y la pregunta, que es lo que el lector nota.
+// EL ESQUEMA DE UNA SOLA LISTA, QUE ES COMO SE PIDEN AHORA.
+//
+// Las dos listas se piden en DOS llamadas que salen a la vez, no en una que
+// las escribe seguidas. La lista es lo unico que el informe entero espera
+// parado -las siete areas no pueden empezar sin ella- y lo que se tarda en
+// escribirla es casi todo tiempo de escribir: en el informe del 27 de agosto
+// fueron 71 segundos para 4.966 palabras de respuesta. Partida en dos mitades
+// que se escriben a la vez, esos 71 segundos son unos 36.
+//
+// No cambia nada de lo que llega: las dos mitades se juntan aqui mismo y todo
+// lo de abajo -las comprobaciones, el repaso, el barrido de repetidos- ve
+// exactamente la misma lista de siempre.
+const esquemaDeUnaLista = (cual) => ({
+  type: 'object',
+  properties: { [cual]: ESQUEMA_RASGOS.properties[cual] },
+  required: [cual],
+  additionalProperties: false,
+});
+
 const ORDEN_DE_LOS_BLOQUES = ['arranque', 'hoy', 'origen', 'creencias', 'soltar'];
 
 // Junta los cinco bloques en la lista de parrafos que espera todo lo de abajo,
@@ -829,15 +848,33 @@ IMPORTANTE: entre ${RASGOS_MINIMO} y ${RASGOS_MAXIMO} por lista, las dos con num
   // Y va con sonnet, como todo lo demas del informe. Iba con opus, que cuesta
   // cinco veces mas por token: el trabajo dificil es escribir las areas, no
   // sacar treinta fichas cortas.
+  // Las dos mitades salen A LA VEZ y se juntan aqui. Ver esquemaDeUnaLista:
+  // de esta linea para abajo no cambia nada, la lista es la de siempre.
   const pedirLaLista = async (queCorregir) => {
+    const [fortalezas, desafios] = await Promise.all([
+      pedirMediaLista('fortalezas', queCorregir),
+      pedirMediaLista('desafios', queCorregir),
+    ]);
+    return { fortalezas, desafios };
+  };
+
+  const COMO_SE_LLAMA_LA_LISTA = {
+    fortalezas: 'LO QUE TIENE A FAVOR: sus fortalezas, sus dones y lo que hace mejor que casi nadie',
+    desafios: 'LO QUE LE PESA: sus desafios, lo que le cuesta y lo que se le repite',
+  };
+
+  const pedirMediaLista = async (cual, queCorregir) => {
+    // La otra mitad la escribe otra vuelta que va a la vez que esta. Se le
+    // dice para que no se meta en su terreno ni la escriba tambien.
+    const suya = `Saca de esta carta UNA de las dos listas, la de ${COMO_SE_LLAMA_LA_LISTA[cual]}, siguiendo exactamente la estructura del esquema. La otra la esta escribiendo otra vuelta ahora mismo, asi que aqui NO se escribe: solo la tuya.`;
     const encargo = queCorregir
-      ? `Saca las dos listas de esta carta, siguiendo exactamente la estructura del esquema.
+      ? `${suya}
 
 La vez anterior salio con esto mal, asi que esta vez hay que arreglarlo:
 ${queCorregir.map(p => '- ' + p).join('\n')}
 
-Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
-      : 'Saca las dos listas de esta carta, siguiendo exactamente la estructura del esquema.';
+Vuelve a sacar tu lista ENTERA, no solo lo que fallaba.`
+      : suya;
 
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -849,7 +886,7 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
       body: JSON.stringify({
         model: 'claude-sonnet-5',
         thinking: { type: 'disabled' },
-        output_config: { format: { type: 'json_schema', schema: ESQUEMA_RASGOS } },
+        output_config: { format: { type: 'json_schema', schema: esquemaDeUnaLista(cual) } },
         // Ver TOPE_RASGOS. El tope viejo eran 3.000 y por eso llegaba cortada.
         max_tokens: TOPE_RASGOS,
         system: prompt,
@@ -888,8 +925,7 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
       .join('') || '{}';
 
     const resultado = JSON.parse(texto);
-    if (!Array.isArray(resultado.fortalezas)) resultado.fortalezas = [];
-    if (!Array.isArray(resultado.desafios)) resultado.desafios = [];
+    if (!Array.isArray(resultado[cual])) resultado[cual] = [];
 
     // La ficha se queda en sus cuatro casillas y nada mas: lo que llegue de
     // sobra se cae aqui.
@@ -927,10 +963,7 @@ Vuelve a sacar las dos listas ENTERAS, no solo lo que fallaba.`
     };
     const valido = r => r && r.nombre && r.descripcion;
 
-    return {
-      fortalezas: resultado.fortalezas.filter(valido).map(limpiar),
-      desafios: resultado.desafios.filter(valido).map(limpiar),
-    };
+    return resultado[cual].filter(valido).map(limpiar);
   };
 
   // Pase lo que pase, de aqui no sale una excepcion. La lista es un extra del
@@ -2430,18 +2463,6 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       flojo.push(`habla de ella desde fuera: "${ella.slice(0, 70).trim()}..."`);
     }
 
-    // El cierre empezado por la formula que su propia area le prohibe. Es lo
-    // mismo que la muletilla del porque: pedido en el encargo y sin nadie que
-    // lo mirara. Ver ARRANQUES_DE_CIERRE_PROHIBIDOS.
-    const elCierre = bloques.filter(b => b.tipo === 'cierre').map(b => b.t).join(' ');
-    const arranque = elArranqueDeMoldeDelCierre(elCierre);
-    if (arranque) {
-      flojo.push(
-        `el cierre empieza por "${arranque.trim()}", que es una de las tres formas que tu area te prohibe: `
-        + `esas salen solas y las siete acaban leyendose iguales`
-      );
-    }
-
     // La frase de relleno donde iba la causa. Ver MULETILLAS_DEL_PORQUE.
     const muletilla = laMuletillaDelPorque(leido);
     if (muletilla) {
@@ -2800,6 +2821,27 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       }
     }
 
+    // ── EL CIERRE DE MOLDE SE CAMBIA, NO SE REESCRIBE EL AREA ──────
+    //
+    // Cada area lleva escrito "NO EMPIECES EL CIERRE por No es que..., No
+    // estas cansada de... ni No te falta...". Cuando se cuela, arreglarlo
+    // volviendo a pedir el area son novecientas palabras y cincuenta segundos
+    // para cambiar un parrafo que ya sabemos cual es. Aqui se pide SOLO el
+    // cierre, que son cuatro segundos, y el resto del area no se toca.
+    //
+    // Si lo que vuelve tambien empieza por una de las tres, se queda el que
+    // habia: no se entra en un bucle por una cosa de estilo.
+    const arranqueDeMolde = elArranqueDeMoldeDelCierre(datos?.cierre?.texto);
+    if (arranqueDeMolde) {
+      console.warn(`Área ${area.id}: el cierre empieza por "${arranqueDeMolde.trim()}", se pide solo el cierre`);
+      const otroCierre = await pedirSoloLaCasilla(area, datos, 'cierre');
+      if (otroCierre && !esDeRelleno(otroCierre, minimoDelCierre) && !elArranqueDeMoldeDelCierre(otroCierre)) {
+        datos.cierre = { ...datos.cierre, texto: otroCierre };
+      } else {
+        console.warn(`SE ENTREGA CON AVISOS — Área ${area.id}: el cierre sigue empezando por una de las tres formas prohibidas`);
+      }
+    }
+
     const yaMarcadas = datos.parrafos.reduce((n, p) => n + ((p?.texto || '').match(/\*\*[\s\S]+?\*\*/g) || []).length, 0);
     if (yaMarcadas < MIN_NEGRITAS) {
       const marcados = await marcarLasNegritas(datos.parrafos);
@@ -2981,7 +3023,9 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // Lanzar las 7 llamadas en paralelo
     // Primero se calienta la cache y solo despues salen las siete: ver
     // calentarLaCache. Sin esto, las siete se pisan y la cache sale cara.
-    await calentarLaCache();
+    // Las dos salen a la vez: ver la nota de calentarLaCache. La lista tarda
+    // muchisimo mas, asi que la cache queda escrita mucho antes de que
+    // arranque la primera area, que es la unica condicion que hay que cumplir.
 
     // LAS LISTAS SALEN LAS PRIMERAS, Y AQUI SE ESPERA A PROPOSITO.
     //
@@ -2995,7 +3039,10 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     //
     // Si se cae, devuelve las listas vacias -no lanza nunca- y las siete areas
     // se escriben como se escribian antes de que las listas existieran.
-    const listas = await extraerRasgos(nombrePila, sexo, cartaTexto);
+    const [, listas] = await Promise.all([
+      calentarLaCache(),
+      extraerRasgos(nombrePila, sexo, cartaTexto),
+    ]);
 
     const resultados = await Promise.all(
       AREAS.map(area => generarArea(area, listas))

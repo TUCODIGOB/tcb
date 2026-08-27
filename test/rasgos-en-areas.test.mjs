@@ -198,6 +198,10 @@ async function generar() {
 }
 
 const deArea = () => llamadas.filter(l => l.tipo === 'area');
+// La lista se pide en DOS mitades que salen a la vez -las fortalezas y los
+// desafios- porque es lo unico que el informe entero espera parado. Lo que se
+// cuenta aqui es la VUELTA, que son las dos.
+const vueltasDeLista = () => Math.ceil(llamadas.filter(l => l.tipo === 'lista').length / 2);
 const mensajeDelArea = n => {
   const suyas = deArea().filter(l => new RegExp(`ÁREA ${n} —`).test(l.mensaje));
   return suyas.length ? suyas[suyas.length - 1].mensaje : '';
@@ -243,13 +247,16 @@ try {
   // aqui bajan de tres a dos.
   const tipos = llamadas.map(l => l.tipo);
   comprobar('la lista se pide una sola vez',
-    tipos.filter(t => t === 'lista').length === 1,
-    tipos.filter(t => t === 'lista').length + ' llamada(s)');
+    vueltasDeLista() === 1,
+    vueltasDeLista() + ' vuelta(s), ' + tipos.filter(t => t === 'lista').length + ' llamadas');
   const formas = [...new Set(llamadas
     .map(l => Object.keys(l.esquema?.properties || {}).sort().join('+')))].sort();
-  comprobar('y en todo el informe solo se piden esas dos formas',
-    formas.length === 2
-    && formas.includes('desafios+fortalezas')
+  // Tres formas y ni una mas: las dos mitades de la lista y el area. Una
+  // llamada nueva al modelo traeria una cuarta y aqui se veria.
+  comprobar('y en todo el informe solo se piden esas tres formas',
+    formas.length === 3
+    && formas.includes('fortalezas')
+    && formas.includes('desafios')
     && formas.some(f => f.startsWith('bloques+')),
     formas.join(' / '));
 
@@ -317,7 +324,9 @@ try {
   const vecesQueSePide = llamadas.filter(l => l.tipo === 'lista').length;
   comprobar('una lista que deja un area con 1 rasgo se vuelve a pedir',
     vecesQueSePide > 1, vecesQueSePide + ' veces');
-  const encargo = llamadas.filter(l => l.tipo === 'lista')[1]?.mensaje || '';
+  // El repaso empieza en la tercera llamada: la primera vuelta son las dos
+  // mitades. Se miran todas las del repaso juntas, que asi no se mueve nunca.
+  const encargo = llamadas.filter(l => l.tipo === 'lista').slice(2).map(l => l.mensaje).join('\n');
   comprobar('y se le dice que area se ha quedado corta',
     /MIEDOS \(1\)/.test(encargo), encargo.slice(0, 90).replace(/\n/g, ' '));
   listaQueDevuelve = null;
@@ -648,9 +657,8 @@ try {
       cuantos === 1, cuantos + ' porqué(s) en el área 1');
     // generar() vacia el registro de llamadas, asi que aqui se cuentan las de
     // ESTA generacion: una sola lista quiere decir que no hubo repaso.
-    const pedidas = llamadas.filter(l => l.tipo === 'lista').length;
     comprobar('la lista no se vuelve a pedir por un porque sucio',
-      pedidas === 1, pedidas + ' llamada(s) de lista');
+      vueltasDeLista() === 1, vueltasDeLista() + ' vuelta(s) de lista');
   }
   listaQueDevuelve = null;
 

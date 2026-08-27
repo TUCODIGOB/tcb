@@ -258,6 +258,10 @@ globalThis.fetch = async (url, opts = {}) => {
       return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_CIERRE_EN_TROZOS }] }) };
     }
     if (modo === 'cierre de molde') {
+      if (String(JSON.parse(opts.body || '{}').messages?.[0]?.content || '').includes('Lo único que falta es')) {
+        llamadas--; // una casilla suelta no es una generacion de area
+        return { ok: true, status: 200, json: async () => ({ content: [{ text: JSON.stringify({ texto: 'Hacer cosas no te cansa, lo que te cansa es que sea la unica prueba que te vale, y llevas anos pudiendo descansar sin saberlo.' }) }] }) };
+      }
       return { ok: true, status: 200, json: async () => ({ content: [{ text: AREA_CIERRE_DE_MOLDE }] }) };
     }
     if (modo === 'cierre mutilado') {
@@ -523,10 +527,18 @@ try {
     customer_details: { email: 'c@e.com' }, metadata: { nombre: 'Ana Ruiz' } });
   const rC1 = res();
   await chat({ method: 'POST', body: { session_id: SID_C1, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, rC1);
-  c('un cierre empezado por "No es que..." se vuelve a pedir', llamadas > 7, llamadas + ' llamadas');
-  c('y se le dice que esa es una de las tres que tiene prohibidas',
-    avisos.some(a => /el cierre empieza por "no es que", que es una de las tres formas/i.test(a)),
+  // NO SE REESCRIBE EL AREA POR ESTO. Son novecientas palabras y cincuenta
+  // segundos para cambiar un parrafo que ya sabemos cual es: se pide SOLO el
+  // cierre, que son cuatro segundos, y el resto del area no se toca.
+  const textoC1 = String(rC1.body?.texto || '');
+  c('un cierre empezado por "No es que..." se cambia, sin reescribir el área',
+    llamadas === 7, llamadas + ' llamadas de área');
+  c('y queda dicho cuál era', 
+    avisos.some(a => /el cierre empieza por "no es que", se pide solo el cierre/i.test(a)),
     avisos.find(a => /el cierre empieza/i.test(a)) || avisos.slice(-1)[0] || 'ningún aviso');
+  c('el cierre de molde NO sale impreso',
+    !/No es que no sepas descansar/.test(textoC1));
+  c('y el que se pidió sí', textoC1.includes('llevas anos pudiendo descansar sin saberlo'));
 
   // Y la limpieza que deja medio cierre impreso.
   modo = 'cierre mutilado';
