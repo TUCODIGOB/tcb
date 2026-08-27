@@ -750,7 +750,48 @@ function loQueLeFaltaALaLista(lista) {
 // EXTRACCION DE RASGOS DESDE LA CARTA NATAL
 // ══════════════════════════════════════════════════════════════════
 
-async function extraerRasgos(nombrePila, sexo, cartaTexto) {
+// ══════════════════════════════════════════════════════════════════
+// LO QUE CUESTA CADA INFORME
+// ══════════════════════════════════════════════════════════════════
+//
+// Hasta ahora no se miraba: la respuesta de la API trae lo que ha costado la
+// llamada y se tiraba sin leerla. Sin eso, cuanto cuesta un informe y si la
+// cache del prompt esta funcionando solo se pueden suponer, y suponer aqui
+// sale caro: el prompt son 22.000 tokens que van SIETE veces, asi que la
+// diferencia entre que la cache acierte o no es la mitad de la factura.
+//
+// Y no se nota mirando el informe, que sale igual de bien de las dos maneras.
+// Solo se nota en la factura, un mes despues. Por eso se apunta.
+//
+// "leidos" son los tokens que vinieron de cache y cuestan una decima parte.
+// Si esa cifra sale en cero, la cache NO esta acertando y hay que mirarlo.
+function apuntarGasto(gasto, data) {
+  const u = data && data.usage;
+  if (!gasto || !u) return;
+  gasto.llamadas++;
+  gasto.entrada += u.input_tokens || 0;
+  gasto.salida += u.output_tokens || 0;
+  gasto.cacheLeida += u.cache_read_input_tokens || 0;
+  gasto.cacheEscrita += u.cache_creation_input_tokens || 0;
+}
+
+// Precios de Sonnet por millon de tokens, para poder poner el coste en euros
+// en el registro. Si Anthropic los cambia, aqui es donde se tocan: no se usan
+// para nada mas que para esa linea.
+const PRECIO = { entrada: 3, salida: 15, cacheLeida: 0.30, cacheEscrita: 3.75 };
+
+function resumirGasto(gasto, segundos) {
+  const d = (gasto.entrada * PRECIO.entrada
+           + gasto.salida * PRECIO.salida
+           + gasto.cacheLeida * PRECIO.cacheLeida
+           + gasto.cacheEscrita * PRECIO.cacheEscrita) / 1e6;
+  return `COSTE DEL INFORME — ${segundos}s, ${gasto.llamadas} llamadas, `
+       + `${gasto.entrada} entrada + ${gasto.cacheLeida} leidos de cache + ${gasto.cacheEscrita} escritos en cache, `
+       + `${gasto.salida} salida — $${d.toFixed(3)}`
+       + (gasto.cacheLeida === 0 ? '  ¡LA CACHE NO ESTA ACERTANDO!' : '');
+}
+
+async function extraerRasgos(nombrePila, sexo, cartaTexto, gasto) {
   const trato = sexo === 'mujer'
     ? 'una MUJER. Toda en femenino.'
     : 'un HOMBRE. Todo en masculino.';
@@ -906,6 +947,7 @@ Vuelve a sacar tu lista ENTERA, no solo lo que fallaba.`
     }
 
     const data = await response.json();
+    apuntarGasto(gasto, data);
 
     // Si aun asi se quedara sin sitio, lo que llega es JSON cortado. Se dice
     // aqui y con estas palabras, que es el aviso que hay que buscar si algun
@@ -1115,6 +1157,11 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // Lo que va costando este informe. Ver apuntarGasto: se rellena en cada
+  // llamada y se escribe una sola linea al final, en los registros.
+  const gasto = { llamadas: 0, entrada: 0, salida: 0, cacheLeida: 0, cacheEscrita: 0 };
+  const arranque = Date.now();
 
   const { session_id } = req.body;
 
@@ -2058,6 +2105,7 @@ NO SE COPIAN: eso de arriba es una nota para ti, no un texto para ella. Ni el no
       });
       if (!r.ok) return null;
       const data = await r.json();
+      apuntarGasto(gasto, data);
       if (data.stop_reason === 'max_tokens') return null;
       const txt = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
       return JSON.parse(txt);
@@ -2574,6 +2622,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     }
 
     const data = await response.json();
+    apuntarGasto(gasto, data);
 
     // El modelo se ha quedado sin espacio y ha dejado el area a media frase.
     // Esto NO llega como error: la respuesta trae texto y es larga, asi que
@@ -2985,6 +3034,8 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       // de 0,90 y uno de 0,50.
       if (!respuesta.ok) {
         console.warn(`La cache no se ha podido calentar (HTTP ${respuesta.status}): el informe sale igual, pero el prompt se paga en cada área`);
+      } else {
+        apuntarGasto(gasto, await respuesta.json().catch(() => null));
       }
     } catch (err) {
       console.warn(`No se pudo calentar la cache (${err.message.slice(0, 60)}): se sigue sin ella`);
@@ -3058,7 +3109,7 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // se escriben como se escribian antes de que las listas existieran.
     const [, listas] = await Promise.all([
       calentarLaCache(),
-      extraerRasgos(nombrePila, sexo, cartaTexto),
+      extraerRasgos(nombrePila, sexo, cartaTexto, gasto),
     ]);
 
     const resultados = await Promise.all(
@@ -3092,27 +3143,43 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
       .split(/\s+/).filter(Boolean).length;
     const largos = resultados.map(enPalabrasEl);
     const mediana = [...largos].sort((a, b) => a - b)[Math.floor(largos.length / 2)];
+    // UNA SOLA LLAMADA POR AREA CORTA, Y ESTO ES LO QUE SALVA EL INFORME.
+    //
+    // Esto va DESPUES de las siete, asi que su tiempo se suma entero al del
+    // informe. Con generarArea se pedia el area y, si la nueva venia floja de
+    // estilo, se pedia OTRA vez: dos llamadas de cincuenta segundos pegadas al
+    // final. El 27 de agosto fue exactamente eso lo que se comio los ultimos
+    // cien segundos y dejo a la clienta sin informe en el minuto cinco.
+    //
+    // Aqui solo se busca que el area no salga a la mitad de largo que sus
+    // hermanas. Con una llamada basta: si la que llega tampoco es mas larga,
+    // se entrega la que habia y queda dicho en los registros.
+    //
+    // Y LAS QUE HAYA SALEN A LA VEZ, no una detras de otra. Iban en fila
+    // dentro del for: con dos areas cortas eran cien segundos en vez de
+    // cincuenta, esperando la segunda a que acabara la primera sin ninguna
+    // razon, porque no dependen entre ellas. Con una sola area corta -que es
+    // lo normal- esto tarda exactamente lo mismo que antes.
+    const cortas = [];
     for (let i = 0; i < resultados.length; i++) {
-      if (largos[i] >= mediana * PARTE_QUE_TIENE_QUE_TENER) continue;
-      console.warn(`Área ${AREAS[i].id} se ha quedado en ${largos[i]} palabras y las demas traen ${mediana}: se vuelve a pedir`);
-      // UNA SOLA LLAMADA, Y ESTO ES LO QUE SALVA EL INFORME.
-      //
-      // Esto va DESPUES de las siete y en fila, asi que su tiempo se suma
-      // entero al del informe. Con generarArea se pedia el area y, si la
-      // nueva venia floja de estilo, se pedia OTRA vez: dos llamadas de
-      // cincuenta segundos pegadas al final. El 27 de agosto fue exactamente
-      // eso lo que se comio los ultimos cien segundos y dejo a la clienta sin
-      // informe en el minuto cinco.
-      //
-      // Aqui solo se busca que el area no salga a la mitad de largo que sus
-      // hermanas. Con una llamada basta: si la que llega tampoco es mas
-      // larga, se entrega la que habia y queda dicho en los registros.
-      const otra = await pedirArea(AREAS[i], null, listas).catch(() => null);
-      if (enPalabrasEl(otra) > largos[i]) {
-        resultados[i] = otra;
-        largos[i] = enPalabrasEl(otra);
-      } else {
-        console.warn(`SE ENTREGA CON AVISOS — Área ${AREAS[i].id}: sigue corta, ${largos[i]} palabras de las ${mediana} que traen las demas`);
+      if (largos[i] < mediana * PARTE_QUE_TIENE_QUE_TENER) cortas.push(i);
+    }
+    if (cortas.length > 0) {
+      for (const i of cortas) {
+        console.warn(`Área ${AREAS[i].id} se ha quedado en ${largos[i]} palabras y las demas traen ${mediana}: se vuelve a pedir`);
+      }
+      const otras = await Promise.all(
+        cortas.map(i => pedirArea(AREAS[i], null, listas).catch(() => null))
+      );
+      for (let k = 0; k < cortas.length; k++) {
+        const i = cortas[k];
+        const otra = otras[k];
+        if (enPalabrasEl(otra) > largos[i]) {
+          resultados[i] = otra;
+          largos[i] = enPalabrasEl(otra);
+        } else {
+          console.warn(`SE ENTREGA CON AVISOS — Área ${AREAS[i].id}: sigue corta, ${largos[i]} palabras de las ${mediana} que traen las demas`);
+        }
       }
     }
 
@@ -3139,6 +3206,8 @@ COPIALAS TAL CUAL, letra por letra, tal como estan escritas en el texto, para qu
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
     // que demuestra que quien pide el PDF es quien tiene la reserva.
     // La lista sale SIN el porque de cada ficha: ver sinElPorque.
+    console.log(resumirGasto(gasto, Math.round((Date.now() - arranque) / 1000)));
+
     return res.status(200).json({ texto: textoCompleto, rasgos: sinElPorque(listas), token: reserva.token });
 
   } catch (err) {
