@@ -751,21 +751,14 @@ fetch('/api/generar-pdf', {
     _G.pdfBase64 = pdfData.pdfBase64;
     // El PDF existe: la copia local de los datos ya no hace falta.
     try { localStorage.removeItem('tcb_pedido'); } catch (e) {}
-    fetch('/api/save-pdf', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        session_id: new URLSearchParams(window.location.search).get('session_id'),
-        token: _G.token,
-        pdfBase64: pdfData.pdfBase64,
-        nombre: _G.nombre,
-        sexo: _G.sexo || '',
-        fecha: _G.fechaNice || '',
-        hora: _G.hora || '',
-        lugar: _G.lugar || '',
-        edad: _G.edad || ''
-      })
-    }).catch(err => console.warn('Email automático falló:', err));
+    // Aqui se le devolvia el PDF entero a save-pdf para que mandara el correo.
+    // Era un resto de cuando el PDF se montaba en esta pagina: el servidor no
+    // lo tenia y habia que subirselo. Desde que lo monta generar-pdf, el correo
+    // sale de alli con el PDF que ya tiene en la mano, y esta subida sobraba.
+    //
+    // Ademas estorbaba: Vercel corta las peticiones de mas de 4,5 MB, y el
+    // informe en base64 pasa de eso. El 27/8 save-pdf devolvio 413 y el cliente
+    // se quedo sin correo, con el informe ya hecho y pagado.
   }).catch(err => {
     // No dejar al cliente creyendo que ya lo tiene. El aviso a la tienda lo
     // manda el propio generar-pdf; aqui se le ensena la misma pantalla que

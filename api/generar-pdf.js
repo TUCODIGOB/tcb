@@ -2,7 +2,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { jsPDF } = require('jspdf');
 import Stripe from 'stripe';
-import { estado, liberar, completar, compraValida } from '../lib/reserva.js';
+import { estado, liberar, completar, compraValida, marcarEmailEnviado } from '../lib/reserva.js';
 import { analizarArea } from '../lib/bloques.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -1062,6 +1062,7 @@ export default async function handler(req, res) {
 
     // ── Devolver PDF en base64 ────────────────────────────────────────────────
     const pdfBase64 = doc.output('datauristring');
+    const soloBase64 = pdfBase64.slice(pdfBase64.indexOf(',') + 1);
 
     // Si algun fichero no se ha podido cargar, el PDF va igualmente al cliente
     // pero puede tener alguna pagina sin fondo, asi que se avisa para revisarlo.
@@ -1076,6 +1077,55 @@ export default async function handler(req, res) {
         });
       } catch (avisoErr) {
         console.error('Tampoco se pudo avisar del fallo del PDF:', avisoErr.message);
+      }
+    }
+
+    // ── EL CORREO SALE DE AQUI ────────────────────────────────────────────────
+    //
+    // Antes lo mandaba save-pdf, y para llegar ahi el PDF tenia que volver al
+    // servidor DESDE el navegador. Ese viaje es un resto de cuando el PDF se
+    // montaba en el navegador: entonces el servidor no lo tenia y habia que
+    // mandarselo. Desde que se monta aqui, el servidor ya lo tiene en la mano
+    // y ese viaje no pinta nada.
+    //
+    // Y ademas estorbaba: Vercel corta cualquier peticion de mas de 4,5 MB, y
+    // un PDF de 3,5 MB son 4,67 MB una vez en base64. El 27/8 save-pdf devolvio
+    // 413 FUNCTION_PAYLOAD_TOO_LARGE y el cliente se quedo sin correo, con el
+    // informe ya hecho y pagado. Mandandolo desde aqui no hay tal viaje.
+    //
+    // Se reintenta porque un corte puntual de Brevo no puede costar un informe
+    // que ya esta hecho: regenerarlo son tres minutos y ~1,60 EUR.
+    let emailEnviado = false;
+    for (let intento = 1; intento <= 3 && !emailEnviado; intento++) {
+      if (intento > 1) await new Promise(r => setTimeout(r, (intento - 1) * 2000));
+      try {
+        await enviarEmailCliente({
+          email: sessionEmail,
+          nombre,
+          pdfContent: soloBase64,
+          nombreArchivo: `TuDisenoDeOrigen_${String(nombre || 'Cliente').replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
+        });
+        emailEnviado = true;
+      } catch (err) {
+        console.error(`[generar-pdf] Envio ${intento}/3 fallido:`, err.message);
+      }
+    }
+
+    if (emailEnviado) {
+      console.log(`[generar-pdf] Email enviado a ${sessionEmail}`);
+      try {
+        await marcarEmailEnviado(stripe, session_id);
+      } catch (err) {
+        console.error('Error marcando email_enviado:', err.message);
+      }
+    } else {
+      // El cliente tiene su boton de descarga, pero no el correo. Hay que
+      // enterarse: sin este aviso el fallo pasa en silencio, que es justo lo
+      // que hizo que el 27/8 nadie se enterara hasta que lo dijo el cliente.
+      try {
+        await enviarAvisoEmailNoEnviado({ nombre, email: sessionEmail, sessionId: session_id });
+      } catch (avisoErr) {
+        console.error('Tampoco se pudo avisar del correo no enviado:', avisoErr.message);
       }
     }
 
@@ -1103,6 +1153,85 @@ export default async function handler(req, res) {
     }
     return res.status(500).json({ error: 'Error generando el PDF: ' + err.message });
   }
+}
+
+
+// ═════════════════════════════════════════════════════════════════
+// EL INFORME AL CLIENTE, CON EL PDF ADJUNTO (via Brevo)
+// Misma plantilla, mismo remitente y mismo adjunto que usaba save-pdf.js:
+// para el cliente el correo es exactamente el de siempre. Lo unico que
+// cambia es desde donde sale.
+//
+// El tope de Brevo son 4 MB por adjunto, medidos sobre el fichero y no
+// sobre el base64 (con 3,05 MB, que en base64 son 4,07 MB, el correo
+// salia). El informe va hoy por 3,5 MB: entra, pero con poco margen.
+// Cuando se acerque a los 4 MB habra que adelgazarlo o mandar enlace.
+// ═════════════════════════════════════════════════════════════════
+async function enviarEmailCliente({ email, nombre, pdfContent, nombreArchivo }) {
+  const BREVO_API_KEY = process.env.BREVO_API_KEY;
+  if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
+  if (!email) throw new Error('La sesion de Stripe no trae email del cliente');
+
+  const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': BREVO_API_KEY,
+    },
+    body: JSON.stringify({
+      sender: { email: 'hola@origennatal.com', name: 'Origen Natal' },
+      to: [{ email, name: nombre || 'Cliente' }],
+      templateId: 28,
+      params: { NOMBRE: nombre || 'Cliente' },
+      attachment: [{ name: nombreArchivo, content: pdfContent }],
+    }),
+  });
+
+  if (!resp.ok) {
+    const errText = await resp.text().catch(() => '');
+    throw new Error(`Brevo email ${resp.status}: ${errText}`);
+  }
+}
+
+
+// ═════════════════════════════════════════════════════════════════
+// AVISO DE CORREO NO ENVIADO (via Brevo)
+// El PDF si esta: el cliente lo tiene en su boton de descarga. Lo que
+// falta es el correo, asi que hay que reenviarselo a mano.
+// ═════════════════════════════════════════════════════════════════
+async function enviarAvisoEmailNoEnviado({ nombre, email, sessionId }) {
+  const BREVO_API_KEY = process.env.BREVO_API_KEY;
+  if (!BREVO_API_KEY) return;
+
+  const mensaje = [
+    'El informe se genero bien y el cliente lo tiene en su boton de descarga,',
+    'pero el correo con el PDF adjunto NO salio (Brevo fallo tres veces).',
+    '',
+    'Si cerro la pestana sin descargarlo, se ha quedado sin nada: hay que',
+    'reenviarselo a mano.',
+    '',
+    `Cliente:    ${nombre || '-'}`,
+    `Email:      ${email || '(desconocido)'}`,
+    `Session ID: ${sessionId || '-'}`,
+  ].join('\n');
+
+  const body = {
+    sender: { email: 'hola@origennatal.com', name: 'Origen Natal — Alertas' },
+    to: [{ email: 'hola.origennatal@gmail.com', name: 'Origen Natal' }],
+    subject: 'CORREO NO ENVIADO — CLIENTE SIN SU INFORME',
+    htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
+  };
+
+  await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': BREVO_API_KEY,
+    },
+    body: JSON.stringify(body),
+  });
 }
 
 
