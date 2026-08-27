@@ -1233,6 +1233,7 @@ ${ESPANOL_DE_ESPANA}
 ESTILO DE ESCRITURA:
 - Habla como una persona de confianza, directo y cercano
 - Lenguaje sencillo, que lo entienda cualquier persona aunque no haya leído un libro en años
+- SE TIENE QUE ENTENDER A LA PRIMERA, y esto manda sobre cualquier otra cosa que leas aquí abajo. Si al llegar al final de una frase hay que volver atrás para saber de qué hablaba, está mal escrita: reescríbela más simple. La idea se dice EN CLARO, con su nombre, y la imagen viene DETRÁS de la idea, nunca en su lugar. Una imagen que carga sola con el significado obliga a traducirla, y traducir es exactamente lo que rompe la lectura. MAL: "sueltas esa vara que te pusiste tú misma y no se te cae nada de lo que has construido" —hay que averiguar qué es la vara, y "caer" significa dos cosas distintas en la misma frase—. BIEN: "dejas de exigirte tanto y no pierdes nada de lo que has conseguido". Dicen lo mismo; la segunda entra a la primera lectura
 - UNA IDEA NO SE PARTE CON UN PUNTO. Va seguida y unida con comas, igual que cuando alguien te lo está contando hablando. El punto se pone al cambiar de idea, nunca en mitad de una: si lo que viene detrás del punto es lo mismo que venías diciendo, ahí iba una coma. Y las ideas se conectan con comas, nunca con guiones largos
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos. Los asteriscos tienen un único uso, marcar la negrita que se explica más abajo, y no valen para nada más. Dentro del texto no se escribe nada que no sean sus palabras: la maquetación sale de las casillas, que se explican en CÓMO SE ENTREGA EL ÁREA
 - ${SIN_NOMBRAR_PLANETAS}
@@ -1372,7 +1373,7 @@ Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta 
 No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que salga de lo que acabas de contar y no de una plantilla.
 
 CIERRE DE CADA ÁREA (OBLIGATORIO):
-El área termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una imagen contundente, una paradoja, una frase corta que golpea. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz.
+El área termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una consecuencia suya que no había atado, una frase corta que golpea. Lo que no puede ser es una imagen o una paradoja que ella tenga que descifrar para saber qué le estás diciendo: eso no hace clic, hace trabajar. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz.
 EL CIERRE REVELA, NO RECOGE. Tiene que decir algo que no has dicho todavía en el área: el nombre exacto de lo que le pasa, la consecuencia que ella no ha atado, lo que hay debajo de todo lo anterior.
 Y ESO SE ESCRIBE ANTES QUE EL CIERRE, en la casilla "revela" que va a su lado: una línea diciendo qué cosa suya dice este cierre que no esté ya contada arriba. No se imprime, es para ti, y es la que decide si hay cierre o no lo hay: si al escribirla ves que eso ya está dicho en el área, no busques cómo redactarlo mejor, busca otra cosa que decirle. Un cierre que recoge no se arregla con palabras. Si el cierre se pudiera escribir habiendo leído solo el primer párrafo, no vale. Y si al leerlo la persona piensa "esto ya me lo has dicho", tampoco.
 NI SE QUEDA A MEDIAS. Un cierre que apunta a algo sin decirlo deja al lector con la sensación de que falta información, y esa sensación es la contraria a la que buscas. Si nombras lo que le pasa, lo nombras entero: no "el colchón nunca fue el problema", sino qué era el problema.
@@ -1649,7 +1650,7 @@ ${cartaTexto}`;
       entra: 'pidiéndole que se acuerde de la última vez que le pasó',
       abre: 'por un gesto pequeño que mucha gente hace sin darse cuenta, contado en dos líneas',
       cuando: 'un rato muerto de tarde',
-      cierra: 'con una paradoja suya: dos cosas que no encajan entre sí y que sin embargo son la misma',
+      cierra: 'diciéndole en claro cuáles son esas dos cosas suyas que parecen opuestas y por qué en realidad son la misma',
     },
     3: {
       pregunta: 'obligándola a elegir entre dos cosas, y que ninguna de las dos sea cómoda',
@@ -1663,7 +1664,7 @@ ${cartaTexto}`;
       entra: 'avisándole de que lo que viene le va a sonar',
       abre: 'por una frase hecha que todo el mundo repite y casi nadie ha pensado del todo',
       cuando: 'un domingo por la tarde',
-      cierra: 'con una imagen concreta que se le quede grabada, no con una explicación',
+      cierra: 'nombrando en claro lo que le pasa, y solo después, si suma, la imagen concreta que se le quede grabada',
     },
     5: {
       pregunta: 'devolviéndole en pregunta la frase exacta que ella se repite por dentro',
