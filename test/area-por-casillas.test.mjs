@@ -428,8 +428,11 @@ try {
   const r5 = res();
   await chat({ method: 'POST', body: { session_id: SID5, nombre: 'Ana Ruiz', cartaTexto: 'Sol: Piscis' } }, r5);
   const avisoDeCorta = avisos.find(a => /Área 2 se ha quedado en \d+ palabras y las demas traen/.test(a));
-  c('el área corta se vuelve a pedir, y por corta', Boolean(avisoDeCorta) && llamadas > 7,
-    avisoDeCorta || avisos.slice(-1)[0] || 'ningún aviso');
+  // OCHO, no nueve: siete areas y UNA sola llamada de repesque. Este trozo va
+  // en fila detras de las siete, asi que cada llamada de mas se suma entera al
+  // reloj del informe. Con dos, el 27 de agosto se paso de los 300 segundos.
+  c('el área corta se vuelve a pedir, y por corta', Boolean(avisoDeCorta) && llamadas === 8,
+    (avisoDeCorta || avisos.slice(-1)[0] || 'ningún aviso') + ' — ' + llamadas + ' llamadas');
   c('y el informe sale igual', r5.code === 200 && String(r5.body?.texto || '').length > 3000, 'HTTP ' + r5.code);
 
   // Y LO CONTRARIO, que es lo que importa: con las siete del mismo tamano no
