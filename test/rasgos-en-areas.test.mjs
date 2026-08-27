@@ -450,7 +450,7 @@ try {
     ['LO QUE TE TOCA CONTAR A TI EN ESTA AREA:', 'la nota de los rasgos'],
     ['POR DÓNDE VA ESTA ÁREA:', 'la nota de la forma'],
     ['POR QUE ES ASI, Y ESTO NO SE COPIA:', 'la cabecera del porqué'],
-    ['CADA RASGO LLEGA CON SU "DE DONDE LE VIENE"', 'la orden del porqué'],
+    ['CADA DESAFIO LLEGA CON SU "DE DONDE LE VIENE"', 'la orden del porqué'],
   ]) {
     loQueElAreaCopia = cabecera;
     const rFuga = await generar();

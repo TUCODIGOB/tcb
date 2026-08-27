@@ -1074,7 +1074,7 @@ const MARCAS_QUE_NO_SE_IMPRIMEN = [
   'esto es que contar, no por donde mirar',
   'los bloques no cambian de trabajo',
   'por que es asi, y esto no se copia',
-  'cada rasgo llega con su',
+  'cada desafio llega con su',
   'la parte de la carta que te toca mirar',
   'por donde va esta area',
   'informacion interna para ti',
