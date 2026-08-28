@@ -510,7 +510,12 @@ LAS DOS LISTAS:
 - FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.
 - DESAFIOS: lo que le cuesta, lo que le pesa, donde tropieza.
 
-SIN NUMERO FIJO. Saca TODOS los que de verdad salgan de esta carta, los que sean. No hay minimo ni maximo, y las dos listas no tienen por que tener el mismo numero. Lo que no vale es inventarse ninguno para alargar la lista, ni dejarse fuera uno que este en la carta para acortarla.
+SIN NUMERO FIJO. Saca TODOS los que de verdad salgan de esta carta, los que sean. No hay minimo, y las dos listas no tienen por que tener el mismo numero. Lo que no vale es inventarse ninguno para alargar la lista, ni dejarse fuera uno que este en la carta para acortarla.
+
+EL UNICO LIMITE: 40 RASGOS ENTRE LAS DOS LISTAS.
+Cuarenta contando fortalezas y desafios juntos, no cuarenta de cada. Y el reparto entre las dos lo decide la carta, no un reparto a partes iguales.
+40 es un techo, NO un objetivo. Si de esta carta salen treinta y ocho de verdad, se entregan treinta y ocho: no se añaden dos mas para llegar a cuarenta, ni se estira uno bueno en dos para rellenar. Preferimos treinta y ocho ciertos que cuarenta con dos inventados.
+Si te salieran mas de cuarenta, te quedas con los cuarenta que mas peso tienen en esta carta.
 
 RECORRE LA CARTA ENTERA, NO SOLO LO QUE MAS SALTA A LA VISTA.
 Una carta tiene mucho mas de lo que se ve en una primera lectura, y quedarse en lo evidente deja fuera la mitad de la persona. Antes de dar las listas por terminadas, pasa por TODO lo que tienes delante, una cosa detras de otra:
