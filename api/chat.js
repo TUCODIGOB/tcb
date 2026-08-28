@@ -533,7 +533,7 @@ function areaDelRasgo(origen) {
   const t = sinTildes(origen);
 
   // Los cuerpos que nombra, en orden de mas personal a mas lejano.
-  const cuerpos = ORDEN_PERSONAL.filter(c => new RegExp('\\b' + c).test(t));
+  const cuerpos = ORDEN_PERSONAL.filter(c => new RegExp('\\b' + c + '\\b').test(t));
   if (cuerpos.length > 0) return AREA_DEL_CUERPO[cuerpos[0]];
 
   // Si no nombra ningun cuerpo pero si una casa, vale la casa.
