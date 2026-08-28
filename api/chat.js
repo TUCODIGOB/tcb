@@ -339,11 +339,7 @@ ${cartaTexto}`;
         // dice exactamente que tiene que salir. Encendido, cada area tardaba 45
         // segundos, gastaba los 3.500 tokens en pensar y devolvia el texto vacio.
         thinking: { type: 'disabled' },
-        // Tope de seguridad, no un objetivo: solo se paga lo que el modelo
-        // escribe, y el largo lo manda el prompt. Tiene que dar para el area
-        // mas larga (1.300 palabras, unos 2.500 tokens). Con 3.500 el area 1
-        // podia llegar cortada a media frase.
-        max_tokens: 6000,
+        max_tokens: 3500,
         system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
