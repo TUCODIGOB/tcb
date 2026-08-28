@@ -593,11 +593,14 @@ Nombre de pila: ${nombrePila}`;
   // Se cogen los rasgos tal como salen. Lo unico que se hace es quitar espacios
   // sobrantes de cada casilla.
   return (Array.isArray(salida.rasgos) ? salida.rasgos : [])
+    // Si a un rasgo le faltara una casilla, se queda vacia. Sin esto se
+    // imprimia en el PDF la palabra "undefined", que es lo mismo que paso con
+    // la palabra "placeholder".
     .map(r => ({
-      nombre: String(r.nombre).trim(),
-      descripcion: String(r.descripcion).trim(),
-      causa: String(r.causa).trim(),
-      origen: String(r.origen).trim(),
+      nombre: String(r.nombre ?? '').trim(),
+      descripcion: String(r.descripcion ?? '').trim(),
+      causa: String(r.causa ?? '').trim(),
+      origen: String(r.origen ?? '').trim(),
     }));
 }
 
