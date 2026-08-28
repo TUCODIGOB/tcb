@@ -517,6 +517,23 @@ const AREA_DEL_CUERPO = {
   jupiter:    'DINERO',      // expansion y abundancia
 };
 
+// Los doce signos, por si el origen nombra un signo y ningun cuerpo ni casa.
+// Cada signo va al area de su planeta regente, que es el estandar.
+const AREA_DEL_SIGNO = {
+  aries:       'AMOR',        // regido por Marte
+  tauro:       'AMOR',        // Venus
+  geminis:     'RELACIONES',  // Mercurio
+  cancer:      'HERIDA',      // Luna
+  leo:         'IDENTIDAD',   // Sol
+  virgo:       'RELACIONES',  // Mercurio
+  libra:       'AMOR',        // Venus
+  escorpio:    'MIEDOS',      // Pluton
+  sagitario:   'DINERO',      // Jupiter
+  capricornio: 'MIEDOS',      // Saturno
+  acuario:     'RELACIONES',  // Urano
+  piscis:      'MIEDOS',      // Neptuno
+};
+
 // De mas personal a mas lejano. Cuando un rasgo sale de un aspecto entre dos
 // cuerpos, manda el mas personal: los de fuera tiñen a los de dentro, pero el
 // rasgo se vive en la parcela del de dentro.
@@ -538,7 +555,11 @@ function areaDelRasgo(origen) {
 
   // Si no nombra ningun cuerpo pero si una casa, vale la casa.
   const casa = t.match(/casa\s*(\d{1,2})/);
-  if (casa) return AREA_DE_LA_CASA[Number(casa[1])] || '';
+  if (casa && AREA_DE_LA_CASA[Number(casa[1])]) return AREA_DE_LA_CASA[Number(casa[1])];
+
+  // Y si solo nombra un signo, vale el signo.
+  const signo = Object.keys(AREA_DEL_SIGNO).find(g => new RegExp('\\b' + g).test(t));
+  if (signo) return AREA_DEL_SIGNO[signo];
 
   return '';
 }
