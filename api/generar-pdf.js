@@ -146,6 +146,10 @@ export default async function handler(req, res) {
     function fx(s) { return s || ''; }
     var W = 210, H = 297;
 
+    // Aire que queda entre el ultimo renglon de la redaccion y el numero de
+    // pagina, en milimetros.
+    var AIRE_SOBRE_NUMERO = 5;
+
     function addPageNum(n) {
       doc.setFont('Roboto', 'bold');
       doc.setFontSize(9);
@@ -645,7 +649,9 @@ export default async function handler(req, res) {
         doc.setFontSize(cuerpo); doc.setTextColor(color[0],color[1],color[2]);
         var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esC);
         for(var pl2=0;pl2<plines.length;pl2++){
-          if(ay>H-16){addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);ay=60;}
+          // La redaccion no baja hasta el numero de pagina: se corta 5 mm antes,
+          // que es el aire que tiene que quedar entre el ultimo renglon y el numero.
+          if(ay>H-16-AIRE_SOBRE_NUMERO){addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);ay=60;}
           var lin=plines[pl2];
           var cx=esC?(105-anchoLinea(lin,cuerpo,esC)/2):18;
           for(var wi=0;wi<lin.length;wi++){
