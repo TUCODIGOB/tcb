@@ -4,7 +4,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
-import { compraValida, estado, marcarEmailEnviado } from '../lib/reserva.js';
+import { estado, marcarEmailEnviado, compraValida } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 

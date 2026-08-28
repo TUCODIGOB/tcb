@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { compraValida, estado } from '../lib/reserva.js';
+import { estado, compraValida } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
