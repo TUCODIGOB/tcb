@@ -144,14 +144,14 @@ REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 - SI EL ÁREA TE SOBRA DE LARGO, quita contenido entero: un párrafo, una idea, un ejemplo. NUNCA comprimas lo que ya está escrito apretándolo, porque al apretarlo se pierden las explicaciones, se queda en afirmaciones sueltas y el área acaba leyéndose como un esquema.
 - REGLA CRÍTICA DE LONGITUD: cada área tiene OBLIGATORIAMENTE entre 850 y 900 palabras, con UNA excepción: el ÁREA 1 (IDENTIDAD) va entre 1.100 y 1.300 palabras, porque cubre más terreno. No cuentes párrafos ni te marques un número: salen los que salgan. Un área por debajo de su mínimo es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
 
-OBJETIVO: Que la persona lea y piense que eso es exactamente ella, que por fin alguien se lo explica.
+OBJETIVO: Que la persona lea y piense que eso es exactamente quien es, que por fin alguien se lo explica.
 
 ESCENA REAL OBLIGATORIA:
 Tienes que incluir una escena concreta, específica y visual que el lector reconozca de inmediato como propia. No vale una situación genérica ni tonta. Debe ser una escena tan concreta que el lector diga "joder, esto me pasa literalmente".
 
 Ejemplos de escenas BUENAS (úsalas de inspiración, no las copies):
 - Para MIEDOS: "Llega el domingo por la tarde y ya notas ese peso raro en el pecho pensando en el lunes, haces una lista mental de todo lo que tienes que controlar, no porque haga falta, sino porque si no lo repasas todo cien veces sientes que algo malo va a pasar, y cuando te metes en la cama te pones a revisar el móvil para no pensar."
-- Para AMOR: "Estás con alguien que te gusta de verdad, todo va bien dos meses, y un día esa persona tarda cuatro horas en contestar un mensaje, y sin darte cuenta ya estás construyendo una historia entera en tu cabeza, ya estás pensando que se acabó, que no le importas, que era demasiado bonito, y cuando por fin responde con un simple 'perdona, he estado liado', tu cuerpo se relaja de golpe y te das cuenta de lo agotada que estabas."
+- Para AMOR: "Estás con alguien que te gusta de verdad, todo va bien dos meses, y un día esa persona tarda cuatro horas en contestar un mensaje, y sin darte cuenta ya estás construyendo una historia entera en tu cabeza, ya estás pensando que se acabó, que no le importas, que era demasiado bonito, y cuando por fin responde con un simple 'perdona, he estado liado', tu cuerpo se relaja de golpe y te das cuenta del cansancio que llevabas encima."
 - Para DINERO: "Te ofrecen un trabajo mejor pagado, la propuesta está encima de la mesa, y antes de alegrarte ya estás pensando en todas las razones por las que no vas a poder con él, en todo lo que puede salir mal, en qué van a pensar los demás si fracasas, y acabas diciendo que no, o pidiendo menos de lo que te ofrecían, con una sensación extraña de alivio."
 
 Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas ("cuando te sientes mal, piensas cosas"), obvias ("a veces dudas de ti mismo") o vacías.
@@ -165,18 +165,18 @@ El área se lee como una sola conversación seguida, no como seis trozos pegados
 HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
 SOLO EN EL ÁREA 1 (IDENTIDAD) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué le ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que hace por fuera. Es lo que le pone nombre a su manera de funcionar y lo que se lleva puesto al terminar de leer.
-Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que ella no pondría primero si le preguntaras. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
+Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que no pondría primero si le preguntaras. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
 Los puntos ciegos que no ve: lo que hace y no registra como un problema, o que registra al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
-Qué muestra, qué oculta y qué contradicciones tiene: la distancia entre la persona que enseña y la que guarda, y las cosas suyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a ella y no a un perfil que le valdría a cualquiera.
+Qué muestra, qué oculta y qué contradicciones tiene: la distancia entre la persona que enseña y la que guarda, y las cosas suyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a esa persona y no a un perfil que le valdría a cualquiera.
 Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante.
 SOLO EN EL ÁREA 2 (PATRONES) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cuáles son sus patrones: los que de verdad le gobiernan la vida, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera.
-Qué los enciende: la situación exacta que los dispara, la que hace saltar el automatismo antes de que ella se dé cuenta. Es lo que hace que se reconozca al leerlo.
+Qué los enciende: la situación exacta que los dispara, la que hace saltar el automatismo antes de que se dé cuenta. Es lo que hace que se reconozca al leerlo.
 Dónde acaba siempre: el mismo punto de llegada al que vuelve una vez tras otra, por caminos distintos y con gente distinta. Es donde ve que el patrón existe de verdad.
 Qué gana con ellos: de qué la protegen, qué le evitan, qué se ahorra cada vez que los repite. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
 Lo que gana con el patrón va aquí; la creencia que lo sostiene va más adelante, en su sitio, y no se cuenta dos veces.
 SOLO EN EL ÁREA 3 (MIEDOS) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuál es el miedo que gobierna su vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que ella nombraría si le preguntaras, y de qué tiene miedo en el fondo cuando tiene miedo de eso.
+Cuál es el miedo que gobierna su vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que nombraría si le preguntaras, y de qué tiene miedo en el fondo cuando tiene miedo de eso.
 Qué se lo dispara y cómo reacciona cuando aparece: las situaciones concretas que lo encienden, y lo que hace en ese momento sin decidirlo, si se paraliza, si controla más, si se adelanta, si desaparece.
 Qué está evitando por él y qué le ha costado ya: lo que lleva años sin hacer por ese miedo, y el precio que ha pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijo a tiempo.
 SOLO EN EL ÁREA 4 (HERIDA) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
@@ -185,23 +185,23 @@ Cómo se protege cuando se reabre, y qué se está perdiendo por protegerse así
 Qué necesita de verdad en ese momento: ponerle nombre a lo que lleva años sintiendo sin saber decirlo, y qué acaba haciendo con esa necesidad.
 SOLO EN EL ÁREA 5 (AMOR) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cómo es en el amor: cómo se comporta cuando quiere a alguien de verdad, cómo lo demuestra, cuánto se entrega y cuánto se guarda, y qué le pasa con el deseo y con la intimidad.
-Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que ella no se está dando.
+Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que no se está dando.
 Qué necesita de la otra persona para sentirse querida y qué le enamora: lo que le hace falta para bajar la guardia, y lo que la engancha de alguien, que no siempre es lo mismo.
-Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué hace ella ahí sin darse cuenta.
-Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que ella da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
+Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué hace ahí sin darse cuenta.
+Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
 SOLO EN EL ÁREA 6 (RELACIONES) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
 Qué papel ocupa siempre sin decidirlo: el sitio que acaba ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darse cuenta de que lo ocupa.
-Qué pasa con lo que da y lo que recibe: si la balanza le sale igualada o no, cuánto sostiene ella y cuánto le sostienen a ella, y qué hace cuando esa cuenta no le cuadra.
-En qué dinámicas acaba metida una y otra vez: el tipo de relación que se le repite con gente distinta, y qué se repite dentro de ella cada vez que vuelve a pasar.
+Qué pasa con lo que da y lo que recibe: si la balanza le sale igualada o no, cuánto sostiene y cuánto le sostienen, y qué hace cuando esa cuenta no le cuadra.
+En qué dinámicas acaba metiéndose una y otra vez: el tipo de relación que se le repite con gente distinta, y qué se repite por dentro cada vez que vuelve a pasar.
 SOLO EN EL ÁREA 7 (DINERO) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Qué significa el dinero para ella y qué le mueve a ganarlo: qué representa de verdad en su cabeza, más allá de los números, y qué es lo que la empuja a querer más o a conformarse.
+Qué significa el dinero para esa persona y qué le mueve a ganarlo: qué representa de verdad en su cabeza, más allá de los números, y qué es lo que la empuja a querer más o a conformarse.
 Qué hace con él cuando lo tiene: cómo lo gasta, cómo toma las decisiones de dinero, y cómo lleva el riesgo cuando hay algo en juego.
 Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo con el que se encuentra una y otra vez, incluido lo que hace en el trabajo cuando toca pedir o cobrar lo que vale, y qué le ocurre justo cuando las cosas empiezan a salirle.
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
 
 ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendió, con quién, en qué situación, y qué hace hoy exactamente por haberlo aprendido. El razonamiento tiene esta forma: "aprendiste esto de pequeña, y por eso hoy, sin darte cuenta, haces esto otro". La forma es esa, las palabras las pones tú y cambian en cada área.
-UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluyó ella de aquello, y qué hace hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra infancia distinta.
+UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluyó de aquello, y qué hace hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra infancia distinta.
 
 CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Después de HOY, es el punto que más sitio ocupa.
 
@@ -640,7 +640,7 @@ Y NI UNO REPETIDO. Repetido no es solo la misma frase: es la misma cosa dicha de
 
 Recorre la carta ENTERA, no solo lo que mas salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona.
 
-El estudio tiene siete areas y la carta habla de las siete, asi que la recorres AREA POR AREA. De cada area miras lo que hay de ella en ESTA carta, y de ahi sacas sus rasgos:
+El estudio tiene siete areas y la carta habla de las siete, asi que la recorres AREA POR AREA. De cada area miras lo que hay de esa area en ESTA carta, y de ahi sacas sus rasgos:
 
 IDENTIDAD    el Sol, el Ascendente, la casa 1
 PATRONES     el Nodo Norte, las casas 6 y 9
@@ -659,12 +659,18 @@ De cada area saldra lo que salga. Lo que no puede pasar es que de un area no hay
 
 4. LAS CUATRO CASILLAS DE CADA RASGO
 
-nombre       De 3 a 6 palabras, sin articulos.
+nombre       Se le habla de tu, igual que en todo lo demas: es lo que hace
+             o lo que le pasa, dicho a la persona. No el nombre de eso.
+             Un nombre que arranca con un sustantivo y le cuelga adjetivos
+             detras no le habla a nadie, es una etiqueta de manual, y esta mal
+             aunque describa bien el rasgo.
+             De cuatro a siete palabras, con sus articulos y sus preposiciones,
+             como se habla.
 
 descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota.
 
 causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
-             lo que ella quiere saber. Dos o tres frases.
+             lo que quiere saber. Dos o tres frases.
              NO REPITE EL RASGO CON OTRAS PALABRAS. Lo que hace y como se le
              nota ya esta arriba, en la descripcion. Aqui se dice que hay
              DETRAS que lo produce, el mecanismo del que sale.
@@ -673,7 +679,7 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              cabeza funciona asi" o "porque le sale natural": eso es el rasgo
              otra vez con un porque delante, y no explica nada. Lo que produce
              una fortaleza nunca es la fortaleza. Es una manera suya de
-             funcionar que por si sola no es ni buena ni mala, y que en ella
+             funcionar que por si sola no es ni buena ni mala, y que
              acaba dando esto.
              PRUEBA ANTES DE ENTREGAR: tapa la descripcion y lee solo la
              causa. Si ahi no hay nada que no estuviera ya en la descripcion,
@@ -685,15 +691,15 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              signo, ninguna casa, ningun aspecto, nada de que algo esta en una
              zona de su carta ni de que va retrogrado, y su carta no se nombra.
              Tampoco se nombra el area del estudio de la que sale el rasgo: eso
-             es cosa nuestra para ordenarlo, no algo que ella tenga que leer.
+             es cosa nuestra para ordenarlo, no algo que tenga que leer.
              La posicion va en "origen", la casilla de al lado, y no se cuenta
-             dos veces. Aqui se explica el mecanismo con las palabras de ella,
+             dos veces. Aqui se explica el mecanismo con sus palabras,
              sin decir de donde has sacado que funciona asi.
              Y OJO CON ESTO: una carta natal es el mapa del momento en que
              nacio. No dice nada de lo que le paso despues. Asi que esta
              PROHIBIDO contar su infancia, su familia, sus padres, su casa o
              cualquier episodio de su vida: eso no esta en la carta y seria
-             inventarselo. Lo que se cuenta es como funciona ella por dentro y
+             inventarselo. Lo que se cuenta es como funciona por dentro y
              a donde le lleva eso.
 
 origen       De donde sale el rasgo en la carta, en tecnico y en corto: el
@@ -702,7 +708,7 @@ origen       De donde sale el rasgo en la carta, en tecnico y en corto: el
              Es obligatoria. Y no repartas todos los rasgos sobre las mismas
              dos o tres posiciones: la carta tiene de sobra.
 
-Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes como seguirlo, se quita ENTERO, tambien su nombre. Nunca se rellena una casilla con una palabra de relleno ni con un aviso de que falta: eso se imprime tal cual en el informe que lee la clienta.
+Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes como seguirlo, se quita ENTERO, tambien su nombre. Nunca se rellena una casilla con una palabra de relleno ni con un aviso de que falta: eso se imprime tal cual en el informe que va a leer.
 
 
 5. COMO SE ESCRIBE
@@ -710,19 +716,18 @@ Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes 
 Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee una sola vez.
 
 - SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atras para entenderla, esta mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
-- SE LE HABLA A ELLA DE TU, siempre, como quien se lo cuenta tomando un cafe. Nunca de ella en tercera persona.
+- SE LE HABLA DE TU, siempre, como quien se lo cuenta tomando un cafe. Nunca en tercera persona.
 - SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un dia cualquiera.
-- NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace ella, no lo que hace un concepto.
+- NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace la persona, no lo que hace un concepto.
 - NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa.
 - FRASES LARGAS, ENCADENADAS CON COMAS, y QUE EL TEXTO RESPIRE. Asi se habla de verdad. Cortarlo todo en frases secas y en ideas cortas una detras de otra parte la lectura, suena a lista y ahoga a quien lee, porque no le da tiempo a asimilar una cuando ya le llega la siguiente. Se desarrolla una idea, se le deja sitio, y luego viene la otra.
 - LAS PALABRAS SON LAS DE LA CALLE, no las de un informe. Si una palabra la verias antes en una evaluacion de trabajo o en un manual que en una conversacion, se cambia por la que usaria cualquiera hablando.
 - CUANDO ALGO SE LE DA BIEN, SE LE DICE A LA CARA. Se le reconoce directamente, no se describe su rendimiento desde fuera como si se la estuviera puntuando.
 - CUANDO ES UN DESAFIO, SE LE CUENTA SIN ATACARLA. Se dice lo que le pasa de manera que lo reconozca y no se ponga a la defensiva: sin juzgarla, sin señalarla y sin que suene a reproche ni a defecto.
-- EL NOMBRE DEL RASGO VA EN EL MISMO IDIOMA QUE EL RESTO. Se dice como se lo dirias a la cara, no como el titulo de un apartado. Si suena a linea de curriculum o a etiqueta de manual, esta mal, aunque el texto de debajo este bien escrito.
 - Español de España, hablado, sin latinoamericanismos.
 - Nada de asteriscos, negritas, guiones ni simbolos: es texto corrido.
 ${cual === 'desafios'
-  ? '- Se nombra lo que HACE o lo que le PASA, no se le pone una etiqueta encima. Se cuenta lo que ocurre, no se la diagnostica.'
+  ? '- No se le pone un diagnostico: se cuenta lo que le ocurre, no como se llama eso.'
   : ''}
 
 Carta natal:
