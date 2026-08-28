@@ -517,8 +517,9 @@ nombre       De 3 a 6 palabras, sin articulos.
 
 descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota.
 
-causa        Por que le pasa eso y de donde le viene, que es lo que ella quiere
-             saber. Dos o tres frases.
+causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
+             lo que ella quiere saber. No una explicacion que valdria para
+             cualquier otro rasgo suyo: la de este. Dos o tres frases.
              Y OJO CON ESTO: una carta natal es el mapa del momento en que
              nacio. No dice nada de lo que le paso despues. Asi que esta
              PROHIBIDO contar su infancia, su familia, sus padres, su casa o
@@ -544,6 +545,7 @@ Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee un
 - SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un dia cualquiera.
 - NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace ella, no lo que hace un concepto.
 - NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa.
+- FRASES LARGAS, ENCADENADAS CON COMAS, que es como se habla de verdad. Cortarlo todo en frases secas parte la lectura y suena a lista, no a alguien contandotelo.
 - NI UNA PALABRA TECNICA en el nombre, la descripcion ni la causa: ni planetas, ni signos, ni casas, ni aspectos, ni carta natal. Todo eso va en "origen" y solo ahi.
 - Español de España, hablado, sin latinoamericanismos.
 - Nada de asteriscos, negritas, guiones ni simbolos: es texto corrido.
