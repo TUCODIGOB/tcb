@@ -116,7 +116,7 @@ try {
   };
   const pedirInforme = (nombre) => {
     const r = respuesta();
-    return chat({ method: 'POST', body: { session_id: SID, nombre, cartaTexto: 'Sol: Piscis' } }, r)
+    return chat({ method: 'POST', body: { session_id: SID, nombre, cartaTexto: '- Sol: Piscis (casa 6)\n- Saturno: Virgo (casa 12)\n- Marte: Virgo (casa 12)' } }, r)
       .then(() => r);
   };
 
