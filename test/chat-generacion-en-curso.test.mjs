@@ -57,7 +57,8 @@ let llamadasAlModelo = 0;
 // peticion de las listas se le devuelve texto de area, no es JSON valido, las
 // listas no salen y no se llega a escribir ni un area.
 const LISTAS_DE_MENTIRA = JSON.stringify({
-  rasgos: [{ nombre: 'Aguante fuera de lo normal', descripcion: 'Sigues de pie donde otros se bajan.',
+  IDENTIDAD: [], PATRONES: [], HERIDA: [], AMOR: [], RELACIONES: [], DINERO: [],
+  MIEDOS: [{ nombre: 'Aguante fuera de lo normal', descripcion: 'Sigues de pie donde otros se bajan.',
              causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen: 'Saturno en Virgo, casa 12' }],
 });
 
