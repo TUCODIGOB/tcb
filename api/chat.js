@@ -471,6 +471,78 @@ const ESQUEMA_UNA_LISTA = {
   additionalProperties: false,
 };
 
+// ═════════════════════════════════════════════════════════════════
+// A QUE AREA DEL ESTUDIO PERTENECE CADA RASGO
+//
+// No lo decide el modelo: lo calcula el codigo a partir de la posicion de la
+// carta de la que sale el rasgo, que es lo que el modelo escribe en la casilla
+// "origen". Asi el area siempre es la misma para la misma posicion, y no
+// depende de que acierte al elegir.
+//
+// El reparto es el estandar en astrologia: cada casa es una parcela de la vida
+// y cada planeta una funcion, y cada una cae en el area del estudio que habla
+// de eso mismo.
+// ═════════════════════════════════════════════════════════════════
+
+// Las doce casas: cada una es una parcela de la vida.
+const AREA_DE_LA_CASA = {
+  1:  'IDENTIDAD',   // quien eres y como te presentas
+  2:  'DINERO',      // tu dinero, lo que posees, lo que vales
+  3:  'RELACIONES',  // comunicacion y entorno cercano
+  4:  'HERIDA',      // hogar, raices, familia
+  5:  'AMOR',        // romance, placer, lo que disfrutas
+  6:  'PATRONES',    // rutinas y trabajo del dia a dia
+  7:  'AMOR',        // pareja y asociaciones
+  8:  'DINERO',      // lo que se comparte con otro
+  9:  'PATRONES',    // creencias y lo que da por cierto
+  10: 'DINERO',      // carrera y lo que hace de puertas afuera
+  11: 'RELACIONES',  // amigos y grupos
+  12: 'MIEDOS',      // lo inconsciente y lo que no se ve
+};
+
+// Los planetas y puntos: cada uno es una funcion.
+const AREA_DEL_CUERPO = {
+  sol:        'IDENTIDAD',   // identidad y vitalidad
+  ascendente: 'IDENTIDAD',   // como se muestra
+  nodo:       'PATRONES',    // lo que repite y hacia donde no va
+  luna:       'HERIDA',      // emociones y raices
+  quiron:     'HERIDA',      // la herida
+  saturno:    'MIEDOS',      // limites y exigencia
+  neptuno:    'MIEDOS',      // lo que se disuelve y confunde
+  pluton:     'MIEDOS',      // poder y lo que se esconde
+  venus:      'AMOR',        // amor y lo que atrae
+  marte:      'AMOR',        // deseo y empuje
+  mercurio:   'RELACIONES',  // comunicacion
+  urano:      'RELACIONES',  // ruptura y grupos
+  jupiter:    'DINERO',      // expansion y abundancia
+};
+
+// De mas personal a mas lejano. Cuando un rasgo sale de un aspecto entre dos
+// cuerpos, manda el mas personal: los de fuera tiñen a los de dentro, pero el
+// rasgo se vive en la parcela del de dentro.
+const ORDEN_PERSONAL = ['sol','luna','mercurio','venus','marte','ascendente','nodo',
+                        'jupiter','saturno','quiron','urano','neptuno','pluton'];
+
+function sinTildes(txt) {
+  return String(txt || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+}
+
+// Lee la casilla "origen" y devuelve el area. Si no reconoce nada, devuelve ''
+// y el PDF simplemente no pinta el area de ese rasgo.
+function areaDelRasgo(origen) {
+  const t = sinTildes(origen);
+
+  // Los cuerpos que nombra, en orden de mas personal a mas lejano.
+  const cuerpos = ORDEN_PERSONAL.filter(c => new RegExp('\\b' + c).test(t));
+  if (cuerpos.length > 0) return AREA_DEL_CUERPO[cuerpos[0]];
+
+  // Si no nombra ningun cuerpo pero si una casa, vale la casa.
+  const casa = t.match(/casa\s*(\d{1,2})/);
+  if (casa) return AREA_DE_LA_CASA[Number(casa[1])] || '';
+
+  return '';
+}
+
 async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto) {
   const trato = sexo === 'mujer'
     ? 'una MUJER. Todo en femenino.'
@@ -632,6 +704,7 @@ Nombre de pila: ${nombrePila}`;
       descripcion: String(r.descripcion ?? '').trim(),
       causa: String(r.causa ?? '').trim(),
       origen: String(r.origen ?? '').trim(),
+      area: areaDelRasgo(r.origen),
     }));
 }
 

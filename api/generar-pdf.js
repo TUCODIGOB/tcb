@@ -692,7 +692,7 @@ export default async function handler(req, res) {
         var lCausa = doc.splitTextToSize(fx(r.causa), 175);
         doc.setFontSize(8);
         var lOrigen = doc.splitTextToSize(fx(r.origen), 175);
-        var alto = 7 + lDesc.length*5 + 2 + lCausa.length*5 + 2 + lOrigen.length*4 + 8;
+        var alto = 7 + lDesc.length*5 + 2 + lCausa.length*5 + 2 + lOrigen.length*4 + (r.area ? 6 : 0) + 8;
 
         if (ry + alto > H - 22) {
           addPageNum(pageC); pageC++;
@@ -719,6 +719,15 @@ export default async function handler(req, res) {
         //    rasgo no esta inventado.
         doc.setFont('Roboto','normal'); doc.setFontSize(8); doc.setTextColor(150,140,120);
         for (var o = 0; o < lOrigen.length; o++) { doc.text(lOrigen[o], 18, ry); ry += 4; }
+
+        // 5. El area del estudio a la que pertenece el rasgo.
+        if (r.area) {
+          ry += 2;
+          doc.setFont('Roboto','bold'); doc.setFontSize(12); doc.setTextColor(207,177,128);
+          doc.text(fx(String(r.area).toUpperCase()), 18, ry);
+          ry += 4;
+        }
+
         ry += 8;
       }
 
