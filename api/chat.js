@@ -667,9 +667,9 @@ Veinte como maximo en TODA la lista, sumando las siete areas, no en cada una. Es
 Si te salieran mas de veinte, te quedas con los que mas peso tienen en esta carta.
 
 ${cual === 'fortalezas'
-  ? 'Y AL MENOS UNO EN CADA AREA. Ninguna caja se entrega vacia.'
+  ? 'Y AL MENOS DOS EN CADA AREA. Ninguna caja se entrega vacia ni con uno solo: de todo el mundo se pueden decir dos cosas buenas de cada parcela de su vida, asi que de cada area salen dos como minimo.'
   : 'Y AL MENOS DOS EN CADA AREA. Ninguna caja se entrega vacia ni con uno solo: en los desafios es donde esta lo que mas le sirve, asi que de cada area salen dos como minimo.'}
-Pero ojo: eso es el suelo, no la respuesta. De cada area sale TODO lo que de verdad haya en su parte de la carta, que en unas seran cuatro y en otras el minimo. Poner el minimo en cada caja y darlo por hecho es entregar media lista.
+Pero ojo: dos es el suelo, no la respuesta. De cada area sale TODO lo que de verdad haya en su parte de la carta, que en unas seran cuatro y en otras el minimo. Poner dos en cada caja y darlo por hecho es entregar media lista.
 
 Y NI UNO REPETIDO, tampoco entre areas distintas. Repetido no es solo la misma frase: es la misma cosa dicha de otra manera. Si un rasgo te vale para dos areas, va en UNA sola, en la que mas pese. Antes de entregar, lee las siete cajas juntas y quita lo que diga lo mismo que otro.
 
@@ -880,7 +880,7 @@ async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto, INTENTOS) {
 // comprueba el codigo. Si alguna area no llega al minimo se piden SOLO esas,
 // una vez, y se juntan con lo que ya habia. Cuando el minimo se cumple, que es
 // lo normal, esto no gasta ni una llamada.
-const MINIMO_POR_AREA = { fortalezas: 1, desafios: 2 };
+const MINIMO_POR_AREA = { fortalezas: 2, desafios: 2 };
 
 async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, lista) {
   const minimo = MINIMO_POR_AREA[cual] || 1;
