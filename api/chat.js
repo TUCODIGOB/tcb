@@ -640,7 +640,7 @@ function areaPorLaPosicion(origen) {
   return '';
 }
 
-async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto, soloEstas) {
+async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto, soloEstas, aReescribir) {
   const trato = sexo === 'mujer'
     ? 'una MUJER. Todo en femenino.'
     : sexo === 'hombre'
@@ -794,9 +794,14 @@ Nombre de pila: ${nombrePila}`;
       max_tokens: 16000,
       system: encargo,
       output_config: { format: { type: 'json_schema', schema: ESQUEMA_UNA_LISTA } },
-      messages: [{ role: 'user', content: soloEstas && soloEstas.length > 0
-        ? `De esta carta faltan ${cual} de estas areas: ${soloEstas.join(', ')}. Sacalos ahora, siguiendo el esquema. Las demas cajas las dejas vacias.`
-        : `Saca la lista de ${cual} de esta carta, siguiendo el esquema.` }],
+      messages: [{ role: 'user', content:
+        aReescribir && aReescribir.length > 0
+          ? [`Estos ${cual} que has sacado de esta carta le nombran la carta a la persona que lo lee, y eso no puede salir en el informe. Devuelvemelos otra vez, cada uno en la caja de su area, con el MISMO nombre y el MISMO origen, cambiando solo la frase que nombra la carta por lo que le pasa a ella con sus palabras. Las demas cajas las dejas vacias.`, '']
+              .concat(aReescribir.map(r => `- area: ${r.area}\n  nombre: ${r.nombre}\n  descripcion: ${r.descripcion}\n  causa: ${r.causa}\n  origen: ${r.origen}`))
+              .join('\n')
+          : soloEstas && soloEstas.length > 0
+            ? `De esta carta faltan ${cual} de estas areas: ${soloEstas.join(', ')}. Sacalos ahora, siguiendo el esquema. Las demas cajas las dejas vacias.`
+            : `Saca la lista de ${cual} de esta carta, siguiendo el esquema.` }],
     }),
   });
 
@@ -908,6 +913,32 @@ function hablaDeAstrologia(rasgo) {
   return PALABRAS_DE_ASTROLOGIA.some(re => re.test(texto));
 }
 
+// UN RASGO BUENO NO SE TIRA POR UNA FRASE.
+//
+// Un rasgo puede estar bien entero y tener una sola frase que nombra la carta.
+// Tirarlo seria perder lo bueno, asi que se le devuelven esos rasgos y se le
+// pide que reescriban SOLO esa frase, con el mismo nombre y el mismo origen.
+// Si alguno vuelve nombrandola otra vez, ese si se cae.
+async function sinNombrarLaCarta(cual, nombrePila, sexo, cartaTexto, lista) {
+  const sucios = lista.filter(hablaDeAstrologia);
+  if (sucios.length === 0) return lista;
+
+  console.warn(`Lista de ${cual}: ${sucios.length} rasgos nombraban la carta, se piden reescritos`);
+  let arreglados;
+  try {
+    arreglados = await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, null, sucios);
+  } catch (err) {
+    console.error(`Lista de ${cual}: no se pudo reescribir: ${err.message.slice(0, 80)}`);
+    return lista;
+  }
+
+  // Cada uno vuelve a su sitio por el nombre, que es lo que se le ha pedido que
+  // no cambie. El que no vuelva, o vuelva igual de sucio, se queda como estaba
+  // y lo quita el filtro de mas abajo.
+  const porNombre = new Map(arreglados.filter(r => !hablaDeAstrologia(r)).map(r => [r.nombre, r]));
+  return lista.map(r => (hablaDeAstrologia(r) && porNombre.has(r.nombre)) ? porNombre.get(r.nombre) : r);
+}
+
 // EL MINIMO POR AREA, GARANTIZADO.
 //
 // El esquema obliga a que existan las siete cajas, pero no puede obligar a que
@@ -948,8 +979,10 @@ async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda
 async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
   const [fortalezas, desafios] = await Promise.all([
     sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS)
+      .then(l => sinNombrarLaCarta('fortalezas', nombrePila, sexo, cartaTexto, l))
       .then(l => conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, l)),
     sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS)
+      .then(l => sinNombrarLaCarta('desafios', nombrePila, sexo, cartaTexto, l))
       .then(l => conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, l)),
   ]);
   return { fortalezas, desafios };
