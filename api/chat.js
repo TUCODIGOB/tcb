@@ -462,9 +462,10 @@ const ESQUEMA_UNA_LISTA = {
           causa:       { type: 'string' },
           origen:      { type: 'string' },
           // El area la dice el modelo, que es el unico que sabe de que va el
-          // rasgo. El enum le impide inventarse un nombre, y ademas el codigo
-          // comprueba que esa area este de verdad en la posicion del origen.
-          area:        { type: 'string', enum: ['IDENTIDAD', 'PATRONES', 'MIEDOS', 'HERIDA', 'AMOR', 'RELACIONES', 'DINERO'] },
+          // rasgo. Aqui va como texto normal, igual que las otras casillas: el
+          // que comprueba que sea una de las siete y que este de verdad en la
+          // posicion del origen es el codigo, en areaDelRasgo.
+          area:        { type: 'string' },
         },
         required: ['nombre', 'descripcion', 'causa', 'origen', 'area'],
         additionalProperties: false,
