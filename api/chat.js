@@ -640,7 +640,7 @@ Y NI UNO REPETIDO. Repetido no es solo la misma frase: es la misma cosa dicha de
 
 Recorre la carta ENTERA, no solo lo que mas salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona.
 
-El estudio tiene siete areas y la carta habla de las siete, asi que la recorres AREA POR AREA. De cada area miras lo que hay de ella en ESTA carta, y de ahi sacas sus rasgos:
+El estudio tiene siete areas y la carta habla de las siete, asi que la recorres AREA POR AREA. De cada area miras lo que hay de esa area en ESTA carta, y de ahi sacas sus rasgos:
 
 IDENTIDAD    el Sol, el Ascendente, la casa 1
 PATRONES     el Nodo Norte, las casas 6 y 9
@@ -670,7 +670,7 @@ nombre       Se le habla de tu, igual que en todo lo demas: es lo que hace
 descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota.
 
 causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
-             lo que ella quiere saber. Dos o tres frases.
+             lo que quiere saber. Dos o tres frases.
              NO REPITE EL RASGO CON OTRAS PALABRAS. Lo que hace y como se le
              nota ya esta arriba, en la descripcion. Aqui se dice que hay
              DETRAS que lo produce, el mecanismo del que sale.
@@ -679,7 +679,7 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              cabeza funciona asi" o "porque le sale natural": eso es el rasgo
              otra vez con un porque delante, y no explica nada. Lo que produce
              una fortaleza nunca es la fortaleza. Es una manera suya de
-             funcionar que por si sola no es ni buena ni mala, y que en ella
+             funcionar que por si sola no es ni buena ni mala, y que
              acaba dando esto.
              PRUEBA ANTES DE ENTREGAR: tapa la descripcion y lee solo la
              causa. Si ahi no hay nada que no estuviera ya en la descripcion,
@@ -691,15 +691,15 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              signo, ninguna casa, ningun aspecto, nada de que algo esta en una
              zona de su carta ni de que va retrogrado, y su carta no se nombra.
              Tampoco se nombra el area del estudio de la que sale el rasgo: eso
-             es cosa nuestra para ordenarlo, no algo que ella tenga que leer.
+             es cosa nuestra para ordenarlo, no algo que tenga que leer.
              La posicion va en "origen", la casilla de al lado, y no se cuenta
-             dos veces. Aqui se explica el mecanismo con las palabras de ella,
+             dos veces. Aqui se explica el mecanismo con sus palabras,
              sin decir de donde has sacado que funciona asi.
              Y OJO CON ESTO: una carta natal es el mapa del momento en que
              nacio. No dice nada de lo que le paso despues. Asi que esta
              PROHIBIDO contar su infancia, su familia, sus padres, su casa o
              cualquier episodio de su vida: eso no esta en la carta y seria
-             inventarselo. Lo que se cuenta es como funciona ella por dentro y
+             inventarselo. Lo que se cuenta es como funciona por dentro y
              a donde le lleva eso.
 
 origen       De donde sale el rasgo en la carta, en tecnico y en corto: el
@@ -708,7 +708,7 @@ origen       De donde sale el rasgo en la carta, en tecnico y en corto: el
              Es obligatoria. Y no repartas todos los rasgos sobre las mismas
              dos o tres posiciones: la carta tiene de sobra.
 
-Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes como seguirlo, se quita ENTERO, tambien su nombre. Nunca se rellena una casilla con una palabra de relleno ni con un aviso de que falta: eso se imprime tal cual en el informe que lee la clienta.
+Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes como seguirlo, se quita ENTERO, tambien su nombre. Nunca se rellena una casilla con una palabra de relleno ni con un aviso de que falta: eso se imprime tal cual en el informe que va a leer.
 
 
 5. COMO SE ESCRIBE
@@ -716,9 +716,9 @@ Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes 
 Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee una sola vez.
 
 - SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atras para entenderla, esta mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
-- SE LE HABLA A ELLA DE TU, siempre, como quien se lo cuenta tomando un cafe. Nunca de ella en tercera persona.
+- SE LE HABLA DE TU, siempre, como quien se lo cuenta tomando un cafe. Nunca en tercera persona.
 - SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un dia cualquiera.
-- NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace ella, no lo que hace un concepto.
+- NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace la persona, no lo que hace un concepto.
 - NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa.
 - FRASES LARGAS, ENCADENADAS CON COMAS, y QUE EL TEXTO RESPIRE. Asi se habla de verdad. Cortarlo todo en frases secas y en ideas cortas una detras de otra parte la lectura, suena a lista y ahoga a quien lee, porque no le da tiempo a asimilar una cuando ya le llega la siguiente. Se desarrolla una idea, se le deja sitio, y luego viene la otra.
 - LAS PALABRAS SON LAS DE LA CALLE, no las de un informe. Si una palabra la verias antes en una evaluacion de trabajo o en un manual que en una conversacion, se cambia por la que usaria cualquiera hablando.
