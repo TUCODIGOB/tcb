@@ -659,12 +659,13 @@ De cada area saldra lo que salga. Lo que no puede pasar es que de un area no hay
 
 4. LAS CUATRO CASILLAS DE CADA RASGO
 
-nombre       EMPIEZA POR UN VERBO, siempre. Es lo que ella hace o lo que le
-             pasa, no el nombre de eso. Un nombre que arranca con un sustantivo
-             y le cuelga adjetivos detras es una etiqueta de manual, y esta mal
+nombre       Se le habla de tu, igual que en todo lo demas: es lo que hace
+             o lo que le pasa, dicho a la persona. No el nombre de eso.
+             Un nombre que arranca con un sustantivo y le cuelga adjetivos
+             detras no le habla a nadie, es una etiqueta de manual, y esta mal
              aunque describa bien el rasgo.
              De cuatro a siete palabras, con sus articulos y sus preposiciones,
-             como se habla. Se lee como si se lo dijeras a la cara.
+             como se habla.
 
 descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota.
 
@@ -726,7 +727,7 @@ Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee un
 - Español de España, hablado, sin latinoamericanismos.
 - Nada de asteriscos, negritas, guiones ni simbolos: es texto corrido.
 ${cual === 'desafios'
-  ? '- No se la diagnostica: se cuenta lo que le ocurre, no como se llama eso.'
+  ? '- No se le pone un diagnostico: se cuenta lo que le ocurre, no como se llama eso.'
   : ''}
 
 Carta natal:
