@@ -52,14 +52,27 @@ globalThis.__TIENDA = TIENDA;
 
 // ── Contamos lo unico que cuesta dinero: las llamadas al modelo.
 let llamadasAlModelo = 0;
-globalThis.fetch = async (url) => {
+// Las dos listas de rasgos se piden antes que las areas y con otro encargo, asi
+// que el modelo de mentira tiene que saber contestar a las dos cosas. Si a la
+// peticion de las listas se le devuelve texto de area, no es JSON valido, las
+// listas no salen y no se llega a escribir ni un area.
+const LISTAS_DE_MENTIRA = JSON.stringify({
+  fortalezas: [{ nombre: 'Aguante fuera de lo normal', descripcion: 'Sigues de pie donde otros se bajan.',
+                 causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen: 'Saturno en Virgo, casa 12' }],
+  desafios:   [{ nombre: 'Te cuesta pedir', descripcion: 'Prefieres cargar tu sola antes que decirlo.',
+                 causa: 'Resolver te resulta mas comodo que exponerte a un no.', origen: 'Marte en Virgo, casa 12' }],
+});
+
+globalThis.fetch = async (url, opciones) => {
   const u = String(url);
   if (u.includes('api.anthropic.com')) {
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
+    let esRasgos = false;
+    try { esRasgos = String(JSON.parse(opciones.body).system || '').startsWith('Eres astrologa'); } catch (e) {}
     // api/chat.js descarta cualquier area de menos de 100 caracteres y la
     // reintenta, asi que la respuesta de mentira tiene que dar la talla.
-    const texto = 'Texto de area generado para la prueba. '.repeat(10);
+    const texto = esRasgos ? LISTAS_DE_MENTIRA : 'Texto de area generado para la prueba. '.repeat(10);
     return { ok: true, status: 200, json: async () => ({ content: [{ text: texto }] }) };
   }
   return { ok: true, status: 200, json: async () => ({}) };   // Brevo

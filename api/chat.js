@@ -385,19 +385,31 @@ ${cartaTexto}`;
   }
 
   try {
-    // Las dos listas se piden A LA VEZ que las areas, no despues: asi no suman
-    // su espera a la del informe, que ya va justo de tiempo.
+    // LAS LISTAS VAN PRIMERO, Y SOLAS.
     //
-    // Y van con su propio catch: si las listas fallan, el informe sale igual,
-    // solo que sin ellas. Una clienta que ha pagado y no recibe nada es peor
-    // que un informe sin las dos ultimas paginas.
-    const laLista = sacarRasgos(nombrePila, sexo, cartaTexto)
-      .catch(err => {
-        console.error('Las listas de rasgos no salieron:', err.message);
-        return null;
-      });
+    // Antes que las areas, no a la vez: mas adelante las areas se escribiran
+    // con los rasgos ya sacados, y para eso tienen que existir antes de que
+    // empiece a escribirse ninguna area.
+    //
+    // Y SIN RED. Si las listas no salen, no sale el informe: se corta aqui, se
+    // suelta la reserva y el cliente reintenta. Un informe sin las listas no es
+    // el producto, asi que no se entrega a medias.
+    // Y con el mismo trato que las areas: hasta 3 intentos cuando el fallo es
+    // temporal (saturacion, error del servidor, corte de red). Las areas ya lo
+    // hacian; las listas van igual, porque tienen que salir siempre.
+    let rasgos, falloRasgos;
+    for (let intento = 1; intento <= INTENTOS_POR_AREA; intento++) {
+      try { rasgos = await sacarRasgos(nombrePila, sexo, cartaTexto); break; }
+      catch (err) {
+        falloRasgos = err;
+        if (intento === INTENTOS_POR_AREA) break;
+        console.warn(`Rasgos: intento ${intento} fallido (${err.message.slice(0, 90)}), reintentando`);
+        await new Promise(r => setTimeout(r, 1500 * intento));
+      }
+    }
+    if (!rasgos) throw falloRasgos;
 
-    // Lanzar las 7 llamadas en paralelo
+    // Despues, las 7 areas a la vez.
     const resultados = await Promise.all(
       AREAS.map(area => generarArea(area))
     );
@@ -415,9 +427,6 @@ ${cartaTexto}`;
 
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
     // que demuestra que quien pide el PDF es quien tiene la reserva.
-    // Las listas ya se estaban haciendo mientras se escribian las areas.
-    const rasgos = await laLista;
-
     return res.status(200).json({ texto: textoCompleto, token: reserva.token, rasgos });
 
   } catch (err) {
@@ -615,6 +624,16 @@ Nombre de pila: ${nombrePila}`;
     - (fortalezas.length + desafios.length);
   if (tirados > 0) {
     console.warn(`Rasgos: ${tirados} descartado(s) por no decir de donde salen`);
+  }
+
+  // Las dos listas tienen que traer rasgos. Si una se queda vacia, o es que el
+  // modelo no ha sacado nada, o es que todo lo que saco venia sin sitio en la
+  // carta: en los dos casos no hay informe que entregar.
+  if (fortalezas.length === 0 || desafios.length === 0) {
+    throw new Error(
+      `rasgos: faltan listas (fortalezas ${fortalezas.length}, desafios ${desafios.length}` +
+      (tirados > 0 ? `, ${tirados} descartados por no decir de donde salen` : '') + ')'
+    );
   }
 
   return { fortalezas, desafios };
