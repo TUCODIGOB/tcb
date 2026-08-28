@@ -163,7 +163,7 @@ export default async function handler(req, res) {
     var AIRE_BAJO_LINEA = 11;
 
     // Hueco que separa el final de una lista del titulo de la siguiente.
-    var AIRE_ENTRE_LISTAS = 25;
+    var AIRE_ENTRE_LISTAS = 30;
 
     function addPageNum(n) {
       doc.setFont('Roboto', 'bold');
