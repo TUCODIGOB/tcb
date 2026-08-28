@@ -459,24 +459,10 @@ ${cartaTexto}`;
 
 // Los doce signos y los diez planetas, para comprobar que "origen" nombra algo
 // de verdad y no una frase vacia.
-const ESQUEMA_RASGOS = {
+const ESQUEMA_UNA_LISTA = {
   type: 'object',
   properties: {
-    fortalezas: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          nombre:      { type: 'string' },
-          descripcion: { type: 'string' },
-          causa:       { type: 'string' },
-          origen:      { type: 'string' },
-        },
-        required: ['nombre', 'descripcion', 'causa', 'origen'],
-        additionalProperties: false,
-      },
-    },
-    desafios: {
+    rasgos: {
       type: 'array',
       items: {
         type: 'object',
@@ -491,11 +477,11 @@ const ESQUEMA_RASGOS = {
       },
     },
   },
-  required: ['fortalezas', 'desafios'],
+  required: ['rasgos'],
   additionalProperties: false,
 };
 
-async function sacarRasgos(nombrePila, sexo, cartaTexto) {
+async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto) {
   const trato = sexo === 'mujer'
     ? 'una MUJER. Todo en femenino.'
     : sexo === 'hombre'
@@ -506,17 +492,18 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto) {
 
 TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posicion concreta de esta carta, no se escribe.
 
-LAS DOS LISTAS:
-- FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.
-- DESAFIOS: lo que le cuesta, lo que le pesa, donde tropieza.
+LA LISTA QUE TIENES QUE SACAR AHORA ES ESTA:
+${cual === 'fortalezas'
+  ? 'FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.'
+  : 'DESAFIOS: lo que le cuesta, lo que le pesa, donde tropieza.'}
+Solo esa. La otra la esta sacando otra persona a la vez que tu, asi que tu no la escribes.
 
-SIN NUMERO FIJO. Saca TODOS los que de verdad salgan de esta carta, los que sean. No hay minimo, y las dos listas no tienen por que tener el mismo numero. Lo que no vale es inventarse ninguno para alargar la lista, ni dejarse fuera uno que este en la carta para acortarla.
+SIN NUMERO FIJO. Saca TODOS los que de verdad salgan de esta carta, los que sean. No hay minimo. Lo que no vale es inventarse ninguno para alargar la lista, ni dejarse fuera uno que este en la carta para acortarla.
 
-EL UNICO LIMITE: 20 COMO MAXIMO EN CADA LISTA.
-Veinte es un TECHO, no un objetivo, y no es una cuota que haya que llenar. Si de esta carta salen dieciocho fortalezas de verdad, se entregan dieciocho: no se añaden dos mas para llegar a veinte, no se repite una que ya esta dicha con otras palabras, y no se parte una buena en dos. Y lo mismo con los desafios.
-Llegar a veinte no es hacerlo mejor. Dieciocho ciertas valen mas que veinte con dos inventadas, porque las dos inventadas se notan y tiran abajo las otras dieciocho.
-Las dos listas no tienen por que tener el mismo numero: cada una tendra los que tenga.
-Si de una lista te salieran mas de veinte, te quedas con los veinte que mas peso tienen en esta carta.
+EL UNICO LIMITE: 20 COMO MAXIMO.
+Veinte es un TECHO, no un objetivo, y no es una cuota que haya que llenar. Si de esta carta salen dieciocho de verdad, se entregan dieciocho: no se añaden dos mas para llegar a veinte, no se repite uno que ya esta dicho con otras palabras, y no se parte uno bueno en dos.
+Llegar a veinte no es hacerlo mejor. Dieciocho ciertos valen mas que veinte con dos inventados, porque los dos inventados se notan y tiran abajo a los otros dieciocho.
+Si te salieran mas de veinte, te quedas con los veinte que mas peso tienen en esta carta.
 
 RECORRE LA CARTA ENTERA, NO SOLO LO QUE MAS SALTA A LA VISTA.
 Una carta tiene mucho mas de lo que se ve en una primera lectura, y quedarse en lo evidente deja fuera la mitad de la persona. Antes de dar las listas por terminadas, pasa por TODO lo que tienes delante, una cosa detras de otra:
@@ -530,7 +517,7 @@ De cada sitio sale lo que salga: a veces dos rasgos, a veces uno, a veces ningun
 CADA RASGO SE ENTREGA ENTERO O NO SE ENTREGA.
 Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes como seguirlo, se quita entero, tambien su nombre. Nunca se rellena una casilla con una palabra de relleno, ni con un aviso de que falta, ni con nada que no sea el texto que toca: eso se imprime tal cual en el informe que lee la clienta. Antes de entregar, repasa las dos listas casilla por casilla y quita cualquier rasgo al que le falte algo.
 
-NI UNO REPETIDO, ni dentro de la misma lista ni entre las dos. Repetido no es solo la misma frase: es la misma cosa dicha con otras palabras. Antes de dar una lista por terminada, leela entera y quita lo que diga lo mismo que otro rasgo.
+NI UNO REPETIDO dentro de tu lista. Repetido no es solo la misma frase: es la misma cosa dicha con otras palabras. Antes de darla por terminada, leela entera y quita lo que diga lo mismo que otro rasgo.
 
 CADA RASGO LLEVA CUATRO CASILLAS:
 
@@ -559,7 +546,7 @@ EL TONO DE LAS TRES PRIMERAS CASILLAS:
 - Español de España, hablado, sin latinoamericanismos.
 - Ni una palabra tecnica en "nombre", "descripcion" ni "causa": ni planetas, ni signos, ni casas, ni aspectos, ni carta natal. Todo lo tecnico va en "origen" y solo ahi.
 - Nada de asteriscos, negritas, guiones ni simbolos: es texto corrido.
-- En los desafios, se nombra lo que HACE o lo que le PASA, no se le pone una etiqueta encima. Se cuenta lo que ocurre, no se la diagnostica.
+- Si estas sacando los desafios, se nombra lo que HACE o lo que le PASA, no se le pone una etiqueta encima. Se cuenta lo que ocurre, no se la diagnostica.
 
 Carta natal:
 ${cartaTexto}
@@ -584,8 +571,8 @@ Nombre de pila: ${nombrePila}`;
       // el modelo escribe.
       max_tokens: 16000,
       system: encargo,
-      output_config: { format: { type: 'json_schema', schema: ESQUEMA_RASGOS } },
-      messages: [{ role: 'user', content: 'Saca las dos listas de esta carta, siguiendo el esquema.' }],
+      output_config: { format: { type: 'json_schema', schema: ESQUEMA_UNA_LISTA } },
+      messages: [{ role: 'user', content: `Saca la lista de ${cual} de esta carta, siguiendo el esquema.` }],
     }),
   });
 
@@ -609,17 +596,23 @@ Nombre de pila: ${nombrePila}`;
 
   // Se cogen los rasgos tal como salen. Lo unico que se hace es quitar espacios
   // sobrantes de cada casilla.
-  const limpiar = (lista) => (Array.isArray(lista) ? lista : [])
+  return (Array.isArray(salida.rasgos) ? salida.rasgos : [])
     .map(r => ({
       nombre: String(r.nombre).trim(),
       descripcion: String(r.descripcion).trim(),
       causa: String(r.causa).trim(),
       origen: String(r.origen).trim(),
     }));
+}
 
-  const fortalezas = limpiar(salida.fortalezas);
-  const desafios = limpiar(salida.desafios);
-
+// Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
+// mismo que antes escribia una sola, pero tardan la mitad porque van en
+// paralelo, igual que las siete areas.
+async function sacarRasgos(nombrePila, sexo, cartaTexto) {
+  const [fortalezas, desafios] = await Promise.all([
+    sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto),
+    sacarUnaLista('desafios', nombrePila, sexo, cartaTexto),
+  ]);
   return { fortalezas, desafios };
 }
 

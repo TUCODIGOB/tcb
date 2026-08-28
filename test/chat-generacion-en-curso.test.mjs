@@ -57,10 +57,8 @@ let llamadasAlModelo = 0;
 // peticion de las listas se le devuelve texto de area, no es JSON valido, las
 // listas no salen y no se llega a escribir ni un area.
 const LISTAS_DE_MENTIRA = JSON.stringify({
-  fortalezas: [{ nombre: 'Aguante fuera de lo normal', descripcion: 'Sigues de pie donde otros se bajan.',
-                 causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen: 'Saturno en Virgo, casa 12' }],
-  desafios:   [{ nombre: 'Te cuesta pedir', descripcion: 'Prefieres cargar tu sola antes que decirlo.',
-                 causa: 'Resolver te resulta mas comodo que exponerte a un no.', origen: 'Marte en Virgo, casa 12' }],
+  rasgos: [{ nombre: 'Aguante fuera de lo normal', descripcion: 'Sigues de pie donde otros se bajan.',
+             causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen: 'Saturno en Virgo, casa 12' }],
 });
 
 globalThis.fetch = async (url, opciones) => {
@@ -152,10 +150,10 @@ try {
   // 3. La generacion legitima termina sin enterarse de nada.
   const legitima = await enCurso;
   comprobar('la generacion legitima termina bien', legitima.code === 200, 'HTTP ' + legitima.code);
-  // 8 = las 7 areas + la peticion de las dos listas de rasgos, que sale a la
-  // vez que ellas. Lo que se vigila aqui no es el numero, sino que la segunda
+  // 9 = las dos listas de rasgos, que van en paralelo y antes que nada, mas las
+  // 7 areas. Lo que se vigila aqui no es el numero, sino que la segunda
   // peticion no haya lanzado NINGUNA generacion mas.
-  comprobar('en total solo se generó una vez', llamadasAlModelo === 8, llamadasAlModelo + ' llamadas');
+  comprobar('en total solo se generó una vez', llamadasAlModelo === 9, llamadasAlModelo + ' llamadas');
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);
