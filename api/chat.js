@@ -512,10 +512,11 @@ LAS DOS LISTAS:
 
 SIN NUMERO FIJO. Saca TODOS los que de verdad salgan de esta carta, los que sean. No hay minimo, y las dos listas no tienen por que tener el mismo numero. Lo que no vale es inventarse ninguno para alargar la lista, ni dejarse fuera uno que este en la carta para acortarla.
 
-EL UNICO LIMITE: 40 RASGOS ENTRE LAS DOS LISTAS.
-Cuarenta contando fortalezas y desafios juntos, no cuarenta de cada. Y el reparto entre las dos lo decide la carta, no un reparto a partes iguales.
-40 es un techo, NO un objetivo. Si de esta carta salen treinta y ocho de verdad, se entregan treinta y ocho: no se añaden dos mas para llegar a cuarenta, ni se estira uno bueno en dos para rellenar. Preferimos treinta y ocho ciertos que cuarenta con dos inventados.
-Si te salieran mas de cuarenta, te quedas con los cuarenta que mas peso tienen en esta carta.
+EL UNICO LIMITE: 20 COMO MAXIMO EN CADA LISTA.
+Veinte es un TECHO, no un objetivo, y no es una cuota que haya que llenar. Si de esta carta salen dieciocho fortalezas de verdad, se entregan dieciocho: no se añaden dos mas para llegar a veinte, no se repite una que ya esta dicha con otras palabras, y no se parte una buena en dos. Y lo mismo con los desafios.
+Llegar a veinte no es hacerlo mejor. Dieciocho ciertas valen mas que veinte con dos inventadas, porque las dos inventadas se notan y tiran abajo las otras dieciocho.
+Las dos listas no tienen por que tener el mismo numero: cada una tendra los que tenga.
+Si de una lista te salieran mas de veinte, te quedas con los veinte que mas peso tienen en esta carta.
 
 RECORRE LA CARTA ENTERA, NO SOLO LO QUE MAS SALTA A LA VISTA.
 Una carta tiene mucho mas de lo que se ve en una primera lectura, y quedarse en lo evidente deja fuera la mitad de la persona. Antes de dar las listas por terminadas, pasa por TODO lo que tienes delante, una cosa detras de otra:
