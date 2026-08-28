@@ -676,6 +676,8 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              nombre, ni en la descripcion, ni aqui: ningun planeta, ningun
              signo, ninguna casa, ningun aspecto, nada de que algo esta en una
              zona de su carta ni de que va retrogrado, y su carta no se nombra.
+             Tampoco se nombra el area del estudio de la que sale el rasgo: eso
+             es cosa nuestra para ordenarlo, no algo que ella tenga que leer.
              La posicion va en "origen", la casilla de al lado, y no se cuenta
              dos veces. Aqui se explica el mecanismo con las palabras de ella,
              sin decir de donde has sacado que funciona asi.
