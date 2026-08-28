@@ -631,18 +631,30 @@ Solo esa. La otra lista la esta sacando otra persona a la vez que tu.
 Veinte como maximo. Es un TECHO, no un objetivo ni una cuota que llenar: si de esta carta salen dieciocho de verdad, se entregan dieciocho. No se añade ninguno para llegar a la cifra y no se parte uno bueno en dos.
 Si te salieran mas de veinte, te quedas con los que mas peso tienen en esta carta.
 
+Y AL MENOS UNO DE CADA AREA de las siete de abajo. Ninguna se queda a cero. Por encima de ese minimo salen los que salgan de verdad, y unas areas daran mas que otras, pero no puede pasar que media lista se te vaya a una sola area y de otra no hayas sacado nada.
+
 Y NI UNO REPETIDO. Repetido no es solo la misma frase: es la misma cosa dicha de otra manera. Antes de entregar, lee la lista entera y quita lo que diga lo mismo que otro.
 
 
 3. DE DONDE LOS SACAS
 
-Recorre la carta ENTERA, no solo lo que mas salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona. Pasa por todo lo que tienes delante, una cosa detras de otra:
-- El Ascendente.
-- Cada planeta, uno por uno, de la Luna a Pluton, con Quiron y el Nodo Norte: en que signo esta y en que casa cae. Los dos datos dicen cosas distintas.
-- Cada aspecto de la lista, uno por uno.
-- Los planetas retrogrados, que los lleva marcados.
-- Donde se junta mas de una cosa: varios planetas en el mismo signo o en la misma casa, o una casa vacia.
-De cada sitio saldra lo que salga, a veces nada. Lo que no puede pasar es que algo de esta carta no lo hayas ni mirado.
+Recorre la carta ENTERA, no solo lo que mas salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona.
+
+El estudio tiene siete areas y la carta habla de las siete, asi que la recorres AREA POR AREA. De cada area miras lo que hay de ella en ESTA carta, y de ahi sacas sus rasgos:
+
+IDENTIDAD    el Sol, el Ascendente, la casa 1
+PATRONES     el Nodo Norte, las casas 6 y 9
+MIEDOS       Saturno, Neptuno, Pluton, la casa 12
+HERIDA       la Luna, Quiron, la casa 4
+AMOR         Venus, las casas 5 y 7
+RELACIONES   Mercurio, las casas 3 y 11
+DINERO       las casas 2, 8 y 10
+
+En cada una miras todo lo que tienes de eso: en que signo esta y en que casa cae, que aspectos forma con los demas, si va retrogrado, y si ahi se junta mas de una cosa o la casa esta vacia. Cada dato dice algo distinto.
+Marte, Urano y Jupiter no llevan area propia: lo que salga de ellos es del area de la casa en la que estan.
+Cuando un rasgo sale de un aspecto entre dos, es del area del mas personal de los dos: primero el Sol, luego la Luna, Mercurio, Venus, Marte, el Ascendente y el Nodo, y por ultimo Jupiter, Saturno, Quiron, Urano, Neptuno y Pluton.
+Si un rasgo vale para dos areas, va en UNA sola, la que mas peso tenga en el.
+De cada area saldra lo que salga. Lo que no puede pasar es que de un area no hayas sacado nada porque ni la has mirado.
 
 
 4. LAS CUATRO CASILLAS DE CADA RASGO
@@ -664,6 +676,8 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              nombre, ni en la descripcion, ni aqui: ningun planeta, ningun
              signo, ninguna casa, ningun aspecto, nada de que algo esta en una
              zona de su carta ni de que va retrogrado, y su carta no se nombra.
+             Tampoco se nombra el area del estudio de la que sale el rasgo: eso
+             es cosa nuestra para ordenarlo, no algo que ella tenga que leer.
              La posicion va en "origen", la casilla de al lado, y no se cuenta
              dos veces. Aqui se explica el mecanismo con las palabras de ella,
              sin decir de donde has sacado que funciona asi.
