@@ -518,8 +518,14 @@ nombre       De 3 a 6 palabras, sin articulos.
 descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota.
 
 causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
-             lo que ella quiere saber. No una explicacion que valdria para
-             cualquier otro rasgo suyo: la de este. Dos o tres frases.
+             lo que ella quiere saber. Dos o tres frases.
+             NO REPITE EL RASGO CON OTRAS PALABRAS. Lo que hace y como se le
+             nota ya esta arriba, en la descripcion. Aqui se dice que hay
+             DETRAS que lo produce, el mecanismo del que sale. Si al leer la
+             causa se entiende lo mismo que ya se entendia con la descripcion,
+             esa causa no vale y hay que escribir la de verdad.
+             Y tiene que ser la de ESTE rasgo, no una que valdria igual para
+             cualquier otro suyo.
              Y OJO CON ESTO: una carta natal es el mapa del momento en que
              nacio. No dice nada de lo que le paso despues. Asi que esta
              PROHIBIDO contar su infancia, su familia, sus padres, su casa o
