@@ -125,6 +125,17 @@ async function enviarPurchaseGA4({ clientId, sessionId }) {
   }
 }
 
+// Brevo rechaza el contacto ENTERO si el telefono no le vale, y entonces la
+// compra no se guarda: ni la lista de compradores, ni los datos de nacimiento,
+// ni nada. Cuando el campo era opcional y el cliente lo dejaba vacio se le
+// mandaba el prefijo suelto ("+34"), y eso es justo lo que tumbaba el registro.
+// Ahora el telefono vuelve a ser obligatorio, pero la comprobacion se queda:
+// un dato de contacto nunca debe poder cargarse una venta.
+function telefonoValido(telefono) {
+  const limpio = String(telefono || '').replace(/[\s\-()]/g, '');
+  return /^\+\d{7,15}$/.test(limpio);
+}
+
 // ═════════════════════════════════════════════════════════════════
 // GUARDAR CONTACTO EN BREVO
 // ═════════════════════════════════════════════════════════════════
@@ -138,11 +149,11 @@ async function guardarContactoBrevo(datos) {
   const firstName = partes[0] || '';
   const lastName = partes.slice(1).join(' ') || '';
 
-  // Atributos personalizados que guardamos en Brevo
+  // Atributos personalizados que guardamos en Brevo. El telefono se anade
+  // aparte, mas abajo, solo si es un numero de verdad.
   const attributes = {
     FIRSTNAME: firstName,
     LASTNAME: lastName,
-    SMS: datos.telefono || '',
     SEXO: datos.sexo || '',
     FECHA_NACIMIENTO: datos.fecha || '',
     HORA_NACIMIENTO: datos.hora || '',
@@ -159,6 +170,8 @@ async function guardarContactoBrevo(datos) {
     LUGAR_NAC: [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', '),
     P1_COMPRADO: 'si',
 };
+
+  if (telefonoValido(datos.telefono)) attributes.SMS = datos.telefono;
 
   const body = {
     email: datos.email,
