@@ -356,16 +356,7 @@ ${cartaTexto}`;
     }
 
     const data = await response.json();
-    // La respuesta viene en bloques y el area puede no ser el primero: los
-    // modelos que razonan antes de escribir colocan delante un bloque de
-    // razonamiento, que no lleva texto. Antes se cogia data.content[0].text a
-    // secas, asi que con esos modelos salia vacio y se descartaba un area que
-    // el modelo si habia escrito, y que ya estaba pagada. Se cogen todos los
-    // bloques de texto y se pegan, que es lo unico que nos interesa.
-    const texto = (data.content || [])
-      .filter(b => b && typeof b.text === 'string')
-      .map(b => b.text)
-      .join('');
+    const texto = data.content?.[0]?.text || '';
 
     if (!texto || texto.trim().length < 100) {
       const err = new Error(`Área ${area.id} devolvió texto vacío o demasiado corto`);
