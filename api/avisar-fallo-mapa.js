@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         sender: { email: 'hola@origennatal.com', name: 'ORIGEN NATAL — Alertas' },
-        to: [{ email: 'hola.origennatal@gmail.com', name: 'ORIGEN NATAL' }],
+        to: [{ email: 'hola.origennatal@gmail.com', name: 'Origen Natal' }],
         subject: 'MAPA CAIDO — UN CLIENTE NO HA PODIDO PAGAR',
         htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
       }),
