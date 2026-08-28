@@ -447,32 +447,36 @@ ${cartaTexto}`;
 // PDF para poder revisar si lo que dice es correcto.
 // ═════════════════════════════════════════════════════════════════
 
-// Los doce signos y los diez planetas, para comprobar que "origen" nombra algo
-// de verdad y no una frase vacia.
-const ESQUEMA_UNA_LISTA = {
+// Las siete areas del estudio, en el orden en que salen en el informe.
+const NOMBRES_DE_AREA = ['IDENTIDAD', 'PATRONES', 'MIEDOS', 'HERIDA', 'AMOR', 'RELACIONES', 'DINERO'];
+
+const CASILLAS_DEL_RASGO = {
   type: 'object',
   properties: {
-    rasgos: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          nombre:      { type: 'string' },
-          descripcion: { type: 'string' },
-          causa:       { type: 'string' },
-          origen:      { type: 'string' },
-          // El area la dice el modelo, que es el unico que sabe de que va el
-          // rasgo. Aqui va como texto normal, igual que las otras casillas: el
-          // que comprueba que sea una de las siete y que este de verdad en la
-          // posicion del origen es el codigo, en areaDelRasgo.
-          area:        { type: 'string' },
-        },
-        required: ['nombre', 'descripcion', 'causa', 'origen', 'area'],
-        additionalProperties: false,
-      },
-    },
+    nombre:      { type: 'string' },
+    descripcion: { type: 'string' },
+    causa:       { type: 'string' },
+    origen:      { type: 'string' },
   },
-  required: ['rasgos'],
+  required: ['nombre', 'descripcion', 'causa', 'origen'],
+  additionalProperties: false,
+};
+
+// UNA CAJA POR AREA, NO UNA LISTA SEGUIDA.
+//
+// Pidiendo una lista seguida, la rellenaba recorriendo los aspectos, que es lo
+// mas largo y concreto que tiene delante, y habia areas a las que no llegaba
+// nunca: el Nodo Norte, por ejemplo, no forma ningun aspecto, asi que el area
+// que sale de el se quedaba a cero. La regla de "al menos uno de cada" estaba
+// escrita y aun asi no se cumplia.
+//
+// Con una caja por area tiene que pasar por las siete para contestar, y dejar
+// una vacia es algo que hace a la vista y no un descuido. El area de cada
+// rasgo ya no hace falta preguntarla: es la caja en la que viene.
+const ESQUEMA_UNA_LISTA = {
+  type: 'object',
+  properties: Object.fromEntries(NOMBRES_DE_AREA.map(a => [a, { type: 'array', items: CASILLAS_DEL_RASGO }])),
+  required: NOMBRES_DE_AREA,
   additionalProperties: false,
 };
 
@@ -636,7 +640,7 @@ function areaPorLaPosicion(origen) {
   return '';
 }
 
-async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto) {
+async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto, soloEstas) {
   const trato = sexo === 'mujer'
     ? 'una MUJER. Todo en femenino.'
     : sexo === 'hombre'
@@ -659,19 +663,26 @@ Solo esa. La otra lista la esta sacando otra persona a la vez que tu.
 
 2. CUANTOS
 
-Veinte como maximo. Es un TECHO, no un objetivo ni una cuota que llenar: si de esta carta salen dieciocho de verdad, se entregan dieciocho. No se añade ninguno para llegar a la cifra y no se parte uno bueno en dos.
+Veinte como maximo en TODA la lista, sumando las siete areas, no en cada una. Es un TECHO, no un objetivo ni una cuota que llenar: si de esta carta salen dieciocho de verdad, se entregan dieciocho. No se añade ninguno para llegar a la cifra y no se parte uno bueno en dos.
 Si te salieran mas de veinte, te quedas con los que mas peso tienen en esta carta.
 
-Y AL MENOS UNO DE CADA AREA de las siete de abajo. Ninguna se queda a cero. Por encima de ese minimo salen los que salgan de verdad, y unas areas daran mas que otras, pero no puede pasar que media lista se te vaya a una sola area y de otra no hayas sacado nada.
+${cual === 'fortalezas'
+  ? 'Y AL MENOS UNO EN CADA AREA. Ninguna caja se entrega vacia.'
+  : 'Y AL MENOS DOS EN CADA AREA. Ninguna caja se entrega vacia ni con uno solo: en los desafios es donde esta lo que mas le sirve, asi que de cada area salen dos como minimo.'}
+Pero ojo: eso es el suelo, no la respuesta. De cada area sale TODO lo que de verdad haya en su parte de la carta, que en unas seran cuatro y en otras el minimo. Poner el minimo en cada caja y darlo por hecho es entregar media lista.
 
-Y NI UNO REPETIDO. Repetido no es solo la misma frase: es la misma cosa dicha de otra manera. Antes de entregar, lee la lista entera y quita lo que diga lo mismo que otro.
+Y NI UNO REPETIDO, tampoco entre areas distintas. Repetido no es solo la misma frase: es la misma cosa dicha de otra manera. Si un rasgo te vale para dos areas, va en UNA sola, en la que mas pese. Antes de entregar, lee las siete cajas juntas y quita lo que diga lo mismo que otro.
 
 
 3. DE DONDE LOS SACAS
 
 Recorre la carta ENTERA, no solo lo que mas salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona.
 
-El estudio tiene siete areas y la carta habla de las siete, asi que la recorres AREA POR AREA. De cada area miras lo que hay de esa area en ESTA carta, y de ahi sacas sus rasgos:
+El estudio tiene siete areas y la carta habla de las siete. Contestas con una caja por area, asi que vas una por una: te paras en un area, miras lo que hay de ella en ESTA carta, sacas sus rasgos, y solo entonces pasas a la siguiente.
+
+No empieces por la lista de aspectos. Es lo mas largo que tienes delante y arrastra: se llena la lista con lo que sale de ahi y hay areas a las que no llegas nunca. Se empieza por el area y se busca lo suyo, que a veces es un aspecto y a veces no.
+
+Esto es lo que hay de cada area:
 
 IDENTIDAD    el Sol, el Ascendente, la casa 1
 PATRONES     el Nodo Norte, las casas 6 y 9
@@ -683,9 +694,7 @@ DINERO       las casas 2, 8 y 10
 
 En cada una miras todo lo que tienes de eso: en que signo esta y en que casa cae, que aspectos forma con los demas, si va retrogrado, y si ahi se junta mas de una cosa o la casa esta vacia. Cada dato dice algo distinto.
 Marte, Urano y Jupiter no llevan area propia: lo que salga de ellos es del area de la casa en la que estan.
-Cuando un rasgo sale de un aspecto entre dos, es del area del mas personal de los dos: primero el Sol, luego la Luna, Mercurio, Venus, Marte, el Ascendente y el Nodo, y por ultimo Jupiter, Saturno, Quiron, Urano, Neptuno y Pluton.
-Si un rasgo vale para dos areas, va en UNA sola, la que mas peso tenga en el.
-De cada area saldra lo que salga. Lo que no puede pasar es que de un area no hayas sacado nada porque ni la has mirado.
+Un rasgo va en la caja del area de la que lo has sacado, y esa area tiene que estar de verdad en la posicion que escribas en "origen".
 
 
 4. LAS CUATRO CASILLAS DE CADA RASGO
@@ -732,12 +741,6 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              cualquier episodio de su vida: eso no esta en la carta y seria
              inventarselo. Lo que se cuenta es como funciona por dentro y
              a donde le lleva eso.
-
-area         A cual de las siete pertenece este rasgo, escrita tal cual. La
-             misma posicion suele valer para dos, porque toca dos cosas de la
-             vida a la vez; eliges la que pesa mas en LO QUE HAS ESCRITO, y va
-             en una sola. Lo que no puede es ser un area que no este en la
-             posicion que pones en "origen".
 
 origen       De donde sale el rasgo en la carta, en tecnico y en corto: el
              cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
@@ -791,7 +794,9 @@ Nombre de pila: ${nombrePila}`;
       max_tokens: 16000,
       system: encargo,
       output_config: { format: { type: 'json_schema', schema: ESQUEMA_UNA_LISTA } },
-      messages: [{ role: 'user', content: `Saca la lista de ${cual} de esta carta, siguiendo el esquema.` }],
+      messages: [{ role: 'user', content: soloEstas && soloEstas.length > 0
+        ? `De esta carta faltan ${cual} de estas areas: ${soloEstas.join(', ')}. Sacalos ahora, siguiendo el esquema. Las demas cajas las dejas vacias.`
+        : `Saca la lista de ${cual} de esta carta, siguiendo el esquema.` }],
     }),
   });
 
@@ -819,19 +824,28 @@ Nombre de pila: ${nombrePila}`;
     throw err;
   }
 
-  // Se cogen los rasgos tal como salen. Lo unico que se hace es quitar espacios
-  // sobrantes de cada casilla.
-  return (Array.isArray(salida.rasgos) ? salida.rasgos : [])
-    // Si a un rasgo le faltara una casilla, se queda vacia. Sin esto se
-    // imprimia en el PDF la palabra "undefined", que es lo mismo que paso con
-    // la palabra "placeholder".
-    .map(r => ({
-      nombre: String(r.nombre ?? '').trim(),
-      descripcion: String(r.descripcion ?? '').trim(),
-      causa: String(r.causa ?? '').trim(),
-      origen: String(r.origen ?? '').trim(),
-      area: areaDelRasgo(r.origen, String(r.area ?? '').trim()),
-    }));
+  // Las siete cajas se juntan otra vez en una lista, en el orden de las areas,
+  // que es como se pintan en el PDF. De ahi para adelante nada cambia.
+  //
+  // Si a un rasgo le faltara una casilla, se queda vacia. Sin esto se imprimia
+  // en el PDF la palabra "undefined", que es lo mismo que paso con la palabra
+  // "placeholder".
+  const lista = [];
+  for (const area of NOMBRES_DE_AREA) {
+    for (const r of (Array.isArray(salida[area]) ? salida[area] : [])) {
+      const origen = String(r?.origen ?? '').trim();
+      lista.push({
+        nombre: String(r?.nombre ?? '').trim(),
+        descripcion: String(r?.descripcion ?? '').trim(),
+        causa: String(r?.causa ?? '').trim(),
+        origen,
+        // La caja dice de que area es, pero solo se le hace caso si esa area
+        // esta de verdad en la posicion de la que sale el rasgo.
+        area: areaDelRasgo(origen, area),
+      });
+    }
+  }
+  return lista;
 }
 
 // CADA LISTA SE REINTENTA POR SU CUENTA, igual que cada area.
@@ -859,10 +873,38 @@ async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto, INTENTOS) {
 // Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
 // mismo que antes escribia una sola, pero tardan la mitad porque van en
 // paralelo, igual que las siete areas.
+// EL MINIMO POR AREA, GARANTIZADO.
+//
+// El esquema obliga a que existan las siete cajas, pero no puede obligar a que
+// lleven algo dentro: la API no admite pedir un minimo por caja. Asi que lo
+// comprueba el codigo. Si alguna area no llega al minimo se piden SOLO esas,
+// una vez, y se juntan con lo que ya habia. Cuando el minimo se cumple, que es
+// lo normal, esto no gasta ni una llamada.
+const MINIMO_POR_AREA = { fortalezas: 1, desafios: 2 };
+
+async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, lista) {
+  const minimo = MINIMO_POR_AREA[cual] || 1;
+  const faltan = NOMBRES_DE_AREA.filter(a => lista.filter(r => r.area === a).length < minimo);
+  if (faltan.length === 0) return lista;
+
+  console.warn(`Lista de ${cual}: no llega al minimo en ${faltan.join(', ')}, se piden aparte`);
+  try {
+    const extra = await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, faltan);
+    return lista.concat(extra.filter(r => faltan.includes(r.area)));
+  } catch (err) {
+    // Si esta segunda peticion falla, se entrega lo que ya habia: vale mas el
+    // informe con un area corta que sin listas.
+    console.error(`Lista de ${cual}: no se pudo completar el minimo: ${err.message.slice(0, 80)}`);
+    return lista;
+  }
+}
+
 async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
   const [fortalezas, desafios] = await Promise.all([
-    sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS),
-    sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS),
+    sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS)
+      .then(l => conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, l)),
+    sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS)
+      .then(l => conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, l)),
   ]);
   return { fortalezas, desafios };
 }

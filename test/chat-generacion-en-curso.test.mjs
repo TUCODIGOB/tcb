@@ -56,9 +56,21 @@ let llamadasAlModelo = 0;
 // que el modelo de mentira tiene que saber contestar a las dos cosas. Si a la
 // peticion de las listas se le devuelve texto de area, no es JSON valido, las
 // listas no salen y no se llega a escribir ni un area.
+// Las siete cajas van con lo suficiente para cumplir el minimo de las dos
+// listas (dos por area, que es el de los desafios). Si vinieran cortas, el
+// codigo pediria las que faltan y esta prueba contaria llamadas de mas.
+const rasgoDe = (origen, n) => ({
+  nombre: `Aguante fuera de lo normal ${n}`, descripcion: 'Sigues de pie donde otros se bajan.',
+  causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen,
+});
 const LISTAS_DE_MENTIRA = JSON.stringify({
-  rasgos: [{ nombre: 'Aguante fuera de lo normal', descripcion: 'Sigues de pie donde otros se bajan.',
-             causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen: 'Saturno en Virgo, casa 12' }],
+  IDENTIDAD:  [rasgoDe('Sol en Piscis casa 6', 1), rasgoDe('Ascendente en Libra', 2)],
+  PATRONES:   [rasgoDe('Nodo Norte en Leo', 1), rasgoDe('casa 6 en Piscis', 2)],
+  MIEDOS:     [rasgoDe('Saturno en Virgo casa 12', 1), rasgoDe('Neptuno en Sagitario', 2)],
+  HERIDA:     [rasgoDe('Luna en Capricornio casa 4', 1), rasgoDe('Quiron en Tauro', 2)],
+  AMOR:       [rasgoDe('Venus en Tauro', 1), rasgoDe('casa 7 en Aries', 2)],
+  RELACIONES: [rasgoDe('Mercurio en Piscis', 1), rasgoDe('casa 3 en Sagitario', 2)],
+  DINERO:     [rasgoDe('casa 2 en Escorpio', 1), rasgoDe('casa 10 en Cancer', 2)],
 });
 
 globalThis.fetch = async (url, opciones) => {
