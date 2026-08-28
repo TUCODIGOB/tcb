@@ -381,21 +381,19 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
-// Solo para los fallos de ACCESO: llegar sin session_id, o no poder
-// verificar el pago. Los fallos de generacion tienen sus dos pantallas
-// propias, mas abajo.
-function showError(msg) {
+function showError(msg, hideSupportBox) {
   if (msg) document.getElementById('errorMsg').textContent = msg;
   const titulo = document.getElementById('errorTitulo');
   if (titulo) titulo.textContent = 'No hemos podido verificar tu acceso';
   const box = document.querySelector('#screenError .error-box');
-  if (box) box.style.display = '';
+  if (box) box.style.display = hideSupportBox ? 'none' : '';
   const btn = document.getElementById('errorBtn');
   if (btn) {
     btn.style.display = 'inline-block';
-    btn.textContent = 'Realizar el pago';
-    btn.href = '/tu-diseno-de-origen#formulario';
-    btn.onclick = null;
+    btn.textContent = hideSupportBox ? 'Volver a intentarlo' : 'Realizar el pago';
+    // Reintentar es recargar esta misma pagina con su session_id. Antes este
+    // boton llevaba al formulario de pago, que no reintenta nada.
+    btn.href = hideSupportBox ? window.location.href : '/tu-diseno-de-origen#formulario';
   }
   showScreen('screenError');
 }
@@ -412,61 +410,6 @@ function showAviso(titulo, msg) {
   const btn = document.getElementById('errorBtn');
   if (btn) btn.style.display = 'none';
   showScreen('screenError');
-}
-
-// Dos intentos por compra, igual que en el servidor (lib/reserva.js): el
-// primero al pagar y uno mas si aquel fallo.
-const MAX_INTENTOS = 2;
-
-// El pedido que se esta generando, para que el boton pueda lanzarlo sin
-// recargar la pagina.
-let _pedidoActual = null;
-
-// Intentos ya gastados de esta compra. Decide cual de las dos pantallas de
-// fallo se le ensena: la que ofrece el boton, o la que ya no lo ofrece.
-let _intentosUsados = 0;
-
-// PANTALLA 1 — la generacion ha fallado y queda un intento. No se genera
-// nada hasta que el cliente pulse: recargar la pagina no cuesta dinero.
-function pantallaReintento(pedido) {
-  if (pedido) _pedidoActual = pedido;
-  const titulo = document.getElementById('errorTitulo');
-  if (titulo) titulo.textContent = 'No hemos podido terminar tu estudio';
-  document.getElementById('errorMsg').textContent =
-    'No te preocupes, tu pago está confirmado, dale al botón para que termine de generarse.';
-  const box = document.querySelector('#screenError .error-box');
-  if (box) box.style.display = 'none';
-  prepararBotonReintentar();
-  showScreen('screenError');
-}
-
-// PANTALLA 2 — se acabaron los intentos. Sin boton: pulsarlo no generaria
-// nada (el servidor lo rechaza) y dejaria al cliente dandole en balde.
-function pantallaSinIntentos() {
-  const titulo = document.getElementById('errorTitulo');
-  if (titulo) titulo.textContent = 'Algo está fallando en este momento';
-  document.getElementById('errorMsg').textContent =
-    'No te preocupes, tu pago está confirmado, escríbenos a hola@origennatal.com con el email que usaste para pagar y te lo mandamos nosotros mismos en breve.';
-  const box = document.querySelector('#screenError .error-box');
-  if (box) box.style.display = 'none';
-  const btn = document.getElementById('errorBtn');
-  if (btn) { btn.style.display = 'none'; btn.onclick = null; }
-  showScreen('screenError');
-}
-
-// Deja el boton listo para reintentar con un clic, sin recargar: recargar
-// volveria a mostrar este mismo boton, que es justo lo que se quiere.
-function prepararBotonReintentar() {
-  const btn = document.getElementById('errorBtn');
-  if (!btn) return;
-  btn.style.display = 'inline-block';
-  btn.textContent = 'Generar mi informe';
-  btn.href = '#';
-  btn.onclick = (e) => {
-    e.preventDefault();
-    btn.onclick = null;               // un solo clic, no dos generaciones
-    if (_pedidoActual) arrancarGeneracion(_pedidoActual);
-  };
 }
 
 // Arranque al cargar la página
@@ -549,90 +492,40 @@ function prepararBotonReintentar() {
   }
 
   if (!datosCompletos(pedido)) {
-    // Los datos de nacimiento no estan ni en este navegador ni en la copia de
-    // Stripe, asi que recargar no arregla nada y no se ofrece. Se avisa a la
-    // tienda para poder generarlo a mano sin depender de que el cliente escriba.
-    fetch('/api/verify-payment', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ session_id: sessionId, avisarDatosPerdidos: true }),
-    }).catch(() => {});
-    showAviso('No encontramos los datos de tu pedido',
-      'Escríbenos a hola@origennatal.com con el email que usaste para pagar y te enviamos el informe nosotros. Ya estamos avisados.');
+    showError('No encontramos los datos de tu pedido. Por favor escríbenos a hola@origennatal.com y te enviaremos el informe manualmente.');
     return;
   }
 
-  // 4. Arrancar, o esperar a que el cliente lo pida.
-  //
-  //    Generar cuesta dinero, asi que el reintento tiene que ser una
-  //    decision, no un efecto secundario de recargar la pagina. Si ya se
-  //    gasto un intento (la primera generacion fallo), aqui no se arranca:
-  //    se le ensena el boton y no pasa nada hasta que lo pulse. Antes
-  //    bastaba con que la pestana se recargara sola para gastar el intento
-  //    que le quedaba, sin que nadie lo pidiera.
-  const intentos = Number(verificado.intentos);
-
-  // Si no se sabe cuantos intentos lleva la compra, NO se genera: se ensena
-  // el boton y decide el cliente. Generar a ciegas puede costar un intento
-  // (y dinero) que nadie ha pedido.
-  if (!Number.isFinite(intentos)) {
-    _intentosUsados = MAX_INTENTOS - 1;   // lo damos por gastado salvo uno
-    pantallaReintento(pedido);
-    return;
-  }
-  if (intentos >= MAX_INTENTOS) {
-    pantallaSinIntentos();
-    return;
-  }
-  if (intentos > 0) {
-    _intentosUsados = intentos;
-    pantallaReintento(pedido);
-    return;
-  }
-  _intentosUsados = 0;
-
-  await arrancarGeneracion(pedido);
-})();
-
-// Lanza la generacion y traduce los fallos a algo que el cliente entienda.
-async function arrancarGeneracion(pedido) {
-  _pedidoActual = pedido;
-  _intentosUsados++;
+  // 4. Pasar a pantalla de generación
   showScreen('screenGenerate');
 
+  // 5. Ejecutar todo el cálculo astronómico y generación (código original)
   try {
     await iniciarConDatos(pedido);
   } catch(e) {
-    // El motivo exacto del fallo queda en la consola y en el aviso que le
-    // llega a la tienda. Al cliente, que ya ha pagado, solo le sirve saber
-    // una cosa: si puede reintentar o si nos escribe. Por eso todos los
-    // fallos acaban en la misma pareja de pantallas.
     console.error('Error generación:', e);
-    if (e.message === 'YA_GENERADO') {
+    if (e.message === 'DATOS_INVALIDOS') {
+      showError('Lo sentimos, ha habido un error en alguno de tus datos, por favor vuelve a intentarlo.', true);
+    } else if (e.message === 'LUGAR_NACIMIENTO') {
+      showError('No hemos podido localizar tu lugar de nacimiento. Por favor vuelve a intentarlo en unos segundos.', true);
+    } else if (e.message === 'ZONA_HORARIA') {
+      showError('No hemos podido calcular la hora exacta de tu lugar de nacimiento. Por favor vuelve a intentarlo en unos segundos.', true);
+    } else if (e.message === 'YA_GENERADO') {
       showAviso('Tu informe ya está listo',
         'Ya generamos tu informe y te lo enviamos por email con el PDF adjunto. Revisa tu bandeja de entrada y, si no lo ves, la carpeta de spam.');
     } else if (e.message === 'EN_CURSO') {
       showAviso('Tu informe se está generando',
         'Lo estamos preparando ahora mismo. En unos minutos te llegará por email con el PDF adjunto. No hace falta que hagas nada.');
-    } else if (_intentosUsados >= MAX_INTENTOS) {
-      pantallaSinIntentos();
     } else {
-      pantallaReintento(pedido);
+      showError('Ha ocurrido un error al generar tu informe. Por favor escríbenos a hola@origennatal.com con tu email de compra y te lo enviaremos manualmente.');
     }
   }
-}
+})();
 
 // Función que lanza todo el proceso usando los datos del pedido
 async function iniciarConDatos(pedido) {
-  // Coordenadas del lugar de nacimiento. Las del formulario ya se comprobaron
-  // antes de pagar, asi que se usan esas: repetir la busqueda aqui podia dar
-  // un punto distinto del que se valido. Si el pedido viene del respaldo de
-  // Stripe (otro navegador, o un reintento) no las lleva, y entonces se buscan
-  // como siempre.
-  const latGuardada = Number(pedido.lat), lonGuardada = Number(pedido.lon);
-  const geo = (Number.isFinite(latGuardada) && Number.isFinite(lonGuardada) && (latGuardada !== 0 || lonGuardada !== 0))
-    ? { lat: latGuardada, lon: lonGuardada, ok: true }
-    : await geocode(pedido.municipio, pedido.provincia, pedido.pais);
+  // Geocode del lugar de nacimiento
+  const geo = await geocode(pedido.municipio, pedido.provincia, pedido.pais);
 
   // Parsear fecha y hora
   const [yr, mo, dy] = pedido.fecha.split('-').map(Number);
@@ -721,12 +614,6 @@ ${listaAspectos || '- sin aspectos dentro de orbe'}`;
 
   // U+001F, el mismo separador invisible que usa api/chat.js al unir las areas.
   _G.areas = data.texto.split('\u001F').map(p => p.trim()).filter(p => p.length > 0);
-
-  // La lista de rasgos que ha sacado chat.js de la carta. Tiene que viajar
-  // hasta generar-pdf o la pagina de rasgos no se pinta: alli la seccion
-  // entera va dentro de un "if (rasgos && ...)". Es opcional a proposito, y si
-  // no viene el informe sale igual, solo que sin esa pagina.
-  _G.rasgos = data.rasgos || null;
 fetch('/api/generar-pdf', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -740,8 +627,7 @@ fetch('/api/generar-pdf', {
       lugar: _G.lugar,
       edad: _G.edad,
       carta: _G.carta,
-      areas: _G.areas,
-      rasgos: _G.rasgos
+      areas: _G.areas
     })
   }).then(r => r.json()).then(pdfData => {
     // Un 500 de generar-pdf devuelve JSON sin pdfBase64: antes eso no entraba
@@ -768,11 +654,10 @@ fetch('/api/generar-pdf', {
     }).catch(err => console.warn('Email automático falló:', err));
   }).catch(err => {
     // No dejar al cliente creyendo que ya lo tiene. El aviso a la tienda lo
-    // manda el propio generar-pdf; aqui se le ensena la misma pantalla que
-    // en cualquier otro fallo de generacion, segun le quede intento o no.
+    // manda el propio generar-pdf; aqui solo se le ofrece reintentar, que
+    // ahora funciona porque la reserva se libero al fallar.
     console.warn('generar-pdf falló:', err);
-    if (_intentosUsados >= MAX_INTENTOS) pantallaSinIntentos();
-    else pantallaReintento(_pedidoActual);
+    showError('No hemos podido terminar tu informe. Por favor vuelve a intentarlo; si vuelve a fallar, escríbenos a hola@origennatal.com y te lo enviamos nosotros.', true);
   });
 }
 
