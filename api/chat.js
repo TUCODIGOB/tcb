@@ -385,6 +385,18 @@ ${cartaTexto}`;
   }
 
   try {
+    // Las dos listas se piden A LA VEZ que las areas, no despues: asi no suman
+    // su espera a la del informe, que ya va justo de tiempo.
+    //
+    // Y van con su propio catch: si las listas fallan, el informe sale igual,
+    // solo que sin ellas. Una clienta que ha pagado y no recibe nada es peor
+    // que un informe sin las dos ultimas paginas.
+    const laLista = sacarRasgos(nombrePila, sexo, cartaTexto)
+      .catch(err => {
+        console.error('Las listas de rasgos no salieron:', err.message);
+        return null;
+      });
+
     // Lanzar las 7 llamadas en paralelo
     const resultados = await Promise.all(
       AREAS.map(area => generarArea(area))
@@ -403,7 +415,10 @@ ${cartaTexto}`;
 
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
     // que demuestra que quien pide el PDF es quien tiene la reserva.
-    return res.status(200).json({ texto: textoCompleto, token: reserva.token });
+    // Las listas ya se estaban haciendo mientras se escribian las areas.
+    const rasgos = await laLista;
+
+    return res.status(200).json({ texto: textoCompleto, token: reserva.token, rasgos });
 
   } catch (err) {
     console.error('Error generando áreas:', err.message);
@@ -412,6 +427,197 @@ ${cartaTexto}`;
     await liberar(stripe, session_id, reserva.token);
     return res.status(500).json({ error: 'Error generando el informe: ' + err.message });
   }
+}
+
+
+// ═════════════════════════════════════════════════════════════════
+// LAS DOS LISTAS DE RASGOS
+//
+// Se piden aparte de las areas, con su propio encargo, y salen UNICAMENTE de
+// la carta natal.
+//
+// CADA RASGO LLEVA DE DONDE SALE, Y ESO ES LO QUE IMPIDE QUE SE LO INVENTE.
+//
+// Un modelo al que se le pide "dime como es esta persona" y ademas se le
+// prohibe nombrar planetas y signos se queda sin nada a lo que agarrarse:
+// deja de leer la carta y escribe el arquetipo que ya se sabe, el mismo para
+// todo el mundo. Obligarle a decir, en cada rasgo, de que posicion concreta
+// sale, le devuelve el suelo: si no puede nombrar el sitio, es que no lo ha
+// sacado de ahi, y ese rasgo no vale.
+//
+// Por eso "origen" es obligatorio en el esquema y se comprueba al recibirlo.
+// Ahora ademas se imprime en el PDF, para poder revisar si lo que dice es
+// correcto. Cuando se de por bueno, se decidira que se le enseña al cliente.
+// ═════════════════════════════════════════════════════════════════
+
+// Los doce signos y los diez planetas, para comprobar que "origen" nombra algo
+// de verdad y no una frase vacia.
+const SIGNOS = ['aries','tauro','geminis','géminis','cancer','cáncer','leo','virgo','libra',
+  'escorpio','sagitario','capricornio','acuario','piscis'];
+const CUERPOS = ['sol','luna','mercurio','venus','marte','jupiter','júpiter','saturno',
+  'urano','neptuno','pluton','plutón','quiron','quirón','nodo','ascendente'];
+
+// Un origen vale si nombra un cuerpo Y (un signo o una casa). "Luna" a secas no
+// dice nada; "Luna en Capricornio" o "Luna en la casa 4" si.
+function origenValido(txt) {
+  const t = String(txt || '').toLowerCase();
+  const hayCuerpo = CUERPOS.some(c => t.includes(c));
+  const haySigno = SIGNOS.some(g => t.includes(g));
+  const hayCasa = /casa\s*\d{1,2}/.test(t);
+  return hayCuerpo && (haySigno || hayCasa);
+}
+
+const ESQUEMA_RASGOS = {
+  type: 'object',
+  properties: {
+    fortalezas: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          nombre:      { type: 'string' },
+          descripcion: { type: 'string' },
+          causa:       { type: 'string' },
+          origen:      { type: 'string' },
+        },
+        required: ['nombre', 'descripcion', 'causa', 'origen'],
+        additionalProperties: false,
+      },
+    },
+    desafios: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          nombre:      { type: 'string' },
+          descripcion: { type: 'string' },
+          causa:       { type: 'string' },
+          origen:      { type: 'string' },
+        },
+        required: ['nombre', 'descripcion', 'causa', 'origen'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['fortalezas', 'desafios'],
+  additionalProperties: false,
+};
+
+async function sacarRasgos(nombrePila, sexo, cartaTexto) {
+  const trato = sexo === 'mujer'
+    ? 'una MUJER. Todo en femenino.'
+    : sexo === 'hombre'
+      ? 'un HOMBRE. Todo en masculino.'
+      : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos.';
+
+  const encargo = `Eres astrologa. Lees una carta natal y sacas dos listas de rasgos de esa persona: lo que se le da bien y lo que le cuesta.
+
+TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posicion concreta de esta carta, no se escribe.
+
+LAS DOS LISTAS:
+- FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.
+- DESAFIOS: lo que le cuesta, lo que le pesa, donde tropieza.
+
+SIN NUMERO FIJO. Saca TODOS los que de verdad salgan de esta carta, los que sean. No hay minimo ni maximo, y las dos listas no tienen por que tener el mismo numero. Lo que no vale es inventarse ninguno para alargar la lista, ni dejarse fuera uno que este en la carta para acortarla.
+
+NI UNO REPETIDO, ni dentro de la misma lista ni entre las dos. Repetido no es solo la misma frase: es la misma cosa dicha con otras palabras. Antes de dar una lista por terminada, leela entera y quita lo que diga lo mismo que otro rasgo.
+
+CADA RASGO LLEVA CUATRO CASILLAS:
+
+1. "nombre": de 3 a 6 palabras, sin articulos.
+
+2. "descripcion": DOS FRASES COMO MUCHO. Que hace, que le pasa, como se le nota. Escrita hablandole a ella de tu.
+
+3. "causa": POR QUE le pasa eso. Y esto es lo mas importante de todo:
+   La causa es el MECANISMO que describe su carta, no una biografia.
+   Una carta natal es el mapa del momento en que nacio. No dice nada de lo que le paso despues, ni de su familia, ni de su infancia, ni de lo que aprendio de pequeña.
+   Asi que esta PROHIBIDO contar su infancia, su familia, sus padres, su casa, lo que vivio de pequeña o cualquier episodio de su vida. Nada de eso esta en la carta, asi que escribirlo seria inventarselo.
+   Lo que si se escribe: como funciona por dentro y que efecto tiene eso: su forma de decidir, de reaccionar, de vincularse, y a donde le lleva. El porque de su manera de ser, no el porque de su historia.
+   Dos o tres frases.
+
+4. "origen": DE DONDE SALE ESE RASGO EN LA CARTA, en lenguaje tecnico y en corto.
+   Tiene que nombrar el cuerpo y su signo o su casa. Si el rasgo sale de un aspecto, se nombra el aspecto y los dos cuerpos.
+   Formato: el nombre del cuerpo, y detras su signo y su casa. Si es un aspecto, los dos cuerpos y que aspecto forman entre ellos. Nada mas: ni explicacion ni frase.
+   ESTA CASILLA ES OBLIGATORIA Y SE COMPRUEBA. Un rasgo sin un sitio concreto de esta carta detras es un rasgo inventado, y un rasgo inventado no vale para nada: sobrarian las dos listas.
+   No repartas todos los rasgos sobre las mismas dos o tres posiciones: la carta tiene planetas, casas y aspectos de sobra, y cada rasgo tiene que salir de donde de verdad sale.
+
+EL TONO DE LAS TRES PRIMERAS CASILLAS:
+- Le hablas a ella de tu, siempre. Nunca de ella en tercera persona.
+- Español de España, hablado, sin latinoamericanismos.
+- Ni una palabra tecnica en "nombre", "descripcion" ni "causa": ni planetas, ni signos, ni casas, ni aspectos, ni carta natal. Todo lo tecnico va en "origen" y solo ahi.
+- Nada de asteriscos, negritas, guiones ni simbolos: es texto corrido.
+- En los desafios, se nombra lo que HACE o lo que le PASA, no se le pone una etiqueta encima. Se cuenta lo que ocurre, no se la diagnostica.
+
+Carta natal:
+${cartaTexto}
+
+Persona: ${trato}
+Nombre de pila: ${nombrePila}`;
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-5',
+      // Igual que las areas: sin razonamiento. Ver el comentario de pedirArea.
+      thinking: { type: 'disabled' },
+      // Sin tope de rasgos, la lista puede ser larga. Si la respuesta se corta,
+      // el JSON no se puede leer y se pierden las DOS listas enteras, asi que
+      // el techo va holgado. Es un techo, no un objetivo: solo se paga lo que
+      // el modelo escribe.
+      max_tokens: 16000,
+      system: encargo,
+      output_config: { format: { type: 'json_schema', schema: ESQUEMA_RASGOS } },
+      messages: [{ role: 'user', content: 'Saca las dos listas de esta carta, siguiendo el esquema.' }],
+    }),
+  });
+
+  if (!response.ok) {
+    const detalle = await response.text();
+    throw new Error(`rasgos: ${response.status} — ${detalle.slice(0, 300)}`);
+  }
+
+  const data = await response.json();
+  const texto = (data.content || [])
+    .filter(b => b && typeof b.text === 'string')
+    .map(b => b.text)
+    .join('');
+
+  let salida;
+  try {
+    salida = JSON.parse(texto);
+  } catch (e) {
+    throw new Error('rasgos: la respuesta no es JSON valido');
+  }
+
+  // LA COMPROBACION QUE DA SENTIDO A TODO ESTO.
+  //
+  // Se tira cualquier rasgo al que le falte una casilla o cuyo "origen" no
+  // nombre una posicion de verdad. Un rasgo sin sitio en la carta es inventado,
+  // y prefiero una lista mas corta y cierta que una larga y adornada.
+  const limpiar = (lista) => (Array.isArray(lista) ? lista : [])
+    .filter(r => r && r.nombre && r.descripcion && r.causa && origenValido(r.origen))
+    .map(r => ({
+      nombre: String(r.nombre).trim(),
+      descripcion: String(r.descripcion).trim(),
+      causa: String(r.causa).trim(),
+      origen: String(r.origen).trim(),
+    }));
+
+  const fortalezas = limpiar(salida.fortalezas);
+  const desafios = limpiar(salida.desafios);
+
+  const tirados = ((salida.fortalezas || []).length + (salida.desafios || []).length)
+    - (fortalezas.length + desafios.length);
+  if (tirados > 0) {
+    console.warn(`Rasgos: ${tirados} descartado(s) por no decir de donde salen`);
+  }
+
+  return { fortalezas, desafios };
 }
 
 

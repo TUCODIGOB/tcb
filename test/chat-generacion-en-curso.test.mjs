@@ -139,7 +139,10 @@ try {
   // 3. La generacion legitima termina sin enterarse de nada.
   const legitima = await enCurso;
   comprobar('la generacion legitima termina bien', legitima.code === 200, 'HTTP ' + legitima.code);
-  comprobar('en total solo se generó una vez', llamadasAlModelo === 7, llamadasAlModelo + ' llamadas');
+  // 8 = las 7 areas + la peticion de las dos listas de rasgos, que sale a la
+  // vez que ellas. Lo que se vigila aqui no es el numero, sino que la segunda
+  // peticion no haya lanzado NINGUNA generacion mas.
+  comprobar('en total solo se generó una vez', llamadasAlModelo === 8, llamadasAlModelo + ' llamadas');
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);

@@ -721,6 +721,12 @@ ${listaAspectos || '- sin aspectos dentro de orbe'}`;
 
   // U+001F, el mismo separador invisible que usa api/chat.js al unir las areas.
   _G.areas = data.texto.split('\u001F').map(p => p.trim()).filter(p => p.length > 0);
+
+  // Las dos listas de rasgos. Viajan hasta generar-pdf, que es donde se pintan.
+  // Van aparte del texto de las areas porque no son texto corrido: cada rasgo
+  // tiene sus cuatro casillas y el PDF las coloca una por una.
+  // Si no vienen (porque fallaron), el informe sale igual pero sin las listas.
+  _G.rasgos = data.rasgos || null;
 fetch('/api/generar-pdf', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -734,7 +740,8 @@ fetch('/api/generar-pdf', {
       lugar: _G.lugar,
       edad: _G.edad,
       carta: _G.carta,
-      areas: _G.areas
+      areas: _G.areas,
+      rasgos: _G.rasgos
     })
   }).then(r => r.json()).then(pdfData => {
     // Un 500 de generar-pdf devuelve JSON sin pdfBase64: antes eso no entraba

@@ -56,7 +56,7 @@ export default async function handler(req, res) {
     }
   }
 
-  const { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas, session_id, token } = req.body;
+  const { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas, rasgos, session_id, token } = req.body;
 
   if (!nombre || !areas || !session_id) {
     return res.status(400).json({ error: 'Faltan parámetros' });
@@ -658,6 +658,76 @@ export default async function handler(req, res) {
       }
       if(areaPageCount<2){addPageNum(pageC);pageC++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);}
       addPageNum(pageC); pageC++;
+    }
+
+    // ── LAS DOS LISTAS DE RASGOS ──────────────────────────────────────────────
+    //
+    // Van despues de las siete areas y por separado: primero las FORTALEZAS
+    // enteras y debajo los DESAFIOS. Cada rasgo lleva sus cuatro casillas.
+    //
+    // "origen" (de donde sale el rasgo en la carta) se imprime a la vista a
+    // proposito, para poder revisar si lo que dice es correcto. Cuando se de por
+    // bueno, se decidira que parte de esto ve el cliente.
+    //
+    // Toda la seccion va dentro de un "if": si las listas no llegan, el informe
+    // sale igual, solo que sin estas paginas.
+    function pintarListaRasgos(titulo, lista) {
+      if (!Array.isArray(lista) || lista.length === 0) return;
+
+      doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
+      var ry = 55;
+
+      // Cabecera de la lista, centrada y en dorado, como los cierres de area.
+      doc.setFont('Roboto','bold'); doc.setFontSize(16); doc.setTextColor(207,177,128);
+      doc.text(fx(titulo), 105, ry, { align: 'center' });
+      ry += 14;
+
+      for (var i = 0; i < lista.length; i++) {
+        var r = lista[i] || {};
+
+        // Lo que ocupa la ficha entera, para no partirla entre dos paginas: se
+        // mide antes de escribir nada y, si no cabe, empieza pagina nueva.
+        doc.setFontSize(10.5);
+        var lDesc = doc.splitTextToSize(fx(r.descripcion), 175);
+        var lCausa = doc.splitTextToSize(fx(r.causa), 175);
+        doc.setFontSize(8);
+        var lOrigen = doc.splitTextToSize(fx(r.origen), 175);
+        var alto = 7 + lDesc.length*5 + 2 + lCausa.length*5 + 2 + lOrigen.length*4 + 8;
+
+        if (ry + alto > H - 22) {
+          addPageNum(pageC); pageC++;
+          doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
+          ry = 40;
+        }
+
+        // 1. El nombre del rasgo
+        doc.setFont('Roboto','bold'); doc.setFontSize(12); doc.setTextColor(14,63,75);
+        doc.text(fx(r.nombre), 18, ry);
+        ry += 7;
+
+        // 2. La descripcion
+        doc.setFont('Roboto','normal'); doc.setFontSize(10.5); doc.setTextColor(40,40,40);
+        for (var d = 0; d < lDesc.length; d++) { doc.text(lDesc[d], 18, ry); ry += 5; }
+        ry += 2;
+
+        // 3. Por que le pasa
+        doc.setFont('Roboto','normal'); doc.setFontSize(10.5); doc.setTextColor(70,70,70);
+        for (var c = 0; c < lCausa.length; c++) { doc.text(lCausa[c], 18, ry); ry += 5; }
+        ry += 2;
+
+        // 4. De donde sale en la carta. Es el dato que permite comprobar que el
+        //    rasgo no esta inventado.
+        doc.setFont('Roboto','normal'); doc.setFontSize(8); doc.setTextColor(150,140,120);
+        for (var o = 0; o < lOrigen.length; o++) { doc.text(lOrigen[o], 18, ry); ry += 4; }
+        ry += 8;
+      }
+
+      addPageNum(pageC); pageC++;
+    }
+
+    if (rasgos) {
+      pintarListaRasgos('TUS FORTALEZAS', rasgos.fortalezas);
+      pintarListaRasgos('TUS DESAFIOS', rasgos.desafios);
     }
 
     // ── PÁGINAS FINALES ───────────────────────────────────────────────────────
