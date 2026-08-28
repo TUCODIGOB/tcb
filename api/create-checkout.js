@@ -8,40 +8,12 @@ import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
-// EL PRECIO NO VIVE AQUI, VIVE EN STRIPE.
-//
-// Lo que se guarda es el PRODUCTO, y el identificador de un producto no cambia
-// nunca. El del precio si: cada vez que se toca el importe en el panel, Stripe
-// se inventa un precio nuevo con otro identificador. Por eso guardar el precio
-// (ni el importe ni su id) obliga a tocar el codigo y desplegar cada vez que
-// cambia la tarifa, y a que durante un rato la web cobre una cosa distinta de
-// la que pone Stripe.
-//
-// Asi que aqui se guarda el producto y se le pregunta a Stripe cual es su
-// precio de hoy. Cambiar el importe en el panel de Stripe, marcandolo como
-// precio predeterminado del producto, es lo unico que hay que hacer: la web se
-// entera sola en la siguiente compra.
-//
-// Si algun dia hubiera que apuntar a otro producto distinto, se pone en la
-// variable de entorno STRIPE_PRODUCT_ID desde el panel de Vercel y tampoco hay
-// que tocar el codigo.
-const PRODUCT_ID = process.env.STRIPE_PRODUCT_ID || 'prod_UOVl3LcgYSnAle';
-
-// Le pregunta a Stripe el precio vigente del producto.
-//
-// Si el producto no tiene precio predeterminado, esto revienta a proposito y el
-// cliente ve "Error al procesar el pago" en vez de que se le cobre un importe
-// equivocado. Cobrar de menos, o cobrar lo que ya no vale, es peor que no
-// cobrar: el dinero mal cobrado hay que devolverlo uno por uno.
-async function precioVigente() {
-  const producto = await stripe.products.retrieve(PRODUCT_ID);
-  const precio = producto.default_price;
-  if (!precio) {
-    throw new Error(`El producto ${PRODUCT_ID} no tiene precio predeterminado en Stripe`);
-  }
-  // Stripe lo devuelve como texto, o como objeto entero si se pidio expandido.
-  return typeof precio === 'string' ? precio : precio.id;
-}
+// Precio del producto "Tu Diseño de Origen", creado en el panel de Stripe.
+// El importe, el nombre y la descripcion que ve el cliente al pagar salen de
+// ahi, no de aqui: asi el producto y sus ventas quedan registrados en Stripe y
+// el precio no vive en el codigo. OJO: si en Stripe se cambia el importe, Stripe
+// crea un precio nuevo con otro identificador y hay que actualizarlo aqui.
+const PRICE_ID = 'price_1TPikI0TJvLtDGUGREUg7kkc';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -65,9 +37,7 @@ export default async function handler(req, res) {
       payment_method_types: ['card'],
       line_items: [
         {
-          // El nombre, la descripcion y el importe que ve el cliente al pagar
-          // salen del producto de Stripe, no de aqui.
-          price: await precioVigente(),
+          price: PRICE_ID,
           quantity: 1,
         },
       ],
