@@ -540,8 +540,37 @@ const AREA_DEL_SIGNO = {
 const ORDEN_PERSONAL = ['sol','luna','mercurio','venus','marte','ascendente','nodo',
                         'jupiter','saturno','quiron','urano','neptuno','pluton'];
 
+// Diez de los trece cuerpos tienen area propia y no se discute: el Sol es la
+// identidad, la Luna y Quiron la herida, Venus el amor, Saturno el miedo.
+//
+// Estos tres no. Marte coge su area de Venus, Urano de la casa once y Jupiter
+// de la casa dos: es un area prestada, no suya. Por eso, cuando el origen dice
+// en que casa estan, manda la casa, que si dice de que parcela de la vida
+// habla el rasgo.
+const AREA_PRESTADA = ['marte', 'urano', 'jupiter'];
+
 function sinTildes(txt) {
   return String(txt || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+}
+
+// La primera casa que nombra el origen, si es una de las doce.
+function casaQueNombra(t) {
+  const m = t.match(/casa\s*(\d{1,2})/);
+  return m ? (AREA_DE_LA_CASA[Number(m[1])] || '') : '';
+}
+
+// La casa que el origen pone junto a un cuerpo concreto: se mira solo el tramo
+// que va desde su nombre hasta el siguiente cuerpo que se nombre, para no
+// cogerle la casa al otro.
+function casaEnElTramo(t, cuerpo) {
+  const desde = t.search(new RegExp('\\b' + cuerpo + '\\b'));
+  if (desde < 0) return '';
+  const siguientes = ORDEN_PERSONAL
+    .filter(c => c !== cuerpo)
+    .map(c => t.slice(desde + 1).search(new RegExp('\\b' + c + '\\b')))
+    .filter(i => i >= 0);
+  const hasta = siguientes.length > 0 ? desde + 1 + Math.min(...siguientes) : t.length;
+  return casaQueNombra(t.slice(desde, hasta));
 }
 
 // Lee la casilla "origen" y devuelve el area. Si no reconoce nada, devuelve ''
@@ -551,11 +580,23 @@ function areaDelRasgo(origen) {
 
   // Los cuerpos que nombra, en orden de mas personal a mas lejano.
   const cuerpos = ORDEN_PERSONAL.filter(c => new RegExp('\\b' + c + '\\b').test(t));
-  if (cuerpos.length > 0) return AREA_DEL_CUERPO[cuerpos[0]];
+  if (cuerpos.length > 0) {
+    const cuerpo = cuerpos[0];
+    if (AREA_PRESTADA.includes(cuerpo)) {
+      // Primero la casa que va con ESE cuerpo: la que aparece desde su nombre
+      // hasta que el origen empieza a hablar de otro.
+      const suya = casaEnElTramo(t, cuerpo);
+      if (suya) return suya;
+      // Y si no la dice pegada a el, la unica casa que nombre el origen.
+      const otra = casaQueNombra(t);
+      if (otra) return otra;
+    }
+    return AREA_DEL_CUERPO[cuerpo];
+  }
 
   // Si no nombra ningun cuerpo pero si una casa, vale la casa.
-  const casa = t.match(/casa\s*(\d{1,2})/);
-  if (casa && AREA_DE_LA_CASA[Number(casa[1])]) return AREA_DE_LA_CASA[Number(casa[1])];
+  const casa = casaQueNombra(t);
+  if (casa) return casa;
 
   // Y si solo nombra un signo, vale el signo.
   const signo = Object.keys(AREA_DEL_SIGNO).find(g => new RegExp('\\b' + g).test(t));
