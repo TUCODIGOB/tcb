@@ -63,14 +63,16 @@ const rasgoDe = (origen, n) => ({
   nombre: `Aguante fuera de lo normal ${n}`, descripcion: 'Sigues de pie donde otros se bajan.',
   causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen,
 });
+// Las posiciones son inventadas para la prueba, de nadie: solo tienen que
+// caer en el area de su caja para que el codigo las acepte.
 const LISTAS_DE_MENTIRA = JSON.stringify({
-  IDENTIDAD:  [rasgoDe('Sol en Piscis casa 6', 1), rasgoDe('Ascendente en Libra', 2)],
-  PATRONES:   [rasgoDe('Nodo Norte en Leo', 1), rasgoDe('casa 6 en Piscis', 2)],
-  MIEDOS:     [rasgoDe('Saturno en Virgo casa 12', 1), rasgoDe('Neptuno en Sagitario', 2)],
-  HERIDA:     [rasgoDe('Luna en Capricornio casa 4', 1), rasgoDe('Quiron en Tauro', 2)],
-  AMOR:       [rasgoDe('Venus en Tauro', 1), rasgoDe('casa 7 en Aries', 2)],
-  RELACIONES: [rasgoDe('Mercurio en Piscis', 1), rasgoDe('casa 3 en Sagitario', 2)],
-  DINERO:     [rasgoDe('casa 2 en Escorpio', 1), rasgoDe('casa 10 en Cancer', 2)],
+  IDENTIDAD:  [rasgoDe('Sol en Aries casa 1', 1), rasgoDe('Ascendente en Aries', 2)],
+  PATRONES:   [rasgoDe('Nodo Norte en Acuario', 1), rasgoDe('casa 9 en Aries', 2)],
+  MIEDOS:     [rasgoDe('Saturno en Acuario casa 12', 1), rasgoDe('Neptuno en Acuario', 2)],
+  HERIDA:     [rasgoDe('Luna en Aries casa 4', 1), rasgoDe('Quiron en Acuario', 2)],
+  AMOR:       [rasgoDe('Venus en Acuario', 1), rasgoDe('casa 5 en Aries', 2)],
+  RELACIONES: [rasgoDe('Mercurio en Aries', 1), rasgoDe('casa 11 en Acuario', 2)],
+  DINERO:     [rasgoDe('casa 2 en Aries', 1), rasgoDe('casa 10 en Acuario', 2)],
 });
 
 globalThis.fetch = async (url, opciones) => {
@@ -126,7 +128,7 @@ try {
   };
   const pedirInforme = (nombre) => {
     const r = respuesta();
-    return chat({ method: 'POST', body: { session_id: SID, nombre, cartaTexto: '- Sol: Piscis (casa 6)\n- Saturno: Virgo (casa 12)\n- Marte: Virgo (casa 12)' } }, r)
+    return chat({ method: 'POST', body: { session_id: SID, nombre, cartaTexto: '- Sol: Aries (casa 1)\n- Saturno: Acuario (casa 12)\n- Marte: Aries (casa 1)' } }, r)
       .then(() => r);
   };
 
