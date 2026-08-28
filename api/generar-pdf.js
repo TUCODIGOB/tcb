@@ -158,6 +158,9 @@ export default async function handler(req, res) {
     // Aire que queda a cada lado de la linea que separa un rasgo del siguiente.
     var AIRE_RASGO = 8;
 
+    // Hueco que separa el final de una lista del titulo de la siguiente.
+    var AIRE_ENTRE_LISTAS = 25;
+
     function addPageNum(n) {
       doc.setFont('Roboto', 'bold');
       doc.setFontSize(9);
@@ -685,11 +688,42 @@ export default async function handler(req, res) {
     //
     // Toda la seccion va dentro de un "if": si las listas no llegan, el informe
     // sale igual, solo que sin estas paginas.
+    // Lo que ocupa la ficha entera y los renglones ya partidos, para no partirla
+    // entre dos paginas: se mide antes de escribir nada.
+    function medirFicha(r) {
+      doc.setFontSize(12);
+      var lDesc = doc.splitTextToSize(fx(r.descripcion), 175);
+      doc.setFontSize(10.5);
+      var lCausa = doc.splitTextToSize(fx(r.causa), 175);
+      doc.setFontSize(8);
+      var lOrigen = doc.splitTextToSize(fx(r.origen), 175);
+      return { desc: lDesc, causa: lCausa, origen: lOrigen,
+               alto: 8 + lDesc.length*5.5 + 2 + lCausa.length*5 + 2 + lOrigen.length*4 + (r.area ? 6 : 0) };
+    }
+
+    // Las dos listas van seguidas: los desafios NO empiezan pagina nueva, siguen
+    // debajo de las fortalezas con un hueco amplio. Por eso la altura y la
+    // pagina abierta se comparten entre las dos.
+    var ry = ALTO_INICIO;
+    var hayPaginaDeRasgos = false;
+
     function pintarListaRasgos(titulo, lista) {
       if (!Array.isArray(lista) || lista.length === 0) return;
 
-      doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
-      var ry = ALTO_INICIO;
+      if (!hayPaginaDeRasgos) {
+        doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
+        ry = ALTO_INICIO;
+        hayPaginaDeRasgos = true;
+      } else {
+        // La segunda lista sigue donde acabo la primera, con el hueco amplio.
+        // Solo pasa de pagina si ahi ya no cabrian el titulo y su primer rasgo.
+        ry += AIRE_ENTRE_LISTAS;
+        if (ry + 14 + medirFicha(lista[0] || {}).alto > H - 22) {
+          addPageNum(pageC); pageC++;
+          doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
+          ry = ALTO_INICIO;
+        }
+      }
 
       // Cabecera de la lista, a la izquierda y en dorado, en la misma linea de
       // margen que los rasgos que van debajo.
@@ -699,21 +733,16 @@ export default async function handler(req, res) {
 
       // Entre un rasgo y el siguiente va una linea divisoria, con el mismo aire
       // por arriba que por abajo. Solo se pinta entre dos rasgos que se vean
-      // juntos: nunca al final de una pagina ni al final de la lista.
+      // juntos: nunca al final de una pagina, ni al final de la lista, ni justo
+      // debajo del titulo.
       var primeroDeLaPagina = true;
 
       for (var i = 0; i < lista.length; i++) {
         var r = lista[i] || {};
 
-        // Lo que ocupa la ficha entera, para no partirla entre dos paginas: se
-        // mide antes de escribir nada y, si no cabe, empieza pagina nueva.
-        doc.setFontSize(12);
-        var lDesc = doc.splitTextToSize(fx(r.descripcion), 175);
-        doc.setFontSize(10.5);
-        var lCausa = doc.splitTextToSize(fx(r.causa), 175);
-        doc.setFontSize(8);
-        var lOrigen = doc.splitTextToSize(fx(r.origen), 175);
-        var alto = 8 + lDesc.length*5.5 + 2 + lCausa.length*5 + 2 + lOrigen.length*4 + (r.area ? 6 : 0);
+        var ficha = medirFicha(r);
+        var lDesc = ficha.desc, lCausa = ficha.causa, lOrigen = ficha.origen;
+        var alto = ficha.alto;
         var divisor = !primeroDeLaPagina;
 
         if (ry + alto + (divisor ? AIRE_RASGO*2 : 0) > H - 22) {
@@ -761,13 +790,13 @@ export default async function handler(req, res) {
 
         primeroDeLaPagina = false;
       }
-
-      addPageNum(pageC); pageC++;
     }
 
     if (rasgos) {
       pintarListaRasgos('TUS FORTALEZAS', rasgos.fortalezas);
       pintarListaRasgos('TUS DESAFIOS', rasgos.desafios);
+      // El numero de la ultima pagina de rasgos, ya con las dos listas dentro.
+      if (hayPaginaDeRasgos) { addPageNum(pageC); pageC++; }
     }
 
     // ── PÁGINAS FINALES ───────────────────────────────────────────────────────
