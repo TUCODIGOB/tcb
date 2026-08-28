@@ -471,6 +471,140 @@ const ESQUEMA_UNA_LISTA = {
   additionalProperties: false,
 };
 
+// ═════════════════════════════════════════════════════════════════
+// A QUE AREA DEL ESTUDIO PERTENECE CADA RASGO
+//
+// No lo decide el modelo: lo calcula el codigo a partir de la posicion de la
+// carta de la que sale el rasgo, que es lo que el modelo escribe en la casilla
+// "origen". Asi el area siempre es la misma para la misma posicion, y no
+// depende de que acierte al elegir.
+//
+// El reparto es el estandar en astrologia: cada casa es una parcela de la vida
+// y cada planeta una funcion, y cada una cae en el area del estudio que habla
+// de eso mismo.
+// ═════════════════════════════════════════════════════════════════
+
+// Las doce casas: cada una es una parcela de la vida.
+const AREA_DE_LA_CASA = {
+  1:  'IDENTIDAD',   // quien eres y como te presentas
+  2:  'DINERO',      // tu dinero, lo que posees, lo que vales
+  3:  'RELACIONES',  // comunicacion y entorno cercano
+  4:  'HERIDA',      // hogar, raices, familia
+  5:  'AMOR',        // romance, placer, lo que disfrutas
+  6:  'PATRONES',    // rutinas y trabajo del dia a dia
+  7:  'AMOR',        // pareja y asociaciones
+  8:  'DINERO',      // lo que se comparte con otro
+  9:  'PATRONES',    // creencias y lo que da por cierto
+  10: 'DINERO',      // carrera y lo que hace de puertas afuera
+  11: 'RELACIONES',  // amigos y grupos
+  12: 'MIEDOS',      // lo inconsciente y lo que no se ve
+};
+
+// Los planetas y puntos: cada uno es una funcion.
+const AREA_DEL_CUERPO = {
+  sol:        'IDENTIDAD',   // identidad y vitalidad
+  ascendente: 'IDENTIDAD',   // como se muestra
+  nodo:       'PATRONES',    // lo que repite y hacia donde no va
+  luna:       'HERIDA',      // emociones y raices
+  quiron:     'HERIDA',      // la herida
+  saturno:    'MIEDOS',      // limites y exigencia
+  neptuno:    'MIEDOS',      // lo que se disuelve y confunde
+  pluton:     'MIEDOS',      // poder y lo que se esconde
+  venus:      'AMOR',        // amor y lo que atrae
+  marte:      'AMOR',        // deseo y empuje
+  mercurio:   'RELACIONES',  // comunicacion
+  urano:      'RELACIONES',  // ruptura y grupos
+  jupiter:    'DINERO',      // expansion y abundancia
+};
+
+// Los doce signos, por si el origen nombra un signo y ningun cuerpo ni casa.
+// Cada signo va al area de su planeta regente, que es el estandar.
+const AREA_DEL_SIGNO = {
+  aries:       'AMOR',        // regido por Marte
+  tauro:       'AMOR',        // Venus
+  geminis:     'RELACIONES',  // Mercurio
+  cancer:      'HERIDA',      // Luna
+  leo:         'IDENTIDAD',   // Sol
+  virgo:       'RELACIONES',  // Mercurio
+  libra:       'AMOR',        // Venus
+  escorpio:    'MIEDOS',      // Pluton
+  sagitario:   'DINERO',      // Jupiter
+  capricornio: 'MIEDOS',      // Saturno
+  acuario:     'RELACIONES',  // Urano
+  piscis:      'MIEDOS',      // Neptuno
+};
+
+// De mas personal a mas lejano. Cuando un rasgo sale de un aspecto entre dos
+// cuerpos, manda el mas personal: los de fuera tiñen a los de dentro, pero el
+// rasgo se vive en la parcela del de dentro.
+const ORDEN_PERSONAL = ['sol','luna','mercurio','venus','marte','ascendente','nodo',
+                        'jupiter','saturno','quiron','urano','neptuno','pluton'];
+
+// Diez de los trece cuerpos tienen area propia y no se discute: el Sol es la
+// identidad, la Luna y Quiron la herida, Venus el amor, Saturno el miedo.
+//
+// Estos tres no. Marte coge su area de Venus, Urano de la casa once y Jupiter
+// de la casa dos: es un area prestada, no suya. Por eso, cuando el origen dice
+// en que casa estan, manda la casa, que si dice de que parcela de la vida
+// habla el rasgo.
+const AREA_PRESTADA = ['marte', 'urano', 'jupiter'];
+
+function sinTildes(txt) {
+  return String(txt || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+}
+
+// La primera casa que nombra el origen, si es una de las doce.
+function casaQueNombra(t) {
+  const m = t.match(/casa\s*(\d{1,2})/);
+  return m ? (AREA_DE_LA_CASA[Number(m[1])] || '') : '';
+}
+
+// La casa que el origen pone junto a un cuerpo concreto: se mira solo el tramo
+// que va desde su nombre hasta el siguiente cuerpo que se nombre, para no
+// cogerle la casa al otro.
+function casaEnElTramo(t, cuerpo) {
+  const desde = t.search(new RegExp('\\b' + cuerpo + '\\b'));
+  if (desde < 0) return '';
+  const siguientes = ORDEN_PERSONAL
+    .filter(c => c !== cuerpo)
+    .map(c => t.slice(desde + 1).search(new RegExp('\\b' + c + '\\b')))
+    .filter(i => i >= 0);
+  const hasta = siguientes.length > 0 ? desde + 1 + Math.min(...siguientes) : t.length;
+  return casaQueNombra(t.slice(desde, hasta));
+}
+
+// Lee la casilla "origen" y devuelve el area. Si no reconoce nada, devuelve ''
+// y el PDF simplemente no pinta el area de ese rasgo.
+function areaDelRasgo(origen) {
+  const t = sinTildes(origen);
+
+  // Los cuerpos que nombra, en orden de mas personal a mas lejano.
+  const cuerpos = ORDEN_PERSONAL.filter(c => new RegExp('\\b' + c + '\\b').test(t));
+  if (cuerpos.length > 0) {
+    const cuerpo = cuerpos[0];
+    if (AREA_PRESTADA.includes(cuerpo)) {
+      // Primero la casa que va con ESE cuerpo: la que aparece desde su nombre
+      // hasta que el origen empieza a hablar de otro.
+      const suya = casaEnElTramo(t, cuerpo);
+      if (suya) return suya;
+      // Y si no la dice pegada a el, la unica casa que nombre el origen.
+      const otra = casaQueNombra(t);
+      if (otra) return otra;
+    }
+    return AREA_DEL_CUERPO[cuerpo];
+  }
+
+  // Si no nombra ningun cuerpo pero si una casa, vale la casa.
+  const casa = casaQueNombra(t);
+  if (casa) return casa;
+
+  // Y si solo nombra un signo, vale el signo.
+  const signo = Object.keys(AREA_DEL_SIGNO).find(g => new RegExp('\\b' + g).test(t));
+  if (signo) return AREA_DEL_SIGNO[signo];
+
+  return '';
+}
+
 async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto) {
   const trato = sexo === 'mujer'
     ? 'una MUJER. Todo en femenino.'
@@ -632,6 +766,7 @@ Nombre de pila: ${nombrePila}`;
       descripcion: String(r.descripcion ?? '').trim(),
       causa: String(r.causa ?? '').trim(),
       origen: String(r.origen ?? '').trim(),
+      area: areaDelRasgo(r.origen),
     }));
 }
 
