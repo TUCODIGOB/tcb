@@ -156,7 +156,11 @@ export default async function handler(req, res) {
     var ALTO_INICIO = 60;
 
     // Aire que queda a cada lado de la linea que separa un rasgo del siguiente.
-    var AIRE_RASGO = 8;
+    // Los dos numeros son distintos para que el hueco se vea igual: por arriba
+    // la linea se mide desde el renglon del area, que no baja de el, y por
+    // abajo hasta el nombre del rasgo, que si sube por encima del suyo.
+    var AIRE_SOBRE_LINEA = 4;
+    var AIRE_BAJO_LINEA = 11;
 
     // Hueco que separa el final de una lista del titulo de la siguiente.
     var AIRE_ENTRE_LISTAS = 25;
@@ -745,7 +749,7 @@ export default async function handler(req, res) {
         var alto = ficha.alto;
         var divisor = !primeroDeLaPagina;
 
-        if (ry + alto + (divisor ? AIRE_RASGO*2 : 0) > H - 22) {
+        if (ry + alto + (divisor ? AIRE_SOBRE_LINEA + AIRE_BAJO_LINEA : 0) > H - 22) {
           addPageNum(pageC); pageC++;
           doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
           ry = ALTO_INICIO;
@@ -754,10 +758,10 @@ export default async function handler(req, res) {
 
         // 0. La linea que separa este rasgo del de arriba.
         if (divisor) {
-          ry += AIRE_RASGO;
+          ry += AIRE_SOBRE_LINEA;
           doc.setDrawColor(228,228,228); doc.setLineWidth(0.2);
-          doc.line(18, ry, 158, ry);
-          ry += AIRE_RASGO;
+          doc.line(35, ry, 175, ry);
+          ry += AIRE_BAJO_LINEA;
         }
 
         // 1. El nombre del rasgo
