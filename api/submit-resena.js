@@ -109,8 +109,8 @@ async function enviarEmailAdmin(nombre, email, fecha, videoUrl, objectKey) {
   const fechaFormateada = fecha ? new Date(fecha).toLocaleString('es-ES') : new Date().toLocaleString('es-ES');
 
   const body = {
-    sender: { email: 'hola@origennatal.com', name: 'Origen Natal — Reseñas' },
-    to: [{ email: 'hola.origennatal@gmail.com', name: 'Origen Natal' }],
+    sender: { email: 'hola@origennatal.com', name: 'ORIGEN NATAL — Reseñas' },
+    to: [{ email: 'hola.origennatal@gmail.com', name: 'ORIGEN NATAL' }],
     subject: '🎬 RESEÑA RECIBIDA',
     htmlContent: `
       <div style="font-family:Arial,sans-serif;padding:24px;background:#fffbef;max-width:600px;">

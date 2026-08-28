@@ -735,8 +735,8 @@ async function enviarAvisoPDFNoGenerado({ nombre, email, sessionId, motivo }) {
   ].join('\n');
 
   const body = {
-    sender: { email: 'hola@origennatal.com', name: 'Origen Natal — Alertas' },
-    to: [{ email: 'hola.origennatal@gmail.com', name: 'Origen Natal' }],
+    sender: { email: 'hola@origennatal.com', name: 'ORIGEN NATAL — Alertas' },
+    to: [{ email: 'hola.origennatal@gmail.com', name: 'ORIGEN NATAL' }],
     subject: 'PDF NO GENERADO — CLIENTE SIN INFORME',
     htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
   };
@@ -775,8 +775,8 @@ async function enviarAvisoFalloPDF({ nombre, email, sessionId, fallos }) {
   ].join('\n');
 
   const body = {
-    sender: { email: 'hola@origennatal.com', name: 'Origen Natal — Alertas' },
-    to: [{ email: 'hola.origennatal@gmail.com', name: 'Origen Natal' }],
+    sender: { email: 'hola@origennatal.com', name: 'ORIGEN NATAL — Alertas' },
+    to: [{ email: 'hola.origennatal@gmail.com', name: 'ORIGEN NATAL' }],
     subject: 'FALLO PDF CLIENTE',
     htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
   };
