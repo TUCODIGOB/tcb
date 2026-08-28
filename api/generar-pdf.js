@@ -727,7 +727,7 @@ export default async function handler(req, res) {
         if (divisor) {
           ry += AIRE_RASGO;
           doc.setDrawColor(228,228,228); doc.setLineWidth(0.2);
-          doc.line(18, ry, 193, ry);
+          doc.line(18, ry, 158, ry);
           ry += AIRE_RASGO;
         }
 
