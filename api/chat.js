@@ -512,6 +512,18 @@ LAS DOS LISTAS:
 
 SIN NUMERO FIJO. Saca TODOS los que de verdad salgan de esta carta, los que sean. No hay minimo ni maximo, y las dos listas no tienen por que tener el mismo numero. Lo que no vale es inventarse ninguno para alargar la lista, ni dejarse fuera uno que este en la carta para acortarla.
 
+RECORRE LA CARTA ENTERA, NO SOLO LO QUE MAS SALTA A LA VISTA.
+Una carta tiene mucho mas de lo que se ve en una primera lectura, y quedarse en lo evidente deja fuera la mitad de la persona. Antes de dar las listas por terminadas, pasa por TODO lo que tienes delante, una cosa detras de otra:
+- El Ascendente.
+- Cada uno de los planetas, uno por uno, de la Luna a Pluton, con Quiron y el Nodo Norte: en que signo esta y en que casa cae. Los dos datos dicen cosas distintas.
+- Cada aspecto de la lista, uno por uno.
+- Los planetas retrogrados, que los lleva marcados.
+- Y donde se junta mas de una cosa: varios planetas en el mismo signo o en la misma casa, o una casa que se queda vacia.
+De cada sitio sale lo que salga: a veces dos rasgos, a veces uno, a veces ninguno. Lo que no puede pasar es que un planeta o un aspecto de esta carta no lo hayas ni mirado.
+
+CADA RASGO SE ENTREGA ENTERO O NO SE ENTREGA.
+Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes como seguirlo, se quita entero, tambien su nombre. Nunca se rellena una casilla con una palabra de relleno, ni con un aviso de que falta, ni con nada que no sea el texto que toca: eso se imprime tal cual en el informe que lee la clienta. Antes de entregar, repasa las dos listas casilla por casilla y quita cualquier rasgo al que le falte algo.
+
 NI UNO REPETIDO, ni dentro de la misma lista ni entre las dos. Repetido no es solo la misma frase: es la misma cosa dicha con otras palabras. Antes de dar una lista por terminada, leela entera y quita lo que diga lo mismo que otro rasgo.
 
 CADA RASGO LLEVA CUATRO CASILLAS:
@@ -525,6 +537,9 @@ CADA RASGO LLEVA CUATRO CASILLAS:
    Una carta natal es el mapa del momento en que nacio. No dice nada de lo que le paso despues, ni de su familia, ni de su infancia, ni de lo que aprendio de pequeña.
    Asi que esta PROHIBIDO contar su infancia, su familia, sus padres, su casa, lo que vivio de pequeña o cualquier episodio de su vida. Nada de eso esta en la carta, asi que escribirlo seria inventarselo.
    Lo que si se escribe: como funciona por dentro y que efecto tiene eso: su forma de decidir, de reaccionar, de vincularse, y a donde le lleva. El porque de su manera de ser, no el porque de su historia.
+   Y SE LE ESCRIBE A ELLA, HABLANDOLE DE TU, CON PALABRAS QUE ENTIENDA.
+   Aqui SI se cuenta por que es asi y de donde le viene eso, que es lo que ella quiere saber. Lo que no se hace es contarlo en el idioma de la carta: nada de decir que un planeta esta en tal sitio y por eso pasa tal cosa, ni que una zona de la carta produce esto o aquello. Ese dato ya va en la casilla "origen".
+   Y no se habla de ella desde fuera, como si se estuviera describiendo a una persona ajena. Nada de decir que la identidad se construye de tal manera o que la afectividad funciona de tal otra. Se le dice a ella lo que le pasa: por que le sale eso, de donde le nace, y a donde le lleva.
    Dos o tres frases.
 
 4. "origen": DE DONDE SALE ESE RASGO EN LA CARTA, en lenguaje tecnico y en corto.
