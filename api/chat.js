@@ -870,9 +870,6 @@ async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto, INTENTOS) {
   throw ultimoError;
 }
 
-// Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
-// mismo que antes escribia una sola, pero tardan la mitad porque van en
-// paralelo, igual que las siete areas.
 // LO QUE LA CLIENTA NO PUEDE LEER.
 //
 // El encargo prohibe las palabras de astrologia en el nombre, la descripcion y
@@ -945,6 +942,9 @@ async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda
   }
 }
 
+// Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
+// mismo que antes escribia una sola, pero tardan la mitad porque van en
+// paralelo, igual que las siete areas.
 async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
   const [fortalezas, desafios] = await Promise.all([
     sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS)
