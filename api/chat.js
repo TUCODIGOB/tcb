@@ -461,8 +461,13 @@ const ESQUEMA_UNA_LISTA = {
           descripcion: { type: 'string' },
           causa:       { type: 'string' },
           origen:      { type: 'string' },
+          // El area la dice el modelo, que es el unico que sabe de que va el
+          // rasgo. Aqui va como texto normal, igual que las otras casillas: el
+          // que comprueba que sea una de las siete y que este de verdad en la
+          // posicion del origen es el codigo, en areaDelRasgo.
+          area:        { type: 'string' },
         },
-        required: ['nombre', 'descripcion', 'causa', 'origen'],
+        required: ['nombre', 'descripcion', 'causa', 'origen', 'area'],
         additionalProperties: false,
       },
     },
@@ -573,9 +578,35 @@ function casaEnElTramo(t, cuerpo) {
   return casaQueNombra(t.slice(desde, hasta));
 }
 
+// Todas las areas que hay DE VERDAD en una posicion de la carta. Una posicion
+// suele tocar dos o tres: "Venus trigono Jupiter" es amor por Venus y dinero
+// por Jupiter, y las dos son ciertas.
+function areasQueHayEn(origen) {
+  const t = sinTildes(origen);
+  const dentro = new Set();
+  for (const c of ORDEN_PERSONAL) {
+    if (new RegExp('\\b' + c + '\\b').test(t)) dentro.add(AREA_DEL_CUERPO[c]);
+  }
+  for (const m of t.matchAll(/casa\s*(\d{1,2})/g)) {
+    const a = AREA_DE_LA_CASA[Number(m[1])];
+    if (a) dentro.add(a);
+  }
+  return dentro;
+}
+
+// El area de un rasgo. La elige el modelo, porque es el unico que sabe de que
+// va el rasgo: la misma posicion sirve para dos areas y solo lo escrito decide
+// cual. Pero solo se le acepta si esa area esta de verdad en su posicion, asi
+// que no puede colocarlo donde le venga bien. Si no la dice, o si la que dice
+// no esta ahi, decide la posicion como hasta ahora.
+function areaDelRasgo(origen, elegida) {
+  if (elegida && areasQueHayEn(origen).has(elegida)) return elegida;
+  return areaPorLaPosicion(origen);
+}
+
 // Lee la casilla "origen" y devuelve el area. Si no reconoce nada, devuelve ''
 // y el PDF simplemente no pinta el area de ese rasgo.
-function areaDelRasgo(origen) {
+function areaPorLaPosicion(origen) {
   const t = sinTildes(origen);
 
   // Los cuerpos que nombra, en orden de mas personal a mas lejano.
@@ -665,7 +696,7 @@ nombre       Se le habla de tu, igual que en todo lo demas: es lo que hace
              detras no le habla a nadie, es una etiqueta de manual, y esta mal
              aunque describa bien el rasgo.
              De cuatro a siete palabras, con sus articulos y sus preposiciones,
-             como se habla.
+             como se habla. Empieza en mayuscula, y sin punto al final.
 
 descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota.
 
@@ -701,6 +732,12 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              cualquier episodio de su vida: eso no esta en la carta y seria
              inventarselo. Lo que se cuenta es como funciona por dentro y
              a donde le lleva eso.
+
+area         A cual de las siete pertenece este rasgo, escrita tal cual. La
+             misma posicion suele valer para dos, porque toca dos cosas de la
+             vida a la vez; eliges la que pesa mas en LO QUE HAS ESCRITO, y va
+             en una sola. Lo que no puede es ser un area que no este en la
+             posicion que pones en "origen".
 
 origen       De donde sale el rasgo en la carta, en tecnico y en corto: el
              cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
@@ -793,7 +830,7 @@ Nombre de pila: ${nombrePila}`;
       descripcion: String(r.descripcion ?? '').trim(),
       causa: String(r.causa ?? '').trim(),
       origen: String(r.origen ?? '').trim(),
-      area: areaDelRasgo(r.origen),
+      area: areaDelRasgo(r.origen, String(r.area ?? '').trim()),
     }));
 }
 
