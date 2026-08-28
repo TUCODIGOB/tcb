@@ -494,7 +494,7 @@ Solo esa. La otra lista la esta sacando otra persona a la vez que tu.
 
 2. CUANTOS
 
-Veinte como maximo. Es un TECHO, no un objetivo ni una cuota que llenar: si de esta carta salen dieciocho de verdad, se entregan dieciocho. No se añade ninguno para llegar a la cifra, no se repite uno ya dicho con otras palabras, y no se parte uno bueno en dos.
+Veinte como maximo. Es un TECHO, no un objetivo ni una cuota que llenar: si de esta carta salen dieciocho de verdad, se entregan dieciocho. No se añade ninguno para llegar a la cifra y no se parte uno bueno en dos.
 Si te salieran mas de veinte, te quedas con los que mas peso tienen en esta carta.
 
 Y NI UNO REPETIDO. Repetido no es solo la misma frase: es la misma cosa dicha de otra manera. Antes de entregar, lee la lista entera y quita lo que diga lo mismo que otro.
@@ -526,13 +526,13 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              esa causa no vale y hay que escribir la de verdad.
              Y tiene que ser la de ESTE rasgo, no una que valdria igual para
              cualquier otro suyo.
-             AQUI ES DONDE MAS SE CUELA LA ASTROLOGIA, Y AQUI NO ENTRA. La
-             posicion de la que sale el rasgo va en "origen", que es la casilla
-             de al lado, y no se cuenta dos veces. Asi que en la causa no se
-             nombra ningun planeta, ni signo, ni casa, ni aspecto, ni se dice
-             que algo esta en una zona de su carta, ni que va retrogrado, ni se
-             habla de su carta para nada. Se explica el mecanismo con las
-             palabras de ella, sin decir de donde has sacado que funciona asi.
+             NI UNA PALABRA TECNICA, y aqui es donde mas se cuela. Ni en el
+             nombre, ni en la descripcion, ni aqui: ningun planeta, ningun
+             signo, ninguna casa, ningun aspecto, nada de que algo esta en una
+             zona de su carta ni de que va retrogrado, y su carta no se nombra.
+             La posicion va en "origen", la casilla de al lado, y no se cuenta
+             dos veces. Aqui se explica el mecanismo con las palabras de ella,
+             sin decir de donde has sacado que funciona asi.
              Y OJO CON ESTO: una carta natal es el mapa del momento en que
              nacio. No dice nada de lo que le paso despues. Asi que esta
              PROHIBIDO contar su infancia, su familia, sus padres, su casa o
@@ -558,13 +558,11 @@ Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee un
 - SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un dia cualquiera.
 - NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace ella, no lo que hace un concepto.
 - NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa.
-- FRASES LARGAS, ENCADENADAS CON COMAS, que es como se habla de verdad. Cortarlo todo en frases secas parte la lectura y suena a lista, no a alguien contandotelo.
-- EL TEXTO TIENE QUE RESPIRAR. Ideas cortas una detras de otra, sin aire entre ellas, ahogan a quien lee: no le da tiempo a asimilar una cuando ya le llega la siguiente. Se desarrolla una idea, se le deja sitio, y luego viene la otra.
+- FRASES LARGAS, ENCADENADAS CON COMAS, y QUE EL TEXTO RESPIRE. Asi se habla de verdad. Cortarlo todo en frases secas y en ideas cortas una detras de otra parte la lectura, suena a lista y ahoga a quien lee, porque no le da tiempo a asimilar una cuando ya le llega la siguiente. Se desarrolla una idea, se le deja sitio, y luego viene la otra.
 - LAS PALABRAS SON LAS DE LA CALLE, no las de un informe. Si una palabra la verias antes en una evaluacion de trabajo o en un manual que en una conversacion, se cambia por la que usaria cualquiera hablando.
 - CUANDO ALGO SE LE DA BIEN, SE LE DICE A LA CARA. Se le reconoce directamente, no se describe su rendimiento desde fuera como si se la estuviera puntuando.
 - CUANDO ES UN DESAFIO, SE LE CUENTA SIN ATACARLA. Se dice lo que le pasa de manera que lo reconozca y no se ponga a la defensiva: sin juzgarla, sin señalarla y sin que suene a reproche ni a defecto.
 - EL NOMBRE DEL RASGO VA EN EL MISMO IDIOMA QUE EL RESTO. Se dice como se lo dirias a la cara, no como el titulo de un apartado. Si suena a linea de curriculum o a etiqueta de manual, esta mal, aunque el texto de debajo este bien escrito.
-- NI UNA PALABRA TECNICA en el nombre, la descripcion ni la causa: ni planetas, ni signos, ni casas, ni aspectos, ni carta natal. Todo eso va en "origen" y solo ahi.
 - Español de España, hablado, sin latinoamericanismos.
 - Nada de asteriscos, negritas, guiones ni simbolos: es texto corrido.
 ${cual === 'desafios'
