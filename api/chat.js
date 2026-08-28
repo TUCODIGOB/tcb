@@ -659,7 +659,12 @@ De cada area saldra lo que salga. Lo que no puede pasar es que de un area no hay
 
 4. LAS CUATRO CASILLAS DE CADA RASGO
 
-nombre       De 3 a 6 palabras, sin articulos.
+nombre       EMPIEZA POR UN VERBO, siempre. Es lo que ella hace o lo que le
+             pasa, no el nombre de eso. Un nombre que arranca con un sustantivo
+             y le cuelga adjetivos detras es una etiqueta de manual, y esta mal
+             aunque describa bien el rasgo.
+             De cuatro a siete palabras, con sus articulos y sus preposiciones,
+             como se habla. Se lee como si se lo dijeras a la cara.
 
 descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota.
 
@@ -718,11 +723,10 @@ Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee un
 - LAS PALABRAS SON LAS DE LA CALLE, no las de un informe. Si una palabra la verias antes en una evaluacion de trabajo o en un manual que en una conversacion, se cambia por la que usaria cualquiera hablando.
 - CUANDO ALGO SE LE DA BIEN, SE LE DICE A LA CARA. Se le reconoce directamente, no se describe su rendimiento desde fuera como si se la estuviera puntuando.
 - CUANDO ES UN DESAFIO, SE LE CUENTA SIN ATACARLA. Se dice lo que le pasa de manera que lo reconozca y no se ponga a la defensiva: sin juzgarla, sin señalarla y sin que suene a reproche ni a defecto.
-- EL NOMBRE DEL RASGO VA EN EL MISMO IDIOMA QUE EL RESTO. Se dice como se lo dirias a la cara, no como el titulo de un apartado. Si suena a linea de curriculum o a etiqueta de manual, esta mal, aunque el texto de debajo este bien escrito.
 - Español de España, hablado, sin latinoamericanismos.
 - Nada de asteriscos, negritas, guiones ni simbolos: es texto corrido.
 ${cual === 'desafios'
-  ? '- Se nombra lo que HACE o lo que le PASA, no se le pone una etiqueta encima. Se cuenta lo que ocurre, no se la diagnostica.'
+  ? '- No se la diagnostica: se cuenta lo que le ocurre, no como se llama eso.'
   : ''}
 
 Carta natal:
