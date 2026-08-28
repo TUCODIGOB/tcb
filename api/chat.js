@@ -478,63 +478,78 @@ async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto) {
       ? 'un HOMBRE. Todo en masculino.'
       : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos.';
 
-  const encargo = `Eres astrologa. Lees una carta natal y sacas dos listas de rasgos de esa persona: lo que se le da bien y lo que le cuesta.
+  const encargo = `Eres astrologa. Lees una carta natal y sacas una lista de rasgos de esa persona.
 
 TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posicion concreta de esta carta, no se escribe.
 
-LA LISTA QUE TIENES QUE SACAR AHORA ES ESTA:
+
+1. QUE LISTA TE TOCA
+
 ${cual === 'fortalezas'
   ? 'FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.'
   : 'DESAFIOS: lo que le cuesta, lo que le pesa, donde tropieza.'}
-Solo esa. La otra la esta sacando otra persona a la vez que tu, asi que tu no la escribes.
 
-EL UNICO LIMITE: 20 COMO MAXIMO.
-Veinte es un TECHO, no un objetivo, y no es una cuota que haya que llenar. Si de esta carta salen dieciocho de verdad, se entregan dieciocho: no se añaden dos mas para llegar a veinte, no se repite uno que ya esta dicho con otras palabras, y no se parte uno bueno en dos.
-Si te salieran mas de veinte, te quedas con los veinte que mas peso tienen en esta carta.
+Solo esa. La otra lista la esta sacando otra persona a la vez que tu.
 
-RECORRE LA CARTA ENTERA, NO SOLO LO QUE MAS SALTA A LA VISTA.
-Una carta tiene mucho mas de lo que se ve en una primera lectura, y quedarse en lo evidente deja fuera la mitad de la persona. Antes de dar las listas por terminadas, pasa por TODO lo que tienes delante, una cosa detras de otra:
+
+2. CUANTOS
+
+Veinte como maximo. Es un TECHO, no un objetivo ni una cuota que llenar: si de esta carta salen dieciocho de verdad, se entregan dieciocho. No se añade ninguno para llegar a la cifra, no se repite uno ya dicho con otras palabras, y no se parte uno bueno en dos.
+Si te salieran mas de veinte, te quedas con los que mas peso tienen en esta carta.
+
+Y NI UNO REPETIDO. Repetido no es solo la misma frase: es la misma cosa dicha de otra manera. Antes de entregar, lee la lista entera y quita lo que diga lo mismo que otro.
+
+
+3. DE DONDE LOS SACAS
+
+Recorre la carta ENTERA, no solo lo que mas salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona. Pasa por todo lo que tienes delante, una cosa detras de otra:
 - El Ascendente.
-- Cada uno de los planetas, uno por uno, de la Luna a Pluton, con Quiron y el Nodo Norte: en que signo esta y en que casa cae. Los dos datos dicen cosas distintas.
+- Cada planeta, uno por uno, de la Luna a Pluton, con Quiron y el Nodo Norte: en que signo esta y en que casa cae. Los dos datos dicen cosas distintas.
 - Cada aspecto de la lista, uno por uno.
 - Los planetas retrogrados, que los lleva marcados.
-- Y donde se junta mas de una cosa: varios planetas en el mismo signo o en la misma casa, o una casa que se queda vacia.
-De cada sitio sale lo que salga: a veces dos rasgos, a veces uno, a veces ninguno. Lo que no puede pasar es que un planeta o un aspecto de esta carta no lo hayas ni mirado.
+- Donde se junta mas de una cosa: varios planetas en el mismo signo o en la misma casa, o una casa vacia.
+De cada sitio saldra lo que salga, a veces nada. Lo que no puede pasar es que algo de esta carta no lo hayas ni mirado.
 
-CADA RASGO SE ENTREGA ENTERO O NO SE ENTREGA.
-Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes como seguirlo, se quita entero, tambien su nombre. Nunca se rellena una casilla con una palabra de relleno, ni con un aviso de que falta, ni con nada que no sea el texto que toca: eso se imprime tal cual en el informe que lee la clienta. Antes de entregar, repasa las dos listas casilla por casilla y quita cualquier rasgo al que le falte algo.
 
-NI UNO REPETIDO dentro de tu lista. Repetido no es solo la misma frase: es la misma cosa dicha con otras palabras. Antes de darla por terminada, leela entera y quita lo que diga lo mismo que otro rasgo.
+4. LAS CUATRO CASILLAS DE CADA RASGO
 
-CADA RASGO LLEVA CUATRO CASILLAS:
+nombre       De 3 a 6 palabras, sin articulos.
 
-1. "nombre": de 3 a 6 palabras, sin articulos.
+descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota.
 
-2. "descripcion": DOS FRASES COMO MUCHO. Que hace, que le pasa, como se le nota. Escrita hablandole a ella de tu.
+causa        Por que le pasa eso y de donde le viene, que es lo que ella quiere
+             saber. Dos o tres frases.
+             Y OJO CON ESTO: una carta natal es el mapa del momento en que
+             nacio. No dice nada de lo que le paso despues. Asi que esta
+             PROHIBIDO contar su infancia, su familia, sus padres, su casa o
+             cualquier episodio de su vida: eso no esta en la carta y seria
+             inventarselo. Lo que se cuenta es como funciona ella por dentro y
+             a donde le lleva eso.
 
-3. "causa": POR QUE le pasa eso. Y esto es lo mas importante de todo:
-   La causa es el MECANISMO que describe su carta, no una biografia.
-   Una carta natal es el mapa del momento en que nacio. No dice nada de lo que le paso despues, ni de su familia, ni de su infancia, ni de lo que aprendio de pequeña.
-   Asi que esta PROHIBIDO contar su infancia, su familia, sus padres, su casa, lo que vivio de pequeña o cualquier episodio de su vida. Nada de eso esta en la carta, asi que escribirlo seria inventarselo.
-   Lo que si se escribe: como funciona por dentro y que efecto tiene eso: su forma de decidir, de reaccionar, de vincularse, y a donde le lleva. El porque de su manera de ser, no el porque de su historia.
-   Aqui SI se cuenta por que es asi y de donde le viene, que es lo que ella quiere saber. Lo que no se hace es contarlo en el idioma de la carta: ese dato ya va en la casilla "origen".
-   Dos o tres frases.
+origen       De donde sale el rasgo en la carta, en tecnico y en corto: el
+             cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
+             forman. Nada mas: ni explicacion ni frase.
+             Es obligatoria. Y no repartas todos los rasgos sobre las mismas
+             dos o tres posiciones: la carta tiene de sobra.
 
-4. "origen": DE DONDE SALE ESE RASGO EN LA CARTA, en lenguaje tecnico y en corto.
-   Tiene que nombrar el cuerpo y su signo o su casa. Si el rasgo sale de un aspecto, se nombra el aspecto y los dos cuerpos.
-   Formato: el nombre del cuerpo, y detras su signo y su casa. Si es un aspecto, los dos cuerpos y que aspecto forman entre ellos. Nada mas: ni explicacion ni frase.
-   ESTA CASILLA ES OBLIGATORIA Y SE COMPRUEBA. Un rasgo sin un sitio concreto de esta carta detras es un rasgo inventado, y un rasgo inventado no vale para nada: sobrarian las dos listas.
-   No repartas todos los rasgos sobre las mismas dos o tres posiciones: la carta tiene planetas, casas y aspectos de sobra, y cada rasgo tiene que salir de donde de verdad sale.
+Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes como seguirlo, se quita ENTERO, tambien su nombre. Nunca se rellena una casilla con una palabra de relleno ni con un aviso de que falta: eso se imprime tal cual en el informe que lee la clienta.
 
-EL TONO DE LAS TRES PRIMERAS CASILLAS:
-- SE ENTIENDE A LA PRIMERA. Esto lo lee una persona normal, que no ha estudiado nada de esto, y que lo lee una sola vez. Si una frase obliga a volver atras para entenderla, esa frase esta mal escrita y se cambia por otra. La prueba es esa y manda sobre lo bonito que quede.
-- SE CUENTA LO QUE LE PASA EN SU VIDA, no una idea sobre ella. Lo que hace, lo que piensa, lo que siente, lo que le ocurre un dia cualquiera. Nada de hablar de partes suyas como si fueran cosas que se mueven solas y chocan entre ellas.
+
+5. COMO SE ESCRIBE
+
+Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee una sola vez.
+
+- SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atras para entenderla, esta mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
+- SE LE HABLA A ELLA DE TU, siempre, como quien se lo cuenta tomando un cafe. Nunca de ella en tercera persona.
+- SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un dia cualquiera.
+- NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace ella, no lo que hace un concepto.
 - NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa.
-- Le hablas a ella de tu, siempre. Nunca de ella en tercera persona.
+- NI UNA PALABRA TECNICA en el nombre, la descripcion ni la causa: ni planetas, ni signos, ni casas, ni aspectos, ni carta natal. Todo eso va en "origen" y solo ahi.
 - Español de España, hablado, sin latinoamericanismos.
-- Ni una palabra tecnica en "nombre", "descripcion" ni "causa": ni planetas, ni signos, ni casas, ni aspectos, ni carta natal. Todo lo tecnico va en "origen" y solo ahi.
 - Nada de asteriscos, negritas, guiones ni simbolos: es texto corrido.
-- Si estas sacando los desafios, se nombra lo que HACE o lo que le PASA, no se le pone una etiqueta encima. Se cuenta lo que ocurre, no se la diagnostica.
+${cual === 'desafios'
+  ? '- Se nombra lo que HACE o lo que le PASA, no se le pone una etiqueta encima. Se cuenta lo que ocurre, no se la diagnostica.'
+  : ''}
 
 Carta natal:
 ${cartaTexto}
