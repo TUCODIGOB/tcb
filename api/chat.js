@@ -640,7 +640,7 @@ function areaPorLaPosicion(origen) {
   return '';
 }
 
-async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto) {
+async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto, soloEstas) {
   const trato = sexo === 'mujer'
     ? 'una MUJER. Todo en femenino.'
     : sexo === 'hombre'
@@ -666,7 +666,10 @@ Solo esa. La otra lista la esta sacando otra persona a la vez que tu.
 Veinte como maximo en TODA la lista, sumando las siete areas, no en cada una. Es un TECHO, no un objetivo ni una cuota que llenar: si de esta carta salen dieciocho de verdad, se entregan dieciocho. No se añade ninguno para llegar a la cifra y no se parte uno bueno en dos.
 Si te salieran mas de veinte, te quedas con los que mas peso tienen en esta carta.
 
-Y AL MENOS UNO EN CADA AREA. Ninguna caja se entrega vacia. Pero ojo: uno es el suelo, no la respuesta. De cada area sale TODO lo que de verdad haya en su parte de la carta, que en unas seran cuatro y en otras uno. Poner uno en cada caja y darlo por hecho es entregar media lista.
+${cual === 'fortalezas'
+  ? 'Y AL MENOS UNO EN CADA AREA. Ninguna caja se entrega vacia.'
+  : 'Y AL MENOS DOS EN CADA AREA. Ninguna caja se entrega vacia ni con uno solo: en los desafios es donde esta lo que mas le sirve, asi que de cada area salen dos como minimo.'}
+Pero ojo: eso es el suelo, no la respuesta. De cada area sale TODO lo que de verdad haya en su parte de la carta, que en unas seran cuatro y en otras el minimo. Poner el minimo en cada caja y darlo por hecho es entregar media lista.
 
 Y NI UNO REPETIDO, tampoco entre areas distintas. Repetido no es solo la misma frase: es la misma cosa dicha de otra manera. Si un rasgo te vale para dos areas, va en UNA sola, en la que mas pese. Antes de entregar, lee las siete cajas juntas y quita lo que diga lo mismo que otro.
 
@@ -791,7 +794,9 @@ Nombre de pila: ${nombrePila}`;
       max_tokens: 16000,
       system: encargo,
       output_config: { format: { type: 'json_schema', schema: ESQUEMA_UNA_LISTA } },
-      messages: [{ role: 'user', content: `Saca la lista de ${cual} de esta carta, siguiendo el esquema.` }],
+      messages: [{ role: 'user', content: soloEstas && soloEstas.length > 0
+        ? `De esta carta faltan ${cual} de estas areas: ${soloEstas.join(', ')}. Sacalos ahora, siguiendo el esquema. Las demas cajas las dejas vacias.`
+        : `Saca la lista de ${cual} de esta carta, siguiendo el esquema.` }],
     }),
   });
 
@@ -868,10 +873,38 @@ async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto, INTENTOS) {
 // Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
 // mismo que antes escribia una sola, pero tardan la mitad porque van en
 // paralelo, igual que las siete areas.
+// EL MINIMO POR AREA, GARANTIZADO.
+//
+// El esquema obliga a que existan las siete cajas, pero no puede obligar a que
+// lleven algo dentro: la API no admite pedir un minimo por caja. Asi que lo
+// comprueba el codigo. Si alguna area no llega al minimo se piden SOLO esas,
+// una vez, y se juntan con lo que ya habia. Cuando el minimo se cumple, que es
+// lo normal, esto no gasta ni una llamada.
+const MINIMO_POR_AREA = { fortalezas: 1, desafios: 2 };
+
+async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, lista) {
+  const minimo = MINIMO_POR_AREA[cual] || 1;
+  const faltan = AREAS.filter(a => lista.filter(r => r.area === a).length < minimo);
+  if (faltan.length === 0) return lista;
+
+  console.warn(`Lista de ${cual}: no llega al minimo en ${faltan.join(', ')}, se piden aparte`);
+  try {
+    const extra = await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, faltan);
+    return lista.concat(extra.filter(r => faltan.includes(r.area)));
+  } catch (err) {
+    // Si esta segunda peticion falla, se entrega lo que ya habia: vale mas el
+    // informe con un area corta que sin listas.
+    console.error(`Lista de ${cual}: no se pudo completar el minimo: ${err.message.slice(0, 80)}`);
+    return lista;
+  }
+}
+
 async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
   const [fortalezas, desafios] = await Promise.all([
-    sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS),
-    sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS),
+    sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS)
+      .then(l => conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, l)),
+    sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS)
+      .then(l => conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, l)),
   ]);
   return { fortalezas, desafios };
 }
