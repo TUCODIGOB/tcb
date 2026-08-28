@@ -150,6 +150,11 @@ export default async function handler(req, res) {
     // pagina, en milimetros.
     var AIRE_SOBRE_NUMERO = 5;
 
+    // Altura a la que arranca la redaccion en cada pagina. Es la misma que usan
+    // las siete areas (el "ay=60" de mas abajo): los rasgos empiezan al mismo
+    // nivel que ellas.
+    var ALTO_INICIO = 60;
+
     function addPageNum(n) {
       doc.setFont('Roboto', 'bold');
       doc.setFontSize(9);
@@ -681,11 +686,12 @@ export default async function handler(req, res) {
       if (!Array.isArray(lista) || lista.length === 0) return;
 
       doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
-      var ry = 55;
+      var ry = ALTO_INICIO;
 
-      // Cabecera de la lista, centrada y en dorado, como los cierres de area.
-      doc.setFont('Roboto','bold'); doc.setFontSize(16); doc.setTextColor(207,177,128);
-      doc.text(fx(titulo), 105, ry, { align: 'center' });
+      // Cabecera de la lista, a la izquierda y en dorado, en la misma linea de
+      // margen que los rasgos que van debajo.
+      doc.setFont('Roboto','bold'); doc.setFontSize(13); doc.setTextColor(207,177,128);
+      doc.text(fx(titulo), 18, ry);
       ry += 14;
 
       for (var i = 0; i < lista.length; i++) {
@@ -703,7 +709,7 @@ export default async function handler(req, res) {
         if (ry + alto > H - 22) {
           addPageNum(pageC); pageC++;
           doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
-          ry = 40;
+          ry = ALTO_INICIO;
         }
 
         // 1. El nombre del rasgo
