@@ -394,20 +394,10 @@ ${cartaTexto}`;
     // Y SIN RED. Si las listas no salen, no sale el informe: se corta aqui, se
     // suelta la reserva y el cliente reintenta. Un informe sin las listas no es
     // el producto, asi que no se entrega a medias.
-    // Y con el mismo trato que las areas: hasta 3 intentos cuando el fallo es
-    // temporal (saturacion, error del servidor, corte de red). Las areas ya lo
-    // hacian; las listas van igual, porque tienen que salir siempre.
-    let rasgos, falloRasgos;
-    for (let intento = 1; intento <= INTENTOS_POR_AREA; intento++) {
-      try { rasgos = await sacarRasgos(nombrePila, sexo, cartaTexto); break; }
-      catch (err) {
-        falloRasgos = err;
-        if (intento === INTENTOS_POR_AREA) break;
-        console.warn(`Rasgos: intento ${intento} fallido (${err.message.slice(0, 90)}), reintentando`);
-        await new Promise(r => setTimeout(r, 1500 * intento));
-      }
-    }
-    if (!rasgos) throw falloRasgos;
+    // Y con el mismo trato que las areas: cada lista se reintenta hasta 3 veces
+    // por su cuenta cuando el fallo es temporal (saturacion, error del
+    // servidor, corte de red). Tienen que salir siempre, igual que las areas.
+    const rasgos = await sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS_POR_AREA);
 
     // Despues, las 7 areas a la vez.
     const resultados = await Promise.all(
@@ -481,7 +471,7 @@ const ESQUEMA_UNA_LISTA = {
   additionalProperties: false,
 };
 
-async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto) {
+async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto) {
   const trato = sexo === 'mujer'
     ? 'una MUJER. Todo en femenino.'
     : sexo === 'hombre'
@@ -578,7 +568,11 @@ Nombre de pila: ${nombrePila}`;
 
   if (!response.ok) {
     const detalle = await response.text();
-    throw new Error(`rasgos: ${response.status} — ${detalle.slice(0, 300)}`);
+    const err = new Error(`${cual}: ${response.status} — ${detalle.slice(0, 300)}`);
+    // Igual que en las areas: la saturacion y los errores del servidor se
+    // reintentan; una peticion mal formada o la clave mal no van a mejorar.
+    err.temporal = response.status === 429 || response.status >= 500;
+    throw err;
   }
 
   const data = await response.json();
@@ -591,7 +585,9 @@ Nombre de pila: ${nombrePila}`;
   try {
     salida = JSON.parse(texto);
   } catch (e) {
-    throw new Error('rasgos: la respuesta no es JSON valido');
+    const err = new Error(`${cual}: la respuesta no es JSON valido`);
+    err.temporal = true;
+    throw err;
   }
 
   // Se cogen los rasgos tal como salen. Lo unico que se hace es quitar espacios
@@ -605,13 +601,35 @@ Nombre de pila: ${nombrePila}`;
     }));
 }
 
+// CADA LISTA SE REINTENTA POR SU CUENTA, igual que cada area.
+//
+// Si falla la de desafios, se vuelve a pedir solo esa: la de fortalezas ya
+// estaba bien y no se tira ni se paga dos veces. Es exactamente lo que hace
+// generarArea con cada una de las siete areas.
+async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto, INTENTOS) {
+  let ultimoError;
+  for (let intento = 1; intento <= INTENTOS; intento++) {
+    try {
+      return await pedirUnaLista(cual, nombrePila, sexo, cartaTexto);
+    } catch (err) {
+      ultimoError = err;
+      // Un corte de red llega sin marca; se trata como temporal.
+      const temporal = err.temporal !== false;
+      if (!temporal || intento === INTENTOS) break;
+      console.warn(`Lista de ${cual}: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
+      await new Promise(r => setTimeout(r, 1500 * intento));
+    }
+  }
+  throw ultimoError;
+}
+
 // Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
 // mismo que antes escribia una sola, pero tardan la mitad porque van en
 // paralelo, igual que las siete areas.
-async function sacarRasgos(nombrePila, sexo, cartaTexto) {
+async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
   const [fortalezas, desafios] = await Promise.all([
-    sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto),
-    sacarUnaLista('desafios', nombrePila, sexo, cartaTexto),
+    sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS),
+    sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS),
   ]);
   return { fortalezas, desafios };
 }
