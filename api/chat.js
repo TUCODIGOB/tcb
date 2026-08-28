@@ -488,11 +488,8 @@ ${cual === 'fortalezas'
   : 'DESAFIOS: lo que le cuesta, lo que le pesa, donde tropieza.'}
 Solo esa. La otra la esta sacando otra persona a la vez que tu, asi que tu no la escribes.
 
-SIN NUMERO FIJO. Saca TODOS los que de verdad salgan de esta carta, los que sean. No hay minimo. Lo que no vale es inventarse ninguno para alargar la lista, ni dejarse fuera uno que este en la carta para acortarla.
-
 EL UNICO LIMITE: 20 COMO MAXIMO.
 Veinte es un TECHO, no un objetivo, y no es una cuota que haya que llenar. Si de esta carta salen dieciocho de verdad, se entregan dieciocho: no se añaden dos mas para llegar a veinte, no se repite uno que ya esta dicho con otras palabras, y no se parte uno bueno en dos.
-Llegar a veinte no es hacerlo mejor. Dieciocho ciertos valen mas que veinte con dos inventados, porque los dos inventados se notan y tiran abajo a los otros dieciocho.
 Si te salieran mas de veinte, te quedas con los veinte que mas peso tienen en esta carta.
 
 RECORRE LA CARTA ENTERA, NO SOLO LO QUE MAS SALTA A LA VISTA.
@@ -520,9 +517,7 @@ CADA RASGO LLEVA CUATRO CASILLAS:
    Una carta natal es el mapa del momento en que nacio. No dice nada de lo que le paso despues, ni de su familia, ni de su infancia, ni de lo que aprendio de pequeña.
    Asi que esta PROHIBIDO contar su infancia, su familia, sus padres, su casa, lo que vivio de pequeña o cualquier episodio de su vida. Nada de eso esta en la carta, asi que escribirlo seria inventarselo.
    Lo que si se escribe: como funciona por dentro y que efecto tiene eso: su forma de decidir, de reaccionar, de vincularse, y a donde le lleva. El porque de su manera de ser, no el porque de su historia.
-   Y SE LE ESCRIBE A ELLA, HABLANDOLE DE TU, CON PALABRAS QUE ENTIENDA.
-   Aqui SI se cuenta por que es asi y de donde le viene eso, que es lo que ella quiere saber. Lo que no se hace es contarlo en el idioma de la carta: nada de decir que un planeta esta en tal sitio y por eso pasa tal cosa, ni que una zona de la carta produce esto o aquello. Ese dato ya va en la casilla "origen".
-   Y no se habla de ella desde fuera, como si se estuviera describiendo a una persona ajena. Nada de decir que la identidad se construye de tal manera o que la afectividad funciona de tal otra. Se le dice a ella lo que le pasa: por que le sale eso, de donde le nace, y a donde le lleva.
+   Aqui SI se cuenta por que es asi y de donde le viene, que es lo que ella quiere saber. Lo que no se hace es contarlo en el idioma de la carta: ese dato ya va en la casilla "origen".
    Dos o tres frases.
 
 4. "origen": DE DONDE SALE ESE RASGO EN LA CARTA, en lenguaje tecnico y en corto.
@@ -532,6 +527,9 @@ CADA RASGO LLEVA CUATRO CASILLAS:
    No repartas todos los rasgos sobre las mismas dos o tres posiciones: la carta tiene planetas, casas y aspectos de sobra, y cada rasgo tiene que salir de donde de verdad sale.
 
 EL TONO DE LAS TRES PRIMERAS CASILLAS:
+- SE ENTIENDE A LA PRIMERA. Esto lo lee una persona normal, que no ha estudiado nada de esto, y que lo lee una sola vez. Si una frase obliga a volver atras para entenderla, esa frase esta mal escrita y se cambia por otra. La prueba es esa y manda sobre lo bonito que quede.
+- SE CUENTA LO QUE LE PASA EN SU VIDA, no una idea sobre ella. Lo que hace, lo que piensa, lo que siente, lo que le ocurre un dia cualquiera. Nada de hablar de partes suyas como si fueran cosas que se mueven solas y chocan entre ellas.
+- NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa.
 - Le hablas a ella de tu, siempre. Nunca de ella en tercera persona.
 - Español de España, hablado, sin latinoamericanismos.
 - Ni una palabra tecnica en "nombre", "descripcion" ni "causa": ni planetas, ni signos, ni casas, ni aspectos, ni carta natal. Todo lo tecnico va en "origen" y solo ahi.
