@@ -155,6 +155,9 @@ export default async function handler(req, res) {
     // nivel que ellas.
     var ALTO_INICIO = 60;
 
+    // Aire que queda a cada lado de la linea que separa un rasgo del siguiente.
+    var AIRE_RASGO = 8;
+
     function addPageNum(n) {
       doc.setFont('Roboto', 'bold');
       doc.setFontSize(9);
@@ -694,32 +697,48 @@ export default async function handler(req, res) {
       doc.text(fx(titulo), 18, ry);
       ry += 14;
 
+      // Entre un rasgo y el siguiente va una linea divisoria, con el mismo aire
+      // por arriba que por abajo. Solo se pinta entre dos rasgos que se vean
+      // juntos: nunca al final de una pagina ni al final de la lista.
+      var primeroDeLaPagina = true;
+
       for (var i = 0; i < lista.length; i++) {
         var r = lista[i] || {};
 
         // Lo que ocupa la ficha entera, para no partirla entre dos paginas: se
         // mide antes de escribir nada y, si no cabe, empieza pagina nueva.
-        doc.setFontSize(10.5);
+        doc.setFontSize(12);
         var lDesc = doc.splitTextToSize(fx(r.descripcion), 175);
+        doc.setFontSize(10.5);
         var lCausa = doc.splitTextToSize(fx(r.causa), 175);
         doc.setFontSize(8);
         var lOrigen = doc.splitTextToSize(fx(r.origen), 175);
-        var alto = 7 + lDesc.length*5 + 2 + lCausa.length*5 + 2 + lOrigen.length*4 + (r.area ? 6 : 0) + 8;
+        var alto = 8 + lDesc.length*5.5 + 2 + lCausa.length*5 + 2 + lOrigen.length*4 + (r.area ? 6 : 0);
+        var divisor = !primeroDeLaPagina;
 
-        if (ry + alto > H - 22) {
+        if (ry + alto + (divisor ? AIRE_RASGO*2 : 0) > H - 22) {
           addPageNum(pageC); pageC++;
           doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
           ry = ALTO_INICIO;
+          divisor = false;
+        }
+
+        // 0. La linea que separa este rasgo del de arriba.
+        if (divisor) {
+          ry += AIRE_RASGO;
+          doc.setDrawColor(228,228,228); doc.setLineWidth(0.2);
+          doc.line(18, ry, 193, ry);
+          ry += AIRE_RASGO;
         }
 
         // 1. El nombre del rasgo
-        doc.setFont('Roboto','bold'); doc.setFontSize(12); doc.setTextColor(14,63,75);
+        doc.setFont('Roboto','bold'); doc.setFontSize(13); doc.setTextColor(14,63,75);
         doc.text(fx(r.nombre), 18, ry);
-        ry += 7;
+        ry += 8;
 
         // 2. La descripcion
-        doc.setFont('Roboto','normal'); doc.setFontSize(10.5); doc.setTextColor(40,40,40);
-        for (var d = 0; d < lDesc.length; d++) { doc.text(lDesc[d], 18, ry); ry += 5; }
+        doc.setFont('Roboto','normal'); doc.setFontSize(12); doc.setTextColor(40,40,40);
+        for (var d = 0; d < lDesc.length; d++) { doc.text(lDesc[d], 18, ry); ry += 5.5; }
         ry += 2;
 
         // 3. Por que le pasa
@@ -740,7 +759,7 @@ export default async function handler(req, res) {
           ry += 4;
         }
 
-        ry += 8;
+        primeroDeLaPagina = false;
       }
 
       addPageNum(pageC); pageC++;
