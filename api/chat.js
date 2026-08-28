@@ -873,6 +873,44 @@ async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto, INTENTOS) {
 // Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
 // mismo que antes escribia una sola, pero tardan la mitad porque van en
 // paralelo, igual que las siete areas.
+// LO QUE LA CLIENTA NO PUEDE LEER.
+//
+// El encargo prohibe las palabras de astrologia en el nombre, la descripcion y
+// la causa, y aun asi se le cuelan: en un informe de prueba tres rasgos decian
+// "en la zona mas escondida de tu carta" o "tu manera de querer esta colocada
+// en una zona de la carta". Pedirlo no basta, asi que se comprueba.
+//
+// Solo se buscan las palabras que en castellano no significan otra cosa. "Casa",
+// "carta" y "aspecto" sueltas se usan a diario ("en casa se comporta distinto",
+// "cuida su aspecto"), asi que solas no cuentan: se buscan pegadas a lo que las
+// hace tecnicas. Cancer, Leo y Libra tampoco entran, que son enfermedad, verbo
+// y verbo. Se cuela alguna asi, pero no se tira ni un rasgo bueno.
+const PALABRAS_DE_ASTROLOGIA = [
+  /\b(mercurio|jupiter|saturno|urano|neptuno|pluton|quiron|ascendente)\b/,
+  /\bnodo (norte|sur)\b/,
+  /\b(aries|tauro|geminis|virgo|escorpio|sagitario|capricornio|acuario|piscis)\b/,
+  // Cancer, Leo y Libra son enfermedad y dos verbos, asi que sueltas no cuentan:
+  // se buscan como se nombra un signo, detras de "en".
+  /\ben (cancer|leo|libra)\b/,
+  /\b(tu|su|la|mi) carta\b/,
+  /\b(carta|mapa) (natal|astral)\b/,
+  /\bretrograd[oa]\b/,
+  /\bcasa \d{1,2}\b/,
+  /\b(conjuncion|oposicion|cuadratura|trigono|sextil) (a|con|al)?\s*(el|la)?\s*(mercurio|jupiter|saturno|urano|neptuno|pluton|quiron|sol|luna|venus|marte)\b/,
+  // "aspecto" y "signo" solas son palabras corrientes, asi que se buscan solo
+  // pegadas a lo que las convierte en tecnicas.
+  /\bsin (ningun )?aspecto/,
+  /\baspectos? (que (conect|sostien|un|enlac)|entre)/,
+  /\b(tu|su) (sol|luna|venus|marte|mercurio|jupiter|saturno|signo)\b/,
+  /\b(los|tus|sus) planetas\b/,
+  /\b(zodiaco|horoscopo|astrolog|efemerides)\b/,
+];
+
+function hablaDeAstrologia(rasgo) {
+  const texto = sinTildes(`${rasgo.nombre} ${rasgo.descripcion} ${rasgo.causa}`);
+  return PALABRAS_DE_ASTROLOGIA.some(re => re.test(texto));
+}
+
 // EL MINIMO POR AREA, GARANTIZADO.
 //
 // El esquema obliga a que existan las siete cajas, pero no puede obligar a que
@@ -882,7 +920,15 @@ async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto, INTENTOS) {
 // lo normal, esto no gasta ni una llamada.
 const MINIMO_POR_AREA = { fortalezas: 2, desafios: 2 };
 
-async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, lista) {
+async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda) {
+  // Fuera los que nombran la carta a la clienta. Si al quitarlos algun area se
+  // queda corta, el relleno de aqui abajo la vuelve a pedir; no hace falta
+  // ninguna llamada nueva para esto.
+  const lista = listaCruda.filter(r => !hablaDeAstrologia(r));
+  if (lista.length < listaCruda.length) {
+    console.warn(`Lista de ${cual}: ${listaCruda.length - lista.length} rasgos nombraban la carta a la clienta, se quitan`);
+  }
+
   const minimo = MINIMO_POR_AREA[cual] || 1;
   const faltan = NOMBRES_DE_AREA.filter(a => lista.filter(r => r.area === a).length < minimo);
   if (faltan.length === 0) return lista;
@@ -890,7 +936,7 @@ async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, lista) {
   console.warn(`Lista de ${cual}: no llega al minimo en ${faltan.join(', ')}, se piden aparte`);
   try {
     const extra = await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, faltan);
-    return lista.concat(extra.filter(r => faltan.includes(r.area)));
+    return lista.concat(extra.filter(r => faltan.includes(r.area) && !hablaDeAstrologia(r)));
   } catch (err) {
     // Si esta segunda peticion falla, se entrega lo que ya habia: vale mas el
     // informe con un area corta que sin listas.
