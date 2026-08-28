@@ -448,7 +448,7 @@ ${cartaTexto}`;
 // ═════════════════════════════════════════════════════════════════
 
 // Las siete areas del estudio, en el orden en que salen en el informe.
-const AREAS = ['IDENTIDAD', 'PATRONES', 'MIEDOS', 'HERIDA', 'AMOR', 'RELACIONES', 'DINERO'];
+const NOMBRES_DE_AREA = ['IDENTIDAD', 'PATRONES', 'MIEDOS', 'HERIDA', 'AMOR', 'RELACIONES', 'DINERO'];
 
 const CASILLAS_DEL_RASGO = {
   type: 'object',
@@ -475,8 +475,8 @@ const CASILLAS_DEL_RASGO = {
 // rasgo ya no hace falta preguntarla: es la caja en la que viene.
 const ESQUEMA_UNA_LISTA = {
   type: 'object',
-  properties: Object.fromEntries(AREAS.map(a => [a, { type: 'array', items: CASILLAS_DEL_RASGO }])),
-  required: AREAS,
+  properties: Object.fromEntries(NOMBRES_DE_AREA.map(a => [a, { type: 'array', items: CASILLAS_DEL_RASGO }])),
+  required: NOMBRES_DE_AREA,
   additionalProperties: false,
 };
 
@@ -831,7 +831,7 @@ Nombre de pila: ${nombrePila}`;
   // en el PDF la palabra "undefined", que es lo mismo que paso con la palabra
   // "placeholder".
   const lista = [];
-  for (const area of AREAS) {
+  for (const area of NOMBRES_DE_AREA) {
     for (const r of (Array.isArray(salida[area]) ? salida[area] : [])) {
       const origen = String(r?.origen ?? '').trim();
       lista.push({
@@ -884,7 +884,7 @@ const MINIMO_POR_AREA = { fortalezas: 1, desafios: 2 };
 
 async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, lista) {
   const minimo = MINIMO_POR_AREA[cual] || 1;
-  const faltan = AREAS.filter(a => lista.filter(r => r.area === a).length < minimo);
+  const faltan = NOMBRES_DE_AREA.filter(a => lista.filter(r => r.area === a).length < minimo);
   if (faltan.length === 0) return lista;
 
   console.warn(`Lista de ${cual}: no llega al minimo en ${faltan.join(', ')}, se piden aparte`);
