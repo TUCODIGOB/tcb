@@ -466,14 +466,80 @@ const SIGNOS = ['aries','tauro','geminis','géminis','cancer','cáncer','leo','v
 const CUERPOS = ['sol','luna','mercurio','venus','marte','jupiter','júpiter','saturno',
   'urano','neptuno','pluton','plutón','quiron','quirón','nodo','ascendente'];
 
-// Un origen vale si nombra un cuerpo Y (un signo o una casa). "Luna" a secas no
-// dice nada; "Luna en Capricornio" o "Luna en la casa 4" si.
-function origenValido(txt) {
-  const t = String(txt || '').toLowerCase();
-  const hayCuerpo = CUERPOS.some(c => t.includes(c));
-  const haySigno = SIGNOS.some(g => t.includes(g));
-  const hayCasa = /casa\s*\d{1,2}/.test(t);
-  return hayCuerpo && (haySigno || hayCasa);
+// Quita tildes y pasa a minusculas, para poder comparar "Geminis" con "Géminis"
+// y "Pluton" con "Plutón" sin depender de como lo escriba el modelo.
+function sinTildes(txt) {
+  return String(txt || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+}
+
+// LEE LA CARTA CALCULADA Y LA CONVIERTE EN DATOS COMPARABLES.
+//
+// cartaTexto es lo que ha salido del calculo real de esta persona, con lineas
+// del tipo "- Luna: Capricornio (casa 4)". De ahi se saca, para cada cuerpo, en
+// que signo y en que casa esta DE VERDAD.
+function leerCarta(cartaTexto) {
+  const posiciones = {};
+  const lineas = String(cartaTexto || '').split('\n');
+  for (const linea of lineas) {
+    const m = linea.match(/^-\s*([A-Za-zÁÉÍÓÚáéíóúÑñ\s]+?):\s*([A-Za-zÁÉÍÓÚáéíóúñ]+)/);
+    if (!m) continue;
+    const cuerpo = sinTildes(m[1]).replace(/\s+/g, ' ').trim();
+    const signo = sinTildes(m[2]).trim();
+    if (!SIGNOS.includes(signo)) continue;
+    const casa = (linea.match(/casa\s*(\d{1,2})/i) || [])[1] || null;
+    posiciones[cuerpo] = { signo, casa };
+  }
+  // Los aspectos vienen como "- Sol cuadratura Saturno (orbe 2.1°)".
+  const aspectos = [];
+  for (const linea of lineas) {
+    const m = linea.match(/^-\s*([A-Za-zÁÉÍÓÚáéíóúÑñ\s]+?)\s+(conjuncion|conjunción|oposicion|oposición|cuadratura|trigono|trígono|sextil)\s+([A-Za-zÁÉÍÓÚáéíóúÑñ\s]+?)\s*\(/i);
+    if (m) aspectos.push({ a: sinTildes(m[1]).trim(), tipo: sinTildes(m[2]).trim(), b: sinTildes(m[3]).trim() });
+  }
+  return { posiciones, aspectos };
+}
+
+// ¿ESTE ORIGEN ES DE VERDAD DE SU CARTA?
+//
+// No basta con que el origen tenga buena pinta. Si el rasgo dice que sale de la
+// Luna en Aries y su Luna esta en Capricornio, ese rasgo no es suyo: es de una
+// carta que no existe, y colarlo seria justo lo que se quiere evitar.
+//
+// Asi que se compara contra el calculo real:
+//   - tiene que nombrar al menos un cuerpo que este en su carta
+//   - si dice un signo para ese cuerpo, tiene que ser el signo que le sale
+//   - si dice una casa para ese cuerpo, tiene que ser la casa que le sale
+// Si nombra un aspecto, ese aspecto tiene que existir entre los dos cuerpos.
+function origenValido(txt, carta) {
+  const t = sinTildes(txt);
+  if (!t.trim()) return false;
+
+  // Los cuerpos que nombra el origen, de nombre mas largo a mas corto para que
+  // "nodo norte" gane a "nodo" y no se confundan entre ellos.
+  const nombrados = Object.keys(carta.posiciones)
+    .filter(c => t.includes(c))
+    .sort((a, b) => b.length - a.length);
+  if (nombrados.length === 0) return false;
+
+  // Si el origen es un aspecto, tiene que ser uno de los suyos.
+  const tipoAspecto = ['conjuncion', 'oposicion', 'cuadratura', 'trigono', 'sextil']
+    .find(x => t.includes(x));
+  if (tipoAspecto) {
+    return carta.aspectos.some(a =>
+      a.tipo === tipoAspecto && t.includes(a.a) && t.includes(a.b));
+  }
+
+  // Si no, tiene que cuadrar el signo y/o la casa del cuerpo que nombra.
+  const signoDicho = SIGNOS.find(g => t.includes(g));
+  const casaDicha = (t.match(/casa\s*(\d{1,2})/) || [])[1] || null;
+  if (!signoDicho && !casaDicha) return false;   // "Luna" a secas no dice nada
+
+  return nombrados.some(c => {
+    const real = carta.posiciones[c];
+    if (!real) return false;
+    if (signoDicho && real.signo !== signoDicho) return false;
+    if (casaDicha && String(real.casa) !== String(casaDicha)) return false;
+    return true;
+  });
 }
 
 const ESQUEMA_RASGOS = {
@@ -608,8 +674,11 @@ Nombre de pila: ${nombrePila}`;
   // Se tira cualquier rasgo al que le falte una casilla o cuyo "origen" no
   // nombre una posicion de verdad. Un rasgo sin sitio en la carta es inventado,
   // y prefiero una lista mas corta y cierta que una larga y adornada.
+  // La carta calculada de ESTA persona, contra la que se comprueba cada rasgo.
+  const carta = leerCarta(cartaTexto);
+
   const limpiar = (lista) => (Array.isArray(lista) ? lista : [])
-    .filter(r => r && r.nombre && r.descripcion && r.causa && origenValido(r.origen))
+    .filter(r => r && r.nombre && r.descripcion && r.causa && origenValido(r.origen, carta))
     .map(r => ({
       nombre: String(r.nombre).trim(),
       descripcion: String(r.descripcion).trim(),
@@ -623,7 +692,7 @@ Nombre de pila: ${nombrePila}`;
   const tirados = ((salida.fortalezas || []).length + (salida.desafios || []).length)
     - (fortalezas.length + desafios.length);
   if (tirados > 0) {
-    console.warn(`Rasgos: ${tirados} descartado(s) por no decir de donde salen`);
+    console.warn(`Rasgos: ${tirados} descartado(s) por no cuadrar con la carta calculada`);
   }
 
   // Las dos listas tienen que traer rasgos. Si una se queda vacia, o es que el
