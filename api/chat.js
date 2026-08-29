@@ -983,6 +983,38 @@ async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda
   }
 }
 
+// LO QUE SE COMPRUEBA CONTANDO, NO OPINANDO.
+//
+// El encargo pide un nombre de cuatro a siete palabras y que se le hable de tu.
+// Mirando siete informes de verdad, el 60% de los nombres se pasaba del tope,
+// habia alguno de catorce palabras, y en uno se colo un nombre en tercera
+// persona. Eso no es criterio: se cuenta y se ve. Volver a pedirlo en el
+// encargo no lo arregla, porque ya estaba pedido.
+//
+// El tope de aqui es mas alto que el que pide el encargo a proposito: el
+// encargo apunta a siete, y esto solo para los que se van tanto que ya no son
+// un nombre sino una frase.
+const TOPE_DE_PALABRAS = 10;
+
+// Un nombre que empieza por "Le cuesta" habla de la persona en vez de hablarle
+// a ella. Pero "Le sacas partido" esta bien: el verbo en segunda persona acaba
+// en ese. Por eso se mira el verbo, no el "le".
+function nombreEnTercera(nombre) {
+  const t = sinTildes(nombre).trim();
+  const le = t.match(/^(se le|le)\s+([a-zñ]+)/);
+  if (le && !le[2].endsWith('s')) return true;
+  return /^(ella|su)\s/.test(t);
+}
+
+// Devuelve por que no vale ese nombre, o cadena vacia si vale.
+function nombreQueNoVale(rasgo) {
+  const nombre = String(rasgo.nombre || '').trim();
+  if (!nombre) return '';
+  if (nombreEnTercera(nombre)) return 'habla de el en vez de hablarle a el';
+  if (nombre.split(/\s+/).length > TOPE_DE_PALABRAS) return 'es una frase, no un nombre';
+  return '';
+}
+
 // EL AREA LA DECIDE LO QUE DICE EL RASGO, NO DE DONDE SALIO.
 //
 // Al escribirlos area por area, cada rasgo se queda en la caja donde nacio
@@ -1017,8 +1049,17 @@ const ESQUEMA_AREAS = {
   properties: {
     areas: { type: 'array', items: { type: 'string' } },
     sobran: { type: 'array', items: { type: 'integer' } },
+    nombres: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { numero: { type: 'integer' }, nombre: { type: 'string' } },
+        required: ['numero', 'nombre'],
+        additionalProperties: false,
+      },
+    },
   },
-  required: ['areas', 'sobran'],
+  required: ['areas', 'sobran', 'nombres'],
   additionalProperties: false,
 };
 
@@ -1028,6 +1069,13 @@ async function porLoQueDiceElRasgo(rasgos, cuantasFortalezas) {
   const listado = rasgos
     .map((r, i) => `${i === 0 ? 'FORTALEZAS\n' : ''}${i === cuantasFortalezas ? '\nDESAFIOS\n' : ''}${i + 1}. ${r.nombre}. ${r.descripcion}`)
     .join('\n');
+
+  // Cuales tienen el nombre mal lo decide el codigo contando, no el modelo. El
+  // modelo solo escribe el nombre nuevo, que eso si es cosa suya.
+  const aRenombrar = rasgos
+    .map((r, i) => ({ numero: i + 1, porque: nombreQueNoVale(r) }))
+    .filter(x => x.porque);
+  if (aRenombrar.length > 0) console.warn(`Nombres mal puestos: ${aRenombrar.length} de ${rasgos.length}`);
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -1054,9 +1102,13 @@ Haces dos cosas.
 2. "sobran": los numeros de los rasgos que hay que quitar. Las dos listas se han escrito por separado y ninguna sabia lo que decia la otra, asi que se pisan. Se quita un rasgo cuando:
    - DICE LO MISMO que otro, aunque sea con otras palabras. Se queda el que este mejor contado y el otro sobra.
    - DICE LO CONTRARIO que uno de la otra lista: una fortaleza que afirma justo lo que un desafio niega, o al reves. No pueden convivir las dos, asi que sobra una: se queda la que este mejor contada y mejor apoyada.
-   Solo eso. Un rasgo duro no sobra por ser duro, y dos rasgos de la misma parcela de su vida no sobran si dicen cosas distintas. Si no hay nada que quitar, devuelves la lista vacia.`,
+   Solo eso. Un rasgo duro no sobra por ser duro, y dos rasgos de la misma parcela de su vida no sobran si dicen cosas distintas. Si no hay nada que quitar, devuelves la lista vacia.
+
+3. "nombres": los rasgos que te diga abajo tienen el nombre mal puesto y hay que cambiarlo. De cada uno devuelves su numero y un nombre nuevo, dejando el resto del rasgo igual. El nombre nuevo tiene de cuatro a siete palabras, le habla de tu, y dice lo mismo que decia el rasgo. Si abajo no te digo ninguno, devuelves la lista vacia.`,
       output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREAS } },
-      messages: [{ role: 'user', content: listado }],
+      messages: [{ role: 'user', content: aRenombrar.length > 0
+        ? `${listado}\n\nCAMBIALE EL NOMBRE A ESTOS (el numero es el del rasgo de arriba):\n${aRenombrar.map(x => `- el numero ${x.numero}, porque ${x.porque}`).join('\n')}`
+        : listado }],
     }),
   });
 
@@ -1071,11 +1123,21 @@ Haces dos cosas.
   const data = await response.json();
   const texto = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
 
-  let dichas, marcados;
+  let dichas, marcados, renombrados;
   try {
     const leido = JSON.parse(texto);
     dichas = (leido.areas || []).map(a => String(a).trim().toUpperCase());
     marcados = (leido.sobran || []).map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= rasgos.length);
+    // El nombre nuevo tiene que pasar la misma prueba que el viejo; si no, el
+    // rasgo se queda con el que tenia, que al menos es suyo.
+    renombrados = new Map();
+    for (const x of (leido.nombres || [])) {
+      const i = Number(x && x.numero) - 1;
+      const nuevo = String((x && x.nombre) || '').trim();
+      if (!Number.isInteger(i) || i < 0 || i >= rasgos.length) continue;
+      if (!nuevo || nombreQueNoVale({ nombre: nuevo })) continue;
+      renombrados.set(i, nuevo);
+    }
   } catch (e) {
     const err = new Error('clasificar areas: la respuesta no es JSON valido');
     err.temporal = true;
@@ -1099,9 +1161,15 @@ Haces dos cosas.
     console.warn(`Areas: decia que sobraban ${marcados.length} de ${rasgos.length} rasgos, demasiados, no se quita ninguno`);
   }
 
+  if (renombrados.size > 0) console.warn(`Se cambia el nombre a ${renombrados.size} rasgos`);
+
   // Y el rasgo al que le diga algo que no es un area se queda con la suya.
   return {
-    rasgos: rasgos.map((r, i) => (NOMBRES_DE_AREA.includes(dichas[i]) ? { ...r, area: dichas[i] } : r)),
+    rasgos: rasgos.map((r, i) => ({
+      ...r,
+      area: NOMBRES_DE_AREA.includes(dichas[i]) ? dichas[i] : r.area,
+      nombre: renombrados.has(i) ? renombrados.get(i) : r.nombre,
+    })),
     sobran,
   };
 }
