@@ -991,17 +991,15 @@ async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda
 
 // LO QUE SE COMPRUEBA CONTANDO, NO OPINANDO.
 //
-// El encargo pide un nombre de cuatro a siete palabras y que se le hable de tu.
-// Mirando siete informes de verdad, el 60% de los nombres se pasaba del tope,
-// habia alguno de catorce palabras, y en uno se colo un nombre en tercera
-// persona. Eso no es criterio: se cuenta y se ve. Volver a pedirlo en el
-// encargo no lo arregla, porque ya estaba pedido.
+// El encargo pide que se le hable de tu y que la descripcion no se alargue, y
+// aun asi se cuela. Eso no es criterio: se cuenta y se ve.
 //
-// El nombre tiene que dejar ver la idea de un vistazo. Contarla es trabajo de
-// la descripcion, que va justo debajo.
-const TOPE_DE_PALABRAS = 7;
-
-// Y la descripcion, tres renglones. Medido renglon a renglon del PDF: a doce
+// El nombre largo NO se toca. Se probo pedir uno nuevo cuando pasaba de siete
+// palabras y salio peor: los que volvian eran cortos pero no se entendian a la
+// primera, etiquetas del tipo "Fiable en el trabajo silencioso" en vez de algo
+// que le hable a ella. Un titulo de mas se lee; uno que no se entiende, no.
+//
+// La descripcion, tres renglones. Medido renglon a renglon del PDF: a doce
 // puntos y con el ancho que tiene entran unos ochenta y ocho caracteres, asi
 // que el corte va en 262. Por debajo de ahi no se toca ninguna de tres.
 const TOPE_DE_LA_DESCRIPCION = 262;
@@ -1021,7 +1019,6 @@ function nombreQueNoVale(rasgo) {
   const nombre = String(rasgo.nombre || '').trim();
   if (!nombre) return '';
   if (nombreEnTercera(nombre)) return 'habla de el en vez de hablarle a el';
-  if (nombre.split(/\s+/).length > TOPE_DE_PALABRAS) return `tiene ${nombre.split(/\s+/).length} palabras y son de cuatro a siete`;
   return '';
 }
 
@@ -1168,7 +1165,7 @@ Haces dos cosas.
    Solo eso. Un rasgo duro no sobra por ser duro, y dos rasgos de la misma parcela de su vida no sobran si dicen cosas distintas. Si no hay nada que quitar, devuelves la lista vacia.
 
 3. "nombres" y "descripciones": abajo te digo que rasgos tienen el nombre o la descripcion mal puestos, y por que. De cada uno devuelves su numero con lo que haya que cambiar.
-   El nombre nuevo tiene de cuatro a siete palabras y le habla de tu. Es el titulo: deja ver la idea de un vistazo y no la cuenta, porque contarla es trabajo de la descripcion.
+   El nombre nuevo dice lo mismo que el que tenia y con sus mismas palabras, cambiando solo que le hable de tu. No es una etiqueta: es lo que hace o lo que le pasa, dicho a ella.
    La descripcion nueva no pasa de tres renglones, que son unos doscientos sesenta caracteres contando los espacios. Se acorta quitando vueltas y repeticiones, NO quitando lo que dice: lo que cuenta de esa persona tiene que seguir estando entero, con las mismas palabras de la calle y hablandole de tu.
    Si abajo no te digo ninguno, devuelves las dos listas vacias.`,
       output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREAS } },
