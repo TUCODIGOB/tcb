@@ -1031,6 +1031,37 @@ function descripcionQueNoVale(rasgo) {
   return '';
 }
 
+// DOS RASGOS CON EL MISMO TITULO SON EL MISMO RASGO DICHO DOS VECES.
+//
+// En el informe 111, "Sabes estar sola sin que te pese" salia dos veces en las
+// fortalezas, en dos areas distintas y contando lo mismo. El paso que quita los
+// que se pisan no lo cazo, y es lo primero que ve quien lo lee.
+//
+// Esto no es criterio, es comparar dos cadenas, asi que lo hace el codigo y no
+// se le pregunta a nadie. Se compara en minusculas, sin tildes y sin
+// puntuacion, y solo cuando el titulo es EL MISMO: dos titulos parecidos pueden
+// ser dos rasgos distintos, y quitar uno bueno es peor que dejar uno repetido.
+// Se queda el primero, que es el del area que va antes en el informe.
+function comoSeCompara(titulo) {
+  return sinTildes(titulo).replace(/[^a-z0-9ñ ]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function sinTituloRepetido(fortalezas, desafios) {
+  const vistos = new Set();
+  const cribar = lista => lista.filter(r => {
+    const t = comoSeCompara(r && r.nombre);
+    if (!t) return true;
+    if (vistos.has(t)) {
+      console.warn(`Se quita un rasgo con el titulo repetido: ${r.nombre}`);
+      return false;
+    }
+    vistos.add(t);
+    return true;
+  });
+  // Las fortalezas primero, que es el orden en que van en el informe.
+  return [cribar(fortalezas), cribar(desafios)];
+}
+
 // EL AREA LA DECIDE LO QUE DICE EL RASGO, NO DE DONDE SALIO.
 //
 // Al escribirlos area por area, cada rasgo se queda en la caja donde nacio
@@ -1287,6 +1318,13 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
     conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, fortalezas),
     conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, desafios),
   ]);
+
+  // 3b. Y fuera el que repite el titulo de otro. Va DESPUES del minimo, no
+  //     antes: puesto antes, quitar un repetido podia dejar un area corta y
+  //     disparar la peticion de relleno, que es una llamada mas y mas tiempo.
+  //     Asi no gasta nada nunca. El precio es que un area puede quedarse con un
+  //     rasgo en vez de dos, y vale mas eso que el mismo titulo dos veces.
+  [fortalezas, desafios] = sinTituloRepetido(fortalezas, desafios);
 
   // 4. Y se ordenan por area. Salian agrupadas porque se escriben caja por
   //    caja, pero al cambiarle el area a un rasgo, y al añadir los del relleno
