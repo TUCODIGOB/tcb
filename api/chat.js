@@ -986,19 +986,14 @@ async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda
 
 // LO QUE SE COMPRUEBA CONTANDO, NO OPINANDO.
 //
-// El encargo pide que se le hable de tu y que la descripcion no se alargue, y
-// aun asi se cuela. Eso no es criterio: se cuenta y se ve.
+// El encargo pide que se le hable de tu y aun asi se cuela alguno en tercera
+// persona. Eso no es criterio: se cuenta y se ve.
 //
 // El nombre largo NO se toca. Se probo pedir uno nuevo cuando pasaba de siete
 // palabras y salio peor: los que volvian eran cortos pero no se entendian a la
 // primera, etiquetas del tipo "Fiable en el trabajo silencioso" en vez de algo
 // que le hable a ella. Un titulo de mas se lee; uno que no se entiende, no.
 //
-// La descripcion, tres renglones. Medido renglon a renglon del PDF: a doce
-// puntos y con el ancho que tiene entran unos ochenta y ocho caracteres, asi
-// que el corte va en 262. Por debajo de ahi no se toca ninguna de tres.
-const TOPE_DE_LA_DESCRIPCION = 262;
-
 // Un nombre que empieza por "Le cuesta" habla de la persona en vez de hablarle
 // a ella. Pero "Le sacas partido" esta bien: el verbo en segunda persona acaba
 // en ese. Por eso se mira el verbo, no el "le".
@@ -1014,13 +1009,6 @@ function nombreQueNoVale(rasgo) {
   const nombre = String(rasgo.nombre || '').trim();
   if (!nombre) return '';
   if (nombreEnTercera(nombre)) return 'habla de el en vez de hablarle a el';
-  return '';
-}
-
-// Y lo mismo con la descripcion, que solo puede estar larga.
-function descripcionQueNoVale(rasgo) {
-  const d = String(rasgo.descripcion || '').trim();
-  if (d.length > TOPE_DE_LA_DESCRIPCION) return `ocupa mas de tres renglones y caben tres`;
   return '';
 }
 
@@ -1098,17 +1086,8 @@ const ESQUEMA_AREAS = {
         additionalProperties: false,
       },
     },
-    descripciones: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: { numero: { type: 'integer' }, descripcion: { type: 'string' } },
-        required: ['numero', 'descripcion'],
-        additionalProperties: false,
-      },
-    },
   },
-  required: ['areas', 'sobran', 'nombres', 'descripciones'],
+  required: ['areas', 'sobran', 'nombres'],
   additionalProperties: false,
 };
 
@@ -1124,11 +1103,9 @@ async function porLoQueDiceElRasgo(rasgos, cuantasFortalezas) {
   const aArreglar = [];
   for (let i = 0; i < rasgos.length; i++) {
     const n = nombreQueNoVale(rasgos[i]);
-    const d = descripcionQueNoVale(rasgos[i]);
     if (n) aArreglar.push(`- el nombre del ${i + 1}, que ${n}`);
-    if (d) aArreglar.push(`- la descripcion del ${i + 1}, que ${d}`);
   }
-  if (aArreglar.length > 0) console.warn(`Mal puestos: ${aArreglar.length} nombres o descripciones de ${rasgos.length} rasgos`);
+  if (aArreglar.length > 0) console.warn(`Mal puestos: ${aArreglar.length} nombres de ${rasgos.length} rasgos`);
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -1159,10 +1136,9 @@ Haces dos cosas.
    - DICE LO CONTRARIO que uno de la otra lista: una fortaleza que afirma justo lo que un desafio niega, o al reves. No pueden convivir las dos, asi que sobra una: se queda la que este mejor contada y mejor apoyada.
    Solo eso. Un rasgo duro no sobra por ser duro, y dos rasgos de la misma parcela de su vida no sobran si dicen cosas distintas. Si no hay nada que quitar, devuelves la lista vacia.
 
-3. "nombres" y "descripciones": abajo te digo que rasgos tienen el nombre o la descripcion mal puestos, y por que. De cada uno devuelves su numero con lo que haya que cambiar.
+3. "nombres": abajo te digo que rasgos tienen el nombre mal puesto, y por que. De cada uno devuelves su numero con el nombre nuevo.
    El nombre nuevo dice lo mismo que el que tenia y con sus mismas palabras, cambiando solo que le hable de tu. No es una etiqueta: es lo que hace o lo que le pasa, dicho a ella.
-   La descripcion nueva no pasa de tres renglones, que son unos doscientos sesenta caracteres contando los espacios. Se acorta quitando vueltas y repeticiones, NO quitando lo que dice: lo que cuenta de esa persona tiene que seguir estando entero, con las mismas palabras de la calle y hablandole de tu.
-   Si abajo no te digo ninguno, devuelves las dos listas vacias.`,
+   Si abajo no te digo ninguno, devuelves la lista vacia.`,
       output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREAS } },
       messages: [{ role: 'user', content: aArreglar.length > 0
         ? `${listado}\n\nESTO HAY QUE CAMBIARLO (el numero es el del rasgo de arriba):\n${aArreglar.join('\n')}`
@@ -1181,7 +1157,7 @@ Haces dos cosas.
   const data = await response.json();
   const texto = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
 
-  let dichas, marcados, renombrados, reescritos;
+  let dichas, marcados, renombrados;
   try {
     const leido = JSON.parse(texto);
     dichas = (leido.areas || []).map(a => String(a).trim().toUpperCase());
@@ -1195,17 +1171,6 @@ Haces dos cosas.
       if (!Number.isInteger(i) || i < 0 || i >= rasgos.length) continue;
       if (!nuevo || nombreQueNoVale({ nombre: nuevo })) continue;
       renombrados.set(i, nuevo);
-    }
-    reescritos = new Map();
-    for (const x of (leido.descripciones || [])) {
-      const i = Number(x && x.numero) - 1;
-      const nueva = String((x && x.descripcion) || '').trim();
-      if (!Number.isInteger(i) || i < 0 || i >= rasgos.length) continue;
-      // Y ademas no puede haberse quedado en nada: si viene mas corta que la
-      // mitad, ha tirado lo que decia en vez de apretarlo.
-      if (!nueva || descripcionQueNoVale({ descripcion: nueva })) continue;
-      if (nueva.length < String(rasgos[i].descripcion || '').length / 2) continue;
-      reescritos.set(i, nueva);
     }
   } catch (e) {
     const err = new Error('clasificar areas: la respuesta no es JSON valido');
@@ -1231,7 +1196,6 @@ Haces dos cosas.
   }
 
   if (renombrados.size > 0) console.warn(`Se cambia el nombre a ${renombrados.size} rasgos`);
-  if (reescritos.size > 0) console.warn(`Se acorta la descripcion de ${reescritos.size} rasgos`);
 
   // Y el rasgo al que le diga algo que no es un area se queda con la suya.
   return {
@@ -1239,7 +1203,6 @@ Haces dos cosas.
       ...r,
       area: NOMBRES_DE_AREA.includes(dichas[i]) ? dichas[i] : r.area,
       nombre: renombrados.has(i) ? renombrados.get(i) : r.nombre,
-      descripcion: reescritos.has(i) ? reescritos.get(i) : r.descripcion,
     })),
     sobran,
   };
