@@ -155,6 +155,7 @@ Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados.
 El área se lee como una sola conversación seguida, no como seis trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
 
 HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
+EL MATERIAL DE HOY SON SUS RASGOS. Al final de la petición tienes los rasgos que se le han sacado de su carta para esta área. De ahí eliges UNA o DOS fortalezas y DOS o TRES desafíos, los que más peso tengan en su vida, y con eso escribes HOY. Si de una lista solo hay dos, van los dos: no se añade ninguno que no esté ahí. Los desafíos se cuentan con su porqué, que lo llevan escrito; las fortalezas no lo llevan y no se les inventa uno. Lo que no elijas no se cuenta en ningún sitio. Y son el material, no apartados: se cuentan seguidos, con tus palabras, sin nombrarlos ni separarlos ni anunciarlos.
 SOLO EN EL ÁREA 1 (IDENTIDAD) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué le ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que hace por fuera. Es lo que le pone nombre a su manera de funcionar y lo que se lleva puesto al terminar de leer.
 Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que no pondría primero si le preguntaras. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
@@ -313,7 +314,21 @@ ${cartaTexto}`;
   // formada) no se reintentan: no van a mejorar por repetirlos.
   const INTENTOS_POR_AREA = 3;
 
-  async function pedirArea(area) {
+  // Los rasgos de esta area, tal como salieron de las listas. Son el material
+  // con el que se escribe HOY: sin esto, cada area sacaba lo suyo de la carta
+  // por su cuenta y las siete acababan contando el mismo patron.
+  function rasgosDelArea(area, rasgos) {
+    if (!rasgos) return '';
+    const nombre = NOMBRES_DE_AREA[area.id - 1];
+    const suyos = l => (l || []).filter(r => r.area === nombre);
+    const linea = (r, conCausa) => `- ${r.nombre}: ${r.descripcion}${conCausa && r.causa ? ` POR QUE LE PASA: ${r.causa}` : ''}`;
+    const f = suyos(rasgos.fortalezas).map(r => linea(r, false));
+    const d = suyos(rasgos.desafios).map(r => linea(r, true));
+    if (f.length === 0 && d.length === 0) return '';
+    return `\n\nRASGOS QUE SE LE HAN SACADO DE SU CARTA PARA ESTA AREA:\n\nFORTALEZAS\n${f.join('\n') || '(ninguna)'}\n\nDESAFIOS\n${d.join('\n') || '(ninguno)'}`;
+  }
+
+  async function pedirArea(area, rasgos) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
@@ -335,7 +350,7 @@ ${cartaTexto}`;
         system: SYSTEM_PROMPT,
         messages: [{
           role: 'user',
-          content: `${contextoPersona}\n\n${area.prompt}`,
+          content: `${contextoPersona}\n\n${area.prompt}${rasgosDelArea(area, rasgos)}`,
         }],
       }),
     });
@@ -359,11 +374,11 @@ ${cartaTexto}`;
     return texto.trim();
   }
 
-  async function generarArea(area) {
+  async function generarArea(area, rasgos) {
     let ultimoError;
     for (let intento = 1; intento <= INTENTOS_POR_AREA; intento++) {
       try {
-        return await pedirArea(area);
+        return await pedirArea(area, rasgos);
       } catch (err) {
         ultimoError = err;
         // Un corte de red llega sin marca; se trata como temporal.
@@ -397,7 +412,7 @@ ${cartaTexto}`;
 
     // Despues, las 7 areas a la vez.
     const resultados = await Promise.all(
-      AREAS.map(area => generarArea(area))
+      AREAS.map(area => generarArea(area, rasgos))
     );
 
     // Unir con el separador. Es U+001F (Unit Separator), un caracter de
