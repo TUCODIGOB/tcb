@@ -681,6 +681,34 @@ async function generarDiagnosticoSilencioso(nombre, sexo, fechaNice, hora, lugar
     .map(a => `- ${a.a} ${a.tipo} ${a.b} (orbe ${a.orbe}°)`)
     .join('\n');
 
+  // QUE HAY EN CADA CASA. Esto va SOLO a las listas de rasgos, no al informe de
+  // las siete areas, que recibe exactamente el mismo texto de siempre.
+  //
+  // Sin esto, el modelo no sabia que hay dentro de cada casa ni en cual cae el
+  // Nodo Norte, y en el informe 111 se lo invento: dos rasgos decian "casas 6 y
+  // 9 vacias" cuando en la 6 estaban el Sol y Mercurio. Son datos que ya se
+  // calculan de su fecha, hora y lugar; solo faltaba pasarlos.
+  const CUERPOS_DE_LA_CASA = {
+    sol: 'Sol', luna: 'Luna', mercurio: 'Mercurio', venus: 'Venus', marte: 'Marte',
+    jupiter: 'Júpiter', saturno: 'Saturno', urano: 'Urano', neptuno: 'Neptuno',
+    pluton: 'Plutón', quiron: 'Quirón', nodo: 'Nodo Norte',
+  };
+  const casasTexto = (() => {
+    if (!carta.casaDe) return '';
+    const dentro = {};
+    for (const [clave, nombreCuerpo] of Object.entries(CUERPOS_DE_LA_CASA)) {
+      const n = carta.casaDe[clave];
+      if (!n) continue;
+      (dentro[n] = dentro[n] || []).push(nombreCuerpo);
+    }
+    const lineas = [];
+    for (let n = 1; n <= 12; n++) {
+      lineas.push(`- Casa ${n}: ${dentro[n] ? dentro[n].join(', ') : 'vacía'}`);
+    }
+    return `Que hay en cada casa (esto es lo que hay, y la casa que pone vacía esta vacía de verdad):
+${lineas.join('\n')}`;
+  })();
+
   const cartaTexto = `Carta natal calculada:
 - Ascendente: ${carta.ascendente}
 - Sol: ${carta.sol}${casa('sol')}
@@ -702,7 +730,7 @@ ${listaAspectos || '- sin aspectos dentro de orbe'}`;
   const response = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session_id: new URLSearchParams(window.location.search).get('session_id'), nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto })
+    body: JSON.stringify({ session_id: new URLSearchParams(window.location.search).get('session_id'), nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto, casasTexto })
   });
 
   if (!response.ok) {

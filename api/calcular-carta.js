@@ -450,6 +450,16 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     casaDe[nombre] = i >= 0 ? i + 1 : null;
   }
 
+  // Y la casa del Nodo Norte, con la misma cuenta. Se hace aparte y NO se mete
+  // en _CUERPOS a proposito: esa lista es la que forma los aspectos, y meterlo
+  // ahi cambiaria la parrilla de aspectos del PDF y el texto de la carta, que
+  // no se tocan. Aqui solo se añade una casa mas a la lista de casas.
+  {
+    const inicioSigno = Math.floor(_mod(nodeL, 360) / 30) * 30;
+    const i = casas.indexOf(inicioSigno);
+    casaDe.nodo = i >= 0 ? i + 1 : null;
+  }
+
   // Aspectos: mismos angulos y orbes que dibuja la parrilla del PDF.
   const _ASPECTOS = [
     { grados: 0,   orbe: 8,  nombre: 'Conjunción' },

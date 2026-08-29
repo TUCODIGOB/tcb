@@ -91,7 +91,7 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
   }
 
-  const { nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto } = req.body;
+  const { nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto, casasTexto } = req.body;
 
   if (!nombre || !cartaTexto) {
     return res.status(400).json({ error: 'Faltan parámetros' });
@@ -397,7 +397,11 @@ ${cartaTexto}`;
     // Y con el mismo trato que las areas: cada lista se reintenta hasta 3 veces
     // por su cuenta cuando el fallo es temporal (saturacion, error del
     // servidor, corte de red). Tienen que salir siempre, igual que las areas.
-    const rasgos = await sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS_POR_AREA);
+    // Lo que hay en cada casa va SOLO aqui, a las listas de rasgos. El informe
+    // de las siete areas recibe el mismo texto de siempre, sin una letra de
+    // mas: lo suyo se arma arriba con cartaTexto a secas.
+    const cartaConLasCasas = casasTexto ? `${cartaTexto}\n\n${casasTexto}` : cartaTexto;
+    const rasgos = await sacarRasgos(nombrePila, sexo, cartaConLasCasas, INTENTOS_POR_AREA);
 
     // Despues, las 7 areas a la vez.
     const resultados = await Promise.all(
