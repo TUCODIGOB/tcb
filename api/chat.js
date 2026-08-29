@@ -758,6 +758,8 @@ Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee un
 - SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atras para entenderla, esta mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
 - SE LE HABLA DE TU, siempre, como quien se lo cuenta tomando un cafe. Nunca en tercera persona.
 - SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un dia cualquiera.
+- NO VALE UN RASGO QUE LE SIRVA A CUALQUIERA. "Aprendes de tus errores", "te frenas antes de fallar" o "transformas lo que te duele en algo util" se los puedes decir a cualquier persona del mundo y asentira, y por eso no valen: no le cuentan nada que no supiera, y quien lo lee nota que eso no es suyo. El rasgo tiene que bajar a SU vida: en que parcela se le nota y que hace ahi. La posicion de donde sale ya te lo dice, porque la casa en la que cae es una parcela concreta de su vida.
+  LA PRUEBA, ANTES DE ENTREGAR: si ese rasgo, tal como lo has escrito, se lo pudieras entregar a otra persona con otra carta y colaria, no vale. Se reescribe hasta que solo le encaje a quien tienes delante.
 - NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace la persona, no lo que hace un concepto.
 - NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa.
 - FRASES LARGAS, ENCADENADAS CON COMAS, y QUE EL TEXTO RESPIRE. Asi se habla de verdad. Cortarlo todo en frases secas y en ideas cortas una detras de otra parte la lectura, suena a lista y ahoga a quien lee, porque no le da tiempo a asimilar una cuando ya le llega la siguiente. Se desarrolla una idea, se le deja sitio, y luego viene la otra.
@@ -973,17 +975,146 @@ async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda
   }
 }
 
+// EL AREA LA DECIDE LO QUE DICE EL RASGO, NO DE DONDE SALIO.
+//
+// Al escribirlos area por area, cada rasgo se queda en la caja donde nacio
+// aunque acabe hablando de otra cosa: "encajas con naturalidad en cualquier
+// grupo" salio trabajando IDENTIDAD, porque venia del Sol, y se quedo ahi
+// aunque hable de gente. Nadie le preguntaba despues de que habla.
+//
+// Aqui se le pregunta. Se le pasan SOLO los rasgos escritos, sin la carta y
+// sin las posiciones, para que no pueda dejarse llevar por el planeta del que
+// salieron: lo unico que puede mirar es lo que dice el rasgo.
+const QUE_CUBRE_CADA_AREA = `IDENTIDAD    quien es por dentro y por que es como es
+PATRONES     lo que repite una y otra vez sin poder parar
+MIEDOS       lo que gobierna su vida sin que lo sepa
+HERIDA       lo que le duele de antiguo y hoy sigue frenandole
+AMOR         como quiere, como le quieren, a quien atrae
+RELACIONES   como se vincula con los demas y que papel ocupa
+DINERO       su relacion con el dinero, lo material y lo que vale su trabajo`;
+
+const ESQUEMA_AREAS = {
+  type: 'object',
+  properties: {
+    areas: { type: 'array', items: { type: 'string' } },
+  },
+  required: ['areas'],
+  additionalProperties: false,
+};
+
+async function porLoQueDiceElRasgo(rasgos) {
+  if (rasgos.length === 0) return rasgos;
+
+  const listado = rasgos
+    .map((r, i) => `${i + 1}. ${r.nombre}. ${r.descripcion}`)
+    .join('\n');
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-5',
+      thinking: { type: 'disabled' },
+      // La respuesta es una palabra por rasgo, asi que no hace falta mas.
+      max_tokens: 2000,
+      system: `Un estudio de personalidad tiene siete areas:
+
+${QUE_CUBRE_CADA_AREA}
+
+Te paso una lista de rasgos de una persona. De cada uno dices a cual de las siete pertenece POR LO QUE DICE, no por otra cosa. Si toca dos, eliges la que mas pesa en lo que esta escrito.
+
+Devuelves una area por rasgo, en el mismo orden y sin saltarte ninguno, escritas tal cual estan arriba.`,
+      output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREAS } },
+      messages: [{ role: 'user', content: listado }],
+    }),
+  });
+
+  if (!response.ok) {
+    const err = new Error(`clasificar areas: ${response.status}`);
+    // Igual que en las listas: la saturacion y los errores del servidor se
+    // reintentan; una peticion mal formada o la clave mal no van a mejorar.
+    err.temporal = response.status === 429 || response.status >= 500;
+    throw err;
+  }
+
+  const data = await response.json();
+  const texto = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
+
+  let dichas;
+  try {
+    dichas = (JSON.parse(texto).areas || []).map(a => String(a).trim().toUpperCase());
+  } catch (e) {
+    const err = new Error('clasificar areas: la respuesta no es JSON valido');
+    err.temporal = true;
+    throw err;
+  }
+
+  // Solo se hace caso si contesta una por rasgo. Si se salta alguno no se sabe
+  // cual, asi que no vale nada de lo que ha dicho y se vuelve a pedir.
+  if (dichas.length !== rasgos.length) {
+    const err = new Error(`clasificar areas: dijo ${dichas.length} de ${rasgos.length}`);
+    err.temporal = true;
+    throw err;
+  }
+
+  // Y el rasgo al que le diga algo que no es un area se queda con la suya.
+  return rasgos.map((r, i) => (NOMBRES_DE_AREA.includes(dichas[i]) ? { ...r, area: dichas[i] } : r));
+}
+
+// Se reintenta por su cuenta, igual que cada lista y cada area. Sin esto, un
+// 429 de los que salen cuando hay siete peticiones a la vez dejaba los rasgos
+// con el area de su caja sin que se notara, que es justo lo que se arregla
+// aqui. Si aun asi no sale, el informe se entrega con las areas de las cajas.
+async function conElAreaDeLoQueDice(rasgos, INTENTOS) {
+  let ultimoError;
+  for (let intento = 1; intento <= INTENTOS; intento++) {
+    try {
+      return await porLoQueDiceElRasgo(rasgos);
+    } catch (err) {
+      ultimoError = err;
+      // Un corte de red llega sin marca; se trata como temporal.
+      const temporal = err.temporal !== false;
+      if (!temporal || intento === INTENTOS) break;
+      console.warn(`Area por lo que dice el rasgo: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
+      await new Promise(r => setTimeout(r, 1500 * intento));
+    }
+  }
+  throw ultimoError;
+}
+
 // Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
 // mismo que antes escribia una sola, pero tardan la mitad porque van en
 // paralelo, igual que las siete areas.
 async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
-  const [fortalezas, desafios] = await Promise.all([
+  // 1. Las dos listas, a la vez, y sin nombrarle la carta a quien lo lee.
+  let [fortalezas, desafios] = await Promise.all([
     sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS)
-      .then(l => sinNombrarLaCarta('fortalezas', nombrePila, sexo, cartaTexto, l))
-      .then(l => conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, l)),
+      .then(l => sinNombrarLaCarta('fortalezas', nombrePila, sexo, cartaTexto, l)),
     sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS)
-      .then(l => sinNombrarLaCarta('desafios', nombrePila, sexo, cartaTexto, l))
-      .then(l => conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, l)),
+      .then(l => sinNombrarLaCarta('desafios', nombrePila, sexo, cartaTexto, l)),
+  ]);
+
+  // 2. Ya escritos, se les pone el area de lo que dicen. Las dos listas van en
+  //    la misma peticion, que es una sola palabra por rasgo. Si falla, cada uno
+  //    se queda con el area de la caja en la que nacio y el informe sale igual.
+  try {
+    const cuantasFortalezas = fortalezas.length;
+    const todos = await conElAreaDeLoQueDice(fortalezas.concat(desafios), INTENTOS);
+    fortalezas = todos.slice(0, cuantasFortalezas);
+    desafios = todos.slice(cuantasFortalezas);
+  } catch (err) {
+    console.error(`No se pudo poner el area por lo que dice el rasgo: ${err.message.slice(0, 90)}`);
+  }
+
+  // 3. Y con las areas ya en su sitio, se comprueba el minimo. En este orden,
+  //    porque mover un rasgo de area puede dejar la de origen corta.
+  [fortalezas, desafios] = await Promise.all([
+    conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, fortalezas),
+    conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, desafios),
   ]);
   return { fortalezas, desafios };
 }
