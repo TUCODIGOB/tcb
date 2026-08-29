@@ -995,26 +995,38 @@ async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda
 // salieron: lo unico que puede mirar es lo que dice el rasgo.
 const QUE_CUBRE_CADA_AREA = `IDENTIDAD    quien es por dentro y por que es como es
 PATRONES     lo que repite una y otra vez sin poder parar
-MIEDOS       lo que gobierna su vida sin que lo sepa
-HERIDA       lo que le duele de antiguo y hoy sigue frenandole
+MIEDOS       lo que teme y lo que evita, y como eso gobierna su vida sin que lo sepa
+HERIDA       lo que le duele A EL, por dentro, y hoy sigue frenandole
 AMOR         como quiere, como le quieren, a quien atrae
-RELACIONES   como se vincula con los demas y que papel ocupa
-DINERO       su relacion con el dinero, lo material y lo que vale su trabajo`;
+RELACIONES   como le va CON LOS DEMAS: como los trata, como le tratan, que papel ocupa
+DINERO       el dinero, lo material, lo que vale su trabajo Y lo que comparte con otros
+
+DONDE MAS SE FALLA, y como se decide:
+- Si el rasgo va de OTRA GENTE (leerlos, caerles bien, calmarlos, hablar con ellos,
+  el ambiente que hay con ellos) es RELACIONES, aunque haya emocion de por medio y
+  aunque esa gente sea su familia. HERIDA es lo que le duele a EL, no lo que percibe
+  de los demas.
+- Si el rasgo va de dinero, bienes, herencias, deudas o de lo que es de dos, es
+  DINERO, aunque lo que cuente sea el miedo a perderlo o las ganas de controlarlo.
+- MIEDOS solo cuando el rasgo no cae en una parcela concreta. Si hay parcela
+  (dinero, pareja, gente, casa), manda la parcela.
+- Que le hayan hecho daño, o que le cueste reconocerlo, es HERIDA, no MIEDOS.`;
 
 const ESQUEMA_AREAS = {
   type: 'object',
   properties: {
     areas: { type: 'array', items: { type: 'string' } },
+    sobran: { type: 'array', items: { type: 'integer' } },
   },
-  required: ['areas'],
+  required: ['areas', 'sobran'],
   additionalProperties: false,
 };
 
-async function porLoQueDiceElRasgo(rasgos) {
-  if (rasgos.length === 0) return rasgos;
+async function porLoQueDiceElRasgo(rasgos, cuantasFortalezas) {
+  if (rasgos.length === 0) return { rasgos, sobran: [] };
 
   const listado = rasgos
-    .map((r, i) => `${i + 1}. ${r.nombre}. ${r.descripcion}`)
+    .map((r, i) => `${i === 0 ? 'FORTALEZAS\n' : ''}${i === cuantasFortalezas ? '\nDESAFIOS\n' : ''}${i + 1}. ${r.nombre}. ${r.descripcion}`)
     .join('\n');
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1033,9 +1045,16 @@ async function porLoQueDiceElRasgo(rasgos) {
 
 ${QUE_CUBRE_CADA_AREA}
 
-Te paso una lista de rasgos de una persona. De cada uno dices a cual de las siete pertenece POR LO QUE DICE, no por otra cosa. Si toca dos, eliges la que mas pesa en lo que esta escrito.
+Te paso los rasgos de una persona, numerados. Vienen de dos listas: primero sus FORTALEZAS y despues sus DESAFIOS, y en el listado se ve donde empieza cada una.
 
-Devuelves una area por rasgo, en el mismo orden y sin saltarte ninguno, escritas tal cual estan arriba.`,
+Haces dos cosas.
+
+1. "areas": a cual de las siete pertenece cada rasgo POR LO QUE DICE, no por otra cosa. Si toca dos, la que mas pesa en lo que esta escrito. Una area por rasgo, en el mismo orden y sin saltarte ninguno, escritas tal cual estan arriba.
+
+2. "sobran": los numeros de los rasgos que hay que quitar. Las dos listas se han escrito por separado y ninguna sabia lo que decia la otra, asi que se pisan. Se quita un rasgo cuando:
+   - DICE LO MISMO que otro, aunque sea con otras palabras. Se queda el que este mejor contado y el otro sobra.
+   - DICE LO CONTRARIO que uno de la otra lista: una fortaleza que afirma justo lo que un desafio niega, o al reves. No pueden convivir las dos, asi que sobra una: se queda la que este mejor contada y mejor apoyada.
+   Solo eso. Un rasgo duro no sobra por ser duro, y dos rasgos de la misma parcela de su vida no sobran si dicen cosas distintas. Si no hay nada que quitar, devuelves la lista vacia.`,
       output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREAS } },
       messages: [{ role: 'user', content: listado }],
     }),
@@ -1052,9 +1071,11 @@ Devuelves una area por rasgo, en el mismo orden y sin saltarte ninguno, escritas
   const data = await response.json();
   const texto = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
 
-  let dichas;
+  let dichas, marcados;
   try {
-    dichas = (JSON.parse(texto).areas || []).map(a => String(a).trim().toUpperCase());
+    const leido = JSON.parse(texto);
+    dichas = (leido.areas || []).map(a => String(a).trim().toUpperCase());
+    marcados = (leido.sobran || []).map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= rasgos.length);
   } catch (e) {
     const err = new Error('clasificar areas: la respuesta no es JSON valido');
     err.temporal = true;
@@ -1069,19 +1090,31 @@ Devuelves una area por rasgo, en el mismo orden y sin saltarte ninguno, escritas
     throw err;
   }
 
+  // Si dice que sobra media lista, no se le hace caso: algo ha entendido mal y
+  // vaciar el informe es peor que dejar un rasgo repetido. El tope es la quinta
+  // parte, que da de sobra para lo que de verdad se pisa.
+  const TOPE = Math.max(1, Math.floor(rasgos.length / 5));
+  const sobran = new Set(marcados.length > TOPE ? [] : marcados.map(n => n - 1));
+  if (marcados.length > TOPE) {
+    console.warn(`Areas: decia que sobraban ${marcados.length} de ${rasgos.length} rasgos, demasiados, no se quita ninguno`);
+  }
+
   // Y el rasgo al que le diga algo que no es un area se queda con la suya.
-  return rasgos.map((r, i) => (NOMBRES_DE_AREA.includes(dichas[i]) ? { ...r, area: dichas[i] } : r));
+  return {
+    rasgos: rasgos.map((r, i) => (NOMBRES_DE_AREA.includes(dichas[i]) ? { ...r, area: dichas[i] } : r)),
+    sobran,
+  };
 }
 
 // Se reintenta por su cuenta, igual que cada lista y cada area. Sin esto, un
 // 429 de los que salen cuando hay siete peticiones a la vez dejaba los rasgos
 // con el area de su caja sin que se notara, que es justo lo que se arregla
 // aqui. Si aun asi no sale, el informe se entrega con las areas de las cajas.
-async function conElAreaDeLoQueDice(rasgos, INTENTOS) {
+async function conElAreaDeLoQueDice(rasgos, cuantasFortalezas, INTENTOS) {
   let ultimoError;
   for (let intento = 1; intento <= INTENTOS; intento++) {
     try {
-      return await porLoQueDiceElRasgo(rasgos);
+      return await porLoQueDiceElRasgo(rasgos, cuantasFortalezas);
     } catch (err) {
       ultimoError = err;
       // Un corte de red llega sin marca; se trata como temporal.
@@ -1106,14 +1139,29 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
       .then(l => sinNombrarLaCarta('desafios', nombrePila, sexo, cartaTexto, l)),
   ]);
 
-  // 2. Ya escritos, se les pone el area de lo que dicen. Las dos listas van en
-  //    la misma peticion, que es una sola palabra por rasgo. Si falla, cada uno
-  //    se queda con el area de la caja en la que nacio y el informe sale igual.
+  // 2. Ya escritos, se les pone el area de lo que dicen, y se quita lo que se
+  //    pisa. Las dos listas van juntas en la misma peticion a proposito: es el
+  //    unico sitio donde se ven las dos a la vez.
+  //
+  //    Se escriben en paralelo, cada una en su llamada, asi que la de fortalezas
+  //    no sabe lo que ha escrito la de desafios. De ahi salia que una dijera
+  //    "sabes mirarte con honestidad" y la otra "evitas mirar lo que te falta".
+  //    Ninguna regla del encargo puede arreglar eso, porque el modelo no tiene
+  //    delante la otra lista. Aqui si.
+  //
+  //    Si falla, cada rasgo se queda con el area de su caja, no se quita nada y
+  //    el informe sale igual.
   try {
     const cuantasFortalezas = fortalezas.length;
-    const todos = await conElAreaDeLoQueDice(fortalezas.concat(desafios), INTENTOS);
-    fortalezas = todos.slice(0, cuantasFortalezas);
-    desafios = todos.slice(cuantasFortalezas);
+    const { rasgos: todos, sobran } = await conElAreaDeLoQueDice(
+      fortalezas.concat(desafios), cuantasFortalezas, INTENTOS);
+    if (sobran.size > 0) console.warn(`Se quitan ${sobran.size} rasgos que se pisaban con otro`);
+    const buenos = todos.filter((r, i) => !sobran.has(i));
+    // El corte se hace por la lista de la que venia cada uno, no por el numero,
+    // porque al quitar rasgos los sitios ya no cuadran.
+    const cuantasQuedan = todos.filter((r, i) => i < cuantasFortalezas && !sobran.has(i)).length;
+    fortalezas = buenos.slice(0, cuantasQuedan);
+    desafios = buenos.slice(cuantasQuedan);
   } catch (err) {
     console.error(`No se pudo poner el area por lo que dice el rasgo: ${err.message.slice(0, 90)}`);
   }
