@@ -124,11 +124,11 @@ ESTILO DE ESCRITURA:
 - USA SU NOMBRE UNA VEZ EN EL ÁREA. Una sola, ni más ni menos, y puesta donde caiga natural dentro de una frase, igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te está diciendo algo que te toca. Nunca para empezar el área, nunca para abrir un párrafo, nunca dos veces seguidas.
 - EL NOMBRE QUE USAS ES EL DE PILA, el que tienes en "Nombre de pila". Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación. Si al mirar el nombre entero ves claro que el de pila es compuesto (María Carmen, José Luis, Juan José), puedes usar las dos palabras. Ante la duda, la primera palabra sola.
 - PREGÚNTALE DIRECTAMENTE. De vez en cuando párate y hazle una pregunta de verdad, de las que se quedan un rato dando vueltas. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
-- Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota. Las MALAS valen para cualquiera y no dicen nada: "¿te suena?", "¿te identificas con esto?", "¿te ha pasado alguna vez?".
+- Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: "¿cuántas veces te has callado algo por no montar un lío?". Las MALAS valen para cualquiera y no dicen nada: "¿te suena?", "¿te identificas con esto?", "¿te ha pasado alguna vez?".
 - No hay número fijo de preguntas: van las que pida el texto y ninguna más. Si un área no pide ninguna, no la fuerces.
 - RESALTA EN NEGRITA LO QUE LO MERECE, marcándolo con dos asteriscos a cada lado: **así**. Se marca la frase que sigue en pie fuera de su párrafo, la que si la sacas de ahí y la escribes sola en una página sigue diciendo algo por sí misma. Esa es la única condición y no hay ninguna más.
 - NO HAY NÚMERO NI SITIO FIJO. En un área saldrán tres y en otra siete, las que dé el texto, nunca una cantidad repartida por página. Si un área no pide ninguna, no la fuerces.
-- Se marca una frase entera o media frase, nunca una palabra suelta y nunca un concepto. NO se marcan las explicaciones, ni los datos, ni los piropos, ni lo que ya se veía venir dos líneas antes. Y de un mismo contraste se marca solo una mitad, nunca las dos, porque marcar las dos se lee a plantilla.
+- Se marca una frase entera o media frase, nunca una palabra suelta y nunca un concepto. NO se marcan las explicaciones, ni los datos, ni los piropos, ni lo que ya se veía venir dos líneas antes. Y de un mismo contraste se marca solo una mitad ("por dentro estás calculando cuánto has enseñado"), nunca las dos, porque marcar las dos se lee a plantilla.
 - NUNCA marques nada dentro de la escena: se lee del tirón, y una marca ahí saca al lector de golpe. NUNCA marques el párrafo de cierre, que ya se destaca solo al maquetarlo.
 - Los asteriscos van siempre en pareja, dos para abrir y dos para cerrar. Nunca sueltos, nunca impares y nunca para ninguna otra cosa.
 - CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra: se escribe "quiero plátanos, peras y fresas", no "quiero plátanos, peras, y fresas". Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.
@@ -228,6 +228,11 @@ No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que
 
 CIERRE DE CADA ÁREA (OBLIGATORIO):
 El área termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una imagen contundente, una paradoja, una frase corta que golpea. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz.
+
+Ejemplos del tono que busco para los cierres:
+- "Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva años esperándote dentro."
+- "Porque en el fondo lo sabes. Siempre lo has sabido. Solo que mirar para otro lado era más cómodo."
+- "Llevas media vida demostrando que vales para no tener que averiguar si es verdad."
 
 PROHIBICIONES ABSOLUTAS:
 - No repetir el título del área en el texto
