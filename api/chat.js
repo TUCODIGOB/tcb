@@ -139,6 +139,9 @@ REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente quien es, que por fin alguien se lo explica.
 
+LO QUE NO SE PUEDE CONTAR EN NINGUNA DE LAS SIETE ÁREAS:
+Una carta natal es el mapa del momento en que nació, así que todo lo que sale de ella lo tiene de nacimiento. Por eso no se dice que lo aprendió de pequeña, ni que se lo enseñaron en casa, ni que le viene de sus padres ni de su familia, ni se cuenta ningún episodio de su vida: nada de eso está en la carta y sería inventárselo. Lo que sí está es cómo funciona por dentro y en qué parcela de su vida se le nota, y eso es lo que se cuenta.
+
 ESCENA REAL OBLIGATORIA:
 Tienes que incluir una escena concreta, específica y visual que el lector reconozca de inmediato como propia. No vale una situación genérica ni tonta. Debe ser una escena tan concreta que el lector diga "joder, esto me pasa literalmente".
 
@@ -188,8 +191,8 @@ Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
 
-ORIGEN — POR QUÉ ES ASÍ Y DE DÓNDE VIENE, con puente causal explícito hasta hoy. No basta con decir cuándo empezó. Tienes que unir pasado y presente como causa y efecto, para que entienda el PORQUÉ y no solo el qué: qué aprendió, con quién, en qué situación, y qué hace hoy exactamente por haberlo aprendido.
-UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges el origen que mejor lo explique todo y lo desarrollas a fondo: la situación concreta, qué concluyó de aquello, y qué hace hoy por haberlo concluido. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de ese único origen salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra infancia distinta.
+ORIGEN — POR QUÉ ES ASÍ, con puente causal explícito hasta lo que hace hoy. No basta con decir que le pasa: tienes que unir causa y efecto para que entienda el PORQUÉ y no solo el qué. Qué hay dentro de ella que produce eso, cómo funciona ese mecanismo y qué hace hoy exactamente por funcionar así.
+UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges la que mejor lo explique todo y la desarrollas a fondo. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de esa única explicación salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra distinta.
 
 CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Después de HOY, es el punto que más sitio ocupa.
 
@@ -198,7 +201,7 @@ SOLTAR — QUÉ TIENE QUE SOLTAR. Solo NOMBRAR la creencia concreta que tiene qu
 CIERRE — el cierre, tal como pide la sección CIERRE DE CADA ÁREA. Además tiene que salir del contenido concreto de ESTA área y de ESTA persona: si ese mismo cierre pudiera ir al final de cualquiera de las otras seis áreas, no vale y lo reescribes.
 
 SIN SOLAPE ENTRE LOS SEIS BLOQUES:
-Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. El pasado sale únicamente en ORIGEN. La escena no se anuncia antes ni se resume después: se cuenta y se sigue. SOLTAR no vuelve a explicar la creencia, solo la nombra. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
+Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. La escena no se anuncia antes ni se resume después: se cuenta y se sigue. SOLTAR no vuelve a explicar la creencia, solo la nombra. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
 
 EL ORDEN DE LOS SEIS BLOQUES CAMBIA SEGÚN EL ÁREA:
 Las siete áreas se leen seguidas dentro del mismo informe. Si las siete siguen el mismo esqueleto se nota, y el estudio deja de parecer escrito para esa persona y empieza a parecer una plantilla rellenada. Por eso cada área lleva su propia secuencia. El cierre es lo único que va siempre al final, porque es el cierre.
