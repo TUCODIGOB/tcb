@@ -169,11 +169,11 @@ Lo que gana con el patrón va aquí; la creencia que lo sostiene va más adelant
 SOLO EN EL ÁREA 3 (MIEDOS) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cuál es el miedo que gobierna su vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que nombraría si le preguntaras, y de qué tiene miedo en el fondo cuando tiene miedo de eso.
 Qué se lo dispara y cómo reacciona cuando aparece: las situaciones concretas que lo encienden, y lo que hace en ese momento sin decidirlo, si se paraliza, si controla más, si se adelanta, si desaparece.
-Qué está evitando por él y qué le cuesta: lo que deja de hacer por ese miedo, y lo que se le va en ello sin llevar la cuenta, en oportunidades y en cosas que no dice a tiempo.
+Qué está evitando por él y qué le ha costado ya: lo que lleva años sin hacer por ese miedo, y el precio que ha pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijo a tiempo.
 SOLO EN EL ÁREA 4 (HERIDA) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuál es la herida y qué la reabre hoy: qué le duele por dentro y qué le sigue faltando, y las situaciones concretas de su vida de ahora que se lo vuelven a tocar.
+Cuál es la herida y qué la reabre hoy: qué le duele por dentro y qué le sigue faltando desde siempre, y las situaciones concretas de su vida de ahora que la vuelven a tocar.
 Cómo se protege cuando se reabre, y qué se está perdiendo por protegerse así: lo que hace en ese momento para que no le vuelva a doler, y lo que esa misma protección le está dejando fuera.
-Qué necesita de verdad en ese momento: ponerle nombre a lo que siente y no sabe decir, y qué acaba haciendo con esa necesidad.
+Qué necesita de verdad en ese momento: ponerle nombre a lo que lleva años sintiendo sin saber decirlo, y qué acaba haciendo con esa necesidad.
 SOLO EN EL ÁREA 5 (AMOR) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cómo es en el amor: cómo se comporta cuando quiere a alguien de verdad, cómo lo demuestra, cuánto se entrega y cuánto se guarda, y qué le pasa con el deseo y con la intimidad.
 Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que no se está dando.
@@ -234,7 +234,7 @@ Ejemplos del tono que busco para los cierres:
 
 PROHIBICIONES ABSOLUTAS:
 - No repetir el título del área en el texto
-- No causas vagas sin explicar cómo
+- No causas vagas sin explicar cómo y cuándo
 - No frases de autoayuda ni coaching
 - No decir qué debe hacer la persona
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
