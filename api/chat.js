@@ -135,6 +135,7 @@ REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 - Un párrafo de dos líneas es la mejor herramienta que tienes para cerrar una idea o dejar caer algo incómodo. Úsalos, y no siempre en el mismo sitio.
 - Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
 - SI EL ÁREA TE SOBRA DE LARGO, quita contenido entero: un párrafo, una idea, un ejemplo. NUNCA comprimas lo que ya está escrito apretándolo, porque al apretarlo se pierden las explicaciones, se queda en afirmaciones sueltas y el área acaba leyéndose como un esquema.
+- Y LO QUE SE QUITA SALE SIEMPRE DE HOY, que es el bloque largo y el que mejor lo aguanta. Los seis bloques van los seis, y los puntos de HOY van todos: no se sacrifica ninguno para que quepa el resto, y menos SOLTAR, que son dos líneas y no descuadra nada.
 - REGLA CRÍTICA DE LONGITUD: cada área tiene OBLIGATORIAMENTE entre 850 y 900 palabras, con UNA excepción: el ÁREA 1 (IDENTIDAD) va entre 1.100 y 1.300 palabras, porque cubre más terreno. No cuentes párrafos ni te marques un número: salen los que salgan. Un área por debajo de su mínimo es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente quien es, que por fin alguien se lo explica.
