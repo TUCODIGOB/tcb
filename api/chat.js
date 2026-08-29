@@ -208,12 +208,12 @@ Las siete áreas se leen seguidas dentro del mismo informe. Si las siete siguen 
 
 Sigue EXACTAMENTE la secuencia del área que te están pidiendo:
 - ÁREA 1, IDENTIDAD:   HOY, ESCENA, ORIGEN, CREENCIAS, SOLTAR, CIERRE
-- ÁREA 2, PATRONES:    ESCENA, HOY, CREENCIAS, ORIGEN, SOLTAR, CIERRE
-- ÁREA 3, MIEDOS:      ORIGEN, HOY, CREENCIAS, SOLTAR, ESCENA, CIERRE
+- ÁREA 2, PATRONES:    HOY, CREENCIAS, ESCENA, ORIGEN, SOLTAR, CIERRE
+- ÁREA 3, MIEDOS:      ORIGEN, ESCENA, HOY, CREENCIAS, SOLTAR, CIERRE
 - ÁREA 4, HERIDA:      CREENCIAS, HOY, ESCENA, ORIGEN, SOLTAR, CIERRE
-- ÁREA 5, AMOR:        HOY, ESCENA, CREENCIAS, SOLTAR, ORIGEN, CIERRE
+- ÁREA 5, AMOR:        HOY, ORIGEN, CREENCIAS, ESCENA, SOLTAR, CIERRE
 - ÁREA 6, RELACIONES:  ORIGEN, HOY, ESCENA, CREENCIAS, SOLTAR, CIERRE
-- ÁREA 7, DINERO:      ESCENA, CREENCIAS, ORIGEN, HOY, SOLTAR, CIERRE
+- ÁREA 7, DINERO:      CREENCIAS, ESCENA, HOY, ORIGEN, SOLTAR, CIERRE
 
 Cuando un bloque te caiga en un sitio que no es el que pediría la lógica de siempre, engánchalo bien con lo que va antes: el texto tiene que leerse como alguien hablando seguido, nunca como piezas sueltas colocadas en otro orden.
 
