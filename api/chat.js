@@ -693,6 +693,10 @@ RELACIONES   Mercurio, las casas 3 y 11
 DINERO       las casas 2, 8 y 10
 
 En cada una miras todo lo que tienes de eso: en que signo esta y en que casa cae, que aspectos forma con los demas, si va retrogrado, y si ahi se junta mas de una cosa o la casa esta vacia. Cada dato dice algo distinto.
+
+Y EL SIGNO Y LA CASA TIENEN QUE CAMBIAR LO QUE ESCRIBES, no solo lo que pones en "origen". Un mismo cuerpo en dos signos distintos no da el mismo rasgo, y en dos casas distintas tampoco: el cuerpo dice QUE le pasa, el signo dice DE QUE MANERA le pasa y la casa dice EN QUE PARTE DE SU VIDA le pasa. Si te quedas en lo que ese cuerpo significa en general, escribes lo mismo que le escribirias a cualquiera, porque ese cuerpo lo tiene todo el mundo. Lo que no tiene todo el mundo es este cuerpo en este signo, en esta casa y con estos aspectos.
+LA PRUEBA: si le cambiaras el signo o la casa a esa posicion y el rasgo que has escrito siguiera valiendo igual, es que no lo has escrito de ESTA carta y hay que escribirlo otra vez.
+
 Marte, Urano y Jupiter no llevan area propia: lo que salga de ellos es del area de la casa en la que estan.
 Un rasgo va en la caja del area de la que lo has sacado, y esa area tiene que estar de verdad en la posicion que escribas en "origen".
 
