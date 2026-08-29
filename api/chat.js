@@ -149,11 +149,6 @@ OBJETIVO: Que la persona lea y piense que eso es exactamente quien es, que por f
 ESCENA REAL OBLIGATORIA:
 Tienes que incluir una escena concreta, específica y visual que el lector reconozca de inmediato como propia. No vale una situación genérica ni tonta. Debe ser una escena tan concreta que el lector diga "joder, esto me pasa literalmente".
 
-Ejemplos de escenas BUENAS (úsalas de inspiración, no las copies):
-- Para MIEDOS: "Llega el domingo por la tarde y ya notas ese peso raro en el pecho pensando en el lunes, haces una lista mental de todo lo que tienes que controlar, no porque haga falta, sino porque si no lo repasas todo cien veces sientes que algo malo va a pasar, y cuando te metes en la cama te pones a revisar el móvil para no pensar."
-- Para AMOR: "Estás con alguien que te gusta de verdad, todo va bien dos meses, y un día esa persona tarda cuatro horas en contestar un mensaje, y sin darte cuenta ya estás construyendo una historia entera en tu cabeza, ya estás pensando que se acabó, que no le importas, que era demasiado bonito, y cuando por fin responde con un simple 'perdona, he estado liado', tu cuerpo se relaja de golpe y te das cuenta del cansancio que llevabas encima."
-- Para DINERO: "Te ofrecen un trabajo mejor pagado, la propuesta está encima de la mesa, y antes de alegrarte ya estás pensando en todas las razones por las que no vas a poder con él, en todo lo que puede salir mal, en qué van a pensar los demás si fracasas, y acabas diciendo que no, o pidiendo menos de lo que te ofrecían, con una sensación extraña de alivio."
-
 Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas ("cuando te sientes mal, piensas cosas"), obvias ("a veces dudas de ti mismo") o vacías.
 
 La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar de que es un ejemplo.
