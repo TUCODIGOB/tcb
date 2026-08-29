@@ -707,7 +707,8 @@ nombre       Se le habla de tu, igual que en todo lo demas: es lo que hace
              De cuatro a siete palabras, con sus articulos y sus preposiciones,
              como se habla. Empieza en mayuscula, y sin punto al final.
 
-descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota.
+descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota
+             y en que parte de su vida se le nota.
 
 causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              lo que quiere saber. Dos o tres frases.
@@ -739,8 +740,13 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              nacio. No dice nada de lo que le paso despues. Asi que esta
              PROHIBIDO contar su infancia, su familia, sus padres, su casa o
              cualquier episodio de su vida: eso no esta en la carta y seria
-             inventarselo. Lo que se cuenta es como funciona por dentro y
-             a donde le lleva eso.
+             inventarselo.
+             Lo que SI esta en la carta es la parcela de su vida en la que le
+             pasa: la casa en la que cae la posicion dice si es su trabajo, su
+             dinero, su pareja, su gente, su hogar, su cabeza o su cuerpo. Esa
+             parcela se dice, con la palabra de siempre y sin nombrar la casa.
+             Sin ella el rasgo se queda en como funciona por dentro, que es
+             igual en todo el mundo, y quien lo lee no se reconoce en nada.
 
 origen       De donde sale el rasgo en la carta, en tecnico y en corto: el
              cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
