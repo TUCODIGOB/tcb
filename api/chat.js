@@ -693,6 +693,10 @@ RELACIONES   Mercurio, las casas 3 y 11
 DINERO       las casas 2, 8 y 10
 
 En cada una miras todo lo que tienes de eso: en que signo esta y en que casa cae, que aspectos forma con los demas, si va retrogrado, y si ahi se junta mas de una cosa o la casa esta vacia. Cada dato dice algo distinto.
+
+Y EL SIGNO Y LA CASA TIENEN QUE CAMBIAR LO QUE ESCRIBES, no solo lo que pones en "origen". Un mismo cuerpo en dos signos distintos no da el mismo rasgo, y en dos casas distintas tampoco: el cuerpo dice QUE le pasa, el signo dice DE QUE MANERA le pasa y la casa dice EN QUE PARTE DE SU VIDA le pasa. Si te quedas en lo que ese cuerpo significa en general, escribes lo mismo que le escribirias a cualquiera, porque ese cuerpo lo tiene todo el mundo. Lo que no tiene todo el mundo es este cuerpo en este signo, en esta casa y con estos aspectos.
+LA PRUEBA: si le cambiaras el signo o la casa a esa posicion y el rasgo que has escrito siguiera valiendo igual, es que no lo has escrito de ESTA carta y hay que escribirlo otra vez.
+
 Marte, Urano y Jupiter no llevan area propia: lo que salga de ellos es del area de la casa en la que estan.
 Un rasgo va en la caja del area de la que lo has sacado, y esa area tiene que estar de verdad en la posicion que escribas en "origen".
 
@@ -707,7 +711,8 @@ nombre       Se le habla de tu, igual que en todo lo demas: es lo que hace
              De cuatro a siete palabras, con sus articulos y sus preposiciones,
              como se habla. Empieza en mayuscula, y sin punto al final.
 
-descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota.
+descripcion  Dos frases como mucho. Que hace, que le pasa, como se le nota
+             y en que parte de su vida se le nota.
 
 causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              lo que quiere saber. Dos o tres frases.
@@ -736,11 +741,16 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              dos veces. Aqui se explica el mecanismo con sus palabras,
              sin decir de donde has sacado que funciona asi.
              Y OJO CON ESTO: una carta natal es el mapa del momento en que
-             nacio. No dice nada de lo que le paso despues. Asi que esta
-             PROHIBIDO contar su infancia, su familia, sus padres, su casa o
-             cualquier episodio de su vida: eso no esta en la carta y seria
-             inventarselo. Lo que se cuenta es como funciona por dentro y
-             a donde le lleva eso.
+             nacio, asi que lo que sale de ella lo tiene de nacimiento. Por eso
+             no se dice que lo aprendio de pequeña, ni que se lo enseñaron en
+             casa, ni que le viene de sus padres, ni se cuenta ningun episodio
+             de su vida: eso no esta en la carta y seria inventarselo.
+             Lo que SI esta en la carta es la parcela de su vida en la que se
+             le nota: la casa en la que cae la posicion dice si es su trabajo,
+             su dinero, su pareja, su gente, su casa, su cabeza o su cuerpo.
+             Esa parcela se dice, con la palabra de siempre y sin nombrar la
+             casa. Sin ella el rasgo se queda en como funciona por dentro, que
+             es igual en todo el mundo, y quien lo lee no se reconoce en nada.
 
 origen       De donde sale el rasgo en la carta, en tecnico y en corto: el
              cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
@@ -973,19 +983,158 @@ async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda
   }
 }
 
+// EL AREA LA DECIDE LO QUE DICE EL RASGO, NO DE DONDE SALIO.
+//
+// Al escribirlos area por area, cada rasgo se queda en la caja donde nacio
+// aunque acabe hablando de otra cosa: "encajas con naturalidad en cualquier
+// grupo" salio trabajando IDENTIDAD, porque venia del Sol, y se quedo ahi
+// aunque hable de gente. Nadie le preguntaba despues de que habla.
+//
+// Aqui se le pregunta. Se le pasan SOLO los rasgos escritos, sin la carta y
+// sin las posiciones, para que no pueda dejarse llevar por el planeta del que
+// salieron: lo unico que puede mirar es lo que dice el rasgo.
+const QUE_CUBRE_CADA_AREA = `IDENTIDAD    quien es por dentro y por que es como es
+PATRONES     lo que repite una y otra vez sin poder parar
+MIEDOS       lo que gobierna su vida sin que lo sepa
+HERIDA       lo que le duele de antiguo y hoy sigue frenandole
+AMOR         como quiere, como le quieren, a quien atrae
+RELACIONES   como se vincula con los demas y que papel ocupa
+DINERO       su relacion con el dinero, lo material y lo que vale su trabajo`;
+
+const ESQUEMA_AREAS = {
+  type: 'object',
+  properties: {
+    areas: { type: 'array', items: { type: 'string' } },
+  },
+  required: ['areas'],
+  additionalProperties: false,
+};
+
+async function porLoQueDiceElRasgo(rasgos) {
+  if (rasgos.length === 0) return rasgos;
+
+  const listado = rasgos
+    .map((r, i) => `${i + 1}. ${r.nombre}. ${r.descripcion}`)
+    .join('\n');
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-5',
+      thinking: { type: 'disabled' },
+      // La respuesta es una palabra por rasgo, asi que no hace falta mas.
+      max_tokens: 2000,
+      system: `Un estudio de personalidad tiene siete areas:
+
+${QUE_CUBRE_CADA_AREA}
+
+Te paso una lista de rasgos de una persona. De cada uno dices a cual de las siete pertenece POR LO QUE DICE, no por otra cosa. Si toca dos, eliges la que mas pesa en lo que esta escrito.
+
+Devuelves una area por rasgo, en el mismo orden y sin saltarte ninguno, escritas tal cual estan arriba.`,
+      output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREAS } },
+      messages: [{ role: 'user', content: listado }],
+    }),
+  });
+
+  if (!response.ok) {
+    const err = new Error(`clasificar areas: ${response.status}`);
+    // Igual que en las listas: la saturacion y los errores del servidor se
+    // reintentan; una peticion mal formada o la clave mal no van a mejorar.
+    err.temporal = response.status === 429 || response.status >= 500;
+    throw err;
+  }
+
+  const data = await response.json();
+  const texto = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
+
+  let dichas;
+  try {
+    dichas = (JSON.parse(texto).areas || []).map(a => String(a).trim().toUpperCase());
+  } catch (e) {
+    const err = new Error('clasificar areas: la respuesta no es JSON valido');
+    err.temporal = true;
+    throw err;
+  }
+
+  // Solo se hace caso si contesta una por rasgo. Si se salta alguno no se sabe
+  // cual, asi que no vale nada de lo que ha dicho y se vuelve a pedir.
+  if (dichas.length !== rasgos.length) {
+    const err = new Error(`clasificar areas: dijo ${dichas.length} de ${rasgos.length}`);
+    err.temporal = true;
+    throw err;
+  }
+
+  // Y el rasgo al que le diga algo que no es un area se queda con la suya.
+  return rasgos.map((r, i) => (NOMBRES_DE_AREA.includes(dichas[i]) ? { ...r, area: dichas[i] } : r));
+}
+
+// Se reintenta por su cuenta, igual que cada lista y cada area. Sin esto, un
+// 429 de los que salen cuando hay siete peticiones a la vez dejaba los rasgos
+// con el area de su caja sin que se notara, que es justo lo que se arregla
+// aqui. Si aun asi no sale, el informe se entrega con las areas de las cajas.
+async function conElAreaDeLoQueDice(rasgos, INTENTOS) {
+  let ultimoError;
+  for (let intento = 1; intento <= INTENTOS; intento++) {
+    try {
+      return await porLoQueDiceElRasgo(rasgos);
+    } catch (err) {
+      ultimoError = err;
+      // Un corte de red llega sin marca; se trata como temporal.
+      const temporal = err.temporal !== false;
+      if (!temporal || intento === INTENTOS) break;
+      console.warn(`Area por lo que dice el rasgo: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
+      await new Promise(r => setTimeout(r, 1500 * intento));
+    }
+  }
+  throw ultimoError;
+}
+
 // Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
 // mismo que antes escribia una sola, pero tardan la mitad porque van en
 // paralelo, igual que las siete areas.
 async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
-  const [fortalezas, desafios] = await Promise.all([
+  // 1. Las dos listas, a la vez, y sin nombrarle la carta a quien lo lee.
+  let [fortalezas, desafios] = await Promise.all([
     sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS)
-      .then(l => sinNombrarLaCarta('fortalezas', nombrePila, sexo, cartaTexto, l))
-      .then(l => conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, l)),
+      .then(l => sinNombrarLaCarta('fortalezas', nombrePila, sexo, cartaTexto, l)),
     sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS)
-      .then(l => sinNombrarLaCarta('desafios', nombrePila, sexo, cartaTexto, l))
-      .then(l => conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, l)),
+      .then(l => sinNombrarLaCarta('desafios', nombrePila, sexo, cartaTexto, l)),
   ]);
-  return { fortalezas, desafios };
+
+  // 2. Ya escritos, se les pone el area de lo que dicen. Las dos listas van en
+  //    la misma peticion, que es una sola palabra por rasgo. Si falla, cada uno
+  //    se queda con el area de la caja en la que nacio y el informe sale igual.
+  try {
+    const cuantasFortalezas = fortalezas.length;
+    const todos = await conElAreaDeLoQueDice(fortalezas.concat(desafios), INTENTOS);
+    fortalezas = todos.slice(0, cuantasFortalezas);
+    desafios = todos.slice(cuantasFortalezas);
+  } catch (err) {
+    console.error(`No se pudo poner el area por lo que dice el rasgo: ${err.message.slice(0, 90)}`);
+  }
+
+  // 3. Y con las areas ya en su sitio, se comprueba el minimo. En este orden,
+  //    porque mover un rasgo de area puede dejar la de origen corta.
+  [fortalezas, desafios] = await Promise.all([
+    conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, fortalezas),
+    conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, desafios),
+  ]);
+
+  // 4. Y se ordenan por area. Salian agrupadas porque se escriben caja por
+  //    caja, pero al cambiarle el area a un rasgo, y al añadir los del relleno
+  //    por el final, el orden se rompia y en el PDF aparecian las etiquetas
+  //    salteadas. El PDF los pinta tal cual se los damos, asi que se ordenan
+  //    aqui, en el orden en que van las areas en el informe.
+  // El rasgo cuya posicion no se reconoce se queda sin area y va al final, que
+  // es donde menos se nota que no lleva etiqueta.
+  const sitio = r => (NOMBRES_DE_AREA.indexOf(r.area) + 1) || NOMBRES_DE_AREA.length + 1;
+  const porArea = (a, b) => sitio(a) - sitio(b);
+  return { fortalezas: fortalezas.slice().sort(porArea), desafios: desafios.slice().sort(porArea) };
 }
 
 
