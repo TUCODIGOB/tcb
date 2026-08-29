@@ -1001,12 +1001,9 @@ async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda
 // la descripcion, que va justo debajo.
 const TOPE_DE_PALABRAS = 7;
 
-// Y la descripcion, tres renglones. Contado en el informe 111, renglon a
-// renglon del PDF: a doce puntos y con el ancho que tiene entran unos ochenta y
-// ocho caracteres, no setenta y cuatro. La descripcion de tres renglones mas
-// larga tenia 268 caracteres y la de cuatro mas corta 264, asi que el corte va
-// en 262: por debajo no se toca ninguna de tres, que son la mayoria y estan
-// bien.
+// Y la descripcion, tres renglones. Medido renglon a renglon del PDF: a doce
+// puntos y con el ancho que tiene entran unos ochenta y ocho caracteres, asi
+// que el corte va en 262. Por debajo de ahi no se toca ninguna de tres.
 const TOPE_DE_LA_DESCRIPCION = 262;
 
 // Un nombre que empieza por "Le cuesta" habla de la persona en vez de hablarle
@@ -1037,9 +1034,9 @@ function descripcionQueNoVale(rasgo) {
 
 // DOS RASGOS CON EL MISMO TITULO SON EL MISMO RASGO DICHO DOS VECES.
 //
-// En el informe 111, "Sabes estar sola sin que te pese" salia dos veces en las
-// fortalezas, en dos areas distintas y contando lo mismo. El paso que quita los
-// que se pisan no lo cazo, y es lo primero que ve quien lo lee.
+// El mismo titulo puede salir dos veces, en dos areas distintas y contando lo
+// mismo. El paso que quita los que se pisan no lo caza, y es lo primero que ve
+// quien lo lee.
 //
 // Esto no es criterio, es comparar dos cadenas, asi que lo hace el codigo y no
 // se le pregunta a nadie. Se compara en minusculas, sin tildes y sin

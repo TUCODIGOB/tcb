@@ -684,10 +684,9 @@ async function generarDiagnosticoSilencioso(nombre, sexo, fechaNice, hora, lugar
   // QUE HAY EN CADA CASA. Esto va SOLO a las listas de rasgos, no al informe de
   // las siete areas, que recibe exactamente el mismo texto de siempre.
   //
-  // Sin esto, el modelo no sabia que hay dentro de cada casa ni en cual cae el
-  // Nodo Norte, y en el informe 111 se lo invento: dos rasgos decian "casas 6 y
-  // 9 vacias" cuando en la 6 estaban el Sol y Mercurio. Son datos que ya se
-  // calculan de su fecha, hora y lugar; solo faltaba pasarlos.
+  // Sin esto, el modelo no sabe que hay dentro de cada casa ni en cual cae el
+  // Nodo Norte, y se lo inventa. Son datos que ya se calculan de su fecha, hora
+  // y lugar; solo faltaba pasarlos.
   const CUERPOS_DE_LA_CASA = {
     sol: 'Sol', luna: 'Luna', mercurio: 'Mercurio', venus: 'Venus', marte: 'Marte',
     jupiter: 'Júpiter', saturno: 'Saturno', urano: 'Urano', neptuno: 'Neptuno',
