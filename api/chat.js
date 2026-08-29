@@ -1064,7 +1064,7 @@ const ESQUEMA_AREAS = {
 };
 
 async function porLoQueDiceElRasgo(rasgos, cuantasFortalezas) {
-  if (rasgos.length === 0) return { rasgos, sobran: [] };
+  if (rasgos.length === 0) return { rasgos, sobran: new Set() };
 
   const listado = rasgos
     .map((r, i) => `${i === 0 ? 'FORTALEZAS\n' : ''}${i === cuantasFortalezas ? '\nDESAFIOS\n' : ''}${i + 1}. ${r.nombre}. ${r.descripcion}`)
@@ -1087,8 +1087,10 @@ async function porLoQueDiceElRasgo(rasgos, cuantasFortalezas) {
     body: JSON.stringify({
       model: 'claude-sonnet-5',
       thinking: { type: 'disabled' },
-      // La respuesta es una palabra por rasgo, asi que no hace falta mas.
-      max_tokens: 2000,
+      // La respuesta son un area por rasgo, los numeros que sobran y algun
+      // nombre nuevo. Poco, pero con cuarenta rasgos ya no cabia en dos mil, y
+      // una respuesta cortada no se puede leer y gasta los tres intentos.
+      max_tokens: 6000,
       system: `Un estudio de personalidad tiene siete areas:
 
 ${QUE_CUBRE_CADA_AREA}
