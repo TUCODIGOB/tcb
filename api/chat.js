@@ -196,7 +196,7 @@ UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges la que mejor lo explique todo y la desa
 
 CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Después de HOY, es el punto que más sitio ocupa.
 
-SOLTAR — QUÉ TIENE QUE SOLTAR. Solo NOMBRAR la creencia concreta que tiene que caer. Nada más. Ni pasos, ni ejercicios, ni plan, ni "empieza por", ni por dónde, ni cómo hacerlo. El cómo es otro producto y aquí sobra. Es el punto más corto de todos.
+SOLTAR — QUÉ TIENE QUE SOLTAR. Solo NOMBRAR la creencia concreta que tiene que caer. Nada más. Ni pasos, ni ejercicios, ni plan, ni "empieza por", ni por dónde, ni cómo hacerlo. El cómo es otro producto y aquí sobra. Es el punto más corto de todos, y por corto es el que más se cae: no se salta nunca, y no se junta con el cierre, que es otra cosa y va después.
 
 CIERRE — el cierre, tal como pide la sección CIERRE DE CADA ÁREA. Además tiene que salir del contenido concreto de ESTA área y de ESTA persona: si ese mismo cierre pudiera ir al final de cualquiera de las otras seis áreas, no vale y lo reescribes.
 
