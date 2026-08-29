@@ -758,8 +758,10 @@ Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee un
 - SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atras para entenderla, esta mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
 - SE LE HABLA DE TU, siempre, como quien se lo cuenta tomando un cafe. Nunca en tercera persona.
 - SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un dia cualquiera.
-- NO VALE UN RASGO QUE LE SIRVA A CUALQUIERA. "Aprendes de tus errores", "te frenas antes de fallar" o "transformas lo que te duele en algo util" se los puedes decir a cualquier persona del mundo y asentira, y por eso no valen: no le cuentan nada que no supiera, y quien lo lee nota que eso no es suyo. El rasgo tiene que bajar a SU vida: en que parcela se le nota y que hace ahi. La posicion de donde sale ya te lo dice, porque la casa en la que cae es una parcela concreta de su vida.
-  LA PRUEBA, ANTES DE ENTREGAR: si ese rasgo, tal como lo has escrito, se lo pudieras entregar a otra persona con otra carta y colaria, no vale. Se reescribe hasta que solo le encaje a quien tienes delante.
+- CADA RASGO SE CUENTA CON UNA ESCENA SUYA, NO CON UNA CUALIDAD. Una cualidad es "aprendes de tus errores", "tienes una intuicion fina", "sabes sacar partido a lo que ya tienes", "te frenas antes de fallar", "transformas lo que te duele en algo util". Eso se lo puedes decir a cualquier persona del mundo y asentira, asi que no le cuentas nada: lo lee, le suena bien y no se reconoce en nada. Una escena es lo que hace esa persona, donde y con quien: en el trabajo, en su casa, con su pareja, con su familia, con el dinero, cuando le llaman por telefono, cuando alguien le lleva la contraria. La descripcion tiene que dejar ver la situacion, no solo nombrar la virtud o el defecto.
+  DE DONDE SALE LA ESCENA: de la casa. La casa en la que cae la posicion es una parcela concreta de su vida y te esta diciendo el escenario; el planeta te dice lo que hace ahi. Si escribes el rasgo sin pisar ese escenario, has escrito media cosa.
+  Y NO SE REPITE EL MISMO MOLDE: "sabes X sin Y", "conviertes X en Y", "lo que a otros les cuesta, tu", "donde otros no ven nada, tu". En cuanto dos rasgos de la lista empiezan igual, el segundo se reescribe de otra manera.
+  LA PRUEBA, ANTES DE ENTREGAR: si ese rasgo, tal como lo has escrito, se lo pudieras entregar a otra persona distinta y colaria, no vale. Se reescribe hasta que solo le encaje a quien tienes delante.
 - NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace la persona, no lo que hace un concepto.
 - NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa.
 - FRASES LARGAS, ENCADENADAS CON COMAS, y QUE EL TEXTO RESPIRE. Asi se habla de verdad. Cortarlo todo en frases secas y en ideas cortas una detras de otra parte la lectura, suena a lista y ahoga a quien lee, porque no le da tiempo a asimilar una cuando ya le llega la siguiente. Se desarrolla una idea, se le deja sitio, y luego viene la otra.
@@ -798,7 +800,9 @@ Nombre de pila: ${nombrePila}`;
       output_config: { format: { type: 'json_schema', schema: ESQUEMA_UNA_LISTA } },
       messages: [{ role: 'user', content:
         aReescribir && aReescribir.length > 0
-          ? [`Estos ${cual} que has sacado de esta carta le nombran la carta a la persona que lo lee, y eso no puede salir en el informe. Devuelvemelos otra vez, cada uno en la caja de su area, con el MISMO nombre y el MISMO origen, cambiando solo la frase que nombra la carta por lo que le pasa a ella con sus palabras. Las demas cajas las dejas vacias.`, '']
+          ? [`Estos ${cual} hay que escribirlos otra vez. Unos le nombran la carta a la persona que lo lee, y eso no puede salir en el informe. Otros estan escritos con frases de catalogo, de las que le valen igual a cualquiera, y quien las lea no se va a reconocer en ellas.
+Devuelvemelos todos, cada uno en la caja de su area y con el MISMO origen, contados con una escena suya: en que parcela de su vida se le nota eso, que hace ahi y con quien, sin nombrar la carta ni nada tecnico. El escenario te lo da la casa del origen. El nombre lo puedes cambiar si el de ahora tambien es de catalogo. Y que no se parezcan entre ellos ni a los que ya tenias.
+Las demas cajas las dejas vacias.`, '']
               .concat(aReescribir.map(r => `- area: ${r.area}\n  nombre: ${r.nombre}\n  descripcion: ${r.descripcion}\n  causa: ${r.causa}\n  origen: ${r.origen}`))
               .join('\n')
           : soloEstas && soloEstas.length > 0
@@ -915,17 +919,56 @@ function hablaDeAstrologia(rasgo) {
   return PALABRAS_DE_ASTROLOGIA.some(re => re.test(texto));
 }
 
+// LO QUE LE VALE A CUALQUIERA.
+//
+// Comparando dos informes de dos personas distintas se veia que un tercio de
+// los rasgos eran casi el mismo: "sabes sacar provecho de lo que ya tienes" y
+// "sabes sacar partido a lo que ya tienes", "aprendes escuchando lo que no se
+// dice" y "una intuicion fina para captar lo que no se dice". No es que la
+// carta diga lo mismo, es que el modelo tiene sus frases hechas y vuelve a
+// ellas cuando no baja el rasgo a la vida de quien tiene delante.
+//
+// Son faciles de reconocer porque son literalmente las mismas, asi que se
+// buscan y se piden otra vez, contados con una escena suya. Lo que decide si
+// un rasgo vale no es esta lista, es la regla del encargo; esto es la red por
+// si se le escapa.
+const FRASES_DE_CATALOGO = [
+  /sacar (partido|provecho|jugo) (a|de) lo que (ya )?tienes/,
+  /(donde|que|lo que) otros no (ven|consiguen|llegan|perciben)/,
+  /donde otros (ven|solo ven) (limites|problemas|solo)/,
+  /(otros|los demas|la mayoria) (les cuesta|no consigue|se queda|ni siquiera)/,
+  /a (otros|otras personas|los demas) les cuesta/,
+  /(transformas|conviertes|convertirlo|convertir) (lo que te (duele|asusta|pesa)|tu propia|eso )?.{0,25}\b(en fuerza|en algo util|en aprendizaje|en comprension)/,
+  /una vara (de medir )?(interna |muy |bastante )*(estricta|alta|severa|exigente)/,
+  /lo que no se dice/,
+  /aprendes .{0,15}de (cada |tus |los )?(error|errores|tropiezo)/,
+  /sin que te pese/,
+  /no te quedas (atrapad|enganchad|estancad|parad)/,
+  /sales fortalecid/,
+  /te da (una )?ventaja/,
+];
+
+function esDeCatalogo(rasgo) {
+  const texto = sinTildes(`${rasgo.nombre} ${rasgo.descripcion} ${rasgo.causa}`);
+  return FRASES_DE_CATALOGO.some(re => re.test(texto));
+}
+
 // UN RASGO BUENO NO SE TIRA POR UNA FRASE.
 //
 // Un rasgo puede estar bien entero y tener una sola frase que nombra la carta.
 // Tirarlo seria perder lo bueno, asi que se le devuelven esos rasgos y se le
-// pide que reescriban SOLO esa frase, con el mismo nombre y el mismo origen.
-// Si alguno vuelve nombrandola otra vez, ese si se cae.
-async function sinNombrarLaCarta(cual, nombrePila, sexo, cartaTexto, lista) {
-  const sucios = lista.filter(hablaDeAstrologia);
+// piden otra vez. Si alguno vuelve nombrandola igual, ese si se cae.
+//
+// En la misma llamada van los de catalogo, que es el otro motivo por el que un
+// rasgo no puede entregarse. Van juntos a proposito: son una peticion pequeña
+// y hacer dos seguidas alargaba la espera del cliente sin ganar nada.
+async function loQueNoSePuedeEntregar(cual, nombrePila, sexo, cartaTexto, lista) {
+  const malo = r => hablaDeAstrologia(r) || esDeCatalogo(r);
+  const sucios = lista.filter(malo);
   if (sucios.length === 0) return lista;
 
-  console.warn(`Lista de ${cual}: ${sucios.length} rasgos nombraban la carta, se piden reescritos`);
+  const cuantosCatalogo = sucios.filter(esDeCatalogo).length;
+  console.warn(`Lista de ${cual}: se piden otra vez ${sucios.length} rasgos (${sucios.length - cuantosCatalogo} nombraban la carta, ${cuantosCatalogo} con frases de catalogo)`);
   let arreglados;
   try {
     arreglados = await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, null, sucios);
@@ -934,11 +977,28 @@ async function sinNombrarLaCarta(cual, nombrePila, sexo, cartaTexto, lista) {
     return lista;
   }
 
-  // Cada uno vuelve a su sitio por el nombre, que es lo que se le ha pedido que
-  // no cambie. El que no vuelva, o vuelva igual de sucio, se queda como estaba
-  // y lo quita el filtro de mas abajo.
-  const porNombre = new Map(arreglados.filter(r => !hablaDeAstrologia(r)).map(r => [r.nombre, r]));
-  return lista.map(r => (hablaDeAstrologia(r) && porNombre.has(r.nombre)) ? porNombre.get(r.nombre) : r);
+  // Vuelven emparejados por el origen, que es lo unico que se le pide que no
+  // cambie: el nombre aqui SI puede cambiar, porque muchas veces el nombre era
+  // justo la frase de catalogo. Dos rasgos pueden salir de la misma posicion,
+  // asi que por cada origen se guarda una cola y se va sacando de ella.
+  const porOrigen = new Map();
+  for (const r of arreglados) {
+    if (malo(r)) continue;
+    const clave = sinTildes(r.origen);
+    if (!porOrigen.has(clave)) porOrigen.set(clave, []);
+    porOrigen.get(clave).push(r);
+  }
+
+  // El que no vuelva, o vuelva igual de sucio, se queda como estaba. Si lo suyo
+  // era nombrar la carta, lo quita el filtro de mas abajo; si era ser generico,
+  // se entrega: generico pero suyo es mejor que no estar.
+  return lista.map(r => {
+    if (!malo(r)) return r;
+    const cola = porOrigen.get(sinTildes(r.origen));
+    // El area se la queda la que ya tenia: quien la decide de verdad es el paso
+    // de despues, mirando lo que dice el rasgo.
+    return (cola && cola.length > 0) ? { ...cola.shift(), area: r.area } : r;
+  });
 }
 
 // EL MINIMO POR AREA, GARANTIZADO.
@@ -1090,12 +1150,13 @@ async function conElAreaDeLoQueDice(rasgos, INTENTOS) {
 // mismo que antes escribia una sola, pero tardan la mitad porque van en
 // paralelo, igual que las siete areas.
 async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
-  // 1. Las dos listas, a la vez, y sin nombrarle la carta a quien lo lee.
+  // 1. Las dos listas, a la vez, y quitando lo que no se puede entregar: lo que
+  //    le nombra la carta a quien lo lee y lo que le valdria a cualquiera.
   let [fortalezas, desafios] = await Promise.all([
     sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS)
-      .then(l => sinNombrarLaCarta('fortalezas', nombrePila, sexo, cartaTexto, l)),
+      .then(l => loQueNoSePuedeEntregar('fortalezas', nombrePila, sexo, cartaTexto, l)),
     sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS)
-      .then(l => sinNombrarLaCarta('desafios', nombrePila, sexo, cartaTexto, l)),
+      .then(l => loQueNoSePuedeEntregar('desafios', nombrePila, sexo, cartaTexto, l)),
   ]);
 
   // 2. Ya escritos, se les pone el area de lo que dicen. Las dos listas van en
@@ -1116,7 +1177,17 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
     conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, fortalezas),
     conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, desafios),
   ]);
-  return { fortalezas, desafios };
+
+  // 4. Y se ordenan por area. Salian agrupadas porque se escriben caja por
+  //    caja, pero al cambiarle el area a un rasgo, y al añadir los del relleno
+  //    por el final, el orden se rompia y en el PDF aparecian las etiquetas
+  //    salteadas. El PDF los pinta tal cual se los damos, asi que se ordenan
+  //    aqui, en el orden en que van las areas en el informe.
+  // El rasgo cuya posicion no se reconoce se queda sin area y va al final, que
+  // es donde menos se nota que no lleva etiqueta.
+  const sitio = r => (NOMBRES_DE_AREA.indexOf(r.area) + 1) || NOMBRES_DE_AREA.length + 1;
+  const porArea = (a, b) => sitio(a) - sitio(b);
+  return { fortalezas: fortalezas.slice().sort(porArea), desafios: desafios.slice().sort(porArea) };
 }
 
 
