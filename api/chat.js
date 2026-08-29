@@ -737,18 +737,16 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              dos veces. Aqui se explica el mecanismo con sus palabras,
              sin decir de donde has sacado que funciona asi.
              Y OJO CON ESTO: una carta natal es el mapa del momento en que
-             nacio. No dice NADA de lo que le paso despues, asi que no se
-             cuenta de donde le viene el rasgo: ni que lo aprendio de pequeña,
-             ni que se lo enseñaron en casa, ni que le viene de sus padres, ni
-             ningun episodio de su vida. Nada de eso esta en la carta y seria
-             inventarselo. Se escribe en presente: como funciona hoy.
-             Lo que SI esta en la carta es la parcela de su vida en la que le
-             pasa: la casa en la que cae la posicion dice si es su trabajo, su
-             dinero, su pareja, su gente, su casa, su cabeza o su cuerpo. Esa
-             parcela se dice, con la palabra de siempre y sin nombrar la casa.
-             Es donde se le nota HOY, nunca de donde le viene.
-             Sin ella el rasgo se queda en como funciona por dentro, que es
-             igual en todo el mundo, y quien lo lee no se reconoce en nada.
+             nacio, asi que lo que sale de ella lo tiene de nacimiento. Por eso
+             no se dice que lo aprendio de pequeña, ni que se lo enseñaron en
+             casa, ni que le viene de sus padres, ni se cuenta ningun episodio
+             de su vida: eso no esta en la carta y seria inventarselo.
+             Lo que SI esta en la carta es la parcela de su vida en la que se
+             le nota: la casa en la que cae la posicion dice si es su trabajo,
+             su dinero, su pareja, su gente, su casa, su cabeza o su cuerpo.
+             Esa parcela se dice, con la palabra de siempre y sin nombrar la
+             casa. Sin ella el rasgo se queda en como funciona por dentro, que
+             es igual en todo el mundo, y quien lo lee no se reconoce en nada.
 
 origen       De donde sale el rasgo en la carta, en tecnico y en corto: el
              cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
