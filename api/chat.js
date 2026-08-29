@@ -737,14 +737,16 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              dos veces. Aqui se explica el mecanismo con sus palabras,
              sin decir de donde has sacado que funciona asi.
              Y OJO CON ESTO: una carta natal es el mapa del momento en que
-             nacio. No dice nada de lo que le paso despues. Asi que esta
-             PROHIBIDO contar su infancia, su familia, sus padres, su casa o
-             cualquier episodio de su vida: eso no esta en la carta y seria
-             inventarselo.
+             nacio. No dice NADA de lo que le paso despues, asi que no se
+             cuenta de donde le viene el rasgo: ni que lo aprendio de pequeña,
+             ni que se lo enseñaron en casa, ni que le viene de sus padres, ni
+             ningun episodio de su vida. Nada de eso esta en la carta y seria
+             inventarselo. Se escribe en presente: como funciona hoy.
              Lo que SI esta en la carta es la parcela de su vida en la que le
              pasa: la casa en la que cae la posicion dice si es su trabajo, su
-             dinero, su pareja, su gente, su hogar, su cabeza o su cuerpo. Esa
+             dinero, su pareja, su gente, su casa, su cabeza o su cuerpo. Esa
              parcela se dice, con la palabra de siempre y sin nombrar la casa.
+             Es donde se le nota HOY, nunca de donde le viene.
              Sin ella el rasgo se queda en como funciona por dentro, que es
              igual en todo el mundo, y quien lo lee no se reconoce en nada.
 
