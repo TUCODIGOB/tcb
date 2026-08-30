@@ -253,6 +253,7 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO apilar varias explicaciones del origen. Una sola, bien desarrollada
 - PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
 - PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
+- PROHIBIDO atribuirle un hecho de su vida que no esté en la carta: una relación, un trabajo, una mudanza, algo que le pasó. La escena es de su vida de ahora, nunca un episodio suyo del pasado
 - PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea`;
 
   const AREAS = [
