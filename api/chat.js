@@ -476,11 +476,12 @@ ${cartaTexto}`;
     // de las siete areas recibe el mismo texto de siempre, sin una letra de
     // mas: lo suyo se arma arriba con cartaTexto a secas.
     const cartaConLasCasas = casasTexto ? `${cartaTexto}\n\n${casasTexto}` : cartaTexto;
-    const rasgos = await sacarRasgos(nombrePila, sexo, cartaConLasCasas, INTENTOS_POR_AREA, reloj);
+    const { paraLasAreas, ...rasgos } = await sacarRasgos(nombrePila, sexo, cartaConLasCasas, INTENTOS_POR_AREA, reloj);
 
-    // Despues, las 7 areas a la vez.
+    // Despues, las 7 areas a la vez. Cada una recibe SOLO los rasgos que caben
+    // en ella; en el PDF salen todos, que eso va por su lado.
     const resultados = await Promise.all(
-      AREAS.map(area => generarArea(area, rasgos))
+      AREAS.map(area => generarArea(area, paraLasAreas))
     );
 
     // Unir con el separador. Es U+001F (Unit Separator), un caracter de
@@ -1227,8 +1228,9 @@ const ESQUEMA_AREAS = {
         additionalProperties: false,
       },
     },
+    masPeso: { type: 'array', items: { type: 'integer' } },
   },
-  required: ['areas', 'sobran', 'nombres'],
+  required: ['areas', 'sobran', 'nombres', 'masPeso'],
   additionalProperties: false,
 };
 
@@ -1282,7 +1284,11 @@ Haces dos cosas.
 
 3. "nombres": abajo te digo que rasgos tienen el nombre mal puesto, y por que. De cada uno devuelves su numero con el nombre nuevo.
    El nombre nuevo dice lo mismo que el que tenia y con sus mismas palabras, cambiando solo que le hable de tu. No es una etiqueta: es lo que hace o lo que le pasa, dicho a ella.
-   Si abajo no te digo ninguno, devuelves la lista vacia.`,
+   Si abajo no te digo ninguno, devuelves la lista vacia.
+
+4. "masPeso": los numeros de los rasgos que MAS PESAN en su vida, mirando area por area. De cada area, como mucho DOS fortalezas y TRES desafios, y de las siete areas.
+   Eres el unico que ve las dos listas enteras, por eso lo decides tu. Son los que se van a desarrollar a fondo en el estudio, asi que eliges los que mas la van a mover al leerlos, no los que mejor suenan escritos. Los que no elijas salen igual en su lista, solo que no se desarrollan.
+   Si de un area hay menos de esos, pones los que haya.`,
       output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREAS } },
       messages: [{ role: 'user', content: aArreglar.length > 0
         ? `${listado}\n\nESTO HAY QUE CAMBIARLO (el numero es el del rasgo de arriba):\n${aArreglar.join('\n')}`
@@ -1301,13 +1307,14 @@ Haces dos cosas.
   const data = await response.json();
   const texto = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
 
-  let dichas, marcados, renombrados;
+  let dichas, marcados, renombrados, pesan;
   try {
     const leido = JSON.parse(texto);
     dichas = (leido.areas || []).map(a => String(a).trim().toUpperCase());
     marcados = (leido.sobran || []).map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= rasgos.length);
     // Lo nuevo tiene que pasar la misma prueba que lo viejo; si no, el rasgo se
     // queda con lo que tenia, que al menos es suyo.
+    pesan = (leido.masPeso || []).map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= rasgos.length).map(n => n - 1);
     renombrados = new Map();
     for (const x of (leido.nombres || [])) {
       const i = Number(x && x.numero) - 1;
@@ -1349,14 +1356,14 @@ Haces dos cosas.
   if (renombrados.size > 0) console.warn(`Se cambia el nombre a ${renombrados.size} rasgos`);
 
   // Y el rasgo al que le diga algo que no es un area se queda con la suya.
-  return {
-    rasgos: rasgos.map((r, i) => ({
-      ...r,
-      area: NOMBRES_DE_AREA.includes(dichas[i]) ? dichas[i] : r.area,
-      nombre: renombrados.has(i) ? renombrados.get(i) : r.nombre,
-    })),
-    sobran,
-  };
+  const nuevos = rasgos.map((r, i) => ({
+    ...r,
+    area: NOMBRES_DE_AREA.includes(dichas[i]) ? dichas[i] : r.area,
+    nombre: renombrados.has(i) ? renombrados.get(i) : r.nombre,
+  }));
+  // Los que mas pesan se devuelven como los rasgos mismos, no como numeros:
+  // mas abajo se quitan rasgos y los numeros dejarian de cuadrar.
+  return { rasgos: nuevos, sobran, masPeso: new Set(pesan.map(i => nuevos[i])) };
 }
 
 // Se reintenta por su cuenta, igual que cada lista y cada area. Sin esto, un
@@ -1378,6 +1385,37 @@ async function conElAreaDeLoQueDice(rasgos, cuantasFortalezas, INTENTOS, reloj) 
     }
   }
   throw ultimoError;
+}
+
+// LO QUE SE LE MANDA A CADA AREA: SOLO LO QUE CABE.
+//
+// A cada area se le mandaban TODOS sus rasgos. Si a MIEDOS le tocaban cinco
+// desafios, el area desarrollaba los cinco, y con cinco cosas contadas no queda
+// sitio para desarrollar ninguna a fondo. El encargo pedia "una o dos
+// fortalezas y dos o tres desafios" y no se cumplia: contar es cosa del codigo,
+// no del modelo. Asi que ahora el area solo recibe los que caben, y lo que no
+// tiene delante no lo puede desarrollar.
+//
+// Cuales pesan mas lo dice la llamada que ya ve las dos listas enteras, la
+// misma que le pone el area a cada rasgo: es la unica que las tiene delante a
+// la vez. Si no lo dice, o dice menos de los que caben, se completan por el
+// orden en que estan escritos, que es el orden en que el encargo le pide
+// escribirlos: primero los de mas peso.
+//
+// Los que se quedan fuera NO se pierden: salen igual en su lista del PDF.
+const CUANTOS_POR_AREA = { fortalezas: 2, desafios: 3 };
+
+function losQuePesan(lista, cual, masPeso) {
+  const tope = CUANTOS_POR_AREA[cual] || 2;
+  const salen = [];
+  for (const area of NOMBRES_DE_AREA) {
+    const suyos = lista.filter(r => r.area === area);
+    const dichos = suyos.filter(r => masPeso.has(r));
+    const resto = suyos.filter(r => !masPeso.has(r));
+    salen.push(...dichos.slice(0, tope));
+    salen.push(...resto.slice(0, Math.max(0, tope - dichos.length)));
+  }
+  return salen;
 }
 
 // Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
@@ -1404,13 +1442,15 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   //
   //    Si falla, cada rasgo se queda con el area de su caja, no se quita nada y
   //    el informe sale igual.
+  let masPeso = new Set();
   try {
     // Tambien esta se salta si ya no cabe con las siete areas detras: sin ella
     // cada rasgo se queda con el area de su caja y el informe sale igual.
     if (!reloj.hayTiempoPara(90)) throw new Error('no da tiempo, se deja el area de cada caja');
     const cuantasFortalezas = fortalezas.length;
-    const { rasgos: todos, sobran } = await conElAreaDeLoQueDice(
+    const { rasgos: todos, sobran, masPeso: pesan } = await conElAreaDeLoQueDice(
       fortalezas.concat(desafios), cuantasFortalezas, INTENTOS, reloj);
+    masPeso = pesan || new Set();
     if (sobran.size > 0) console.warn(`Se quitan ${sobran.size} rasgos que se pisaban con otro`);
     const buenos = todos.filter((r, i) => !sobran.has(i));
     // El corte se hace por la lista de la que venia cada uno, no por el numero,
@@ -1448,7 +1488,19 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   // es donde menos se nota que no lleva etiqueta.
   const sitio = r => (NOMBRES_DE_AREA.indexOf(r.area) + 1) || NOMBRES_DE_AREA.length + 1;
   const porArea = (a, b) => sitio(a) - sitio(b);
-  return { fortalezas: fortalezas.slice().sort(porArea), desafios: desafios.slice().sort(porArea) };
+  fortalezas = fortalezas.slice().sort(porArea);
+  desafios = desafios.slice().sort(porArea);
+
+  // 5. Y aparte, lo que se le manda a las areas: solo los que caben. La lista
+  //    del PDF sigue llevandolos todos; esto es otra cosa y va por su lado.
+  return {
+    fortalezas,
+    desafios,
+    paraLasAreas: {
+      fortalezas: losQuePesan(fortalezas, 'fortalezas', masPeso),
+      desafios: losQuePesan(desafios, 'desafios', masPeso),
+    },
+  };
 }
 
 
