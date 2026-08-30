@@ -190,9 +190,10 @@ Una carta natal es el mapa del momento en que nació, así que todo lo que sale 
 ESCENA REAL OBLIGATORIA:
 Tienes que incluir una escena concreta, específica y visual que el lector reconozca de inmediato como propia. No vale una situación genérica ni tonta. Debe ser una escena tan concreta que el lector diga "joder, esto me pasa literalmente".
 
-Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas ("cuando te sientes mal, piensas cosas"), obvias ("a veces dudas de ti mismo") o vacías.
+Las escenas BUENAS son específicas (gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas ("cuando te sientes mal, piensas cosas"), obvias ("a veces dudas de ti mismo") o vacías.
 
 La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar de que es un ejemplo.
+LA ESCENA DE ESTA ÁREA NO PASA DE NOCHE. Solo el ÁREA 1 puede llevarla de noche; en las otras seis ocurre a otra hora del día. Es lo único que cambia: el gesto concreto, el objeto y lo que le pasa por dentro siguen siendo los mismos y con el mismo detalle.
 Y ES UNA SITUACIÓN DE SU VIDA DE AHORA, de las que se le repiten, no un hecho concreto de su pasado contado como si hubiera ocurrido de verdad. Nunca se le atribuye una relación, un trabajo, una mudanza ni ningún episodio que no esté en la carta: eso sería inventárselo, por muy bien que encaje.
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
@@ -241,7 +242,7 @@ Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo
 
 ESOS PUNTOS NO SE SALTAN NI SE FUNDEN ENTRE ELLOS. Si a un área le tocan cuatro, se cuentan los cuatro, y si le tocan tres, los tres. Cada uno con su sitio y su desarrollo: si terminas un área y uno de sus puntos no está contado, o está resuelto de pasada dentro de otro, el área no está terminada y la repasas antes de entregarla.
 
-ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, y ahí nunca es el primer bloque ni el último: no abre el área ni la cierra. Y CADA PÁRRAFO DE LA ESCENA EMPIEZA CON "> ", asi: "> Son las once de la noche y...". Solo los de la escena, ningun otro parrafo del area lleva esa marca. Esto NO ES OPCIONAL Y NO TIENE EXCEPCIONES: si el area lleva escena, sus parrafos van marcados. Un area cuya escena no lleve la marca no esta terminada.
+ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, y ahí nunca es el primer bloque ni el último: no abre el área ni la cierra. Y CADA PÁRRAFO DE LA ESCENA EMPIEZA CON "> ": el signo mayor y un espacio, pegados delante de su primera palabra, sea cual sea. Solo los de la escena, ningun otro parrafo del area lleva esa marca. Esto NO ES OPCIONAL Y NO TIENE EXCEPCIONES: si el area lleva escena, sus parrafos van marcados. Un area cuya escena no lleve la marca no esta terminada.
 
 ORIGEN — POR QUÉ ES ASÍ, con puente causal explícito hasta lo que hace hoy. Es el porqué de SUS DESAFÍOS, de dónde le nacen, y solo de ellos. No basta con decir que le pasa: tienes que unir causa y efecto para que entienda el PORQUÉ y no solo el qué. Qué hay dentro de ella que produce eso, cómo funciona ese mecanismo y qué hace hoy exactamente por funcionar así.
 UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges la que mejor lo explique todo y la desarrollas a fondo. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de esa única explicación salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra distinta.
@@ -313,7 +314,7 @@ PROHIBICIONES ABSOLUTAS:
 
 Esta área abre el estudio, así que empieza con una entrada de dos o tres frases que la sitúen antes de entrar en materia, como se abre un libro. Suave, sin prisa y sin adelantar lo que viene. Solo el área 1 lleva esa entrada.
 
-CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: la ESCENA entra sin avisar, pegada a la frase anterior y arrancando por el momento concreto, el día o la hora. El ORIGEN entra contestando algo que ella ya se ha preguntado alguna vez. Las CREENCIAS entran por la frase que ella se dice por dentro, dicha con sus palabras.
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: la ESCENA entra sin avisar, pegada a la frase anterior y arrancando por el momento concreto. El ORIGEN entra contestando algo que ella ya se ha preguntado alguna vez. Las CREENCIAS entran por la frase que ella se dice por dentro, dicha con sus palabras.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
