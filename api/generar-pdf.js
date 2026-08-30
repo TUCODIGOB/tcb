@@ -210,30 +210,30 @@ export default async function handler(req, res) {
       return out;
     }
 
-    function anchoPalabra(pal, size, todoNegrita) {
+    function anchoPalabra(pal, size, todoNegrita, cursiva) {
       doc.setFontSize(size);
-      doc.setFont('Roboto', (todoNegrita || pal.b) ? 'bold' : 'normal');
+      doc.setFont('Roboto', cursiva ? 'italic' : ((todoNegrita || pal.b) ? 'bold' : 'normal'));
       return doc.getTextWidth(pal.t);
     }
 
-    function anchoLinea(linea, size, todoNegrita) {
+    function anchoLinea(linea, size, todoNegrita, cursiva) {
       var a = 0;
-      for (var i = 0; i < linea.length; i++) a += anchoPalabra(linea[i], size, todoNegrita);
+      for (var i = 0; i < linea.length; i++) a += anchoPalabra(linea[i], size, todoNegrita, cursiva);
       return a;
     }
 
     // Lo mismo que splitTextToSize, pero midiendo cada palabra con su fuente.
-    function lineasConNegrita(txt, maxW, size, todoNegrita) {
+    function lineasConNegrita(txt, maxW, size, todoNegrita, cursiva) {
       var pals = palabrasConNegrita(txt), lineas = [], linea = [], ancho = 0;
       for (var i = 0; i < pals.length; i++) {
-        var w = anchoPalabra(pals[i], size, todoNegrita);
+        var w = anchoPalabra(pals[i], size, todoNegrita, cursiva);
         if (pals[i].esp) {
           if (linea.length === 0) continue;
           linea.push(pals[i]); ancho += w; continue;
         }
         if (ancho + w > maxW && linea.length > 0) {
           while (linea.length > 0 && linea[linea.length - 1].esp) {
-            ancho -= anchoPalabra(linea.pop(), size, todoNegrita);
+            ancho -= anchoPalabra(linea.pop(), size, todoNegrita, cursiva);
           }
           lineas.push(linea); linea = []; ancho = 0;
         }
@@ -647,6 +647,9 @@ export default async function handler(req, res) {
         var sinMarcas=chunk.replace(/^\*\*/,'').replace(/\*\*$/,'').trim();
         var esDestacado=!esCierre && (/^¿[\s\S]*\?$/.test(sinMarcas) || /^\*\*[\s\S]+\*\*$/.test(chunk));
         if(esDestacado){ paras.push({t:sinMarcas,cierre:false,dest:true}); continue; }
+        // La escena viene marcada con un ">" delante, y va en cursiva con una
+        // linea dorada al lado. Se reconoce aqui y tampoco se parte.
+        if(!esCierre && /^>\s*/.test(chunk)){ paras.push({t:chunk.replace(/^>\s*/,''),cierre:false,escena:true}); continue; }
         if(chunk.length>500){
           var sentences=chunk.split(/(?<=\.)\s+/);
           var trozos=[],group='',sCount=0;
@@ -667,29 +670,40 @@ export default async function handler(req, res) {
         if(!paras[pi2]||!paras[pi2].t) continue;
         var esC=paras[pi2].cierre;
         var esD=paras[pi2].dest;
+        var esE=paras[pi2].escena;
         // El cierre es la frase que el lector se lleva puesta: se saca del
         // bloque de texto y se pinta en negrita dorada, centrada y con aire.
         // Los destacados van igual de centrados y de grandes, pero en el verde
         // de la marca y sin negrita, que son del cuerpo del area y no el final.
         var cuerpo=esD?16:(esC?14:12);
         var color=esC?[207,177,128]:(esD?[14,63,75]:[40,40,40]);
-        var ancho=(esC||esD)?150:175, alto=(esC||esD)?8:7;
+        var ancho=(esC||esD)?150:(esE?167:175), alto=(esC||esD)?8:7;
         if(esC||esD) ay+=8;
+        if(esE) ay+=4;
+        // Donde arranca la linea dorada de la escena. Se guarda antes de pintar
+        // el primer renglon y se dibuja al acabar, para que mida lo que ocupa.
+        var lineaDesde=esE?ay-4.5:0;
         doc.setFontSize(cuerpo); doc.setTextColor(color[0],color[1],color[2]);
-        var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esC);
+        var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esC,esE);
         for(var pl2=0;pl2<plines.length;pl2++){
           // La redaccion no baja hasta el numero de pagina: se corta 5 mm antes,
           // que es el aire que tiene que quedar entre el ultimo renglon y el numero.
-          if(ay>H-16-AIRE_SOBRE_NUMERO){addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);ay=60;}
+          if(ay>H-16-AIRE_SOBRE_NUMERO){
+            // Si la escena se parte entre dos paginas, su linea se cierra aqui
+            // y vuelve a empezar arriba en la siguiente.
+            if(esE){ doc.setDrawColor(207,177,128); doc.setLineWidth(0.8); doc.line(18,lineaDesde,18,ay-alto+2); lineaDesde=60-4.5; }
+            addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);ay=60;
+          }
           var lin=plines[pl2];
-          var cx=(esC||esD)?(105-anchoLinea(lin,cuerpo,esC)/2):18;
+          var cx=(esC||esD)?(105-anchoLinea(lin,cuerpo,esC)/2):(esE?26:18);
           for(var wi=0;wi<lin.length;wi++){
-            if(!lin[wi].esp){ doc.setFont('Roboto',(esC||lin[wi].b)?'bold':'normal'); doc.text(lin[wi].t,cx,ay); }
-            cx+=anchoPalabra(lin[wi],cuerpo,esC);
+            if(!lin[wi].esp){ doc.setFont('Roboto',esE?'italic':((esC||lin[wi].b)?'bold':'normal')); doc.text(lin[wi].t,cx,ay); }
+            cx+=anchoPalabra(lin[wi],cuerpo,esC,esE);
           }
           ay+=alto;
         }
-        ay+=(esC||esD)?8:4;
+        if(esE){ doc.setDrawColor(207,177,128); doc.setLineWidth(0.8); doc.line(18,lineaDesde,18,ay-alto+2); }
+        ay+=(esC||esD)?8:(esE?8:4);
       }
       if(areaPageCount<2){addPageNum(pageC);pageC++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);}
       addPageNum(pageC); pageC++;
