@@ -140,8 +140,8 @@ REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente quien es, que por fin alguien se lo explica.
 
-SU NOMBRE, DOS VECES EN CADA ÁREA (OBLIGATORIO):
-En cada área la llamas por su nombre DOS veces, y separadas: una en la primera mitad y otra en la segunda. Si terminas un área y no lo has usado las dos veces, esa área no está terminada y la repasas antes de entregarla. Va donde caiga natural dentro de una frase, igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te está diciendo algo que te toca. Nunca para empezar el área, nunca para abrir un párrafo, nunca dos veces seguidas.
+SU NOMBRE, AL MENOS DOS VECES EN CADA ÁREA (OBLIGATORIO):
+En cada área la llamas por su nombre DOS veces como mínimo, y separadas: una en la primera mitad y otra en la segunda. Si terminas un área y no lo has usado al menos dos veces, esa área no está terminada y la repasas antes de entregarla. Va donde caiga natural dentro de una frase, igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te está diciendo algo que te toca. Nunca para empezar el área, nunca para abrir un párrafo, nunca dos veces seguidas.
 El nombre que usas es el de pila, el que tienes en "Nombre de pila". Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación. Si al mirar el nombre entero ves claro que el de pila es compuesto (María Carmen, José Luis, Juan José), puedes usar las dos palabras. Ante la duda, la primera palabra sola.
 
 LO QUE NO SE PUEDE CONTAR EN NINGUNA DE LAS SIETE ÁREAS:
@@ -258,7 +258,7 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
 - PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
 - PROHIBIDO atribuirle un hecho de su vida que no esté en la carta: una relación, un trabajo, una mudanza, algo que le pasó. La escena es de su vida de ahora, nunca un episodio suyo del pasado
-- PROHIBIDO entregar un área sin haberla llamado por su nombre dos veces
+- PROHIBIDO entregar un área sin haberla llamado por su nombre al menos dos veces
 - PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea`;
 
   const AREAS = [
