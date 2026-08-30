@@ -223,6 +223,8 @@ Sigue EXACTAMENTE la secuencia del área que te están pidiendo:
 
 Cuando un bloque te caiga en un sitio que no es el que pediría la lógica de siempre, engánchalo bien con lo que va antes: el texto tiene que leerse como alguien hablando seguido, nunca como piezas sueltas colocadas en otro orden.
 
+Y NINGUNA ÁREA ABRE COMO OTRA. Las siete van seguidas en el mismo informe y ella las lee del tirón, así que si varias arrancan con el mismo giro se nota a la primera y el estudio empieza a parecer una plantilla. La primera frase de cada área entra directa en lo que toca contar y le habla a ella, sin fórmula de presentación por delante.
+
 NADA DE FRASES MOLDE:
 Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta al leerlas del tirón. La lógica de fondo se mantiene siempre (qué te pasa, de dónde viene, qué creencia lo sostiene, qué se cae), lo que cambia en cada área es cómo se dice y en qué orden aparece. Quedan PROHIBIDAS estas fórmulas y cualquier variante suya:
 - "el bucle es siempre el mismo", "el patrón es siempre el mismo", "y así una y otra vez"
@@ -260,6 +262,8 @@ PROHIBICIONES ABSOLUTAS:
     {
       id: 1,
       prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí misma.
+
+Esta área abre el estudio, así que empieza con una entrada de dos o tres frases que la sitúen antes de entrar en materia, como se abre un libro. Suave, sin prisa y sin adelantar lo que viene. Solo el área 1 lleva esa entrada.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
