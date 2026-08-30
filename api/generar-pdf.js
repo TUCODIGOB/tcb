@@ -100,7 +100,7 @@ export default async function handler(req, res) {
       }
     }
 
-    const [regular, bold, italic,
+    const [regular, bold, italic, italianno,
       img_portada, img_indice, img_bienvenido, img_rueda, img_base,
       img_identidad, img_patrones, img_miedos, img_herida, img_amor, img_relaciones, img_dinero,
       img_frase, img_proximo, img_proximo2, img_trasera, img_rasgos
@@ -108,6 +108,7 @@ export default async function handler(req, res) {
       loadFontBase64('/fonts/Roboto-Regular.ttf'),
       loadFontBase64('/fonts/Roboto-Bold.ttf'),
       loadFontBase64('/fonts/Roboto-Italic.ttf'),
+      loadFontBase64('/fonts/Italianno-Regular.ttf'),
       loadImageBase64('/images/1-portada-pdf.jpg'),
       loadImageBase64('/images/2-indice-pdf.jpg'),
       loadImageBase64('/images/3-bienvenido-pdf.jpg'),
@@ -137,6 +138,8 @@ export default async function handler(req, res) {
     if (regular) { doc.addFileToVFS('Roboto-Regular.ttf', regular); doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal'); }
     if (bold)    { doc.addFileToVFS('Roboto-Bold.ttf', bold);       doc.addFont('Roboto-Bold.ttf', 'Roboto', 'bold'); }
     if (italic)  { doc.addFileToVFS('Roboto-Italic.ttf', italic);   doc.addFont('Roboto-Italic.ttf', 'Roboto', 'italic'); }
+    // La caligrafica del cierre de cada area.
+    if (italianno) { doc.addFileToVFS('Italianno-Regular.ttf', italianno); doc.addFont('Italianno-Regular.ttf', 'Italianno', 'normal'); }
 
     // Si un fondo no se ha podido cargar, esa pagina sale sin fondo en vez de
     // romper el PDF entero. Se envuelve addImage una sola vez para no tener que
@@ -210,30 +213,31 @@ export default async function handler(req, res) {
       return out;
     }
 
-    function anchoPalabra(pal, size, todoNegrita, cursiva) {
+    function anchoPalabra(pal, size, todoNegrita, cursiva, caligrafica) {
       doc.setFontSize(size);
-      doc.setFont('Roboto', cursiva ? 'italic' : ((todoNegrita || pal.b) ? 'bold' : 'normal'));
+      if (caligrafica) doc.setFont('Italianno', 'normal');
+      else doc.setFont('Roboto', cursiva ? 'italic' : ((todoNegrita || pal.b) ? 'bold' : 'normal'));
       return doc.getTextWidth(pal.t);
     }
 
-    function anchoLinea(linea, size, todoNegrita, cursiva) {
+    function anchoLinea(linea, size, todoNegrita, cursiva, caligrafica) {
       var a = 0;
-      for (var i = 0; i < linea.length; i++) a += anchoPalabra(linea[i], size, todoNegrita, cursiva);
+      for (var i = 0; i < linea.length; i++) a += anchoPalabra(linea[i], size, todoNegrita, cursiva, caligrafica);
       return a;
     }
 
     // Lo mismo que splitTextToSize, pero midiendo cada palabra con su fuente.
-    function lineasConNegrita(txt, maxW, size, todoNegrita, cursiva) {
+    function lineasConNegrita(txt, maxW, size, todoNegrita, cursiva, caligrafica) {
       var pals = palabrasConNegrita(txt), lineas = [], linea = [], ancho = 0;
       for (var i = 0; i < pals.length; i++) {
-        var w = anchoPalabra(pals[i], size, todoNegrita, cursiva);
+        var w = anchoPalabra(pals[i], size, todoNegrita, cursiva, caligrafica);
         if (pals[i].esp) {
           if (linea.length === 0) continue;
           linea.push(pals[i]); ancho += w; continue;
         }
         if (ancho + w > maxW && linea.length > 0) {
           while (linea.length > 0 && linea[linea.length - 1].esp) {
-            ancho -= anchoPalabra(linea.pop(), size, todoNegrita, cursiva);
+            ancho -= anchoPalabra(linea.pop(), size, todoNegrita, cursiva, caligrafica);
           }
           lineas.push(linea); linea = []; ancho = 0;
         }
@@ -675,16 +679,16 @@ export default async function handler(req, res) {
         // bloque de texto y se pinta en negrita dorada, centrada y con aire.
         // Los destacados van igual de centrados y de grandes, pero en el verde
         // de la marca y sin negrita, que son del cuerpo del area y no el final.
-        var cuerpo=esD?16:(esC?14:12);
+        var cuerpo=esD?16:(esC?22:12);
         var color=esC?[207,177,128]:(esD?[14,63,75]:[40,40,40]);
-        var ancho=(esC||esD)?150:(esE?167:175), alto=(esC||esD)?8:7;
+        var ancho=(esC||esD)?150:(esE?167:175), alto=esC?10:(esD?8:7);
         if(esC||esD) ay+=8;
         if(esE) ay+=4;
         // Donde arranca la linea dorada de la escena. Se guarda antes de pintar
         // el primer renglon y se dibuja al acabar, para que mida lo que ocupa.
         var lineaDesde=esE?ay-4.5:0;
         doc.setFontSize(cuerpo); doc.setTextColor(color[0],color[1],color[2]);
-        var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esC,esE);
+        var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esC,esE,esC);
         for(var pl2=0;pl2<plines.length;pl2++){
           // La redaccion no baja hasta el numero de pagina: se corta 5 mm antes,
           // que es el aire que tiene que quedar entre el ultimo renglon y el numero.
@@ -695,10 +699,10 @@ export default async function handler(req, res) {
             addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);ay=60;
           }
           var lin=plines[pl2];
-          var cx=(esC||esD)?(105-anchoLinea(lin,cuerpo,esC)/2):(esE?26:18);
+          var cx=(esC||esD)?(105-anchoLinea(lin,cuerpo,esC,false,esC)/2):(esE?26:18);
           for(var wi=0;wi<lin.length;wi++){
-            if(!lin[wi].esp){ doc.setFont('Roboto',esE?'italic':((esC||lin[wi].b)?'bold':'normal')); doc.text(lin[wi].t,cx,ay); }
-            cx+=anchoPalabra(lin[wi],cuerpo,esC,esE);
+            if(!lin[wi].esp){ if(esC){doc.setFont('Italianno','normal');} else {doc.setFont('Roboto',esE?'italic':(lin[wi].b?'bold':'normal'));} doc.text(lin[wi].t,cx,ay); }
+            cx+=anchoPalabra(lin[wi],cuerpo,esC,esE,esC);
           }
           ay+=alto;
         }
