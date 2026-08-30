@@ -151,6 +151,7 @@ Tienes que incluir una escena concreta, específica y visual que el lector recon
 Las escenas BUENAS son específicas (hora del día, gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas ("cuando te sientes mal, piensas cosas"), obvias ("a veces dudas de ti mismo") o vacías.
 
 La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar de que es un ejemplo.
+Y ES UNA SITUACIÓN DE SU VIDA DE AHORA, de las que se le repiten, no un hecho concreto de su pasado contado como si hubiera ocurrido de verdad. Nunca se le atribuye una relación, un trabajo, una mudanza ni ningún episodio que no esté en la carta: eso sería inventárselo, por muy bien que encaje.
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
 Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos").
