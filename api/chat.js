@@ -137,7 +137,7 @@ REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 - Un párrafo de dos líneas es la mejor herramienta que tienes para cerrar una idea o dejar caer algo incómodo. Úsalos, y no siempre en el mismo sitio.
 - Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
 - SI EL ÁREA TE SOBRA DE LARGO, quita contenido entero: un párrafo, una idea, un ejemplo. NUNCA comprimas lo que ya está escrito apretándolo, porque al apretarlo se pierden las explicaciones, se queda en afirmaciones sueltas y el área acaba leyéndose como un esquema.
-- Y LO QUE SE QUITA SALE SIEMPRE DE HOY, que es el bloque largo y el que mejor lo aguanta. Los seis bloques van los seis, y los puntos de HOY van todos: no se sacrifica ninguno para que quepa el resto, y menos SOLTAR, que son dos líneas y no descuadra nada.
+- Y LO QUE SE QUITA SALE SIEMPRE DE HOY, que es el bloque largo y el que mejor lo aguanta. Los cinco bloques van los cinco, y los puntos de HOY van todos: no se sacrifica ninguno para que quepa el resto.
 - REGLA CRÍTICA DE LONGITUD: cada área tiene OBLIGATORIAMENTE entre 850 y 900 palabras, con UNA excepción: el ÁREA 1 (IDENTIDAD) va entre 1.100 y 1.300 palabras, porque cubre más terreno. No cuentes párrafos ni te marques un número: salen los que salgan. Un área por debajo de su mínimo es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente quien es, que por fin alguien se lo explica.
@@ -154,9 +154,9 @@ La escena ocupa uno o dos párrafos completos dentro del área, integrada de for
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
 Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos").
-El área se lee como una sola conversación seguida, no como seis trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
+El área se lee como una sola conversación seguida, no como cinco trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
 
-EL MATERIAL DEL ÁREA ENTERA SON SUS RASGOS. Al final de la petición tienes los rasgos que se le han sacado de su carta para esta área. De ahí eliges UNA o DOS fortalezas y DOS o TRES desafíos, los que más peso tengan en su vida, y con esos escribes los SEIS bloques: lo que le pasa hoy, la escena, de dónde viene, la creencia que lo sostiene, la que tiene que caer y el cierre. Los seis hablan de lo mismo, cada uno desde su sitio, y por eso el área no se va por otro lado a mitad de camino.
+EL MATERIAL DEL ÁREA ENTERA SON SUS RASGOS. Al final de la petición tienes los rasgos que se le han sacado de su carta para esta área. De ahí eliges UNA o DOS fortalezas y DOS o TRES desafíos, los que más peso tengan en su vida, y con esos escribes los CINCO bloques: lo que le pasa hoy, la escena, de dónde viene, la creencia que lo sostiene y el cierre. Los cinco hablan de lo mismo, cada uno desde su sitio, y por eso el área no se va por otro lado a mitad de camino.
 El porqué de cada desafío viene escrito con él, y de ahí sale lo que cuentas en ORIGEN y la creencia que hay debajo. Las fortalezas no llevan porqué y no se les inventa uno.
 Si de una lista solo hay dos, van los dos: no se añade ninguno que no esté ahí. Lo que no elijas no se cuenta en ningún sitio. Y son el material, no apartados: se cuentan seguidos, con tus palabras, sin nombrarlos ni separarlos ni anunciarlos.
 
@@ -201,26 +201,24 @@ ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBL
 ORIGEN — POR QUÉ ES ASÍ, con puente causal explícito hasta lo que hace hoy. No basta con decir que le pasa: tienes que unir causa y efecto para que entienda el PORQUÉ y no solo el qué. Qué hay dentro de ella que produce eso, cómo funciona ese mecanismo y qué hace hoy exactamente por funcionar así.
 UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges la que mejor lo explique todo y la desarrollas a fondo. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de esa única explicación salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra distinta.
 
-CREENCIAS — LO QUE SOSTIENE EL PATRÓN. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Va una por cada desafío que hayas contado en esta área, y cuando dos se apoyan en la misma, se dice una sola vez y no se repite. Después de HOY, es el punto que más sitio ocupa.
-
-SOLTAR — QUÉ TIENE QUE SOLTAR. Solo NOMBRAR las creencias que tienen que caer, que son las que acabas de contar en CREENCIAS y ninguna más: si ahí hay dos, aquí caen las dos. Nada más. Ni pasos, ni ejercicios, ni plan, ni "empieza por", ni por dónde, ni cómo hacerlo. El cómo es otro producto y aquí sobra. Es el punto más corto de todos, y por corto es el que más se cae: no se salta nunca, y no se junta con el cierre, que es otra cosa y va después.
+CREENCIAS — LO QUE SOSTIENE EL PATRÓN, Y QUÉ SE LE ABRE SI CAE. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Va una por cada desafío que hayas contado en esta área, y cuando dos se apoyan en la misma, se dice una sola vez y no se repite. Y de cada una se dice también qué se le abre en su vida el día que caiga: qué deja de pasarle, qué puede hacer que hoy no hace. Eso NO es decirle cómo soltarla: ni pasos, ni ejercicios, ni plan, ni "empieza por", ni por dónde. El cómo es otro producto y aquí sobra. Después de HOY, es el punto que más sitio ocupa.
 
 CIERRE — el cierre, tal como pide la sección CIERRE DE CADA ÁREA. Además tiene que salir del contenido concreto de ESTA área y de ESTA persona: si ese mismo cierre pudiera ir al final de cualquiera de las otras seis áreas, no vale y lo reescribes.
 
-SIN SOLAPE ENTRE LOS SEIS BLOQUES:
-Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. La escena no se anuncia antes ni se resume después: se cuenta y se sigue. SOLTAR no vuelve a explicar la creencia, solo la nombra. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
+SIN SOLAPE ENTRE LOS CINCO BLOQUES:
+Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. La escena no se anuncia antes ni se resume después: se cuenta y se sigue. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
 
-EL ORDEN DE LOS SEIS BLOQUES CAMBIA SEGÚN EL ÁREA:
+EL ORDEN DE LOS CINCO BLOQUES CAMBIA SEGÚN EL ÁREA:
 Las siete áreas se leen seguidas dentro del mismo informe. Si las siete siguen el mismo esqueleto se nota, y el estudio deja de parecer escrito para esa persona y empieza a parecer una plantilla rellenada. Por eso cada área lleva su propia secuencia. El cierre es lo único que va siempre al final, porque es el cierre.
 
 Sigue EXACTAMENTE la secuencia del área que te están pidiendo:
-- ÁREA 1, IDENTIDAD:   HOY, ESCENA, ORIGEN, CREENCIAS, SOLTAR, CIERRE
-- ÁREA 2, PATRONES:    HOY, CREENCIAS, ESCENA, ORIGEN, SOLTAR, CIERRE
-- ÁREA 3, MIEDOS:      ORIGEN, ESCENA, HOY, CREENCIAS, SOLTAR, CIERRE
-- ÁREA 4, HERIDA:      CREENCIAS, HOY, ESCENA, ORIGEN, SOLTAR, CIERRE
-- ÁREA 5, AMOR:        HOY, ORIGEN, CREENCIAS, ESCENA, SOLTAR, CIERRE
-- ÁREA 6, RELACIONES:  ORIGEN, HOY, ESCENA, CREENCIAS, SOLTAR, CIERRE
-- ÁREA 7, DINERO:      CREENCIAS, ESCENA, HOY, ORIGEN, SOLTAR, CIERRE
+- ÁREA 1, IDENTIDAD:   HOY, ESCENA, ORIGEN, CREENCIAS, CIERRE
+- ÁREA 2, PATRONES:    HOY, CREENCIAS, ESCENA, ORIGEN, CIERRE
+- ÁREA 3, MIEDOS:      ORIGEN, ESCENA, HOY, CREENCIAS, CIERRE
+- ÁREA 4, HERIDA:      CREENCIAS, HOY, ESCENA, ORIGEN, CIERRE
+- ÁREA 5, AMOR:        HOY, ORIGEN, ESCENA, CREENCIAS, CIERRE
+- ÁREA 6, RELACIONES:  ORIGEN, HOY, ESCENA, CREENCIAS, CIERRE
+- ÁREA 7, DINERO:      CREENCIAS, ESCENA, HOY, ORIGEN, CIERRE
 
 Cuando un bloque te caiga en un sitio que no es el que pediría la lógica de siempre, engánchalo bien con lo que va antes: el texto tiene que leerse como alguien hablando seguido, nunca como piezas sueltas colocadas en otro orden.
 
