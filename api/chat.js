@@ -235,7 +235,7 @@ Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo
 
 ESOS PUNTOS NO SE SALTAN NI SE FUNDEN ENTRE ELLOS. Si a un área le tocan cuatro, se cuentan los cuatro, y si le tocan tres, los tres. Cada uno con su sitio y su desarrollo: si terminas un área y uno de sus puntos no está contado, o está resuelto de pasada dentro de otro, el área no está terminada y la repasas antes de entregarla.
 
-ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
+ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, y ahí nunca es el primer bloque ni el último: no abre el área ni la cierra.
 
 ORIGEN — POR QUÉ ES ASÍ, con puente causal explícito hasta lo que hace hoy. No basta con decir que le pasa: tienes que unir causa y efecto para que entienda el PORQUÉ y no solo el qué. Qué hay dentro de ella que produce eso, cómo funciona ese mecanismo y qué hace hoy exactamente por funcionar así.
 UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges la que mejor lo explique todo y la desarrollas a fondo. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de esa única explicación salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra distinta.
@@ -286,6 +286,7 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
 - PROHIBIDO escribir párrafos de más de 7 líneas. Parte en 2 si hace falta
 - UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos. Se cuentan antes de entregar
+- PROHIBIDO cambiar el orden de los cinco bloques: van en la secuencia exacta de ESTA área
 - PROHIBIDO enumerar o anunciar cuántas cosas vienen ("son tres", "el primero", "la segunda")
 - PROHIBIDO que un párrafo empiece un tema nuevo sin engancharlo con el anterior
 - PROHIBIDO encadenar tres frases cortas seguidas. Frases largas unidas por comas
