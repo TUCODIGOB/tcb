@@ -683,12 +683,20 @@ export default async function handler(req, res) {
         var cuerpo=esD?14:(esC?30:12);
         var color=esC?[207,177,128]:(esD?[14,63,75]:[40,40,40]);
         var ancho=(esC||esD)?150:(esE?167:175), alto=esC?13:(esD?7:7);
-        if(esC) ay+=16; else if(esD) ay+=8;
+        if(esD) ay+=8;
         var vieneEscena=pi2>0 && paras[pi2-1] && paras[pi2-1].escena;
         var sigueEscena=pi2+1<paras.length && paras[pi2+1] && paras[pi2+1].escena;
         if(esE && !vieneEscena) { ay+=4; lineaDesde=ay-4.5; }
         doc.setFontSize(cuerpo); doc.setTextColor(color[0],color[1],color[2]);
         var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esD,esE,esC);
+        // EL CIERRE VA SOLO EN SU PAGINA, CENTRADO. Se abre pagina nueva y se
+        // baja hasta la mitad, restando lo que el cierre ocupa.
+        if(esC){
+          addPageNum(pageC);pageC++;areaPageCount++;
+          doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);
+          doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);
+          ay=(H-plines.length*alto)/2;
+        }
         for(var pl2=0;pl2<plines.length;pl2++){
           // La redaccion no baja hasta el numero de pagina: se corta 5 mm antes,
           // que es el aire que tiene que quedar entre el ultimo renglon y el numero.
