@@ -285,6 +285,7 @@ PROHIBICIONES ABSOLUTAS:
 - No decir qué debe hacer la persona
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
 - PROHIBIDO escribir párrafos de más de 7 líneas. Parte en 2 si hace falta
+- UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos. Se cuentan antes de entregar
 - PROHIBIDO enumerar o anunciar cuántas cosas vienen ("son tres", "el primero", "la segunda")
 - PROHIBIDO que un párrafo empiece un tema nuevo sin engancharlo con el anterior
 - PROHIBIDO encadenar tres frases cortas seguidas. Frases largas unidas por comas
