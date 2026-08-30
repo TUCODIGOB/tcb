@@ -644,13 +644,11 @@ export default async function handler(req, res) {
         // LO QUE SE SACA DEL BLOQUE DE TEXTO.
         //
         // Un area seguida es un muro de parrafos iguales y el ojo no descansa.
-        // Se sacan dos cosas y se pintan centradas, mas grandes y en el verde de
-        // la marca: las preguntas que se le hacen al lector, y la frase que el
-        // encargo marca como la que mas golpea. Las dos van solas en su parrafo,
-        // asi que aqui se reconocen por eso y no se parten nunca.
-        var sinMarcas=chunk.replace(/^\*\*/,'').replace(/\*\*$/,'').trim();
-        var esDestacado=!esCierre && (/^¿[\s\S]*\?$/.test(sinMarcas) || /^\*\*[\s\S]+\*\*$/.test(chunk));
-        if(esDestacado){ paras.push({t:sinMarcas,cierre:false,dest:true}); continue; }
+        // Se sacan las preguntas que se le hacen al lector y se pintan centradas,
+        // mas grandes y en el verde de la marca. Van solas en su parrafo, asi que
+        // se reconocen por eso, y no se parten nunca.
+        var esDestacado=!esCierre && /^¿[\s\S]*\?$/.test(chunk);
+        if(esDestacado){ paras.push({t:chunk,cierre:false,dest:true}); continue; }
         // La escena viene marcada con un ">" delante, y va en cursiva con una
         // linea dorada al lado. Se reconoce aqui y tampoco se parte.
         if(!esCierre && /^>\s*/.test(chunk)){ paras.push({t:chunk.replace(/^>\s*/,''),cierre:false,escena:true}); continue; }
