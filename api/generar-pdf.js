@@ -692,17 +692,21 @@ export default async function handler(req, res) {
     //
     // Toda la seccion va dentro de un "if": si las listas no llegan, el informe
     // sale igual, solo que sin estas paginas.
+    // EN EL PDF SOLO SE VEN EL NOMBRE Y LA DESCRIPCION.
+    //
+    // El rasgo sigue llevando su causa, su origen en la carta y su area: eso lo
+    // necesitan las siete areas del informe y se les manda igual desde
+    // api/chat.js. Aqui solo se decide QUE SE DIBUJA, y esas tres cosas no se
+    // dibujan: el cliente no las lee, alargaban las listas tres o cuatro
+    // paginas, y la etiqueta del area acertaba en el noventa por ciento de los
+    // rasgos, asi que una mal puesta cantaba mas de lo que sumaba tenerla.
+    //
     // Lo que ocupa la ficha entera y los renglones ya partidos, para no partirla
     // entre dos paginas: se mide antes de escribir nada.
     function medirFicha(r) {
       doc.setFontSize(12);
       var lDesc = doc.splitTextToSize(fx(r.descripcion), 175);
-      doc.setFontSize(10.5);
-      var lCausa = doc.splitTextToSize(fx(r.causa), 175);
-      doc.setFontSize(8);
-      var lOrigen = doc.splitTextToSize(fx(r.origen), 175);
-      return { desc: lDesc, causa: lCausa, origen: lOrigen,
-               alto: 8 + lDesc.length*5.5 + 2 + lCausa.length*5 + 2 + lOrigen.length*4 + (r.area ? 6 : 0) };
+      return { desc: lDesc, alto: 8 + lDesc.length*5.5 };
     }
 
     // Las dos listas van seguidas: los desafios NO empiezan pagina nueva, siguen
@@ -745,7 +749,7 @@ export default async function handler(req, res) {
         var r = lista[i] || {};
 
         var ficha = medirFicha(r);
-        var lDesc = ficha.desc, lCausa = ficha.causa, lOrigen = ficha.origen;
+        var lDesc = ficha.desc;
         var alto = ficha.alto;
         var divisor = !primeroDeLaPagina;
 
@@ -772,25 +776,6 @@ export default async function handler(req, res) {
         // 2. La descripcion
         doc.setFont('Roboto','normal'); doc.setFontSize(12); doc.setTextColor(40,40,40);
         for (var d = 0; d < lDesc.length; d++) { doc.text(lDesc[d], 18, ry); ry += 5.5; }
-        ry += 2;
-
-        // 3. Por que le pasa
-        doc.setFont('Roboto','normal'); doc.setFontSize(10.5); doc.setTextColor(70,70,70);
-        for (var c = 0; c < lCausa.length; c++) { doc.text(lCausa[c], 18, ry); ry += 5; }
-        ry += 2;
-
-        // 4. De donde sale en la carta. Es el dato que permite comprobar que el
-        //    rasgo no esta inventado.
-        doc.setFont('Roboto','normal'); doc.setFontSize(8); doc.setTextColor(150,140,120);
-        for (var o = 0; o < lOrigen.length; o++) { doc.text(lOrigen[o], 18, ry); ry += 4; }
-
-        // 5. El area del estudio a la que pertenece el rasgo.
-        if (r.area) {
-          ry += 2;
-          doc.setFont('Roboto','bold'); doc.setFontSize(12); doc.setTextColor(207,177,128);
-          doc.text(fx(String(r.area).toUpperCase()), 18, ry);
-          ry += 4;
-        }
 
         primeroDeLaPagina = false;
       }
