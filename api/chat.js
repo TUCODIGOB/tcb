@@ -186,7 +186,7 @@ Cómo se protege cuando se reabre, y qué se está perdiendo por protegerse así
 Qué necesita de verdad en ese momento: ponerle nombre a lo que lleva años sintiendo sin saber decirlo, y qué acaba haciendo con esa necesidad.
 SOLO EN EL ÁREA 5 (AMOR) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cómo es en el amor: cómo se comporta cuando quiere a alguien de verdad, cómo lo demuestra, cuánto se entrega y cuánto se guarda, y qué le pasa con el deseo y con la intimidad.
-Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que no se está dando.
+Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que no se está dando. Esto NO es lo mismo que lo que a ella le engancha, que va en el punto siguiente: aquí se cuenta a quién atrae ella, aunque no lo busque, y los dos puntos se cuentan enteros.
 Qué necesita de la otra persona para sentirse querida y qué le enamora: lo que le hace falta para bajar la guardia, y lo que la engancha de alguien, que no siempre es lo mismo.
 Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué hace ahí sin darse cuenta.
 Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
@@ -198,6 +198,8 @@ SOLO EN EL ÁREA 7 (DINERO) este punto cubre tres cosas, cada una sacada de su c
 Qué significa el dinero para esa persona y qué le mueve a ganarlo: qué representa de verdad en su cabeza, más allá de los números, y qué es lo que la empuja a querer más o a conformarse.
 Qué hace con él cuando lo tiene: cómo lo gasta, cómo toma las decisiones de dinero, y cómo lleva el riesgo cuando hay algo en juego.
 Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo con el que se encuentra una y otra vez, incluido lo que hace en el trabajo cuando toca pedir o cobrar lo que vale, y qué le ocurre justo cuando las cosas empiezan a salirle.
+
+ESOS PUNTOS NO SE SALTAN NI SE FUNDEN ENTRE ELLOS. Si a un área le tocan cuatro, se cuentan los cuatro, y si le tocan tres, los tres. Cada uno con su sitio y su desarrollo: si terminas un área y uno de sus puntos no está contado, o está resuelto de pasada dentro de otro, el área no está terminada y la repasas antes de entregarla.
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, no siempre en el mismo sitio.
 
