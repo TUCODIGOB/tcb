@@ -1111,16 +1111,52 @@ function comoSeCompara(titulo) {
   return sinTildes(titulo).replace(/[^a-z0-9ñ ]/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
+// Las palabras que no dicen nada. Sin ellas, dos titulos que solo se
+// diferencian en un "que" o un "en" se ven por lo que son: el mismo.
+const PALABRAS_SIN_PESO = new Set([
+  'a', 'al', 'ante', 'como', 'con', 'cuando', 'de', 'del', 'desde', 'donde',
+  'el', 'ella', 'en', 'entre', 'es', 'esa', 'ese', 'esta', 'este', 'hasta',
+  'la', 'las', 'lo', 'los', 'mas', 'me', 'mi', 'mis', 'muy', 'ni', 'no', 'o',
+  'para', 'pero', 'por', 'que', 'se', 'si', 'sin', 'sobre', 'solo', 'su',
+  'sus', 'tan', 'te', 'ti', 'tu', 'tus', 'un', 'una', 'uno', 'y', 'ya',
+]);
+
+function palabrasConPeso(titulo) {
+  return new Set(comoSeCompara(titulo).split(' ').filter(p => p && !PALABRAS_SIN_PESO.has(p)));
+}
+
+// DOS TITULOS QUE SON EL MISMO RASGO.
+//
+// Antes solo se veian los identicos letra por letra. En el informe 116 salieron
+// "te cuesta pedir lo que NECESITAS en pareja" y "te cuesta pedir lo que
+// QUIERES en pareja": el mismo rasgo con una palabra cambiada, y paso. En el
+// 112 paso lo mismo con "aguantas la PRESION mejor que la mayoria" y "aguantas
+// la INCERTIDUMBRE mejor que la mayoria".
+//
+// Son el mismo cuando tienen las mismas palabras con peso salvo una. Se exige
+// que sean las MISMAS CUANTAS a proposito, para no confundir dos rasgos
+// distintos que empiezan igual: "te cuesta soltar el control cuando algo no
+// depende de ti" y "te cuesta soltar el control sobre tus finanzas
+// compartidas" comparten tres palabras, no son el mismo rasgo, y con esta
+// cuenta no se tocan.
+function esElMismoTitulo(a, b) {
+  if (a.size !== b.size || a.size < 3) return false;
+  let comunes = 0;
+  for (const p of a) if (b.has(p)) comunes++;
+  return comunes >= a.size - 1;
+}
+
 function sinTituloRepetido(fortalezas, desafios) {
-  const vistos = new Set();
+  const vistos = [];
   const cribar = lista => lista.filter(r => {
     const t = comoSeCompara(r && r.nombre);
     if (!t) return true;
-    if (vistos.has(t)) {
+    const palabras = palabrasConPeso(r.nombre);
+    if (vistos.some(v => v.texto === t || esElMismoTitulo(v.palabras, palabras))) {
       console.warn(`Se quita un rasgo con el titulo repetido: ${r.nombre}`);
       return false;
     }
-    vistos.add(t);
+    vistos.push({ texto: t, palabras });
     return true;
   });
   // Las fortalezas primero, que es el orden en que van en el informe.
