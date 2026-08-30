@@ -150,6 +150,9 @@ ESTILO DE ESCRITURA:
 - No empieces dos párrafos con la misma estructura. Varía los arranques
 - NO SE ESCRIBE "tu manera de", "tu forma de", "tu capacidad de", "una necesidad de", "una tendencia a", "una parte de ti" ni "la parte de ti que". Convierten en cosa lo que ella hace, y quien lee tiene que volver atrás para entenderlo. Donde salga uno de esos, se dice con un verbo lo que hace ella
 - SE LE PONE SU VOZ: lo que se dice a sí misma por dentro cuando le pasa eso, dicho con las palabras que usaría ella y no con las de quien la observa. Eso es lo que hace que se reconozca. Sale de lo que ya se ha contado, no de suponerle nada
+- PRIMERO LA IDEA EN CLARO, DESPUÉS EL ADORNO. Cada cosa que le cuentes se dice antes en seco: qué hace, qué le pasa o cómo se le nota, con palabras que se puedan agarrar. La imagen, la comparación o la frase bonita va DETRÁS, como remate de lo que ya has dicho claro, nunca en su lugar.
+- PROHIBIDO CONTAR ALGO SOLO CON UNA SENSACIÓN. Si al leer una frase no se sabe qué hace ella o qué le pasa exactamente, esa frase no vale y se reescribe diciéndolo. Describir cómo se siente algo no es contar qué es.
+- PROHIBIDO DECIR DOS VECES LA MISMA IDEA CON OTRA ROPA. Si el párrafo siguiente cuenta lo mismo que el anterior cambiando las palabras, sobra: o dice algo nuevo, o no va. Eso es lo que hace que parezcan muchas ideas cuando hay una.
 - Escribe como un humano, no como una IA: menos puntos, más comas, frases que fluyen
 - CADA FRASE TIENE QUE SONAR COMO HABLA UNA PERSONA DE VERDAD. Antes de dar una frase por buena, léela en voz alta por dentro: si nadie la diría hablando, está mal y se reescribe. No fuerces la gramática para que suene elaborado, y no cojas un verbo raro cuando el normal dice lo mismo. Lo que suena a literatura no emociona, distrae: el lector tropieza, sale del texto y deja de reconocerse.
 - Vigila especialmente la primera frase del área. Si el lector tropieza ahí, ya no entra.
