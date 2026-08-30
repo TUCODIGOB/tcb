@@ -238,7 +238,7 @@ ESOS PUNTOS NO SE SALTAN NI SE FUNDEN ENTRE ELLOS. Si a un área le tocan cuatro
 
 ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, y ahí nunca es el primer bloque ni el último: no abre el área ni la cierra.
 
-ORIGEN — POR QUÉ ES ASÍ, con puente causal explícito hasta lo que hace hoy. No basta con decir que le pasa: tienes que unir causa y efecto para que entienda el PORQUÉ y no solo el qué. Qué hay dentro de ella que produce eso, cómo funciona ese mecanismo y qué hace hoy exactamente por funcionar así.
+ORIGEN — POR QUÉ ES ASÍ, con puente causal explícito hasta lo que hace hoy. Es el porqué de SUS DESAFÍOS, de dónde le nacen, y solo de ellos. No basta con decir que le pasa: tienes que unir causa y efecto para que entienda el PORQUÉ y no solo el qué. Qué hay dentro de ella que produce eso, cómo funciona ese mecanismo y qué hace hoy exactamente por funcionar así.
 UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges la que mejor lo explique todo y la desarrollas a fondo. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de esa única explicación salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra distinta.
 
 CREENCIAS — LO QUE SOSTIENE EL PATRÓN, Y QUÉ SE LE ABRE SI CAE. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Va una por cada desafío que hayas contado en esta área, y cuando dos se apoyan en la misma, se dice una sola vez y no se repite. Y de cada una se dice también qué se le abre en su vida el día que caiga: qué deja de pasarle, qué puede hacer que hoy no hace. Eso NO es decirle cómo soltarla: ni pasos, ni ejercicios, ni plan, ni "empieza por", ni por dónde. El cómo es otro producto y aquí sobra. Después de HOY, es el punto que más sitio ocupa.
@@ -288,6 +288,7 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO escribir párrafos de más de 7 líneas. Parte en 2 si hace falta
 - UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos. Se cuentan antes de entregar
 - PROHIBIDO cambiar el orden de los cinco bloques: van en la secuencia exacta de ESTA área
+- PROHIBIDO explicar de dónde nace una fortaleza. El porqué es solo de los desafíos: la fortaleza se cuenta y ya. De los desafíos tienes el porqué escrito abajo; de las fortalezas no lo tienes, así que cualquiera que escribas te lo estarías inventando
 - PROHIBIDO enumerar o anunciar cuántas cosas vienen ("son tres", "el primero", "la segunda")
 - PROHIBIDO que un párrafo empiece un tema nuevo sin engancharlo con el anterior
 - PROHIBIDO encadenar tres frases cortas seguidas. Frases largas unidas por comas
