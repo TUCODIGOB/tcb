@@ -637,6 +637,16 @@ export default async function handler(req, res) {
       for(var rp=0;rp<rawParas.length;rp++){
         var chunk=rawParas[rp].trim();
         var esCierre=(rp===idxCierre);
+        // LO QUE SE SACA DEL BLOQUE DE TEXTO.
+        //
+        // Un area seguida es un muro de parrafos iguales y el ojo no descansa.
+        // Se sacan dos cosas y se pintan centradas, mas grandes y en el verde de
+        // la marca: las preguntas que se le hacen al lector, y la frase que el
+        // encargo marca como la que mas golpea. Las dos van solas en su parrafo,
+        // asi que aqui se reconocen por eso y no se parten nunca.
+        var sinMarcas=chunk.replace(/^\*\*/,'').replace(/\*\*$/,'').trim();
+        var esDestacado=!esCierre && (/^¿[\s\S]*\?$/.test(sinMarcas) || /^\*\*[\s\S]+\*\*$/.test(chunk));
+        if(esDestacado){ paras.push({t:sinMarcas,cierre:false,dest:true}); continue; }
         if(chunk.length>500){
           var sentences=chunk.split(/(?<=\.)\s+/);
           var trozos=[],group='',sCount=0;
@@ -656,12 +666,15 @@ export default async function handler(req, res) {
       for(var pi2=0;pi2<paras.length;pi2++){
         if(!paras[pi2]||!paras[pi2].t) continue;
         var esC=paras[pi2].cierre;
+        var esD=paras[pi2].dest;
         // El cierre es la frase que el lector se lleva puesta: se saca del
         // bloque de texto y se pinta en negrita dorada, centrada y con aire.
-        var cuerpo=esC?14:12;
-        var color=esC?[207,177,128]:[40,40,40];
-        var ancho=esC?150:175, alto=esC?8:7;
-        if(esC) ay+=8;
+        // Los destacados van igual de centrados y de grandes, pero en el verde
+        // de la marca y sin negrita, que son del cuerpo del area y no el final.
+        var cuerpo=esD?16:(esC?14:12);
+        var color=esC?[207,177,128]:(esD?[14,63,75]:[40,40,40]);
+        var ancho=(esC||esD)?150:175, alto=(esC||esD)?8:7;
+        if(esC||esD) ay+=8;
         doc.setFontSize(cuerpo); doc.setTextColor(color[0],color[1],color[2]);
         var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esC);
         for(var pl2=0;pl2<plines.length;pl2++){
@@ -669,14 +682,14 @@ export default async function handler(req, res) {
           // que es el aire que tiene que quedar entre el ultimo renglon y el numero.
           if(ay>H-16-AIRE_SOBRE_NUMERO){addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);ay=60;}
           var lin=plines[pl2];
-          var cx=esC?(105-anchoLinea(lin,cuerpo,esC)/2):18;
+          var cx=(esC||esD)?(105-anchoLinea(lin,cuerpo,esC)/2):18;
           for(var wi=0;wi<lin.length;wi++){
             if(!lin[wi].esp){ doc.setFont('Roboto',(esC||lin[wi].b)?'bold':'normal'); doc.text(lin[wi].t,cx,ay); }
             cx+=anchoPalabra(lin[wi],cuerpo,esC);
           }
           ay+=alto;
         }
-        ay+=esC?8:4;
+        ay+=(esC||esD)?8:4;
       }
       if(areaPageCount<2){addPageNum(pageC);pageC++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);}
       addPageNum(pageC); pageC++;
