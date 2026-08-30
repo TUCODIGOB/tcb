@@ -670,6 +670,9 @@ export default async function handler(req, res) {
       }
       doc.addPage(); doc.addImage(img_areas[ai2],'JPEG',0,0,W,H);
       var ay=60, areaPageCount=1;
+      // La raya dorada de la escena es UNA para toda ella, no una por parrafo:
+      // se guarda aqui donde arranco y se dibuja cuando la escena se acaba.
+      var lineaDesde=0;
       for(var pi2=0;pi2<paras.length;pi2++){
         if(!paras[pi2]||!paras[pi2].t) continue;
         var esC=paras[pi2].cierre;
@@ -679,16 +682,15 @@ export default async function handler(req, res) {
         // bloque de texto y se pinta en negrita dorada, centrada y con aire.
         // Los destacados van igual de centrados y de grandes, pero en el verde
         // de la marca y sin negrita, que son del cuerpo del area y no el final.
-        var cuerpo=esD?16:(esC?22:12);
+        var cuerpo=esD?14:(esC?30:12);
         var color=esC?[207,177,128]:(esD?[14,63,75]:[40,40,40]);
-        var ancho=(esC||esD)?150:(esE?167:175), alto=esC?10:(esD?8:7);
-        if(esC||esD) ay+=8;
-        if(esE) ay+=4;
-        // Donde arranca la linea dorada de la escena. Se guarda antes de pintar
-        // el primer renglon y se dibuja al acabar, para que mida lo que ocupa.
-        var lineaDesde=esE?ay-4.5:0;
+        var ancho=(esC||esD)?150:(esE?167:175), alto=esC?13:(esD?7:7);
+        if(esC) ay+=16; else if(esD) ay+=8;
+        var vieneEscena=pi2>0 && paras[pi2-1] && paras[pi2-1].escena;
+        var sigueEscena=pi2+1<paras.length && paras[pi2+1] && paras[pi2+1].escena;
+        if(esE && !vieneEscena) { ay+=4; lineaDesde=ay-4.5; }
         doc.setFontSize(cuerpo); doc.setTextColor(color[0],color[1],color[2]);
-        var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esC,esE,esC);
+        var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esD,esE,esC);
         for(var pl2=0;pl2<plines.length;pl2++){
           // La redaccion no baja hasta el numero de pagina: se corta 5 mm antes,
           // que es el aire que tiene que quedar entre el ultimo renglon y el numero.
@@ -699,15 +701,16 @@ export default async function handler(req, res) {
             addPageNum(pageC);pageC++;areaPageCount++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);doc.setFontSize(cuerpo);doc.setTextColor(color[0],color[1],color[2]);ay=60;
           }
           var lin=plines[pl2];
-          var cx=(esC||esD)?(105-anchoLinea(lin,cuerpo,esC,false,esC)/2):(esE?26:18);
+          var cx=(esC||esD)?(105-anchoLinea(lin,cuerpo,esD,false,esC)/2):(esE?26:18);
           for(var wi=0;wi<lin.length;wi++){
-            if(!lin[wi].esp){ if(esC){doc.setFont('Italianno','normal');} else {doc.setFont('Roboto',esE?'italic':(lin[wi].b?'bold':'normal'));} doc.text(lin[wi].t,cx,ay); }
-            cx+=anchoPalabra(lin[wi],cuerpo,esC,esE,esC);
+            if(!lin[wi].esp){ if(esC){doc.setFont('Italianno','normal');} else {doc.setFont('Roboto',esE?'italic':((esD||lin[wi].b)?'bold':'normal'));} doc.text(lin[wi].t,cx,ay); }
+            cx+=anchoPalabra(lin[wi],cuerpo,esD,esE,esC);
           }
           ay+=alto;
         }
-        if(esE){ doc.setDrawColor(207,177,128); doc.setLineWidth(0.8); doc.line(18,lineaDesde,18,ay-alto+2); }
-        ay+=(esC||esD)?8:(esE?8:4);
+        if(esE && !sigueEscena){ doc.setDrawColor(207,177,128); doc.setLineWidth(0.8); doc.line(18,lineaDesde,18,ay-alto+2); }
+        // 4. Y mas aire entre parrafos, que iban demasiado juntos.
+        ay+=(esC||esD)?8:(esE&&sigueEscena?6:7);
       }
       if(areaPageCount<2){addPageNum(pageC);pageC++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);}
       addPageNum(pageC); pageC++;
