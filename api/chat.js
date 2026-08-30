@@ -7,6 +7,37 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // no pueda escribir nunca; ver la nota donde se usa.
 const SEPARADOR_AREAS = '\u001F';
 
+// EL RELOJ DE LA PETICION.
+//
+// Vercel corta esta funcion a los 300 segundos y devuelve un 504: el cliente ve
+// "no hemos podido terminar tu estudio" y se queda sin informe habiendo pagado.
+//
+// Ninguna llamada llevaba tope de tiempo. Una que se quedaba colgada -en el
+// informe 116 una estuvo 189 segundos sin contestar- no fallaba nunca, asi que
+// el reintento tampoco llegaba a saltar: se comia el presupuesto entero y la
+// funcion moria con el informe a medias.
+//
+// El reloj arranca al entrar la peticion y hace dos cosas:
+//   - le pone tope a cada llamada, y nunca mas de lo que quede de presupuesto,
+//     para que una colgada se corte sola y entre el reintento;
+//   - deja saltarse los pasos que solo pulen (reescribir un rasgo que nombra la
+//     carta, rellenar un area corta) cuando ya no queda tiempo para ellos y
+//     para las siete areas. Vale mas el informe entero que un rasgo mejor.
+//
+// No añade ni una llamada: las quita cuando el tiempo aprieta.
+const TOPE_DE_LA_PETICION = 285000; // 15 segundos por debajo del corte de Vercel
+
+function crearReloj(margen = TOPE_DE_LA_PETICION) {
+  const fin = Date.now() + margen;
+  return {
+    quedan: () => fin - Date.now(),
+    // El tope de una llamada: el suyo, o lo que quede si queda menos.
+    senal: tope => AbortSignal.timeout(Math.max(1000, Math.min(tope, fin - Date.now()))),
+    // Un paso opcional solo se pide si caben sus segundos y los que vienen detras.
+    hayTiempoPara: segundos => (fin - Date.now()) > segundos * 1000,
+  };
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -15,6 +46,9 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // El reloj empieza aqui, con la peticion, no cuando se llama al modelo.
+  const reloj = crearReloj();
 
   const { session_id } = req.body;
 
@@ -345,6 +379,9 @@ ${cartaTexto}`;
   async function pedirArea(area, rasgos) {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
+      // Un area tarda entre 20 y 40 segundos. Pasado el minuto y medio no esta
+      // tardando: esta colgada, y vale mas cortarla y volver a pedirla.
+      signal: reloj.senal(90000),
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': process.env.ANTHROPIC_API_KEY,
@@ -422,7 +459,7 @@ ${cartaTexto}`;
     // de las siete areas recibe el mismo texto de siempre, sin una letra de
     // mas: lo suyo se arma arriba con cartaTexto a secas.
     const cartaConLasCasas = casasTexto ? `${cartaTexto}\n\n${casasTexto}` : cartaTexto;
-    const rasgos = await sacarRasgos(nombrePila, sexo, cartaConLasCasas, INTENTOS_POR_AREA);
+    const rasgos = await sacarRasgos(nombrePila, sexo, cartaConLasCasas, INTENTOS_POR_AREA, reloj);
 
     // Despues, las 7 areas a la vez.
     const resultados = await Promise.all(
@@ -665,7 +702,7 @@ function areaPorLaPosicion(origen) {
   return '';
 }
 
-async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto, soloEstas, aReescribir) {
+async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto, soloEstas, aReescribir, reloj) {
   const trato = sexo === 'mujer'
     ? 'una MUJER. Todo en femenino.'
     : sexo === 'hombre'
@@ -818,6 +855,9 @@ Nombre de pila: ${nombrePila}`;
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
+    // Una lista tarda menos de un minuto. Pasados cien segundos no esta
+    // tardando: esta colgada, y el reintento hace mas que seguir esperando.
+    signal: reloj.senal(100000),
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': process.env.ANTHROPIC_API_KEY,
@@ -898,11 +938,11 @@ Nombre de pila: ${nombrePila}`;
 // Si falla la de desafios, se vuelve a pedir solo esa: la de fortalezas ya
 // estaba bien y no se tira ni se paga dos veces. Es exactamente lo que hace
 // generarArea con cada una de las siete areas.
-async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto, INTENTOS) {
+async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   let ultimoError;
   for (let intento = 1; intento <= INTENTOS; intento++) {
     try {
-      return await pedirUnaLista(cual, nombrePila, sexo, cartaTexto);
+      return await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, null, null, reloj);
     } catch (err) {
       ultimoError = err;
       // Un corte de red llega sin marca; se trata como temporal.
@@ -959,14 +999,22 @@ function hablaDeAstrologia(rasgo) {
 // Tirarlo seria perder lo bueno, asi que se le devuelven esos rasgos y se le
 // pide que reescriban SOLO esa frase, con el mismo nombre y el mismo origen.
 // Si alguno vuelve nombrandola otra vez, ese si se cae.
-async function sinNombrarLaCarta(cual, nombrePila, sexo, cartaTexto, lista) {
+async function sinNombrarLaCarta(cual, nombrePila, sexo, cartaTexto, lista, reloj) {
   const sucios = lista.filter(hablaDeAstrologia);
   if (sucios.length === 0) return lista;
+
+  // Esto solo pule. Si no quedan tiempo para esta llamada y para todo lo que
+  // viene detras, se deja: el filtro de mas abajo quita esos rasgos y el
+  // informe sale. Perder un rasgo es menos malo que perder el informe.
+  if (!reloj.hayTiempoPara(190)) {
+    console.warn(`Lista de ${cual}: ${sucios.length} rasgos nombraban la carta, no da tiempo a reescribirlos`);
+    return lista;
+  }
 
   console.warn(`Lista de ${cual}: ${sucios.length} rasgos nombraban la carta, se piden reescritos`);
   let arreglados;
   try {
-    arreglados = await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, null, sucios);
+    arreglados = await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, null, sucios, reloj);
   } catch (err) {
     console.error(`Lista de ${cual}: no se pudo reescribir: ${err.message.slice(0, 80)}`);
     return lista;
@@ -988,7 +1036,7 @@ async function sinNombrarLaCarta(cual, nombrePila, sexo, cartaTexto, lista) {
 // lo normal, esto no gasta ni una llamada.
 const MINIMO_POR_AREA = { fortalezas: 2, desafios: 2 };
 
-async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda) {
+async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda, reloj) {
   // Fuera los que nombran la carta a la clienta. Si al quitarlos algun area se
   // queda corta, el relleno de aqui abajo la vuelve a pedir; no hace falta
   // ninguna llamada nueva para esto.
@@ -1001,9 +1049,16 @@ async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda
   const faltan = NOMBRES_DE_AREA.filter(a => lista.filter(r => r.area === a).length < minimo);
   if (faltan.length === 0) return lista;
 
+  // Igual que la reescritura: si no cabe esta llamada y las siete areas
+  // detras, se entrega el area corta antes que quedarse sin informe.
+  if (!reloj.hayTiempoPara(110)) {
+    console.warn(`Lista de ${cual}: no llega al minimo en ${faltan.join(', ')}, no da tiempo a completarlo`);
+    return lista;
+  }
+
   console.warn(`Lista de ${cual}: no llega al minimo en ${faltan.join(', ')}, se piden aparte`);
   try {
-    const extra = await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, faltan);
+    const extra = await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, faltan, null, reloj);
     return lista.concat(extra.filter(r => faltan.includes(r.area) && !hablaDeAstrologia(r)));
   } catch (err) {
     // Si esta segunda peticion falla, se entrega lo que ya habia: vale mas el
@@ -1120,7 +1175,7 @@ const ESQUEMA_AREAS = {
   additionalProperties: false,
 };
 
-async function porLoQueDiceElRasgo(rasgos, cuantasFortalezas) {
+async function porLoQueDiceElRasgo(rasgos, cuantasFortalezas, reloj) {
   if (rasgos.length === 0) return { rasgos, sobran: new Set() };
 
   const listado = rasgos
@@ -1130,14 +1185,17 @@ async function porLoQueDiceElRasgo(rasgos, cuantasFortalezas) {
   // Cual esta mal lo decide el codigo contando, no el modelo. El modelo solo
   // escribe lo nuevo, que eso si es cosa suya.
   const aArreglar = [];
+  const pedidos = new Set();
   for (let i = 0; i < rasgos.length; i++) {
     const n = nombreQueNoVale(rasgos[i]);
-    if (n) aArreglar.push(`- el nombre del ${i + 1}, que ${n}`);
+    if (n) { aArreglar.push(`- el nombre del ${i + 1}, que ${n}`); pedidos.add(i); }
   }
   if (aArreglar.length > 0) console.warn(`Mal puestos: ${aArreglar.length} nombres de ${rasgos.length} rasgos`);
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
+    // Esta es la llamada corta de las tres. Pasados setenta segundos, colgada.
+    signal: reloj.senal(70000),
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': process.env.ANTHROPIC_API_KEY,
@@ -1198,6 +1256,13 @@ Haces dos cosas.
       const i = Number(x && x.numero) - 1;
       const nuevo = String((x && x.nombre) || '').trim();
       if (!Number.isInteger(i) || i < 0 || i >= rasgos.length) continue;
+      // SOLO SE CAMBIA LO QUE SE HA PEDIDO CAMBIAR.
+      //
+      // Cual esta mal lo cuenta el codigo, y aun asi aqui se aceptaba cualquier
+      // numero que devolviera. En el informe 116 se pidieron unos pocos y se
+      // reescribieron 19 nombres: rasgos que estaban bien salieron con otro
+      // titulo, escrito sin haberlo mirado nadie.
+      if (!pedidos.has(i)) continue;
       if (!nuevo || nombreQueNoVale({ nombre: nuevo })) continue;
       renombrados.set(i, nuevo);
     }
@@ -1241,11 +1306,11 @@ Haces dos cosas.
 // 429 de los que salen cuando hay siete peticiones a la vez dejaba los rasgos
 // con el area de su caja sin que se notara, que es justo lo que se arregla
 // aqui. Si aun asi no sale, el informe se entrega con las areas de las cajas.
-async function conElAreaDeLoQueDice(rasgos, cuantasFortalezas, INTENTOS) {
+async function conElAreaDeLoQueDice(rasgos, cuantasFortalezas, INTENTOS, reloj) {
   let ultimoError;
   for (let intento = 1; intento <= INTENTOS; intento++) {
     try {
-      return await porLoQueDiceElRasgo(rasgos, cuantasFortalezas);
+      return await porLoQueDiceElRasgo(rasgos, cuantasFortalezas, reloj);
     } catch (err) {
       ultimoError = err;
       // Un corte de red llega sin marca; se trata como temporal.
@@ -1261,13 +1326,13 @@ async function conElAreaDeLoQueDice(rasgos, cuantasFortalezas, INTENTOS) {
 // Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
 // mismo que antes escribia una sola, pero tardan la mitad porque van en
 // paralelo, igual que las siete areas.
-async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
+async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   // 1. Las dos listas, a la vez, y sin nombrarle la carta a quien lo lee.
   let [fortalezas, desafios] = await Promise.all([
-    sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS)
-      .then(l => sinNombrarLaCarta('fortalezas', nombrePila, sexo, cartaTexto, l)),
-    sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS)
-      .then(l => sinNombrarLaCarta('desafios', nombrePila, sexo, cartaTexto, l)),
+    sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS, reloj)
+      .then(l => sinNombrarLaCarta('fortalezas', nombrePila, sexo, cartaTexto, l, reloj)),
+    sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS, reloj)
+      .then(l => sinNombrarLaCarta('desafios', nombrePila, sexo, cartaTexto, l, reloj)),
   ]);
 
   // 2. Ya escritos, se les pone el area de lo que dicen, y se quita lo que se
@@ -1283,9 +1348,12 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
   //    Si falla, cada rasgo se queda con el area de su caja, no se quita nada y
   //    el informe sale igual.
   try {
+    // Tambien esta se salta si ya no cabe con las siete areas detras: sin ella
+    // cada rasgo se queda con el area de su caja y el informe sale igual.
+    if (!reloj.hayTiempoPara(90)) throw new Error('no da tiempo, se deja el area de cada caja');
     const cuantasFortalezas = fortalezas.length;
     const { rasgos: todos, sobran } = await conElAreaDeLoQueDice(
-      fortalezas.concat(desafios), cuantasFortalezas, INTENTOS);
+      fortalezas.concat(desafios), cuantasFortalezas, INTENTOS, reloj);
     if (sobran.size > 0) console.warn(`Se quitan ${sobran.size} rasgos que se pisaban con otro`);
     const buenos = todos.filter((r, i) => !sobran.has(i));
     // El corte se hace por la lista de la que venia cada uno, no por el numero,
@@ -1300,8 +1368,8 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS) {
   // 3. Y con las areas ya en su sitio, se comprueba el minimo. En este orden,
   //    porque mover un rasgo de area puede dejar la de origen corta.
   [fortalezas, desafios] = await Promise.all([
-    conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, fortalezas),
-    conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, desafios),
+    conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, fortalezas, reloj),
+    conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, desafios, reloj),
   ]);
 
   // 3b. Y fuera el que repite el titulo de otro. Va DESPUES del minimo, no
@@ -1340,6 +1408,8 @@ async function enviarEmailAdmin({ asunto, mensaje }) {
 
   await fetch('https://api.brevo.com/v3/smtp/email', {
     method: 'POST',
+    // Un aviso que no sale no puede costarle el informe a nadie.
+    signal: AbortSignal.timeout(10000),
     headers: {
       'accept': 'application/json',
       'content-type': 'application/json',
