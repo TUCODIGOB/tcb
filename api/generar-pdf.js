@@ -652,7 +652,9 @@ export default async function handler(req, res) {
         // La escena viene marcada con un ">" delante, y va en cursiva con una
         // linea dorada al lado. Se reconoce aqui y tampoco se parte.
         if(!esCierre && /^>\s*/.test(chunk)){ paras.push({t:chunk.replace(/^>\s*/,''),cierre:false,escena:true}); continue; }
-        if(chunk.length>500){
+        // EL CIERRE NO SE PARTE NUNCA: va entero en su propia pagina,
+        // asi que aunque sea largo se queda como un solo parrafo.
+        if(chunk.length>500 && !esCierre){
           var sentences=chunk.split(/(?<=\.)\s+/);
           var trozos=[],group='',sCount=0;
           for(var si2=0;si2<sentences.length;si2++){
