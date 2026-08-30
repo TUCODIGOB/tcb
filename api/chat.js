@@ -780,6 +780,10 @@ descripcion  TRES RENGLONES COMO MUCHO, que son unos doscientos sesenta
 
 causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              lo que quiere saber. Dos o tres frases.
+             ABRE NOMBRANDO LA CAUSA, no describiendo otra vez lo que le pasa:
+             "esto sale porque...", "esto viene de que...", "lo que hay detras
+             es que...". Abrir con lo que hace o lo que siente es lo que hace
+             que la causa acabe siendo el rasgo dicho de otra manera.
              NO REPITE EL RASGO CON OTRAS PALABRAS. Lo que hace y como se le
              nota ya esta arriba, en la descripcion. Aqui se dice que hay
              DETRAS que lo produce, el mecanismo del que sale.
