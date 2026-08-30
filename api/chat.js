@@ -1401,19 +1401,22 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
     console.error(`No se pudo poner el area por lo que dice el rasgo: ${err.message.slice(0, 90)}`);
   }
 
-  // 3. Y con las areas ya en su sitio, se comprueba el minimo. En este orden,
-  //    porque mover un rasgo de area puede dejar la de origen corta.
+  // 3. Fuera el que repite el titulo de otro. Va ANTES del minimo, no despues:
+  //    quitar un repetido puede dejar un area con un rasgo, y el minimo es el
+  //    paso que la vuelve a llenar. Al reves, el area se quedaba corta y asi se
+  //    entregaba. En el informe 114 habria pasado justo eso en DINERO.
+  //
+  //    Casi nunca cuesta nada: solo se pide relleno si al quitar el repetido un
+  //    area baja del minimo, que es lo que el encargo pide de todas formas.
+  [fortalezas, desafios] = sinTituloRepetido(fortalezas, desafios);
+
+  // 3b. Y con las areas ya en su sitio y sin repetidos, se comprueba el minimo.
+  //     En este orden, porque mover un rasgo de area, o quitar uno repetido,
+  //     puede dejar la de origen corta.
   [fortalezas, desafios] = await Promise.all([
     conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, fortalezas, reloj),
     conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, desafios, reloj),
   ]);
-
-  // 3b. Y fuera el que repite el titulo de otro. Va DESPUES del minimo, no
-  //     antes: puesto antes, quitar un repetido podia dejar un area corta y
-  //     disparar la peticion de relleno, que es una llamada mas y mas tiempo.
-  //     Asi no gasta nada nunca. El precio es que un area puede quedarse con un
-  //     rasgo en vez de dos, y vale mas eso que el mismo titulo dos veces.
-  [fortalezas, desafios] = sinTituloRepetido(fortalezas, desafios);
 
   // 4. Y se ordenan por area. Salian agrupadas porque se escriben caja por
   //    caja, pero al cambiarle el area a un rasgo, y al añadir los del relleno

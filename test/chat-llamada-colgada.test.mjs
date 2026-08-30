@@ -102,19 +102,43 @@ process.env.ANTHROPIC_API_KEY = 'sk-ant-test';
 process.env.BREVO_API_KEY = '';
 
 // ── 3. El modelo de mentira.
-const rasgoDe = (origen, n) => ({
-  nombre: `Aguante fuera de lo normal ${n}`, descripcion: 'Sigues de pie donde otros se bajan.',
+// Cada rasgo con su titulo, distintos entre si: dos titulos que dicen lo mismo
+// los quita el filtro de repetidos, el area se queda bajo el minimo y se pide
+// relleno, que es una llamada mas y aqui se cuentan llamadas.
+const TITULOS = {
+  Fortaleza: [
+    'Aguantas cuando todo aprieta', 'Miras de frente lo incomodo',
+    'Decides rapido y sin ruido', 'Cuidas los detalles pequenos',
+    'Sostienes a quien se cae', 'Aprendes de cada golpe',
+    'Hablas claro sin herir a nadie', 'Guardas la calma en la tormenta',
+    'Empujas los proyectos hasta el final', 'Notas lo que nadie dice',
+    'Repartes tu tiempo con cabeza', 'Levantas el animo de tu gente',
+    'Ahorras pensando en manana', 'Negocias sin perder la forma',
+  ],
+  Desafio: [
+    'Te callas lo que te duele', 'Aplazas las conversaciones dificiles',
+    'Cargas con lo que no te toca', 'Dudas de lo que ya sabes',
+    'Buscas aprobacion antes de moverte', 'Te exiges mas de la cuenta',
+    'Huyes del conflicto abierto', 'Escondes lo que necesitas',
+    'Controlas hasta lo que no depende de ti', 'Postergas los cierres',
+    'Te comparas con quien no deberias', 'Gastas energia en agradar',
+    'Temes quedarte sin nada', 'Confundes ayudar con salvar',
+  ],
+};
+const rasgoDe = (origen, i, lista) => ({
+  nombre: TITULOS[lista][i], descripcion: 'Sigues de pie donde otros se bajan.',
   causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen,
 });
-const caja = (a, b) => [rasgoDe(a, 1), rasgoDe(b, 2)];
-const LISTAS = JSON.stringify({
-  IDENTIDAD:  caja('Sol en Aries casa 1', 'Ascendente en Aries'),
-  PATRONES:   caja('Nodo Norte en Acuario', 'casa 9 en Aries'),
-  MIEDOS:     caja('Saturno en Acuario casa 12', 'Neptuno en Acuario'),
-  HERIDA:     caja('Luna en Aries casa 4', 'Quiron en Acuario'),
-  AMOR:       caja('Venus en Acuario', 'casa 5 en Aries'),
-  RELACIONES: caja('Mercurio en Aries', 'casa 11 en Acuario'),
-  DINERO:     caja('casa 2 en Aries', 'casa 10 en Acuario'),
+const caja = (a, b, i, l) => [rasgoDe(a, i, l), rasgoDe(b, i + 1, l)];
+// Las dos listas escriben titulos distintos, como en la realidad.
+const listas = l => JSON.stringify({
+  IDENTIDAD:  caja('Sol en Aries casa 1', 'Ascendente en Aries', 0, l),
+  PATRONES:   caja('Nodo Norte en Acuario', 'casa 9 en Aries', 2, l),
+  MIEDOS:     caja('Saturno en Acuario casa 12', 'Neptuno en Acuario', 4, l),
+  HERIDA:     caja('Luna en Aries casa 4', 'Quiron en Acuario', 6, l),
+  AMOR:       caja('Venus en Acuario', 'casa 5 en Aries', 8, l),
+  RELACIONES: caja('Mercurio en Aries', 'casa 11 en Acuario', 10, l),
+  DINERO:     caja('casa 2 en Aries', 'casa 10 en Acuario', 12, l),
 });
 
 let llamadas = 0, sinSenal = 0, colgarLaPrimera = false, yaColgada = false;
@@ -126,11 +150,12 @@ globalThis.fetch = async (url, opciones) => {
   llamadas++;
   if (!opciones || !opciones.signal) sinSenal++;
 
-  let esLista = false, esClasificar = false, cuantos = 0;
+  let esLista = false, esClasificar = false, cuantos = 0, cualLista = 'Fortaleza';
   try {
     const cuerpo = JSON.parse(opciones.body);
     const sistema = String(cuerpo.system || '');
     esLista = sistema.startsWith('Eres astrologa');
+    cualLista = sistema.includes('FORTALEZAS: lo que se le da bien') ? 'Fortaleza' : 'Desafio';
     esClasificar = sistema.startsWith('Un estudio de personalidad');
     if (esClasificar) {
       cuantos = String(cuerpo.messages[0].content).split('\n').filter(l => /^\d+\. /.test(l)).length;
@@ -156,7 +181,7 @@ globalThis.fetch = async (url, opciones) => {
       sobran: [], nombres: [],
     }) }] }) };
   }
-  const texto = esLista ? LISTAS : 'Texto de area generado para la prueba. '.repeat(10);
+  const texto = esLista ? listas(cualLista) : 'Texto de area generado para la prueba. '.repeat(10);
   return { ok: true, status: 200, json: async () => ({ content: [{ text: texto }] }) };
 };
 

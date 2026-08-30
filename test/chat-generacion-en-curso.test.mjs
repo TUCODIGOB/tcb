@@ -59,20 +59,45 @@ let llamadasAlModelo = 0;
 // Las siete cajas van con lo suficiente para cumplir el minimo de las dos
 // listas (dos por area, que es el de los desafios). Si vinieran cortas, el
 // codigo pediria las que faltan y esta prueba contaria llamadas de mas.
-const rasgoDe = (origen, n) => ({
-  nombre: `Aguante fuera de lo normal ${n}`, descripcion: 'Sigues de pie donde otros se bajan.',
+// CADA RASGO CON SU PROPIO TITULO, como en una lista de verdad. Si dos titulos
+// dicen lo mismo, el filtro de repetidos quita uno, el area se queda bajo el
+// minimo y el codigo pide relleno: llamadas de mas que no son las que se miden
+// aqui.
+const TITULOS = {
+  Fortaleza: [
+    'Aguantas cuando todo aprieta', 'Miras de frente lo incomodo',
+    'Decides rapido y sin ruido', 'Cuidas los detalles pequenos',
+    'Sostienes a quien se cae', 'Aprendes de cada golpe',
+    'Hablas claro sin herir a nadie', 'Guardas la calma en la tormenta',
+    'Empujas los proyectos hasta el final', 'Notas lo que nadie dice',
+    'Repartes tu tiempo con cabeza', 'Levantas el animo de tu gente',
+    'Ahorras pensando en manana', 'Negocias sin perder la forma',
+  ],
+  Desafio: [
+    'Te callas lo que te duele', 'Aplazas las conversaciones dificiles',
+    'Cargas con lo que no te toca', 'Dudas de lo que ya sabes',
+    'Buscas aprobacion antes de moverte', 'Te exiges mas de la cuenta',
+    'Huyes del conflicto abierto', 'Escondes lo que necesitas',
+    'Controlas hasta lo que no depende de ti', 'Postergas los cierres',
+    'Te comparas con quien no deberias', 'Gastas energia en agradar',
+    'Temes quedarte sin nada', 'Confundes ayudar con salvar',
+  ],
+};
+
+const rasgoDe = (origen, i, lista) => ({
+  nombre: TITULOS[lista][i], descripcion: 'Sigues de pie donde otros se bajan.',
   causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen,
 });
 // Las posiciones son inventadas para la prueba, de nadie: solo tienen que
 // caer en el area de su caja para que el codigo las acepte.
-const LISTAS_DE_MENTIRA = JSON.stringify({
-  IDENTIDAD:  [rasgoDe('Sol en Aries casa 1', 1), rasgoDe('Ascendente en Aries', 2)],
-  PATRONES:   [rasgoDe('Nodo Norte en Acuario', 1), rasgoDe('casa 9 en Aries', 2)],
-  MIEDOS:     [rasgoDe('Saturno en Acuario casa 12', 1), rasgoDe('Neptuno en Acuario', 2)],
-  HERIDA:     [rasgoDe('Luna en Aries casa 4', 1), rasgoDe('Quiron en Acuario', 2)],
-  AMOR:       [rasgoDe('Venus en Acuario', 1), rasgoDe('casa 5 en Aries', 2)],
-  RELACIONES: [rasgoDe('Mercurio en Aries', 1), rasgoDe('casa 11 en Acuario', 2)],
-  DINERO:     [rasgoDe('casa 2 en Aries', 1), rasgoDe('casa 10 en Acuario', 2)],
+const listasDeMentira = lista => JSON.stringify({
+  IDENTIDAD:  [rasgoDe('Sol en Aries casa 1', 0, lista), rasgoDe('Ascendente en Aries', 1, lista)],
+  PATRONES:   [rasgoDe('Nodo Norte en Acuario', 2, lista), rasgoDe('casa 9 en Aries', 3, lista)],
+  MIEDOS:     [rasgoDe('Saturno en Acuario casa 12', 4, lista), rasgoDe('Neptuno en Acuario', 5, lista)],
+  HERIDA:     [rasgoDe('Luna en Aries casa 4', 6, lista), rasgoDe('Quiron en Acuario', 7, lista)],
+  AMOR:       [rasgoDe('Venus en Acuario', 8, lista), rasgoDe('casa 5 en Aries', 9, lista)],
+  RELACIONES: [rasgoDe('Mercurio en Aries', 10, lista), rasgoDe('casa 11 en Acuario', 11, lista)],
+  DINERO:     [rasgoDe('casa 2 en Aries', 12, lista), rasgoDe('casa 10 en Acuario', 13, lista)],
 });
 
 globalThis.fetch = async (url, opciones) => {
@@ -80,11 +105,15 @@ globalThis.fetch = async (url, opciones) => {
   if (u.includes('api.anthropic.com')) {
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
-    let esRasgos = false, esAreaDelRasgo = false, cuantos = 0;
+    let esRasgos = false, esAreaDelRasgo = false, cuantos = 0, cualLista = 'Fortaleza';
     try {
       const cuerpo = JSON.parse(opciones.body);
       const sistema = String(cuerpo.system || '');
       esRasgos = sistema.startsWith('Eres astrologa');
+      // Las dos listas devuelven titulos distintos, igual que en la realidad:
+      // la de fortalezas no sabe lo que escribe la de desafios, pero no escriben
+      // lo mismo palabra por palabra.
+      cualLista = sistema.includes('FORTALEZAS: lo que se le da bien') ? 'Fortaleza' : 'Desafio';
       // La peticion que pone el area de cada rasgo. Contesta una por rasgo,
       // en el mismo orden, que es lo que espera api/chat.js.
       esAreaDelRasgo = sistema.startsWith('Un estudio de personalidad');
@@ -102,7 +131,7 @@ globalThis.fetch = async (url, opciones) => {
     }
     // api/chat.js descarta cualquier area de menos de 100 caracteres y la
     // reintenta, asi que la respuesta de mentira tiene que dar la talla.
-    const texto = esRasgos ? LISTAS_DE_MENTIRA : 'Texto de area generado para la prueba. '.repeat(10);
+    const texto = esRasgos ? listasDeMentira(cualLista) : 'Texto de area generado para la prueba. '.repeat(10);
     return { ok: true, status: 200, json: async () => ({ content: [{ text: texto }] }) };
   }
   return { ok: true, status: 200, json: async () => ({}) };   // Brevo
