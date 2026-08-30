@@ -787,13 +787,13 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              NO REPITE EL RASGO CON OTRAS PALABRAS. Lo que hace y como se le
              nota ya esta arriba, en la descripcion. Aqui se dice que hay
              DETRAS que lo produce, el mecanismo del que sale.
-             DONDE MAS SE FALLA ES EN LAS FORTALEZAS. Ahi sale solo escribir
-             "se le da bien porque le importa", "porque se exige", "porque su
-             cabeza funciona asi" o "porque le sale natural": eso es el rasgo
-             otra vez con un porque delante, y no explica nada. Lo que produce
-             una fortaleza nunca es la fortaleza. Es una manera suya de
-             funcionar que por si sola no es ni buena ni mala, y que
-             acaba dando esto.
+             DONDE NO PUEDE FALLAR NI UNA ES EN LOS DESAFIOS.
+             Y EL FALLO TIPICO, en las dos listas, es escribir "se le da bien
+             porque le importa", "porque se exige", "porque su cabeza funciona
+             asi" o "porque le sale natural": eso es el rasgo otra vez con un
+             porque delante, y no explica nada. Lo que produce un rasgo nunca
+             es el rasgo. Es una manera suya de funcionar que por si sola no
+             es ni buena ni mala, y que acaba dando esto.
              PRUEBA ANTES DE ENTREGAR: tapa la descripcion y lee solo la
              causa. Si ahi no hay nada que no estuviera ya en la descripcion,
              esa causa no vale y se escribe la de verdad.
