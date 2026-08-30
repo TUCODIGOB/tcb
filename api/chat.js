@@ -307,11 +307,15 @@ PROHIBICIONES ABSOLUTAS:
 
 Esta área abre el estudio, así que empieza con una entrada de dos o tres frases que la sitúen antes de entrar en materia, como se abre un libro. Suave, sin prisa y sin adelantar lo que viene. Solo el área 1 lleva esa entrada.
 
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: la ESCENA entra sin avisar, pegada a la frase anterior y arrancando por el momento concreto, el día o la hora. El ORIGEN entra contestando algo que ella ya se ha preguntado alguna vez. Las CREENCIAS entran por la frase que ella se dice por dentro, dicha con sus palabras.
+
 No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 2,
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué repite una y otra vez sin darse cuenta.
+
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las CREENCIAS entran por lo que hace cuando se la cree, y la idea se nombra al final, no al principio. La ESCENA entra dentro de un párrafo ya empezado, sin punto y aparte delante. El ORIGEN entra por las dos partes suyas que chocan, nombradas las dos.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
@@ -319,11 +323,15 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que gobierna su vida sin que lo nombre.
 
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el ORIGEN abre el área nombrando el miedo por su nombre, a la cara y sin rodeo. La ESCENA entra por un objeto o un gesto concreto suyo. Las CREENCIAS entran por lo que evita hacer, y de ahí sale la idea.
+
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué le sigue doliendo hoy y cómo le afecta.
+
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las CREENCIAS abren el área con la idea dicha en su voz, como se la diría ella a sí misma. La ESCENA entra por lo que hace con las manos en ese momento. El ORIGEN entra por lo que le faltó, no por lo que le pasa hoy.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
@@ -331,17 +339,23 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 5,
       prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo vive las relaciones de pareja.
 
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el ORIGEN entra por la parcela concreta de su vida donde se le nota. La ESCENA entra por una conversación, y por lo que no llegó a decir en ella. Las CREENCIAS entran por la distancia entre lo que da y lo que pide.
+
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 6,
       prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: cómo se vincula con los demás fuera de la pareja.
 
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el ORIGEN abre el área contando de dónde le viene el sitio que ocupa con la gente. La ESCENA entra por lo que hacen o dicen los demás, no por lo que hace ella. Las CREENCIAS entran por lo que le cuesta sostener ese sitio, y la idea llega al final del párrafo.
+
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
     {
       id: 7,
       prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero.
+
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las CREENCIAS abren el área por lo que el dinero significa para ella, no por la idea en abstracto. La ESCENA entra por una cantidad o un número concreto. El ORIGEN entra por lo que se repite en las dos caras, lo compartido y lo suyo.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
