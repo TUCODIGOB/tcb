@@ -885,9 +885,21 @@ export default async function handler(req, res) {
       }
     }
 
+    // Marcar el informe como completado para bloquear generaciones repetidas.
+    // completar() vuelve a leer la metadata justo antes de escribir, para no
+    // pisar lo que se haya guardado mientras se construia el PDF.
+    try {
+      await completar(stripe, session_id);
+    } catch (err) {
+      console.error('Error marcando informe_completado:', err.message);
+    }
+
     // Guardar lo que se le ha entregado, para que el siguiente producto pueda
-    // apoyarse en ESTE informe y no en una tirada nueva. Va aqui, con el PDF ya
-    // hecho, y nunca corta: si falla, el cliente recibe su informe igual.
+    // apoyarse en ESTE informe y no en una tirada nueva.
+    //
+    // Va lo ultimo a proposito: el PDF ya esta hecho y la compra ya esta
+    // cerrada, asi que a partir de aqui no queda nada que esto pueda estropear.
+    // Y nunca corta: si falla, el cliente recibe su informe igual.
     try {
       const guardado = await guardarInforme({
         producto: 'p1',
@@ -899,15 +911,6 @@ export default async function handler(req, res) {
       if (guardado.guardado) console.log(`Informe guardado: ${guardado.ruta} (${guardado.bytes} bytes)`);
     } catch (err) {
       console.error('No se pudo guardar el informe:', err.message);
-    }
-
-    // Marcar el informe como completado para bloquear generaciones repetidas.
-    // completar() vuelve a leer la metadata justo antes de escribir, para no
-    // pisar lo que se haya guardado mientras se construia el PDF.
-    try {
-      await completar(stripe, session_id);
-    } catch (err) {
-      console.error('Error marcando informe_completado:', err.message);
     }
 
     return res.status(200).json({ pdfBase64 });
