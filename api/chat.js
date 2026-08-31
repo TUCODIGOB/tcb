@@ -304,6 +304,7 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
 - PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
 - PROHIBIDO atribuirle un hecho de su vida que no esté en la carta: una relación, un trabajo, una mudanza, algo que le pasó. La escena es de su vida de ahora, nunca un episodio suyo del pasado
+- PROHIBIDO escribir una cifra concreta de dinero, suya o de nadie: ni un importe, ni un sueldo, ni un precio, ni un ahorro, ni un porcentaje de nada. No sabes cuánto tiene ni cuánto gana, así que cualquier número que pongas es inventado y ella lo va a ver falso al leerlo. El dinero se nombra por lo que significa y por lo que hace con él, nunca por su cantidad
 - PROHIBIDO entregar un área sin haberla llamado por su nombre al menos dos veces
 - PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea`;
 
@@ -362,7 +363,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
       id: 7,
       prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero.
 
-CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las CREENCIAS abren el área por lo que el dinero significa para ella, no por la idea en abstracto. La ESCENA entra por una cantidad o un número concreto. El ORIGEN entra por lo que se repite en las dos caras, lo compartido y lo suyo.
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las CREENCIAS abren el área por lo que el dinero significa para ella, no por la idea en abstracto. La ESCENA entra por una decisión de dinero que tiene delante y no acaba de tomar, contada sin decir nunca de cuánto se trata. El ORIGEN entra por lo que se repite en las dos caras, lo compartido y lo suyo.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
     },
