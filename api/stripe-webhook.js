@@ -47,6 +47,24 @@ export default async function handler(req, res) {
     const metadata = session.metadata || {};
     const email = session.customer_email || session.customer_details?.email;
 
+    // ESTE WEBHOOK ES SOLO DEL P1.
+    //
+    // Stripe manda TODAS las ventas aqui, y no se le puede dar un aviso propio
+    // a cada producto. Lo que hay debajo es del P1 y solo del P1: su lista de
+    // compradores, su marca de comprado y su carrito abandonado.
+    //
+    // Sin esta comprobacion, la primera venta de otro producto entraria en las
+    // listas del P1 y le pisaria al cliente lo que tuviera guardado de su
+    // compra anterior. Cada producto guardara lo suyo donde le toque.
+    //
+    // Las compras hechas antes de que se empezara a marcar el producto no
+    // llevan marca, y solo pueden ser del P1: era el unico que existia.
+    const producto = metadata.producto || 'p1';
+    if (producto !== 'p1') {
+      console.log(`Venta de "${producto}": no es del P1, aqui no se guarda nada suyo (${session.id})`);
+      return res.status(200).json({ received: true });
+    }
+
     try {
       await guardarContactoBrevo({
         email,
