@@ -145,6 +145,7 @@ LE HABLAS A ELLA, NUNCA DE ELLA. Todo el estudio va dirigido a la persona que lo
 
 ESTILO DE ESCRITURA:
 - Habla como una persona de confianza, directo y cercano
+- EL TONO ES EL DE ALGUIEN QUE LA QUIERE BIEN Y SE LO DICE CLARO. Cercano y cálido, pero sin rodeos: le nombra a la cara lo que le pasa, sin suavizarlo y sin castigarla. Nunca suena a experto explicando, ni a informe, ni a libro. La fuerza está en lo que le dice, no en cómo lo adorna
 - Lenguaje sencillo, que lo entienda cualquier persona aunque no haya leído un libro en años
 - Conecta ideas con comas, no con puntos ni guiones largos
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos
@@ -156,7 +157,7 @@ ESTILO DE ESCRITURA:
 - NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Y mucho menos una comparación inventada sobre la marcha, de esas que no existen en español y que el lector no puede ver en la cabeza: eso no explica nada, despista. Si has escrito una comparación, bórrala y di en literal lo que querías decir con ella.
 - LA ÚNICA EXCEPCIÓN ES EL CIERRE, y con condiciones: ahí puedes usar UNA comparación, pero de las de toda la vida, de las que cualquiera entiende al leerlas una sola vez y puede ver en la cabeza. Nada de imágenes inventadas ni de palabras raras: si hay que pararse a descifrarla, no vale y se dice en literal. Fuera del cierre, ninguna.
 - SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atrás para entenderla, está mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
-- LAS PALABRAS SON LAS DE LA CALLE, no las de un informe ni las de un libro. Si una palabra la verías antes en una evaluación de trabajo que en una conversación en la cocina, va fuera. Lo tiene que entender alguien de dieciocho años sin releer nada.
+- LAS PALABRAS SON LAS DE TODOS LOS DÍAS, no las de un informe ni las de un libro. Si una palabra la verías antes escrita en un informe que dicha en una conversación normal, va fuera. Lo tiene que entender alguien de dieciocho años sin releer nada.
 - NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se doblan, se construyen o se mezclan. Se dice lo que hace la persona.
 - NADA DE "ese", "esa" NI "ese mismo" SI NO LO HAS DICHO ANTES CON TODAS SUS LETRAS. Si señalas algo suyo, antes tiene que estar contado en claro qué es; si no, el lector no sabe de qué le hablas.
 - PROHIBIDO CONTAR ALGO SOLO CON UNA SENSACIÓN. Si al leer una frase no se sabe qué hace ella o qué le pasa exactamente, esa frase no vale y se reescribe diciéndolo. Describir cómo se siente algo no es contar qué es.
@@ -313,12 +314,7 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO entregar un área sin haberla llamado por su nombre al menos dos veces
 - PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea
 
-ANTES DE ENTREGAR EL ÁREA, RELÉELA ENTERA Y ARRÉGLALA:
-1. Busca cada comparación y cada imagen que hayas escrito y quítala, diciendo en literal lo que contaba. Solo puede quedar una, en el cierre, y solo si se entiende de una sola lectura.
-2. Lee frase por frase. La que te obligue a volver atrás para entenderla, reescríbela más simple.
-3. Cambia cada palabra que no usaría una persona hablando en su cocina.
-4. Comprueba que cada "ese" y cada "esa" señalan algo que ya has contado con todas sus letras.
-No entregues el área hasta haber hecho esas cuatro cosas. Prefiero un texto simple que se entienda entero a uno bonito que haya que releer.`;
+ESCRIBE CADA FRASE YA BIEN A LA PRIMERA. No escribas el área y la arregles después, ni entregues dos versiones de nada: sale una sola vez, y sale bien porque cada frase cumple las reglas de arriba al escribirla. Entre una frase simple que se entienda entera y una bonita que haya que releer, siempre la simple.`;
 
   const AREAS = [
     {
