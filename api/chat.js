@@ -152,7 +152,13 @@ ESTILO DE ESCRITURA:
 - No empieces dos párrafos con la misma estructura. Varía los arranques
 - NO SE ESCRIBE "tu manera de", "tu forma de", "tu capacidad de", "una necesidad de", "una tendencia a", "una parte de ti" ni "la parte de ti que". Convierten en cosa lo que ella hace, y quien lee tiene que volver atrás para entenderlo. Donde salga uno de esos, se dice con un verbo lo que hace ella
 - SE LE PONE SU VOZ: lo que se dice a sí misma por dentro cuando le pasa eso, dicho con las palabras que usaría ella y no con las de quien la observa. Eso es lo que hace que se reconozca. Sale de lo que ya se ha contado, no de suponerle nada
-- PRIMERO LA IDEA EN CLARO, DESPUÉS EL ADORNO. Cada cosa que le cuentes se dice antes en seco: qué hace, qué le pasa o cómo se le nota, con palabras que se puedan agarrar. La imagen, la comparación o la frase bonita va DETRÁS, como remate de lo que ya has dicho claro, nunca en su lugar.
+- LA IDEA SE DICE EN CLARO, SIEMPRE Y EN LITERAL. Cada cosa que le cuentes se dice en seco: qué hace, qué le pasa o cómo se le nota, con palabras que se puedan agarrar. Si tapas todo lo demás y esa frase sola no dice nada concreto de ella, está mal escrita.
+- NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Y mucho menos una comparación inventada sobre la marcha, de esas que no existen en español y que el lector no puede ver en la cabeza: eso no explica nada, despista. Si has escrito una comparación, bórrala y di en literal lo que querías decir con ella.
+- LA ÚNICA EXCEPCIÓN ES EL CIERRE, y con condiciones: ahí puedes usar UNA comparación, pero de las de toda la vida, de las que cualquiera entiende al leerlas una sola vez y puede ver en la cabeza. Nada de imágenes inventadas ni de palabras raras: si hay que pararse a descifrarla, no vale y se dice en literal. Fuera del cierre, ninguna.
+- SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atrás para entenderla, está mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
+- LAS PALABRAS SON LAS DE LA CALLE, no las de un informe ni las de un libro. Si una palabra la verías antes en una evaluación de trabajo que en una conversación en la cocina, va fuera. Lo tiene que entender alguien de dieciocho años sin releer nada.
+- NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se doblan, se construyen o se mezclan. Se dice lo que hace la persona.
+- NADA DE "ese", "esa" NI "ese mismo" SI NO LO HAS DICHO ANTES CON TODAS SUS LETRAS. Si señalas algo suyo, antes tiene que estar contado en claro qué es; si no, el lector no sabe de qué le hablas.
 - PROHIBIDO CONTAR ALGO SOLO CON UNA SENSACIÓN. Si al leer una frase no se sabe qué hace ella o qué le pasa exactamente, esa frase no vale y se reescribe diciéndolo. Describir cómo se siente algo no es contar qué es.
 - PROHIBIDO DECIR DOS VECES LA MISMA IDEA CON OTRA ROPA. Si el párrafo siguiente cuenta lo mismo que el anterior cambiando las palabras, sobra: o dice algo nuevo, o no va. Eso es lo que hace que parezcan muchas ideas cuando hay una.
 - Escribe como un humano, no como una IA: menos puntos, más comas, frases que fluyen
@@ -278,7 +284,7 @@ Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta 
 No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que salga de lo que acabas de contar y no de una plantilla.
 
 CIERRE DE CADA ÁREA (OBLIGATORIO):
-El área termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una imagen contundente, una paradoja, una frase corta que golpea. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz. Y ES UN PÁRRAFO, NUNCA UNA FRASE SUELTA: una sola línea de despedida no cierra nada, se lee como un pie de página. Y NO LLEVA NI UNA PREGUNTA, ni dentro ni justo antes: el cierre afirma, y la última pregunta del área tiene que haberse quedado bien atrás, con texto por medio. Los ejemplos de aquí abajo enseñan el TONO, no lo largo que tiene que ser el cierre.
+El área termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una paradoja, una frase corta que golpea. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz. Y ES UN PÁRRAFO, NUNCA UNA FRASE SUELTA: una sola línea de despedida no cierra nada, se lee como un pie de página. Y NO LLEVA NI UNA PREGUNTA, ni dentro ni justo antes: el cierre afirma, y la última pregunta del área tiene que haberse quedado bien atrás, con texto por medio. Los ejemplos de aquí abajo enseñan el TONO, no lo largo que tiene que ser el cierre.
 
 Ejemplos del tono que busco para los cierres:
 - "Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva años esperándote dentro."
@@ -305,7 +311,14 @@ PROHIBICIONES ABSOLUTAS:
 - PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
 - PROHIBIDO atribuirle un hecho de su vida que no esté en la carta: una relación, un trabajo, una mudanza, algo que le pasó. La escena es de su vida de ahora, nunca un episodio suyo del pasado
 - PROHIBIDO entregar un área sin haberla llamado por su nombre al menos dos veces
-- PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea`;
+- PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea
+
+ANTES DE ENTREGAR EL ÁREA, RELÉELA ENTERA Y ARRÉGLALA:
+1. Busca cada comparación y cada imagen que hayas escrito y quítala, diciendo en literal lo que contaba. Solo puede quedar una, en el cierre, y solo si se entiende de una sola lectura.
+2. Lee frase por frase. La que te obligue a volver atrás para entenderla, reescríbela más simple.
+3. Cambia cada palabra que no usaría una persona hablando en su cocina.
+4. Comprueba que cada "ese" y cada "esa" señalan algo que ya has contado con todas sus letras.
+No entregues el área hasta haber hecho esas cuatro cosas. Prefiero un texto simple que se entienda entero a uno bonito que haya que releer.`;
 
   const AREAS = [
     {
