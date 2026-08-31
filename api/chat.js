@@ -1186,19 +1186,36 @@ function esElMismoTitulo(a, b) {
 
 function sinTituloRepetido(fortalezas, desafios) {
   const vistos = [];
-  const cribar = lista => lista.filter(r => {
-    const t = comoSeCompara(r && r.nombre);
-    if (!t) return true;
-    const palabras = palabrasConPeso(r.nombre);
-    if (vistos.some(v => v.texto === t || esElMismoTitulo(v.palabras, palabras))) {
-      console.warn(`Se quita un rasgo con el titulo repetido: ${r.nombre}`);
-      return false;
-    }
-    vistos.push({ texto: t, palabras });
-    return true;
-  });
+  // UN REPETIDO NO SE QUITA SI DEJA EL AREA CORTA.
+  //
+  // Quitarlo obligaba a pedir otro para esa area, y eso es una llamada mas y
+  // medio minuto mas de espera. Entre dos titulos parecidos y una llamada
+  // extra, se queda el parecido: al cliente le cuesta menos.
+  const cribar = (lista, cual) => {
+    const minimo = MINIMO_POR_AREA[cual] || 1;
+    const quedan = {};
+    for (const r of lista) quedan[r.area] = (quedan[r.area] || 0) + 1;
+    return lista.filter(r => {
+      const t = comoSeCompara(r && r.nombre);
+      if (!t) return true;
+      const palabras = palabrasConPeso(r.nombre);
+      if (vistos.some(v => v.texto === t || esElMismoTitulo(v.palabras, palabras))) {
+        // El rasgo sin area reconocida no cuenta para ningun minimo, asi que
+        // si es repetido se quita igual que antes.
+        if (NOMBRES_DE_AREA.includes(r.area) && (quedan[r.area] || 0) - 1 < minimo) {
+          console.warn(`Se deja un rasgo con el titulo repetido para no dejar corta ${r.area}: ${r.nombre}`);
+          return true;
+        }
+        quedan[r.area] -= 1;
+        console.warn(`Se quita un rasgo con el titulo repetido: ${r.nombre}`);
+        return false;
+      }
+      vistos.push({ texto: t, palabras });
+      return true;
+    });
+  };
   // Las fortalezas primero, que es el orden en que van en el informe.
-  return [cribar(fortalezas), cribar(desafios)];
+  return [cribar(fortalezas, 'fortalezas'), cribar(desafios, 'desafios')];
 }
 
 // EL AREA LA DECIDE LO QUE DICE EL RASGO, NO DE DONDE SALIO.
