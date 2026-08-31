@@ -632,6 +632,11 @@ export default async function handler(req, res) {
       {tit:fx('DINERO'),sub:fx('Por que el dinero no termina de fluir en tu vida')},
     ];
     var pageC=6;
+    // NINGUN SUBTITULO SE REPITE ENTRE AREAS. Las siete se escriben por
+    // separado y ninguna sabe lo que ponen las otras, asi que el que ya haya
+    // salido antes no se pinta: el parrafo empieza sin el y nadie lo echa de
+    // menos. Es la unica manera de garantizarlo sin pedir nada otra vez.
+    var subsUsados = {};
     for(var ai2=0;ai2<areaTitles.length;ai2++){
       var areaText=areas[ai2]||'';
       var rawParas=areaText.split(/\n\n+/).filter(p=>p.trim().length>0);
@@ -647,6 +652,15 @@ export default async function handler(req, res) {
         // Se sacan las preguntas que se le hacen al lector y se pintan centradas,
         // mas grandes y en el verde de la marca. Van solas en su parrafo, asi que
         // se reconocen por eso, y no se parten nunca.
+        // El subtitulo viene marcado con "## " delante. Es corto, va en dorado
+        // y en mayusculas, y sirve para que el ojo sepa que empieza otra cosa.
+        if(!esCierre && /^##\s+/.test(chunk)){
+          var elSub=chunk.replace(/^##\s+/,'').replace(/[.:]+$/,'').toUpperCase();
+          var clave=elSub.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^A-Z0-9 ]/g,'').replace(/\s+/g,' ').trim();
+          // Y NUNCA ABRE EL AREA: si el modelo lo pone el primero, no se pinta.
+          if(clave && !subsUsados[clave] && paras.length>0){ subsUsados[clave]=true; paras.push({t:elSub,cierre:false,sub:true}); }
+          continue;
+        }
         var esDestacado=!esCierre && /^¿[\s\S]*\?$/.test(chunk);
         if(esDestacado){ paras.push({t:chunk,cierre:false,dest:true}); continue; }
         // La escena viene marcada con un ">" delante, y va en cursiva con una
@@ -678,19 +692,29 @@ export default async function handler(req, res) {
         var esC=paras[pi2].cierre;
         var esD=paras[pi2].dest;
         var esE=paras[pi2].escena;
+        var esS=paras[pi2].sub;
         // El cierre es la frase que el lector se lleva puesta: se saca del
         // bloque de texto y se pinta en negrita dorada, centrada y con aire.
         // Los destacados van igual de centrados y de grandes, pero en el verde
         // de la marca y sin negrita, que son del cuerpo del area y no el final.
-        var cuerpo=esD?14:(esC?30:12);
-        var color=esC?[207,177,128]:(esD?[14,63,75]:[40,40,40]);
+        var cuerpo=esS?13:(esD?14:(esC?30:12));
+        var color=(esC||esS)?[207,177,128]:(esD?[14,63,75]:[40,40,40]);
         var ancho=(esC||esD)?150:(esE?167:175), alto=esC?13:(esD?7:7);
         if(esD) ay+=8;
+        // El subtitulo respira por arriba y va pegado al parrafo que abre.
+        if(esS) ay+=6;
+        // Y NO SE QUEDA SOLO AL PIE: si no cabe el con dos renglones de lo que
+        // presenta, pasa entero a la pagina siguiente y arrastra su parrafo.
+        if(esS && ay > H-16-AIRE_SOBRE_NUMERO-20){
+          addPageNum(pageC);pageC++;areaPageCount++;
+          doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);
+          ay=60;
+        }
         var vieneEscena=pi2>0 && paras[pi2-1] && paras[pi2-1].escena;
         var sigueEscena=pi2+1<paras.length && paras[pi2+1] && paras[pi2+1].escena;
         if(esE && !vieneEscena) { ay+=4; lineaDesde=ay-4.5; }
         doc.setFontSize(cuerpo); doc.setTextColor(color[0],color[1],color[2]);
-        var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esD,esE,esC);
+        var plines=lineasConNegrita(fx(paras[pi2].t.trim()),ancho,cuerpo,esD||esS,esE,esC);
         // EL CIERRE VA SOLO EN SU PAGINA, CENTRADO. Se abre pagina nueva y se
         // baja hasta la mitad, restando lo que el cierre ocupa.
         if(esC){
@@ -711,14 +735,14 @@ export default async function handler(req, res) {
           var lin=plines[pl2];
           var cx=(esC||esD)?(105-anchoLinea(lin,cuerpo,esD,false,esC)/2):(esE?26:18);
           for(var wi=0;wi<lin.length;wi++){
-            if(!lin[wi].esp){ if(esC){doc.setFont('Italianno','normal');} else {doc.setFont('Roboto',esE?'italic':((esD||lin[wi].b)?'bold':'normal'));} doc.text(lin[wi].t,cx,ay); }
-            cx+=anchoPalabra(lin[wi],cuerpo,esD,esE,esC);
+            if(!lin[wi].esp){ if(esC){doc.setFont('Italianno','normal');} else {doc.setFont('Roboto',esE?'italic':((esD||esS||lin[wi].b)?'bold':'normal'));} doc.text(lin[wi].t,cx,ay); }
+            cx+=anchoPalabra(lin[wi],cuerpo,esD||esS,esE,esC);
           }
           ay+=alto;
         }
         if(esE && !sigueEscena){ doc.setDrawColor(207,177,128); doc.setLineWidth(0.8); doc.line(18,lineaDesde,18,ay-alto+2); }
         // 4. Y mas aire entre parrafos, que iban demasiado juntos.
-        ay+=(esC||esD)?8:(esE&&sigueEscena?6:7);
+        ay+=esS?3:((esC||esD)?8:(esE&&sigueEscena?6:7));
       }
       if(areaPageCount<2){addPageNum(pageC);pageC++;doc.addPage();doc.addImage(img_base,'JPEG',0,0,W,H);}
       addPageNum(pageC); pageC++;
