@@ -1,5 +1,5 @@
 import Stripe from 'stripe';
-import { compraValida, MAX_INTENTOS, estado, reservar, liberar } from '../lib/reserva.js';
+import { compraValida, esDelProducto, MAX_INTENTOS, estado, reservar, liberar } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -64,7 +64,9 @@ export default async function handler(req, res) {
   let reserva;
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id);
-    if (!compraValida(session)) {
+    // La cerradura del P1: se exige que este pagado Y que sea del P1. El
+    // recibo de otro producto no abre este camino.
+    if (!compraValida(session) || !esDelProducto(session, 'p1')) {
       return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
     }
 

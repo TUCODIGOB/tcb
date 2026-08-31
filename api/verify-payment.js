@@ -5,7 +5,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
-import { estado, compraValida } from '../lib/reserva.js';
+import { estado, compraValida, esDelProducto } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -27,7 +27,9 @@ export default async function handler(req, res) {
       return res.status(404).json({ ok: false, error: 'Sesión no encontrada' });
     }
 
-    if (!compraValida(session)) {
+    // La cerradura del P1: se exige que este pagado Y que sea del P1. El
+    // recibo de otro producto no abre este camino.
+    if (!compraValida(session) || !esDelProducto(session, 'p1')) {
       return res.status(402).json({ ok: false, error: 'El pago no está confirmado' });
     }
 

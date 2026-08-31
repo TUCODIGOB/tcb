@@ -4,7 +4,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
-import { estado, marcarEmailEnviado, compraValida } from '../lib/reserva.js';
+import { estado, marcarEmailEnviado, compraValida, esDelProducto } from '../lib/reserva.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -28,7 +28,9 @@ export default async function handler(req, res) {
 
     // 1. Verificar que el pago es real consultando Stripe
     const session = await stripe.checkout.sessions.retrieve(session_id);
-    if (!compraValida(session)) {
+    // La cerradura del P1: se exige que este pagado Y que sea del P1. El
+    // recibo de otro producto no abre este camino.
+    if (!compraValida(session) || !esDelProducto(session, 'p1')) {
       return res.status(402).json({ error: 'Pago no confirmado' });
     }
 
