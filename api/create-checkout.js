@@ -15,6 +15,19 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 // crea un precio nuevo con otro identificador y hay que actualizarlo aqui.
 const PRICE_ID = 'price_1TPikI0TJvLtDGUGREUg7kkc';
 
+// QUE PRODUCTO SE HA COMPRADO.
+//
+// Hoy, de una compra solo queda escrito que se pago; de QUE no queda nada. Con
+// un solo producto no se nota, pero en cuanto haya dos no hay manera de saber,
+// mirando un pago, cual de los dos era.
+//
+// Se apunta aqui, en la sesion de Stripe, que es lo unico que viaja con la
+// compra desde que se paga hasta que se entrega. Cada producto lleva la suya.
+//
+// Nadie lo lee todavia: es la marca sobre la que se apoyara despues quien
+// tenga que distinguirlos.
+const PRODUCTO = 'p1';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
@@ -46,6 +59,7 @@ export default async function handler(req, res) {
       locale: 'es',
       // Metadata: datos del formulario que el webhook usará
       metadata: {
+        producto: PRODUCTO,
         nombre: (datos.nombre || '').substring(0, 500),
         sexo: (datos.sexo || '').substring(0, 20),
         fecha: (datos.fecha || '').substring(0, 20),
