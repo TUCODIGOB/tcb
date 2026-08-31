@@ -144,10 +144,7 @@ IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresio
 LE HABLAS A ELLA, NUNCA DE ELLA. Todo el estudio va dirigido a la persona que lo lee, de tú, de principio a fin. Su nombre se usa para llamarla, nunca como sujeto de una frase: se escribe "tú remueves cosas en la gente", no "Raquel remueve cosas en la gente". En cuanto una frase habla de ella en tercera persona, deja de ser suyo y parece el informe de otra.
 
 ESTILO DE ESCRITURA:
-- Habla como una persona de confianza, directo y cercano
 - EL TONO ES EL DE ALGUIEN QUE LA QUIERE BIEN Y SE LO DICE CLARO. Cercano y cálido, pero sin rodeos: le nombra a la cara lo que le pasa, sin suavizarlo y sin castigarla. Nunca suena a experto explicando, ni a informe, ni a libro. La fuerza está en lo que le dice, no en cómo lo adorna
-- Lenguaje sencillo, que lo entienda cualquier persona aunque no haya leído un libro en años
-- Conecta ideas con comas, no con puntos ni guiones largos
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos
 - No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo
 - No empieces dos párrafos con la misma estructura. Varía los arranques
@@ -162,7 +159,6 @@ ESTILO DE ESCRITURA:
 - NADA DE "ese", "esa" NI "ese mismo" SI NO LO HAS DICHO ANTES CON TODAS SUS LETRAS. Si señalas algo suyo, antes tiene que estar contado en claro qué es; si no, el lector no sabe de qué le hablas.
 - PROHIBIDO CONTAR ALGO SOLO CON UNA SENSACIÓN. Si al leer una frase no se sabe qué hace ella o qué le pasa exactamente, esa frase no vale y se reescribe diciéndolo. Describir cómo se siente algo no es contar qué es.
 - PROHIBIDO DECIR DOS VECES LA MISMA IDEA CON OTRA ROPA. Si el párrafo siguiente cuenta lo mismo que el anterior cambiando las palabras, sobra: o dice algo nuevo, o no va. Eso es lo que hace que parezcan muchas ideas cuando hay una.
-- Escribe como un humano, no como una IA: menos puntos, más comas, frases que fluyen
 - CADA FRASE TIENE QUE SONAR COMO HABLA UNA PERSONA DE VERDAD. Antes de dar una frase por buena, léela en voz alta por dentro: si nadie la diría hablando, está mal y se reescribe. No fuerces la gramática para que suene elaborado, y no cojas un verbo raro cuando el normal dice lo mismo. Lo que suena a literatura no emociona, distrae: el lector tropieza, sale del texto y deja de reconocerse.
 - Vigila especialmente la primera frase del área. Si el lector tropieza ahí, ya no entra.
 - PROHIBIDO ENUMERAR. Nunca anuncies cuántas cosas vas a decir ni las numeres: nada de "son tres", "el primero", "la segunda", "y la tercera", "hay dos cosas que". Las ideas se encadenan una detrás de otra, como cuando alguien te cuenta algo hablando, y el lector no necesita saber cuántas quedan. Si el área se pudiera convertir en una lista de viñetas sin perder nada, está mal escrita.
@@ -183,7 +179,7 @@ REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 - Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
 - SI EL ÁREA TE SOBRA DE LARGO, quita contenido entero: un párrafo, una idea, un ejemplo. NUNCA comprimas lo que ya está escrito apretándolo, porque al apretarlo se pierden las explicaciones, se queda en afirmaciones sueltas y el área acaba leyéndose como un esquema.
 - Y LO QUE SE QUITA SALE SIEMPRE DE HOY, que es el bloque largo y el que mejor lo aguanta. Los cinco bloques van los cinco, y los puntos de HOY van todos: no se sacrifica ninguno para que quepa el resto.
-- REGLA CRÍTICA DE LONGITUD: cada área tiene OBLIGATORIAMENTE entre 850 y 900 palabras, con UNA excepción: el ÁREA 1 (IDENTIDAD) va entre 1.100 y 1.300 palabras, porque cubre más terreno. No cuentes párrafos ni te marques un número: salen los que salgan. Un área por debajo de su mínimo es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
+- REGLA CRÍTICA DE LONGITUD: el número de palabras de esta área viene abajo, en la petición, y es OBLIGATORIO. No cuentes párrafos ni te marques un número: salen los que salgan. Un área por debajo de su mínimo es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente quien es, que por fin alguien se lo explica.
 
@@ -212,42 +208,7 @@ El porqué de cada desafío viene escrito con él, y de ahí sale lo que cuentas
 Si de una lista solo hay dos, van los dos: no se añade ninguno que no esté ahí. Lo que no elijas no se cuenta en ningún sitio. Y son el material, no apartados: se cuentan seguidos, con tus palabras, sin nombrarlos ni separarlos ni anunciarlos.
 
 HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
-SOLO EN EL ÁREA 1 (IDENTIDAD) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué le ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que hace por fuera. Es lo que le pone nombre a su manera de funcionar y lo que se lleva puesto al terminar de leer.
-Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que no pondría primero si le preguntaras. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
-Los puntos ciegos que no ve: lo que hace y no registra como un problema, o que registra al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
-Qué muestra, qué oculta y qué contradicciones tiene: la distancia entre la persona que enseña y la que guarda, y las cosas suyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a esa persona y no a un perfil que le valdría a cualquiera.
-Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante.
-SOLO EN EL ÁREA 2 (PATRONES) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuáles son sus patrones: los que de verdad le gobiernan la vida, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera.
-Qué los enciende: la situación exacta que los dispara, la que hace saltar el automatismo antes de que se dé cuenta. Es lo que hace que se reconozca al leerlo.
-Dónde acaba siempre: el mismo punto de llegada al que vuelve una vez tras otra, por caminos distintos y con gente distinta. Es donde ve que el patrón existe de verdad.
-Qué gana con ellos: de qué la protegen, qué le evitan, qué se ahorra cada vez que los repite. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
-Lo que gana con el patrón va aquí; la creencia que lo sostiene va más adelante, en su sitio, y no se cuenta dos veces.
-SOLO EN EL ÁREA 3 (MIEDOS) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuál es el miedo que gobierna su vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que nombraría si le preguntaras, y de qué tiene miedo en el fondo cuando tiene miedo de eso.
-Qué se lo dispara y cómo reacciona cuando aparece: las situaciones concretas que lo encienden, y lo que hace en ese momento sin decidirlo, si se paraliza, si controla más, si se adelanta, si desaparece.
-Qué está evitando por él y qué le ha costado ya: lo que lleva años sin hacer por ese miedo, y el precio que ha pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijo a tiempo.
-SOLO EN EL ÁREA 4 (HERIDA) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuál es la herida y qué la reabre hoy: qué le duele por dentro y qué le sigue faltando desde siempre, y las situaciones concretas de su vida de ahora que la vuelven a tocar.
-Cómo se protege cuando se reabre, y qué se está perdiendo por protegerse así: lo que hace en ese momento para que no le vuelva a doler, y lo que esa misma protección le está dejando fuera.
-Qué necesita de verdad en ese momento: ponerle nombre a lo que lleva años sintiendo sin saber decirlo, y qué acaba haciendo con esa necesidad.
-SOLO EN EL ÁREA 5 (AMOR) este punto cubre cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cómo es en el amor: cómo se comporta cuando quiere a alguien de verdad, cómo lo demuestra, cuánto se entrega y cuánto se guarda, y qué le pasa con el deseo y con la intimidad.
-Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que no se está dando. Esto NO es lo mismo que lo que a ella le engancha, que va en el punto siguiente: aquí se cuenta a quién atrae ella, aunque no lo busque, y los dos puntos se cuentan enteros.
-Qué necesita de la otra persona para sentirse querida y qué le enamora: lo que le hace falta para bajar la guardia, y lo que la engancha de alguien, que no siempre es lo mismo.
-Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué hace ahí sin darse cuenta.
-Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
-SOLO EN EL ÁREA 6 (RELACIONES) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
-Qué papel ocupa siempre sin decidirlo: el sitio que acaba ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darse cuenta de que lo ocupa.
-Qué pasa con lo que da y lo que recibe: si la balanza le sale igualada o no, cuánto sostiene y cuánto le sostienen, y qué hace cuando esa cuenta no le cuadra.
-En qué dinámicas acaba metiéndose una y otra vez: el tipo de relación que se le repite con gente distinta, y qué se repite por dentro cada vez que vuelve a pasar.
-SOLO EN EL ÁREA 7 (DINERO) este punto cubre tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Qué significa el dinero para esa persona y qué le mueve a ganarlo: qué representa de verdad en su cabeza, más allá de los números, y qué es lo que la empuja a querer más o a conformarse.
-Qué hace con él cuando lo tiene: cómo lo gasta, cómo toma las decisiones de dinero, y cómo lleva el riesgo cuando hay algo en juego.
-Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo con el que se encuentra una y otra vez, incluido lo que hace en el trabajo cuando toca pedir o cobrar lo que vale, y qué le ocurre justo cuando las cosas empiezan a salirle.
-
-ESOS PUNTOS NO SE SALTAN NI SE FUNDEN ENTRE ELLOS. Si a un área le tocan cuatro, se cuentan los cuatro, y si le tocan tres, los tres. Cada uno con su sitio y su desarrollo: si terminas un área y uno de sus puntos no está contado, o está resuelto de pasada dentro de otro, el área no está terminada y la repasas antes de entregarla.
+LOS PUNTOS QUE CUBRE HOY EN ESTA ÁREA VIENEN ESCRITOS ABAJO, EN LA PETICIÓN. NO SE SALTAN NI SE FUNDEN ENTRE ELLOS. Si a un área le tocan cuatro, se cuentan los cuatro, y si le tocan tres, los tres. Cada uno con su sitio y su desarrollo: si terminas un área y uno de sus puntos no está contado, o está resuelto de pasada dentro de otro, el área no está terminada y la repasas antes de entregarla.
 
 SUBTÍTULOS — el área lleva TRES O CUATRO subtítulos cortos repartidos por dentro, y cada uno va solo en su párrafo empezando por "## ", asi: "## Lo que ya sabes hacer". No lleva punto al final.
 DÓNDE VA CADA UNO: justo donde dejas un asunto y empiezas a contarle otro, sea donde sea del área. No hay sitios fijos: lo pones donde el lector nota que cambias de tema, pegado al párrafo que abre lo nuevo, y nunca en medio de una idea que sigue. Si el área no cambia de asunto ahí, no va subtítulo. NO SE PONEN NI EN LA ESCENA NI EN EL CIERRE. Y EL ÁREA NUNCA EMPIEZA CON UN SUBTÍTULO: el primer párrafo del área entra directo, y el primer subtítulo no llega hasta que cambias de asunto por primera vez.
@@ -268,14 +229,7 @@ Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repit
 EL ORDEN DE LOS CINCO BLOQUES CAMBIA SEGÚN EL ÁREA:
 Las siete áreas se leen seguidas dentro del mismo informe. Si las siete siguen el mismo esqueleto se nota, y el estudio deja de parecer escrito para esa persona y empieza a parecer una plantilla rellenada. Por eso cada área lleva su propia secuencia. El cierre es lo único que va siempre al final, porque es el cierre.
 
-Sigue EXACTAMENTE la secuencia del área que te están pidiendo:
-- ÁREA 1, IDENTIDAD:   HOY, ESCENA, ORIGEN, CREENCIAS, CIERRE
-- ÁREA 2, PATRONES:    HOY, CREENCIAS, ESCENA, ORIGEN, CIERRE
-- ÁREA 3, MIEDOS:      ORIGEN, ESCENA, HOY, CREENCIAS, CIERRE
-- ÁREA 4, HERIDA:      CREENCIAS, HOY, ESCENA, ORIGEN, CIERRE
-- ÁREA 5, AMOR:        HOY, ORIGEN, ESCENA, CREENCIAS, CIERRE
-- ÁREA 6, RELACIONES:  ORIGEN, HOY, ESCENA, CREENCIAS, CIERRE
-- ÁREA 7, DINERO:      CREENCIAS, ESCENA, HOY, ORIGEN, CIERRE
+LA SECUENCIA DE ESTA ÁREA VIENE ESCRITA ABAJO, EN LA PETICIÓN, Y SE SIGUE EXACTAMENTE.
 
 Cuando un bloque te caiga en un sitio que no es el que pediría la lógica de siempre, engánchalo bien con lo que va antes: el texto tiene que leerse como alguien hablando seguido, nunca como piezas sueltas colocadas en otro orden.
 
@@ -302,23 +256,9 @@ PROHIBICIONES ABSOLUTAS:
 - No frases de autoayuda ni coaching
 - No decir qué debe hacer la persona
 - PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
-- PROHIBIDO escribir párrafos de más de 7 líneas. Parte en 2 si hace falta
-- UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos. Se cuentan antes de entregar
-- PROHIBIDO cambiar el orden de los cinco bloques: van en la secuencia exacta de ESTA área
-- PROHIBIDO explicar de dónde nace una fortaleza. El porqué es solo de los desafíos: la fortaleza se cuenta y ya. De los desafíos tienes el porqué escrito abajo; de las fortalezas no lo tienes, así que cualquiera que escribas te lo estarías inventando
-- PROHIBIDO enumerar o anunciar cuántas cosas vienen ("son tres", "el primero", "la segunda")
-- PROHIBIDO que un párrafo empiece un tema nuevo sin engancharlo con el anterior
-- PROHIBIDO encadenar tres frases cortas seguidas. Frases largas unidas por comas
-- PROHIBIDO comprimir el texto para que quepa. Si sobra, se quita contenido entero
-- PROHIBIDO retorcer una frase o usar un verbo raro para que suene literario. Si no lo diría una persona hablando, se reescribe
-- PROHIBIDO apilar varias explicaciones del origen. Una sola, bien desarrollada
-- PROHIBIDO que todos los párrafos midan casi lo mismo. La variedad es obligatoria
-- PROHIBIDO poner escenas tontas, genéricas o abstractas. Si no es específica y visual, no vale
-- PROHIBIDO atribuirle un hecho de su vida que no esté en la carta: una relación, un trabajo, una mudanza, algo que le pasó. La escena es de su vida de ahora, nunca un episodio suyo del pasado
-- PROHIBIDO entregar un área sin haberla llamado por su nombre al menos dos veces
-- PROHIBIDO cerrar un área con una frase suave o vaga. El cierre siempre golpea
 
-ESCRIBE CADA FRASE YA BIEN A LA PRIMERA. No escribas el área y la arregles después, ni entregues dos versiones de nada: sale una sola vez, y sale bien porque cada frase cumple las reglas de arriba al escribirla. Entre una frase simple que se entienda entera y una bonita que haya que releer, siempre la simple.`;
+ESCRIBE CADA FRASE YA BIEN A LA PRIMERA. No escribas el área y la arregles después, ni entregues dos versiones de nada: sale una sola vez, y sale bien porque cada frase cumple las reglas de arriba al escribirla. Entre una frase simple que se entienda entera y una bonita que haya que releer, siempre la simple.
+`;
 
   const AREAS = [
     {
@@ -327,57 +267,175 @@ ESCRIBE CADA FRASE YA BIEN A LA PRIMERA. No escribas el área y la arregles desp
 
 Esta área abre el estudio, así que empieza con una entrada de dos o tres frases que la sitúen antes de entrar en materia, como se abre un libro. Suave, sin prisa y sin adelantar lo que viene. Solo el área 1 lleva esa entrada.
 
+EN ESTA ÁREA, EL BLOQUE HOY CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué le ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que hace por fuera. Es lo que le pone nombre a su manera de funcionar y lo que se lleva puesto al terminar de leer.
+Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que no pondría primero si le preguntaras. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
+Los puntos ciegos que no ve: lo que hace y no registra como un problema, o que registra al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
+Qué muestra, qué oculta y qué contradicciones tiene: la distancia entre la persona que enseña y la que guarda, y las cosas suyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a esa persona y no a un perfil que le valdría a cualquiera.
+Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante.
+
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: HOY, ESCENA, ORIGEN, CREENCIAS, CIERRE
+
 CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: la ESCENA entra sin avisar, pegada a la frase anterior y arrancando por el momento concreto. El ORIGEN entra contestando algo que ella ya se ha preguntado alguna vez. Las CREENCIAS entran por la frase que ella se dice por dentro, dicha con sus palabras.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
+EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
+1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
+4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
+5. Su nombre de pila, dos veces como mínimo y separadas.
+6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+`
     },
     {
       id: 2,
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué repite una y otra vez sin darse cuenta.
 
+EN ESTA ÁREA, EL BLOQUE HOY CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+Cuáles son sus patrones: los que de verdad le gobiernan la vida, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera.
+Qué los enciende: la situación exacta que los dispara, la que hace saltar el automatismo antes de que se dé cuenta. Es lo que hace que se reconozca al leerlo.
+Dónde acaba siempre: el mismo punto de llegada al que vuelve una vez tras otra, por caminos distintos y con gente distinta. Es donde ve que el patrón existe de verdad.
+Qué gana con ellos: de qué la protegen, qué le evitan, qué se ahorra cada vez que los repite. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
+Lo que gana con el patrón va aquí; la creencia que lo sostiene va más adelante, en su sitio, y no se cuenta dos veces.
+
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: HOY, CREENCIAS, ESCENA, ORIGEN, CIERRE
+
 CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las CREENCIAS entran por lo que hace cuando se la cree, y la idea se nombra al final, no al principio. La ESCENA entra dentro de un párrafo ya empezado, sin punto y aparte delante. El ORIGEN entra por las dos partes suyas que chocan, nombradas las dos.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
+EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
+1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
+4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
+5. Su nombre de pila, dos veces como mínimo y separadas.
+6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+`
     },
     {
       id: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que gobierna su vida sin que lo nombre.
 
+EN ESTA ÁREA, EL BLOQUE HOY CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+Cuál es el miedo que gobierna su vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que nombraría si le preguntaras, y de qué tiene miedo en el fondo cuando tiene miedo de eso.
+Qué se lo dispara y cómo reacciona cuando aparece: las situaciones concretas que lo encienden, y lo que hace en ese momento sin decidirlo, si se paraliza, si controla más, si se adelanta, si desaparece.
+Qué está evitando por él y qué le ha costado ya: lo que lleva años sin hacer por ese miedo, y el precio que ha pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijo a tiempo.
+
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: ORIGEN, ESCENA, HOY, CREENCIAS, CIERRE
+
 CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el ORIGEN abre el área nombrando el miedo por su nombre, a la cara y sin rodeo. La ESCENA entra por un objeto o un gesto concreto suyo. Las CREENCIAS entran por lo que evita hacer, y de ahí sale la idea.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
+EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
+1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
+4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
+5. Su nombre de pila, dos veces como mínimo y separadas.
+6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+`
     },
     {
       id: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué le sigue doliendo hoy y cómo le afecta.
 
+EN ESTA ÁREA, EL BLOQUE HOY CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+Cuál es la herida y qué la reabre hoy: qué le duele por dentro y qué le sigue faltando desde siempre, y las situaciones concretas de su vida de ahora que la vuelven a tocar.
+Cómo se protege cuando se reabre, y qué se está perdiendo por protegerse así: lo que hace en ese momento para que no le vuelva a doler, y lo que esa misma protección le está dejando fuera.
+Qué necesita de verdad en ese momento: ponerle nombre a lo que lleva años sintiendo sin saber decirlo, y qué acaba haciendo con esa necesidad.
+
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: CREENCIAS, HOY, ESCENA, ORIGEN, CIERRE
+
 CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las CREENCIAS abren el área con la idea dicha en su voz, como se la diría ella a sí misma. La ESCENA entra por lo que hace con las manos en ese momento. El ORIGEN entra por lo que le faltó, no por lo que le pasa hoy.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
+EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
+1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
+4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
+5. Su nombre de pila, dos veces como mínimo y separadas.
+6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+`
     },
     {
       id: 5,
       prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo vive las relaciones de pareja.
 
+EN ESTA ÁREA, EL BLOQUE HOY CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+Cómo es en el amor: cómo se comporta cuando quiere a alguien de verdad, cómo lo demuestra, cuánto se entrega y cuánto se guarda, y qué le pasa con el deseo y con la intimidad.
+Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que no se está dando. Esto NO es lo mismo que lo que a ella le engancha, que va en el punto siguiente: aquí se cuenta a quién atrae ella, aunque no lo busque, y los dos puntos se cuentan enteros.
+Qué necesita de la otra persona para sentirse querida y qué le enamora: lo que le hace falta para bajar la guardia, y lo que la engancha de alguien, que no siempre es lo mismo.
+Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué hace ahí sin darse cuenta.
+Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
+
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: HOY, ORIGEN, ESCENA, CREENCIAS, CIERRE
+
 CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el ORIGEN entra por la parcela concreta de su vida donde se le nota. La ESCENA entra por una conversación, y por lo que no llegó a decir en ella. Las CREENCIAS entran por la distancia entre lo que da y lo que pide.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
+EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
+1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
+4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
+5. Su nombre de pila, dos veces como mínimo y separadas.
+6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+`
     },
     {
       id: 6,
       prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: cómo se vincula con los demás fuera de la pareja.
 
+EN ESTA ÁREA, EL BLOQUE HOY CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
+Qué papel ocupa siempre sin decidirlo: el sitio que acaba ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darse cuenta de que lo ocupa.
+Qué pasa con lo que da y lo que recibe: si la balanza le sale igualada o no, cuánto sostiene y cuánto le sostienen, y qué hace cuando esa cuenta no le cuadra.
+En qué dinámicas acaba metiéndose una y otra vez: el tipo de relación que se le repite con gente distinta, y qué se repite por dentro cada vez que vuelve a pasar.
+
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: ORIGEN, HOY, ESCENA, CREENCIAS, CIERRE
+
 CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el ORIGEN abre el área contando de dónde le viene el sitio que ocupa con la gente. La ESCENA entra por lo que hacen o dicen los demás, no por lo que hace ella. Las CREENCIAS entran por lo que le cuesta sostener ese sitio, y la idea llega al final del párrafo.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
+EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
+1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
+4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
+5. Su nombre de pila, dos veces como mínimo y separadas.
+6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+`
     },
     {
       id: 7,
       prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero.
 
+EN ESTA ÁREA, EL BLOQUE HOY CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+Qué significa el dinero para esa persona y qué le mueve a ganarlo: qué representa de verdad en su cabeza, más allá de los números, y qué es lo que la empuja a querer más o a conformarse.
+Qué hace con él cuando lo tiene: cómo lo gasta, cómo toma las decisiones de dinero, y cómo lleva el riesgo cuando hay algo en juego.
+Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo con el que se encuentra una y otra vez, incluido lo que hace en el trabajo cuando toca pedir o cobrar lo que vale, y qué le ocurre justo cuando las cosas empiezan a salirle.
+
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: CREENCIAS, ESCENA, HOY, ORIGEN, CIERRE
+
 CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las CREENCIAS abren el área por lo que el dinero significa para ella, no por la idea en abstracto. La ESCENA entra por una cantidad o un número concreto. El ORIGEN entra por lo que se repite en las dos caras, lo compartido y lo suyo.
 
-No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.`
+No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
+EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
+1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
+4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
+5. Su nombre de pila, dos veces como mínimo y separadas.
+6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+`
     },
   ];
 
