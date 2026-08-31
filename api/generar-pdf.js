@@ -330,7 +330,7 @@ export default async function handler(req, res) {
 
       function dibujarSigno(idx, centerX, centerY, size) {
         doc.setDrawColor(COL_VERDE[0],COL_VERDE[1],COL_VERDE[2]);
-        doc.setLineWidth(0.5);
+        doc.setLineWidth(0.3);
         var sz = size, x = centerX, y = centerY;
         if (idx===0){doc.line(x-sz*.7,y+sz*.5,x,y-sz*.3);doc.line(x,y-sz*.3,x+sz*.7,y+sz*.5);doc.line(x-sz*.7,y+sz*.5,x-sz*.5,y+sz*.1);doc.line(x+sz*.7,y+sz*.5,x+sz*.5,y+sz*.1);}
         else if(idx===1){doc.circle(x,y+sz*.25,sz*.35);doc.line(x-sz*.5,y-sz*.1,x-sz*.7,y-sz*.5);doc.line(x+sz*.5,y-sz*.1,x+sz*.7,y-sz*.5);}
@@ -373,7 +373,7 @@ export default async function handler(req, res) {
       }
 
       function dibujarPlaneta(tipo, centerX, centerY, size) {
-        doc.setDrawColor(COL_VERDE[0],COL_VERDE[1],COL_VERDE[2]); doc.setLineWidth(0.45);
+        doc.setDrawColor(COL_VERDE[0],COL_VERDE[1],COL_VERDE[2]); doc.setLineWidth(0.28);
         var sz=size, x=centerX, y=centerY;
         if(tipo==='sol'){doc.circle(x,y,sz*.55);doc.setFillColor(COL_VERDE[0],COL_VERDE[1],COL_VERDE[2]);doc.circle(x,y,sz*.1,'F');}
         else if(tipo==='luna'){doc.setFillColor(COL_VERDE[0],COL_VERDE[1],COL_VERDE[2]);doc.circle(x-sz*.1,y,sz*.55,'F');doc.setFillColor(COL_CREMA[0],COL_CREMA[1],COL_CREMA[2]);doc.circle(x+sz*.15,y,sz*.5,'F');}
