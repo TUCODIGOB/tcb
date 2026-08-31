@@ -34,7 +34,7 @@ const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const RAIZ = path.join(AQUI, '..');
 
 // Huella del dibujo de la rueda para la carta de abajo. Ver la nota.
-const HUELLA_RUEDA = '8c8d0500661cd9cd';
+const HUELLA_RUEDA = 'f7be33ec9bd3f560';
 
 const CARTA = { year: 1953, month: 3, day: 15, localHour: 12, localMin: 0,
                 latDeg: 40.4168, lonDeg: -3.7038, tzOffset: 1 };
