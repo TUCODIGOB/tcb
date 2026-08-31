@@ -3,6 +3,7 @@ const require = createRequire(import.meta.url);
 const { jsPDF } = require('jspdf');
 import Stripe from 'stripe';
 import { compraValida, esDelProducto, estado, liberar, completar } from '../lib/reserva.js';
+import { guardarInforme } from '../lib/guardar-informe.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -882,6 +883,22 @@ export default async function handler(req, res) {
       } catch (avisoErr) {
         console.error('Tampoco se pudo avisar del fallo del PDF:', avisoErr.message);
       }
+    }
+
+    // Guardar lo que se le ha entregado, para que el siguiente producto pueda
+    // apoyarse en ESTE informe y no en una tirada nueva. Va aqui, con el PDF ya
+    // hecho, y nunca corta: si falla, el cliente recibe su informe igual.
+    try {
+      const guardado = await guardarInforme({
+        producto: 'p1',
+        sessionId: session_id,
+        cliente: { nombre, sexo, email: sessionEmail, fecha: fechaNice, hora, lugar, edad },
+        areas,
+        rasgos: rasgos || null,
+      });
+      if (guardado.guardado) console.log(`Informe guardado: ${guardado.ruta} (${guardado.bytes} bytes)`);
+    } catch (err) {
+      console.error('No se pudo guardar el informe:', err.message);
     }
 
     // Marcar el informe como completado para bloquear generaciones repetidas.
