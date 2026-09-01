@@ -119,6 +119,52 @@ export function repartir(texto) {
 // lo que se le enseñe escrito, lo copia, y entonces el informe deja de ser de
 // quien lo ha comprado.
 
+// ── LAS REGLAS QUE VALEN PARA TODO EL P2 ────────────────────
+//
+// Esto no es de las creencias: es como se le habla y que no se le puede
+// inventar. Vale igual para los otros puntos del informe.
+//
+// Escrito UNA VEZ y metido en cada encargo. Si el tono hay que corregirlo, se
+// corrige aqui y queda corregido en todos, en vez de ir persiguiendo la misma
+// frase por ocho sitios y dejarla distinta en cada uno.
+
+const REGLAS_COMUNES = `AQUI NO SE ESCRIBEN ESCENAS
+
+Ni una. Nada de contarle un momento suyo como si lo estuvieras viendo: ni una hora, ni un dia de la semana, ni un sitio, ni lo que tenia en la mano, ni lo que hizo despues.
+
+En cuanto describes un momento te lo estas inventando, y ella lo nota a la primera. Una escena que no le paso tira todo lo demas, aunque lo demas sea cierto.
+
+Lo que si se dice es como funciona: lo que hace siempre que le pasa eso. Eso es suyo y es verdad. El cuando y el donde, no.
+
+
+NO SE LE INVENTA NADA DE SU VIDA
+
+Ni su infancia, ni sus padres, ni una pareja, ni hijos, ni un trabajo, ni de donde le viene el dinero, ni un episodio que le paso. Si no esta escrito en lo que te paso, no existe.
+
+Si nombras a alguien de su alrededor, esa persona tiene que estar en lo que te paso; y no le pongas sexo, ni parentesco, ni nombre que no le hayan puesto.
+
+Y no lo arregles con un momento de los que le pasan a cualquiera: eso tambien es ponerle una vida que no sabes si tiene.
+
+Y ninguna puede contradecir lo que sus rasgos dicen: si en ellos pone que se le da bien algo, no vale decirle que le cuesta.
+
+
+COMO SE HABLA
+
+Le hablas a ella de tu, como alguien que la conoce bien y se lo cuenta claro. Ni como un informe, ni como un libro, ni como una experta explicando.
+
+- SE ENTIENDE A LA PRIMERA. Si una frase hay que releerla, esta mal escrita. Lo tiene que entender alguien de dieciocho años sin pararse.
+- LAS PALABRAS SON LAS DE TODOS LOS DIAS. Si una palabra la verias antes en un informe que en una conversacion, fuera.
+- NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa. Si lo que escribes no se puede ver ocurriendo de verdad, esta mal escrito.
+- LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice ella por dentro cuando le pasa eso.
+- LE DAS LA RAZON ANTES DE CORREGIRLA. Nunca de frente.
+- FRASES SUELTAS PARA REMATAR. Una linea corta, en su propio parrafo, cuando algo tiene que aterrizar.
+- NI UNA PALABRA TECNICA: ningun planeta, ningun signo, ninguna casa, ningun aspecto. Su carta no se nombra, y no se dice tu informe ni tu estudio.
+- NADA DE ANIMAR NI DE CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
+- Español de España, hablado. Ni una palabra en otro idioma.
+- Sin asteriscos, sin listas, sin simbolos, sin guiones de adorno y sin numerar nada. Fuera de la linea de la creencia y de los cuatro ladillos, todo va en texto corrido.
+
+CUANTO OCUPA: lo que necesite para entenderse, ni una linea mas. Pero corto no es apretado: lo que sobra es repetir con otras palabras algo ya dicho; lo que no sobra es explicarse.`;
+
 // ── EL ENCARGO ──────────────────────────────────────────────
 //
 // UNO SOLO. Antes eran tres -elegir, juntar, escribir- porque de una tirada
@@ -279,15 +325,6 @@ Que lo cierre sabiendo por donde tira, no solo entendiendo por que esta atascada
 Pero sin irse de largo y sin convertirlo en un plan: ni ejercicios, ni pasos, ni pruebas para esta semana, ni consejos. El como se hace va en otra parte.
 
 
-AQUI NO SE ESCRIBEN ESCENAS
-
-Ni una. Nada de contarle un momento suyo como si lo estuvieras viendo: ni una hora, ni un dia de la semana, ni un sitio, ni lo que tenia en la mano, ni lo que hizo despues.
-
-En cuanto describes un momento te lo estas inventando, y ella lo nota a la primera. Una escena que no le paso tira todo lo demas, aunque lo demas sea cierto.
-
-Lo que si se dice es como funciona: lo que hace siempre que le pasa eso. Eso es suyo y es verdad. El cuando y el donde, no.
-
-
 NINGUNA SE PARECE A OTRA AL LEERLA
 
 El montaje es el mismo en todas, y justo por eso lo que va escrito dentro tiene que ser distinto de verdad. Si ademas suenan igual, a la tercera sabe lo que viene y deja de leer.
@@ -303,33 +340,7 @@ El montaje es el mismo en todas, y justo por eso lo que va escrito dentro tiene 
 Antes de entregar, lee la primera frase de cada creencia seguidas, y luego la ultima de cada una. Si se parecen, reescribelas.
 
 
-NO SE LE INVENTA NADA DE SU VIDA
-
-Ni su infancia, ni sus padres, ni una pareja, ni hijos, ni un trabajo, ni de donde le viene el dinero, ni un episodio que le paso. Si no esta escrito en lo que te paso, no existe.
-
-Si nombras a alguien de su alrededor, esa persona tiene que estar en lo que te paso; y no le pongas sexo, ni parentesco, ni nombre que no le hayan puesto.
-
-Y no lo arregles con un momento de los que le pasan a cualquiera: eso tambien es ponerle una vida que no sabes si tiene.
-
-Y ninguna puede contradecir lo que sus rasgos dicen: si en ellos pone que se le da bien algo, no vale decirle que le cuesta.
-
-
-COMO SE HABLA
-
-Le hablas a ella de tu, como alguien que la conoce bien y se lo cuenta claro. Ni como un informe, ni como un libro, ni como una experta explicando.
-
-- SE ENTIENDE A LA PRIMERA. Si una frase hay que releerla, esta mal escrita. Lo tiene que entender alguien de dieciocho años sin pararse.
-- LAS PALABRAS SON LAS DE TODOS LOS DIAS. Si una palabra la verias antes en un informe que en una conversacion, fuera.
-- NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa. Si lo que escribes no se puede ver ocurriendo de verdad, esta mal escrito.
-- LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice ella por dentro cuando le pasa eso.
-- LE DAS LA RAZON ANTES DE CORREGIRLA. Nunca de frente.
-- FRASES SUELTAS PARA REMATAR. Una linea corta, en su propio parrafo, cuando algo tiene que aterrizar.
-- NI UNA PALABRA TECNICA: ningun planeta, ningun signo, ninguna casa, ningun aspecto. Su carta no se nombra, y no se dice tu informe ni tu estudio.
-- NADA DE ANIMAR NI DE CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
-- Español de España, hablado. Ni una palabra en otro idioma.
-- Sin asteriscos, sin listas, sin simbolos, sin guiones de adorno y sin numerar nada. Fuera de la linea de la creencia y de los cuatro ladillos, todo va en texto corrido.
-
-CUANTO OCUPA: lo que necesite para entenderse, ni una linea mas. Pero corto no es apretado: lo que sobra es repetir con otras palabras algo ya dicho; lo que no sobra es explicarse.
+${REGLAS_COMUNES}
 
 
 QUE ENTREGAS
@@ -394,6 +405,27 @@ function primerosParrafos(bloques) {
     }
   }
   return lista;
+}
+
+// UNA CREENCIA A MEDIAS NO SE ENTREGA.
+//
+// Si el modelo llega al techo de escritura, la ultima se queda cortada a mitad
+// de frase -paso, y se lo llevo el cliente-. Vale mas que lea cinco enteras
+// que cinco y media: lo cortado se nota a la primera y tira todo lo demas.
+//
+// Entera es que lleve sus cuatro ladillos y que ninguno se quede vacio. Solo
+// se miran las del final, que son las unicas que se pueden haber cortado.
+export function quitarLasCortadas(bloques) {
+  const entera = b => {
+    const suyos = b.partes.filter(p => p.ladillo).map(p => p.ladillo);
+    if (LADILLOS.some(l => !suyos.includes(l))) return false;
+    // Que el ultimo ladillo tenga algo escrito debajo.
+    const ultima = b.partes[b.partes.length - 1];
+    return Boolean(ultima && ultima.parrafo);
+  };
+  const limpio = [...bloques];
+  while (limpio.length && !entera(limpio[limpio.length - 1])) limpio.pop();
+  return limpio;
 }
 
 export function arranquesQueChocan(bloques) {
@@ -566,13 +598,18 @@ async function escribirCreencias(informe, respuestas) {
 
   // Y despues, los trozos que entran igual que otro, reescritos por su
   // arranque. Solo llama al modelo si de verdad hay alguno.
-  const bloques = repartir(una.texto);
+  const escritas = repartir(una.texto);
+  const bloques = quitarLasCortadas(escritas);
+  const cortadas = escritas.length - bloques.length;
+  if (!bloques.length) throw new Error('No ha salido ninguna creencia entera');
+
   const dos = await desmoldarArranques(bloques);
 
   const suma = k => [una.uso, dos.uso].reduce((t, u) => t + (u[k] || 0), 0);
   return {
     bloques,
     rasgos,
+    cortadas,
     desmoldados: dos.arreglados,
     uso: { dentro: suma('input_tokens'), fuera: suma('output_tokens') },
   };
@@ -695,7 +732,7 @@ export default async function handler(req, res) {
     const informe = JSON.parse(await pedirR2(cfg, `/${clave}`));
 
     const t0 = Date.now();
-    const { bloques, rasgos, desmoldados, uso } =
+    const { bloques, rasgos, cortadas, desmoldados, uso } =
       await escribirCreencias(informe, respuestas);
     const seg = ((Date.now() - t0) / 1000).toFixed(0);
 
@@ -709,7 +746,8 @@ export default async function handler(req, res) {
     return res.status(200).send(pagina(
       `<div class="aviso">PRUEBA — informe ${escapar(clave)} · ${seg}s ·
         ${uso.dentro} dentro / ${uso.fuera} fuera ·
-        ${desmoldados ? `${desmoldados} arranques repetidos, reescritos` : 'ningun arranque repetido'}</div>
+        ${desmoldados ? `${desmoldados} arranques repetidos, reescritos` : 'ningun arranque repetido'}
+        ${cortadas ? `· ${cortadas} creencia(s) cortadas por el techo, fuera` : ''}</div>
        <details><summary>Chuleta: el material con el que ha escrito</summary>
          <pre>${escapar(rasgos)}</pre>
        </details>
