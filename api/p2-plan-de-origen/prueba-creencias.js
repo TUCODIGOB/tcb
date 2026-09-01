@@ -48,20 +48,12 @@ import crypto from 'crypto';
 // Estan escritos aqui una sola vez. El encargo los pide con estas palabras, y
 // al pintar la pagina se cogen de aqui y no de lo que devuelva el modelo, asi
 // que salen siempre bien escritos y con sus tildes aunque el se las coma.
-// EL TECHO DE CREENCIAS. Marca donde se corta si salieran mas de las que se le
-// piden. En el encargo ya no se le nombra: alli va el numero de abajo, y el
-// techo se aplica aqui por codigo, porque un techo solo pedido se puede pasar.
+// EL TECHO DE CREENCIAS. No es una cantidad que haya que alcanzar: si le salen
+// tres, van tres. Marca donde se corta cuando salen mas.
+//
+// Escrito aqui una vez: se le pide en el encargo y se corta despues por
+// codigo, porque un techo que solo esta pedido se puede pasar.
 const TECHO = 6;
-
-// CUANTAS SE LE PIDEN.
-//
-// El techo dice donde se corta; esto dice cuantas escribe. Sin un numero
-// pedido no hay ninguno: se quedaba en tres o en cuatro sin patron, porque
-// nada en el encargo ni en el codigo decidia la cantidad.
-//
-// Va por debajo del techo a proposito. Si le sobra alguna, el techo la corta;
-// si algun repaso se lleva una, quedan cuatro, que es lo que ya salia.
-const PEDIDAS = 5;
 
 const LADILLOS = [
   'La creencia',
@@ -283,13 +275,11 @@ CUANTAS
 
 Ordenalas de la que más le cuesta a la que menos.
 
-ESCRIBES ${PEDIDAS}, y las cuentas antes de entregar. Ni tres, ni cuatro: ${PEDIDAS}.
+${TECHO} ES EL TECHO, NO UNA CANTIDAD QUE HAYA QUE ALCANZAR. Si te quedan más de ${TECHO}, cortas ahí. Y si después de mirar sus respuestas Y sus rasgos solo salen tres de peso, van tres, y esta bien: son las suyas y no falta ninguna. Cada persona tiene las que tiene.
 
-Material hay de sobra. Sus dos listados de rasgos son largos, y si te quedas en tres es que no has pasado de lo que ella ha contestado hoy. Las que faltan están en sus rasgos, que es donde no has mirado.
+Las que se quedan son las que más le cuestan, midiendo con lo que ya has visto arriba.
 
-Las ${PEDIDAS} son las que más le cuestan, midiendo con lo que ya has visto arriba.
-
-Y no se rellena para que salga el número: ninguna de las ${PEDIDAS} puede ser una que no le quite nada, ni una que ya has juntado y vuelves a separar, que eso devuelve el repetido que acabas de quitar. Si una no aguanta lo de arriba, la cambias por otra de sus rasgos; no la dejas floja.
+No se rellena inventando para llegar a ${TECHO}, y una que ya has juntado no se vuelve a separar: eso devuelve el repetido que acabas de quitar.
 
 
 COMO VA MONTADA CADA CREENCIA
