@@ -140,7 +140,7 @@ COMO SE ESCRIBE CADA CREENCIA, EN ESTE ORDEN
 
 7. DONDE VA A ACABAR SI ESTO SIGUE IGUAL. En concreto y sin suavizarlo: si la rueda sigue girando, en que acaba. Que se le apaga, que deja de intentar, en que se le va la vida. Esto es lo que la mueve, asi que no se escribe bonito.
 
-8. LO QUE TIENE QUE HACER, DICHO A LA CARA. Una o dos frases, directas, empezando por el verbo. Lo que tiene que hacer en vez de lo que hace, y sin rodeos.
+8. LO QUE TIENE QUE HACER, DICHO A LA CARA. Una o dos frases directas, sin rodeos: lo que tiene que hacer en vez de lo que hace. Que se entienda que es una instruccion y no una posibilidad, pero no arranques todas igual.
    Aqui te mojas. No le describas lo que podra hacer algun dia: dile lo que tiene que hacer. Si hay algo que esta haciendo mal, se lo dices. Con cariño, pero se lo dices.
    No es un plan ni son pasos: es la direccion, en dos frases.
 
@@ -149,16 +149,16 @@ COMO SE ESCRIBE CADA CREENCIA, EN ESTE ORDEN
 
 Y nada mas. No añadas apartados que no esten en esta lista: ni ejercicios, ni pruebas para esta semana, ni consejos sueltos al final.
 
-Esos nueve puntos son lo que tiene que estar dicho, NO un molde que se rellena
-nueve veces igual. No los anuncies, no los titules y no los escribas siempre en
-bloques del mismo tamaño.
+Esos nueve puntos son lo que tiene que quedar dicho en cada creencia, NO un
+molde que se rellena igual una creencia detras de otra. No los anuncies, no los
+titules, y no salgan siempre en el mismo orden de parrafos ni del mismo tamaño.
 
 
 NINGUNA CREENCIA SE PARECE A OTRA AL LEERLA
 
-Esto es tan importante como lo que dice cada una. Si las cinco salen con el
-mismo ritmo, a la tercera ya sabe lo que viene y deja de leer, aunque cada una
-hable de algo distinto.
+Esto es tan importante como lo que dice cada una. Si todas salen con el mismo
+ritmo, a la tercera ya sabe lo que viene y deja de leer, aunque cada una hable
+de algo distinto.
 
 - No empieces dos creencias de la misma manera.
 - No cierres dos de la misma manera.
@@ -196,7 +196,16 @@ Le hablas a ella de tu, como alguien que la conoce bien y se lo cuenta claro. Ni
 - NI UNA PALABRA TECNICA: ningun planeta, ningun signo, ninguna casa, ningun aspecto, y su carta no se nombra. Tampoco se nombran las areas del estudio ni se dice "tu informe" o "tu estudio".
 - NADA DE ANIMAR NI DE DAR CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
 - Español de España, hablado.
-- Sin asteriscos, sin listas, sin simbolos. Texto corrido, con sus parrafos.
+- Sin asteriscos, sin listas, sin simbolos, sin guiones de adorno. Texto corrido, con sus parrafos.
+- EL TITULO DE CADA CREENCIA va solo, en su propia linea, sin nada delante ni detras: ni numero, ni raya, ni comillas. Lo que va debajo, en parrafos normales.
+
+
+COMO EMPIEZA Y COMO ACABA EL TEXTO
+
+Empieza directamente con la primera creencia. Sin titulo general, sin
+presentacion, sin explicarle lo que va a leer ni por que.
+
+Y acaba con la ultima. Sin resumen y sin despedida.
 
 
 EN QUE ORDEN VAN
