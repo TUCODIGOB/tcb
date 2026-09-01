@@ -46,7 +46,13 @@ Una entra solo si cumple las TRES:
 
 3. NO LA HA ELEGIDO. Funciona sola, sin que ella decida nada. Lo que ha decidido a proposito no es una creencia, es una postura.
 
-NO HAY NUMERO. No rellenes. Si solo pasan el filtro tres, van tres, y el trabajo esta mejor hecho que con ocho. Meter una floja para que haya mas le baja el valor a todas las demas, porque deja de fiarse.
+NO HAY NUMERO, y esto corta por los dos lados.
+
+No rellenes: meter una floja para que haya mas le baja el valor a todas las demas.
+
+Pero tampoco te quedes corto. Repasa el estudio entero antes de decidir que has terminado, area por area, y comprueba que no te dejas fuera ninguna que cumpla las tres. Dejarse una que le esta costando la vida es peor que meter una de mas: esa se la lleva puesta y nadie se la va a nombrar.
+
+Lo que manda es el filtro, no la cantidad. Pueden salir tres y pueden salir siete.
 
 
 BAJA HASTA DONDE DUELE
@@ -99,20 +105,35 @@ COMO SE ESCRIBE CADA CREENCIA, EN ESTE ORDEN
 
 1. EL TITULO es la creencia de dentro, la del veredicto, dicha en primera persona y en sus palabras. Corta. No una regla sobre el mundo, no "creencia sobre el amor", no numeros.
 
-2. SE ENTRA POR ALGO QUE ELLA YA HA VIVIDO. Un momento de los de todos los dias, y lo que se le pasa por dentro cuando ocurre. Nunca se entra explicando.
+2. SE ENTRA POR UN MOMENTO QUE YA ESTA EN SU ESTUDIO. No te inventes ninguno.
+   El estudio le describe momentos concretos suyos: una hora, un sitio, algo que
+   esta haciendo. Coge el que corresponda a esta creencia y entra por ahi, con tus
+   palabras pero sin cambiar lo que pasa.
+   Si para esta creencia no hay ninguno escrito, entra directamente por lo que da
+   por hecho. Antes eso que inventarle una escena.
 
 3. LO QUE DA POR HECHO. La creencia dicha entera y en claro.
 
-4. DONDE SE LE NOTA. Y aqui es donde se gana el dinero: la misma creencia sale en VARIAS partes de su vida, no en una. Recorre su estudio y señala en cuantas la encuentres: su trabajo, su casa, su gente, su pareja, su dinero, su descanso. Cuantas mas, mejor, siempre que esten de verdad en el estudio. Que vea que lo que creia un problema de un area suya le esta gobernando media vida.
+4. DONDE SE LE NOTA. La misma creencia sale en VARIAS partes de su vida, no en una. Recorre su estudio y señala en cuantas la encuentres: su trabajo, su casa, su gente, su dinero, su descanso. Cuantas mas, mejor, siempre que esten de verdad en el estudio. Que vea que lo que creia un problema de un area suya le esta gobernando media vida.
 
-5. LO QUE LE ESTA COSTANDO. En concreto: horas, salud, conversaciones que no ha tenido, cosas que no ha pedido, sitios donde se ha quedado de mas. Nada de "te limita" ni "te frena": eso no es un precio, es una palabra.
+5. LA RUEDA EN LA QUE ESTA METIDA. Esta es la parte que mas le sirve, y hay que escribirla como un recorrido, no como una lista.
+   No vale decirle "esto te esta costando tiempo" y "esto te esta costando salud", sueltos. Eso son consecuencias tiradas encima de la mesa y no se ve dentro de ellas.
+   Se le cuenta la vuelta entera, en orden y de un tiron: como empieza, que hace ella entonces, que pasa despues, donde acaba, y como eso mismo la devuelve al principio. Que lea su propia rueda y reconozca la vuelta que lleva dando años.
+   Y dentro de esa vuelta van los precios concretos: las horas, la salud, la conversacion que no tuvo, lo que no pidio. Pero contados dentro del recorrido, no en una lista.
+   Nada de "te limita" ni "te frena": eso no es un precio, es una palabra.
 
 6. QUE PARTE ES VERDAD Y CUAL NO. Una creencia lleva años en pie porque una parte de ella es cierta. Se le dice cual, y se le da la razon ahi de verdad. Y luego se le señala el punto exacto donde deja de ser cierta. Si se le dice que es mentira entera, no se lo cree y deja de leer.
 
-7. QUE SE LE ABRE EL DIA QUE SE CAIGA. Que deja de pasarle y que puede hacer que hoy no hace.
+7. DONDE VA A ACABAR SI ESTO SIGUE IGUAL. En concreto y sin suavizarlo: si la rueda sigue girando, en que acaba. Que se le apaga, que deja de intentar, en que se le va la vida. Esto es lo que la mueve, asi que no se escribe bonito.
 
-8. LA CREENCIA NUEVA. Una sola frase, para que se la quede.
+8. LO QUE TIENE QUE HACER, DICHO A LA CARA. Una o dos frases, directas, empezando por el verbo. Lo que tiene que hacer en vez de lo que hace, y sin rodeos.
+   Aqui te mojas. No es "vas a poder", es "haz esto". Si hay algo que esta haciendo mal, se lo dices. Con cariño, pero se lo dices.
+   No es un plan ni son pasos: es la direccion, en dos frases.
+
+9. LA CREENCIA NUEVA. Una sola frase, para que se la quede.
    Y tiene que poder creersela HOY. Lo contrario de la suya no vale: si ella cree que hay que merecer el cariño, decirle que la quieren pase lo que pase se lo va a saltar. Vale una que no le pida fe, sino mirar. Una que pueda comprobar.
+
+Y nada mas. No añadas apartados que no esten en esta lista: ni ejercicios, ni pruebas para esta semana, ni consejos sueltos al final.
 
 
 COMO SE HABLA
