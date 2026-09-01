@@ -17,21 +17,31 @@ import crypto from 'crypto';
 
 const AREAS = ['IDENTIDAD', 'PATRONES', 'MIEDOS', 'HERIDA', 'AMOR', 'RELACIONES', 'DINERO'];
 
-// ── EL ENCARGO ───────────────────────────────────────────────────
+// ── EL ENCARGO, EN DOS PASOS ─────────────────────────────────────
+//
+// Antes iba de una tirada: leia el informe y escribia las creencias del
+// primer viaje. Salian repetidas -dos y dos decian lo mismo debajo-, y
+// todas con el mismo ritmo, porque juntarlas se le pedia AL FINAL, cuando
+// ya las tenia escritas, y nadie tira siete paginas ya hechas.
+//
+// Ahora son dos: primero ELIGE, sin escribir ni una linea para ella, y ahi
+// juntar no le cuesta nada. Y luego ESCRIBE solo las que han quedado.
 //
 // Solo reglas. Ni una linea de ejemplo, ni un trozo de informe de muestra:
 // lo que se le enseñe escrito, lo copia, y entonces el informe deja de ser
 // de quien lo ha comprado.
-const ENCARGO = `Eres quien escribe la segunda parte de un estudio personal. La persona ya leyo la primera parte, que le contaba como es y por que. Esta segunda parte es para que cambie.
 
-Te toca UNA sola cosa: sus creencias. Lo que da por cierto sin haberlo puesto en duda nunca, y que hace que todo lo demas se le repita.
+// ── PASO 1: elegir ───────────────────────────────────────────────
+const ELEGIR = `Estas preparando la segunda parte de un estudio personal. Todavia NO escribes nada para la persona: hoy solo decides.
+
+Abajo tienes el estudio que ella ya leyo, el que le contaba como es y por que. De ahi tienes que sacar sus creencias: lo que da por cierto sin haberlo puesto en duda nunca, y que hace que todo lo demas se le repita.
 
 
-DE DONDE SALEN LAS CREENCIAS
+DE DONDE SALEN
 
-Del estudio que te paso abajo. De ahi y de ningun otro sitio.
+Del estudio y de ningun otro sitio.
 
-Ese estudio ya trae escritas sus creencias, unas con todas sus letras y otras metidas dentro de lo que se le cuenta. Las sacas de ahi. No inventas ninguna, no le añades una que "encajaria", y no le pones ninguna que no puedas señalar en el texto.
+Ese estudio ya trae escritas sus creencias, unas con todas sus letras y otras metidas dentro de lo que se le cuenta. Las sacas de ahi. No inventas ninguna, no le añades una que "encajaria", y no pones ninguna que no puedas señalar en el texto.
 
 
 CUALES ENTRAN Y CUALES NO
@@ -46,14 +56,6 @@ Una entra solo si cumple las TRES:
 
 3. NO LA HA ELEGIDO. Funciona sola, sin que ella decida nada. Lo que ha decidido a proposito no es una creencia, es una postura.
 
-NO HAY NUMERO, y esto corta por los dos lados.
-
-No rellenes: meter una floja para que haya mas le baja el valor a todas las demas.
-
-Pero tampoco te quedes corto. Repasa el estudio entero antes de decidir que has terminado, area por area, y comprueba que no te dejas fuera ninguna que cumpla las tres. Dejarse una que le esta costando la vida es peor que meter una de mas: esa se la lleva puesta y nadie se la va a nombrar.
-
-Lo que manda es el filtro, no la cantidad. Pueden salir tres y pueden salir siete.
-
 
 BAJA HASTA DONDE DUELE
 
@@ -63,124 +65,122 @@ Una creencia tiene dos versiones. La presentable es una regla sobre como funcion
 
 Y debajo hay otra, que es un veredicto sobre ELLA. Lo que cree que es, o que le falta, o que le sobra. Y esa no la ha dicho en voz alta nunca, ni a su mejor amiga.
 
-Esa es la que se escribe.
+Esa es la que se elige.
 
-Para encontrarla: coge la version presentable y preguntate que tiene que ser cierto sobre ella para que se comporte asi. Y luego preguntatelo otra vez. Se para cuando llegas a un veredicto sobre lo que ella es o lo que le falta, algo que la deja sin sitio. Y lo escribes con las palabras que usaria ella: si la frase te sale igual que le saldria a cualquier otra persona, no has llegado a la suya.
+Para encontrarla: coge la version presentable y preguntate que tiene que ser cierto sobre ella para que se comporte asi. Y luego preguntatelo otra vez. Se para cuando llegas a un veredicto sobre lo que ella es o lo que le falta, algo que la deja sin sitio.
 
-COMO SE SABE QUE HAS LLEGADO: la creencia esta escrita en primera persona, dice algo sobre ella y no sobre el mundo, y da un poco de verguenza leerla. Si al leerla se puede asentir tranquilamente, no has bajado.
-
-Y se escribe con SUS palabras, las de dentro, no las educadas.
+COMO SE SABE QUE HAS LLEGADO: esta en primera persona, dice algo sobre ella y no sobre el mundo, y da un poco de verguenza leerla. Si al leerla se puede asentir tranquilamente, no has bajado.
 
 
-NINGUNA SE PARECE A OTRA
+AHORA JUNTA, Y JUNTA SIN PENA
 
-Cuando bajas a ese fondo, muchas se juntan solas: varias reglas distintas resultan ser el mismo veredicto. Junta todas las que lo sean, sin miedo a quedarte con pocas. Vale mas cuatro que peguen que ocho que se pisen.
+Esta es la parte que de verdad importa hoy, y por eso se hace aqui: todavia no has escrito nada para ella, asi que tachar una linea no te cuesta nada.
 
-Dos creencias son la misma cuando debajo dicen lo mismo, aunque cambien las palabras.
+Cuando bajas a ese fondo, muchas se juntan solas: varias reglas distintas resultan ser el mismo veredicto.
+
+Dos son la misma cuando debajo dicen lo mismo, aunque cambien las palabras y aunque una hable de su trabajo y la otra de su pareja. El sitio donde ocurre no las hace distintas.
 
 Y ademas, ninguna puede repetirle a otra:
 - el sitio de su vida donde se le nota
 - lo que le esta costando
 
-Si dos aterrizan en el mismo sitio o le cuestan lo mismo, es que son una. Juntalas.
+Si dos aterrizan en el mismo sitio o le cuestan lo mismo, es que son una.
 
+REPASO OBLIGATORIO ANTES DE ENTREGAR. Coge tu lista y compara cada una con TODAS las demas, una por una, sin saltarte ningun par. De cada par preguntate: si se lo cuento primero una y luego la otra, ¿va a pensar "esto ya me lo has dicho con otras palabras"? Si la respuesta es que si, las juntas en una sola y te quedas con la version que mas abajo llega.
 
-CADA CREENCIA SE TIENE QUE PODER SEÑALAR
+Vale mas tres que peguen que siete que se pisen. Quedarte con pocas no es quedarte corta: es haber hecho el trabajo.
 
-Antes de escribir una, encuentra en el estudio la frase concreta de la que sale. Si no puedes señalarla, no la escribas, por bien que suene.
-
-Y NINGUNA PUEDE CONTRADECIR LO QUE EL ESTUDIO YA LE DIJO. Si el estudio dice que se le da bien algo, no le digas ahora que le cuesta. Se acordara, porque lo leyo hace poco, y a partir de ahi no se cree nada.
+NO HAY NUMERO. No rellenes. Pero tampoco te dejes fuera una que cumpla las tres y no se parezca a ninguna: esa se la lleva puesta y nadie se la va a nombrar. Manda el filtro, no la cantidad.
 
 
 NO SE LE INVENTA NADA DE SU VIDA
 
-Ni su infancia, ni sus padres, ni como fue su casa, ni una pareja, ni un trabajo, ni un episodio que le paso.
+Ni su infancia, ni sus padres, ni como fue su casa, ni una pareja, ni si tiene hijos, ni un trabajo concreto, ni dinero que venga de algun sitio, ni un episodio que le paso.
 
-OJO CON ESTO: el estudio que te paso puede traer alguna frase de ese tipo, porque no deberia haberla escrito y a veces se le cuela. Si la ves, NO la repitas. Te quedas con como funciona ella, que eso si es suyo, y tiras la parte que le cuenta de donde le viene.
+OJO: el estudio que te paso puede traer alguna frase de ese tipo, porque no deberia haberla escrito y a veces se le cuela. Si la ves, no la des por buena. Te quedas con como funciona ella, que eso si es suyo, y tiras la parte que le cuenta de donde le viene.
 
-Y no lo arregles inventandote un momento "de los que le pasan a cualquiera": eso tambien es ponerle una vida que no sabes si tiene. Los momentos salen de su estudio, y si para una creencia no hay ninguno, no hay momento y se entra por otro sitio.
-
-
-COMO SE ESCRIBE CADA CREENCIA, EN ESTE ORDEN
-
-1. EL TITULO. Es lo primero que lee de cada creencia y decide si sigue leyendo,
-   asi que tiene que darle donde duele desde la primera linea.
-
-   Es el veredicto, dicho por ella y sobre ella. En primera persona, presente, y
-   corto: si no cabe de un vistazo, no golpea.
-
-   COMO SE SABE QUE ESTA BIEN: al leerlo tiene que apartar un poco la vista.
-   Si se puede leer entero sin que se le mueva nada, esta mal y se vuelve a bajar.
-
-   LO QUE NO ES UN TITULO:
-   - una norma sobre como funciona el mundo o sobre lo que hay que hacer
-   - una etiqueta que la nombra desde fuera, como si la estuvieran clasificando
-   - una explicacion larga con condiciones dentro
-   - una frase suavizada para que no incomode
-   - numeros ni encabezados de apartado
-
-2. SE ENTRA POR UN MOMENTO QUE YA ESTA EN SU ESTUDIO. No te inventes ninguno.
-   El estudio le describe momentos concretos suyos: una hora, un sitio, algo que
-   esta haciendo. Coge el que corresponda a esta creencia y entra por ahi, con tus
-   palabras pero sin cambiar lo que pasa.
-   Si para esta creencia no hay ninguno escrito, entra directamente por lo que da
-   por hecho. Antes eso que inventarle una escena.
-
-3. LO QUE DA POR HECHO. La creencia dicha entera y en claro.
-
-4. DONDE SE LE NOTA. La misma creencia sale en VARIAS partes de su vida, no en una. Recorre su estudio y señala en cuantas la encuentres: su trabajo, su casa, su gente, su dinero, su descanso. Cuantas mas, mejor, siempre que esten de verdad en el estudio. Que vea que lo que creia un problema de un area suya le esta gobernando media vida.
-
-5. LA RUEDA EN LA QUE ESTA METIDA. Esta es la parte que mas le sirve, y hay que escribirla como un recorrido, no como una lista.
-   No vale ir soltandole lo que le cuesta en frases sueltas, una detras de otra. Eso son consecuencias tiradas encima de la mesa y no se ve dentro de ellas.
-   Se le cuenta la vuelta entera, en orden y de un tiron: como empieza, que hace ella entonces, que pasa despues, donde acaba, y como eso mismo la devuelve al principio. Que lea su propia rueda y reconozca la vuelta que lleva dando años.
-   Y dentro de esa vuelta van los precios concretos: las horas, la salud, la conversacion que no tuvo, lo que no pidio. Pero contados dentro del recorrido, no en una lista.
-   Nada de "te limita" ni "te frena": eso no es un precio, es una palabra.
-
-6. QUE PARTE ES VERDAD Y CUAL NO. Una creencia lleva años en pie porque una parte de ella es cierta. Se le dice cual, y se le da la razon ahi de verdad. Y luego se le señala el punto exacto donde deja de ser cierta. Si se le dice que es mentira entera, no se lo cree y deja de leer.
-
-7. DONDE VA A ACABAR SI ESTO SIGUE IGUAL. En concreto y sin suavizarlo: si la rueda sigue girando, en que acaba. Que se le apaga, que deja de intentar, en que se le va la vida. Esto es lo que la mueve, asi que no se escribe bonito.
-
-8. LO QUE TIENE QUE HACER, DICHO A LA CARA. Una o dos frases directas, sin rodeos: lo que tiene que hacer en vez de lo que hace. Que se entienda que es una instruccion y no una posibilidad, pero no arranques todas igual.
-   Aqui te mojas. No le describas lo que podra hacer algun dia: dile lo que tiene que hacer. Si hay algo que esta haciendo mal, se lo dices. Con cariño, pero se lo dices.
-   No es un plan ni son pasos: es la direccion, en dos frases.
-
-9. LA CREENCIA NUEVA. Una sola frase, para que se la quede.
-   Y tiene que poder creersela HOY. Lo contrario de la suya no vale, porque eso le pide un salto de fe que no va a dar y se lo salta. Vale una que no le pida creer, sino mirar: algo que pueda comprobar por si misma.
-
-Y nada mas. No añadas apartados que no esten en esta lista: ni ejercicios, ni pruebas para esta semana, ni consejos sueltos al final.
-
-Esos nueve puntos son lo que tiene que quedar dicho en cada creencia, NO un
-molde que se rellena igual una creencia detras de otra. No los anuncies, no los
-titules, y no salgan siempre en el mismo orden de parrafos ni del mismo tamaño.
+Y NINGUNA PUEDE CONTRADECIR LO QUE EL ESTUDIO YA LE DIJO. Si el estudio dice que se le da bien algo, no vale elegir una que diga que le cuesta.
 
 
-NINGUNA CREENCIA SE PARECE A OTRA AL LEERLA
+QUE ENTREGAS
 
-Esto es tan importante como lo que dice cada una. Si todas salen con el mismo
-ritmo, a la tercera ya sabe lo que viene y deja de leer, aunque cada una hable
-de algo distinto.
+La lista, y NADA MAS. Ni presentacion, ni explicacion, ni comentarios tuyos.
 
-- No empieces dos creencias de la misma manera.
-- No cierres dos de la misma manera.
-- La parte de que es verdad y que no, dicha distinta cada vez. Si en todas usas
-  el mismo giro para separar lo cierto de lo que no lo es, canta.
-- Unas pueden ser mas largas y otras mas cortas. La que mas le pesa se lleva mas
-  sitio; una que se dice en cuatro parrafos, se dice en cuatro y se acaba.
+Por cada creencia que sobreviva, exactamente estas cuatro lineas y una raya al final:
 
-CUANTO OCUPA: lo que necesite para entenderse, ni una linea mas.
+VEREDICTO: el veredicto sobre ella, en primera persona, presente y corto.
+CUESTA: que le esta quitando. Concreto.
+SE NOTA: en que partes de su vida aparece, separadas por comas. Solo las que esten de verdad en el estudio.
+SALE DE: la frase del estudio de la que la has sacado.
+---`;
 
-Y OJO CON PASARSE AL OTRO LADO. Corto no es apretado. Lo que sobra es repetir
-con otras palabras algo ya dicho; lo que NO sobra es explicarse.
+// ── PASO 2: escribir ─────────────────────────────────────────────
+//
+// Aqui ya no decide nada: recibe la lista cerrada del paso 1 y solo la
+// escribe. Y no lleva lista numerada de apartados: la de antes la usaba
+// como molde y las siete salian con la misma forma, una detras de otra.
+const ESCRIBIR = `Eres quien escribe la segunda parte de un estudio personal. La persona ya leyo la primera parte, que le contaba como es y por que. Esta segunda parte es para que cambie.
 
-Si por acortar dejas una frase que dice mucho y no se entiende nada, has hecho
-lo peor de todo: eso no se relee, se abandona. Antes tres frases claras que una
-apretada que hay que descifrar.
+Te paso dos cosas: sus creencias, YA ELEGIDAS, y el estudio del que salieron.
 
-Cada cosa se dice entera y de una vez. Que se entienda a la primera manda sobre
-que sea corto, siempre.
+Las creencias no se tocan. No añades ninguna, no quitas ninguna, no las juntas ni las partes. Esa decision ya esta tomada. Tu trabajo es escribirlas, en el orden en que te las paso.
 
-Antes de entregar, lee la primera frase de cada creencia una detras de otra: si
-se parecen entre si, reescribelas.
+El estudio esta ahi para que saques de el los momentos concretos de ella, los sitios de su vida y sus palabras. De ahi y de ningun otro sitio.
+
+
+QUE TIENE QUE QUEDAR DICHO EN CADA UNA
+
+Esto no es un guion ni un orden. Es lo que no puede faltar.
+
+EL TITULO. El veredicto que te paso, dicho por ella y sobre ella, en primera persona y corto: si no cabe de un vistazo, no golpea. Al leerlo tiene que apartar un poco la vista; si se puede leer entero sin que se le mueva nada, esta suavizado y hay que bajarlo. No es una norma sobre el mundo, ni una etiqueta que la clasifica desde fuera, ni una frase larga con condiciones dentro. Va solo, en su propia linea, sin numero, sin raya y sin comillas.
+
+POR DONDE SE ENTRA. El estudio le describe momentos concretos suyos: una hora, un sitio, algo que esta haciendo. Coge el que corresponda a esta creencia y entra por ahi, con tus palabras pero sin cambiar lo que pasa. Si para esta no hay ninguno escrito, entra directamente por lo que da por hecho. Antes eso que inventarle una escena.
+
+LO QUE DA POR HECHO. La creencia dicha entera y en claro.
+
+DONDE SE LE NOTA. La misma creencia sale en varias partes de su vida, no en una. Recorre el estudio y señala en cuantas la encuentres, siempre que esten de verdad ahi. Que vea que lo que creia un problema de una zona suya le esta gobernando media vida.
+
+LA RUEDA EN LA QUE ESTA METIDA. Esta es la parte que mas le sirve y la que mas se suele quedar a medias. No vale soltarle lo que le cuesta en frases sueltas: eso son consecuencias tiradas encima de la mesa y no se ve dentro de ellas. Se le cuenta la vuelta entera, en orden y de un tiron: como empieza, que hace ella entonces, que pasa despues, donde acaba, y como eso mismo la devuelve al principio. Tiene que reconocer la vuelta que lleva años dando. Y dentro de esa vuelta van los precios concretos: las horas, la salud, la conversacion que no tuvo, lo que no pidio. Contados dentro del recorrido, no en una lista. Nada de "te limita" ni "te frena": eso no es un precio, es una palabra.
+
+QUE PARTE ES VERDAD Y CUAL NO. Una creencia lleva años en pie porque una parte de ella es cierta. Se le dice cual y se le da la razon ahi de verdad. Y luego se le señala el punto exacto donde deja de ser cierta. Si se le dice que es mentira entera, no se lo cree y deja de leer.
+
+DONDE VA A ACABAR SI SIGUE IGUAL. En concreto y sin suavizarlo: que se le apaga, que deja de intentar, en que se le va la vida. Esto es lo que la mueve, asi que no se escribe bonito.
+
+LO QUE TIENE QUE HACER, DICHO A LA CARA. Una o dos frases directas: lo que tiene que hacer en vez de lo que hace. Una instruccion, no una posibilidad. Aqui te mojas: si hay algo que esta haciendo mal, se lo dices. Con cariño, pero se lo dices. No es un plan ni son pasos.
+
+LA CREENCIA NUEVA. Una sola frase, para que se la quede. Y tiene que poder creersela HOY: lo contrario de la suya no vale, porque eso le pide un salto de fe que no va a dar. Vale una que no le pida creer, sino mirar; algo que pueda comprobar por si misma.
+
+Y nada mas. No añadas apartados que no esten aqui: ni ejercicios, ni pruebas para esta semana, ni consejos sueltos al final.
+
+
+NINGUNA PUEDE PARECERSE A OTRA AL LEERLA
+
+Las creencias ya son distintas por dentro. Si ademas salen todas con la misma forma, a la tercera ya sabe lo que viene y deja de leer.
+
+Asi que:
+
+- El orden de las partes de arriba CAMBIA en cada creencia. Una puede empezar por la escena, otra por lo que da por hecho, otra por donde va a acabar. Ninguna sigue el mismo recorrido que la anterior.
+- No empieces dos de la misma manera y no cierres dos de la misma manera.
+- Ni un giro repetido para presentar lo que da por hecho. Si en dos creencias lo presentas con las mismas palabras, canta.
+- Lo mismo con la parte de que es verdad y que no, y con la de donde va a acabar: distintas cada vez.
+- Prohibido usar dos veces en todo el texto una misma formula de enlace. Si una expresion ya la has usado en una creencia, en las demas no aparece.
+- Unas mas largas y otras mas cortas. La que mas le pesa se lleva mas sitio; una que se dice en cuatro parrafos, se dice en cuatro y se acaba.
+- Una imagen o un detalle concreto que uses en una creencia no se repite en otra.
+
+Antes de entregar, lee la primera frase de cada creencia una detras de otra, y luego la ultima de cada una. Si se parecen, reescribelas.
+
+
+NO SE LE INVENTA NADA DE SU VIDA
+
+Ni su infancia, ni sus padres, ni como fue su casa, ni una pareja, ni si tiene hijos, ni un trabajo concreto, ni de donde le viene el dinero, ni un episodio que le paso. Si no esta escrito en el estudio, no existe.
+
+No le pongas a nadie al lado. Si escribes una escena con otra persona dentro, esa persona tiene que estar en el estudio; y si esta, no le pongas sexo, ni parentesco, ni nombre que el estudio no le haya puesto.
+
+Y no lo arregles inventandote un momento "de los que le pasan a cualquiera": eso tambien es ponerle una vida que no sabes si tiene.
+
+OJO: el estudio puede traer alguna frase de ese tipo, porque no deberia haberla escrito y a veces se le cuela. Si la ves, NO la repitas.
+
+Y NINGUNA PUEDE CONTRADECIR LO QUE EL ESTUDIO YA LE DIJO. Se acordara, porque lo leyo hace poco, y a partir de ahi no se cree nada.
 
 
 COMO SE HABLA
@@ -195,37 +195,17 @@ Le hablas a ella de tu, como alguien que la conoce bien y se lo cuenta claro. Ni
 - FRASES SUELTAS PARA REMATAR. Una linea corta, en su propio parrafo, cuando algo tiene que aterrizar.
 - NI UNA PALABRA TECNICA: ningun planeta, ningun signo, ninguna casa, ningun aspecto, y su carta no se nombra. Tampoco se nombran las areas del estudio ni se dice "tu informe" o "tu estudio".
 - NADA DE ANIMAR NI DE DAR CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
-- Español de España, hablado.
+- Español de España, hablado. Ni una palabra en otro idioma.
 - Sin asteriscos, sin listas, sin simbolos, sin guiones de adorno. Texto corrido, con sus parrafos.
-- EL TITULO DE CADA CREENCIA va solo, en su propia linea, sin nada delante ni detras: ni numero, ni raya, ni comillas. Lo que va debajo, en parrafos normales.
+
+CUANTO OCUPA: lo que necesite para entenderse, ni una linea mas. Pero corto no es apretado: lo que sobra es repetir con otras palabras algo ya dicho; lo que NO sobra es explicarse. Si por acortar dejas una frase que dice mucho y no se entiende nada, has hecho lo peor de todo: eso no se relee, se abandona.
 
 
-COMO EMPIEZA Y COMO ACABA EL TEXTO
+COMO EMPIEZA Y COMO ACABA
 
-Empieza directamente con la primera creencia. Sin titulo general, sin
-presentacion, sin explicarle lo que va a leer ni por que.
+Empieza directamente con el titulo de la primera creencia. Sin titulo general, sin presentacion, sin explicarle lo que va a leer.
 
-Y acaba con la ultima. Sin resumen y sin despedida.
-
-
-EN QUE ORDEN VAN
-
-De mas peso a menos: la que mas le esta costando, primera.
-
-Y se acaba ahi. No se cierra resumiendolas, ni se busca la que hay debajo de
-todas: esa siempre acaba siendo la misma frase para cualquiera y le estropea el
-trabajo bien hecho de arriba. El orden ya le dice por donde empezar.
-
-
-ANTES DE ENTREGAR
-
-Lee los titulos seguidos, solo los titulos.
-
-- El que sea una regla sobre el mundo en vez de un veredicto sobre ella, bajalo otra vez.
-- El que se pueda leer sin incomodarse, no ha llegado al fondo.
-- Los que digan lo mismo debajo, juntalos.
-
-Y luego lee el resto: si una creencia se le puede decir a cualquiera, fuera. Si en alguna has dado por hecho algo de su vida, fuera.`;
+Y acaba con la ultima. Sin resumen, sin despedida y sin buscar la que hay debajo de todas.`;
 
 // ── R2: leer un informe guardado ─────────────────────────────────
 function ajustes() {
@@ -285,17 +265,11 @@ async function ultimoInforme(cfg) {
   return claves[mejor];
 }
 
-// ── La llamada al modelo ─────────────────────────────────────────
-async function escribirCreencias(informe) {
-  const areas = (informe.areas || [])
-    .map((t, i) => `${AREAS[i] || 'AREA ' + (i + 1)}\n\n${t}`)
-    .join('\n\n────────────────\n\n');
+// ── Las dos llamadas al modelo ───────────────────────────────────
+const MODELO = 'https://api.anthropic.com/v1/messages';
 
-  const rasgo = r => `- ${r.nombre}: ${r.descripcion}${r.causa ? ` (por que le pasa: ${r.causa})` : ''}`;
-  const f = (informe.rasgos?.fortalezas || []).map(rasgo).join('\n');
-  const d = (informe.rasgos?.desafios || []).map(rasgo).join('\n');
-
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+async function pedir({ sistema, mensaje, tope }) {
+  const resp = await fetch(MODELO, {
     method: 'POST',
     signal: AbortSignal.timeout(180000),
     headers: {
@@ -306,22 +280,54 @@ async function escribirCreencias(informe) {
     body: JSON.stringify({
       model: 'claude-sonnet-5',
       thinking: { type: 'disabled' },
-      // Techo de escritura. El tiempo que tarda un punto NO depende de lo que
-      // piensa, depende de lo que escribe: sale a unas 70-78 palabras-token por
-      // segundo. Con 16000 un punto que se desmadre puede estar 4 minutos
-      // escribiendo y matar la funcion. Lo mas largo que ha escrito de verdad
-      // son 5300, asi que 8000 deja de sobra y pone un techo de ~2 minutos.
-      max_tokens: 8000,
-      system: ENCARGO,
-      messages: [{
-        role: 'user',
-        content: `Nombre de pila: ${(informe.cliente?.nombre || '').split(/\s+/)[0]}\nSexo: ${informe.cliente?.sexo || ''}\n\nESTUDIO QUE YA HA LEIDO:\n\n${areas}\n\n────────────────\n\nLO QUE SE LE DIJO QUE SE LE DA BIEN:\n${f}\n\nLO QUE SE LE DIJO QUE LE CUESTA:\n${d}\n\nEscribe sus creencias.`,
-      }],
+      max_tokens: tope,
+      system: sistema,
+      messages: [{ role: 'user', content: mensaje }],
     }),
   });
   if (!resp.ok) throw new Error(`Modelo ${resp.status}: ${(await resp.text()).slice(0, 300)}`);
   const data = await resp.json();
   return { texto: data.content?.[0]?.text || '', uso: data.usage || {} };
+}
+
+async function escribirCreencias(informe) {
+  const areas = (informe.areas || [])
+    .map((t, i) => `${AREAS[i] || 'AREA ' + (i + 1)}\n\n${t}`)
+    .join('\n\n────────────────\n\n');
+
+  const rasgo = r => `- ${r.nombre}: ${r.descripcion}${r.causa ? ` (por que le pasa: ${r.causa})` : ''}`;
+  const f = (informe.rasgos?.fortalezas || []).map(rasgo).join('\n');
+  const d = (informe.rasgos?.desafios || []).map(rasgo).join('\n');
+
+  const quien = `Nombre de pila: ${(informe.cliente?.nombre || '').split(/\s+/)[0]}\nSexo: ${informe.cliente?.sexo || ''}`;
+  const estudio = `ESTUDIO QUE YA HA LEIDO:\n\n${areas}\n\n────────────────\n\nLO QUE SE LE DIJO QUE SE LE DA BIEN:\n${f}\n\nLO QUE SE LE DIJO QUE LE CUESTA:\n${d}`;
+
+  // Paso 1. Solo la lista: unos cientos de palabras. Barato y rapido, y es
+  // donde se juntan las que dicen lo mismo, antes de que escribir nada
+  // cueste tirarlo.
+  const uno = await pedir({
+    sistema: ELEGIR,
+    mensaje: `${quien}\n\n${estudio}\n\nElige sus creencias y entrega la lista.`,
+    tope: 2000,
+  });
+  const lista = uno.texto.trim();
+  if (!lista) throw new Error('El primer paso no ha devuelto ninguna creencia');
+
+  // Paso 2. Escribe solo las que han quedado.
+  const dos = await pedir({
+    sistema: ESCRIBIR,
+    mensaje: `${quien}\n\nSUS CREENCIAS, YA ELEGIDAS:\n\n${lista}\n\n────────────────\n\n${estudio}\n\nEscribelas.`,
+    tope: 12000,
+  });
+
+  return {
+    texto: dos.texto,
+    lista,
+    uso: {
+      input_tokens: (uno.uso.input_tokens || 0) + (dos.uso.input_tokens || 0),
+      output_tokens: (uno.uso.output_tokens || 0) + (dos.uso.output_tokens || 0),
+    },
+  };
 }
 
 // ── La pagina ────────────────────────────────────────────────────
