@@ -13,20 +13,19 @@
 // vez. Una respuesta escrita aqui dentro se le acabaria colando a otro
 // cliente, y entonces el informe deja de ser suyo.
 //
-// EN CUATRO PASOS. Antes iba de una tirada y salian repetidas: juntar las que
-// decian lo mismo se le pedia al final, cuando ya las tenia escritas, y
-// nadie tira siete paginas hechas. Ahora primero ELIGE -solo una lista, sin
-// escribir nada para ella-, luego JUNTA las que dicen lo mismo mirando solo
-// esa lista, despues ESCRIBE las que quedan, y por ultimo se comprueba que no
-// haya dos trozos que empiecen igual.
+// SOLO LOS RASGOS. Las siete areas del P1 no se le mandan: son treinta mil
+// caracteres que no aportan ninguna creencia que no este ya en los rasgos.
 //
-// TRES LLAMADAS AL MODELO POR ENVIO, Y UNA CUARTA CORTA SOLO SI DE VERDAD HAY
-// ARRANQUES REPETIDOS.
+// UNA SOLA LLAMADA. Elige, descarta las repetidas y las escribe de una vez.
+// Iba en tres pasos porque de una tirada salian repetidas, y salian repetidas
+// por tener las areas delante. Sin ellas, las ve todas a la vez mientras
+// escribe, que es cuando mejor puede no repetirse.
+//
+// Y despues se comprueba que no haya dos trozos que empiecen igual. Eso es una
+// segunda llamada, corta, y SOLO si de verdad los hay.
 // ════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
-
-const AREAS = ['IDENTIDAD', 'PATRONES', 'MIEDOS', 'HERIDA', 'AMOR', 'RELACIONES', 'DINERO'];
 
 // LOS LADILLOS QUE LLEVA CADA CREENCIA.
 //
@@ -120,27 +119,42 @@ export function repartir(texto) {
 // lo que se le enseñe escrito, lo copia, y entonces el informe deja de ser de
 // quien lo ha comprado.
 
-const ELEGIR = `Estas preparando la segunda parte de un estudio personal. Todavia NO escribes nada para ella: hoy solo decides cuales son sus creencias.
+// ── EL ENCARGO ──────────────────────────────────────────────
+//
+// UNO SOLO. Antes eran tres -elegir, juntar, escribir- porque de una tirada
+// salian repetidas. Salian repetidas porque se le mandaba tambien el estudio
+// entero de las siete areas: treinta mil caracteres delante en los que cada
+// creencia parecia justificada por su lado. Con los rasgos a secas eso ya no
+// pasa, y las ve todas a la vez mientras escribe, que es cuando mejor puede
+// no repetirse.
+//
+// SOLO REGLAS. Ni una linea de ejemplo, ni un trozo de informe de muestra: lo
+// que se le enseñe escrito, lo copia, y entonces el informe deja de ser de
+// quien lo ha comprado.
+
+const CREENCIAS = `Escribes la segunda parte de un estudio personal. Ella ya leyo la primera, que le contaba como es y por que. Esta es para que cambie.
+
+Te paso sus rasgos y lo que ella ha contestado hoy. Con eso eliges sus creencias y las escribes, todo de una vez.
 
 Una creencia es algo que da por cierto sin haberlo puesto nunca en duda, y que decide lo que hace. Ella no lo vive como una creencia suya: lo vive como que las cosas son asi.
 
 
 DE DONDE SALEN
 
-De sus rasgos y de lo que el estudio cuenta de ellos. De ahi.
+De sus rasgos. De ahi y de nada mas.
 
-No inventas ninguna. No pones ninguna que no puedas señalar en el texto que te paso.
+No inventas ninguna. No pones ninguna que no puedas señalar en los rasgos que te paso.
 
 
 CUALES ENTRAN
 
-Abajo tienes tambien lo que ella ha contestado: como seria su mejor version, como es su vida hoy, y que lleva años intentando cambiar sin conseguirlo.
+Abajo tienes lo que ella ha contestado: como seria su mejor version, como es su vida hoy, y que lleva años intentando cambiar sin conseguirlo.
 
 Una creencia entra SOLO si le esta bloqueando algo de eso que ella misma ha dicho que quiere y no consigue.
 
-Si una creencia no bloquea nada de lo que ella ha nombrado, fuera, por bien que suene y por mucho que este en sus rasgos.
+Si no bloquea nada de lo que ella ha nombrado, fuera, por bien que suene y por mucho que este en sus rasgos.
 
-NO HAY NUMERO. Salen las que salgan. Lo que decide no es cuantas son, es el peso que tienen: una que no la tenga atascada de verdad no entra, por bien que suene.
+Lo que decide no es cuantas son, es el peso que tienen: una que no la tenga atascada de verdad no entra.
 
 
 BAJA HASTA DONDE DUELE
@@ -158,84 +172,30 @@ Para llegar: coge la version presentable y preguntate que tiene que ser cierto s
 COMO SE SABE QUE HAS LLEGADO: esta en primera persona, dice algo sobre ella y no sobre el mundo, y da un poco de verguenza leerla. Si se puede asentir tranquilamente, no has bajado.
 
 
-SACALAS TODAS, QUE YA SE LIMPIARAN DESPUES
+NI UNA REPETIDA. ESTO ES LO QUE MAS SE ESTROPEA
 
-Aqui no tienes que quitar ninguna por miedo a repetirte: de juntar las que digan lo mismo se encarga otro despues, mirando solo la lista.
+Antes de escribir nada, ponlas todas en una lista y comparalas de dos en dos: la primera con la segunda, la primera con la tercera, y asi hasta el final. Luego la segunda con todas las que van detras. Todos los pares.
 
-Lo tuyo es que ninguna se quede fuera y que todas esten bajadas hasta el fondo.
+DOS SON LA MISMA cuando debajo dan por cierto lo mismo sobre ella, aunque cambien las palabras.
 
+Y EL CASO QUE MAS SE ESCAPA ES ESTE: la misma creencia repetida en dos parcelas de su vida. Una con el trabajo y otra con la gente. Una con el dinero y otra con la pareja. Suenan a dos porque hablan de dos sitios, pero debajo dicen lo mismo sobre ella. Esas son UNA, siempre. El sitio donde le ocurre no las hace distintas.
 
-NO SE LE INVENTA NADA DE SU VIDA
+AL REVES TAMBIEN, Y AQUI NO TE PASES: dos creencias distintas pueden estropearle lo mismo, porque en una vida casi todo desemboca en las mismas cuatro cosas. Que le bloqueen lo mismo no las hace una. Juntar dos que eran distintas le borra una creencia suya y esa ya no vuelve.
 
-Ni su infancia, ni sus padres, ni una pareja, ni hijos, ni un trabajo, ni de donde le viene el dinero, ni un episodio que le paso. Si no esta escrito en lo que te paso, no existe.
+La pregunta es siempre la misma, y no hay otra: lo que da por cierto SOBRE SI MISMA en una, es lo mismo que da por cierto en la otra?
 
-El estudio puede traer alguna frase de ese tipo, porque no deberia haberla escrito. Si la ves, no la des por buena.
-
-Y ninguna puede contradecir lo que el estudio ya le dijo: si el estudio dice que se le da bien algo, no vale elegir una que diga que le cuesta.
-
-
-QUE ENTREGAS
-
-La lista y nada mas. Ni presentacion, ni explicacion, ni comentarios.
-
-Por cada creencia, estas cinco lineas y una raya:
-
-CREENCIA: el veredicto sobre ella, en primera persona y presente. Esta linea es la que ella va a leer como titulo, asi que va CORTA: UNA sola idea, DIEZ PALABRAS COMO MUCHO, y cuentalas. Ni una condicion metida dentro: nada de "asi que", nada de "y entonces", nada de dos frases pegadas con una coma. Se entiende entera a la primera y no hay que releerla. Aqui no se explica: explicarla viene despues y es otro trabajo. Si no te cabe en diez palabras es que llevas dos creencias en una: o las separas, o bajas hasta la que sostiene a las dos. Y con palabras de todos los dias, en seco: si al leerla hay que rellenar con la cabeza a que se refiere, esta mal escrita. Las palabras que no se pueden ver -confiar, valer, merecer, servir- no dicen nada solas; en su sitio va lo que ella hace, o lo que se dice, o lo que le pasa cuando se la cree.
-BLOQUEA: que cosa de las que ella ha dicho que quiere y no consigue le esta impidiendo.
-CUESTA: que le esta quitando. Concreto.
-DONDE SE LE VE: en que partes de su vida aparece, separadas por comas.
-SALE DE: el rasgo o la frase del estudio de donde la has sacado.
----`;
-
-// ── PASO 2: juntar ─────────────────────────────────────────
-//
-// Este solo ve la lista. Nada de informe y nada de respuestas: con treinta
-// mil caracteres delante, cada creencia parece justificada por su lado y no
-// junta ninguna. A pelo, una al lado de otra, un duplicado canta.
-const JUNTAR = `Te paso una lista de creencias de una misma persona. Solo la lista.
-
-Tu unico trabajo es dejar las que son de verdad distintas.
-
-DOS SON LA MISMA cuando debajo dicen lo mismo, aunque cambien las palabras. Y el caso que mas se escapa es justo ese: la misma creencia repetida en dos parcelas de su vida, una con el trabajo y otra con la gente, o una con el dinero y otra con la pareja. Suenan a dos porque hablan de dos sitios, pero debajo da por cierto exactamente lo mismo sobre ella. Esas son UNA, siempre. El sitio donde le ocurre no las hace distintas.
-
-LO QUE SE COMPARA ES LA CREENCIA, NUNCA SUS CONSECUENCIAS. Dos creencias completamente distintas pueden bloquearle lo mismo y costarle lo mismo, porque en una vida casi todo desemboca en las mismas cuatro cosas. Que coincidan en BLOQUEA o en CUESTA no las hace una, y juntarlas por ahi le borra una creencia que era suya y que era de las buenas.
-
-Y al reves: dos que bloquean cosas distintas SI son la misma si debajo da por cierto lo mismo sobre ella. El sitio donde le sale no las separa.
-
-La pregunta es siempre esta, y no hay otra: lo que da por cierto SOBRE SI MISMA en una, es lo mismo que da por cierto en la otra? Si es que si, son una. Si es que no, se quedan las dos, por mucho que le estropeen lo mismo.
-
-COMO SE HACE, Y NO VALE SALTARSELO. Compara la primera con la segunda, la primera con la tercera, y asi hasta el final. Luego la segunda con todas las que van detras. Todos los pares, sin excepcion.
-
-De cada par te preguntas: si se lo cuento primero una y luego la otra, va a pensar que eso ya se lo he dicho con otras palabras. Si la respuesta es que si, son una.
-
-CUANDO JUNTES DOS: te quedas con la que llega mas abajo, la que mas duele, y le sumas lo que la otra traiga de nuevo en sus lineas de BLOQUEA, CUESTA y DONDE SE LE VE. No se pierde nada de eso.
-
-Y la linea CREENCIA que queda es UNA, la suya, tal cual estaba. No se pegan las dos frases con una coma ni con un "asi que": eso deja un titulo largo que ya no golpea.
-
-SI DUDAS DE UN PAR, MIRALO OTRA VEZ POR DONDE HAY QUE MIRARLO: lo que da por cierto sobre ella cada una, no lo que le estropea cada una. Ahi se ve casi siempre, y ahi decides.
+Cuando dos sean la misma, te quedas con la que llega mas abajo, la que mas duele, y le sumas lo que la otra tenga de nuevo. No se pierde nada de eso.
 
 
-Y AHORA QUEDATE CON LAS QUE PESAN
+CUANTAS
 
-Cuando ya no queden repetidas, ordenalas de la que mas le cuesta a la que menos.
+Ordenalas de la que mas le cuesta a la que menos.
 
-SEIS ES EL TECHO, NO UNA CANTIDAD QUE HAYA QUE ALCANZAR. Si quedan mas de seis, cortas por la sexta. Si quedan tres, van tres, y esta bien: son las suyas y no hay ninguna que falte. Cada persona tiene las que tiene.
+SEIS ES EL TECHO, NO UNA CANTIDAD QUE HAYA QUE ALCANZAR. Si te quedan mas de seis, cortas por la sexta. Si te quedan tres, van tres, y esta bien: son las suyas y no falta ninguna. Cada persona tiene las que tiene.
 
-Las que se quedan son las que le estan bloqueando lo que ella misma ha dicho que quiere y no consigue, y las que le salen en mas sitios de su vida. Esas son las de mas peso.
+Las que se quedan son las que le bloquean lo que ella misma ha dicho que quiere, y las que le salen en mas sitios de su vida.
 
-Las demas fuera, aunque sean ciertas. Una creencia de relleno no solo le hace leer de mas: hace que las buenas se lean con menos peso por ir rodeadas de flojas.
-
-No se rellena inventando para llegar a seis, y una que ya has juntado no se vuelve a separar: eso le devuelve el repetido, que es justo lo que acabas de quitar.
-
-QUE ENTREGAS: la lista que queda, con las mismas lineas y en el mismo formato que te la paso, ordenada de la que mas le cuesta a la que menos. Nada mas: ni explicacion, ni que has juntado, ni comentarios.`;
-
-const ESCRIBIR = `Escribes la segunda parte de un estudio personal. Ella ya leyo la primera, que le contaba como es y por que. Esta es para que cambie.
-
-Te paso sus creencias YA ELEGIDAS y su estudio.
-
-Cada creencia viene con lo que le bloquea, lo que le cuesta y donde se le ve. Eso es lo que hay: no tienes su vida entera delante y no te hace falta.
-
-Las creencias no se tocan: no añades, no quitas, no juntas ni partes. Las escribes en el orden en que te las paso.
+No se rellena inventando para llegar a seis, y una que ya has juntado no se vuelve a separar: eso devuelve el repetido que acabas de quitar.
 
 
 COMO VA MONTADA CADA CREENCIA
@@ -256,9 +216,15 @@ Ni un ladillo mas, ni uno menos, ni cambiados de sitio, ni con otras palabras. N
 
 EL TITULO, LA LINEA DE ARRIBA
 
-Viene ya escrito en la lista que te paso y se copia TAL CUAL. No se alarga, no se le añade una explicacion detras, no se le pega otra frase con una coma. Es corto a proposito: es lo que decide si sigue leyendo, y en cuanto se explica deja de golpear.
+Es el veredicto dicho por ella y sobre ella: primera persona y presente. Es lo que decide si sigue leyendo.
 
-Explicarlo es el trabajo del primer ladillo, no suyo.
+VA CORTO: UNA sola idea, DIEZ PALABRAS COMO MUCHO, y cuentalas. Ni una condicion metida dentro: nada de "asi que", nada de "y entonces", nada de dos frases pegadas con una coma. Si no te cabe en diez palabras es que llevas dos creencias en una: o las separas, o bajas hasta la que sostiene a las dos.
+
+CON PALABRAS DE TODOS LOS DIAS, en seco. Si al leerlo hay que rellenar con la cabeza a que se refiere, esta mal escrito. Las palabras que no se pueden ver -confiar, valer, merecer, servir- no dicen nada solas; en su sitio va lo que ella hace, o lo que se dice, o lo que le pasa cuando se la cree.
+
+Al leerlo tiene que apartar un poco la vista. Si se lee entero sin que se le mueva nada, esta suavizado y hay que bajarlo.
+
+Aqui no se explica: explicarlo es el trabajo del primer ladillo. Sin numero, sin raya y sin comillas.
 
 
 DEBAJO DEL PRIMER LADILLO
@@ -272,16 +238,20 @@ Todavia no cuentas donde se le ve ni lo que le cuesta: eso viene en el ladillo s
 
 DEBAJO DEL SEGUNDO
 
-Lo que esta creencia le hace hacer, lo que le hace no hacer, y lo que eso le quita. Sale en varias partes de su vida, no en una: señala en cuantas la encuentres, siempre que esten en el estudio o en las lineas que trae la propia creencia. Que vea que lo que creia un problema de una zona suya le esta gobernando media vida.
+Lo que esta creencia le hace hacer, lo que le hace no hacer, y lo que eso le quita.
 
-No vacies aqui todo lo que traiga la creencia en sus lineas. Coges lo que mas le pese y lo cuentas; lo demas se queda fuera. Una lista larga de sitios, uno detras de otro, deja de leerse a la tercera.
+Sale en varias partes de su vida, no en una: señala en cuantas la encuentres, siempre que esten en sus rasgos o en lo que ella ha contado. Que vea que lo que creia un problema de una zona suya le esta gobernando media vida.
+
+Pero no las vacies todas de golpe. Coges lo que mas le pese y lo cuentas; lo demas se queda fuera. Una lista larga de sitios, uno detras de otro, deja de leerse a la tercera.
 
 Los precios, concretos: las horas, la salud, el dinero, la conversacion que no tuvo, lo que no pidio. Nada de que le limita o le frena: eso no es un precio, es una palabra.
 
 
 DEBAJO DEL TERCERO
 
-Lleva años en pie porque una parte es cierta. Se le dice cual y se le da la razon ahi de verdad. Y luego se le señala el punto exacto donde deja de ser cierta. Si se le dice que es mentira entera, no se lo cree y deja de leer.
+Lleva años en pie porque una parte es cierta. Se le dice cual y se le da la razon ahi de verdad. Y luego se le señala el punto exacto donde deja de ser cierta.
+
+Si se le dice que es mentira entera, no se lo cree y deja de leer.
 
 
 DEBAJO DEL CUARTO
@@ -290,19 +260,19 @@ Aqui el estudio deja de mirar hacia atras. Todo lo anterior le explica lo que le
 
 Primero la creencia nueva, en una frase. Y esa frase tiene que APORTARLE algo o no vale.
 
-Acaba de leer tres bloques explicandole como funciona por dentro. Si esta frase es la suya puesta del reves, o un resumen de lo que ya le has contado con otras palabras, o un lema de los que valen para cualquiera, no le aporta nada y se la salta. Eso es exactamente lo que hay que evitar aqui.
+Acaba de leer tres bloques explicandole como funciona por dentro. Si esta frase es la suya puesta del reves, o un resumen de lo que ya le has contado con otras palabras, o un lema de los que valen para cualquiera, no le aporta nada y se la salta.
 
 Le aporta cuando le dice algo que no tenia: donde esta de verdad lo que lleva buscando, o que es lo que si le da eso que ella creia que le daba la creencia vieja.
 
 Y tiene que poder creersela HOY: lo contrario de la suya no vale, porque le pide un salto de fe que no va a dar.
 
-NO ARRANQUES ESTA FRASE CON "PUEDO", ni con "ya no necesito", ni con ninguna formula que acabe repitiendose en las demas. En cuanto todas empiezan igual se leen como un lema pegado al final, y entonces se saltan todas.
+NO ARRANQUES ESTA FRASE CON "PUEDO", ni con "ya no necesito", ni con ninguna formula que acabe repitiendose en las demas.
 
-Y despues, lo que se le abre. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que la creencia trae escrito en su linea BLOQUEA, que es justo lo que ella ha dicho que quiere y no consigue, ahi puesto y al alcance, sin la creencia delante tapandolo.
+Y despues, lo que se le abre. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que ella misma ha dicho que quiere, ahi puesto y al alcance, sin la creencia delante tapandolo.
 
 Que lo cierre sabiendo por donde tira, no solo entendiendo por que esta atascada.
 
-Pero sin irse de largo, y sin convertirlo en un plan: ni ejercicios, ni pasos, ni pruebas para esta semana, ni consejos. El como se hace va en otra parte.
+Pero sin irse de largo y sin convertirlo en un plan: ni ejercicios, ni pasos, ni pruebas para esta semana, ni consejos. El como se hace va en otra parte.
 
 
 AQUI NO SE ESCRIBEN ESCENAS
@@ -318,10 +288,10 @@ NINGUNA SE PARECE A OTRA AL LEERLA
 
 El montaje es el mismo en todas, y justo por eso lo que va escrito dentro tiene que ser distinto de verdad. Si ademas suenan igual, a la tercera sabe lo que viene y deja de leer.
 
-- LO QUE CUENTAS EN UNA NO LO VUELVES A CONTAR EN OTRA. Ni la misma idea con otras palabras, ni el mismo precio, ni el mismo detalle suyo. Si al escribir una notas que estas diciendo algo que ya dijiste antes, cortalo y cuenta lo que esta creencia tiene de suyo.
-- EL PARRAFO NO ARRANCA CON LAS PALABRAS DE SU LADILLO. Acaba de leer el ladillo justo encima; si el parrafo empieza diciendo lo mismo, lee dos veces la misma frase y el ojo se cansa. Entra directo por lo suyo.
-- Y DENTRO DE UN BLOQUE, NO EMPIECES TRES FRASES SEGUIDAS IGUAL. En cuanto se ve la misma entrada una y otra vez, aquello se lee como una lista y deja de contarle nada.
-- El giro de lo que es verdad a lo que ya no lo es no se dice siempre con las mismas palabras. Si las creencias lo hacen todas igual, se ve el molde a la segunda.
+- LO QUE CUENTAS EN UNA NO LO VUELVES A CONTAR EN OTRA. Ni la misma idea con otras palabras, ni el mismo precio, ni el mismo detalle suyo.
+- NINGUN PARRAFO ARRANCA COMO OTRO QUE VAYA DEBAJO DEL MISMO LADILLO. Los que van debajo del tercer ladillo son los que mas se te van a ir por el mismo molde: mirate los suyos juntos antes de entregar y cambialos.
+- EL PARRAFO NO ARRANCA CON LAS PALABRAS DE SU LADILLO. Acaba de leerlo justo encima; si el parrafo empieza diciendo lo mismo, lee dos veces la misma frase.
+- Y DENTRO DE UN BLOQUE, NO EMPIECES TRES FRASES SEGUIDAS IGUAL. En cuanto se ve la misma entrada una y otra vez, aquello se lee como una lista.
 - No empieces dos igual y no cierres dos igual.
 - Si una formula ya la has usado en una creencia, en las demas no aparece.
 - Unas mas largas y otras mas cortas. La que mas le pesa se lleva mas sitio.
@@ -337,7 +307,7 @@ Si nombras a alguien de su alrededor, esa persona tiene que estar en lo que te p
 
 Y no lo arregles con un momento de los que le pasan a cualquiera: eso tambien es ponerle una vida que no sabes si tiene.
 
-Y ninguna puede contradecir lo que el estudio ya le dijo: se acordara, porque lo leyo hace poco, y a partir de ahi no se cree nada.
+Y ninguna puede contradecir lo que sus rasgos dicen: si en ellos pone que se le da bien algo, no vale decirle que le cuesta.
 
 
 COMO SE HABLA
@@ -350,19 +320,19 @@ Le hablas a ella de tu, como alguien que la conoce bien y se lo cuenta claro. Ni
 - LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice ella por dentro cuando le pasa eso.
 - LE DAS LA RAZON ANTES DE CORREGIRLA. Nunca de frente.
 - FRASES SUELTAS PARA REMATAR. Una linea corta, en su propio parrafo, cuando algo tiene que aterrizar.
-- NI UNA PALABRA TECNICA: ningun planeta, ningun signo, ninguna casa, ningun aspecto. Su carta no se nombra, ni las areas del estudio, y no se dice tu informe ni tu estudio.
+- NI UNA PALABRA TECNICA: ningun planeta, ningun signo, ninguna casa, ningun aspecto. Su carta no se nombra, y no se dice tu informe ni tu estudio.
 - NADA DE ANIMAR NI DE CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
 - Español de España, hablado. Ni una palabra en otro idioma.
 - Sin asteriscos, sin listas, sin simbolos, sin guiones de adorno y sin numerar nada. Fuera de la linea de la creencia y de los cuatro ladillos, todo va en texto corrido.
 
-CUANTO OCUPA: lo que necesite para entenderse, ni una linea mas. Pero corto no es apretado: lo que sobra es repetir con otras palabras algo ya dicho; lo que no sobra es explicarse. Si por acortar dejas una frase que dice mucho y no se entiende, eso no se relee, se abandona.
+CUANTO OCUPA: lo que necesite para entenderse, ni una linea mas. Pero corto no es apretado: lo que sobra es repetir con otras palabras algo ya dicho; lo que no sobra es explicarse.
 
 
-COMO EMPIEZA Y COMO ACABA
+QUE ENTREGAS
 
-Empieza directamente con la linea CREENCIA: de la primera. Sin titulo general, sin presentacion.
+Las creencias escritas y nada mas. Ni presentacion, ni titulo general, ni la lista de las que has elegido, ni explicacion de lo que has hecho, ni comentarios.
 
-Y acaba con el ultimo parrafo de la ultima. Sin resumen, sin despedida, y sin buscar la creencia que hay debajo de todas.`;
+Empiezas directamente con la linea CREENCIA: de la primera. Acabas con el ultimo parrafo de la ultima, sin resumen, sin despedida y sin buscar la creencia que hay debajo de todas.`;
 
 // ── PASO 4: los arranques que se repiten ────────────────────
 //
@@ -425,7 +395,7 @@ function primerosParrafos(bloques) {
 export function arranquesQueChocan(bloques) {
   const grupos = new Map();
   for (const p of primerosParrafos(bloques)) {
-    const llave = `${p.bajo} ${arranqueDe(primeraFrase(p.parte.parrafo))}`;
+    const llave = `${p.bajo} | ${arranqueDe(primeraFrase(p.parte.parrafo))}`;
     if (!grupos.has(llave)) grupos.set(llave, []);
     grupos.get(llave).push(p.parte);
   }
@@ -560,66 +530,46 @@ async function pedir({ sistema, mensaje, tope }) {
 }
 
 async function escribirCreencias(informe, respuestas) {
-  const areas = (informe.areas || [])
-    .map((t, i) => `${AREAS[i] || 'AREA ' + (i + 1)}\n\n${t}`)
-    .join('\n\n────────────────\n\n');
-
   const rasgo = r => `- ${r.nombre}: ${r.descripcion}${r.causa ? ` (por que le pasa: ${r.causa})` : ''}`;
   const f = (informe.rasgos?.fortalezas || []).map(rasgo).join('\n');
   const d = (informe.rasgos?.desafios || []).map(rasgo).join('\n');
 
   const quien = `Nombre de pila: ${(informe.cliente?.nombre || '').split(/\s+/)[0]}\nSexo: ${informe.cliente?.sexo || ''}`;
 
-  // El material del P1: lo que ella leyo. De ahi salen las creencias.
-  const estudio =
+  // SOLO LOS RASGOS. Las siete areas del P1 no entran: son treinta mil
+  // caracteres que no aportan una creencia que no este ya en los rasgos, y con
+  // todo eso delante cada creencia parece justificada por su lado y acaban
+  // repitiendose. Fuera, tarda menos, cuesta menos y se repite menos.
+  const rasgos =
     `SUS RASGOS, LOS QUE SE LE DIJO QUE SE LE DAN BIEN:\n${f}\n\n` +
-    `SUS RASGOS, LOS QUE SE LE DIJO QUE LE CUESTAN:\n${d}\n\n` +
-    `────────────────\n\nEL ESTUDIO QUE YA HA LEIDO:\n\n${areas}`;
+    `SUS RASGOS, LOS QUE SE LE DIJO QUE LE CUESTAN:\n${d}`;
 
-  // Lo que ha contestado hoy. Solo lo ve el paso de elegir: sirve para saber
-  // que le esta bloqueando, no para contarselo. Quien escribe no lo recibe, y
-  // por eso no puede devolverle su propio texto.
-  const contestado = `LO QUE ELLA HA CONTESTADO:\n\n` +
+  const contestado = `LO QUE ELLA HA CONTESTADO HOY:\n\n` +
     respuestas.map((r, i) => `${PREGUNTAS[i]}\n${r}`).join('\n\n');
 
-  // Paso 1. Saca las candidatas, sin quitar ninguna por miedo a repetirse.
-  const uno = await pedir({
-    sistema: ELEGIR,
-    mensaje: `${quien}\n\n${estudio}\n\n────────────────\n\n${contestado}\n\nElige sus creencias y entrega la lista.`,
-    tope: 2500,
+  // Una sola llamada: elige, descarta las repetidas y las escribe.
+  //
+  // El tiempo lo marca lo que escribe, no lo que piensa: unas 75
+  // palabras-token por segundo. Con 8000 este paso no puede pasar de dos
+  // minutos, y la funcion se corta a los cinco. Seis creencias de cuatro
+  // bloques son unas 5500.
+  const una = await pedir({
+    sistema: CREENCIAS,
+    mensaje: `${quien}\n\n${rasgos}\n\n────────────────\n\n${contestado}\n\nEscribe sus creencias.`,
+    tope: 8000,
   });
-  const candidatas = uno.texto.trim();
-  if (!candidatas) throw new Error('El primer paso no ha devuelto ninguna creencia');
+  if (!una.texto.trim()) throw new Error('No ha devuelto ninguna creencia');
 
-  // Paso 2. Junta las que dicen lo mismo. Ve la lista y nada mas: con el
-  // informe delante, cada creencia parece justificada y no junta ninguna.
-  // Es una llamada corta, unos segundos.
-  const dos = await pedir({ sistema: JUNTAR, mensaje: candidatas, tope: 2500 });
-  const lista = dos.texto.trim() || candidatas;
+  // Y despues, los trozos que entran igual que otro, reescritos por su
+  // arranque. Solo llama al modelo si de verdad hay alguno.
+  const bloques = repartir(una.texto);
+  const dos = await desmoldarArranques(bloques);
 
-  // Paso 3. Escribe las que han quedado.
-  const tres = await pedir({
-    sistema: ESCRIBIR,
-    mensaje: `${quien}\n\nSUS CREENCIAS, YA ELEGIDAS:\n\n${lista}\n\n────────────────\n\n${estudio}\n\nEscribelas.`,
-    // Techo de escritura. El tiempo lo marca lo que escribe, no lo que
-    // piensa: unas 75 palabras-token por segundo. Con 10000 este paso no
-    // puede pasar de dos minutos y medio, y la funcion se corta a los cinco.
-    // Con tres o cuatro creencias de cuatro partes, lo esperable son 4000.
-    tope: 10000,
-  });
-
-  // Paso 4. Los trozos que entran igual que otro, reescritos por su arranque.
-  // Solo llama al modelo si de verdad hay alguno; si no, no cuesta nada.
-  const bloques = repartir(tres.texto);
-  const cuatro = await desmoldarArranques(bloques);
-
-  const suma = k => [uno.uso, dos.uso, tres.uso, cuatro.uso]
-    .reduce((t, u) => t + (u[k] || 0), 0);
+  const suma = k => [una.uso, dos.uso].reduce((t, u) => t + (u[k] || 0), 0);
   return {
     bloques,
-    candidatas,
-    lista,
-    desmoldados: cuatro.arreglados,
+    rasgos,
+    desmoldados: dos.arreglados,
     uso: { dentro: suma('input_tokens'), fuera: suma('output_tokens') },
   };
 }
@@ -676,7 +626,7 @@ function formulario(datos = {}, aviso = '', informes = []) {
 
   return pagina(`${aviso}
     <div class="aviso">PRUEBA — lo que pegues aqui no se guarda en ningun sitio.
-      Cada envio son dos llamadas al modelo.</div>
+      Cada envio es una llamada al modelo, y una segunda corta solo si hay arranques repetidos.</div>
     <form method="POST">
       ${elegir}
       ${campo(0)}${campo(1)}${campo(2)}
@@ -741,7 +691,7 @@ export default async function handler(req, res) {
     const informe = JSON.parse(await pedirR2(cfg, `/${clave}`));
 
     const t0 = Date.now();
-    const { bloques, candidatas, lista, desmoldados, uso } =
+    const { bloques, rasgos, desmoldados, uso } =
       await escribirCreencias(informe, respuestas);
     const seg = ((Date.now() - t0) / 1000).toFixed(0);
 
@@ -756,8 +706,8 @@ export default async function handler(req, res) {
       `<div class="aviso">PRUEBA — informe ${escapar(clave)} · ${seg}s ·
         ${uso.dentro} dentro / ${uso.fuera} fuera ·
         ${desmoldados ? `${desmoldados} arranques repetidos, reescritos` : 'ningun arranque repetido'}</div>
-       <details><summary>Chuleta: lo que saco y lo que dejo al juntar</summary>
-         <pre>SACO:\n\n${escapar(candidatas)}\n\n\nDEJO:\n\n${escapar(lista)}</pre>
+       <details><summary>Chuleta: el material con el que ha escrito</summary>
+         <pre>${escapar(rasgos)}</pre>
        </details>
        ${creencias}`));
 
