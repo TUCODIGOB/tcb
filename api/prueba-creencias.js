@@ -189,7 +189,11 @@ async function escribirCreencias(informe) {
 }
 
 // ── La pagina ────────────────────────────────────────────────────
-const escapar = t => String(t).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+// El encargo prohibe los asteriscos, pero si alguno se cuela se veria tal cual
+// en la pagina y parece un fallo. Se quitan al pintar.
+const escapar = t => String(t)
+  .replace(/\*\*?/g, '')
+  .replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 
 function pagina(cuerpo) {
   return `<!doctype html><html lang="es"><head><meta charset="utf-8">
