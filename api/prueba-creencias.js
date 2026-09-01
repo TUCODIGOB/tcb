@@ -77,17 +77,11 @@ Para llegar: coge la version presentable y preguntate que tiene que ser cierto s
 COMO SE SABE QUE HAS LLEGADO: esta en primera persona, dice algo sobre ella y no sobre el mundo, y da un poco de verguenza leerla. Si se puede asentir tranquilamente, no has bajado.
 
 
-AHORA JUNTA, Y JUNTA SIN PENA
+SACALAS TODAS, QUE YA SE LIMPIARAN DESPUES
 
-Esta es la parte que importa hoy, y se hace aqui porque todavia no has escrito nada: tachar una linea no te cuesta nada, tirar una pagina escrita si.
+Aqui no tienes que quitar ninguna por miedo a repetirte: de juntar las que digan lo mismo se encarga otro despues, mirando solo la lista.
 
-Dos son la misma cuando debajo dicen lo mismo, aunque cambien las palabras y aunque una hable de su trabajo y la otra de su gente. El sitio donde ocurre no las hace distintas.
-
-Y ninguna puede repetirle a otra lo que le esta costando.
-
-REPASO OBLIGATORIO: compara cada creencia con TODAS las demas, par por par, sin saltarte ninguno. De cada par preguntate si al leer la segunda va a pensar que eso ya se lo has dicho con otras palabras. Si la respuesta es que si, las juntas en una y te quedas con la que mas abajo llega.
-
-Vale mas tres que peguen que siete que se pisen.
+Lo tuyo es que ninguna se quede fuera y que todas esten bajadas hasta el fondo.
 
 
 NO SE LE INVENTA NADA DE SU VIDA
@@ -105,15 +99,41 @@ La lista y nada mas. Ni presentacion, ni explicacion, ni comentarios.
 
 Por cada creencia, estas cuatro lineas y una raya:
 
-CREENCIA: el veredicto sobre ella, en primera persona, presente y corto.
+CREENCIA: el veredicto sobre ella, en primera persona y presente. NUEVE PALABRAS COMO MUCHO. Si te pasas, es que no has llegado al fondo: lo de abajo siempre se dice en menos.
 BLOQUEA: que cosa de las que ella ha dicho que quiere y no consigue le esta impidiendo.
 CUESTA: que le esta quitando. Concreto.
+DONDE SE LE VE: en que partes de su vida aparece, separadas por comas.
 SALE DE: el rasgo o la frase del estudio de donde la has sacado.
 ---`;
 
+// ── PASO 2: juntar ─────────────────────────────────────────
+//
+// Este solo ve la lista. Nada de informe y nada de respuestas: con treinta
+// mil caracteres delante, cada creencia parece justificada por su lado y no
+// junta ninguna. A pelo, una al lado de otra, un duplicado canta.
+const JUNTAR = `Te paso una lista de creencias de una misma persona. Solo la lista.
+
+Tu unico trabajo es dejar las que son de verdad distintas.
+
+DOS SON LA MISMA cuando debajo dicen lo mismo, aunque cambien las palabras y aunque una hable de su trabajo y la otra de su gente. El sitio donde ocurre no las hace distintas.
+
+Y ademas son la misma si le bloquean lo mismo o si le cuestan lo mismo. Miralo en sus lineas de BLOQUEA y de CUESTA: si dos coinciden ahi, son una, por distintas que suenen las dos frases de arriba.
+
+COMO SE HACE, Y NO VALE SALTARSELO. Compara la primera con la segunda, la primera con la tercera, y asi hasta el final. Luego la segunda con todas las que van detras. Todos los pares, sin excepcion.
+
+De cada par te preguntas: si se lo cuento primero una y luego la otra, va a pensar que eso ya se lo he dicho con otras palabras. Si la respuesta es que si, son una.
+
+CUANDO JUNTES DOS: te quedas con la que llega mas abajo, la que mas duele, y le sumas lo que la otra traiga de nuevo en sus lineas de BLOQUEA, CUESTA y DONDE SE LE VE. No se pierde nada de eso.
+
+JUNTA SIN PENA. Vale mas tres que peguen que siete que se pisen. Si dudas de un par, junta.
+
+QUE ENTREGAS: la lista que queda, con las mismas lineas y en el mismo formato que te la paso, ordenada de la que mas le cuesta a la que menos. Nada mas: ni explicacion, ni que has juntado, ni comentarios.`;
+
 const ESCRIBIR = `Escribes la segunda parte de un estudio personal. Ella ya leyo la primera, que le contaba como es y por que. Esta es para que cambie.
 
-Te paso sus creencias YA ELEGIDAS, su estudio, y lo que ella ha contestado sobre su vida.
+Te paso sus creencias YA ELEGIDAS y su estudio.
+
+Cada creencia viene con lo que le bloquea, lo que le cuesta y donde se le ve. Eso es lo que hay: no tienes su vida entera delante y no te hace falta.
 
 Las creencias no se tocan: no añades, no quitas, no juntas ni partes. Las escribes en el orden en que te las paso.
 
@@ -122,7 +142,7 @@ QUE TIENE QUE QUEDAR DICHO EN CADA UNA
 
 Cuatro cosas. Ni una mas.
 
-LA CREENCIA. Va sola en su linea, es el titulo, y es lo que decide si sigue leyendo. El veredicto dicho por ella y sobre ella: primera persona, presente, corto. Al leerlo tiene que apartar un poco la vista; si se lee entero sin que se le mueva nada, esta suavizado y hay que bajarlo. No es una norma sobre el mundo, ni una etiqueta que la clasifica desde fuera, ni una frase larga con condiciones dentro. Sin numero, sin raya y sin comillas.
+LA CREENCIA. Va sola en su linea, es el titulo, y es lo que decide si sigue leyendo. El veredicto dicho por ella y sobre ella: primera persona y presente. NUEVE PALABRAS COMO MUCHO, y cuentalas: un titulo largo no golpea, se lee como una explicacion y se pasa por encima. Al leerlo tiene que apartar un poco la vista; si se lee entero sin que se le mueva nada, esta suavizado y hay que bajarlo. No es una norma sobre el mundo, ni una etiqueta que la clasifica desde fuera, ni una frase larga con condiciones dentro. Sin numero, sin raya y sin comillas.
 
 DONDE SE LE VE Y QUE LE ESTA COSTANDO. Lo que esta creencia le hace hacer, lo que le hace no hacer, y lo que eso le quita. Sale en varias partes de su vida, no en una: señala en cuantas la encuentres, siempre que esten en el estudio o en lo que ella ha contado. Que vea que lo que creia un problema de una zona suya le esta gobernando media vida. Los precios, concretos: las horas, la salud, el dinero, la conversacion que no tuvo, lo que no pidio. Nada de que le limita o le frena: eso no es un precio, es una palabra.
 
@@ -133,13 +153,13 @@ LA CREENCIA NUEVA. Una frase, para que se la quede. Y tiene que poder creersela 
 Y nada mas. Ni ejercicios, ni pruebas para esta semana, ni consejos al final. El plan va en otro sitio.
 
 
-LO QUE ELLA HA CONTESTADO NO SE LE REPITE
+AQUI NO SE ESCRIBEN ESCENAS
 
-Sus respuestas son para saber donde apuntar, no para devolverselas.
+Ni una. Nada de contarle un momento suyo como si lo estuvieras viendo: ni una hora, ni un dia de la semana, ni un sitio, ni lo que tenia en la mano, ni lo que hizo despues.
 
-Nunca le digas que ella ha dicho tal cosa, ni le cites lo que escribio, ni se lo resumas. Acaba de escribirlo: si se lo repites, ve que le estas devolviendo su propio texto y se le cae el trabajo en la mano.
+En cuanto describes un momento te lo estas inventando, y ella lo nota a la primera. Una escena que no le paso tira todo lo demas, aunque lo demas sea cierto.
 
-Se usan al reves: sabes que es lo que no consigue, y le enseñas por que.
+Lo que si se dice es como funciona: lo que hace siempre que le pasa eso. Eso es suyo y es verdad. El cuando y el donde, no.
 
 
 NINGUNA SE PARECE A OTRA AL LEERLA
@@ -295,42 +315,50 @@ async function escribirCreencias(informe, respuestas) {
 
   const quien = `Nombre de pila: ${(informe.cliente?.nombre || '').split(/\s+/)[0]}\nSexo: ${informe.cliente?.sexo || ''}`;
 
-  const material =
+  // El material del P1: lo que ella leyo. De ahi salen las creencias.
+  const estudio =
     `SUS RASGOS, LOS QUE SE LE DIJO QUE SE LE DAN BIEN:\n${f}\n\n` +
     `SUS RASGOS, LOS QUE SE LE DIJO QUE LE CUESTAN:\n${d}\n\n` +
-    `────────────────\n\nEL ESTUDIO QUE YA HA LEIDO:\n\n${areas}\n\n` +
-    `────────────────\n\nLO QUE ELLA HA CONTESTADO:\n\n` +
+    `────────────────\n\nEL ESTUDIO QUE YA HA LEIDO:\n\n${areas}`;
+
+  // Lo que ha contestado hoy. Solo lo ve el paso de elegir: sirve para saber
+  // que le esta bloqueando, no para contarselo. Quien escribe no lo recibe, y
+  // por eso no puede devolverle su propio texto.
+  const contestado = `LO QUE ELLA HA CONTESTADO:\n\n` +
     respuestas.map((r, i) => `${PREGUNTAS[i]}\n${r}`).join('\n\n');
 
-  // Paso 1. Solo la lista: unos cientos de palabras. Es donde se juntan las
-  // que dicen lo mismo, antes de que escribirlas cueste tirarlas.
+  // Paso 1. Saca las candidatas, sin quitar ninguna por miedo a repetirse.
   const uno = await pedir({
     sistema: ELEGIR,
-    mensaje: `${quien}\n\n${material}\n\nElige sus creencias y entrega la lista.`,
-    tope: 2000,
+    mensaje: `${quien}\n\n${estudio}\n\n────────────────\n\n${contestado}\n\nElige sus creencias y entrega la lista.`,
+    tope: 2500,
   });
-  const lista = uno.texto.trim();
-  if (!lista) throw new Error('El primer paso no ha devuelto ninguna creencia');
+  const candidatas = uno.texto.trim();
+  if (!candidatas) throw new Error('El primer paso no ha devuelto ninguna creencia');
 
-  // Paso 2. Escribe solo las que han quedado.
-  const dos = await pedir({
+  // Paso 2. Junta las que dicen lo mismo. Ve la lista y nada mas: con el
+  // informe delante, cada creencia parece justificada y no junta ninguna.
+  // Es una llamada corta, unos segundos.
+  const dos = await pedir({ sistema: JUNTAR, mensaje: candidatas, tope: 2500 });
+  const lista = dos.texto.trim() || candidatas;
+
+  // Paso 3. Escribe las que han quedado.
+  const tres = await pedir({
     sistema: ESCRIBIR,
-    mensaje: `${quien}\n\nSUS CREENCIAS, YA ELEGIDAS:\n\n${lista}\n\n────────────────\n\n${material}\n\nEscribelas.`,
+    mensaje: `${quien}\n\nSUS CREENCIAS, YA ELEGIDAS:\n\n${lista}\n\n────────────────\n\n${estudio}\n\nEscribelas.`,
     // Techo de escritura. El tiempo lo marca lo que escribe, no lo que
-    // piensa: unas 75 palabras-token por segundo. Con 10000 el paso de
-    // escribir no puede pasar de unos dos minutos y medio, y la funcion se
-    // corta a los cinco. Con tres o cuatro creencias de cuatro partes, lo
-    // esperable son 4000 o 5000.
+    // piensa: unas 75 palabras-token por segundo. Con 10000 este paso no
+    // puede pasar de dos minutos y medio, y la funcion se corta a los cinco.
+    // Con tres o cuatro creencias de cuatro partes, lo esperable son 4000.
     tope: 10000,
   });
 
+  const suma = k => [uno.uso, dos.uso, tres.uso].reduce((t, u) => t + (u[k] || 0), 0);
   return {
-    texto: dos.texto,
+    texto: tres.texto,
+    candidatas,
     lista,
-    uso: {
-      dentro: (uno.uso.input_tokens || 0) + (dos.uso.input_tokens || 0),
-      fuera: (uno.uso.output_tokens || 0) + (dos.uso.output_tokens || 0),
-    },
+    uso: { dentro: suma('input_tokens'), fuera: suma('output_tokens') },
   };
 }
 
@@ -350,7 +378,9 @@ function pagina(cuerpo) {
  body{margin:0;background:#fffbef;color:#1d2b2f;font:17px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
  main{max-width:44rem;margin:0 auto;padding:3rem 1.5rem 6rem}
  .aviso{font-size:.8rem;color:#8a8578;border-bottom:1px solid #e7e0d0;padding-bottom:1rem;margin-bottom:2.5rem}
- h1{font-size:1.5rem;color:#0e3f4b;margin:0 0 .3rem;line-height:1.3}
+ h1{font-size:1.55rem;color:#0e3f4b;margin:0 0 1.2rem;line-height:1.25;font-weight:700}
+ .creencia{padding:2.5rem 0 2rem;border-top:1px solid #e0d8c6}
+ .creencia:first-of-type{border-top:0;padding-top:0}
  p{margin:0 0 1.1rem}
  label{display:block;font-size:.95rem;font-weight:600;color:#0e3f4b;margin:2rem 0 .5rem}
  textarea,input,select{width:100%;box-sizing:border-box;font:inherit;font-size:.95rem;padding:.7rem;
@@ -448,23 +478,48 @@ export default async function handler(req, res) {
     const informe = JSON.parse(await pedirR2(cfg, `/${clave}`));
 
     const t0 = Date.now();
-    const { texto, lista, uso } = await escribirCreencias(informe, respuestas);
+    const { texto, candidatas, lista, uso } = await escribirCreencias(informe, respuestas);
     const seg = ((Date.now() - t0) / 1000).toFixed(0);
 
-    const parrafos = texto.split(/\n{2,}/).map(p => {
-      const t = p.trim();
-      if (!t) return '';
-      // Un renglon corto y suelto se lee como titulo de la creencia.
-      if (t.length < 70 && !/[.:;]$/.test(t)) return `<h1>${escapar(t)}</h1>`;
-      return `<p>${escapar(t)}</p>`;
-    }).join('\n');
+    // Que renglon es el titulo de una creencia. No se adivina por la pinta:
+    // se compara con los titulos que el paso de juntar dejo cerrados. Se
+    // miran las cuatro primeras palabras, porque al escribirlo puede
+    // cambiarle alguna. Si aun asi no cuadra, vale un renglon corto y suelto.
+    const pelado = t => t.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+    const arranque = t => pelado(t).split(' ').slice(0, 4).join(' ');
+    const cerrados = [...lista.matchAll(/^\s*CREENCIA:\s*(.+)$/gmi)]
+      .map(m => arranque(m[1])).filter(a => a.split(' ').length === 4);
+    // Si hay lista cerrada, manda ella y solo ella: el encargo pide frases
+    // sueltas y cortas para rematar, y esas no son titulos aunque lo parezcan.
+    const esTitulo = t => cerrados.length
+      ? cerrados.includes(arranque(t))
+      : t.length < 80 && !/[.:;,]$/.test(t);
+
+    // El texto llega en parrafos. Cada vez que aparece un titulo empieza una
+    // creencia nueva, y se pinta separada de la anterior.
+    const bloques = [];
+    for (const trozo of texto.split(/\n{2,}/)) {
+      const t = trozo.trim();
+      if (!t) continue;
+      if (esTitulo(t)) bloques.push({ titulo: t, parrafos: [] });
+      else if (bloques.length) bloques[bloques.length - 1].parrafos.push(t);
+      else bloques.push({ titulo: '', parrafos: [t] });
+    }
+
+    const creencias = bloques.map(b => `<section class="creencia">
+      ${b.titulo ? `<h1>${escapar(b.titulo)}</h1>` : ''}
+      ${b.parrafos.map(t => `<p>${escapar(t)}</p>`).join('\n')}
+    </section>`).join('\n');
 
     return res.status(200).send(pagina(
       `<div class="aviso">PRUEBA — informe ${escapar(clave)} · ${seg}s ·
         ${uso.dentro} dentro / ${uso.fuera} fuera</div>
-       <details><summary>Las creencias que eligio antes de escribir</summary>
-         <pre>${escapar(lista)}</pre></details>
-       <div class="texto">${parrafos}</div>`));
+       <details><summary>Chuleta: lo que saco y lo que dejo al juntar</summary>
+         <pre>SACO:\n\n${escapar(candidatas)}\n\n\nDEJO:\n\n${escapar(lista)}</pre>
+       </details>
+       ${creencias}`));
 
   } catch (err) {
     return res.status(200).send(formulario(datos,
