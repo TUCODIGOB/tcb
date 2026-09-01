@@ -36,15 +36,41 @@ Ese estudio ya trae escritas sus creencias, unas con todas sus letras y otras me
 Sacas TODAS las que encuentres, no una selección. Si hay siete, van siete.
 
 
+BAJA HASTA DONDE DUELE
+
+Esto es lo que decide si el trabajo vale algo o no.
+
+Una creencia tiene dos versiones. La presentable, que es una regla sobre como funciona el mundo, y suena razonable: "el carino se gana cuidando", "hay que tenerlo todo controlado". Esa no sirve. Se lee, se asiente y no pasa nada, porque no acusa a nadie.
+
+Y debajo hay otra, que es un veredicto sobre ELLA. Lo que cree que es, o que le falta, o que le sobra. Y esa no la ha dicho en voz alta nunca, ni a su mejor amiga.
+
+Esa es la que se escribe.
+
+Para encontrarla: coge la version presentable y preguntate que tiene que ser cierto sobre ella para que se comporte asi. Y luego preguntatelo otra vez. Se para cuando llegas a algo que la deja sin sitio: que no vale, que no basta, que sobra, que no es motivo suficiente, que hay algo en ella que si se ve, espanta.
+
+COMO SE SABE QUE HAS LLEGADO: la creencia esta escrita en primera persona, dice algo sobre ella y no sobre el mundo, y da un poco de verguenza leerla. Si al leerla se puede asentir tranquilamente, no has bajado.
+
+Y se escribe con SUS palabras, las de dentro, no las educadas.
+
+
 NINGUNA SE PARECE A OTRA
 
-Dos creencias son la misma cuando debajo dicen lo mismo, aunque cambien las palabras. Si te salen dos asi, se juntan en una.
+Cuando bajas a ese fondo, muchas se juntan solas: varias reglas distintas resultan ser el mismo veredicto. Junta todas las que lo sean, sin miedo a quedarte con pocas. Vale mas cuatro que peguen que ocho que se pisen.
+
+Dos creencias son la misma cuando debajo dicen lo mismo, aunque cambien las palabras.
 
 Y ademas, ninguna puede repetirle a otra:
 - el sitio de su vida donde se le nota
 - lo que le esta costando
 
-Si dos aterrizan en el mismo sitio o le cuestan lo mismo, es que en realidad son una. Juntalas.
+Si dos aterrizan en el mismo sitio o le cuestan lo mismo, es que son una. Juntalas.
+
+
+CADA CREENCIA SE TIENE QUE PODER SEÑALAR
+
+Antes de escribir una, encuentra en el estudio la frase concreta de la que sale. Si no puedes señalarla, no la escribas, por bien que suene.
+
+Y NINGUNA PUEDE CONTRADECIR LO QUE EL ESTUDIO YA LE DIJO. Si el estudio dice que se le da bien algo, no le digas ahora que le cuesta. Se acordara, porque lo leyo hace poco, y a partir de ahi no se cree nada.
 
 
 NO SE LE INVENTA NADA DE SU VIDA
@@ -58,7 +84,7 @@ Lo que si puedes escribir es un momento corriente que le pasa a cualquiera -reci
 
 COMO SE ESCRIBE CADA CREENCIA, EN ESTE ORDEN
 
-1. EL TITULO es la creencia dicha en sus palabras, corta, como se la diria ella a si misma. No "creencia sobre el amor", ni numeros.
+1. EL TITULO es la creencia de dentro, la del veredicto, dicha en primera persona y en sus palabras. Corta. No una regla sobre el mundo, no "creencia sobre el amor", no numeros.
 
 2. SE ENTRA POR ALGO QUE ELLA YA HA VIVIDO. Un momento de los de todos los dias, y lo que se le pasa por dentro cuando ocurre. Nunca se entra explicando.
 
@@ -94,7 +120,13 @@ Le hablas a ella de tu, como alguien que la conoce bien y se lo cuenta claro. Ni
 
 ANTES DE ENTREGAR
 
-Lee las creencias seguidas. Si dos se parecen, juntalas. Si una se puede decir de cualquiera, quitala. Si en alguna hay un dato de su vida que te has inventado, quitalo.`;
+Lee los titulos seguidos, solo los titulos.
+
+- El que sea una regla sobre el mundo en vez de un veredicto sobre ella, bajalo otra vez.
+- El que se pueda leer sin incomodarse, no ha llegado al fondo.
+- Los que digan lo mismo debajo, juntalos.
+
+Y luego lee el resto: si una creencia se le puede decir a cualquiera, fuera. Si en alguna has dado por hecho algo de su vida, fuera.`;
 
 // ── R2: leer un informe guardado ─────────────────────────────────
 function ajustes() {
