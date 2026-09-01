@@ -48,6 +48,13 @@ import crypto from 'crypto';
 // Estan escritos aqui una sola vez. El encargo los pide con estas palabras, y
 // al pintar la pagina se cogen de aqui y no de lo que devuelva el modelo, asi
 // que salen siempre bien escritos y con sus tildes aunque el se las coma.
+// EL TECHO DE CREENCIAS. No es una cantidad que haya que alcanzar: si le salen
+// tres, van tres. Marca donde se corta cuando salen mas.
+//
+// Escrito aqui una vez: se le pide en el encargo y se corta despues por
+// codigo, porque un techo que solo esta pedido se puede pasar.
+const TECHO = 6;
+
 const LADILLOS = [
   'La creencia',
   'Dónde se te nota y lo que te está costando',
@@ -240,11 +247,11 @@ CUANTAS
 
 Ordenalas de la que mas le cuesta a la que menos.
 
-SEIS ES EL TECHO, NO UNA CANTIDAD QUE HAYA QUE ALCANZAR. Si te quedan mas de seis, cortas por la sexta. Si te quedan tres, van tres, y esta bien: son las suyas y no falta ninguna. Cada persona tiene las que tiene.
+${TECHO} ES EL TECHO, NO UNA CANTIDAD QUE HAYA QUE ALCANZAR. Si te quedan mas de ${TECHO}, cortas ahi. Si te quedan tres, van tres, y esta bien: son las suyas y no falta ninguna. Cada persona tiene las que tiene.
 
 Las que se quedan son las que le bloquean lo que ella misma ha dicho que quiere, y las que le salen en mas sitios de su vida.
 
-No se rellena inventando para llegar a seis, y una que ya has juntado no se vuelve a separar: eso devuelve el repetido que acabas de quitar.
+No se rellena inventando para llegar a ${TECHO}, y una que ya has juntado no se vuelve a separar: eso devuelve el repetido que acabas de quitar.
 
 
 COMO VA MONTADA CADA CREENCIA
@@ -714,20 +721,29 @@ async function escribirCreencias(informe, respuestas) {
   const cortadas = escritas.length - bloques.length;
   if (!bloques.length) throw new Error('No ha salido ninguna creencia entera');
 
-  // Las que dicen lo mismo que otra, fuera. Y despues, los trozos que entran
-  // igual que otro, reescritos por su arranque.
+  // Los tres repasos, en este orden: primero se quitan las que dicen lo mismo
+  // que otra, luego las que no le bloquean nada de lo suyo, y por ultimo se
+  // reescriben los trozos que entran igual. El de los arranques va el ultimo a
+  // proposito, para no gastarlo en creencias que se van a caer.
   const dos = await quitarLasQueDicenLoMismo(bloques);
   const tres = await quitarLasQueNoLeBloqueanNada(dos.bloques, contestado);
-  const cuatro = await desmoldarArranques(tres.bloques);
+
+  // Y el techo, cortado aqui y no solo pedido en el encargo. Vienen ordenadas
+  // de la que mas le pesa a la que menos, asi que se queda con las primeras.
+  const sobraban = Math.max(0, tres.bloques.length - TECHO);
+  const finales = tres.bloques.slice(0, TECHO);
+
+  const cuatro = await desmoldarArranques(finales);
 
   const suma = k => [una.uso, dos.uso, tres.uso, cuatro.uso]
     .reduce((t, u) => t + (u[k] || 0), 0);
   return {
-    bloques: tres.bloques,
+    bloques: finales,
     rasgos,
     cortadas,
     repetidas: dos.quitadas,
     flojas: tres.quitadas,
+    sobraban,
     desmoldados: cuatro.arreglados,
     uso: { dentro: suma('input_tokens'), fuera: suma('output_tokens') },
   };
@@ -850,7 +866,7 @@ export default async function handler(req, res) {
     const informe = JSON.parse(await pedirR2(cfg, `/${clave}`));
 
     const t0 = Date.now();
-    const { bloques, rasgos, cortadas, repetidas, flojas, desmoldados, uso } =
+    const { bloques, rasgos, cortadas, repetidas, flojas, sobraban, desmoldados, uso } =
       await escribirCreencias(informe, respuestas);
     const seg = ((Date.now() - t0) / 1000).toFixed(0);
 
@@ -867,7 +883,8 @@ export default async function handler(req, res) {
         ${desmoldados ? `${desmoldados} arranques repetidos, reescritos` : 'ningun arranque repetido'}
         ${cortadas ? `· ${cortadas} cortada(s) por el techo, fuera` : ''}
         ${repetidas ? `· ${repetidas} que decia(n) lo mismo, fuera` : ''}
-        ${flojas ? `· ${flojas} que no le bloquea(n) nada, fuera` : ''}</div>
+        ${flojas ? `· ${flojas} que no le bloquea(n) nada, fuera` : ''}
+        ${sobraban ? `· ${sobraban} por encima del techo de ${TECHO}, fuera` : ''}</div>
        <details><summary>Chuleta: el material con el que ha escrito</summary>
          <pre>${escapar(rasgos)}</pre>
        </details>
