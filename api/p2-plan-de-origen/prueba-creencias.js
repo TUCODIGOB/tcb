@@ -903,7 +903,11 @@ async function escribirCreencias(informe, respuestas) {
   // leer, asi que no se puede saber cuantas faltan ni pedir mas encima.
   const cinco = sinFiltrar ? { bloques, rehechas: 0, uso: {} }
                            : await lasQueFaltanPorEscribir(bloques, elegidas, material);
-  const finales = cinco.bloques;
+
+  // Y el techo otra vez, ahora sobre lo escrito. Se le dan las que van y se le
+  // dice que escriba esas, pero eso es una orden: si se arranca con una de mas
+  // -o parte una en dos al escribirla-, sin esto se entregaria.
+  const finales = cinco.bloques.slice(0, TECHO);
 
   // Y por ultimo los dos arreglos de redaccion, que van aqui a proposito: solo
   // se gastan en las creencias que de verdad van a salir.
