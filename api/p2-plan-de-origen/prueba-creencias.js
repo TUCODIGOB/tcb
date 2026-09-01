@@ -243,7 +243,7 @@ Aqui no juntas, no eliges y no descartas. Eso viene despues y lo hace otro. Tu t
 
 Coges sus dos listados de rasgos y los repasas UNO POR UNO, los que se le dan bien y los que le cuestan, de arriba abajo y sin saltarte ninguno. De cada uno te preguntas: ¿qué da por cierto sobre sí misma alguien a quien le pasa esto?
 
-Son muchos rasgos y hay material de sobra. SACA OCHO POR LO MENOS, y más si las ves.
+No pares hasta el final de los dos listados. Aqui no hay un numero al que llegar ni uno que no pasar: son las que encuentres, y de eso todavia no se ha limpiado nada.
 
 DOS QUE TE PAREZCAN PARECIDAS LAS PONES LAS DOS, cada una por su lado. Juntarlas no es cosa tuya, y la que juntes aqui ya no la recupera nadie.
 
@@ -443,22 +443,37 @@ export const enLista = fichas => fichas
 
 // ── SI SE HA QUEDADO CORTO, SE LE PIDEN LAS QUE FALTAN ──────
 //
-// Solo salta por debajo del suelo. En un dia normal no existe: se le piden
-// ocho y con cuarenta rasgos delante las hay. Cuando salta, se le enseña lo
-// que ya tiene para que no lo repita, y solo saca lo que falta.
+// Solo salta por debajo del suelo. Al listar no se le pide ningun numero -eso
+// seria rellenar antes de haber limpiado-, asi que la red esta aqui: si de lo
+// que ha encontrado no salen ni las del suelo, se le enseña lo que ya tiene
+// para que no lo repita y saca lo que falta.
 
 async function lasQueFaltan(fichas, material) {
-  if (fichas.length >= SUELO) return { fichas, buscadas: 0, uso: {} };
+  let tengo = fichas;
+  let buscadas = 0;
+  const gasto = { input_tokens: 0, output_tokens: 0 };
 
-  const { texto, uso } = await pedir({
-    sistema: LISTA,
-    mensaje: `${material}\n\n────────────────\n\nESTAS YA LAS TIENE, NO LAS REPITAS:\n\n${enLista(fichas)}\n\nSaca las que faltan: en sus rasgos hay mas.`,
-    tope: 3000,
-  });
+  // Dos intentos como mucho. Uno solo no basta: si vuelve corto otra vez, la
+  // clienta se queda por debajo del suelo y no hay quien lo levante despues.
+  // Y mas de dos no se hacen: si con cuarenta rasgos delante no las encuentra
+  // en dos vueltas, seguir pidiendo solo gasta su tiempo.
+  for (let vuelta = 0; vuelta < 2 && tengo.length < SUELO; vuelta++) {
+    const { texto, uso } = await pedir({
+      sistema: LISTA,
+      mensaje: `${material}\n\n────────────────\n\nESTAS YA LAS TIENE, NO LAS REPITAS:\n\n${enLista(tengo)}\n\nSaca las que faltan: en sus rasgos hay mas.`,
+      tope: 3000,
+    });
+    gasto.input_tokens += uso.input_tokens || 0;
+    gasto.output_tokens += uso.output_tokens || 0;
 
-  const tenia = new Set(fichas.map(f => f.creencia));
-  const nuevas = repartirFichas(texto).filter(f => !tenia.has(f.creencia));
-  return { fichas: [...fichas, ...nuevas], buscadas: nuevas.length, uso };
+    const tenia = new Set(tengo.map(f => f.creencia));
+    const nuevas = repartirFichas(texto).filter(f => !tenia.has(f.creencia));
+    if (!nuevas.length) break;          // no saca mas: insistir no lo cambia
+    tengo = [...tengo, ...nuevas];
+    buscadas += nuevas.length;
+  }
+
+  return { fichas: tengo, buscadas, uso: gasto };
 }
 
 
@@ -881,13 +896,17 @@ async function escribirCreencias(informe, respuestas) {
   const sinFiltrar = enteras.length ? 0 : escritas.length;
   if (!bloques.length) throw new Error('El modelo no ha devuelto nada que se pueda leer');
 
-  // Y por ultimo los dos arreglos de redaccion, que van aqui a proposito: solo
-  // se gastan en las creencias que de verdad van a salir.
-  // Si ha entregado menos de las que se le dieron, se le piden las que faltan
-  // antes de arreglar nada: los arreglos tienen que verlas todas.
-  const cinco = await lasQueFaltanPorEscribir(bloques, elegidas, material);
+  // Si ha entregado menos de las que se le dieron, se le piden las que faltan.
+  // Va antes de los arreglos porque los arreglos tienen que verlas todas.
+  //
+  // No se pide cuando el texto salio mal montado: ahi lo que hay no se sabe
+  // leer, asi que no se puede saber cuantas faltan ni pedir mas encima.
+  const cinco = sinFiltrar ? { bloques, rehechas: 0, uso: {} }
+                           : await lasQueFaltanPorEscribir(bloques, elegidas, material);
   const finales = cinco.bloques;
 
+  // Y por ultimo los dos arreglos de redaccion, que van aqui a proposito: solo
+  // se gastan en las creencias que de verdad van a salir.
   const seis = await acortarTitulos(finales);
   const siete = await desmoldarArranques(finales);
 
