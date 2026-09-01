@@ -13,28 +13,33 @@
 // vez. Una respuesta escrita aqui dentro se le acabaria colando a otro
 // cliente, y entonces el informe deja de ser suyo.
 //
-// EN DOS PASOS. Antes iba de una tirada y salian repetidas: juntar las que
+// EN TRES PASOS. Antes iba de una tirada y salian repetidas: juntar las que
 // decian lo mismo se le pedia al final, cuando ya las tenia escritas, y
 // nadie tira siete paginas hechas. Ahora primero ELIGE -solo una lista, sin
-// escribir nada para ella, y ahi juntar no cuesta nada- y luego ESCRIBE solo
-// las que quedan.
+// escribir nada para ella-, luego JUNTA las que dicen lo mismo mirando solo
+// esa lista, y por ultimo ESCRIBE las que quedan.
 //
-// CADA ENVIO CUESTA DOS LLAMADAS AL MODELO.
+// CADA ENVIO CUESTA TRES LLAMADAS AL MODELO.
 // ════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
 
 const AREAS = ['IDENTIDAD', 'PATRONES', 'MIEDOS', 'HERIDA', 'AMOR', 'RELACIONES', 'DINERO'];
 
-// LOS TRES LADILLOS QUE LLEVA CADA CREENCIA.
+// LOS LADILLOS QUE LLEVA CADA CREENCIA.
 //
 // Van iguales en todas y en este orden. Son lo que deja respirar la lectura:
 // el ojo descansa en ellos y de un vistazo sabe por donde va.
+//
+// El titulo es la creencia dicha corta. Debajo, el primer ladillo la explica:
+// son dos cosas distintas y por eso van separadas. Un titulo que ademas
+// tuviera que explicarse se convierte en el parrafo largo que no golpea.
 //
 // Estan escritos aqui una sola vez. El encargo los pide con estas palabras, y
 // al pintar la pagina se cogen de aqui y no de lo que devuelva el modelo, asi
 // que salen siempre bien escritos y con sus tildes aunque el se las coma.
 const LADILLOS = [
+  'La creencia',
   'Dónde se te nota y lo que te está costando',
   'Qué parte es verdad y qué parte no',
   'La creencia nueva',
@@ -113,7 +118,7 @@ La lista y nada mas. Ni presentacion, ni explicacion, ni comentarios.
 
 Por cada creencia, estas cuatro lineas y una raya:
 
-CREENCIA: el veredicto sobre ella, en primera persona y presente. Corta, y que se entienda entera a la primera: si hay que releerla para saber que dice, no vale. Si te sale larga y con condiciones dentro, es que no has llegado al fondo: lo de abajo siempre se dice en menos.
+CREENCIA: el veredicto sobre ella, en primera persona y presente. Esta linea es la que ella va a leer como titulo, asi que va CORTA: UNA sola idea, DIEZ PALABRAS COMO MUCHO, y cuentalas. Ni una condicion metida dentro: nada de "asi que", nada de "y entonces", nada de dos frases pegadas con una coma. Se entiende entera a la primera y no hay que releerla. Aqui no se explica: explicarla viene despues y es otro trabajo. Si no te cabe en diez palabras es que llevas dos creencias en una: o las separas, o bajas hasta la que sostiene a las dos.
 BLOQUEA: que cosa de las que ella ha dicho que quiere y no consigue le esta impidiendo.
 CUESTA: que le esta quitando. Concreto.
 DONDE SE LE VE: en que partes de su vida aparece, separadas por comas.
@@ -131,7 +136,11 @@ Tu unico trabajo es dejar las que son de verdad distintas.
 
 DOS SON LA MISMA cuando debajo dicen lo mismo, aunque cambien las palabras y aunque una hable de su trabajo y la otra de su gente. El sitio donde ocurre no las hace distintas.
 
-Y ademas son la misma si le bloquean lo mismo o si le cuestan lo mismo. Miralo en sus lineas de BLOQUEA y de CUESTA: si dos coinciden ahi, son una, por distintas que suenen las dos frases de arriba.
+LO QUE SE COMPARA ES LA CREENCIA, NUNCA SUS CONSECUENCIAS. Dos creencias completamente distintas pueden bloquearle lo mismo y costarle lo mismo, porque en una vida casi todo desemboca en las mismas cuatro cosas. Que coincidan en BLOQUEA o en CUESTA no las hace una, y juntarlas por ahi le borra una creencia que era suya y que era de las buenas.
+
+Y al reves: dos que bloquean cosas distintas SI son la misma si debajo da por cierto lo mismo sobre ella. El sitio donde le sale no las separa.
+
+La pregunta es siempre esta, y no hay otra: lo que da por cierto SOBRE SI MISMA en una, es lo mismo que da por cierto en la otra? Si es que si, son una. Si es que no, se quedan las dos, por mucho que le estropeen lo mismo.
 
 COMO SE HACE, Y NO VALE SALTARSELO. Compara la primera con la segunda, la primera con la tercera, y asi hasta el final. Luego la segunda con todas las que van detras. Todos los pares, sin excepcion.
 
@@ -139,7 +148,9 @@ De cada par te preguntas: si se lo cuento primero una y luego la otra, va a pens
 
 CUANDO JUNTES DOS: te quedas con la que llega mas abajo, la que mas duele, y le sumas lo que la otra traiga de nuevo en sus lineas de BLOQUEA, CUESTA y DONDE SE LE VE. No se pierde nada de eso.
 
-JUNTA SIN PENA. Vale mas tres que peguen que siete que se pisen. Si dudas de un par, junta.
+Y la linea CREENCIA que queda es UNA, la suya, tal cual estaba. No se pegan las dos frases con una coma ni con un "asi que": eso deja un titulo largo que ya no golpea.
+
+SI DUDAS DE UN PAR, MIRALO OTRA VEZ POR DONDE HAY QUE MIRARLO: lo que da por cierto sobre ella cada una, no lo que le estropea cada una. Ahi se ve casi siempre. Y si aun asi no lo tienes claro, dejalas separadas: juntar dos que no eran la misma le quita una creencia entera y eso ya no vuelve.
 
 QUE ENTREGAS: la lista que queda, con las mismas lineas y en el mismo formato que te la paso, ordenada de la que mas le cuesta a la que menos. Nada mas: ni explicacion, ni que has juntado, ni comentarios.`;
 
@@ -158,41 +169,57 @@ Todas van montadas igual, y esto no cambia de una a otra.
 
 Primero una linea que empieza por CREENCIA: y detras, en esa misma linea, la creencia. Nada mas en esa linea.
 
-Debajo van tres ladillos, en este orden y con estas palabras exactas, cada uno solo en su linea y con sus parrafos debajo:
+Debajo van cuatro ladillos, en este orden y con estas palabras exactas, cada uno solo en su linea y con sus parrafos debajo:
 
 ${LADILLOS[0]}
 ${LADILLOS[1]}
 ${LADILLOS[2]}
+${LADILLOS[3]}
 
 Ni un ladillo mas, ni uno menos, ni cambiados de sitio, ni con otras palabras. Ninguno se queda sin nada debajo.
 
 
-LA CREENCIA, LA DE LA PRIMERA LINEA
+EL TITULO, LA LINEA DE ARRIBA
 
-Es lo que decide si sigue leyendo. El veredicto dicho por ella y sobre ella: primera persona y presente.
+Viene ya escrito en la lista que te paso y se copia TAL CUAL. No se alarga, no se le añade una explicacion detras, no se le pega otra frase con una coma. Es corto a proposito: es lo que decide si sigue leyendo, y en cuanto se explica deja de golpear.
 
-SE ENTIENDE ENTERA A LA PRIMERA, y esto manda sobre todo lo demas. Si hay que releerla, o pararse a descifrarla, o llegar al final para saber que dice, no vale y se reescribe. Corta, porque corta golpea mas, pero nunca a costa de que se entienda.
-
-Al leerla tiene que apartar un poco la vista. Si se lee entera sin que se le mueva nada, esta suavizada y hay que bajarla.
-
-No es una norma sobre el mundo, ni una etiqueta que la clasifica desde fuera, ni una frase larga con condiciones dentro. Sin numero, sin raya y sin comillas.
+Explicarlo es el trabajo del primer ladillo, no suyo.
 
 
 DEBAJO DEL PRIMER LADILLO
 
-Lo que esta creencia le hace hacer, lo que le hace no hacer, y lo que eso le quita. Sale en varias partes de su vida, no en una: señala en cuantas la encuentres, siempre que esten en el estudio o en lo que ella ha contado. Que vea que lo que creia un problema de una zona suya le esta gobernando media vida. Los precios, concretos: las horas, la salud, el dinero, la conversacion que no tuvo, lo que no pidio. Nada de que le limita o le frena: eso no es un precio, es una palabra.
+Aqui se le cuenta que es eso que acaba de leer arriba. Que da por cierto sobre ella misma, dicho entero y con sus palabras, hasta que lo reconozca.
+
+Ella no lo vive como una creencia suya: lo vive como que las cosas son asi. Eso es justo lo que hay que enseñarle aqui, que es una idea que lleva dentro y no una descripcion del mundo.
+
+Todavia no cuentas donde se le ve ni lo que le cuesta: eso viene en el ladillo siguiente y aqui sobra.
 
 
 DEBAJO DEL SEGUNDO
 
-Lleva años en pie porque una parte es cierta. Se le dice cual y se le da la razon ahi de verdad. Y luego se le señala el punto exacto donde deja de ser cierta. Si se le dice que es mentira entera, no se lo cree y deja de leer.
+Lo que esta creencia le hace hacer, lo que le hace no hacer, y lo que eso le quita. Sale en varias partes de su vida, no en una: señala en cuantas la encuentres, siempre que esten en el estudio o en lo que ella ha contado. Que vea que lo que creia un problema de una zona suya le esta gobernando media vida.
+
+No vacies aqui todo lo que traiga la creencia en sus lineas. Coges lo que mas le pese y lo cuentas; lo demas se queda fuera. Una lista larga de sitios, uno detras de otro, deja de leerse a la tercera.
+
+Los precios, concretos: las horas, la salud, el dinero, la conversacion que no tuvo, lo que no pidio. Nada de que le limita o le frena: eso no es un precio, es una palabra.
 
 
 DEBAJO DEL TERCERO
 
-Una frase, para que se la quede. Y tiene que poder creersela HOY: lo contrario de la suya no vale, porque le pide un salto de fe que no va a dar. Vale una que no le pida creer, sino mirar; algo que pueda comprobar por si misma.
+Lleva años en pie porque una parte es cierta. Se le dice cual y se le da la razon ahi de verdad. Y luego se le señala el punto exacto donde deja de ser cierta. Si se le dice que es mentira entera, no se lo cree y deja de leer.
 
-Y nada mas. Ni ejercicios, ni pruebas para esta semana, ni consejos al final. El plan va en otro sitio.
+
+DEBAJO DEL CUARTO
+
+Aqui el estudio deja de mirar hacia atras. Todo lo anterior le explica lo que le pasa; esto es lo unico que se lleva, asi que no se despacha en una linea suelta.
+
+Primero la creencia nueva, en una frase corta y clara, de las que se quedan. Tiene que poder creersela HOY: lo contrario de la suya no vale, porque le pide un salto de fe que no va a dar. Vale una que no le pida creer, sino mirar: algo que pueda comprobar ella sola.
+
+Y despues, lo que se le abre. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que ella misma ha dicho que quiere, ahi puesto, al alcance, sin la creencia delante tapandolo.
+
+Que lo cierre sabiendo por donde tira, no solo entendiendo por que esta atascada.
+
+Pero sin irse de largo, y sin convertirlo en un plan: ni ejercicios, ni pasos, ni pruebas para esta semana, ni consejos. El como se hace va en otra parte.
 
 
 AQUI NO SE ESCRIBEN ESCENAS
@@ -209,6 +236,9 @@ NINGUNA SE PARECE A OTRA AL LEERLA
 El montaje es el mismo en todas, y justo por eso lo que va escrito dentro tiene que ser distinto de verdad. Si ademas suenan igual, a la tercera sabe lo que viene y deja de leer.
 
 - LO QUE CUENTAS EN UNA NO LO VUELVES A CONTAR EN OTRA. Ni la misma idea con otras palabras, ni el mismo precio, ni el mismo detalle suyo. Si al escribir una notas que estas diciendo algo que ya dijiste antes, cortalo y cuenta lo que esta creencia tiene de suyo.
+- EL PARRAFO NO ARRANCA CON LAS PALABRAS DE SU LADILLO. Acaba de leer el ladillo justo encima; si el parrafo empieza diciendo lo mismo, lee dos veces la misma frase y el ojo se cansa. Entra directo por lo suyo.
+- Y DENTRO DE UN BLOQUE, NO EMPIECES TRES FRASES SEGUIDAS IGUAL. En cuanto se ve la misma entrada una y otra vez, aquello se lee como una lista y deja de contarle nada.
+- El giro de lo que es verdad a lo que ya no lo es no se dice siempre con las mismas palabras. Si las creencias lo hacen todas igual, se ve el molde a la segunda.
 - No empieces dos igual y no cierres dos igual.
 - Si una formula ya la has usado en una creencia, en las demas no aparece.
 - Unas mas largas y otras mas cortas. La que mas le pesa se lleva mas sitio.
@@ -240,7 +270,7 @@ Le hablas a ella de tu, como alguien que la conoce bien y se lo cuenta claro. Ni
 - NI UNA PALABRA TECNICA: ningun planeta, ningun signo, ninguna casa, ningun aspecto. Su carta no se nombra, ni las areas del estudio, y no se dice tu informe ni tu estudio.
 - NADA DE ANIMAR NI DE CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
 - Español de España, hablado. Ni una palabra en otro idioma.
-- Sin asteriscos, sin listas, sin simbolos, sin guiones de adorno y sin numerar nada. Fuera de la linea de la creencia y de los tres ladillos, todo va en texto corrido.
+- Sin asteriscos, sin listas, sin simbolos, sin guiones de adorno y sin numerar nada. Fuera de la linea de la creencia y de los cuatro ladillos, todo va en texto corrido.
 
 CUANTO OCUPA: lo que necesite para entenderse, ni una linea mas. Pero corto no es apretado: lo que sobra es repetir con otras palabras algo ya dicho; lo que no sobra es explicarse. Si por acortar dejas una frase que dice mucho y no se entiende, eso no se relee, se abandona.
 
@@ -526,7 +556,7 @@ export default async function handler(req, res) {
     // COMO SE REPARTE EL TEXTO EN LA PAGINA.
     //
     // Ya no hay que adivinar nada: cada creencia arranca en su linea CREENCIA:
-    // y dentro lleva los tres ladillos, que son siempre los mismos.
+    // y dentro lleva sus ladillos, que son siempre los mismos.
     //
     // Los ladillos se comparan sin tildes y sin mayusculas, pero se PINTAN
     // desde LADILLOS, no desde lo que haya escrito el modelo. Asi el cliente
