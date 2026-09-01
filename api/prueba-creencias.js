@@ -235,17 +235,30 @@ async function pedirR2(cfg, ruta, consulta = '') {
   return resp.text();
 }
 
-// El ultimo informe guardado, si no se dice cual.
-async function ultimoInforme(cfg) {
+// Los informes guardados, del mas nuevo al mas viejo, con el nombre de cada
+// uno para poder elegir de quien se prueba. Solo se abren los diez ultimos:
+// abrir cada fichero es una peticion, y en la prueba no hacen falta mas.
+async function informesGuardados(cfg) {
   // La consulta va firmada tal cual, y AWS exige que dentro de un valor la
   // barra vaya escrita como %2F. Sin eso la firma no cuadra y R2 responde 403.
   const xml = await pedirR2(cfg, '/', 'list-type=2&prefix=p1%2F');
   const claves = [...xml.matchAll(/<Key>([^<]+)<\/Key>/g)].map(m => m[1]);
   const fechas = [...xml.matchAll(/<LastModified>([^<]+)<\/LastModified>/g)].map(m => m[1]);
-  if (claves.length === 0) throw new Error('No hay ningun informe guardado todavia');
-  let mejor = 0;
-  for (let i = 1; i < claves.length; i++) if (fechas[i] > fechas[mejor]) mejor = i;
-  return claves[mejor];
+  const todos = claves
+    .map((clave, i) => ({ clave, fecha: fechas[i] || '' }))
+    .sort((a, b) => (a.fecha < b.fecha ? 1 : -1))
+    .slice(0, 10);
+
+  // Si un informe no se puede abrir, se lista igual sin nombre: mejor eso que
+  // quedarse sin lista entera por uno malo.
+  return Promise.all(todos.map(async item => {
+    try {
+      const info = JSON.parse(await pedirR2(cfg, `/${item.clave}`));
+      return { ...item, nombre: (info.cliente?.nombre || '').split(/\s+/)[0] || '' };
+    } catch {
+      return { ...item, nombre: '' };
+    }
+  }));
 }
 
 // ── Las dos llamadas al modelo ──────────────────────────────
@@ -340,7 +353,7 @@ function pagina(cuerpo) {
  h1{font-size:1.5rem;color:#0e3f4b;margin:0 0 .3rem;line-height:1.3}
  p{margin:0 0 1.1rem}
  label{display:block;font-size:.95rem;font-weight:600;color:#0e3f4b;margin:2rem 0 .5rem}
- textarea,input{width:100%;box-sizing:border-box;font:inherit;font-size:.95rem;padding:.7rem;
+ textarea,input,select{width:100%;box-sizing:border-box;font:inherit;font-size:.95rem;padding:.7rem;
    border:1px solid #d8d0bd;border-radius:6px;background:#fff;color:inherit}
  textarea{min-height:8rem;resize:vertical}
  button{margin-top:2rem;background:#0e3f4b;color:#fffbef;border:0;border-radius:6px;
@@ -351,15 +364,28 @@ function pagina(cuerpo) {
 </style></head><body><main>${cuerpo}</main></body></html>`;
 }
 
-function formulario(datos = {}, aviso = '') {
+function formulario(datos = {}, aviso = '', informes = []) {
   const campo = (i) => `<label>${escapar(PREGUNTAS[i])}</label>
     <textarea name="r${i + 1}" required>${escapar(datos[`r${i + 1}`] || '')}</textarea>`;
+
+  const opcion = ({ clave, nombre, fecha }) => {
+    const dia = (fecha || '').slice(0, 10).split('-').reverse().join('/');
+    const quien = nombre || clave.replace(/^p1\//, '').slice(0, 18);
+    return `<option value="${escapar(clave)}"${datos.informe === clave ? ' selected' : ''}
+      >${escapar(quien)}${dia ? ' — ' + dia : ''}</option>`;
+  };
+
+  const elegir = informes.length
+    ? `<label>De quien se prueba</label>
+       <select name="informe">${informes.map(opcion).join('')}</select>`
+    : `<label>Compra del informe P1</label>
+       <input name="informe" value="${escapar(datos.informe || '')}" placeholder="p1/cs_live_...">`;
+
   return pagina(`${aviso}
     <div class="aviso">PRUEBA — lo que pegues aqui no se guarda en ningun sitio.
       Cada envio son dos llamadas al modelo.</div>
     <form method="POST">
-      <label>Compra del informe P1 (vacio = el ultimo guardado)</label>
-      <input name="p1" value="${escapar(datos.p1 || '')}" placeholder="cs_live_...">
+      ${elegir}
       ${campo(0)}${campo(1)}${campo(2)}
       <button type="submit">Escribir sus creencias</button>
     </form>`);
@@ -391,8 +417,16 @@ export default async function handler(req, res) {
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store');
 
+  const cfg = ajustes();
+
+  // La lista de informes se saca para pintar el desplegable. Si no se puede,
+  // el formulario sale igual con una casilla donde escribir la ruta a mano.
+  const listar = async () => {
+    try { return cfg ? await informesGuardados(cfg) : []; } catch { return []; }
+  };
+
   if (req.method !== 'POST') {
-    return res.status(200).send(formulario({ p1: req.query?.p1 || '' }));
+    return res.status(200).send(formulario({}, '', await listar()));
   }
 
   let datos = {};
@@ -401,15 +435,16 @@ export default async function handler(req, res) {
     const respuestas = [datos.r1, datos.r2, datos.r3].map(t => String(t || '').trim());
     if (respuestas.some(t => !t)) {
       return res.status(200).send(formulario(datos,
-        '<div class="err">Faltan respuestas: hacen falta las tres.</div>'));
+        '<div class="err">Faltan respuestas: hacen falta las tres.</div>', await listar()));
     }
 
-    const cfg = ajustes();
     if (!cfg) throw new Error('Faltan las variables INFORME_P1_CLOUDFLARE_*');
     if (!process.env.ANTHROPIC_API_KEY) throw new Error('Falta ANTHROPIC_API_KEY');
 
-    const pedido = String(datos.p1 || '').replace(/[^A-Za-z0-9_-]/g, '');
-    const clave = pedido ? `p1/${pedido}.json` : await ultimoInforme(cfg);
+    // Solo se admite lo que hay guardado del P1: la ruta llega del propio
+    // desplegable, pero se filtra igual para que nadie pueda pedir otra cosa.
+    const clave = String(datos.informe || '').trim();
+    if (!/^p1\/[A-Za-z0-9_-]+\.json$/.test(clave)) throw new Error('Elige de quien se prueba');
     const informe = JSON.parse(await pedirR2(cfg, `/${clave}`));
 
     const t0 = Date.now();
@@ -433,6 +468,6 @@ export default async function handler(req, res) {
 
   } catch (err) {
     return res.status(200).send(formulario(datos,
-      `<div class="err">No se pudo: ${escapar(err.message)}</div>`));
+      `<div class="err">No se pudo: ${escapar(err.message)}</div>`, await listar()));
   }
 }
