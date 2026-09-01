@@ -206,11 +206,13 @@ CUALES ENTRAN
 
 Abajo tienes lo que ella ha contestado: como seria su mejor version, como es su vida hoy, y que lleva años intentando cambiar sin conseguirlo.
 
-Una creencia entra SOLO si le esta bloqueando algo de eso que ella misma ha dicho que quiere y no consigue.
+PRIMERO, LAS QUE SALEN DE AHI. Una creencia que le este bloqueando algo de lo que ella ha nombrado entra, y esas van las primeras. Son las que va a reconocer antes, porque hablan de lo que acaba de escribir.
 
-Si no bloquea nada de lo que ella ha nombrado, fuera, por bien que suene y por mucho que este en sus rasgos.
+Y SI DE AHI SALEN POCAS, VUELVE A SUS RASGOS. Hay quien contesta en tres lineas y quien se explaya, y las dos han pagado lo mismo: el informe no puede quedarse corto porque ella escribiera poco. Asi que repasa sus rasgos y mira cuales se te han quedado fuera.
 
-Lo que decide no es cuantas son, es el peso que tienen: una que no la tenga atascada de verdad no entra.
+DE ESAS, SOLO LAS FUERTES. Fuerte es que le este costando algo de verdad: tiempo, salud, dinero, gente, calma. Con que le cueste algo gordo en una sola parcela de su vida basta, no hace falta que le salga en varias. Lo que no entra es la mania que no le quita nada, por bien que suene y por mucho que este escrita en sus rasgos.
+
+Y sigue sin haber numero. Salen las que salgan.
 
 
 BAJA HASTA DONDE DUELE
@@ -370,22 +372,24 @@ Empiezas directamente con la linea CREENCIA: de la primera. Acabas con el ultimo
 
 const FLOJAS = `Te paso los titulos de las creencias de una misma persona, numerados, y debajo lo que ella misma ha contestado sobre su vida.
 
-Este estudio existe para desatascarla de lo que ella ha dicho que quiere y no consigue. Una creencia solo tiene sitio aqui si le esta impidiendo algo de eso.
+Este estudio existe para desatascarla. Una creencia solo tiene sitio aqui si le esta costando algo de verdad.
 
-Tu unico trabajo es decir CUALES NO LE IMPIDEN NADA de lo que ella ha nombrado.
+Tu unico trabajo es decir CUALES NO LE ESTAN COSTANDO NADA.
 
-No busques cual pesa mas ni cual duele mas: eso no se puede medir y no es lo que te pido. Solo esto: lo que dice esa creencia, le esta cerrando el paso a algo que ella ha dicho que quiere? Si le cierra el paso, aunque sea a una sola cosa, se queda.
+Miralo en las dos cosas que te paso, en las dos: lo que ella ha contestado hoy, y sus rasgos. Le cuesta algo de lo que ella ha nombrado, o algo de lo que se ve en sus rasgos? Con que le cueste algo en una sola parcela de su vida, se queda. Que ella no lo haya escrito hoy no la tira: hay gente que contesta corto y no por eso le pesa menos.
+
+No busques cual pesa mas ni cual duele mas: eso es una opinion y no es lo que te pido. Fuera van solo las que no le quitan nada: ni tiempo, ni salud, ni dinero, ni gente, ni calma.
 
 Ante la duda, se queda. Quitar una que si le importaba es peor que dejar una de mas.
 
 QUE ENTREGAS: los numeros de las que no le impiden nada, uno por linea y nada mas. Si todas le impiden algo, escribes NINGUNA. Ni explicacion, ni comentarios.`;
 
-async function quitarLasQueNoLeBloqueanNada(bloques, contestado) {
+async function quitarLasQueNoLeBloqueanNada(bloques, contestado, rasgos) {
   if (bloques.length < 3) return { bloques, quitadas: 0, uso: {} };
 
   const { texto, uso } = await pedir({
     sistema: FLOJAS,
-    mensaje: `${bloques.map((b, i) => `${i + 1}. ${b.titulo}`).join('\n')}\n\n────────────────\n\n${contestado}`,
+    mensaje: `${bloques.map((b, i) => `${i + 1}. ${b.titulo}`).join('\n')}\n\n────────────────\n\n${contestado}\n\n────────────────\n\n${rasgos}`,
     tope: 200,
   });
 
@@ -734,7 +738,7 @@ async function escribirCreencias(informe, respuestas) {
   // reescriben los trozos que entran igual. El de los arranques va el ultimo a
   // proposito, para no gastarlo en creencias que se van a caer.
   const dos = await quitarLasQueDicenLoMismo(bloques);
-  const tres = await quitarLasQueNoLeBloqueanNada(dos.bloques, contestado);
+  const tres = await quitarLasQueNoLeBloqueanNada(dos.bloques, contestado, rasgos);
 
   // Y el techo, cortado aqui y no solo pedido en el encargo. Vienen ordenadas
   // de la que mas le pesa a la que menos, asi que se queda con las primeras.
