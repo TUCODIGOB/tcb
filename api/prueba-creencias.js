@@ -394,50 +394,48 @@ async function quitarLasQueDicenLoMismo(bloques) {
   return { bloques: quedan, quitadas: bloques.length - quedan.length, uso };
 }
 
-// ── LOS ARRANQUES QUE SE REPITEN ────────────────────────────
+// ── LOS TROZOS QUE ENTRAN IGUAL ─────────────────────────────
 //
-// POR QUE NO BASTA CON PEDIRLO EN EL ENCARGO.
+// El molde de los arranques es lo que mas canta al leer seguido: los bloques
+// de "que parte es verdad" salieron los DOCE empezando igual.
 //
-// Ya se le pide, y se lo salta. Escribiendo la sexta creencia no se acuerda de
-// como empezo la segunda, asi que cae en el mismo molde una y otra vez: los
-// bloques de "que parte es verdad" salieron los DOCE empezando igual.
+// NO SE COMPARAN PALABRAS. Comparar las primeras palabras solo pilla el
+// repetido literal, y el molde casi nunca es literal: "es verdad que" y "es
+// cierto que" no comparten ni una palabra y son la misma entrada. Por
+// palabras se escapaba, asi que se juzga, igual que con las creencias.
 //
-// Comparar texto, en cambio, no falla nunca. Aqui se miran los primeros
-// parrafos de cada ladillo, y si dos entran igual se le devuelven SOLO esas
-// frases, sueltas y juntas. Ahi si las ve todas a la vez, que es justo lo que
-// no puede hacer mientras escribe.
+// Se le enseñan SOLO las primeras frases, agrupadas por el punto al que
+// pertenecen. Ahi, una debajo de otra, el molde se ve; escribiendo la sexta
+// creencia no tiene delante como empezo la segunda, y por eso cae en el.
 //
-// SOLO SE LLAMA SI HAY REPETICION. Si no la hay, este paso no cuesta nada.
+// Solo se comparan las del MISMO punto: que el bloque de la creencia y el de
+// lo que le cuesta empiecen parecido no canta, porque van separados.
 //
-// Y ESTO NO SABE NADA DE CREENCIAS: sirve igual para cualquier otro punto del
-// P2 que se escriba con ladillos.
+// Vuelven reescritas solo por donde entran, con lo que dicen intacto, y se
+// sustituye unicamente la primera frase de cada parrafo.
 
-const ARRANQUES = `Te paso unas frases sueltas y numeradas. Cada una abre un trozo de un mismo estudio, y todas empiezan igual: leidas seguidas se ve el molde y quien lee se las salta.
+const ARRANQUES = `Te paso las primeras frases de los trozos de un mismo estudio, numeradas y repartidas en grupos. Los trozos de un mismo grupo van seguidos cuando ella lee.
 
-Reescribelas para que NINGUNA empiece como otra.
+Tu trabajo es que dentro de cada grupo NINGUNA ENTRE COMO OTRA.
 
-LO QUE DICE CADA UNA NO SE TOCA. Los mismos datos, lo mismo contado, sin añadir nada y sin quitar nada. Lo unico que cambia es por donde entra.
+DOS ENTRAN IGUAL cuando arrancan de la misma manera, aunque no compartan ni una palabra. No mires si repiten palabras: mira por donde entran. Empezar las dos dandole la razon, o las dos nombrando un sitio donde le pasa, o las dos anunciando lo que viene, es entrar igual, y a la tercera sabe lo que va a leer y se lo salta.
 
-Y CAMBIA LA MANERA DE ENTRAR, no solo la primera palabra. Una puede entrar por lo que ella hace, otra por lo que se dice por dentro, otra por lo que evita, otra nombrando la cosa en seco, otra por lo que se le va en ello. Si todas entran igual aunque cambien las palabras, no has hecho nada.
+LAS QUE ENTREN IGUAL QUE OTRA DE SU GRUPO, LAS REESCRIBES. Las demas las devuelves tal cual te las paso, sin tocarles una coma.
 
-Ninguna empieza repitiendo las palabras del titulo que lleva encima, si lo lleva.
+LO QUE DICE UNA FRASE NO SE TOCA NUNCA. Los mismos datos, lo mismo contado, sin añadir nada y sin quitar nada. Lo unico que cambia es por donde entra.
+
+Y AL CAMBIARLA, CAMBIA LA MANERA DE ENTRAR, no la primera palabra. Una puede entrar por lo que ella hace, otra por lo que se dice por dentro, otra por lo que evita, otra nombrando la cosa en seco, otra por lo que se le va en ello.
+
+Ninguna empieza repitiendo las palabras del titulo de su grupo.
 
 Español de España, hablado, de tu a tu. Ni una palabra que no dirias en una conversacion.
 
-QUE ENTREGAS: las mismas frases, con su mismo numero, una por linea y nada mas. Ni titulos, ni explicacion, ni comentarios.`;
-
-// Las primeras palabras de una frase, sin tildes ni signos. Con tres basta: es
-// donde se ve el molde, y con mas se escapan los que solo cambian la cuarta.
-const PALABRAS_DE_ARRANQUE = 3;
-const arranqueDe = t => pelado(t).split(' ').slice(0, PALABRAS_DE_ARRANQUE).join(' ');
+QUE ENTREGAS: TODAS las frases, con su mismo numero, una por linea y en el mismo orden. Sin los grupos y sin nada mas: ni titulos, ni explicacion, ni comentarios.`;
 
 // La primera frase de un parrafo. Si no hay punto, el parrafo entero.
 const primeraFrase = p => (String(p).match(/^[^.!?]*[.!?]/) || [String(p)])[0].trim();
 
 // Los primeros parrafos de cada ladillo, que son los que se comparan entre si.
-// Se compara solo dentro del MISMO ladillo: que el bloque de la creencia y el
-// de lo que le cuesta empiecen parecido no canta, porque van separados. Que
-// los seis "que parte es verdad" empiecen igual, si.
 function primerosParrafos(bloques) {
   const lista = [];
   for (const b of bloques) {
@@ -458,14 +456,14 @@ function primerosParrafos(bloques) {
 // de frase -paso, y se lo llevo el cliente-. Vale mas que lea cinco enteras
 // que cinco y media: lo cortado se nota a la primera y tira todo lo demas.
 //
-// Entera es que lleve sus cuatro ladillos y que ninguno se quede vacio. Solo
-// se miran las del final, que son las unicas que se pueden haber cortado.
+// Entera es que tenga titulo, que lleve sus cuatro ladillos y que ninguno se
+// quede vacio. Solo se miran las del final, que son las unicas que se pueden
+// haber cortado.
 export function quitarLasCortadas(bloques) {
   const entera = b => {
     if (!b.titulo) return false;
     const suyos = b.partes.filter(p => p.ladillo).map(p => p.ladillo);
     if (LADILLOS.some(l => !suyos.includes(l))) return false;
-    // Y ningun ladillo puede quedarse sin nada escrito debajo, ni el ultimo.
     return b.partes.every((parte, i) => !parte.ladillo || Boolean(b.partes[i + 1]?.parrafo));
   };
   const limpio = [...bloques];
@@ -473,32 +471,36 @@ export function quitarLasCortadas(bloques) {
   return limpio;
 }
 
-export function arranquesQueChocan(bloques) {
-  const grupos = new Map();
-  for (const p of primerosParrafos(bloques)) {
-    const llave = `${p.bajo} | ${arranqueDe(primeraFrase(p.parte.parrafo))}`;
-    if (!grupos.has(llave)) grupos.set(llave, []);
-    grupos.get(llave).push(p.parte);
-  }
-  // Van todos los del grupo, no todos menos uno: si se le deja uno puesto, los
-  // demas se le acaban pareciendo igualmente.
-  return [...grupos.values()].filter(g => g.length > 1).flat();
-}
-
 async function desmoldarArranques(bloques) {
-  const chocan = arranquesQueChocan(bloques);
-  if (!chocan.length) return { arreglados: 0, uso: {} };
+  const trozos = primerosParrafos(bloques);
+  // Con una sola creencia no hay nada con lo que chocar.
+  if (bloques.length < 2 || !trozos.length) return { arreglados: 0, uso: {} };
 
-  const frases = chocan.map(parte => primeraFrase(parte.parrafo));
-  const { texto, uso } = await pedir({
-    sistema: ARRANQUES,
-    mensaje: frases.map((f, i) => `${i + 1}. ${f}`).join('\n'),
-    tope: 2000,
+  // Agrupadas por ladillo, que es como las lee ella.
+  //
+  // Y NUMERADAS SEGUIDAS TAL COMO SE VEN, no en el orden en que estaban en el
+  // texto. Al agrupar se reordenan, asi que numerar por su sitio de origen
+  // dejaria la lista salteada (1, 5, 2, 6...), y con eso es facil que devuelva
+  // una frase con el numero de otra: entonces se cambiaria el parrafo que no
+  // era. "orden" guarda a que trozo corresponde cada numero.
+  const frases = trozos.map(t => primeraFrase(t.parte.parrafo));
+  const porGrupo = new Map();
+  trozos.forEach((t, i) => {
+    if (!porGrupo.has(t.bajo)) porGrupo.set(t.bajo, []);
+    porGrupo.get(t.bajo).push(i);
   });
 
-  // Se lee lo que vuelve por su numero. Lo que no vuelva, o vuelva vacio, se
-  // queda como estaba: un arranque repetido se lee peor, pero perder la frase
-  // se lee muchisimo peor.
+  const orden = [];
+  const mensaje = [...porGrupo].map(([ladillo, indices]) => {
+    const lineas = indices.map(i => `${orden.push(i)}. ${frases[i]}`);
+    return `BAJO "${ladillo}"\n${lineas.join('\n')}`;
+  }).join('\n\n');
+
+  const { texto, uso } = await pedir({ sistema: ARRANQUES, mensaje, tope: 3000 });
+
+  // Se lee lo que vuelve por su numero. Lo que no vuelva se queda como estaba:
+  // un arranque repetido se lee peor, pero perder la frase se lee muchisimo
+  // peor.
   const nuevas = new Map();
   for (const linea of String(texto).split('\n')) {
     const m = linea.trim().match(/^(\d{1,2})\s*[.)-]\s*(.+)$/);
@@ -506,10 +508,10 @@ async function desmoldarArranques(bloques) {
   }
 
   let arreglados = 0;
-  chocan.forEach((parte, i) => {
-    const nueva = nuevas.get(i + 1);
+  orden.forEach((i, sitio) => {
+    const nueva = nuevas.get(sitio + 1);
     if (!nueva || nueva === frases[i]) return;
-    parte.parrafo = nueva + parte.parrafo.slice(frases[i].length);
+    trozos[i].parte.parrafo = nueva + trozos[i].parte.parrafo.slice(frases[i].length);
     arreglados++;
   });
 
