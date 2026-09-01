@@ -143,7 +143,9 @@ async function pedirR2(cfg, ruta, consulta = '') {
 
 // El ultimo informe guardado, si no se dice cual.
 async function ultimoInforme(cfg) {
-  const xml = await pedirR2(cfg, '/', 'list-type=2&prefix=p1/');
+  // La consulta va firmada tal cual, y AWS exige que dentro de un valor la
+  // barra vaya escrita como %2F. Sin eso la firma no cuadra y R2 responde 403.
+  const xml = await pedirR2(cfg, '/', 'list-type=2&prefix=p1%2F');
   const claves = [...xml.matchAll(/<Key>([^<]+)<\/Key>/g)].map(m => m[1]);
   const fechas = [...xml.matchAll(/<LastModified>([^<]+)<\/LastModified>/g)].map(m => m[1]);
   if (claves.length === 0) throw new Error('No hay ningun informe guardado todavia');
