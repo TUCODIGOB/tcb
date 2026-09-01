@@ -158,7 +158,9 @@ EL CASO QUE MAS SE ESCAPA, Y NO SE TE PUEDE ESCAPAR: la misma creencia repetida 
 
 Y AHORA QUEDATE CON LAS QUE PESAN
 
-Cuando ya no queden repetidas, ordenalas de la que mas le cuesta a la que menos y deja SEIS. Seis es el maximo y es tambien lo que se busca: si despues de juntar te quedan mas de seis, cortas por la sexta.
+Cuando ya no queden repetidas, ordenalas de la que mas le cuesta a la que menos.
+
+SEIS ES EL TECHO, NO UNA CANTIDAD QUE HAYA QUE ALCANZAR. Si quedan mas de seis, cortas por la sexta. Si quedan tres, van tres, y esta bien: son las suyas y no hay ninguna que falte. Cada persona tiene las que tiene.
 
 Las que se quedan son las que le estan bloqueando lo que ella misma ha dicho que quiere y no consigue, y las que le salen en mas sitios de su vida. Esas son las de mas peso.
 
