@@ -274,11 +274,13 @@ COMO SE SABE QUE HAS LLEGADO: esta en primera persona, dice algo sobre ella y no
 
 QUE ENTREGAS
 
-Una detras de otra, cada una en dos lineas y nada mas:
+Una detras de otra, cada una en tres lineas y nada mas:
 
 En la primera, la palabra CREENCIA, dos puntos, y lo que da por cierto sobre si misma, en primera persona y en una sola frase.
 
 En la segunda, la palabra CUESTA, dos puntos, y lo que le esta costando por creerlo, concreto: las horas, la salud, el dinero, la gente, la conversacion que no tuvo, lo que no pidio.
+
+En la tercera, la palabra RASGOS, dos puntos, y los nombres de los rasgos suyos de los que sale esta creencia, copiados tal cual estan escritos arriba y separados por punto y coma. Solo los nombres, sin su explicacion. Esa linea es la que le va a permitir a quien la escriba ir a buscar lo suyo, asi que no te la saltes ni te la inventes: van los que de verdad la sostienen.
 
 Sin numerar, sin titulos, sin explicaciones, sin comentarios y sin despedida. Y en español correcto, con sus tildes y sus eñes.`;
 
@@ -308,7 +310,9 @@ ESCRIBES ESAS Y TODAS ESAS. Ni una menos, ni una mas, ni cambiadas por otras, ni
 
 Van en el mismo orden en que te las paso.
 
-Te paso tambien sus rasgos y lo que ella ha contestado hoy, que es de donde han salido. Eso es todo lo que sabes de ella: lo que no este ahi, no existe.
+DEBAJO DE CADA UNA VAN SUS RASGOS, los suyos, los que la sostienen. De ahi sale lo que le cuentas: lo que le pasa, donde se le nota y lo que le esta costando. No escribas desarrollando esas dos lineas de arriba, que son un resumen; escribe desde sus rasgos, que es donde esta ella.
+
+Te paso ademas sus dos listados enteros y lo que ha contestado hoy. Eso es todo lo que sabes de ella: lo que no este ahi, no existe.
 
 
 COMO VA MONTADA CADA CREENCIA
@@ -375,9 +379,17 @@ DEBAJO DEL CUARTO
 
 Aquí el estudio deja de mirar hacia atrás. Todo lo anterior le explica lo que le pasa; esto es lo único que se lleva, así que no se despacha en una línea suelta.
 
-NO EMPIEZA CON UNA FRASE-LEMA. Nada de resumir la creencia nueva en una línea suelta antes de empezar: la suya puesta del reves, o un lema de los que valen para cualquiera, se lee, no dice nada y se salta. Aquí se entra directamente por lo que se le abre.
+NO EMPIEZA CON UNA FRASE-LEMA. Nada de resumir la creencia nueva en una línea suelta antes de empezar: la suya puesta del reves, o un lema de los que valen para cualquiera, se lee, no dice nada y se salta.
 
-Y lo que va aquí es lo que cambia en su vida. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que ella misma ha dicho que quiere, ahí puesto y al alcance, sin la creencia delante tapandolo.
+Y AQUÍ NO SE LE DA UN PERMISO. En cuanto esto arranca con que puede, con que se le abre, con que existe la posibilidad o con que podrá, deja de contarle nada: le esta diciendo que algo le estaria permitido, y eso ya lo sabe. Le sirve tanto a ella como a cualquiera, y de esas frases ya viene servida.
+
+SE LE CUENTA COMO PASA, NO COMO SI PUDIERA PASAR. En presente y en indicativo, como se cuenta algo que ocurre. Tres cosas, y las tres:
+
+QUE DEJA DE PASARLE. Lo que hoy le ocurre por creer esto y deja de ocurrirle. Concreto, y cogido de lo que acabas de contarle que le esta costando: si arriba le has dicho que pierde horas, aquí se dice que deja de perderlas y en que se le van a ir.
+
+COMO ES ELLA SIN ESTO ENCIMA. No una persona nueva: ella misma con esto quitado de en medio. Su mejor version es esa, y no es un futuro bonito inventado: es lo que ella ha dicho que quiere, puesto ahí y al alcance, sin la creencia delante tapandolo.
+
+QUE HACE QUE HOY NO HACE. Lo que se pone a hacer cuando esto ya no le manda. Dicho como algo que hace, no como algo que le estaria permitido hacer.
 
 Que lo cierre sabiendo por donde tira, no solo entendiendo por que esta atascada.
 
@@ -428,17 +440,43 @@ export function repartirFichas(texto) {
     const t = linea.trim();
     if (!t) continue;
     const cre = t.match(/^[*_#>\s-]*CREENCIA\s*:\s*(.*)$/i);
-    if (cre) { fichas.push({ creencia: sinAdornos(cre[1]), cuesta: '' }); continue; }
+    if (cre) { fichas.push({ creencia: sinAdornos(cre[1]), cuesta: '', rasgos: [] }); continue; }
+    if (!fichas.length) continue;
+    const ficha = fichas[fichas.length - 1];
     const cue = t.match(/^[*_#>\s-]*CUESTA\s*:\s*(.*)$/i);
-    if (cue && fichas.length) fichas[fichas.length - 1].cuesta = sinAdornos(cue[1]);
+    if (cue) { ficha.cuesta = sinAdornos(cue[1]); continue; }
+    const ras = t.match(/^[*_#>\s-]*RASGOS\s*:\s*(.*)$/i);
+    if (ras) ficha.rasgos = sinAdornos(ras[1]).split(';').map(x => sinAdornos(x)).filter(Boolean);
   }
   return fichas.filter(f => f.creencia && f.cuesta);
 }
 
-// Asi se le enseñan a los dos pasos siguientes: numeradas y con sus dos
-// lineas. Nunca un titular suelto, que es por lo que se decidia antes.
+// Asi las ve el que junta: numeradas y con sus dos lineas. Nunca un titular
+// suelto, que es por lo que se decidia antes.
 export const enLista = fichas => fichas
   .map((f, i) => `${i + 1}. ${f.creencia}\n   Le cuesta: ${f.cuesta}`).join('\n\n');
+
+
+// ── CADA CREENCIA CON SUS RASGOS DEBAJO ─────────────────────
+//
+// Asi las ve el que escribe, y esto es lo que le devuelve la fuerza.
+//
+// Con las dos lineas a secas, escribia desarrollando un resumen: cuatro
+// parrafos sacados de una frase. Salia correcto y sin fuerza, a diagnostico.
+// Antes no pasaba porque el mismo bajaba hasta la creencia con los cuarenta
+// rasgos delante, y escribia desde el material de ella.
+//
+// Los rasgos enteros van tambien aparte, pero ahi son una lista de cuarenta:
+// no le dice cual es de cual. Puestos DEBAJO de su creencia, si.
+//
+// El que no encuentre por su nombre se deja pasar sin ruido: la lista entera
+// la tiene igual mas arriba, asi que no se pierde nada.
+
+export const enListaConSusRasgos = (fichas, buscar) => fichas.map((f, i) => {
+  const suyos = (f.rasgos || []).map(buscar).filter(Boolean);
+  return `${i + 1}. ${f.creencia}\n   Le cuesta: ${f.cuesta}` +
+    (suyos.length ? `\n   Sale de estos rasgos suyos:\n${suyos.map(t => `   ${t}`).join('\n')}` : '');
+}).join('\n\n');
 
 
 // ── SI SE HA QUEDADO CORTO, SE LE PIDEN LAS QUE FALTAN ──────
@@ -488,7 +526,7 @@ async function lasQueFaltan(fichas, material) {
 //
 // Solo salta por debajo del suelo. Escribiendolas todas, no existe.
 
-async function lasQueFaltanPorEscribir(bloques, elegidas, material) {
+async function lasQueFaltanPorEscribir(bloques, elegidas, material, buscar) {
   if (bloques.length >= SUELO || bloques.length >= elegidas.length) {
     return { bloques, rehechas: 0, uso: {} };
   }
@@ -496,7 +534,7 @@ async function lasQueFaltanPorEscribir(bloques, elegidas, material) {
   const faltan = elegidas.slice(bloques.length);
   const { texto, uso } = await pedir({
     sistema: REDACTAR,
-    mensaje: `${material}\n\n────────────────\n\nSUS CREENCIAS, LAS QUE ESCRIBES:\n\n${enLista(faltan)}\n\nEscribelas.`,
+    mensaje: `${material}\n\n────────────────\n\nSUS CREENCIAS, LAS QUE ESCRIBES:\n\n${enListaConSusRasgos(faltan, buscar)}\n\nEscribelas.`,
     tope: 8000,
   });
 
@@ -831,8 +869,20 @@ async function pedir({ sistema, mensaje, tope }) {
 
 async function escribirCreencias(informe, respuestas) {
   const rasgo = r => `- ${r.nombre}: ${r.descripcion}${r.causa ? ` (por que le pasa: ${r.causa})` : ''}`;
+  const todos = [...(informe.rasgos?.fortalezas || []), ...(informe.rasgos?.desafios || [])];
   const f = (informe.rasgos?.fortalezas || []).map(rasgo).join('\n');
   const d = (informe.rasgos?.desafios || []).map(rasgo).join('\n');
+
+  // Buscar un rasgo por el nombre que devuelva el modelo. No letra por letra:
+  // se le come una tilde o corta el nombre por la mitad, y por exigir el
+  // calcado se quedaria sin sus rasgos justo la creencia que los necesita.
+  const buscar = nombre => {
+    const busco = pelado(nombre);
+    if (!busco) return '';
+    const suyo = todos.find(r => pelado(r.nombre) === busco)
+      || todos.find(r => pelado(r.nombre).includes(busco) || busco.includes(pelado(r.nombre)));
+    return suyo ? rasgo(suyo) : '';
+  };
 
   const quien = `Nombre de pila: ${(informe.cliente?.nombre || '').split(/\s+/)[0]}\nSexo: ${informe.cliente?.sexo || ''}`;
 
@@ -877,7 +927,7 @@ async function escribirCreencias(informe, respuestas) {
   //    12000 no se queda a medias, y solo se paga lo que escribe de verdad.
   const cuatro = await pedir({
     sistema: REDACTAR,
-    mensaje: `${material}\n\n────────────────\n\nSUS CREENCIAS, LAS QUE ESCRIBES:\n\n${enLista(elegidas)}\n\nEscribelas.`,
+    mensaje: `${material}\n\n────────────────\n\nSUS CREENCIAS, LAS QUE ESCRIBES:\n\n${enListaConSusRasgos(elegidas, buscar)}\n\nEscribelas.`,
     tope: 12000,
   });
   if (!cuatro.texto.trim()) throw new Error('No ha escrito ninguna creencia');
@@ -902,7 +952,7 @@ async function escribirCreencias(informe, respuestas) {
   // No se pide cuando el texto salio mal montado: ahi lo que hay no se sabe
   // leer, asi que no se puede saber cuantas faltan ni pedir mas encima.
   const cinco = sinFiltrar ? { bloques, rehechas: 0, uso: {} }
-                           : await lasQueFaltanPorEscribir(bloques, elegidas, material);
+                           : await lasQueFaltanPorEscribir(bloques, elegidas, material, buscar);
 
   // Y el techo otra vez, ahora sobre lo escrito. Se le dan las que van y se le
   // dice que escriba esas, pero eso es una orden: si se arranca con una de mas
