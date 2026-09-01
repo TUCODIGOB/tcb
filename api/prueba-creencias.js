@@ -137,6 +137,8 @@ Van de mas peso a menos. La que mas le esta costando, primera.
 
 Y al final, en un cierre corto, se le dice CUAL DE TODAS SOSTIENE A LAS DEMAS: casi siempre las otras son maneras distintas de decir una sola, y esa es la que hay que mover. Se le dice cual es, y por que las demas vienen detras de ella.
 
+ESA NO SE INVENTA. Es una de las que acabas de escribir, repetida con sus mismas palabras. No vale sacar ahora una nueva, ni resumirlas todas en una frase que no esta arriba: se elige de la lista y punto. Si ninguna sostiene a las demas de verdad, se dice que van cada una por su lado y no se fuerza.
+
 Sin eso se queda con una lista y sin saber por donde empezar, que es lo mismo que no tener nada.
 
 
