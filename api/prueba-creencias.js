@@ -158,11 +158,13 @@ EL CASO QUE MAS SE ESCAPA, Y NO SE TE PUEDE ESCAPAR: la misma creencia repetida 
 
 Y AHORA QUEDATE CON LAS QUE PESAN
 
-Cuando ya no queden repetidas, ordenalas de la que mas le cuesta a la que menos y deja CINCO COMO MUCHO.
+Cuando ya no queden repetidas, ordenalas de la que mas le cuesta a la que menos y deja SEIS. Seis es el maximo y es tambien lo que se busca: si despues de juntar te quedan mas de seis, cortas por la sexta.
 
-Las que se quedan son las que le estan bloqueando lo que ella misma ha dicho que quiere y no consigue, y las que le salen en mas sitios de su vida. Esas son las fuertes.
+Las que se quedan son las que le estan bloqueando lo que ella misma ha dicho que quiere y no consigue, y las que le salen en mas sitios de su vida. Esas son las de mas peso.
 
-Las demas fuera, aunque sean ciertas. Una creencia de relleno no solo le hace leer de mas: hace que las buenas se lean con menos peso por ir rodeadas de flojas. Vale mucho mas que se lleve cuatro que le remuevan de verdad que doce por encima.
+Las demas fuera, aunque sean ciertas. Una creencia de relleno no solo le hace leer de mas: hace que las buenas se lean con menos peso por ir rodeadas de flojas.
+
+Y si de verdad no le salen seis distintas, entregas las que haya. No se rellena inventando, y una que ya has juntado no se vuelve a separar para llegar a seis: eso le devuelve el repetido, que es justo lo que estamos quitando.
 
 QUE ENTREGAS: la lista que queda, con las mismas lineas y en el mismo formato que te la paso, ordenada de la que mas le cuesta a la que menos. Nada mas: ni explicacion, ni que has juntado, ni comentarios.`;
 
