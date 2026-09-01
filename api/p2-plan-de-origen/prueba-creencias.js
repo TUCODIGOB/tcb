@@ -344,6 +344,60 @@ Las creencias escritas y nada mas. Ni presentacion, ni titulo general, ni la lis
 
 Empiezas directamente con la linea CREENCIA: de la primera. Acabas con el ultimo parrafo de la ultima, sin resumen, sin despedida y sin buscar la creencia que hay debajo de todas.`;
 
+// ── LAS QUE NO LE BLOQUEAN NADA ─────────────────────────────
+//
+// La regla del encargo es clara: una creencia entra SOLO si le esta bloqueando
+// algo de lo que ella misma ha dicho que quiere y no consigue. Pero es una
+// regla, y una regla se puede saltar sin que nadie se entere.
+//
+// Aqui se comprueba. Se le enseñan los titulos y lo que ella contesto, y nada
+// mas: sin parrafos, sin rasgos. La pregunta no es cual pesa mas -eso es una
+// opinion y no se puede comprobar-, es una que si tiene respuesta: esta le
+// impide algo de lo que ella ha dicho, si o no.
+//
+// Las que no, fuera. Son las de relleno: ciertas, pero le hacen leer de mas y
+// hacen que las buenas se lean con menos peso por ir rodeadas de flojas.
+//
+// NUNCA SE QUEDA CON MENOS DE LA MITAD. Si dijera que casi todas sobran, es
+// que se ha equivocado el, no ella: en ese caso no se quita ninguna.
+
+const FLOJAS = `Te paso los titulos de las creencias de una misma persona, numerados, y debajo lo que ella misma ha contestado sobre su vida.
+
+Este estudio existe para desatascarla de lo que ella ha dicho que quiere y no consigue. Una creencia solo tiene sitio aqui si le esta impidiendo algo de eso.
+
+Tu unico trabajo es decir CUALES NO LE IMPIDEN NADA de lo que ella ha nombrado.
+
+No busques cual pesa mas ni cual duele mas: eso no se puede medir y no es lo que te pido. Solo esto: lo que dice esa creencia, le esta cerrando el paso a algo que ella ha dicho que quiere? Si le cierra el paso, aunque sea a una sola cosa, se queda.
+
+Ante la duda, se queda. Quitar una que si le importaba es peor que dejar una de mas.
+
+QUE ENTREGAS: los numeros de las que no le impiden nada, uno por linea y nada mas. Si todas le impiden algo, escribes NINGUNA. Ni explicacion, ni comentarios.`;
+
+async function quitarLasQueNoLeBloqueanNada(bloques, contestado) {
+  if (bloques.length < 3) return { bloques, quitadas: 0, uso: {} };
+
+  const { texto, uso } = await pedir({
+    sistema: FLOJAS,
+    mensaje: `${bloques.map((b, i) => `${i + 1}. ${b.titulo}`).join('\n')}\n\n────────────────\n\n${contestado}`,
+    tope: 200,
+  });
+
+  const fuera = new Set();
+  for (const linea of String(texto).split('\n')) {
+    const m = linea.trim().match(/^(\d{1,2})[\s.)]*$/);
+    if (!m) continue;
+    const i = Number(m[1]) - 1;
+    if (i >= 0 && i < bloques.length) fuera.add(i);
+  }
+
+  // Si dice que sobran la mitad o mas, el que se ha equivocado es el. No se
+  // toca nada: mejor una de relleno que un informe vaciado.
+  if (fuera.size * 2 >= bloques.length) return { bloques, quitadas: 0, uso };
+
+  const quedan = bloques.filter((_, i) => !fuera.has(i));
+  return { bloques: quedan, quitadas: fuera.size, uso };
+}
+
 // ── DOS CREENCIAS QUE DICEN LO MISMO ────────────────────────
 //
 // Es lo que mas estropea el informe y lo que mas veces se ha escapado. En el
@@ -663,15 +717,18 @@ async function escribirCreencias(informe, respuestas) {
   // Las que dicen lo mismo que otra, fuera. Y despues, los trozos que entran
   // igual que otro, reescritos por su arranque.
   const dos = await quitarLasQueDicenLoMismo(bloques);
-  const tres = await desmoldarArranques(dos.bloques);
+  const tres = await quitarLasQueNoLeBloqueanNada(dos.bloques, contestado);
+  const cuatro = await desmoldarArranques(tres.bloques);
 
-  const suma = k => [una.uso, dos.uso, tres.uso].reduce((t, u) => t + (u[k] || 0), 0);
+  const suma = k => [una.uso, dos.uso, tres.uso, cuatro.uso]
+    .reduce((t, u) => t + (u[k] || 0), 0);
   return {
-    bloques: dos.bloques,
+    bloques: tres.bloques,
     rasgos,
     cortadas,
     repetidas: dos.quitadas,
-    desmoldados: tres.arreglados,
+    flojas: tres.quitadas,
+    desmoldados: cuatro.arreglados,
     uso: { dentro: suma('input_tokens'), fuera: suma('output_tokens') },
   };
 }
@@ -793,7 +850,7 @@ export default async function handler(req, res) {
     const informe = JSON.parse(await pedirR2(cfg, `/${clave}`));
 
     const t0 = Date.now();
-    const { bloques, rasgos, cortadas, repetidas, desmoldados, uso } =
+    const { bloques, rasgos, cortadas, repetidas, flojas, desmoldados, uso } =
       await escribirCreencias(informe, respuestas);
     const seg = ((Date.now() - t0) / 1000).toFixed(0);
 
@@ -809,7 +866,8 @@ export default async function handler(req, res) {
         ${uso.dentro} dentro / ${uso.fuera} fuera ·
         ${desmoldados ? `${desmoldados} arranques repetidos, reescritos` : 'ningun arranque repetido'}
         ${cortadas ? `· ${cortadas} cortada(s) por el techo, fuera` : ''}
-        ${repetidas ? `· ${repetidas} que decia(n) lo mismo, fuera` : ''}</div>
+        ${repetidas ? `· ${repetidas} que decia(n) lo mismo, fuera` : ''}
+        ${flojas ? `· ${flojas} que no le bloquea(n) nada, fuera` : ''}</div>
        <details><summary>Chuleta: el material con el que ha escrito</summary>
          <pre>${escapar(rasgos)}</pre>
        </details>
