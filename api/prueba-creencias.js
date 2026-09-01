@@ -113,12 +113,6 @@ export function repartir(texto) {
   return bloques;
 }
 
-// ── LOS TRES ENCARGOS ───────────────────────────────────────
-//
-// Solo reglas. Ni una linea de ejemplo, ni un trozo de informe de muestra:
-// lo que se le enseñe escrito, lo copia, y entonces el informe deja de ser de
-// quien lo ha comprado.
-
 // ── LAS REGLAS QUE VALEN PARA TODO EL P2 ────────────────────
 //
 // Esto no es de las creencias: es como se le habla y que no se le puede
@@ -349,7 +343,7 @@ Las creencias escritas y nada mas. Ni presentacion, ni titulo general, ni la lis
 
 Empiezas directamente con la linea CREENCIA: de la primera. Acabas con el ultimo parrafo de la ultima, sin resumen, sin despedida y sin buscar la creencia que hay debajo de todas.`;
 
-// ── PASO 4: los arranques que se repiten ────────────────────
+// ── LOS ARRANQUES QUE SE REPITEN ────────────────────────────
 //
 // POR QUE NO BASTA CON PEDIRLO EN EL ENCARGO.
 //
@@ -417,8 +411,13 @@ function primerosParrafos(bloques) {
 // se miran las del final, que son las unicas que se pueden haber cortado.
 export function quitarLasCortadas(bloques) {
   const entera = b => {
+    if (!b.titulo) return false;
     const suyos = b.partes.filter(p => p.ladillo).map(p => p.ladillo);
     if (LADILLOS.some(l => !suyos.includes(l))) return false;
+    // Y ningun ladillo puede quedarse sin nada escrito debajo.
+    for (let i = 0; i < b.partes.length; i++) {
+      if (b.partes[i].ladillo && !b.partes[i + 1]?.parrafo) return false;
+    }
     // Que el ultimo ladillo tenga algo escrito debajo.
     const ultima = b.partes[b.partes.length - 1];
     return Boolean(ultima && ultima.parrafo);
@@ -542,7 +541,7 @@ async function informesGuardados(cfg) {
   }));
 }
 
-// ── Las dos llamadas al modelo ──────────────────────────────
+// ── Pedirle algo al modelo ──────────────────────────────────
 async function pedir({ sistema, mensaje, tope }) {
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
