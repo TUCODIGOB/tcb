@@ -10,7 +10,7 @@
       "memory": 1024,
       "maxDuration": 300
     },
-    "api/prueba-creencias.js": {
+    "api/p2-plan-de-origen/prueba-creencias.js": {
       "memory": 1024,
       "maxDuration": 300
     }

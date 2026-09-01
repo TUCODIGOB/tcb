@@ -1,5 +1,11 @@
 // ════════════════════════════════════════════════════════════════
-// /api/prueba-creencias.js
+// /api/p2-plan-de-origen/prueba-creencias.js
+//
+// TODO EL P2 VIVE EN ESTA CARPETA. Lo que se vaya montando de "Tu Plan de
+// Origen" nace aqui dentro, y asi el dia que haya que tocarlo -o quitarlo- no
+// se anda hurgando en ficheros del P1. La unica excepcion es la pagina
+// tu-plan-de-origen.html, que se queda en la raiz porque su direccion va
+// impresa dentro de los PDF del P1 que ya se han vendido.
 //
 // PRUEBA. No es parte de la tienda y se borra cuando cerremos el punto de
 // creencias del P2. No lo llama ninguna pagina.
