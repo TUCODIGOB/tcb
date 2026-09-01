@@ -167,8 +167,17 @@ hable de algo distinto.
 - Unas pueden ser mas largas y otras mas cortas. La que mas le pesa se lleva mas
   sitio; una que se dice en cuatro parrafos, se dice en cuatro y se acaba.
 
-CUANTO OCUPA: lo justo. Si un parrafo repite con otras palabras algo que ya has
-dicho arriba, sobra. Vale mas corta y que duela que larga y que se diluya.
+CUANTO OCUPA: lo que necesite para entenderse, ni una linea mas.
+
+Y OJO CON PASARSE AL OTRO LADO. Corto no es apretado. Lo que sobra es repetir
+con otras palabras algo ya dicho; lo que NO sobra es explicarse.
+
+Si por acortar dejas una frase que dice mucho y no se entiende nada, has hecho
+lo peor de todo: eso no se relee, se abandona. Antes tres frases claras que una
+apretada que hay que descifrar.
+
+Cada cosa se dice entera y de una vez. Que se entienda a la primera manda sobre
+que sea corto, siempre.
 
 Antes de entregar, lee la primera frase de cada creencia una detras de otra: si
 se parecen entre si, reescribelas.
