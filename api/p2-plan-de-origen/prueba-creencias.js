@@ -478,6 +478,65 @@ async function quitarLasQueDicenLoMismo(bloques) {
   return { bloques: quedan, quitadas: bloques.length - quedan.length, uso };
 }
 
+// ── LOS TITULOS QUE SE PASAN DE LARGOS ──────────────────────
+//
+// El encargo pide diez palabras como mucho y se lo salta, igual que se saltaba
+// lo de las tildes. Salieron de doce y de catorce, y un titulo largo no
+// golpea: se lee como una explicacion y se pasa por encima.
+//
+// Contar palabras no falla nunca, asi que se cuentan. Y solo se le devuelven
+// los que se pasan, sueltos, para que los acorte. Los que ya caben ni se
+// tocan, y si no hay ninguno largo esto no cuesta nada.
+
+const TOPE_TITULO = 10;
+
+const TITULOS = `Te paso unos titulos de un estudio personal, numerados. Cada uno es lo que una persona da por cierto sobre si misma, dicho en primera persona.
+
+Todos se han pasado de largo. Tu unico trabajo es acortarlos.
+
+CADA UNO EN DIEZ PALABRAS COMO MUCHO, y cuentalas. Ocho esta mejor.
+
+LO QUE DICE NO SE TOCA. Es la misma idea, dicha en menos. Si al acortarlo dice otra cosa, no vale.
+
+SI NO CABE, ES QUE LLEVA DOS IDEAS DENTRO: te quedas con la que mas pesa y sueltas la otra. No las pegues con una coma ni con un "y" para que quepan las dos.
+
+Ni "es que", ni "porque", ni "asi que": eso alarga y convierte el titulo en un razonamiento.
+
+Español de España, con sus tildes y sus eñes.
+
+QUE ENTREGAS: los mismos titulos, con su mismo numero, uno por linea y nada mas. Ni explicacion, ni comentarios.`;
+
+async function acortarTitulos(bloques) {
+  const largos = bloques.filter(b => b.titulo.split(/\s+/).filter(Boolean).length > TOPE_TITULO);
+  if (!largos.length) return { acortados: 0, uso: {} };
+
+  const { texto, uso } = await pedir({
+    sistema: TITULOS,
+    mensaje: largos.map((b, i) => `${i + 1}. ${b.titulo}`).join('\n'),
+    tope: 500,
+  });
+
+  // Lo que no vuelva, o vuelva sin acortar, se queda como estaba: un titulo
+  // largo se lee peor, pero uno cambiado a peor se lee muchisimo peor.
+  const nuevos = new Map();
+  for (const linea of String(texto).split('\n')) {
+    const m = linea.trim().match(/^(\d{1,2})\s*[.)-]\s*(.+)$/);
+    if (m) nuevos.set(Number(m[1]), m[2].replace(/^[*_#\s]+|[*_#\s]+$/g, '').trim());
+  }
+
+  let acortados = 0;
+  largos.forEach((b, i) => {
+    const nuevo = nuevos.get(i + 1);
+    if (!nuevo) return;
+    const cuantas = nuevo.split(/\s+/).filter(Boolean).length;
+    if (cuantas > TOPE_TITULO || cuantas < 3) return;
+    b.titulo = nuevo;
+    acortados++;
+  });
+
+  return { acortados, uso };
+}
+
 // ── LOS TROZOS QUE ENTRAN IGUAL ─────────────────────────────
 //
 // El molde de los arranques es lo que mas canta al leer seguido: los bloques
@@ -767,9 +826,10 @@ async function escribirCreencias(informe, respuestas) {
   const sobraban = Math.max(0, tres.bloques.length - TECHO);
   const finales = tres.bloques.slice(0, TECHO);
 
-  const cuatro = await desmoldarArranques(finales);
+  const cuatro = await acortarTitulos(finales);
+  const cinco = await desmoldarArranques(finales);
 
-  const suma = k => [una.uso, dos.uso, tres.uso, cuatro.uso]
+  const suma = k => [una.uso, dos.uso, tres.uso, cuatro.uso, cinco.uso]
     .reduce((t, u) => t + (u[k] || 0), 0);
   return {
     bloques: finales,
@@ -779,7 +839,8 @@ async function escribirCreencias(informe, respuestas) {
     repetidas: dos.quitadas,
     flojas: tres.quitadas,
     sobraban,
-    desmoldados: cuatro.arreglados,
+    acortados: cuatro.acortados,
+    desmoldados: cinco.arreglados,
     uso: { dentro: suma('input_tokens'), fuera: suma('output_tokens') },
   };
 }
@@ -901,7 +962,7 @@ export default async function handler(req, res) {
     const informe = JSON.parse(await pedirR2(cfg, `/${clave}`));
 
     const t0 = Date.now();
-    const { bloques, rasgos, cortadas, sinFiltrar, repetidas, flojas, sobraban, desmoldados, uso } =
+    const { bloques, rasgos, cortadas, sinFiltrar, repetidas, flojas, sobraban, acortados, desmoldados, uso } =
       await escribirCreencias(informe, respuestas);
     const seg = ((Date.now() - t0) / 1000).toFixed(0);
 
@@ -916,6 +977,7 @@ export default async function handler(req, res) {
       `<div class="aviso">PRUEBA — informe ${escapar(clave)} · ${seg}s ·
         ${uso.dentro} dentro / ${uso.fuera} fuera ·
         ${desmoldados ? `${desmoldados} arranque(s) reescrito(s)` : 'ningun arranque reescrito'}
+        ${acortados ? `· ${acortados} titulo(s) largo(s), acortado(s)` : ''}
         ${cortadas ? `· ${cortadas} cortada(s) por el techo, fuera` : ''}
         ${sinFiltrar ? `· AVISO: las ${sinFiltrar} salieron mal montadas y se entregan sin filtrar` : ''}
         ${repetidas ? `· ${repetidas} que decia(n) lo mismo, fuera` : ''}
