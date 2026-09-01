@@ -248,7 +248,7 @@ CUANTAS
 
 Ordenalas de la que mas le cuesta a la que menos.
 
-${TECHO} ES EL TECHO, NO UNA CANTIDAD QUE HAYA QUE ALCANZAR. Si te quedan mas de ${TECHO}, cortas ahi. Si te quedan tres, van tres, y esta bien: son las suyas y no falta ninguna. Cada persona tiene las que tiene.
+${TECHO} ES EL TECHO, NO UNA CANTIDAD QUE HAYA QUE ALCANZAR. Si te quedan mas de ${TECHO}, cortas ahi. Y si despues de mirar sus respuestas Y sus rasgos solo salen tres de peso, van tres, y esta bien: son las suyas y no falta ninguna. Cada persona tiene las que tiene.
 
 Las que se quedan son las que mas le cuestan, midiendo con lo que ya has visto arriba.
 
@@ -301,7 +301,7 @@ DEBAJO DEL SEGUNDO
 
 Lo que esta creencia le hace hacer, lo que le hace no hacer, y lo que eso le quita.
 
-Sale en varias partes de su vida, no en una: señala en cuantas la encuentres, siempre que esten en sus rasgos o en lo que ella ha contado. Que vea que lo que creia un problema de una zona suya le esta gobernando media vida.
+Señalale en cuantas partes de su vida la encuentres, siempre que esten en sus rasgos o en lo que ella ha contado. Si le sale en varias, mejor: asi ve que lo que creia un problema de una zona suya le esta gobernando media vida. Y si de verdad solo le sale en una, se cuenta esa y ya, bien contada. No se le añade ni un sitio mas para que parezcan mas: eso seria inventarle vida.
 
 Pero no las vacies todas de golpe. Coges lo que mas le pese y lo cuentas; lo demas se queda fuera. Una lista larga de sitios, uno detras de otro, deja de leerse a la tercera.
 
@@ -369,7 +369,7 @@ Empiezas directamente con la linea CREENCIA: de la primera. Acabas con el ultimo
 // NUNCA SE QUEDA CON MENOS DE LA MITAD. Si dijera que casi todas sobran, es
 // que se ha equivocado el, no ella: en ese caso no se quita ninguna.
 
-const FLOJAS = `Te paso los titulos de las creencias de una misma persona, numerados, y debajo lo que ella misma ha contestado sobre su vida.
+const FLOJAS = `Te paso los titulos de las creencias de una misma persona, numerados, y debajo dos cosas suyas: lo que ella ha contestado hoy sobre su vida, y sus rasgos.
 
 Este estudio existe para desatascarla. Una creencia solo tiene sitio aqui si le esta costando algo de verdad.
 
@@ -381,7 +381,7 @@ No busques cual pesa mas ni cual duele mas: eso es una opinion y no es lo que te
 
 Ante la duda, se queda. Quitar una que si le importaba es peor que dejar una de mas.
 
-QUE ENTREGAS: los numeros de las que no le impiden nada, uno por linea y nada mas. Si todas le impiden algo, escribes NINGUNA. Ni explicacion, ni comentarios.`;
+QUE ENTREGAS: los numeros de las que no le cuestan nada, uno por linea y nada mas. Si todas le cuestan algo, escribes NINGUNA. Ni explicacion, ni comentarios.`;
 
 async function quitarLasQueNoLeBloqueanNada(bloques, contestado, rasgos) {
   if (bloques.length < 3) return { bloques, quitadas: 0, uso: {} };
