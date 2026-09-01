@@ -306,7 +306,12 @@ async function escribirCreencias(informe) {
     body: JSON.stringify({
       model: 'claude-sonnet-5',
       thinking: { type: 'disabled' },
-      max_tokens: 16000,
+      // Techo de escritura. El tiempo que tarda un punto NO depende de lo que
+      // piensa, depende de lo que escribe: sale a unas 70-78 palabras-token por
+      // segundo. Con 16000 un punto que se desmadre puede estar 4 minutos
+      // escribiendo y matar la funcion. Lo mas largo que ha escrito de verdad
+      // son 5300, asi que 8000 deja de sobra y pone un techo de ~2 minutos.
+      max_tokens: 8000,
       system: ENCARGO,
       messages: [{
         role: 'user',
