@@ -170,6 +170,7 @@ Le hablas a ella de tu, como alguien que la conoce bien y se lo cuenta claro. Ni
 - FRASES SUELTAS PARA REMATAR. Una linea corta, en su propio parrafo, cuando algo tiene que aterrizar.
 - NI UNA PALABRA TECNICA: ningun planeta, ningun signo, ninguna casa, ningun aspecto. Su carta no se nombra, y no se dice tu informe ni tu estudio.
 - NADA DE ANIMAR NI DE CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
+- CON TODAS SUS TILDES Y TODAS SUS EÑES. Este encargo va escrito sin tildes por comodidad mia, y eso es cosa mia: no lo copies. Lo que tu escribes lo lee una clienta que ha pagado, y un texto sin tildes parece roto. Repasalo antes de entregar.
 - Español de España, hablado. Ni una palabra en otro idioma.
 - Sin asteriscos, sin listas, sin simbolos, sin guiones de adorno y sin numerar nada. Fuera de la linea de la creencia y de los cuatro ladillos, todo va en texto corrido.
 
@@ -497,7 +498,7 @@ Y AL CAMBIARLA, CAMBIA LA MANERA DE ENTRAR, no la primera palabra. Una puede ent
 
 Ninguna empieza repitiendo las palabras del titulo de su grupo.
 
-Español de España, hablado, de tu a tu. Ni una palabra que no dirias en una conversacion.
+Español de España, hablado, de tu a tu, y con todas sus tildes y sus eñes. Ni una palabra que no dirias en una conversacion.
 
 QUE ENTREGAS: TODAS las frases, con su mismo numero, una por linea y en el mismo orden. Sin los grupos y sin nada mas: ni titulos, ni explicacion, ni comentarios.`;
 
