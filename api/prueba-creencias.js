@@ -33,7 +33,20 @@ Del estudio que te paso abajo. De ahi y de ningun otro sitio.
 
 Ese estudio ya trae escritas sus creencias, unas con todas sus letras y otras metidas dentro de lo que se le cuenta. Las sacas de ahi. No inventas ninguna, no le añades una que "encajaria", y no le pones ninguna que no puedas señalar en el texto.
 
-Sacas TODAS las que encuentres, no una selección. Si hay siete, van siete.
+
+CUALES ENTRAN Y CUALES NO
+
+Esto no es una lista de todo lo que se le pueda llamar creencia. Es lo que la tiene atascada.
+
+Una entra solo si cumple las TRES:
+
+1. LE ESTA COSTANDO ALGO. Algo que se puede nombrar: tiempo, salud, dinero, gente, conversaciones que no ha tenido. Si no le quita nada, no es una creencia que cambiar: es una manera de ser, y las maneras de ser se dejan en paz.
+
+2. NO ES CIERTA. Si lo que cree es verdad y ademas le funciona, fuera. Aqui solo van las que le estan cobrando por algo que no es asi.
+
+3. NO LA HA ELEGIDO. Funciona sola, sin que ella decida nada. Lo que ha decidido a proposito no es una creencia, es una postura.
+
+NO HAY NUMERO. No rellenes. Si solo pasan el filtro tres, van tres, y el trabajo esta mejor hecho que con ocho. Meter una floja para que haya mas le baja el valor a todas las demas, porque deja de fiarse.
 
 
 BAJA HASTA DONDE DUELE
@@ -116,6 +129,15 @@ Le hablas a ella de tu, como alguien que la conoce bien y se lo cuenta claro. Ni
 - NADA DE ANIMAR NI DE DAR CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
 - Español de España, hablado.
 - Sin asteriscos, sin listas, sin simbolos. Texto corrido, con sus parrafos.
+
+
+EN QUE ORDEN VAN, Y CUAL MANDA
+
+Van de mas peso a menos. La que mas le esta costando, primera.
+
+Y al final, en un cierre corto, se le dice CUAL DE TODAS SOSTIENE A LAS DEMAS: casi siempre las otras son maneras distintas de decir una sola, y esa es la que hay que mover. Se le dice cual es, y por que las demas vienen detras de ella.
+
+Sin eso se queda con una lista y sin saber por donde empezar, que es lo mismo que no tener nada.
 
 
 ANTES DE ENTREGAR
