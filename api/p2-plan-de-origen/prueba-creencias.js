@@ -27,13 +27,6 @@
 // por tener las areas delante. Sin ellas, las ve todas a la vez mientras
 // escribe, que es cuando mejor puede no repetirse.
 //
-// Y DESPUES SE MIRA QUE NO SE HAYA DEJADO MEDIA VIDA FUERA. Con cuarenta
-// rasgos delante escribe tres creencias y deja areas enteras de ella sin
-// tocar, y pedirle que los repase todos uno a uno no lo arregla. Se le enseñan
-// sus titulos y sus rasgos numerados, ahi no escribe, y dice cuales se han
-// quedado fuera. Los fuertes se escriben aparte y pasan por los mismos filtros
-// que los de arriba.
-//
 // Y DESPUES SE COMPRUEBA. Dos cosas que pedirlas en el encargo no basta,
 // porque escribiendo la sexta no tiene delante lo que dijo en la segunda:
 // que no haya dos creencias que digan lo mismo -mirando solo los titulos,
@@ -196,16 +189,59 @@ Español, año, día, más, está, aquí, así, también, después, sensación, 
 
 CUANTO OCUPA: lo que necesite para entenderse, ni una línea más. Pero corto no es apretado: lo que sobra es repetir con otras palabras algo ya dicho; lo que no sobra es explicarse.`;
 
-// ── LO QUE VALE PARA CUALQUIER CREENCIA, SE ELIJA COMO SE ELIJA ──
+// ── EL ENCARGO ──────────────────────────────────────────────
 //
-// Estos dos trozos no son de elegir creencias: son de que es una creencia y
-// de como se escribe. Los usan los dos encargos que escriben, el que las saca
-// de sus respuestas y el que escribe las que se quedaron fuera.
+// UNO SOLO. Antes eran tres -elegir, juntar, escribir- porque de una tirada
+// salian repetidas. Salian repetidas porque se le mandaba tambien el estudio
+// entero de las siete areas: treinta mil caracteres delante en los que cada
+// creencia parecia justificada por su lado. Con los rasgos a secas eso ya no
+// pasa, y las ve todas a la vez mientras escribe, que es cuando mejor puede
+// no repetirse.
 //
-// Escritos UNA VEZ. Copiados en los dos, se corrige uno, se olvida el otro, y
-// ella acaba leyendo dos creencias escritas con reglas distintas.
+// SOLO REGLAS. Ni una linea de ejemplo, ni un trozo de informe de muestra: lo
+// que se le enseñe escrito, lo copia, y entonces el informe deja de ser de
+// quien lo ha comprado.
 
-const HASTA_DONDE_DUELE = `BAJA HASTA DONDE DUELE
+const CREENCIAS = `Escribes la segunda parte de un estudio personal. Ella ya leyo la primera, que le contaba como es y por que. Esta es para que cambie.
+
+Te paso sus rasgos y lo que ella ha contestado hoy. Con eso eliges sus creencias y las escribes, todo de una vez.
+
+Una creencia es algo que da por cierto sin haberlo puesto nunca en duda, y que decide lo que hace. Ella no lo vive como una creencia suya: lo vive como que las cosas son así.
+
+
+DE DONDE SALEN
+
+De sus rasgos. De ahí y de nada más.
+
+No inventas ninguna. No pones ninguna que no puedas señalar en los rasgos que te paso.
+
+
+CUALES ENTRAN
+
+Abajo tienes lo que ella ha contestado: como seria su mejor versión, como es su vida hoy, y que lleva años intentando cambiar sin conseguirlo.
+
+ESTO SE HACE EN DOS VUELTAS, Y LAS DOS SE HACEN SIEMPRE. La segunda no depende de cómo haya ido la primera: se hace igual, hayan salido dos o hayan salido cinco.
+
+
+PRIMERA VUELTA: LO QUE ELLA HA CONTESTADO
+
+Una creencia que le esté bloqueando algo de lo que ella ha nombrado entra, y esas van las primeras. Son las que va a reconocer antes, porque hablan de lo que acaba de escribir.
+
+
+SEGUNDA VUELTA: SUS DOS LISTADOS DE RASGOS, ENTEROS
+
+Ahora coges sus rasgos y los repasas UNO POR UNO, los que se le dan bien y los que le cuestan, de arriba abajo y sin saltarte ninguno. Son muchos: hay material de sobra y no puede quedarse ahí.
+
+De cada rasgo te preguntas: ¿qué da por cierto sobre sí misma alguien a quien le pasa esto? Y esa creencia, la tengo ya de la primera vuelta o es otra distinta?
+
+Si es otra distinta y es fuerte, entra.
+
+FUERTE ES QUE LE ESTÉ COSTANDO ALGO DE VERDAD: tiempo, salud, dinero, gente, calma. Con que le cueste algo gordo en una sola parcela de su vida basta, no hace falta que le salga en varias. Lo que no entra es la manía que no le quita nada, por bien que suene y por mucho que este escrita en sus rasgos.
+
+Y NO REPITAS. Si esa creencia ya la tienes de la primera vuelta, aunque venga de otro rasgo y suene distinta, no la metas otra vez: eso no suma, resta.
+
+
+BAJA HASTA DONDE DUELE
 
 Esto decide si el trabajo vale algo.
 
@@ -217,9 +253,36 @@ Esa es la que se elige.
 
 Para llegar: coge la versión presentable y preguntate que tiene que ser cierto sobre ella para que se comporte así. Y vuelve a preguntartelo. Paras cuando llegas a un veredicto sobre lo que ella es o lo que le falta.
 
-COMO SE SABE QUE HAS LLEGADO: esta en primera persona, dice algo sobre ella y no sobre el mundo, y da un poco de vergüenza leerla. Si se puede asentir tranquilamente, no has bajado.`;
+COMO SE SABE QUE HAS LLEGADO: esta en primera persona, dice algo sobre ella y no sobre el mundo, y da un poco de vergüenza leerla. Si se puede asentir tranquilamente, no has bajado.
 
-const COMO_SE_ESCRIBE = `COMO VA MONTADA CADA CREENCIA
+
+NI UNA REPETIDA. ESTO ES LO QUE MÁS SE ESTROPEA
+
+Antes de escribir nada, ponlas todas en una lista y comparalas de dos en dos: la primera con la segunda, la primera con la tercera, y así hasta el final. Luego la segunda con todas las que van detras. Todos los pares.
+
+DOS SON LA MISMA cuando debajo dan por cierto lo mismo sobre ella, aunque cambien las palabras.
+
+Y EL CASO QUE MÁS SE ESCAPA ES ESTE: la misma creencia repetida en dos parcelas de su vida. Una con el trabajo y otra con la gente. Una con el dinero y otra con la pareja. Suenan a dos porque hablan de dos sitios, pero debajo dicen lo mismo sobre ella. Esas son UNA, siempre. El sitio donde le ocurre no las hace distintas.
+
+AL REVES TAMBIÉN, Y AQUÍ NO TE PASES: dos creencias distintas pueden estropearle lo mismo, porque en una vida casi todo desemboca en las mismas cuatro cosas. Que le bloqueen lo mismo no las hace una. Juntar dos que eran distintas le borra una creencia suya y esa ya no vuelve.
+
+La pregunta es siempre la misma, y no hay otra: lo que da por cierto SOBRE SI MISMA en una, es lo mismo que da por cierto en la otra?
+
+Cuando dos sean la misma, te quedas con la que llega más abajo, la que más duele, y le sumas lo que la otra tenga de nuevo. No se pierde nada de eso.
+
+
+CUANTAS
+
+Ordenalas de la que más le cuesta a la que menos.
+
+${TECHO} ES EL TECHO, NO UNA CANTIDAD QUE HAYA QUE ALCANZAR. Si te quedan más de ${TECHO}, cortas ahí. Y si después de mirar sus respuestas Y sus rasgos solo salen tres de peso, van tres, y esta bien: son las suyas y no falta ninguna. Cada persona tiene las que tiene.
+
+Las que se quedan son las que más le cuestan, midiendo con lo que ya has visto arriba.
+
+No se rellena inventando para llegar a ${TECHO}, y una que ya has juntado no se vuelve a separar: eso devuelve el repetido que acabas de quitar.
+
+
+COMO VA MONTADA CADA CREENCIA
 
 Todas van montadas igual, y esto no cambia de una a otra.
 
@@ -318,221 +381,6 @@ Las creencias escritas y nada más. Ni presentación, ni titulo general, ni la l
 Empiezas directamente con la línea CREENCIA: de la primera. Acabas con el último párrafo de la última, sin resumen, sin despedida y sin buscar la creencia que hay debajo de todas.
 
 Y todo ello en español correcto, con sus tildes y sus eñes.`;
-
-// ── EL ENCARGO ──────────────────────────────────────────────
-//
-// UNO SOLO. Antes eran tres -elegir, juntar, escribir- porque de una tirada
-// salian repetidas. Salian repetidas porque se le mandaba tambien el estudio
-// entero de las siete areas: treinta mil caracteres delante en los que cada
-// creencia parecia justificada por su lado. Con los rasgos a secas eso ya no
-// pasa, y las ve todas a la vez mientras escribe, que es cuando mejor puede
-// no repetirse.
-//
-// SOLO REGLAS. Ni una linea de ejemplo, ni un trozo de informe de muestra: lo
-// que se le enseñe escrito, lo copia, y entonces el informe deja de ser de
-// quien lo ha comprado.
-
-const CREENCIAS = `Escribes la segunda parte de un estudio personal. Ella ya leyo la primera, que le contaba como es y por que. Esta es para que cambie.
-
-Te paso sus rasgos y lo que ella ha contestado hoy. Con eso eliges sus creencias y las escribes, todo de una vez.
-
-Una creencia es algo que da por cierto sin haberlo puesto nunca en duda, y que decide lo que hace. Ella no lo vive como una creencia suya: lo vive como que las cosas son así.
-
-
-DE DONDE SALEN
-
-De sus rasgos. De ahí y de nada más.
-
-No inventas ninguna. No pones ninguna que no puedas señalar en los rasgos que te paso.
-
-
-CUALES ENTRAN
-
-Abajo tienes lo que ella ha contestado: como seria su mejor versión, como es su vida hoy, y que lleva años intentando cambiar sin conseguirlo.
-
-ESTO SE HACE EN DOS VUELTAS, Y LAS DOS SE HACEN SIEMPRE. La segunda no depende de cómo haya ido la primera: se hace igual, hayan salido dos o hayan salido cinco.
-
-
-PRIMERA VUELTA: LO QUE ELLA HA CONTESTADO
-
-Una creencia que le esté bloqueando algo de lo que ella ha nombrado entra, y esas van las primeras. Son las que va a reconocer antes, porque hablan de lo que acaba de escribir.
-
-
-SEGUNDA VUELTA: SUS DOS LISTADOS DE RASGOS, ENTEROS
-
-Ahora coges sus rasgos y los repasas UNO POR UNO, los que se le dan bien y los que le cuestan, de arriba abajo y sin saltarte ninguno. Son muchos: hay material de sobra y no puede quedarse ahí.
-
-De cada rasgo te preguntas: ¿qué da por cierto sobre sí misma alguien a quien le pasa esto? Y esa creencia, la tengo ya de la primera vuelta o es otra distinta?
-
-Si es otra distinta y es fuerte, entra.
-
-FUERTE ES QUE LE ESTÉ COSTANDO ALGO DE VERDAD: tiempo, salud, dinero, gente, calma. Con que le cueste algo gordo en una sola parcela de su vida basta, no hace falta que le salga en varias. Lo que no entra es la manía que no le quita nada, por bien que suene y por mucho que este escrita en sus rasgos.
-
-Y NO REPITAS. Si esa creencia ya la tienes de la primera vuelta, aunque venga de otro rasgo y suene distinta, no la metas otra vez: eso no suma, resta.
-
-
-${HASTA_DONDE_DUELE}
-
-
-NI UNA REPETIDA. ESTO ES LO QUE MÁS SE ESTROPEA
-
-Antes de escribir nada, ponlas todas en una lista y comparalas de dos en dos: la primera con la segunda, la primera con la tercera, y así hasta el final. Luego la segunda con todas las que van detras. Todos los pares.
-
-DOS SON LA MISMA cuando debajo dan por cierto lo mismo sobre ella, aunque cambien las palabras.
-
-Y EL CASO QUE MÁS SE ESCAPA ES ESTE: la misma creencia repetida en dos parcelas de su vida. Una con el trabajo y otra con la gente. Una con el dinero y otra con la pareja. Suenan a dos porque hablan de dos sitios, pero debajo dicen lo mismo sobre ella. Esas son UNA, siempre. El sitio donde le ocurre no las hace distintas.
-
-AL REVES TAMBIÉN, Y AQUÍ NO TE PASES: dos creencias distintas pueden estropearle lo mismo, porque en una vida casi todo desemboca en las mismas cuatro cosas. Que le bloqueen lo mismo no las hace una. Juntar dos que eran distintas le borra una creencia suya y esa ya no vuelve.
-
-La pregunta es siempre la misma, y no hay otra: lo que da por cierto SOBRE SI MISMA en una, es lo mismo que da por cierto en la otra?
-
-Cuando dos sean la misma, te quedas con la que llega más abajo, la que más duele, y le sumas lo que la otra tenga de nuevo. No se pierde nada de eso.
-
-
-CUANTAS
-
-Ordenalas de la que más le cuesta a la que menos.
-
-${TECHO} ES EL TECHO, NO UNA CANTIDAD QUE HAYA QUE ALCANZAR. Si te quedan más de ${TECHO}, cortas ahí. Y si después de mirar sus respuestas Y sus rasgos solo salen tres de peso, van tres, y esta bien: son las suyas y no falta ninguna. Cada persona tiene las que tiene.
-
-Las que se quedan son las que más le cuestan, midiendo con lo que ya has visto arriba.
-
-No se rellena inventando para llegar a ${TECHO}, y una que ya has juntado no se vuelve a separar: eso devuelve el repetido que acabas de quitar.
-
-
-${COMO_SE_ESCRIBE}`;
-
-// ── LOS RASGOS QUE SE HA DEJADO SIN MIRAR ───────────────────
-//
-// El encargo le manda dar dos vueltas: primero las creencias que le bloquean
-// lo que ella ha contestado, y despues sus dos listados de rasgos enteros,
-// uno por uno, para sacar las fuertes que no haya nombrado.
-//
-// LA SEGUNDA VUELTA NO LA DA. Comprobado con dos clientes distintos: con
-// cuarenta y cuatro rasgos delante escribio tres creencias y dejo un area
-// entera de su vida sin tocar. Y no se puede saber desde fuera, porque el
-// texto que devuelve esta bien escrito: simplemente le falta la mitad.
-//
-// Pedirselo mejor no lo arregla, como no lo arreglaron las dos redacciones
-// anteriores. Lo que lo arregla es sacarlo de donde falla: mientras escribe no
-// puede tener delante sus cuarenta y cuatro rasgos y sus propias creencias a
-// la vez, asi que aqui no escribe, COMPARA. Se le enseñan solo los titulos que
-// ya ha sacado y los rasgos numerados, y dice cuales se han quedado fuera.
-//
-// Y de los que se queden fuera entran los fuertes, que se escriben en una
-// segunda llamada con las mismas reglas que los de arriba.
-//
-// No se llama si ya esta lleno: con el techo alcanzado, lo que saliera de aqui
-// se cortaria despues igual.
-
-const SIN_CUBRIR = `Te paso las creencias que ya se le han escrito a una persona, solo sus titulos y numerados. Debajo van sus rasgos, tambien numerados.
-
-Cada titulo es lo que ella da por cierto sobre si misma. Cada rasgo es algo que se le dijo que le pasa.
-
-Tu único trabajo es decir QUÉ RASGOS SUYOS SE HAN QUEDADO FUERA.
-
-Los repasas UNO POR UNO, de arriba abajo y sin saltarte ninguno. De cada uno te preguntas: ¿qué da por cierto sobre sí misma alguien a quien le pasa esto? Y eso, ¿lo dice ya alguno de los titulos?
-
-UN RASGO ESTÁ CUBIERTO cuando alguno de los titulos ya dice eso mismo sobre ella. No hace falta que use sus palabras: si por debajo dicen lo mismo, esta cubierto y no me lo nombras.
-
-DE LOS QUE SE QUEDEN FUERA, SOLO ME DICES LOS FUERTES. Fuerte es que le esté costando algo de verdad: tiempo, salud, dinero, gente, calma. Con que le cueste algo gordo en una sola parcela de su vida basta, no hace falta que le salga en varias. Lo que no entra es la manía que no le quita nada, por bien que suene.
-
-Y SI DOS DE LOS QUE QUEDAN FUERA DAN POR CIERTO LO MISMO SOBRE ELLA, me dices uno solo, el que más le cueste.
-
-Ordénamelos del que más le cuesta al que menos.
-
-QUE ENTREGAS: los números de esos rasgos, uno por línea y nada más. Si no ha quedado fuera ninguno fuerte, escribes NINGUNO. Ni explicación, ni comentarios.`;
-
-const LAS_QUE_FALTAN = `Escribes un trozo de la segunda parte de un estudio personal. Ella ya leyo la primera, que le contaba como es y por que. Esta es para que cambie.
-
-A esta persona ya se le han escrito unas creencias, y abajo tienes sus titulos. Debajo van unos rasgos suyos que se quedaron fuera. Las creencias que salen de esos rasgos son las que escribes tu ahora.
-
-Una creencia es algo que da por cierto sin haberlo puesto nunca en duda, y que decide lo que hace. Ella no lo vive como una creencia suya: lo vive como que las cosas son así.
-
-
-DE DONDE SALEN
-
-De los rasgos que te paso, y de nada más. No inventas ninguna, y no pones ninguna que no puedas señalar en ellos.
-
-Y no va una por rasgo: los rasgos que den por cierto lo mismo sobre ella son UNA sola creencia.
-
-
-NINGUNA PUEDE DECIR LO QUE YA DICEN LAS DE ARRIBA
-
-Es lo que más se estropea aquí. Antes de dar una por buena, bajas a lo que da por cierto sobre sí misma y la comparas con los titulos de arriba, uno por uno.
-
-Si llegas a lo mismo que ya dice uno de ellos, esa no la escribes, aunque venga de otro rasgo y suene distinta. Repetirla no suma, resta.
-
-Y entre las tuyas igual: ninguna dice lo que dice otra tuya.
-
-
-CUANTAS
-
-Las que te pidan abajo como mucho, y menos si no hay más de peso. No se rellena para llegar al número: una creencia floja hace que las buenas se lean con menos peso por ir al lado.
-
-Ordenalas de la que más le cuesta a la que menos.
-
-${HASTA_DONDE_DUELE}
-
-${COMO_SE_ESCRIBE}`;
-
-async function sumarLasQueSeHaDejado(bloques, fortalezas, desafios) {
-  // Lo que cabe hasta el techo. Lleno, no se llama: lo que saliera se cortaria
-  // despues igual y se habria pagado y esperado para nada.
-  const hueco = TECHO - bloques.length;
-  const sueltos = [...fortalezas, ...desafios];
-  if (hueco <= 0 || !sueltos.length) return { bloques, sumadas: 0, uso: {} };
-
-  // Esto se compara contra los titulos. Si alguna llego aqui sin titulo, el
-  // texto salio mal montado y no hay con que comparar: se deja como esta.
-  if (bloques.some(b => !b.titulo)) return { bloques, sumadas: 0, uso: {} };
-
-  const titulos = bloques.map((b, i) => `${i + 1}. ${b.titulo}`).join('\n');
-  const numerar = (lista, desde) => lista.map((t, i) => `${desde + i + 1}. ${t}`).join('\n');
-
-  const mira = await pedir({
-    sistema: SIN_CUBRIR,
-    mensaje: `LAS CREENCIAS QUE YA TIENE:\n${titulos}\n\n────────────────\n\n` +
-      `SUS RASGOS, LOS QUE SE LE DIJO QUE SE LE DAN BIEN:\n${numerar(fortalezas, 0)}\n\n` +
-      `SUS RASGOS, LOS QUE SE LE DIJO QUE LE CUESTAN:\n${numerar(desafios, fortalezas.length)}`,
-    tope: 300,
-  });
-
-  // Un numero que no exista se ignora, y si no vuelve ninguno no se llama a
-  // escribir: sin rasgos que cubrir no hay nada que añadir.
-  //
-  // Se le piden los numeros a secas, pero se admite tambien el numero con su
-  // rasgo detras, que es como se le escapa alguna vez. Lo que no se admite es
-  // una linea que empiece por un numero sin punto detras: eso es una frase
-  // suya, y colarla seria escribir la creencia de un rasgo que no ha elegido.
-  const fuera = [];
-  for (const linea of String(mira.texto).split('\n')) {
-    const m = linea.trim().match(/^(\d{1,3})(?:\s*[.)-]\s*.*)?$/);
-    if (!m) continue;
-    const i = Number(m[1]) - 1;
-    if (i >= 0 && i < sueltos.length && !fuera.includes(i)) fuera.push(i);
-  }
-  if (!fuera.length) return { bloques, sumadas: 0, uso: mira.uso };
-
-  const escribir = await pedir({
-    sistema: LAS_QUE_FALTAN,
-    mensaje: `LAS CREENCIAS QUE YA TIENE, Y QUE NO PUEDES REPETIR:\n${titulos}\n\n────────────────\n\n` +
-      `SUS RASGOS QUE SE QUEDARON FUERA:\n${fuera.map(i => `- ${sueltos[i]}`).join('\n')}\n\n` +
-      `Escribe ${hueco === 1 ? 'una creencia como mucho' : `${hueco} creencias como mucho`}.`,
-    tope: 8000,
-  });
-
-  const uso = {
-    input_tokens: (mira.uso.input_tokens || 0) + (escribir.uso.input_tokens || 0),
-    output_tokens: (mira.uso.output_tokens || 0) + (escribir.uso.output_tokens || 0),
-  };
-
-  // Las nuevas van detras: primero las que le bloquean lo que ella ha
-  // contestado, que son las que reconoce antes, y despues estas.
-  const nuevas = quitarLasCortadas(repartir(escribir.texto)).slice(0, hueco);
-  if (!nuevas.length) return { bloques, sumadas: 0, uso };
-  return { bloques: [...bloques, ...nuevas], sumadas: nuevas.length, uso };
-}
 
 // ── LAS QUE NO LE BLOQUEAN NADA ─────────────────────────────
 //
@@ -932,12 +780,9 @@ async function pedir({ sistema, mensaje, tope }) {
 }
 
 async function escribirCreencias(informe, respuestas) {
-  // Cada rasgo suelto, ademas de en bloque: el encargo los lee en fila y la
-  // comprobacion de los que se ha dejado los necesita numerados uno a uno.
-  const rasgo = r => `${r.nombre}: ${r.descripcion}${r.causa ? ` (por que le pasa: ${r.causa})` : ''}`;
-  const fortalezas = (informe.rasgos?.fortalezas || []).map(rasgo);
-  const desafios = (informe.rasgos?.desafios || []).map(rasgo);
-  const enFila = lista => lista.map(t => `- ${t}`).join('\n');
+  const rasgo = r => `- ${r.nombre}: ${r.descripcion}${r.causa ? ` (por que le pasa: ${r.causa})` : ''}`;
+  const f = (informe.rasgos?.fortalezas || []).map(rasgo).join('\n');
+  const d = (informe.rasgos?.desafios || []).map(rasgo).join('\n');
 
   const quien = `Nombre de pila: ${(informe.cliente?.nombre || '').split(/\s+/)[0]}\nSexo: ${informe.cliente?.sexo || ''}`;
 
@@ -946,8 +791,8 @@ async function escribirCreencias(informe, respuestas) {
   // todo eso delante cada creencia parece justificada por su lado y acaban
   // repitiendose. Fuera, tarda menos, cuesta menos y se repite menos.
   const rasgos =
-    `SUS RASGOS, LOS QUE SE LE DIJO QUE SE LE DAN BIEN:\n${enFila(fortalezas)}\n\n` +
-    `SUS RASGOS, LOS QUE SE LE DIJO QUE LE CUESTAN:\n${enFila(desafios)}`;
+    `SUS RASGOS, LOS QUE SE LE DIJO QUE SE LE DAN BIEN:\n${f}\n\n` +
+    `SUS RASGOS, LOS QUE SE LE DIJO QUE LE CUESTAN:\n${d}`;
 
   const contestado = `LO QUE ELLA HA CONTESTADO HOY:\n\n` +
     respuestas.map((r, i) => `${PREGUNTAS[i]}\n${r}`).join('\n\n');
@@ -985,14 +830,11 @@ async function escribirCreencias(informe, respuestas) {
   const sinFiltrar = enteras.length ? 0 : escritas.length;
   if (!bloques.length) throw new Error('El modelo no ha devuelto nada que se pueda leer');
 
-  // Los repasos, en este orden. Primero se suman las que salen de rasgos suyos
-  // que no ha llegado a mirar, porque las que vengan de ahi tienen que pasar
-  // por los mismos filtros que las demas. Luego se quitan las que dicen lo
-  // mismo que otra y las que no le bloquean nada de lo suyo. Y por ultimo se
-  // reescriben los trozos que entran igual: ese va el ultimo a proposito, para
-  // no gastarlo en creencias que se van a caer.
-  const mas = await sumarLasQueSeHaDejado(bloques, fortalezas, desafios);
-  const dos = await quitarLasQueDicenLoMismo(mas.bloques);
+  // Los tres repasos, en este orden: primero se quitan las que dicen lo mismo
+  // que otra, luego las que no le bloquean nada de lo suyo, y por ultimo se
+  // reescriben los trozos que entran igual. El de los arranques va el ultimo a
+  // proposito, para no gastarlo en creencias que se van a caer.
+  const dos = await quitarLasQueDicenLoMismo(bloques);
   const tres = await quitarLasQueNoLeBloqueanNada(dos.bloques, contestado, rasgos);
 
   // Y el techo, cortado aqui y no solo pedido en el encargo. Vienen ordenadas
@@ -1003,14 +845,13 @@ async function escribirCreencias(informe, respuestas) {
   const cuatro = await acortarTitulos(finales);
   const cinco = await desmoldarArranques(finales);
 
-  const suma = k => [una.uso, mas.uso, dos.uso, tres.uso, cuatro.uso, cinco.uso]
+  const suma = k => [una.uso, dos.uso, tres.uso, cuatro.uso, cinco.uso]
     .reduce((t, u) => t + (u[k] || 0), 0);
   return {
     bloques: finales,
     rasgos,
     cortadas,
     sinFiltrar,
-    sumadas: mas.sumadas,
     repetidas: dos.quitadas,
     flojas: tres.quitadas,
     sobraban,
@@ -1137,7 +978,7 @@ export default async function handler(req, res) {
     const informe = JSON.parse(await pedirR2(cfg, `/${clave}`));
 
     const t0 = Date.now();
-    const { bloques, rasgos, cortadas, sinFiltrar, sumadas, repetidas, flojas, sobraban, acortados, desmoldados, uso } =
+    const { bloques, rasgos, cortadas, sinFiltrar, repetidas, flojas, sobraban, acortados, desmoldados, uso } =
       await escribirCreencias(informe, respuestas);
     const seg = ((Date.now() - t0) / 1000).toFixed(0);
 
@@ -1155,7 +996,6 @@ export default async function handler(req, res) {
         ${acortados ? `· ${acortados} titulo(s) largo(s), acortado(s)` : ''}
         ${cortadas ? `· ${cortadas} cortada(s) por el techo, fuera` : ''}
         ${sinFiltrar ? `· AVISO: las ${sinFiltrar} salieron mal montadas y se entregan sin filtrar` : ''}
-        ${sumadas ? `· ${sumadas} de rasgos suyos que se habia dejado, sumada(s)` : ''}
         ${repetidas ? `· ${repetidas} que decia(n) lo mismo, fuera` : ''}
         ${flojas ? `· ${flojas} que no le bloquea(n) nada, fuera` : ''}
         ${sobraban ? `· ${sobraban} por encima del techo de ${TECHO}, fuera` : ''}</div>
