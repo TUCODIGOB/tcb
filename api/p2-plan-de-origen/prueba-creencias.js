@@ -122,7 +122,9 @@ export function repartir(texto) {
       const marca = t.match(/^[*_#>\s-]*CREENCIA\s*:\s*(.*)$/i);
       if (marca) {
         soltar();
-        bloques.push({ titulo: marca[1].replace(/^[*_#\s]+|[*_#\s]+$/g, '').trim(), partes: [] });
+        // Y sin el punto final: un titulo no lo lleva. Se quita aqui y no se le pide
+        // en el encargo, porque contar un punto no falla y pedirlo si.
+        bloques.push({ titulo: marca[1].replace(/^[*_#\s]+|[*_#\s.]+$/g, '').trim(), partes: [] });
         continue;
       }
       const cual = pintaDeLadillo(t) ? LADILLOS_CON_PESO.indexOf(conPeso(t)) : -1;
