@@ -212,8 +212,6 @@ Y SI DE AHI SALEN POCAS, VUELVE A SUS RASGOS. Hay quien contesta en tres lineas 
 
 DE ESAS, SOLO LAS FUERTES. Fuerte es que le este costando algo de verdad: tiempo, salud, dinero, gente, calma. Con que le cueste algo gordo en una sola parcela de su vida basta, no hace falta que le salga en varias. Lo que no entra es la mania que no le quita nada, por bien que suene y por mucho que este escrita en sus rasgos.
 
-Y sigue sin haber numero. Salen las que salgan.
-
 
 BAJA HASTA DONDE DUELE
 
@@ -251,7 +249,7 @@ Ordenalas de la que mas le cuesta a la que menos.
 
 ${TECHO} ES EL TECHO, NO UNA CANTIDAD QUE HAYA QUE ALCANZAR. Si te quedan mas de ${TECHO}, cortas ahi. Si te quedan tres, van tres, y esta bien: son las suyas y no falta ninguna. Cada persona tiene las que tiene.
 
-Las que se quedan son las que le bloquean lo que ella misma ha dicho que quiere, y las que le salen en mas sitios de su vida.
+Las que se quedan son las que mas le cuestan, midiendo con lo que ya has visto arriba.
 
 No se rellena inventando para llegar a ${TECHO}, y una que ya has juntado no se vuelve a separar: eso devuelve el repetido que acabas de quitar.
 
