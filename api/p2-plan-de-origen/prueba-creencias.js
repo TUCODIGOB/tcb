@@ -379,17 +379,9 @@ DEBAJO DEL CUARTO
 
 Aquí el estudio deja de mirar hacia atrás. Todo lo anterior le explica lo que le pasa; esto es lo único que se lleva, así que no se despacha en una línea suelta.
 
-NO EMPIEZA CON UNA FRASE-LEMA. Nada de resumir la creencia nueva en una línea suelta antes de empezar: la suya puesta del reves, o un lema de los que valen para cualquiera, se lee, no dice nada y se salta.
+NO EMPIEZA CON UNA FRASE-LEMA. Nada de resumir la creencia nueva en una línea suelta antes de empezar: la suya puesta del reves, o un lema de los que valen para cualquiera, se lee, no dice nada y se salta. Aquí se entra directamente por lo que se le abre.
 
-Y AQUÍ NO SE LE DA UN PERMISO. En cuanto esto arranca con que puede, con que se le abre, con que existe la posibilidad o con que podrá, deja de contarle nada: le esta diciendo que algo le estaria permitido, y eso ya lo sabe. Le sirve tanto a ella como a cualquiera, y de esas frases ya viene servida.
-
-SE LE CUENTA COMO PASA, NO COMO SI PUDIERA PASAR. En presente y en indicativo, como se cuenta algo que ocurre. Tres cosas, y las tres:
-
-QUE DEJA DE PASARLE. Lo que hoy le ocurre por creer esto y deja de ocurrirle. Concreto, y cogido de lo que acabas de contarle que le esta costando: si arriba le has dicho que pierde horas, aquí se dice que deja de perderlas y en que se le van a ir.
-
-COMO ES ELLA SIN ESTO ENCIMA. No una persona nueva: ella misma con esto quitado de en medio. Su mejor version es esa, y no es un futuro bonito inventado: es lo que ella ha dicho que quiere, puesto ahí y al alcance, sin la creencia delante tapandolo.
-
-QUE HACE QUE HOY NO HACE. Lo que se pone a hacer cuando esto ya no le manda. Dicho como algo que hace, no como algo que le estaria permitido hacer.
+Y lo que va aquí es lo que cambia en su vida. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que ella misma ha dicho que quiere, ahí puesto y al alcance, sin la creencia delante tapandolo.
 
 Que lo cierre sabiendo por donde tira, no solo entendiendo por que esta atascada.
 
