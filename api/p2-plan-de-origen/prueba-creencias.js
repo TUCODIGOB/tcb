@@ -346,9 +346,9 @@ DEBAJO DEL CUARTO
 
 Aquí el estudio deja de mirar hacia atrás. Todo lo anterior le explica lo que le pasa; esto es lo único que se lleva, así que no se despacha en una línea suelta.
 
-NO SE ABRE CON UNA FRASE-LEMA. Nada de resumir la creencia nueva en una línea suelta antes de empezar: la suya puesta del reves, o un lema de los que valen para cualquiera, se lee, no dice nada y se salta. Aquí se entra directamente por lo que se le abre.
+NO EMPIEZA CON UNA FRASE-LEMA. Nada de resumir la creencia nueva en una línea suelta antes de empezar: la suya puesta del reves, o un lema de los que valen para cualquiera, se lee, no dice nada y se salta. Aquí se entra directamente por lo que se le abre.
 
-Y lo que se le abre es esto. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que ella misma ha dicho que quiere, ahí puesto y al alcance, sin la creencia delante tapandolo.
+Y lo que va aquí es lo que cambia en su vida. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que ella misma ha dicho que quiere, ahí puesto y al alcance, sin la creencia delante tapandolo.
 
 Que lo cierre sabiendo por donde tira, no solo entendiendo por que esta atascada.
 
