@@ -131,13 +131,13 @@ Le hablas a ella de tu, como alguien que la conoce bien y se lo cuenta claro. Ni
 - Sin asteriscos, sin listas, sin simbolos. Texto corrido, con sus parrafos.
 
 
-EN QUE ORDEN VAN, Y CUAL MANDA
+EN QUE ORDEN VAN
 
-Van de mas peso a menos. La que mas le esta costando, primera.
+De mas peso a menos: la que mas le esta costando, primera.
 
-Y al final, en un cierre corto, se le dice CUAL DE TODAS SOSTIENE A LAS DEMAS: casi siempre las otras son maneras distintas de decir una sola, y esa es la que hay que mover. Se le dice cual es, y por que las demas vienen detras de ella.
-
-ESA NO SE INVENTA. Es una de las que acabas de escribir, repetida con sus mismas palabras. No vale sacar ahora una nueva, ni resumirlas todas en una frase que no esta arriba: se elige de la lista y punto. Si ninguna sostiene a las demas de verdad, se dice que van cada una por su lado y no se fuerza.
+Y se acaba ahi. No se cierra resumiendolas, ni se busca la que hay debajo de
+todas: esa siempre acaba siendo la misma frase para cualquiera y le estropea el
+trabajo bien hecho de arriba. El orden ya le dice por donde empezar.
 
 Sin eso se queda con una lista y sin saber por donde empezar, que es lo mismo que no tener nada.
 
