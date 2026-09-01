@@ -119,6 +119,7 @@ La lista y nada mas. Ni presentacion, ni explicacion, ni comentarios.
 Por cada creencia, estas cuatro lineas y una raya:
 
 CREENCIA: el veredicto sobre ella, en primera persona y presente. Esta linea es la que ella va a leer como titulo, asi que va CORTA: UNA sola idea, DIEZ PALABRAS COMO MUCHO, y cuentalas. Ni una condicion metida dentro: nada de "asi que", nada de "y entonces", nada de dos frases pegadas con una coma. Se entiende entera a la primera y no hay que releerla. Aqui no se explica: explicarla viene despues y es otro trabajo. Si no te cabe en diez palabras es que llevas dos creencias en una: o las separas, o bajas hasta la que sostiene a las dos.
+PALABRAS DE TODOS LOS DIAS, y en seco. La prueba es esta: si al leer la frase hay que rellenar con la cabeza a que se refiere, esta mal escrita. Las palabras que no se pueden ver -confiar, valer, merecer, servir- no dicen nada solas: en su sitio va lo que ella hace, o lo que se dice, o lo que le pasa cuando se la cree. El resto del estudio se entiende bien; el titulo tiene que entenderse igual de bien, y hoy es lo unico que se lee dos veces.
 BLOQUEA: que cosa de las que ella ha dicho que quiere y no consigue le esta impidiendo.
 CUESTA: que le esta quitando. Concreto.
 DONDE SE LE VE: en que partes de su vida aparece, separadas por comas.
@@ -150,7 +151,18 @@ CUANDO JUNTES DOS: te quedas con la que llega mas abajo, la que mas duele, y le 
 
 Y la linea CREENCIA que queda es UNA, la suya, tal cual estaba. No se pegan las dos frases con una coma ni con un "asi que": eso deja un titulo largo que ya no golpea.
 
-SI DUDAS DE UN PAR, MIRALO OTRA VEZ POR DONDE HAY QUE MIRARLO: lo que da por cierto sobre ella cada una, no lo que le estropea cada una. Ahi se ve casi siempre. Y si aun asi no lo tienes claro, dejalas separadas: juntar dos que no eran la misma le quita una creencia entera y eso ya no vuelve.
+SI DUDAS DE UN PAR, MIRALO OTRA VEZ POR DONDE HAY QUE MIRARLO: lo que da por cierto sobre ella cada una, no lo que le estropea cada una. Ahi se ve casi siempre, y ahi decides.
+
+EL CASO QUE MAS SE ESCAPA, Y NO SE TE PUEDE ESCAPAR: la misma creencia repetida en dos parcelas de su vida. La misma frase con el trabajo y con la gente, o con el dinero y con la pareja. Suenan a dos porque hablan de dos sitios, pero debajo da por cierto exactamente lo mismo sobre ella. Esas son UNA, siempre, sin excepcion. Es el duplicado que mas canta al leerlo seguido y el que mas barato sale de pillar aqui.
+
+
+Y AHORA QUEDATE CON LAS QUE PESAN
+
+Cuando ya no queden repetidas, ordenalas de la que mas le cuesta a la que menos y deja CINCO COMO MUCHO.
+
+Las que se quedan son las que le estan bloqueando lo que ella misma ha dicho que quiere y no consigue, y las que le salen en mas sitios de su vida. Esas son las fuertes.
+
+Las demas fuera, aunque sean ciertas. Una creencia de relleno no solo le hace leer de mas: hace que las buenas se lean con menos peso por ir rodeadas de flojas. Vale mucho mas que se lleve cuatro que le remuevan de verdad que doce por encima.
 
 QUE ENTREGAS: la lista que queda, con las mismas lineas y en el mismo formato que te la paso, ordenada de la que mas le cuesta a la que menos. Nada mas: ni explicacion, ni que has juntado, ni comentarios.`;
 
@@ -213,7 +225,15 @@ DEBAJO DEL CUARTO
 
 Aqui el estudio deja de mirar hacia atras. Todo lo anterior le explica lo que le pasa; esto es lo unico que se lleva, asi que no se despacha en una linea suelta.
 
-Primero la creencia nueva, en una frase corta y clara, de las que se quedan. Tiene que poder creersela HOY: lo contrario de la suya no vale, porque le pide un salto de fe que no va a dar. Vale una que no le pida creer, sino mirar: algo que pueda comprobar ella sola.
+Primero la creencia nueva, en una frase. Y esa frase tiene que APORTARLE algo o no vale.
+
+Acaba de leer tres bloques explicandole como funciona por dentro. Si esta frase es la suya puesta del reves, o un resumen de lo que ya le has contado con otras palabras, o un lema de los que valen para cualquiera, no le aporta nada y se la salta. Eso es exactamente lo que hay que evitar aqui.
+
+Le aporta cuando le dice algo que no tenia: donde esta de verdad lo que lleva buscando, o que es lo que si le da eso que ella creia que le daba la creencia vieja.
+
+Y tiene que poder creersela HOY: lo contrario de la suya no vale, porque le pide un salto de fe que no va a dar.
+
+NO ARRANQUES ESTA FRASE CON "PUEDO", ni con "ya no necesito", ni con ninguna formula que acabe repitiendose en las demas. En cuanto todas empiezan igual se leen como un lema pegado al final, y entonces se saltan todas.
 
 Y despues, lo que se le abre. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que ella misma ha dicho que quiere, ahi puesto, al alcance, sin la creencia delante tapandolo.
 
@@ -564,7 +584,20 @@ export default async function handler(req, res) {
     const pelado = t => t.toLowerCase()
       .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
       .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
-    const ladillos = LADILLOS.map(pelado);
+
+    // Un ladillo se reconoce por sus palabras con peso, no letra por letra.
+    // El modelo escribe alguna vez "lo que LE esta costando" donde el encargo
+    // pone "TE", y con la comparacion exacta ese renglon se pintaba como un
+    // parrafo mas: la creencia se quedaba sin su ladillo y el texto sin su
+    // descanso. Quitando las palabras de relleno, esa variante ya cuadra.
+    const HUECAS = /\b(el|la|lo|los|las|un|una|unos|unas|y|o|que|de|del|a|al|en|se|te|le|me|tu|su|mi|es|esta|estas|esto)\b/g;
+    const conPeso = t => pelado(t).replace(HUECAS, ' ').replace(/\s+/g, ' ').trim();
+    const ladillos = LADILLOS.map(conPeso);
+
+    // Y solo se mira si el renglon tiene pinta de ladillo: corto y sin puntuacion
+    // al final. Sin esto, una frase suelta que acabara con las mismas palabras
+    // con peso se convertiria en un ladillo y partiria la creencia en dos.
+    const pintaDeLadillo = t => t.length < 70 && !/[.:;,!?]$/.test(t);
 
     const bloques = [];
     const meter = (parte) => {
@@ -592,7 +625,7 @@ export default async function handler(req, res) {
           bloques.push({ titulo: marca[1].trim(), partes: [] });
           continue;
         }
-        const cual = ladillos.indexOf(pelado(t));
+        const cual = pintaDeLadillo(t) ? ladillos.indexOf(conPeso(t)) : -1;
         if (cual >= 0) { soltar(); meter({ ladillo: LADILLOS[cual] }); continue; }
         suelto.push(t);
       }
