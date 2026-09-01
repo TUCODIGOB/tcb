@@ -574,9 +574,17 @@ async function desmoldarArranques(bloques) {
     if (m) nuevas.set(Number(m[1]), m[2].trim());
   }
 
+  // SE COGE SOLO LA PRIMERA FRASE DE LO QUE DEVUELVE, aunque devuelva mas.
+  //
+  // Se le pide una frase, pero a veces devuelve el parrafo entero. Pegando eso
+  // delante del resto que ya teniamos, la cola sale escrita dos veces y esa
+  // repeticion se la lleva la clienta en su informe. Cortando por la primera
+  // frase no puede pasar, devuelva lo que devuelva.
   let arreglados = 0;
   orden.forEach((i, sitio) => {
-    const nueva = nuevas.get(sitio + 1);
+    const vuelve = nuevas.get(sitio + 1);
+    if (!vuelve) return;
+    const nueva = primeraFrase(vuelve);
     if (!nueva || nueva === frases[i]) return;
     trozos[i].parte.parrafo = nueva + trozos[i].parte.parrafo.slice(frases[i].length);
     arreglados++;
@@ -880,7 +888,7 @@ export default async function handler(req, res) {
     return res.status(200).send(pagina(
       `<div class="aviso">PRUEBA — informe ${escapar(clave)} · ${seg}s ·
         ${uso.dentro} dentro / ${uso.fuera} fuera ·
-        ${desmoldados ? `${desmoldados} arranques repetidos, reescritos` : 'ningun arranque repetido'}
+        ${desmoldados ? `${desmoldados} arranque(s) reescrito(s)` : 'ningun arranque reescrito'}
         ${cortadas ? `· ${cortadas} cortada(s) por el techo, fuera` : ''}
         ${repetidas ? `· ${repetidas} que decia(n) lo mismo, fuera` : ''}
         ${flojas ? `· ${flojas} que no le bloquea(n) nada, fuera` : ''}
