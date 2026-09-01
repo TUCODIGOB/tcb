@@ -218,23 +218,23 @@ CUALES ENTRAN
 
 Abajo tienes lo que ella ha contestado: como seria su mejor versión, como es su vida hoy, y que lleva años intentando cambiar sin conseguirlo.
 
-ESTO SE HACE EN DOS VUELTAS, Y LAS DOS SE HACEN SIEMPRE. La segunda no depende de como haya ido la primera: se hace igual, hayan salido dos o hayan salido cinco.
+ESTO SE HACE EN DOS VUELTAS, Y LAS DOS SE HACEN SIEMPRE. La segunda no depende de cómo haya ido la primera: se hace igual, hayan salido dos o hayan salido cinco.
 
 
 PRIMERA VUELTA: LO QUE ELLA HA CONTESTADO
 
-Una creencia que le este bloqueando algo de lo que ella ha nombrado entra, y esas van las primeras. Son las que va a reconocer antes, porque hablan de lo que acaba de escribir.
+Una creencia que le esté bloqueando algo de lo que ella ha nombrado entra, y esas van las primeras. Son las que va a reconocer antes, porque hablan de lo que acaba de escribir.
 
 
 SEGUNDA VUELTA: SUS DOS LISTADOS DE RASGOS, ENTEROS
 
-Ahora coges sus rasgos y los repasas UNO POR UNO, los que se le dan bien y los que le cuestan, de arriba abajo y sin saltarte ninguno. Son muchos: hay material de sobra y no puede quedarse ahi.
+Ahora coges sus rasgos y los repasas UNO POR UNO, los que se le dan bien y los que le cuestan, de arriba abajo y sin saltarte ninguno. Son muchos: hay material de sobra y no puede quedarse ahí.
 
-De cada rasgo te preguntas: que da por cierto sobre si misma alguien a quien le pasa esto? Y esa creencia, la tengo ya de la primera vuelta o es otra distinta?
+De cada rasgo te preguntas: ¿qué da por cierto sobre sí misma alguien a quien le pasa esto? Y esa creencia, la tengo ya de la primera vuelta o es otra distinta?
 
 Si es otra distinta y es fuerte, entra.
 
-FUERTE ES QUE LE ESTE COSTANDO ALGO DE VERDAD: tiempo, salud, dinero, gente, calma. Con que le cueste algo gordo en una sola parcela de su vida basta, no hace falta que le salga en varias. Lo que no entra es la manía que no le quita nada, por bien que suene y por mucho que este escrita en sus rasgos.
+FUERTE ES QUE LE ESTÉ COSTANDO ALGO DE VERDAD: tiempo, salud, dinero, gente, calma. Con que le cueste algo gordo en una sola parcela de su vida basta, no hace falta que le salga en varias. Lo que no entra es la manía que no le quita nada, por bien que suene y por mucho que este escrita en sus rasgos.
 
 Y NO REPITAS. Si esa creencia ya la tienes de la primera vuelta, aunque venga de otro rasgo y suene distinta, no la metas otra vez: eso no suma, resta.
 
