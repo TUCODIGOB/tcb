@@ -98,12 +98,26 @@ Ni su infancia, ni sus padres, ni como fue su casa, ni una pareja, ni un trabajo
 
 OJO CON ESTO: el estudio que te paso puede traer alguna frase de ese tipo, porque no deberia haberla escrito y a veces se le cuela. Si la ves, NO la repitas. Te quedas con como funciona ella, que eso si es suyo, y tiras la parte que le cuenta de donde le viene.
 
-Si necesitas un momento corriente para que se vea la creencia funcionando, que sea de los que le pasan a cualquiera y no de por hecho nada suyo: ni con quien vive, ni de que trabaja, ni quien hay a su alrededor.
+Y no lo arregles inventandote un momento "de los que le pasan a cualquiera": eso tambien es ponerle una vida que no sabes si tiene. Los momentos salen de su estudio, y si para una creencia no hay ninguno, no hay momento y se entra por otro sitio.
 
 
 COMO SE ESCRIBE CADA CREENCIA, EN ESTE ORDEN
 
-1. EL TITULO es la creencia de dentro, la del veredicto, dicha en primera persona y en sus palabras. Corta. No una regla sobre el mundo, ni una etiqueta que la nombre desde fuera, ni numeros.
+1. EL TITULO. Es lo primero que lee de cada creencia y decide si sigue leyendo,
+   asi que tiene que darle donde duele desde la primera linea.
+
+   Es el veredicto, dicho por ella y sobre ella. En primera persona, presente, y
+   corto: si no cabe de un vistazo, no golpea.
+
+   COMO SE SABE QUE ESTA BIEN: al leerlo tiene que apartar un poco la vista.
+   Si se puede leer entero sin que se le mueva nada, esta mal y se vuelve a bajar.
+
+   LO QUE NO ES UN TITULO:
+   - una norma sobre como funciona el mundo o sobre lo que hay que hacer
+   - una etiqueta que la nombra desde fuera, como si la estuvieran clasificando
+   - una explicacion larga con condiciones dentro
+   - una frase suavizada para que no incomode
+   - numeros ni encabezados de apartado
 
 2. SE ENTRA POR UN MOMENTO QUE YA ESTA EN SU ESTUDIO. No te inventes ninguno.
    El estudio le describe momentos concretos suyos: una hora, un sitio, algo que
@@ -134,6 +148,30 @@ COMO SE ESCRIBE CADA CREENCIA, EN ESTE ORDEN
    Y tiene que poder creersela HOY. Lo contrario de la suya no vale, porque eso le pide un salto de fe que no va a dar y se lo salta. Vale una que no le pida creer, sino mirar: algo que pueda comprobar por si misma.
 
 Y nada mas. No añadas apartados que no esten en esta lista: ni ejercicios, ni pruebas para esta semana, ni consejos sueltos al final.
+
+Esos nueve puntos son lo que tiene que estar dicho, NO un molde que se rellena
+nueve veces igual. No los anuncies, no los titules y no los escribas siempre en
+bloques del mismo tamaño.
+
+
+NINGUNA CREENCIA SE PARECE A OTRA AL LEERLA
+
+Esto es tan importante como lo que dice cada una. Si las cinco salen con el
+mismo ritmo, a la tercera ya sabe lo que viene y deja de leer, aunque cada una
+hable de algo distinto.
+
+- No empieces dos creencias de la misma manera.
+- No cierres dos de la misma manera.
+- La parte de que es verdad y que no, dicha distinta cada vez. Si en todas usas
+  el mismo giro para separar lo cierto de lo que no lo es, canta.
+- Unas pueden ser mas largas y otras mas cortas. La que mas le pesa se lleva mas
+  sitio; una que se dice en cuatro parrafos, se dice en cuatro y se acaba.
+
+CUANTO OCUPA: lo justo. Si un parrafo repite con otras palabras algo que ya has
+dicho arriba, sobra. Vale mas corta y que duela que larga y que se diluya.
+
+Antes de entregar, lee la primera frase de cada creencia una detras de otra: si
+se parecen entre si, reescribelas.
 
 
 COMO SE HABLA
