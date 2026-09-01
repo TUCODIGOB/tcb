@@ -114,10 +114,15 @@ export function repartir(texto) {
     for (const linea of trozo.split('\n')) {
       const t = linea.trim();
       if (!t) continue;
-      const marca = t.match(/^CREENCIA\s*:\s*(.*)$/i);
+      // La cabecera se reconoce aunque venga adornada. El encargo prohibe los
+      // asteriscos, pero si un dia se le escapa un "**CREENCIA: ...**" y aqui
+      // se exige la palabra pegada al principio de la linea, esa creencia se
+      // queda sin titulo, y sin titulo se descarta entera. Paso: se descartaron
+      // todas y el cliente se quedo sin informe por dos asteriscos.
+      const marca = t.match(/^[*_#>\s-]*CREENCIA\s*:\s*(.*)$/i);
       if (marca) {
         soltar();
-        bloques.push({ titulo: marca[1].trim(), partes: [] });
+        bloques.push({ titulo: marca[1].replace(/^[*_#\s]+|[*_#\s]+$/g, '').trim(), partes: [] });
         continue;
       }
       const cual = pintaDeLadillo(t) ? LADILLOS_CON_PESO.indexOf(conPeso(t)) : -1;
@@ -728,9 +733,18 @@ async function escribirCreencias(informe, respuestas) {
   // Y despues, los trozos que entran igual que otro, reescritos por su
   // arranque. Solo llama al modelo si de verdad hay alguno.
   const escritas = repartir(una.texto);
-  const bloques = quitarLasCortadas(escritas);
-  const cortadas = escritas.length - bloques.length;
-  if (!bloques.length) throw new Error('No ha salido ninguna creencia entera');
+  const enteras = quitarLasCortadas(escritas);
+
+  // SI EL FILTRO SE LAS LLEVA TODAS, NO SE TIRA LO ESCRITO.
+  //
+  // Paso: las descarto todas, solto un error y el texto se perdio, asi que no
+  // hubo manera de saber por que las habia rechazado. Un filtro que se queda a
+  // cero no esta diciendo que el texto sea malo, esta diciendo que YO no lo he
+  // sabido leer. Se entrega lo que hay y se avisa.
+  const bloques = enteras.length ? enteras : escritas;
+  const cortadas = enteras.length ? escritas.length - enteras.length : 0;
+  const sinFiltrar = enteras.length ? 0 : escritas.length;
+  if (!bloques.length) throw new Error('El modelo no ha devuelto nada que se pueda leer');
 
   // Los tres repasos, en este orden: primero se quitan las que dicen lo mismo
   // que otra, luego las que no le bloquean nada de lo suyo, y por ultimo se
@@ -752,6 +766,7 @@ async function escribirCreencias(informe, respuestas) {
     bloques: finales,
     rasgos,
     cortadas,
+    sinFiltrar,
     repetidas: dos.quitadas,
     flojas: tres.quitadas,
     sobraban,
@@ -877,7 +892,7 @@ export default async function handler(req, res) {
     const informe = JSON.parse(await pedirR2(cfg, `/${clave}`));
 
     const t0 = Date.now();
-    const { bloques, rasgos, cortadas, repetidas, flojas, sobraban, desmoldados, uso } =
+    const { bloques, rasgos, cortadas, sinFiltrar, repetidas, flojas, sobraban, desmoldados, uso } =
       await escribirCreencias(informe, respuestas);
     const seg = ((Date.now() - t0) / 1000).toFixed(0);
 
@@ -893,6 +908,7 @@ export default async function handler(req, res) {
         ${uso.dentro} dentro / ${uso.fuera} fuera ·
         ${desmoldados ? `${desmoldados} arranque(s) reescrito(s)` : 'ningun arranque reescrito'}
         ${cortadas ? `· ${cortadas} cortada(s) por el techo, fuera` : ''}
+        ${sinFiltrar ? `· AVISO: las ${sinFiltrar} salieron mal montadas y se entregan sin filtrar` : ''}
         ${repetidas ? `· ${repetidas} que decia(n) lo mismo, fuera` : ''}
         ${flojas ? `· ${flojas} que no le bloquea(n) nada, fuera` : ''}
         ${sobraban ? `· ${sobraban} por encima del techo de ${TECHO}, fuera` : ''}</div>
