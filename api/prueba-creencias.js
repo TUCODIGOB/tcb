@@ -381,7 +381,7 @@ async function quitarLasQueDicenLoMismo(bloques) {
   // exista se ignora: si lo que vuelve no se entiende, no se quita nada.
   const fuera = new Set();
   for (const linea of String(texto).split('\n')) {
-    const m = linea.trim().match(/^(\d{1,2})\s*[-–y,]+\s*(\d{1,2})$/);
+    const m = linea.trim().match(/^(\d{1,2})\s*[-–y,]+\s*(\d{1,2})[\s.)]*$/);
     if (!m) continue;
     const a = Number(m[1]) - 1, b = Number(m[2]) - 1;
     if (a < 0 || b < 0 || a >= bloques.length || b >= bloques.length || a === b) continue;
@@ -632,14 +632,18 @@ async function escribirCreencias(informe, respuestas) {
 
   // Una sola llamada: elige, descarta las repetidas y las escribe.
   //
+  // El techo NO es un objetivo: es donde se corta si se pasa. Seis creencias de
+  // cuatro bloques rondan las 6600 palabras-token, asi que 8000 lo roza y una
+  // sexta larga se perderia entera. Con 10000 sobra sitio y no cuesta nada de
+  // mas, porque solo se paga lo que escribe de verdad.
+  //
   // El tiempo lo marca lo que escribe, no lo que piensa: unas 75
-  // palabras-token por segundo. Con 8000 este paso no puede pasar de dos
-  // minutos, y la funcion se corta a los cinco. Seis creencias de cuatro
-  // bloques son unas 5500.
+  // palabras-token por segundo. Ni asi puede pasar de los tres minutos que
+  // aguanta la llamada, ni de los cinco de la funcion.
   const una = await pedir({
     sistema: CREENCIAS,
     mensaje: `${quien}\n\n${rasgos}\n\n────────────────\n\n${contestado}\n\nEscribe sus creencias.`,
-    tope: 8000,
+    tope: 10000,
   });
   if (!una.texto.trim()) throw new Error('No ha devuelto ninguna creencia');
 
