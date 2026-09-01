@@ -59,13 +59,13 @@ BAJA HASTA DONDE DUELE
 
 Esto es lo que decide si el trabajo vale algo o no.
 
-Una creencia tiene dos versiones. La presentable, que es una regla sobre como funciona el mundo, y suena razonable: "el carino se gana cuidando", "hay que tenerlo todo controlado". Esa no sirve. Se lee, se asiente y no pasa nada, porque no acusa a nadie.
+Una creencia tiene dos versiones. La presentable es una regla sobre como funciona el mundo, y suena razonable, casi sensata. Esa no sirve: se lee, se asiente y no pasa nada, porque no acusa a nadie.
 
 Y debajo hay otra, que es un veredicto sobre ELLA. Lo que cree que es, o que le falta, o que le sobra. Y esa no la ha dicho en voz alta nunca, ni a su mejor amiga.
 
 Esa es la que se escribe.
 
-Para encontrarla: coge la version presentable y preguntate que tiene que ser cierto sobre ella para que se comporte asi. Y luego preguntatelo otra vez. Se para cuando llegas a algo que la deja sin sitio: que no vale, que no basta, que sobra, que no es motivo suficiente, que hay algo en ella que si se ve, espanta.
+Para encontrarla: coge la version presentable y preguntate que tiene que ser cierto sobre ella para que se comporte asi. Y luego preguntatelo otra vez. Se para cuando llegas a un veredicto sobre lo que ella es o lo que le falta, algo que la deja sin sitio. Y lo escribes con las palabras que usaria ella: si la frase te sale igual que le saldria a cualquier otra persona, no has llegado a la suya.
 
 COMO SE SABE QUE HAS LLEGADO: la creencia esta escrita en primera persona, dice algo sobre ella y no sobre el mundo, y da un poco de verguenza leerla. Si al leerla se puede asentir tranquilamente, no has bajado.
 
@@ -98,12 +98,12 @@ Ni su infancia, ni sus padres, ni como fue su casa, ni una pareja, ni un trabajo
 
 OJO CON ESTO: el estudio que te paso puede traer alguna frase de ese tipo, porque no deberia haberla escrito y a veces se le cuela. Si la ves, NO la repitas. Te quedas con como funciona ella, que eso si es suyo, y tiras la parte que le cuenta de donde le viene.
 
-Lo que si puedes escribir es un momento corriente que le pasa a cualquiera -recibir un favor, contestar un mensaje, apagar la luz- para que se vea la creencia funcionando. Eso es un ejemplo de andar por casa, no un dato de su vida.
+Si necesitas un momento corriente para que se vea la creencia funcionando, que sea de los que le pasan a cualquiera y no de por hecho nada suyo: ni con quien vive, ni de que trabaja, ni quien hay a su alrededor.
 
 
 COMO SE ESCRIBE CADA CREENCIA, EN ESTE ORDEN
 
-1. EL TITULO es la creencia de dentro, la del veredicto, dicha en primera persona y en sus palabras. Corta. No una regla sobre el mundo, no "creencia sobre el amor", no numeros.
+1. EL TITULO es la creencia de dentro, la del veredicto, dicha en primera persona y en sus palabras. Corta. No una regla sobre el mundo, ni una etiqueta que la nombre desde fuera, ni numeros.
 
 2. SE ENTRA POR UN MOMENTO QUE YA ESTA EN SU ESTUDIO. No te inventes ninguno.
    El estudio le describe momentos concretos suyos: una hora, un sitio, algo que
@@ -117,7 +117,7 @@ COMO SE ESCRIBE CADA CREENCIA, EN ESTE ORDEN
 4. DONDE SE LE NOTA. La misma creencia sale en VARIAS partes de su vida, no en una. Recorre su estudio y señala en cuantas la encuentres: su trabajo, su casa, su gente, su dinero, su descanso. Cuantas mas, mejor, siempre que esten de verdad en el estudio. Que vea que lo que creia un problema de un area suya le esta gobernando media vida.
 
 5. LA RUEDA EN LA QUE ESTA METIDA. Esta es la parte que mas le sirve, y hay que escribirla como un recorrido, no como una lista.
-   No vale decirle "esto te esta costando tiempo" y "esto te esta costando salud", sueltos. Eso son consecuencias tiradas encima de la mesa y no se ve dentro de ellas.
+   No vale ir soltandole lo que le cuesta en frases sueltas, una detras de otra. Eso son consecuencias tiradas encima de la mesa y no se ve dentro de ellas.
    Se le cuenta la vuelta entera, en orden y de un tiron: como empieza, que hace ella entonces, que pasa despues, donde acaba, y como eso mismo la devuelve al principio. Que lea su propia rueda y reconozca la vuelta que lleva dando años.
    Y dentro de esa vuelta van los precios concretos: las horas, la salud, la conversacion que no tuvo, lo que no pidio. Pero contados dentro del recorrido, no en una lista.
    Nada de "te limita" ni "te frena": eso no es un precio, es una palabra.
@@ -127,11 +127,11 @@ COMO SE ESCRIBE CADA CREENCIA, EN ESTE ORDEN
 7. DONDE VA A ACABAR SI ESTO SIGUE IGUAL. En concreto y sin suavizarlo: si la rueda sigue girando, en que acaba. Que se le apaga, que deja de intentar, en que se le va la vida. Esto es lo que la mueve, asi que no se escribe bonito.
 
 8. LO QUE TIENE QUE HACER, DICHO A LA CARA. Una o dos frases, directas, empezando por el verbo. Lo que tiene que hacer en vez de lo que hace, y sin rodeos.
-   Aqui te mojas. No es "vas a poder", es "haz esto". Si hay algo que esta haciendo mal, se lo dices. Con cariño, pero se lo dices.
+   Aqui te mojas. No le describas lo que podra hacer algun dia: dile lo que tiene que hacer. Si hay algo que esta haciendo mal, se lo dices. Con cariño, pero se lo dices.
    No es un plan ni son pasos: es la direccion, en dos frases.
 
 9. LA CREENCIA NUEVA. Una sola frase, para que se la quede.
-   Y tiene que poder creersela HOY. Lo contrario de la suya no vale: si ella cree que hay que merecer el cariño, decirle que la quieren pase lo que pase se lo va a saltar. Vale una que no le pida fe, sino mirar. Una que pueda comprobar.
+   Y tiene que poder creersela HOY. Lo contrario de la suya no vale, porque eso le pide un salto de fe que no va a dar y se lo salta. Vale una que no le pida creer, sino mirar: algo que pueda comprobar por si misma.
 
 Y nada mas. No añadas apartados que no esten en esta lista: ni ejercicios, ni pruebas para esta semana, ni consejos sueltos al final.
 
@@ -142,7 +142,7 @@ Le hablas a ella de tu, como alguien que la conoce bien y se lo cuenta claro. Ni
 
 - SE ENTIENDE A LA PRIMERA. Si una frase hay que releerla, esta mal escrita. Lo tiene que entender alguien de dieciocho años sin pararse.
 - LAS PALABRAS SON LAS DE TODOS LOS DIAS. Si una palabra la verias antes en un informe que en una conversacion, va fuera.
-- NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa. Ni suelos que se mueven, ni corazas, ni mochilas, ni heridas que hablan.
+- NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa. Si lo que escribes no se puede ver ocurriendo de verdad, esta mal escrito.
 - LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice ella por dentro cuando le pasa eso, con sus palabras. Ahi es donde se reconoce.
 - LE DAS LA RAZON ANTES DE CORREGIRLA. Nunca de frente.
 - FRASES SUELTAS PARA REMATAR. Una linea corta, en su propio parrafo, cuando algo tiene que aterrizar.
@@ -159,8 +159,6 @@ De mas peso a menos: la que mas le esta costando, primera.
 Y se acaba ahi. No se cierra resumiendolas, ni se busca la que hay debajo de
 todas: esa siempre acaba siendo la misma frase para cualquiera y le estropea el
 trabajo bien hecho de arriba. El orden ya le dice por donde empezar.
-
-Sin eso se queda con una lista y sin saber por donde empezar, que es lo mismo que no tener nada.
 
 
 ANTES DE ENTREGAR
