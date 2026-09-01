@@ -216,11 +216,15 @@ Ni un ladillo mas, ni uno menos, ni cambiados de sitio, ni con otras palabras. N
 
 EL TITULO, LA LINEA DE ARRIBA
 
-Es el veredicto dicho por ella y sobre ella: primera persona y presente. Es lo que decide si sigue leyendo.
+Es lo que ella se dice por dentro cuando le pasa eso, con sus palabras. Primera persona y presente. Es lo que decide si sigue leyendo.
 
-VA CORTO: UNA sola idea, DIEZ PALABRAS COMO MUCHO, y cuentalas. Ni una condicion metida dentro: nada de "asi que", nada de "y entonces", nada de dos frases pegadas con una coma. Si no te cabe en diez palabras es que llevas dos creencias en una: o las separas, o bajas hasta la que sostiene a las dos.
+LO QUE CIERRA EL TITULO ES LO QUE ELLA CONCLUYE, NO LO QUE SE LE VE HACER. Aqui se decide si el titulo vale o no vale. Si acaba contando una conducta suya, se queda en una observacion hecha desde fuera, se lee sin que le pase nada por dentro y no acusa a nadie. Tiene que acabar en el veredicto que saca ella, dicho en seco.
 
-CON PALABRAS DE TODOS LOS DIAS, en seco. Si al leerlo hay que rellenar con la cabeza a que se refiere, esta mal escrito. Las palabras que no se pueden ver -confiar, valer, merecer, servir- no dicen nada solas; en su sitio va lo que ella hace, o lo que se dice, o lo que le pasa cuando se la cree.
+CORTO Y PLANO. Ocho palabras esta bien, diez es el techo, y las cuentas. Cuanto mas corto, mas cae.
+
+Y NO SE EXPLICA NADA DENTRO. En cuanto aparece un "es que", un "porque", un "asi que", un "antes que" o un "en vez de", deja de caer y se convierte en un razonamiento. Ni condiciones metidas dentro, ni dos frases pegadas con una coma para que quepa todo. Si no te cabe, llevas dos creencias en una: o las separas, o bajas hasta la que sostiene a las dos.
+
+CON PALABRAS DE TODOS LOS DIAS. Si al leerlo hay que rellenar con la cabeza a que se refiere, esta mal escrito. Las palabras que no se pueden ver -confiar, valer, merecer, servir- no dicen nada solas y no entra ninguna.
 
 Al leerlo tiene que apartar un poco la vista. Si se lee entero sin que se le mueva nada, esta suavizado y hay que bajarlo.
 
