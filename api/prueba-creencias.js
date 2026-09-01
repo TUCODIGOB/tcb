@@ -21,8 +21,11 @@
 // por tener las areas delante. Sin ellas, las ve todas a la vez mientras
 // escribe, que es cuando mejor puede no repetirse.
 //
-// Y despues se comprueba que no haya dos trozos que empiecen igual. Eso es una
-// segunda llamada, corta, y SOLO si de verdad los hay.
+// Y DESPUES SE COMPRUEBA. Dos cosas que pedirlas en el encargo no basta,
+// porque escribiendo la sexta no tiene delante lo que dijo en la segunda:
+// que no haya dos creencias que digan lo mismo -mirando solo los titulos,
+// en fila- y que no haya dos trozos que empiecen igual. Son dos llamadas
+// cortas, de segundos, y la de los arranques solo salta si de verdad los hay.
 // ════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
@@ -302,17 +305,9 @@ DEBAJO DEL CUARTO
 
 Aqui el estudio deja de mirar hacia atras. Todo lo anterior le explica lo que le pasa; esto es lo unico que se lleva, asi que no se despacha en una linea suelta.
 
-Primero la creencia nueva, en una frase. Y esa frase tiene que APORTARLE algo o no vale.
+NO SE ABRE CON UNA FRASE-LEMA. Nada de resumir la creencia nueva en una linea suelta antes de empezar: la suya puesta del reves, o un lema de los que valen para cualquiera, se lee, no dice nada y se salta. Aqui se entra directamente por lo que se le abre.
 
-Acaba de leer tres bloques explicandole como funciona por dentro. Si esta frase es la suya puesta del reves, o un resumen de lo que ya le has contado con otras palabras, o un lema de los que valen para cualquiera, no le aporta nada y se la salta.
-
-Le aporta cuando le dice algo que no tenia: donde esta de verdad lo que lleva buscando, o que es lo que si le da eso que ella creia que le daba la creencia vieja.
-
-Y tiene que poder creersela HOY: lo contrario de la suya no vale, porque le pide un salto de fe que no va a dar.
-
-NO ARRANQUES ESTA FRASE CON "PUEDO", ni con "ya no necesito", ni con ninguna formula que acabe repitiendose en las demas.
-
-Y despues, lo que se le abre. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que ella misma ha dicho que quiere, ahi puesto y al alcance, sin la creencia delante tapandolo.
+Y lo que se le abre es esto. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que ella misma ha dicho que quiere, ahi puesto y al alcance, sin la creencia delante tapandolo.
 
 Que lo cierre sabiendo por donde tira, no solo entendiendo por que esta atascada.
 
@@ -342,6 +337,62 @@ QUE ENTREGAS
 Las creencias escritas y nada mas. Ni presentacion, ni titulo general, ni la lista de las que has elegido, ni explicacion de lo que has hecho, ni comentarios.
 
 Empiezas directamente con la linea CREENCIA: de la primera. Acabas con el ultimo parrafo de la ultima, sin resumen, sin despedida y sin buscar la creencia que hay debajo de todas.`;
+
+// ── DOS CREENCIAS QUE DICEN LO MISMO ────────────────────────
+//
+// Es lo que mas estropea el informe y lo que mas veces se ha escapado. En el
+// encargo ya se le pide, pero pedirlo no basta: escribiendo la sexta no tiene
+// delante lo que dijo en la segunda.
+//
+// Aqui se le enseñan SOLO los titulos, numerados y en fila. Sin parrafos,
+// sin rasgos, sin nada mas. Uno al lado de otro, dos que dicen lo mismo se
+// ven; con siete paginas de por medio, no.
+//
+// Es una llamada de dos lineas de ida y dos de vuelta: unos segundos.
+//
+// Y LA QUE SOBRA SE QUITA, NO SE REESCRIBE. Vienen ordenadas de la que mas le
+// pesa a la que menos, asi que de cada par se va la de mas abajo, que es la
+// mas floja. Se lleva cinco distintas en vez de seis con dos iguales.
+
+const REPETIDAS = `Te paso los titulos de las creencias de una misma persona, numerados. Cada uno es lo que ella da por cierto sobre si misma.
+
+Tu unico trabajo es decir cuales dicen lo mismo.
+
+DOS DICEN LO MISMO cuando debajo dan por cierto lo mismo sobre ella, aunque cambien las palabras y aunque una hable de su trabajo y la otra de su gente. El sitio donde le ocurre no las hace distintas.
+
+NO DICEN LO MISMO solo porque le estropeen lo mismo. Dos creencias distintas pueden dejarla igual de atascada, y juntarlas le borraria una que era suya.
+
+La pregunta es una sola: lo que da por cierto sobre si misma en la primera, es lo mismo que da por cierto en la otra?
+
+Comparalas todas contra todas, sin saltarte ningun par.
+
+QUE ENTREGAS: una linea por cada par que diga lo mismo, con sus dos numeros separados por un guion, y nada mas. Si no hay ninguno, escribes NINGUNA. Ni explicacion, ni comentarios.`;
+
+async function quitarLasQueDicenLoMismo(bloques) {
+  if (bloques.length < 2) return { bloques, quitadas: 0, uso: {} };
+
+  const { texto, uso } = await pedir({
+    sistema: REPETIDAS,
+    mensaje: bloques.map((b, i) => `${i + 1}. ${b.titulo}`).join('\n'),
+    tope: 300,
+  });
+
+  // De cada par se va la de mas abajo, que es la mas floja. Un numero que no
+  // exista se ignora: si lo que vuelve no se entiende, no se quita nada.
+  const fuera = new Set();
+  for (const linea of String(texto).split('\n')) {
+    const m = linea.trim().match(/^(\d{1,2})\s*[-–y,]+\s*(\d{1,2})$/);
+    if (!m) continue;
+    const a = Number(m[1]) - 1, b = Number(m[2]) - 1;
+    if (a < 0 || b < 0 || a >= bloques.length || b >= bloques.length || a === b) continue;
+    fuera.add(Math.max(a, b));
+  }
+
+  // Nunca se queda sin ninguna, pase lo que pase con lo que devuelva.
+  const quedan = bloques.filter((_, i) => !fuera.has(i));
+  if (!quedan.length) return { bloques, quitadas: 0, uso };
+  return { bloques: quedan, quitadas: bloques.length - quedan.length, uso };
+}
 
 // ── LOS ARRANQUES QUE SE REPITEN ────────────────────────────
 //
@@ -414,13 +465,8 @@ export function quitarLasCortadas(bloques) {
     if (!b.titulo) return false;
     const suyos = b.partes.filter(p => p.ladillo).map(p => p.ladillo);
     if (LADILLOS.some(l => !suyos.includes(l))) return false;
-    // Y ningun ladillo puede quedarse sin nada escrito debajo.
-    for (let i = 0; i < b.partes.length; i++) {
-      if (b.partes[i].ladillo && !b.partes[i + 1]?.parrafo) return false;
-    }
-    // Que el ultimo ladillo tenga algo escrito debajo.
-    const ultima = b.partes[b.partes.length - 1];
-    return Boolean(ultima && ultima.parrafo);
+    // Y ningun ladillo puede quedarse sin nada escrito debajo, ni el ultimo.
+    return b.partes.every((parte, i) => !parte.ladillo || Boolean(b.partes[i + 1]?.parrafo));
   };
   const limpio = [...bloques];
   while (limpio.length && !entera(limpio[limpio.length - 1])) limpio.pop();
@@ -602,14 +648,18 @@ async function escribirCreencias(informe, respuestas) {
   const cortadas = escritas.length - bloques.length;
   if (!bloques.length) throw new Error('No ha salido ninguna creencia entera');
 
-  const dos = await desmoldarArranques(bloques);
+  // Las que dicen lo mismo que otra, fuera. Y despues, los trozos que entran
+  // igual que otro, reescritos por su arranque.
+  const dos = await quitarLasQueDicenLoMismo(bloques);
+  const tres = await desmoldarArranques(dos.bloques);
 
-  const suma = k => [una.uso, dos.uso].reduce((t, u) => t + (u[k] || 0), 0);
+  const suma = k => [una.uso, dos.uso, tres.uso].reduce((t, u) => t + (u[k] || 0), 0);
   return {
-    bloques,
+    bloques: dos.bloques,
     rasgos,
     cortadas,
-    desmoldados: dos.arreglados,
+    repetidas: dos.quitadas,
+    desmoldados: tres.arreglados,
     uso: { dentro: suma('input_tokens'), fuera: suma('output_tokens') },
   };
 }
@@ -731,7 +781,7 @@ export default async function handler(req, res) {
     const informe = JSON.parse(await pedirR2(cfg, `/${clave}`));
 
     const t0 = Date.now();
-    const { bloques, rasgos, cortadas, desmoldados, uso } =
+    const { bloques, rasgos, cortadas, repetidas, desmoldados, uso } =
       await escribirCreencias(informe, respuestas);
     const seg = ((Date.now() - t0) / 1000).toFixed(0);
 
@@ -746,7 +796,8 @@ export default async function handler(req, res) {
       `<div class="aviso">PRUEBA — informe ${escapar(clave)} · ${seg}s ·
         ${uso.dentro} dentro / ${uso.fuera} fuera ·
         ${desmoldados ? `${desmoldados} arranques repetidos, reescritos` : 'ningun arranque repetido'}
-        ${cortadas ? `· ${cortadas} creencia(s) cortadas por el techo, fuera` : ''}</div>
+        ${cortadas ? `· ${cortadas} cortada(s) por el techo, fuera` : ''}
+        ${repetidas ? `· ${repetidas} que decia(n) lo mismo, fuera` : ''}</div>
        <details><summary>Chuleta: el material con el que ha escrito</summary>
          <pre>${escapar(rasgos)}</pre>
        </details>
