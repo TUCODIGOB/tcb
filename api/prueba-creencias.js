@@ -52,7 +52,7 @@ const PREGUNTAS = [
   '¿Que llevas años intentando cambiar y no cambia?',
 ];
 
-// ── LOS DOS ENCARGOS ────────────────────────────────────────
+// ── LOS TRES ENCARGOS ───────────────────────────────────────
 //
 // Solo reglas. Ni una linea de ejemplo, ni un trozo de informe de muestra:
 // lo que se le enseñe escrito, lo copia, y entonces el informe deja de ser de
@@ -78,7 +78,7 @@ Una creencia entra SOLO si le esta bloqueando algo de eso que ella misma ha dich
 
 Si una creencia no bloquea nada de lo que ella ha nombrado, fuera, por bien que suene y por mucho que este en sus rasgos.
 
-NO HAY NUMERO. Salen las que salgan. Pero pocas y hondas antes que muchas y flojas: si dudas, quita.
+NO HAY NUMERO. Salen las que salgan. Lo que decide no es cuantas son, es el peso que tienen: una que no la tenga atascada de verdad no entra, por bien que suene.
 
 
 BAJA HASTA DONDE DUELE
@@ -116,10 +116,9 @@ QUE ENTREGAS
 
 La lista y nada mas. Ni presentacion, ni explicacion, ni comentarios.
 
-Por cada creencia, estas cuatro lineas y una raya:
+Por cada creencia, estas cinco lineas y una raya:
 
-CREENCIA: el veredicto sobre ella, en primera persona y presente. Esta linea es la que ella va a leer como titulo, asi que va CORTA: UNA sola idea, DIEZ PALABRAS COMO MUCHO, y cuentalas. Ni una condicion metida dentro: nada de "asi que", nada de "y entonces", nada de dos frases pegadas con una coma. Se entiende entera a la primera y no hay que releerla. Aqui no se explica: explicarla viene despues y es otro trabajo. Si no te cabe en diez palabras es que llevas dos creencias en una: o las separas, o bajas hasta la que sostiene a las dos.
-PALABRAS DE TODOS LOS DIAS, y en seco. La prueba es esta: si al leer la frase hay que rellenar con la cabeza a que se refiere, esta mal escrita. Las palabras que no se pueden ver -confiar, valer, merecer, servir- no dicen nada solas: en su sitio va lo que ella hace, o lo que se dice, o lo que le pasa cuando se la cree. El resto del estudio se entiende bien; el titulo tiene que entenderse igual de bien, y hoy es lo unico que se lee dos veces.
+CREENCIA: el veredicto sobre ella, en primera persona y presente. Esta linea es la que ella va a leer como titulo, asi que va CORTA: UNA sola idea, DIEZ PALABRAS COMO MUCHO, y cuentalas. Ni una condicion metida dentro: nada de "asi que", nada de "y entonces", nada de dos frases pegadas con una coma. Se entiende entera a la primera y no hay que releerla. Aqui no se explica: explicarla viene despues y es otro trabajo. Si no te cabe en diez palabras es que llevas dos creencias en una: o las separas, o bajas hasta la que sostiene a las dos. Y con palabras de todos los dias, en seco: si al leerla hay que rellenar con la cabeza a que se refiere, esta mal escrita. Las palabras que no se pueden ver -confiar, valer, merecer, servir- no dicen nada solas; en su sitio va lo que ella hace, o lo que se dice, o lo que le pasa cuando se la cree.
 BLOQUEA: que cosa de las que ella ha dicho que quiere y no consigue le esta impidiendo.
 CUESTA: que le esta quitando. Concreto.
 DONDE SE LE VE: en que partes de su vida aparece, separadas por comas.
@@ -135,7 +134,7 @@ const JUNTAR = `Te paso una lista de creencias de una misma persona. Solo la lis
 
 Tu unico trabajo es dejar las que son de verdad distintas.
 
-DOS SON LA MISMA cuando debajo dicen lo mismo, aunque cambien las palabras y aunque una hable de su trabajo y la otra de su gente. El sitio donde ocurre no las hace distintas.
+DOS SON LA MISMA cuando debajo dicen lo mismo, aunque cambien las palabras. Y el caso que mas se escapa es justo ese: la misma creencia repetida en dos parcelas de su vida, una con el trabajo y otra con la gente, o una con el dinero y otra con la pareja. Suenan a dos porque hablan de dos sitios, pero debajo da por cierto exactamente lo mismo sobre ella. Esas son UNA, siempre. El sitio donde le ocurre no las hace distintas.
 
 LO QUE SE COMPARA ES LA CREENCIA, NUNCA SUS CONSECUENCIAS. Dos creencias completamente distintas pueden bloquearle lo mismo y costarle lo mismo, porque en una vida casi todo desemboca en las mismas cuatro cosas. Que coincidan en BLOQUEA o en CUESTA no las hace una, y juntarlas por ahi le borra una creencia que era suya y que era de las buenas.
 
@@ -153,8 +152,6 @@ Y la linea CREENCIA que queda es UNA, la suya, tal cual estaba. No se pegan las 
 
 SI DUDAS DE UN PAR, MIRALO OTRA VEZ POR DONDE HAY QUE MIRARLO: lo que da por cierto sobre ella cada una, no lo que le estropea cada una. Ahi se ve casi siempre, y ahi decides.
 
-EL CASO QUE MAS SE ESCAPA, Y NO SE TE PUEDE ESCAPAR: la misma creencia repetida en dos parcelas de su vida. La misma frase con el trabajo y con la gente, o con el dinero y con la pareja. Suenan a dos porque hablan de dos sitios, pero debajo da por cierto exactamente lo mismo sobre ella. Esas son UNA, siempre, sin excepcion. Es el duplicado que mas canta al leerlo seguido y el que mas barato sale de pillar aqui.
-
 
 Y AHORA QUEDATE CON LAS QUE PESAN
 
@@ -166,7 +163,7 @@ Las que se quedan son las que le estan bloqueando lo que ella misma ha dicho que
 
 Las demas fuera, aunque sean ciertas. Una creencia de relleno no solo le hace leer de mas: hace que las buenas se lean con menos peso por ir rodeadas de flojas.
 
-Y si de verdad no le salen seis distintas, entregas las que haya. No se rellena inventando, y una que ya has juntado no se vuelve a separar para llegar a seis: eso le devuelve el repetido, que es justo lo que estamos quitando.
+No se rellena inventando para llegar a seis, y una que ya has juntado no se vuelve a separar: eso le devuelve el repetido, que es justo lo que acabas de quitar.
 
 QUE ENTREGAS: la lista que queda, con las mismas lineas y en el mismo formato que te la paso, ordenada de la que mas le cuesta a la que menos. Nada mas: ni explicacion, ni que has juntado, ni comentarios.`;
 
@@ -213,7 +210,7 @@ Todavia no cuentas donde se le ve ni lo que le cuesta: eso viene en el ladillo s
 
 DEBAJO DEL SEGUNDO
 
-Lo que esta creencia le hace hacer, lo que le hace no hacer, y lo que eso le quita. Sale en varias partes de su vida, no en una: señala en cuantas la encuentres, siempre que esten en el estudio o en lo que ella ha contado. Que vea que lo que creia un problema de una zona suya le esta gobernando media vida.
+Lo que esta creencia le hace hacer, lo que le hace no hacer, y lo que eso le quita. Sale en varias partes de su vida, no en una: señala en cuantas la encuentres, siempre que esten en el estudio o en las lineas que trae la propia creencia. Que vea que lo que creia un problema de una zona suya le esta gobernando media vida.
 
 No vacies aqui todo lo que traiga la creencia en sus lineas. Coges lo que mas le pese y lo cuentas; lo demas se queda fuera. Una lista larga de sitios, uno detras de otro, deja de leerse a la tercera.
 
@@ -239,7 +236,7 @@ Y tiene que poder creersela HOY: lo contrario de la suya no vale, porque le pide
 
 NO ARRANQUES ESTA FRASE CON "PUEDO", ni con "ya no necesito", ni con ninguna formula que acabe repitiendose en las demas. En cuanto todas empiezan igual se leen como un lema pegado al final, y entonces se saltan todas.
 
-Y despues, lo que se le abre. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que ella misma ha dicho que quiere, ahi puesto, al alcance, sin la creencia delante tapandolo.
+Y despues, lo que se le abre. Que deja de pasarle. Que puede hacer que hoy no hace. Como es ella cuando esto ya no le manda, y eso no es un futuro bonito inventado: es lo que la creencia trae escrito en su linea BLOQUEA, que es justo lo que ella ha dicho que quiere y no consigue, ahi puesto y al alcance, sin la creencia delante tapandolo.
 
 Que lo cierre sabiendo por donde tira, no solo entendiendo por que esta atascada.
 
@@ -274,7 +271,7 @@ NO SE LE INVENTA NADA DE SU VIDA
 
 Ni su infancia, ni sus padres, ni una pareja, ni hijos, ni un trabajo, ni de donde le viene el dinero, ni un episodio que le paso. Si no esta escrito en lo que te paso, no existe.
 
-Si escribes una escena con otra persona dentro, esa persona tiene que estar en lo que te paso; y no le pongas sexo, ni parentesco, ni nombre que no le hayan puesto.
+Si nombras a alguien de su alrededor, esa persona tiene que estar en lo que te paso; y no le pongas sexo, ni parentesco, ni nombre que no le hayan puesto.
 
 Y no lo arregles con un momento de los que le pasan a cualquiera: eso tambien es ponerle una vida que no sabes si tiene.
 
