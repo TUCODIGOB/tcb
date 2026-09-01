@@ -13,13 +13,15 @@
 // vez. Una respuesta escrita aqui dentro se le acabaria colando a otro
 // cliente, y entonces el informe deja de ser suyo.
 //
-// EN TRES PASOS. Antes iba de una tirada y salian repetidas: juntar las que
+// EN CUATRO PASOS. Antes iba de una tirada y salian repetidas: juntar las que
 // decian lo mismo se le pedia al final, cuando ya las tenia escritas, y
 // nadie tira siete paginas hechas. Ahora primero ELIGE -solo una lista, sin
 // escribir nada para ella-, luego JUNTA las que dicen lo mismo mirando solo
-// esa lista, y por ultimo ESCRIBE las que quedan.
+// esa lista, despues ESCRIBE las que quedan, y por ultimo se comprueba que no
+// haya dos trozos que empiecen igual.
 //
-// CADA ENVIO CUESTA TRES LLAMADAS AL MODELO.
+// TRES LLAMADAS AL MODELO POR ENVIO, Y UNA CUARTA CORTA SOLO SI DE VERDAD HAY
+// ARRANQUES REPETIDOS.
 // ════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
@@ -51,6 +53,66 @@ const PREGUNTAS = [
   '¿Como es tu vida hoy? ¿Como es una semana normal tuya?',
   '¿Que llevas años intentando cambiar y no cambia?',
 ];
+
+// ── REPARTIR EL TEXTO QUE DEVUELVE EL MODELO ────────────────
+//
+// Cada creencia arranca en su linea CREENCIA: y dentro lleva sus ladillos,
+// que son siempre los mismos. Aqui no se adivina nada.
+//
+// Los ladillos se reconocen por sus palabras con peso, no letra por letra: el
+// modelo escribe alguna vez "lo que LE esta costando" donde el encargo pone
+// "TE", y con la comparacion exacta ese renglon se quedaba en parrafo suelto,
+// asi que la creencia perdia su ladillo y el texto su descanso.
+
+const pelado = t => String(t).toLowerCase()
+  .normalize('NFD').replace(/[̀-ͯ]/g, '')
+  .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+
+const HUECAS = /\b(el|la|lo|los|las|un|una|unos|unas|y|o|que|de|del|a|al|en|se|te|le|me|tu|su|mi|es|esta|estas|esto)\b/g;
+const conPeso = t => pelado(t).replace(HUECAS, ' ').replace(/\s+/g, ' ').trim();
+
+// Solo se mira si el renglon tiene pinta de ladillo: corto y sin puntuacion al
+// final. Sin esto, una frase suelta que acabara con las mismas palabras con
+// peso se convertiria en ladillo y partiria la creencia en dos.
+const pintaDeLadillo = t => t.length < 70 && !/[.:;,!?]$/.test(t);
+
+const LADILLOS_CON_PESO = LADILLOS.map(conPeso);
+
+export function repartir(texto) {
+  const bloques = [];
+  const meter = (parte) => {
+    if (!bloques.length) bloques.push({ titulo: '', partes: [] });
+    bloques[bloques.length - 1].partes.push(parte);
+  };
+
+  for (const trozo of String(texto).split(/\n{2,}/)) {
+    // Dentro de un trozo, un ladillo puede venir pegado a su parrafo con un
+    // solo salto de linea. Se miran las lineas una a una, y las que no son ni
+    // cabecera ni ladillo se vuelven a juntar en el parrafo del que venian,
+    // para no partir en dos lo que era uno.
+    let suelto = [];
+    const soltar = () => {
+      const p = suelto.join(' ').trim();
+      suelto = [];
+      if (p) meter({ parrafo: p });
+    };
+    for (const linea of trozo.split('\n')) {
+      const t = linea.trim();
+      if (!t) continue;
+      const marca = t.match(/^CREENCIA\s*:\s*(.*)$/i);
+      if (marca) {
+        soltar();
+        bloques.push({ titulo: marca[1].trim(), partes: [] });
+        continue;
+      }
+      const cual = pintaDeLadillo(t) ? LADILLOS_CON_PESO.indexOf(conPeso(t)) : -1;
+      if (cual >= 0) { soltar(); meter({ ladillo: LADILLOS[cual] }); continue; }
+      suelto.push(t);
+    }
+    soltar();
+  }
+  return bloques;
+}
 
 // ── LOS TRES ENCARGOS ───────────────────────────────────────
 //
@@ -302,6 +364,107 @@ Empieza directamente con la linea CREENCIA: de la primera. Sin titulo general, s
 
 Y acaba con el ultimo parrafo de la ultima. Sin resumen, sin despedida, y sin buscar la creencia que hay debajo de todas.`;
 
+// ── PASO 4: los arranques que se repiten ────────────────────
+//
+// POR QUE NO BASTA CON PEDIRLO EN EL ENCARGO.
+//
+// Ya se le pide, y se lo salta. Escribiendo la sexta creencia no se acuerda de
+// como empezo la segunda, asi que cae en el mismo molde una y otra vez: los
+// bloques de "que parte es verdad" salieron los DOCE empezando igual.
+//
+// Comparar texto, en cambio, no falla nunca. Aqui se miran los primeros
+// parrafos de cada ladillo, y si dos entran igual se le devuelven SOLO esas
+// frases, sueltas y juntas. Ahi si las ve todas a la vez, que es justo lo que
+// no puede hacer mientras escribe.
+//
+// SOLO SE LLAMA SI HAY REPETICION. Si no la hay, este paso no cuesta nada.
+//
+// Y ESTO NO SABE NADA DE CREENCIAS: sirve igual para cualquier otro punto del
+// P2 que se escriba con ladillos.
+
+const ARRANQUES = `Te paso unas frases sueltas y numeradas. Cada una abre un trozo de un mismo estudio, y todas empiezan igual: leidas seguidas se ve el molde y quien lee se las salta.
+
+Reescribelas para que NINGUNA empiece como otra.
+
+LO QUE DICE CADA UNA NO SE TOCA. Los mismos datos, lo mismo contado, sin añadir nada y sin quitar nada. Lo unico que cambia es por donde entra.
+
+Y CAMBIA LA MANERA DE ENTRAR, no solo la primera palabra. Una puede entrar por lo que ella hace, otra por lo que se dice por dentro, otra por lo que evita, otra nombrando la cosa en seco, otra por lo que se le va en ello. Si todas entran igual aunque cambien las palabras, no has hecho nada.
+
+Ninguna empieza repitiendo las palabras del titulo que lleva encima, si lo lleva.
+
+Español de España, hablado, de tu a tu. Ni una palabra que no dirias en una conversacion.
+
+QUE ENTREGAS: las mismas frases, con su mismo numero, una por linea y nada mas. Ni titulos, ni explicacion, ni comentarios.`;
+
+// Las primeras palabras de una frase, sin tildes ni signos. Con tres basta: es
+// donde se ve el molde, y con mas se escapan los que solo cambian la cuarta.
+const PALABRAS_DE_ARRANQUE = 3;
+const arranqueDe = t => pelado(t).split(' ').slice(0, PALABRAS_DE_ARRANQUE).join(' ');
+
+// La primera frase de un parrafo. Si no hay punto, el parrafo entero.
+const primeraFrase = p => (String(p).match(/^[^.!?]*[.!?]/) || [String(p)])[0].trim();
+
+// Los primeros parrafos de cada ladillo, que son los que se comparan entre si.
+// Se compara solo dentro del MISMO ladillo: que el bloque de la creencia y el
+// de lo que le cuesta empiecen parecido no canta, porque van separados. Que
+// los seis "que parte es verdad" empiecen igual, si.
+function primerosParrafos(bloques) {
+  const lista = [];
+  for (const b of bloques) {
+    let bajo = null;
+    for (const parte of b.partes) {
+      if (parte.ladillo) { bajo = parte.ladillo; continue; }
+      if (bajo === null) continue;
+      lista.push({ bajo, parte });
+      bajo = null;
+    }
+  }
+  return lista;
+}
+
+export function arranquesQueChocan(bloques) {
+  const grupos = new Map();
+  for (const p of primerosParrafos(bloques)) {
+    const llave = `${p.bajo} ${arranqueDe(primeraFrase(p.parte.parrafo))}`;
+    if (!grupos.has(llave)) grupos.set(llave, []);
+    grupos.get(llave).push(p.parte);
+  }
+  // Van todos los del grupo, no todos menos uno: si se le deja uno puesto, los
+  // demas se le acaban pareciendo igualmente.
+  return [...grupos.values()].filter(g => g.length > 1).flat();
+}
+
+async function desmoldarArranques(bloques) {
+  const chocan = arranquesQueChocan(bloques);
+  if (!chocan.length) return { arreglados: 0, uso: {} };
+
+  const frases = chocan.map(parte => primeraFrase(parte.parrafo));
+  const { texto, uso } = await pedir({
+    sistema: ARRANQUES,
+    mensaje: frases.map((f, i) => `${i + 1}. ${f}`).join('\n'),
+    tope: 2000,
+  });
+
+  // Se lee lo que vuelve por su numero. Lo que no vuelva, o vuelva vacio, se
+  // queda como estaba: un arranque repetido se lee peor, pero perder la frase
+  // se lee muchisimo peor.
+  const nuevas = new Map();
+  for (const linea of String(texto).split('\n')) {
+    const m = linea.trim().match(/^(\d{1,2})\s*[.)-]\s*(.+)$/);
+    if (m) nuevas.set(Number(m[1]), m[2].trim());
+  }
+
+  let arreglados = 0;
+  chocan.forEach((parte, i) => {
+    const nueva = nuevas.get(i + 1);
+    if (!nueva || nueva === frases[i]) return;
+    parte.parrafo = nueva + parte.parrafo.slice(frases[i].length);
+    arreglados++;
+  });
+
+  return { arreglados, uso };
+}
+
 // ── R2: leer un informe guardado ─────────────────────────────
 function ajustes() {
   const cuenta = process.env.INFORME_P1_CLOUDFLARE_ACCOUNT_ID;
@@ -445,11 +608,18 @@ async function escribirCreencias(informe, respuestas) {
     tope: 10000,
   });
 
-  const suma = k => [uno.uso, dos.uso, tres.uso].reduce((t, u) => t + (u[k] || 0), 0);
+  // Paso 4. Los trozos que entran igual que otro, reescritos por su arranque.
+  // Solo llama al modelo si de verdad hay alguno; si no, no cuesta nada.
+  const bloques = repartir(tres.texto);
+  const cuatro = await desmoldarArranques(bloques);
+
+  const suma = k => [uno.uso, dos.uso, tres.uso, cuatro.uso]
+    .reduce((t, u) => t + (u[k] || 0), 0);
   return {
-    texto: tres.texto,
+    bloques,
     candidatas,
     lista,
+    desmoldados: cuatro.arreglados,
     uso: { dentro: suma('input_tokens'), fuera: suma('output_tokens') },
   };
 }
@@ -571,67 +741,9 @@ export default async function handler(req, res) {
     const informe = JSON.parse(await pedirR2(cfg, `/${clave}`));
 
     const t0 = Date.now();
-    const { texto, candidatas, lista, uso } = await escribirCreencias(informe, respuestas);
+    const { bloques, candidatas, lista, desmoldados, uso } =
+      await escribirCreencias(informe, respuestas);
     const seg = ((Date.now() - t0) / 1000).toFixed(0);
-
-    // COMO SE REPARTE EL TEXTO EN LA PAGINA.
-    //
-    // Ya no hay que adivinar nada: cada creencia arranca en su linea CREENCIA:
-    // y dentro lleva sus ladillos, que son siempre los mismos.
-    //
-    // Los ladillos se comparan sin tildes y sin mayusculas, pero se PINTAN
-    // desde LADILLOS, no desde lo que haya escrito el modelo. Asi el cliente
-    // los ve siempre bien escritos aunque el se coma un acento.
-    const pelado = t => t.toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
-
-    // Un ladillo se reconoce por sus palabras con peso, no letra por letra.
-    // El modelo escribe alguna vez "lo que LE esta costando" donde el encargo
-    // pone "TE", y con la comparacion exacta ese renglon se pintaba como un
-    // parrafo mas: la creencia se quedaba sin su ladillo y el texto sin su
-    // descanso. Quitando las palabras de relleno, esa variante ya cuadra.
-    const HUECAS = /\b(el|la|lo|los|las|un|una|unos|unas|y|o|que|de|del|a|al|en|se|te|le|me|tu|su|mi|es|esta|estas|esto)\b/g;
-    const conPeso = t => pelado(t).replace(HUECAS, ' ').replace(/\s+/g, ' ').trim();
-    const ladillos = LADILLOS.map(conPeso);
-
-    // Y solo se mira si el renglon tiene pinta de ladillo: corto y sin puntuacion
-    // al final. Sin esto, una frase suelta que acabara con las mismas palabras
-    // con peso se convertiria en un ladillo y partiria la creencia en dos.
-    const pintaDeLadillo = t => t.length < 70 && !/[.:;,!?]$/.test(t);
-
-    const bloques = [];
-    const meter = (parte) => {
-      if (!bloques.length) bloques.push({ titulo: '', partes: [] });
-      bloques[bloques.length - 1].partes.push(parte);
-    };
-
-    for (const trozo of texto.split(/\n{2,}/)) {
-      // Dentro de un trozo, un ladillo puede venir pegado a su parrafo con un
-      // solo salto de linea. Se miran las lineas una a una, y las que no son
-      // ni cabecera ni ladillo se vuelven a juntar en el parrafo del que
-      // venian, para no partir en dos lo que era uno.
-      let suelto = [];
-      const soltar = () => {
-        const p = suelto.join(' ').trim();
-        suelto = [];
-        if (p) meter({ parrafo: p });
-      };
-      for (const linea of trozo.split('\n')) {
-        const t = linea.trim();
-        if (!t) continue;
-        const marca = t.match(/^CREENCIA\s*:\s*(.*)$/i);
-        if (marca) {
-          soltar();
-          bloques.push({ titulo: marca[1].trim(), partes: [] });
-          continue;
-        }
-        const cual = pintaDeLadillo(t) ? ladillos.indexOf(conPeso(t)) : -1;
-        if (cual >= 0) { soltar(); meter({ ladillo: LADILLOS[cual] }); continue; }
-        suelto.push(t);
-      }
-      soltar();
-    }
 
     const creencias = bloques.map(b => `<section class="creencia">
       ${b.titulo ? `<h1>${escapar(b.titulo)}</h1>` : ''}
@@ -642,7 +754,8 @@ export default async function handler(req, res) {
 
     return res.status(200).send(pagina(
       `<div class="aviso">PRUEBA — informe ${escapar(clave)} · ${seg}s ·
-        ${uso.dentro} dentro / ${uso.fuera} fuera</div>
+        ${uso.dentro} dentro / ${uso.fuera} fuera ·
+        ${desmoldados ? `${desmoldados} arranques repetidos, reescritos` : 'ningun arranque repetido'}</div>
        <details><summary>Chuleta: lo que saco y lo que dejo al juntar</summary>
          <pre>SACO:\n\n${escapar(candidatas)}\n\n\nDEJO:\n\n${escapar(lista)}</pre>
        </details>
