@@ -1612,9 +1612,15 @@ async function sinLoQueYaSeHaDicho(fortalezas, desafios, reloj) {
     return [fortalezas, desafios];
   }
 
-  // Si dice que sobra un tercio o mas, ha entendido mal: vaciar la lista es
+  // Si dice que sobra mas de la mitad, ha entendido mal: vaciar la lista es
   // peor que dejar un repetido, asi que no se quita ninguno.
-  const TOPE = Math.max(1, Math.floor(rasgos.length / 3));
+  //
+  // La mitad y no menos: en el informe 150, trece de cuarenta y cinco rasgos
+  // repetian a otro, casi un tercio. Un tope mas apretado habria dado justo en
+  // esa cifra y no habria quitado NADA, que es el fallo que se viene a
+  // arreglar. Lo que impide que esto vacie un area no es este tope, es el
+  // minimo que se cuenta abajo.
+  const TOPE = Math.floor(rasgos.length / 2);
   if (marcados.length > TOPE) {
     console.warn(`Repetidos: decia que sobraban ${marcados.length} de ${rasgos.length}, demasiados, no se quita ninguno`);
     return [fortalezas, desafios];
