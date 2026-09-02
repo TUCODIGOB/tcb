@@ -300,7 +300,131 @@ async function leer(compra) {
 }
 
 // ════════════════════════════════════════════════════════════════
-// TERCERA PARTE: ESCRIBIR UNA DE LAS SIETE
+// TERCERA PARTE: REPARTIR LAS COSAS QUE HAY QUE HACER
+// ════════════════════════════════════════════════════════════════
+
+// POR QUE HACE FALTA ESTE PASO.
+//
+// Cada una de las siete llamadas solo ve su parte, y esa es su virtud: sin las
+// otras seis delante no puede contar en el dinero lo que ya conto en el amor.
+//
+// Pero tiene un precio. Como ninguna sabe lo que han pedido las demas, varias
+// llegan por su cuenta a la misma conclusion. En una prueba real, "dilo en el
+// momento" salio en cuatro partes distintas con cuatro nombres distintos, y
+// "quedate quieta sin tarea" en tres. Quien lo lee ve veinte cosas que hacer y
+// en realidad son diez.
+//
+// Asi que antes de escribir nada se lee el informe ENTERO de una vez -que es
+// justo lo que las siete no pueden hacer- y se decide la lista: que hay que
+// hacer y en que parte va cada cosa.
+//
+// LA GARANTIA LA DA EL CODIGO, NO EL MODELO. Cada cosa de la lista se asigna a
+// una parte y solo a una. Y a cada parte se le enseña ademas lo que se llevaron
+// las otras, con el encargo de no escribirlo. Aunque el modelo repitiera algo
+// al hacer la lista, no puede acabar cuatro veces en el documento.
+//
+// AQUI NO SE ESCRIBE NADA DEL INFORME. Solo se decide. Cada cosa sale de aqui
+// en una linea, y quien la desarrolla es la parte a la que le toca.
+
+// La lista tarda menos que una parte: es corta, aunque lea mucho.
+const ESPERA_DEL_REPARTO_MS = 90000;
+const TECHO_DEL_REPARTO = 4000;
+
+// Cuantas cosas que hacer caben en cada parte. Sale de sus cajas, y solo
+// cuentan las que piden hacer algo: la caja de comprender no lleva acciones.
+const cuantasCaben = area => area.cajas
+  .filter(c => c.tipo === 'acciones')
+  .reduce((suma, c) => suma + c.max, 0);
+
+const MOLDE_DEL_REPARTO = {
+  type: 'object',
+  properties: {
+    partes: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          acciones: { type: 'array', items: { type: 'string' } },
+        },
+        required: ['id', 'acciones'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['partes'],
+  additionalProperties: false,
+};
+
+const ENCARGO_DEL_REPARTO = `Tienes delante el estudio entero de una persona. Se lo leyo hace poco y le contaba como es y de donde le viene.
+
+Ahora se le esta preparando lo siguiente: qué tiene que hacer para llegar a ser quien quiere ser y tener la vida que quiere.
+
+AQUÍ NO SE ESCRIBE ESE DOCUMENTO. Aquí solo se decide QUÉ va dentro y EN QUÉ PARTE va cada cosa. Lo escribe otro después, así que no desarrolles nada: cada cosa sale de aquí en una línea.
+
+EL DOCUMENTO TIENE SIETE PARTES, y a cada una le toca lo suyo:
+
+${AREAS.map(a => `- ${a.id}: ${a.titulo}. Caben ${cuantasCaben(a)} como mucho.`).join('\n')}
+
+QUÉ ES UNA COSA DE ESTAS
+
+Algo que hace, no algo que piensa ni que entiende. Tiene que poder empezar a hacerlo esta semana sin preguntarle nada a nadie.
+
+Y tiene que salir de su estudio: de un patrón suyo, de algo que repite, de algo que se dice por dentro. Si lo que escribes le vale igual a cualquier otra persona, no vale y lo cambias.
+
+LO QUE NO PUEDE PASAR, Y ES A LO QUE HAS VENIDO
+
+Que dos digan lo mismo con otras palabras.
+
+Antes de darlas por buenas, las lees TODAS juntas y las comparas de dos en dos. Si dos vienen a pedir lo mismo, aunque se apliquen en sitios distintos de su vida, dejas UNA -la más concreta- y la otra la cambias por otra cosa distinta de verdad.
+
+Dos cosas son la misma si al hacer una ya has hecho la otra. Eso es lo que hay que mirar, no si están escritas parecido.
+
+DÓNDE VA CADA UNA
+
+En la parte donde más peso tiene en su vida. Si encaja en dos, va en la que más le duele, y en la otra pones algo distinto.
+
+Ninguna parte se queda vacía, y ninguna pasa de lo que cabe.
+
+CÓMO SE ESCRIBE CADA LÍNEA
+
+Corta y clara: qué hace. Sin explicar por qué, sin adornos y sin justificarla, que eso viene después.
+
+Devuelve las siete partes con su id tal y como están escritos arriba.`;
+
+// Lee el informe entero y decide que va en cada parte.
+async function repartir({ nombre, areas, rasgos }) {
+  const cuerpo = AREAS.map((a, i) => `━━━ ${a.del_p1} ━━━\n\n${areas[i] || '(no guardada)'}`).join('\n\n');
+  const listaDeRasgos = r => (r || []).map(x => `- ${x.nombre}: ${x.descripcion}`).join('\n');
+  const conRasgos = (rasgos?.fortalezas?.length || rasgos?.desafios?.length)
+    ? `\n\nSUS FORTALEZAS\n${listaDeRasgos(rasgos.fortalezas)}\n\nSUS DESAFÍOS\n${listaDeRasgos(rasgos.desafios)}`
+    : '';
+
+  const dicho = await pedirAlModelo({
+    que: 'el reparto',
+    system: ENCARGO_DEL_REPARTO,
+    user: `Se llama ${nombre}.\n\nSU ESTUDIO ENTERO:\n\n${cuerpo}${conRasgos}`,
+    molde: MOLDE_DEL_REPARTO,
+    techo: TECHO_DEL_REPARTO,
+    espera: ESPERA_DEL_REPARTO_MS,
+  });
+
+  // Se coloca contra las siete de AREAS: lo que venga con un id que no existe
+  // se cae, y lo que pase del tope de su parte se corta. El reparto manda sobre
+  // lo que devuelva el modelo, no al reves.
+  const reparto = {};
+  for (const area of AREAS) {
+    const suyas = (dicho.partes || []).find(p => String(p.id || '').trim().toLowerCase() === area.id);
+    reparto[area.id] = (suyas?.acciones || [])
+      .map(a => String(a || '').trim())
+      .filter(Boolean)
+      .slice(0, cuantasCaben(area));
+  }
+  return reparto;
+}
+
+// ════════════════════════════════════════════════════════════════
+// CUARTA PARTE: ESCRIBIR UNA DE LAS SIETE
 // ════════════════════════════════════════════════════════════════
 
 // Techo por parte. Es un techo, no un objetivo: solo se paga lo que escribe.
@@ -452,6 +576,39 @@ ESTO ES LO QUE ELLA YA LEYÓ EN SU ESTUDIO SOBRE ESTA PARTE DE SU VIDA:
 ${textoDelArea}${conRasgos}`;
 }
 
+// LO QUE VA EN ESTA PARTE Y LO QUE NO.
+//
+// Las cosas que hacer no las elige quien escribe la parte: vienen ya repartidas
+// del paso anterior, y aqui solo se desarrollan. Y se le enseñan tambien las de
+// las otras seis, para que no las escriba con otras palabras.
+//
+// Si el reparto no llego a darle ninguna -porque fallo o porque se quedo
+// corto-, esta parte las elige por su cuenta como antes. Vale mas una parte
+// escrita a su aire que una parte vacia.
+function loQueVaAqui(asignadas, tomadas) {
+  const mias = (asignadas || []).filter(Boolean);
+  const otras = (tomadas || []).filter(Boolean);
+  let texto = '';
+
+  if (mias.length) {
+    texto += `\n\nLAS COSAS QUE VAN EN ESTA PARTE YA ESTÁN ELEGIDAS, Y SON ESTAS:
+
+${mias.map(a => `- ${a}`).join('\n')}
+
+Desarrollas ESAS, cada una en su entrada y en el orden en que están. No añades otras, no las cambias por otras y no juntas dos en una. Están dichas en una línea a propósito: lo que falta -el momento suyo, lo que se le va a poner en contra, la señal- lo escribes tú.`;
+  }
+
+  if (otras.length) {
+    texto += `\n\nY ESTAS OTRAS YA ESTÁN EN OTRAS PARTES DEL DOCUMENTO:
+
+${otras.map(a => `- ${a}`).join('\n')}
+
+Ninguna de esas se escribe aquí, ni con otras palabras. Si lo que ibas a pedir es en el fondo una de ellas -si haciendo una ya has hecho la otra-, no lo escribas.`;
+  }
+
+  return texto;
+}
+
 // Lo ya escrito en las partes anteriores, para que esta no salga con la misma
 // forma. No se le enseña el contenido -no lo necesita y le daria pie a
 // repetirlo-: solo como empezaban y como cerraban.
@@ -467,10 +624,17 @@ ${frases}
 Tu apertura y tu cierre tienen que arrancar con otra construcción distinta a todas esas. No es que no puedan decir lo mismo: es que no pueden SONAR igual. Si al escribirla ves que se parece a una de arriba, bórrala y empiézala de otra forma.`;
 }
 
-async function escribirParte({ area, nombre, textoDelArea, rasgos, hechas }) {
+// La unica puerta al modelo. Todas las llamadas del P2 pasan por aqui, con el
+// mismo molde y el mismo trato de los fallos: asi no hay dos sitios donde
+// cambiar el dia que cambie algo.
+//
+// SIN RAZONAMIENTO, igual que el P1. El encargo dice exactamente que tiene que
+// salir, y encendido se gastaba el presupuesto pensando y devolvia el texto
+// vacio.
+async function pedirAlModelo({ que, system, user, molde, techo, espera }) {
   const resp = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    signal: AbortSignal.timeout(ESPERA_MAXIMA_MS),
+    signal: AbortSignal.timeout(espera),
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': process.env.ANTHROPIC_API_KEY,
@@ -479,28 +643,35 @@ async function escribirParte({ area, nombre, textoDelArea, rasgos, hechas }) {
     body: JSON.stringify({
       model: 'claude-sonnet-5',
       thinking: { type: 'disabled' },
-      max_tokens: TECHO_DE_TEXTO,
-      system: `${REGLAS_COMUNES}\n\n\n${encargo(area)}`,
-      output_config: { format: { type: 'json_schema', schema: esquema(area) } },
-      messages: [{
-        role: 'user',
-        content: `${material(area, nombre, textoDelArea, rasgos)}${noRepitasLaForma(hechas)}`,
-      }],
+      max_tokens: techo,
+      system,
+      output_config: { format: { type: 'json_schema', schema: molde } },
+      messages: [{ role: 'user', content: user }],
     }),
   });
 
   if (!resp.ok) {
-    throw new Error(`${area.id}: ${resp.status} — ${(await resp.text()).slice(0, 300)}`);
+    throw new Error(`${que}: ${resp.status} — ${(await resp.text()).slice(0, 300)}`);
   }
 
   const data = await resp.json();
   const texto = (data?.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
-  let escrito;
   try {
-    escrito = JSON.parse(texto);
+    return JSON.parse(texto);
   } catch {
-    throw new Error(`${area.id}: la respuesta no vino en su molde`);
+    throw new Error(`${que}: la respuesta no vino en su molde`);
   }
+}
+
+async function escribirParte({ area, nombre, textoDelArea, rasgos, hechas, asignadas, tomadas }) {
+  const escrito = await pedirAlModelo({
+    que: area.id,
+    system: `${REGLAS_COMUNES}\n\n\n${encargo(area)}`,
+    user: `${material(area, nombre, textoDelArea, rasgos)}${loQueVaAqui(asignadas, tomadas)}${noRepitasLaForma(hechas)}`,
+    molde: esquema(area),
+    techo: TECHO_DE_TEXTO,
+    espera: ESPERA_MAXIMA_MS,
+  });
 
   // Las cajas vuelven a colocarse contra las que pide reglas.js: si el modelo
   // devuelve una de mas, se cae; si devuelve una de menos, queda vacia y se
@@ -529,7 +700,7 @@ async function escribirParte({ area, nombre, textoDelArea, rasgos, hechas }) {
 }
 
 // ════════════════════════════════════════════════════════════════
-// CUARTA PARTE: LA PAGINA
+// QUINTA PARTE: LA PAGINA
 // ════════════════════════════════════════════════════════════════
 
 export default async function handler(req, res) {
@@ -561,8 +732,19 @@ export default async function handler(req, res) {
       return res.status(200).json({ informes: conNombre });
     }
 
+    if (accion === 'reparto') {
+      const { compra } = req.body || {};
+      const informe = await leer(compra);
+      const reparto = await repartir({
+        nombre: informe?.cliente?.nombre || 'esta persona',
+        areas: informe?.areas || [],
+        rasgos: informe?.rasgos,
+      });
+      return res.status(200).json({ reparto });
+    }
+
     if (accion === 'parte') {
-      const { compra, indice, hechas } = req.body || {};
+      const { compra, indice, hechas, asignadas, tomadas } = req.body || {};
       const area = AREAS[Number(indice)];
       if (!area) return res.status(400).json({ error: 'Esa parte no existe' });
 
@@ -574,10 +756,12 @@ export default async function handler(req, res) {
 
       const parte = await escribirParte({
         area,
-        nombre: informe?.cliente?.nombre || 'ella',
+        nombre: informe?.cliente?.nombre || 'esta persona',
         textoDelArea,
         rasgos: informe?.rasgos,
         hechas: Array.isArray(hechas) ? hechas : [],
+        asignadas: Array.isArray(asignadas) ? asignadas : [],
+        tomadas: Array.isArray(tomadas) ? tomadas : [],
       });
       return res.status(200).json({ parte });
     }
@@ -645,6 +829,7 @@ const PAGINA = `<!DOCTYPE html>
   <div id="salida"></div>
 </div>
 <script>
+const AREAS = ${JSON.stringify(AREAS.map(a => a.id))};
 const quien = document.getElementById('quien');
 const ir = document.getElementById('ir');
 const aviso = document.getElementById('aviso');
@@ -688,10 +873,25 @@ ir.addEventListener('click', async () => {
   const compra = quien.value;
   const hechas = [];
 
+  // Primero el reparto: decide que va en cada parte y que no se repite.
+  // Si falla, se sigue igual y cada parte elige por su cuenta, como antes.
+  let reparto = {};
+  aviso.textContent = 'Repartiendo lo que va en cada parte…';
+  try {
+    const r = await llamar({ accion:'reparto', compra });
+    reparto = r.reparto || {};
+  } catch (e) {
+    salida.insertAdjacentHTML('beforeend',
+      '<p class="aviso error">El reparto ha fallado: ' + escapar(e.message) +
+      '. Sigo sin él, así que puede que alguna cosa se repita entre partes.</p>');
+  }
+
   for (let i = 0; i < 7; i++) {
     aviso.textContent = 'Escribiendo la parte ' + (i+1) + ' de 7…';
+    const mias = reparto[AREAS[i]] || [];
+    const otras = AREAS.filter((_, j) => j !== i).flatMap(a => reparto[a] || []);
     try {
-      const { parte } = await llamar({ accion:'parte', compra, indice:i, hechas });
+      const { parte } = await llamar({ accion:'parte', compra, indice:i, hechas, asignadas:mias, tomadas:otras });
       hechas.push({ apertura: parte.apertura, cierre: parte.cierre });
       salida.insertAdjacentHTML('beforeend', pintar(parte));
     } catch (e) {
