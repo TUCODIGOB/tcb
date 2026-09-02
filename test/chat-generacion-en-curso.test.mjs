@@ -211,11 +211,11 @@ try {
   // 3. La generacion legitima termina sin enterarse de nada.
   const legitima = await enCurso;
   comprobar('la generacion legitima termina bien', legitima.code === 200, 'HTTP ' + legitima.code);
-  // 11 = las dos listas de rasgos, que van en paralelo y antes que nada, mas la
-  // que le pone el area a cada uno, mas la que limpia los repetidos al final,
-  // mas las 7 areas del informe. Lo que se vigila aqui no es el numero, sino
-  // que la segunda peticion no haya lanzado NINGUNA generacion mas.
-  comprobar('en total solo se generó una vez', llamadasAlModelo === 11, llamadasAlModelo + ' llamadas');
+  // 10 = las dos listas de rasgos, que van en paralelo y antes que nada, mas la
+  // que le pone el area a cada uno, mas las 7 areas del informe. Lo que se
+  // vigila aqui no es el numero, sino que la segunda peticion no haya lanzado
+  // NINGUNA generacion mas.
+  comprobar('en total solo se generó una vez', llamadasAlModelo === 10, llamadasAlModelo + ' llamadas');
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);
