@@ -75,7 +75,7 @@ function encargo(area) {
   const cajas = area.cajas.map((c, i) => {
     const cuantas = c.min === c.max ? `${c.min}` : `entre ${c.min} y ${c.max}`;
     if (c.tipo === 'comprender') {
-      return `CAJA ${i + 1} — "${c.titulo}": ${cuantas} entradas. Aquí no le pides que haga nada: le explicas lo que tiene que entender antes de poder mover nada. Cada entrada lleva un título corto y una explicación de dos o tres frases. La señal va vacía.`;
+      return `CAJA ${i + 1} — "${c.titulo}": ${cuantas} entradas. Es la única caja que no pide hacer nada: le das lo que necesita entender para poder mover esto. Dicho hacia delante -lo que cambia cuando lo entiende-, no como un repaso de lo que le pasó. Cada entrada lleva un título corto y dos o tres frases. La señal va vacía.`;
     }
     return `CAJA ${i + 1} — "${c.titulo}": ${cuantas} entradas. Cada una es algo que hace, no algo que piense. Título corto, y después una o dos frases que digan exactamente qué hacer, de forma que pueda hacerlo en los próximos siete días sin preguntar nada a nadie. En la señal, una frase: en qué va a notar que está funcionando. Algo que pueda ver, no cómo se va a sentir.`;
   }).join('\n\n');
@@ -89,13 +89,17 @@ Es una de las siete, y solo tienes delante lo suyo. No hables de las otras ni la
 
 El título de esta parte ya está puesto y no lo escribes tú: "${area.titulo}". Todo lo que escribas tiene que ir con él.
 
-APERTURA: de dos a cuatro frases. Busca en su texto la creencia o el patrón que manda en esta parte de su vida, y cuéntaselo dado la vuelta: cómo funciona ella cuando no está atrapada ahí. Tienes que poder señalar de qué frase suya sale. Si no puedes señalarla, coge otra frase suya.
+APERTURA: de dos a cuatro frases, y va hacia delante.
+
+La PRIMERA engancha: una sola frase que le diga por qué esto va con ella en concreto, sacada de algo que su texto ya dice. Tienes que poder señalar de qué frase suya sale; si no puedes, coge otra. Una frase, no dos: aquí no se repasa lo que le pasa, que eso ya se lo contaron.
+
+Las que siguen son lo nuevo: cómo se mueve ella en esta parte de su vida cuando hace las cosas de otra manera. Qué hace distinto y qué le cambia. En presente, como algo que ya puede hacer, no como una promesa de lo que será algún día.
 
 ${cajas}
 
 CIERRE: una sola frase, una sola idea, veinte palabras como mucho. No unas dos ideas con "y" ni con un guion. Si te salen dos, quédate con la que más pese y tira la otra.
 
-Su nombre, una vez como mucho en toda la parte, y nunca en el cierre.`;
+Su nombre, un par de veces en la parte, separadas y donde caiga natural. Nunca en el cierre.`;
 }
 
 // Lo que se le enseña: su texto de esta area y sus rasgos de esta area.

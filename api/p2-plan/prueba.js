@@ -8,15 +8,14 @@
 // guardados y enseña en pantalla lo que saldria. Se borra el dia que el P2 este
 // cerrado y no deja rastro.
 //
-// COMO SE USA: se abre en el navegador con la clave detras,
-//   /api/p2-plan/prueba?clave=LA_QUE_SEA
-// sale la lista de los ultimos informes guardados, se pincha uno y las siete
-// partes van apareciendo segun se escriben.
+// COMO SE USA: se abre /api/p2-plan/prueba en el navegador, sale la lista de
+// los ultimos informes guardados, se pincha uno y las siete partes van
+// apareciendo segun se escriben.
 //
-// POR QUE LLEVA CLAVE. Detras de esto hay informes enteros de clientas reales,
-// con su nombre. Una direccion que se pueda adivinar es una direccion que
-// alguien acaba abriendo. Sin la variable P2_CLAVE puesta, esto no abre: mas
-// vale que no funcione a que se quede abierto de par en par.
+// NO LLEVA CLAVE, a proposito: el producto no esta lanzado y aqui solo entra
+// quien lo esta montando. Pero por aqui pasan informes de clientas reales con
+// su nombre, asi que EL DIA QUE ESTO SE LANCE, esta pagina se borra o se le
+// pone una puerta. No se queda abierta.
 //
 // POR QUE LAS SIETE PARTES SE PIDEN DE UNA EN UNA DESDE EL NAVEGADOR. Cada
 // peticion escribe una parte y se acaba: asi ninguna se acerca al tiempo maximo
@@ -28,23 +27,7 @@ import { AREAS } from './reglas.js';
 import { listar, leer } from './informe.js';
 import { escribirParte } from './escribir.js';
 
-function laClaveEsBuena(req) {
-  const buena = process.env.P2_CLAVE;
-  if (!buena) return false;
-  const dada = (req.query?.clave || req.body?.clave || '').toString();
-  return dada.length > 0 && dada === buena;
-}
-
 export default async function handler(req, res) {
-  if (!laClaveEsBuena(req)) {
-    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    return res.status(403).send(
-      process.env.P2_CLAVE
-        ? 'Clave incorrecta.'
-        : 'Sin la variable P2_CLAVE puesta en el servidor, esta pagina no abre.'
-    );
-  }
-
   if (req.method === 'GET') {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     // Que no se quede guardada en ningun sitio: aqui salen datos de clientas.
@@ -147,7 +130,6 @@ const PAGINA = `<!DOCTYPE html>
   <div id="salida"></div>
 </div>
 <script>
-const clave = new URLSearchParams(location.search).get('clave') || '';
 const quien = document.getElementById('quien');
 const ir = document.getElementById('ir');
 const aviso = document.getElementById('aviso');
@@ -158,7 +140,7 @@ const escapar = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&
 async function llamar(cuerpo) {
   const r = await fetch(location.pathname, {
     method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ clave, ...cuerpo }),
+    body: JSON.stringify(cuerpo),
   });
   const d = await r.json().catch(() => ({ error:'Respuesta ilegible' }));
   if (!r.ok) throw new Error(d.error || ('Error ' + r.status));

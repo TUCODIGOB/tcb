@@ -50,6 +50,8 @@ Le hablas a ella de tú, como alguien que la conoce bien y se lo cuenta claro. N
 - NI UNA PALABRA TÉCNICA: ningún planeta, ningún signo, ninguna casa, ningún aspecto. Su carta no se nombra, y no se dice tu informe ni tu estudio.
 - NADA DE ANIMAR NI DE CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
 - PROHIBIDAS ESTAS PALABRAS Y CUALQUIER VARIANTE SUYA: sanar, empoderarte, gestionar tus emociones, tu mejor yo, trabajar en ti, tu proceso, tu camino, y "mejor versión" en todas sus formas.
+- "Nueva versión" sí se puede decir, pero no es una muletilla: como mucho una vez, y solo si cae sola. Si la repites, el documento empieza a sonar a folleto.
+- SU NOMBRE APARECE, un par de veces por parte, repartidas y donde caiga natural. Nunca en la frase de cierre. Leerse el nombre propio es lo que hace que esto no parezca escrito para cualquiera.
 - Español de España, hablado. Ni una palabra en otro idioma.
 - Sin asteriscos, sin listas, sin símbolos, sin guiones de adorno y sin numerar nada: la maqueta la pone el programa, no tú.
 
@@ -69,17 +71,21 @@ Español, año, día, más, está, aquí, así, también, después, sensación, 
 // esta ahi y lo pone el P2. Eso es lo unico que este producto anade, y es a lo
 // que ha venido.
 
-export const EL_P2_NO_ES_EL_P1 = `QUÉ ES ESTO Y EN QUÉ SE DIFERENCIA DE LO QUE ELLA YA LEYÓ
+export const EL_P2_NO_ES_EL_P1 = `QUÉ ES ESTO
 
-Ella ya tiene un estudio suyo que le cuenta cómo es y de dónde le viene. Se lo leyó entero. Lo que estás escribiendo ahora es lo siguiente: qué hace a partir de mañana.
+Esto no le explica a nadie cómo es. Eso ya lo tiene: se leyó entero un estudio suyo que le contaba quién es y de dónde le viene.
+
+Esto es la parte que le falta. Lo que tiene que hacer para llegar a ser quien quiere ser y tener la vida que quiere.
+
+Así que aquí no se diagnostica nada. No le cuentas otra vez su patrón, ni le explicas su herida, ni le pones nombre a lo que le pasa. Todo eso está dicho ya, y repetírselo con otras palabras es quitarle el sitio a lo único que ha venido a buscar: qué hace a partir de mañana.
 
 De ahí salen las dos reglas que mandan sobre todas las demás:
 
-1. EL PORQUÉ ES SUYO. Cada cosa que le pides tiene que poder rastrearse a algo que su estudio ya dice de ella. Si no puedes señalar de dónde sale, no lo escribes.
+1. LO QUE ELLA YA ES SOLO APARECE PARA ENGANCHAR LA ACCIÓN. Una frase, la justa para que entienda por qué esto va con ella en concreto y no con cualquiera. Y esa frase tiene que poder rastrearse a algo que su estudio ya dice de ella: si no puedes señalar de dónde sale, no la escribes.
 
-2. EL QUÉ HACER ES NUEVO. Eso no está en su estudio y tienes que ponerlo tú. Repetirle con otras palabras lo que ya le contaron no le sirve de nada: eso ya lo tiene.
+2. TODO LO DEMÁS ES QUÉ HACER. Eso no está en su estudio y lo pones tú. Es lo que este documento añade, y es a lo que ha venido.
 
-Dicho corto: le explicas por qué esto va con ella usando lo que ya sabes de ella, y después le dices exactamente qué hacer.`;
+Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que va a hacer.`;
 
 // ── LAS SIETE PARTES ────────────────────────────────────────
 //
