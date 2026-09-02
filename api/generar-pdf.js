@@ -990,6 +990,10 @@ export default async function handler(req, res) {
         producto: 'p1',
         sessionId: session_id,
         cliente: { nombre, sexo, email: sessionEmail, fecha: fechaNice, hora, lugar, edad },
+        // La carta tal y como se calculo hoy, con las coordenadas del lugar
+        // incluidas: es lo unico que no se puede volver a sacar igual mas
+        // adelante. Ver el porque en lib/guardar-informe.js.
+        carta: carta || null,
         areas,
         rasgos: rasgos || null,
       });
