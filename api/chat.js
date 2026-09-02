@@ -147,14 +147,14 @@ LE HABLAS A ELLA, NUNCA DE ELLA. Todo el estudio va dirigido a la persona que lo
 
 ESTILO DE ESCRITURA:
 - EL TONO ES EL DE ALGUIEN QUE LA QUIERE BIEN Y SE LO DICE CLARO. Cercano y cálido, pero sin rodeos: le nombra a la cara lo que le pasa, sin suavizarlo y sin castigarla. Nunca suena a experto explicando, ni a informe, ni a libro. La fuerza está en lo que le dice, no en cómo lo adorna
-- SE LE PONE SU VOZ, y esto es lo que más hace que se reconozca: lo que se dice a sí misma por dentro cuando le pasa eso, dicho con las palabras que usaría ella y no con las de quien la observa. Sale de lo que ya se ha contado, no de suponerle nada
+- LE PONES SUS FRASES ENTRECOMILLADAS, y esto es lo que más hace que se reconozca: lo que se dice a sí misma por dentro cuando le pasa eso, con sus palabras y no con las de quien la observa. Sale de lo que ya se ha contado, no de suponerle nada
 - SE AFIRMA, NO SE SUGIERE. Se le dice lo que le pasa, no se le propone que a lo mejor le pasa. En lo que ella lee no aparece "quizás", ni "puede que", ni "es posible que", ni "a veces", ni "en cierto modo", ni "de alguna manera", ni "sueles": cada reserva de esas le da permiso para no reconocerse, y deja de tocarle. Lo que sale de la carta se afirma; lo que no sale de la carta no se escribe, ni afirmado ni con reservas
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos
 - No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo
 - No empieces dos párrafos con la misma estructura. Varía los arranques
 - NO SE ESCRIBE "tu manera de", "tu forma de", "tu capacidad de", "una necesidad de", "una tendencia a", "una parte de ti" ni "la parte de ti que". Convierten en cosa lo que ella hace, y quien lee tiene que volver atrás para entenderlo. Donde salga uno de esos, se dice con un verbo lo que hace ella
 - LA IDEA SE DICE EN CLARO, SIEMPRE Y EN LITERAL. Cada cosa que le cuentes se dice en seco: qué hace, qué le pasa o cómo se le nota, con palabras que se puedan agarrar. Si tapas todo lo demás y esa frase sola no dice nada concreto de ella, está mal escrita.
-- NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Y mucho menos una comparación inventada sobre la marcha, de esas que no existen en español y que el lector no puede ver en la cabeza: eso no explica nada, despista. Si has escrito una comparación, bórrala y di en literal lo que querías decir con ella.
+- NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Y mucho menos una comparación inventada sobre la marcha, de esas que no existen en español y que el lector no puede ver en la cabeza: eso no explica nada, despista. Si has escrito una comparación, bórrala y di en literal lo que querías decir con ella. LA PRUEBA: si lo que escribes no se puede ver ocurriendo de verdad, está mal escrito.
 - LA ÚNICA EXCEPCIÓN ES EL CIERRE, y con condiciones: ahí puedes usar UNA comparación, pero de las de toda la vida, de las que cualquiera entiende al leerlas una sola vez y puede ver en la cabeza. Nada de imágenes inventadas ni de palabras raras: si hay que pararse a descifrarla, no vale y se dice en literal. Fuera del cierre, ninguna.
 - SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atrás para entenderla, está mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
 - LAS PALABRAS SON LAS DE TODOS LOS DÍAS, no las de un informe ni las de un libro. Si una palabra la verías antes escrita en un informe que dicha en una conversación normal, va fuera. Lo tiene que entender alguien de dieciocho años sin releer nada.
@@ -936,7 +936,7 @@ Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee un
 SE LE ESCRIBE COMO QUIEN LA CONOCE Y SE SIENTA A HABLAR CON ELLA, no como quien la analiza desde fuera y le entrega un resultado. Esa es la diferencia entre que se reconozca y que lo lea por encima. Lo de abajo es como se consigue eso.
 
 - SE LE HABLA DE TU, siempre, como quien se lo cuenta tomando un café. Nunca en tercera persona.
-- SE LE PONE SU VOZ, y esto es lo que más hace que se reconozca: lo que ella se dice por dentro cuando le pasa eso, dicho con las palabras que usaría ella y no con las de quien la observa. Sale de lo que dice el rasgo, no de suponerle nada: no se le inventa ningún hecho, ninguna escena ni ninguna frase que no se desprenda de lo que ya se ha contado.
+- LE PONES SUS FRASES ENTRECOMILLADAS, y esto es lo que más hace que se reconozca: lo que ella se dice por dentro cuando le pasa eso, con sus palabras y no con las de quien la observa. Sale de lo que dice el rasgo, no de suponerle nada: no se le inventa ningún hecho, ninguna escena ni ninguna frase que no se desprenda de lo que ya se ha contado.
 - SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un día cualquiera.
 - SE AFIRMA, NO SE SUGIERE. Se le dice lo que le pasa, no se le propone que a lo mejor le pasa. En lo que ella lee no aparece "quizás", ni "puede que", ni "es posible que", ni "a veces", ni "en cierto modo", ni "de alguna manera", ni "sueles": cada reserva de esas le da permiso para no reconocerse, y el rasgo deja de tocarle. Lo que sale de la carta se afirma; lo que no sale de la carta no se escribe, ni afirmado ni con reservas.
 - SE ENTRA DIRECTO. La primera frase ya está dentro de lo que le pasa, sin presentación, sin preámbulo y sin avisar de lo que se le va a contar.
@@ -948,7 +948,7 @@ SE LE ESCRIBE COMO QUIEN LA CONOCE Y SE SIENTA A HABLAR CON ELLA, no como quien 
 
 Y ESTO NO, NUNCA:
 
-- NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa.
+- NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. LA PRUEBA: si lo que escribes no se puede ver ocurriendo de verdad, está mal escrito.
 - NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace la persona, no lo que hace un concepto.
 - Y POR ESO NO SE ESCRIBE "tu manera de", "tu forma de", "tu capacidad de", "una necesidad de", "una tendencia a", "una parte de ti" ni "la parte de ti que". Convierten en cosa lo que ella hace, y quien lee tiene que volver atrás para entenderlo. Donde salga uno de esos, se dice con un verbo lo que hace ella.
 - NI DOS NOMBRES NI DOS DESCRIPCIONES QUE EMPIECEN IGUAL. Antes de entregar, lee en columna los nombres de toda la lista, y luego las descripciones: los que arranquen con la misma palabra se escriben otra vez arrancando de otra manera.
