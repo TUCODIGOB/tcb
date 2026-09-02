@@ -1,12 +1,18 @@
 // ════════════════════════════════════════════════════════════════
 // api/p2-plan/prueba.js
 //
-// LA PAGINA PARA VER COMO SALE EL P2, y nada mas.
+// TU PLAN DE ORIGEN (P2), ENTERO Y EN UN SOLO FICHERO.
 //
-// No es la tienda. No la enlaza ninguna pagina, no manda correos, no cobra, no
-// escribe nada en ningun sitio y no toca la compra. Solo lee informes del P1 ya
-// guardados y enseña en pantalla lo que saldria. Se borra el dia que el P2 este
-// cerrado y no deja rastro.
+// Aqui dentro esta todo lo del producto: como se le habla, sus siete partes,
+// como se lee el informe del P1 que ya quedo guardado, como se escribe cada
+// parte y la pagina para leerlas.
+//
+// VA JUNTO A PROPOSITO. El P2 todavia no existe como producto: hay que ver
+// primero si el texto que saca vale. Si no vale, se borra la carpeta y no se
+// jode nada: no hay un solo trozo de esto repartido por los ficheros del P1.
+//
+// LO UNICO QUE COGE DE FUERA es el informe del P1, y SOLO PARA LEERLO. No
+// escribe nada en ningun sitio, no manda correos, no cobra y no toca la compra.
 //
 // COMO SE USA: se abre /api/p2-plan/prueba en el navegador, sale la lista de
 // los ultimos informes guardados, se pincha uno y las siete partes van
@@ -14,8 +20,8 @@
 //
 // NO LLEVA CLAVE, a proposito: el producto no esta lanzado y aqui solo entra
 // quien lo esta montando. Pero por aqui pasan informes de clientas reales con
-// su nombre, asi que EL DIA QUE ESTO SE LANCE, esta pagina se borra o se le
-// pone una puerta. No se queda abierta.
+// su nombre, y cada pulsacion gasta dinero del modelo, asi que EL DIA QUE ESTO
+// SE LANCE, esta pagina se borra o se le pone una puerta. No se queda abierta.
 //
 // POR QUE LAS SIETE PARTES SE PIDEN DE UNA EN UNA DESDE EL NAVEGADOR. Cada
 // peticion escribe una parte y se acaba: asi ninguna se acerca al tiempo maximo
@@ -23,9 +29,447 @@
 // empezaron las anteriores para no sonar igual.
 // ════════════════════════════════════════════════════════════════
 
-import { AREAS } from './reglas.js';
-import { listar, leer } from './informe.js';
-import { escribirParte } from './escribir.js';
+import crypto from 'crypto';
+
+// ════════════════════════════════════════════════════════════════
+// PRIMERA PARTE: COMO SE LE HABLA Y CUALES SON SUS SIETE PARTES
+// ════════════════════════════════════════════════════════════════
+
+// ── COMO SE LE HABLA ────────────────────────────────────────
+//
+// Esto no es del P2: es de la marca. Es lo que ya se aprendio escribiendo el
+// primer informe, y aqui se aplica igual para que los dos suenen a lo mismo.
+
+const REGLAS_COMUNES = `AQUÍ NO SE ESCRIBEN ESCENAS
+
+Ni una. Nada de contarle un momento suyo como si lo estuvieras viendo: ni una hora, ni un día de la semana, ni un sitio, ni lo que tenía en la mano, ni lo que hizo después.
+
+En cuanto describes un momento te lo estás inventando, y ella lo nota a la primera. Una escena que no le pasó tira todo lo demás, aunque lo demás sea cierto.
+
+Lo que sí se dice es cómo funciona: lo que hace siempre que le pasa eso. Eso es suyo y es verdad. El cuándo y el dónde, no.
+
+
+NO SE LE INVENTA NADA DE SU VIDA
+
+Ni su infancia, ni sus padres, ni una pareja, ni hijos, ni un trabajo, ni de dónde le viene el dinero, ni un episodio que le pasó. Si no está escrito en lo que te paso, no existe.
+
+Si nombras a alguien de su alrededor, esa persona tiene que estar en lo que te paso; y no le pongas sexo, ni parentesco, ni nombre que no le hayan puesto.
+
+Y no lo arregles con un momento de los que le pasan a cualquiera: eso también es ponerle una vida que no sabes si tiene.
+
+Y nada de lo que escribas puede contradecir lo que te paso: si ahí pone que se le da bien algo, no vale decirle que le cuesta.
+
+
+CÓMO SE HABLA
+
+Le hablas a ella de tú, como alguien que la conoce bien y se lo cuenta claro. Ni como un informe, ni como un libro, ni como una experta explicando.
+
+- SE ENTIENDE A LA PRIMERA. Si una frase hay que releerla, está mal escrita. Lo tiene que entender alguien de dieciocho años sin pararse.
+- LAS PALABRAS SON LAS DE TODOS LOS DÍAS. Si una palabra la verías antes en un informe que en una conversación, fuera.
+- NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Si lo que escribes no se puede ver ocurriendo de verdad, está mal escrito.
+- LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice ella por dentro cuando le pasa eso.
+- LE DAS LA RAZÓN ANTES DE CORREGIRLA. Nunca de frente.
+- NI UNA PALABRA TÉCNICA: ningún planeta, ningún signo, ninguna casa, ningún aspecto. Su carta no se nombra, y no se dice tu informe ni tu estudio.
+- NADA DE ANIMAR NI DE CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
+- PROHIBIDAS ESTAS PALABRAS Y CUALQUIER VARIANTE SUYA: sanar, empoderarte, gestionar tus emociones, tu mejor yo, trabajar en ti, tu proceso, tu camino, y "mejor versión" en todas sus formas.
+- "Nueva versión" sí se puede decir, pero no es una muletilla: como mucho una vez, y solo si cae sola. Si la repites, el documento empieza a sonar a folleto.
+- SU NOMBRE APARECE, un par de veces por parte, repartidas y donde caiga natural. Nunca en la frase de cierre. Leerse el nombre propio es lo que hace que esto no parezca escrito para cualquiera.
+- Español de España, hablado. Ni una palabra en otro idioma.
+- Sin asteriscos, sin listas, sin símbolos, sin guiones de adorno y sin numerar nada: la maqueta la pone el programa, no tú.
+
+SE ESCRIBE EN ESPAÑOL CORRECTO, CON TODAS SUS TILDES Y TODAS SUS EÑES
+
+Esto no es un detalle. Lo lee una clienta que ha pagado, y un texto al que le faltan las tildes parece roto y barato, por bueno que sea lo que dice.
+
+Español, año, día, más, está, aquí, así, también, después, sensación, cariño, vínculo: todas llevan lo que llevan. Ni una palabra sin su acento, y ni una eñe escrita como una ene.`;
+
+// ── LO QUE SEPARA EL P2 DEL P1 ──────────────────────────────
+//
+// Es la regla que decide si este producto vale algo. El P1 ya le conto quien
+// es; si el P2 se lo vuelve a contar en positivo, ella lo lee y piensa que le
+// han dado dos veces lo mismo. Y tendria razon.
+//
+// Por eso se parte en dos: el PORQUE sale de su informe, y el QUE HACER no
+// esta ahi y lo pone el P2. Eso es lo unico que este producto anade, y es a lo
+// que ha venido.
+
+const EL_P2_NO_ES_EL_P1 = `QUÉ ES ESTO
+
+Esto no le explica a nadie cómo es. Eso ya lo tiene: se leyó entero un estudio suyo que le contaba quién es y de dónde le viene.
+
+Esto es la parte que le falta. Lo que tiene que hacer para llegar a ser quien quiere ser y tener la vida que quiere.
+
+Así que aquí no se diagnostica nada. No le cuentas otra vez su patrón, ni le explicas su herida, ni le pones nombre a lo que le pasa. Todo eso está dicho ya, y repetírselo con otras palabras es quitarle el sitio a lo único que ha venido a buscar: qué hace a partir de mañana.
+
+De ahí salen las dos reglas que mandan sobre todas las demás:
+
+1. LO QUE ELLA YA ES SOLO APARECE PARA ENGANCHAR LA ACCIÓN. Una frase, la justa para que entienda por qué esto va con ella en concreto y no con cualquiera. Y esa frase tiene que poder rastrearse a algo que su estudio ya dice de ella: si no puedes señalar de dónde sale, no la escribes.
+
+2. TODO LO DEMÁS ES QUÉ HACER. Eso no está en su estudio y lo pones tú. Es lo que este documento añade, y es a lo que ha venido.
+
+Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que va a hacer.`;
+
+// ── LAS SIETE PARTES ────────────────────────────────────────
+//
+// Van estas siete y en este orden, el mismo del P1: cada una recoge lo que el
+// P1 le conto en la suya.
+//
+// LOS TITULOS Y LOS LADILLOS SE ESCRIBEN AQUI, no los escribe el modelo. Es lo
+// que hace que salgan siempre bien puestos y con sus tildes aunque el modelo se
+// las coma, y lo que deja que dos clientas distintas reciban el mismo
+// documento con dentro sus dos vidas distintas.
+//
+// "del_p1" es la etiqueta con la que el P1 marca los rasgos de cada area.
+//
+// Cada area lleva una o dos cajas. Las de tipo "acciones" piden cosas que
+// hacer; la de tipo "comprender", de la herida, no pide hacer nada: ahi lo que
+// hace falta primero es entender, y pedirle una tarea antes de eso seria
+// pedirle que arregle algo que todavia no ha visto.
+
+const AREAS = [
+  {
+    id: 'identidad',
+    del_p1: 'IDENTIDAD',
+    titulo: 'Así actúas cuando estás en tu centro',
+    cajas: [{ titulo: 'Los cambios concretos para esta semana', tipo: 'acciones', min: 2, max: 3 }],
+  },
+  {
+    id: 'patrones',
+    del_p1: 'PATRONES',
+    titulo: 'Así rompes el ciclo',
+    cajas: [
+      { titulo: 'Esto es lo que dejas de hacer', tipo: 'acciones', min: 1, max: 2 },
+      { titulo: 'Esto es lo que empiezas a hacer', tipo: 'acciones', min: 1, max: 2 },
+    ],
+  },
+  {
+    id: 'miedos',
+    del_p1: 'MIEDOS',
+    titulo: 'Así gestionas el miedo que te paraliza',
+    cajas: [{ titulo: 'El primer paso', tipo: 'acciones', min: 1, max: 2 }],
+  },
+  {
+    id: 'herida',
+    del_p1: 'HERIDA',
+    titulo: 'Así se cura lo que te bloquea',
+    cajas: [
+      { titulo: 'Esto es lo que necesitas comprender', tipo: 'comprender', min: 1, max: 2 },
+      { titulo: 'El ejercicio de esta semana', tipo: 'acciones', min: 1, max: 1 },
+    ],
+  },
+  {
+    id: 'amor',
+    del_p1: 'AMOR',
+    titulo: 'Así amas cuando no estás repitiendo el patrón',
+    cajas: [{ titulo: 'Los patrones a romper y cómo', tipo: 'acciones', min: 2, max: 3 }],
+  },
+  {
+    id: 'relaciones',
+    del_p1: 'RELACIONES',
+    titulo: 'Así te relacionas cuando no cedes tu sitio',
+    cajas: [{ titulo: 'Esto es lo que cambia cuando empiezas a aplicarlo', tipo: 'acciones', min: 2, max: 3 }],
+  },
+  {
+    id: 'dinero',
+    del_p1: 'DINERO',
+    titulo: 'Así gestionas el dinero',
+    cajas: [{ titulo: 'Tus bloqueos y cómo desactivarlos', tipo: 'acciones', min: 2, max: 3 }],
+  },
+];
+
+// ════════════════════════════════════════════════════════════════
+// SEGUNDA PARTE: LEER EL INFORME DEL P1 QUE YA ESTA GUARDADO
+// ════════════════════════════════════════════════════════════════
+
+function ajustes() {
+  const cuenta = process.env.INFORME_P1_CLOUDFLARE_ACCOUNT_ID;
+  const clave = process.env.INFORME_P1_CLOUDFLARE_ACCESS_KEY_ID;
+  const secreto = process.env.INFORME_P1_CLOUDFLARE_SECRET_ACCESS_KEY;
+  const bucket = process.env.INFORME_P1_CLOUDFLARE_BUCKET_NAME;
+  if (!cuenta || !clave || !secreto || !bucket) return null;
+  return { cuenta, clave, secreto, bucket };
+}
+
+function firmaDelDia(secreto, dia, region, servicio) {
+  const kFecha = crypto.createHmac('sha256', `AWS4${secreto}`).update(dia).digest();
+  const kRegion = crypto.createHmac('sha256', kFecha).update(region).digest();
+  const kServicio = crypto.createHmac('sha256', kRegion).update(servicio).digest();
+  return crypto.createHmac('sha256', kServicio).update('aws4_request').digest();
+}
+
+// El numero de compra forma la ruta del fichero, asi que se filtra: sin esto,
+// un "../" escrito a mano en la direccion sacaria ficheros de otro sitio.
+const limpio = txt => String(txt || '').replace(/[^A-Za-z0-9_-]/g, '');
+
+// Una peticion GET firmada a R2. El cuerpo va siempre vacio, que es lo unico
+// que se hace aqui: pedir.
+async function pedir(cfg, ruta, consulta = {}) {
+  const host = `${cfg.cuenta}.r2.cloudflarestorage.com`;
+  const region = 'auto', servicio = 's3';
+  const ahora = new Date();
+  const dia = ahora.toISOString().slice(0, 10).replace(/-/g, '');
+  const marca = ahora.toISOString().replace(/[:-]|\.\d{3}/g, '').slice(0, 15) + 'Z';
+  const ambito = `${dia}/${region}/${servicio}/aws4_request`;
+
+  // El cuerpo vacio tiene un hash fijo, pero se calcula igual para no dejar
+  // aqui una constante magica que nadie sepa de donde sale.
+  const hash = crypto.createHash('sha256').update('').digest('hex');
+
+  // La firma exige los parametros ordenados alfabeticamente y codificados uno
+  // a uno. Cualquier otro orden da una firma que R2 rechaza.
+  const query = Object.keys(consulta).sort()
+    .map(k => `${encodeURIComponent(k)}=${encodeURIComponent(consulta[k])}`)
+    .join('&');
+
+  const cabeceras =
+    `host:${host}\n` +
+    `x-amz-content-sha256:${hash}\n` +
+    `x-amz-date:${marca}\n`;
+  const firmadas = 'host;x-amz-content-sha256;x-amz-date';
+  const peticion = ['GET', ruta, query, cabeceras, firmadas, hash].join('\n');
+  const aFirmar = ['AWS4-HMAC-SHA256', marca, ambito,
+    crypto.createHash('sha256').update(peticion).digest('hex')].join('\n');
+  const firma = crypto.createHmac('sha256', firmaDelDia(cfg.secreto, dia, region, servicio))
+    .update(aFirmar).digest('hex');
+
+  return fetch(`https://${host}${ruta}${query ? `?${query}` : ''}`, {
+    method: 'GET',
+    signal: AbortSignal.timeout(15000),
+    headers: {
+      'x-amz-content-sha256': hash,
+      'x-amz-date': marca,
+      'Authorization': `AWS4-HMAC-SHA256 Credential=${cfg.clave}/${ambito}, SignedHeaders=${firmadas}, Signature=${firma}`,
+    },
+  });
+}
+
+// Los informes guardados, del mas nuevo al mas viejo.
+//
+// R2 los devuelve en XML y ordenados por nombre, no por fecha, asi que se
+// ordenan aqui por la fecha que trae cada uno.
+//
+// Solo saca el nombre y la fecha: para elegir en una lista no hace falta
+// bajarse los informes enteros, que son decenas de KB cada uno.
+async function listar(cuantos = 40) {
+  const cfg = ajustes();
+  if (!cfg) throw new Error('Faltan las variables INFORME_P1_CLOUDFLARE_*');
+
+  const resp = await pedir(cfg, `/${cfg.bucket}`, {
+    'list-type': '2',
+    'prefix': 'p1/',
+    'max-keys': String(Math.min(Math.max(cuantos, 1), 1000)),
+  });
+  if (!resp.ok) {
+    throw new Error(`R2 no deja listar (${resp.status}): ${(await resp.text()).slice(0, 200)}`);
+  }
+
+  const xml = await resp.text();
+  const informes = [];
+  for (const trozo of xml.split('<Contents>').slice(1)) {
+    const clave = (trozo.match(/<Key>([^<]+)<\/Key>/) || [])[1];
+    const fecha = (trozo.match(/<LastModified>([^<]+)<\/LastModified>/) || [])[1];
+    if (!clave || !clave.endsWith('.json')) continue;
+    informes.push({ compra: clave.slice('p1/'.length, -'.json'.length), fecha: fecha || '' });
+  }
+  informes.sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)));
+  return informes.slice(0, cuantos);
+}
+
+// Un informe entero. Devuelve lo mismo que se guardo: cliente, carta, las
+// siete areas y los rasgos.
+async function leer(compra) {
+  const cfg = ajustes();
+  if (!cfg) throw new Error('Faltan las variables INFORME_P1_CLOUDFLARE_*');
+
+  const cual = limpio(compra);
+  if (!cual) throw new Error('Numero de compra vacio');
+
+  const resp = await pedir(cfg, `/${cfg.bucket}/p1/${cual}.json`);
+  if (resp.status === 404) throw new Error(`No hay informe guardado de la compra ${cual}`);
+  if (!resp.ok) {
+    throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+  }
+  return resp.json();
+}
+
+// ════════════════════════════════════════════════════════════════
+// TERCERA PARTE: ESCRIBIR UNA DE LAS SIETE
+// ════════════════════════════════════════════════════════════════
+
+// Techo por parte. Una parte escrita entera ronda las 350 palabras; con esto
+// sobra de largo, y es un techo, no un objetivo: solo se paga lo que escribe.
+const TECHO_DE_TEXTO = 3000;
+
+// Una parte tarda entre 15 y 30 segundos. Pasado el minuto no esta tardando:
+// esta colgada, y esperar mas no la arregla.
+const ESPERA_MAXIMA_MS = 60000;
+
+// El molde de la respuesta. Pedido asi, no hay que adivinar donde empieza cada
+// cosa: viene cada trozo en su casilla y se pinta directamente.
+function esquema(area) {
+  return {
+    type: 'object',
+    properties: {
+      apertura: { type: 'string' },
+      cajas: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            entradas: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  titulo: { type: 'string' },
+                  texto: { type: 'string' },
+                  senal: { type: 'string' },
+                },
+                required: ['titulo', 'texto', 'senal'],
+                additionalProperties: false,
+              },
+            },
+          },
+          required: ['entradas'],
+          additionalProperties: false,
+        },
+      },
+      cierre: { type: 'string' },
+    },
+    required: ['apertura', 'cajas', 'cierre'],
+    additionalProperties: false,
+  };
+}
+
+// El encargo de una parte. Se arma con lo que dice reglas.js, para que cambiar
+// una caja de sitio sea cambiar una linea alli y no reescribir esto.
+function encargo(area) {
+  const cajas = area.cajas.map((c, i) => {
+    const cuantas = c.min === c.max ? `${c.min}` : `entre ${c.min} y ${c.max}`;
+    if (c.tipo === 'comprender') {
+      return `CAJA ${i + 1} — "${c.titulo}": ${cuantas} entradas. Es la única caja que no pide hacer nada: le das lo que necesita entender para poder mover esto. Dicho hacia delante -lo que cambia cuando lo entiende-, no como un repaso de lo que le pasó. Cada entrada lleva un título corto y dos o tres frases. La señal va vacía.`;
+    }
+    return `CAJA ${i + 1} — "${c.titulo}": ${cuantas} entradas. Cada una es algo que hace, no algo que piense. Título corto, y después una o dos frases que digan exactamente qué hacer, de forma que pueda hacerlo en los próximos siete días sin preguntar nada a nadie. En la señal, una frase: en qué va a notar que está funcionando. Algo que pueda ver, no cómo se va a sentir.`;
+  }).join('\n\n');
+
+  return `${EL_P2_NO_ES_EL_P1}
+
+
+LA PARTE QUE ESCRIBES AHORA
+
+Es una de las siete, y solo tienes delante lo suyo. No hables de las otras ni las anuncies.
+
+El título de esta parte ya está puesto y no lo escribes tú: "${area.titulo}". Todo lo que escribas tiene que ir con él.
+
+APERTURA: de dos a cuatro frases, y va hacia delante.
+
+La PRIMERA engancha: una sola frase que le diga por qué esto va con ella en concreto, sacada de algo que su texto ya dice. Tienes que poder señalar de qué frase suya sale; si no puedes, coge otra. Una frase, no dos: aquí no se repasa lo que le pasa, que eso ya se lo contaron.
+
+Las que siguen son lo nuevo: cómo se mueve ella en esta parte de su vida cuando hace las cosas de otra manera. Qué hace distinto y qué le cambia. En presente, como algo que ya puede hacer, no como una promesa de lo que será algún día.
+
+${cajas}
+
+CIERRE: una sola frase, una sola idea, veinte palabras como mucho. No unas dos ideas con "y" ni con un guion. Si te salen dos, quédate con la que más pese y tira la otra.
+
+Su nombre, un par de veces en la parte, separadas y donde caiga natural. Nunca en el cierre.`;
+}
+
+// Lo que se le enseña: su texto de esta area y sus rasgos de esta area.
+//
+// Los rasgos vienen etiquetados por el P1 y la etiqueta no siempre acierta,
+// asi que van como material de apoyo: lo que manda es su texto, que es lo que
+// ella leyo de verdad.
+function material(area, nombre, textoDelArea, rasgos) {
+  const suyos = lista => (lista || []).filter(r => r && r.area === area.del_p1);
+  const linea = r => `- ${r.nombre}: ${r.descripcion}${r.causa ? ` POR QUÉ LE PASA: ${r.causa}` : ''}`;
+  const f = suyos(rasgos?.fortalezas).map(linea);
+  const d = suyos(rasgos?.desafios).map(linea);
+
+  const conRasgos = (f.length || d.length)
+    ? `\n\nSUS RASGOS DE ESTA PARTE (apoyo; manda el texto de arriba)\n\nFORTALEZAS\n${f.join('\n') || '(ninguna)'}\n\nDESAFÍOS\n${d.join('\n') || '(ninguno)'}`
+    : '';
+
+  return `Se llama ${nombre}.
+
+ESTO ES LO QUE ELLA YA LEYÓ EN SU ESTUDIO SOBRE ESTA PARTE DE SU VIDA:
+
+${textoDelArea}${conRasgos}`;
+}
+
+// Lo ya escrito en las partes anteriores, para que esta no salga con la misma
+// forma. No se le enseña el contenido -no lo necesita y le daria pie a
+// repetirlo-: solo como empezaban y como cerraban.
+function noRepitasLaForma(hechas) {
+  if (!hechas || hechas.length === 0) return '';
+  const frases = hechas
+    .map(p => `- "${String(p.apertura || '').split(/(?<=\.)\s/)[0]}" ... "${p.cierre || ''}"`)
+    .join('\n');
+  return `\n\nASÍ EMPEZARON Y CERRARON LAS PARTES YA ESCRITAS DE ESTE MISMO DOCUMENTO:
+
+${frases}
+
+Tu apertura y tu cierre tienen que arrancar con otra construcción distinta a todas esas. No es que no puedan decir lo mismo: es que no pueden SONAR igual. Si al escribirla ves que se parece a una de arriba, bórrala y empiézala de otra forma.`;
+}
+
+async function escribirParte({ area, nombre, textoDelArea, rasgos, hechas }) {
+  const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    signal: AbortSignal.timeout(ESPERA_MAXIMA_MS),
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-5',
+      thinking: { type: 'disabled' },
+      max_tokens: TECHO_DE_TEXTO,
+      system: `${REGLAS_COMUNES}\n\n\n${encargo(area)}`,
+      output_config: { format: { type: 'json_schema', schema: esquema(area) } },
+      messages: [{
+        role: 'user',
+        content: `${material(area, nombre, textoDelArea, rasgos)}${noRepitasLaForma(hechas)}`,
+      }],
+    }),
+  });
+
+  if (!resp.ok) {
+    throw new Error(`${area.id}: ${resp.status} — ${(await resp.text()).slice(0, 300)}`);
+  }
+
+  const data = await resp.json();
+  const texto = (data?.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+  let escrito;
+  try {
+    escrito = JSON.parse(texto);
+  } catch {
+    throw new Error(`${area.id}: la respuesta no vino en su molde`);
+  }
+
+  // Las cajas vuelven a colocarse contra las que pide reglas.js: si el modelo
+  // devuelve una de mas, se cae; si devuelve una de menos, queda vacia y se
+  // ve al momento en la pagina, en vez de descuadrar la maqueta en silencio.
+  const cajas = area.cajas.map((c, i) => ({
+    titulo: c.titulo,
+    entradas: (escrito.cajas?.[i]?.entradas || []).map(e => ({
+      titulo: String(e.titulo || '').trim(),
+      texto: String(e.texto || '').trim(),
+      senal: String(e.senal || '').trim(),
+    })).filter(e => e.titulo || e.texto),
+  }));
+
+  return {
+    id: area.id,
+    titulo: area.titulo,
+    apertura: String(escrito.apertura || '').trim(),
+    cajas,
+    cierre: String(escrito.cierre || '').trim(),
+  };
+}
+
+// ════════════════════════════════════════════════════════════════
+// CUARTA PARTE: LA PAGINA
+// ════════════════════════════════════════════════════════════════
 
 export default async function handler(req, res) {
   if (req.method === 'GET') {
