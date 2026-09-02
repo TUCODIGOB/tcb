@@ -706,7 +706,7 @@ export default async function handler(req, res) {
     lineaDato('Nodo Sur:', (carta.nodoSur||'-') + '   ·   casa ' + casaDe(carta.nodeSurRaw), py6); py6 += 12;
 
     doc.setFont('Roboto','italic'); doc.setFontSize(9); doc.setTextColor(60,60,60);
-    py6 = wrapText(fx('Las casas de esta carta son de signo completo: cada casa ocupa un signo entero, empezando por el del Ascendente. Por eso el Medio Cielo no cae necesariamente en la casa 10, y cuando cae en otra es correcto, no un error de cálculo.'),18,py6,175,5.5);
+    wrapText(fx('Las casas de esta carta son de signo completo: cada casa ocupa un signo entero, empezando por el del Ascendente. Por eso el Medio Cielo no cae necesariamente en la casa 10, y cuando cae en otra es correcto, no un error de cálculo.'),18,py6,175,5.5);
     addPageNum(6);
 
     // ── PAGS 7-20 LAS 7 AREAS ────────────────────────────────────────────────
