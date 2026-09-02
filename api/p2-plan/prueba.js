@@ -678,6 +678,9 @@ async function escribirParte({ area, nombre, textoDelArea, rasgos, hechas, asign
   // ve al momento en la pagina, en vez de descuadrar la maqueta en silencio.
   const cajas = area.cajas.map((c, i) => ({
     titulo: c.titulo,
+    // La hoja final solo recoge lo que hay que HACER. La caja de comprender no
+    // lo es, y sin esta marca se colaba ahi como si fuera una tarea mas.
+    tipo: c.tipo,
     entradas: (escrito.cajas?.[i]?.entradas || []).map(e => ({
       titulo: String(e.titulo || '').trim(),
       texto: String(e.texto || '').trim(),
@@ -1012,7 +1015,9 @@ ir.addEventListener('click', async () => {
       hechas.push({
         apertura: parte.apertura,
         cierre: parte.cierre,
-        pedidas: (parte.cajas||[]).flatMap(c => (c.entradas||[]).map(e => e.titulo)).filter(Boolean),
+        pedidas: (parte.cajas||[])
+          .filter(c => c.tipo === 'acciones')
+          .flatMap(c => (c.entradas||[]).map(e => e.titulo)).filter(Boolean),
       });
       salida.insertAdjacentHTML('beforeend', pintar(parte));
     } catch (e) {
