@@ -507,6 +507,10 @@ async function escribirParte({ area, nombre, textoDelArea, rasgos, hechas }) {
 
   return {
     id: area.id,
+    // El numero y el nombre salen del orden de AREAS, que es el mismo del P1.
+    // Van aqui y no en el encargo: son de la maqueta, no del texto.
+    numero: AREAS.indexOf(area) + 1,
+    nombre: area.del_p1,
     titulo: area.titulo,
     apertura: String(escrito.apertura || '').trim(),
     cajas,
@@ -598,6 +602,7 @@ const PAGINA = `<!DOCTYPE html>
   .aviso { font-family:system-ui,sans-serif; font-size:.9rem; color:#6b6b6b; margin:1.2rem 0; }
   .error { color:#c0392b; }
   .parte { background:#fff; border:1px solid rgba(189,144,72,.25); border-left:4px solid var(--gold); border-radius:8px; padding:1.6rem 1.8rem; margin-top:1.6rem; }
+  .cual { font-family:system-ui,sans-serif; font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); margin-bottom:.5rem; }
   .parte h2 { font-size:1.25rem; color:var(--teal); margin-bottom:.9rem; line-height:1.35; }
   .apertura { margin-bottom:1.4rem; }
   .cajita { background:rgba(189,144,72,.07); border-radius:6px; padding:1rem 1.2rem; margin-bottom:1rem; }
@@ -698,7 +703,8 @@ function pintar(p) {
       (e.senal ? '<p class="senal"><span>Lo notas en</span> ' + escapar(e.senal) + '</p>' : '') + '</div>'
     ).join('') + '</div>'
   ).join('');
-  return '<div class="parte"><h2>' + escapar(p.titulo) + '</h2>' +
+  return '<div class="parte"><p class="cual">' + escapar(p.numero) + ' — ' + escapar(p.nombre) + '</p>' +
+    '<h2>' + escapar(p.titulo) + '</h2>' +
     '<p class="apertura">' + escapar(p.apertura) + '</p>' + cajas +
     '<p class="cierre">' + escapar(p.cierre) + '</p></div>';
 }
