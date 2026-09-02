@@ -1519,6 +1519,127 @@ function losQuePesan(lista, cual, masPeso) {
 // Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
 // mismo que antes escribia una sola, pero tardan la mitad porque van en
 // paralelo, igual que las siete areas.
+// ── LA LIMPIEZA DE REPETIDOS, AL FINAL Y ELLA SOLA ───────────────────────────
+//
+// POR QUE VA AL FINAL. Los rasgos de relleno se piden DESPUES de la limpieza
+// que hay arriba, asi que nunca pasaban por ella: entraban al informe sin que
+// nadie los comparase con los que ya habia. De ahi salian pares como "Sientes
+// que tu esfuerzo nunca es suficiente" y "Temes que tu esfuerzo nunca sea
+// suficiente", casi el mismo rasgo dos veces y seguidos.
+//
+// POR QUE VA SOLA. La llamada de arriba hace cuatro cosas a la vez sobre
+// cuarenta y cinco rasgos: ponerle area a cada uno, buscar los que se pisan,
+// reescribir nombres y elegir cuales pesan mas. En el informe 150 marco dos de
+// trece. Aqui solo tiene que hacer una cosa.
+//
+// El filtro de titulos que hay mas arriba no sirve para esto: compara palabras,
+// y dos rasgos que dicen lo mismo con otras palabras no comparten ninguna.
+//
+// Y QUITAR NO PUEDE DEJAR UN AREA CORTA. Eso lo decide el codigo contando, no
+// el modelo, igual que ya se hace con los titulos repetidos. Sin esa cuenta,
+// limpiar aqui abajo dejaria areas por debajo del minimo y ya no queda ningun
+// paso detras que las vuelva a llenar.
+const ESQUEMA_SOBRAN = {
+  type: 'object',
+  properties: { sobran: { type: 'array', items: { type: 'integer' } } },
+  required: ['sobran'],
+  additionalProperties: false,
+};
+
+async function pedirLosRepetidos(rasgos, cuantasFortalezas, reloj) {
+  const listado = rasgos
+    .map((r, i) => `${i === 0 ? 'FORTALEZAS\n' : ''}${i === cuantasFortalezas ? '\nDESAFIOS\n' : ''}${i + 1}. ${r.nombre}. ${r.descripcion}`)
+    .join('\n');
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    // Solo devuelve numeros, asi que es la mas corta de todas. Mismo tope que
+    // la otra llamada corta: pasados setenta segundos, esta colgada.
+    signal: reloj.senal(70000),
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY,
+      'anthropic-version': '2023-06-01',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-5',
+      thinking: { type: 'disabled' },
+      // La respuesta es una lista de numeros y nada mas.
+      max_tokens: 2000,
+      system: `Te paso los rasgos de una persona, numerados. Vienen de dos listas: primero sus FORTALEZAS y despues sus DESAFIOS, y en el listado se ve donde empieza cada una.
+
+Se han escrito por separado, y ademas se han añadido rasgos sueltos despues sin ver los que ya habia, asi que hay rasgos que repiten a otro sin saberlo.
+
+Devuelves "sobran": los numeros de los rasgos que hay que quitar. Se quita uno cuando:
+- DICE LO MISMO que otro, aunque este contado con otras palabras. En que se nota: los dos hablan de lo mismo que ella hace o de lo mismo que le pasa, y si los leyera seguidos pensaria que eso ya se lo has dicho. De los dos se queda el que este mejor contado y el otro sobra.
+- DICE LO CONTRARIO que uno de la otra lista: una fortaleza que afirma justo lo que un desafio niega, o al reves. No pueden convivir las dos, asi que sobra la peor contada.
+
+Solo eso. Un rasgo no sobra por ser duro, y dos rasgos de la misma parcela de su vida no sobran si dicen cosas distintas.
+
+Si no hay nada que quitar, devuelves la lista vacia.`,
+      output_config: { format: { type: 'json_schema', schema: ESQUEMA_SOBRAN } },
+      messages: [{ role: 'user', content: listado }],
+    }),
+  });
+
+  if (!response.ok) throw new Error(`limpiar repetidos: ${response.status}`);
+
+  const data = await response.json();
+  const texto = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
+  const leido = JSON.parse(texto);
+  return (leido.sobran || []).map(Number)
+    .filter(n => Number.isInteger(n) && n >= 1 && n <= rasgos.length);
+}
+
+async function sinLoQueYaSeHaDicho(fortalezas, desafios, reloj) {
+  const rasgos = fortalezas.concat(desafios);
+  if (rasgos.length < 2) return [fortalezas, desafios];
+
+  // Igual que los demas pasos opcionales: si no caben sus segundos y las siete
+  // areas detras, no se pide y el informe sale como salia.
+  if (!reloj.hayTiempoPara(90)) {
+    console.warn('No da tiempo a limpiar los repetidos, se dejan');
+    return [fortalezas, desafios];
+  }
+
+  let marcados;
+  try {
+    marcados = await pedirLosRepetidos(rasgos, fortalezas.length, reloj);
+  } catch (err) {
+    // Si falla, el informe sale como salia hoy. Perder la limpieza es menos
+    // malo que perder el informe.
+    console.error(`No se pudieron limpiar los repetidos: ${err.message.slice(0, 90)}`);
+    return [fortalezas, desafios];
+  }
+
+  // Si dice que sobra un tercio o mas, ha entendido mal: vaciar la lista es
+  // peor que dejar un repetido, asi que no se quita ninguno.
+  const TOPE = Math.max(1, Math.floor(rasgos.length / 3));
+  if (marcados.length > TOPE) {
+    console.warn(`Repetidos: decia que sobraban ${marcados.length} de ${rasgos.length}, demasiados, no se quita ninguno`);
+    return [fortalezas, desafios];
+  }
+  const fuera = new Set(marcados.map(n => n - 1));
+  if (fuera.size === 0) return [fortalezas, desafios];
+
+  const quitar = (lista, desde, cual) => {
+    const minimo = MINIMO_POR_AREA[cual] || 1;
+    const quedan = {};
+    for (const r of lista) quedan[r.area] = (quedan[r.area] || 0) + 1;
+    return lista.filter((r, i) => {
+      if (!fuera.has(desde + i)) return true;
+      if (NOMBRES_DE_AREA.includes(r.area) && (quedan[r.area] || 0) - 1 < minimo) {
+        console.warn(`Se deja un rasgo repetido para no dejar corta ${r.area}: ${r.nombre}`);
+        return true;
+      }
+      quedan[r.area] -= 1;
+      console.warn(`Se quita un rasgo que repetia a otro: ${r.nombre}`);
+      return false;
+    });
+  };
+  return [quitar(fortalezas, 0, 'fortalezas'), quitar(desafios, fortalezas.length, 'desafios')];
+}
+
 async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   // 1. Las dos listas, a la vez, y sin nombrarle la carta a quien lo lee.
   let [fortalezas, desafios] = await Promise.all([
@@ -1576,6 +1697,10 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
     conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, fortalezas, reloj),
     conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, desafios, reloj),
   ]);
+
+  // 3c. Y AHORA se limpian los repetidos, con los de relleno ya dentro. Es el
+  //     unico sitio desde el que se ven todos los rasgos que van a salir.
+  [fortalezas, desafios] = await sinLoQueYaSeHaDicho(fortalezas, desafios, reloj);
 
   // 4. Y se ordenan por area. Salian agrupadas porque se escriben caja por
   //    caja, pero al cambiarle el area a un rasgo, y al añadir los del relleno
