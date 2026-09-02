@@ -932,18 +932,27 @@ Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes 
 
 Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee una sola vez.
 
-- SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atras para entenderla, esta mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
+SE LE ESCRIBE COMO QUIEN LA CONOCE Y SE SIENTA A HABLAR CON ELLA, no como quien la
+analiza desde fuera y le entrega un resultado. Esa es la diferencia entre que se
+reconozca y que lo lea por encima. Lo de abajo es como se consigue eso.
+
 - SE LE HABLA DE TU, siempre, como quien se lo cuenta tomando un cafe. Nunca en tercera persona.
+- SE LE PONE SU VOZ, y esto es lo que mas hace que se reconozca: lo que ella se dice por dentro cuando le pasa eso, dicho con las palabras que usaria ella y no con las de quien la observa. Sale de lo que dice el rasgo, no de suponerle nada: no se le inventa ningun hecho, ninguna escena ni ninguna frase que no se desprenda de lo que ya se ha contado.
 - SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un dia cualquiera.
-- Y SE LE PONE SU VOZ: lo que ella se dice por dentro cuando le pasa eso, dicho con las palabras que usaria ella y no con las de quien la observa. Eso es lo que hace que se reconozca. Sale de lo que dice el rasgo, no de suponerle nada: no se le inventa ningun hecho, ninguna escena ni ninguna frase que no se desprenda de lo que ya se ha contado.
+- SE AFIRMA, NO SE SUGIERE. Se le dice lo que le pasa, no se le propone que a lo mejor le pasa. Nada de "quizas", "puede que", "es posible que", "a veces", "en cierto modo", "de alguna manera" ni "sueles": cada reserva de esas le da permiso para no reconocerse, y el rasgo deja de tocarle. Lo que sale de la carta se afirma; lo que no sale de la carta no se escribe, ni afirmado ni con reservas.
+- SE ENTRA DIRECTO. La primera frase ya esta dentro de lo que le pasa, sin presentacion, sin preambulo y sin avisar de lo que se le va a contar.
+- CUANDO ALGO SE LE DA BIEN, SE LE DICE A LA CARA. Se le reconoce directamente, no se describe su rendimiento desde fuera como si se la estuviera puntuando.
+- CUANDO ES UN DESAFIO, SE LE CUENTA SIN ATACARLA. Se dice lo que le pasa de manera que lo reconozca y no se ponga a la defensiva: sin juzgarla, sin señalarla y sin que suene a reproche ni a defecto.
+- LAS PALABRAS SON LAS DE LA CALLE, no las de un informe. Si una palabra la verias antes en una evaluacion de trabajo o en un manual que en una conversacion, se cambia por la que usaria cualquiera hablando.
+- FRASES LARGAS, ENCADENADAS CON COMAS, y QUE EL TEXTO RESPIRE. Asi se habla de verdad. Cortarlo todo en frases secas y en ideas cortas una detras de otra parte la lectura, suena a lista y ahoga a quien lee, porque no le da tiempo a asimilar una cuando ya le llega la siguiente. Se desarrolla una idea, se le deja sitio, y luego viene la otra.
+- SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atras para entenderla, esta mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
+
+Y ESTO NO, NUNCA:
+
+- NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa.
 - NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace la persona, no lo que hace un concepto.
 - Y POR ESO NO SE ESCRIBE "tu manera de", "tu forma de", "tu capacidad de", "una necesidad de", "una tendencia a", "una parte de ti" ni "la parte de ti que". Convierten en cosa lo que ella hace, y quien lee tiene que volver atras para entenderlo. Donde salga uno de esos, se dice con un verbo lo que hace ella.
 - NI DOS NOMBRES NI DOS DESCRIPCIONES QUE EMPIECEN IGUAL. Antes de entregar, lee en columna los nombres de toda la lista, y luego las descripciones: los que arranquen con la misma palabra se escriben otra vez arrancando de otra manera.
-- NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa.
-- FRASES LARGAS, ENCADENADAS CON COMAS, y QUE EL TEXTO RESPIRE. Asi se habla de verdad. Cortarlo todo en frases secas y en ideas cortas una detras de otra parte la lectura, suena a lista y ahoga a quien lee, porque no le da tiempo a asimilar una cuando ya le llega la siguiente. Se desarrolla una idea, se le deja sitio, y luego viene la otra.
-- LAS PALABRAS SON LAS DE LA CALLE, no las de un informe. Si una palabra la verias antes en una evaluacion de trabajo o en un manual que en una conversacion, se cambia por la que usaria cualquiera hablando.
-- CUANDO ALGO SE LE DA BIEN, SE LE DICE A LA CARA. Se le reconoce directamente, no se describe su rendimiento desde fuera como si se la estuviera puntuando.
-- CUANDO ES UN DESAFIO, SE LE CUENTA SIN ATACARLA. Se dice lo que le pasa de manera que lo reconozca y no se ponga a la defensiva: sin juzgarla, sin señalarla y sin que suene a reproche ni a defecto.
 - Español de España, hablado, sin latinoamericanismos.
 - Nada de asteriscos, negritas, guiones ni simbolos: es texto corrido.
 ${cual === 'desafios'
