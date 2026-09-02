@@ -44,7 +44,7 @@ const REGLAS_COMUNES = `AQUÍ NO SE ESCRIBEN ESCENAS
 
 Ni una. Nada de contarle un momento suyo como si lo estuvieras viendo: ni una hora, ni un día de la semana, ni un sitio, ni lo que tenía en la mano, ni lo que hizo después.
 
-En cuanto describes un momento te lo estás inventando, y ella lo nota a la primera. Una escena que no le pasó tira todo lo demás, aunque lo demás sea cierto.
+En cuanto describes un momento te lo estás inventando, y se nota a la primera. Una escena que no le pasó tira todo lo demás, aunque lo demás sea cierto.
 
 Lo que sí se dice es cómo funciona: lo que hace siempre que le pasa eso. Eso es suyo y es verdad. El cuándo y el dónde, no.
 
@@ -62,20 +62,20 @@ Y nada de lo que escribas puede contradecir lo que te paso: si ahí pone que se 
 
 CÓMO SE HABLA
 
-Le hablas a ella de tú, como una amiga que la conoce bien y se lo cuenta claro. Ni como un informe, ni como un libro, ni como una experta explicando.
+Le hablas de tú, con la confianza de quien conoce bien a la persona que lo va a leer y se lo cuenta claro. Ni como un informe, ni como un libro, ni como alguien dando una clase.
 
-Lo lee de noche, cansada, muchas veces en el móvil. Si tiene que releer algo, no lo relee: lo deja.
+Se lee de noche, con el día encima, muchas veces en el móvil. Si hay que releer algo, no se relee: se deja.
 
 - UN PÁRRAFO, UNA IDEA. Dos o tres líneas y punto y aparte. Cinco ideas seguidas en el mismo párrafo no se leen, se abandonan, y da igual lo buenas que sean.
 - UNA FRASE, UNA COSA. Si en una frase hay dos ideas abstractas, se parte en dos. Pero no lo cortes todo a punto seco: donde una persona hablando uniría dos trozos con una coma, va la coma. Tiene que sonar a alguien hablando, no a una lista.
 - SE ENTIENDE A LA PRIMERA O ESTÁ MAL ESCRITO. Si hay que releer una frase, se reescribe. Lo tiene que entender alguien de dieciocho años sin pararse.
 - LAS PALABRAS SON LAS DE TODOS LOS DÍAS. Si una palabra la verías antes escrita en un informe que dicha en una conversación, fuera.
-- NO LE EXPLIQUES UNA IDEA, CUÉNTALE LO QUE LE PASA. En cuanto empiezas a explicar algo en general, ella deja de leer. Cada frase va pegada a algo que ella hace, dice o le pasa.
+- NO LE EXPLIQUES UNA IDEA, CUÉNTALE LO QUE LE PASA. En cuanto empiezas a explicar algo en general, deja de leerte. Cada frase va pegada a algo que hace, dice o le pasa.
 - NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Si lo que escribes no se puede ver ocurriendo de verdad, está mal escrito.
-- LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice ella por dentro, con sus palabras y en primera persona. Es lo que hace que se reconozca.
+- LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice por dentro, con sus palabras y en primera persona. Es lo que hace que se reconozca.
 - LE PREGUNTAS. De vez en cuando le haces una pregunta directa y la dejas ahí, sin contestársela tú. Le da aire y la mete dentro.
 - LE DAS LA RAZÓN ANTES DE CORREGIRLA. Nunca de frente.
-- NO DES NADA POR SABIDO. Ella no tiene a quién preguntarle. Cortar una explicación no es escribir conciso, es dejarla coja: si hace falta una frase más para que se entienda, va esa frase. Lo que sí sobra siempre es repetir con otras palabras algo ya dicho.
+- NO DES NADA POR SABIDO. No tiene a quién preguntarle. Cortar una explicación no es escribir conciso, es dejarla coja: si hace falta una frase más para que se entienda, va esa frase. Lo que sí sobra siempre es repetir con otras palabras algo ya dicho.
 - NI UNA PALABRA TÉCNICA: ningún planeta, ningún signo, ninguna casa, ningún aspecto. Su carta no se nombra, y no se dice tu informe ni tu estudio.
 - NADA DE ANIMAR NI DE CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
 - PROHIBIDAS ESTAS PALABRAS Y CUALQUIER VARIANTE SUYA: sanar, empoderarte, gestionar tus emociones, tu mejor yo, trabajar en ti, tu proceso, tu camino, y "mejor versión" en todas sus formas.
@@ -86,7 +86,7 @@ Lo lee de noche, cansada, muchas veces en el móvil. Si tiene que releer algo, n
 
 SE ESCRIBE EN ESPAÑOL CORRECTO, CON TODAS SUS TILDES Y TODAS SUS EÑES
 
-Esto no es un detalle. Lo lee una clienta que ha pagado, y un texto al que le faltan las tildes parece roto y barato, por bueno que sea lo que dice.
+Esto no es un detalle. Lo lee alguien que ha pagado, y un texto al que le faltan las tildes parece roto y barato, por bueno que sea lo que dice.
 
 Español, año, día, más, está, aquí, así, también, después, sensación, cariño, vínculo: todas llevan lo que llevan. Ni una palabra sin su acento, y ni una eñe escrita como una ene.`;
 
@@ -110,7 +110,7 @@ Así que aquí no se diagnostica nada. No le cuentas otra vez su patrón, ni le 
 
 De ahí salen las dos reglas que mandan sobre todas las demás:
 
-1. LO QUE ELLA YA ES SOLO APARECE PARA ENGANCHAR LA ACCIÓN. Una frase, la justa para que entienda por qué esto va con ella en concreto y no con cualquiera. Y esa frase tiene que poder rastrearse a algo que su estudio ya dice de ella: si no puedes señalar de dónde sale, no la escribes.
+1. LO QUE YA ES SOLO APARECE PARA ENGANCHAR LA ACCIÓN. Una frase, la justa para que entienda por qué esto va con esta persona en concreto y no con cualquiera. Y esa frase tiene que poder rastrearse a algo que su estudio ya dice: si no puedes señalar de dónde sale, no la escribes.
 
 2. TODO LO DEMÁS ES QUÉ HACER. Eso no está en su estudio y lo pones tú. Es lo que este documento añade, y es a lo que ha venido.
 
@@ -377,7 +377,7 @@ function encargo(area) {
     if (c.tipo === 'comprender') {
       return `CAJA ${i + 1} — "${c.titulo}": ${cuantas}. Es la única caja que no pide hacer nada: le das lo que necesita entender para poder mover esto. Dicho hacia delante -lo que cambia cuando lo entiende-, no como un repaso de lo que le pasó.
 
-Cada entrada lleva un título corto y, debajo, la explicación entera: qué es lo que ella da por cierto ahí sin haberlo puesto nunca en duda, por qué se lo cree con lo que ha vivido -eso está en su texto-, y qué parte de eso no se sostiene. Explicado hasta el final, no apuntado. Cuatro o cinco frases, y si hace falta una más para que se entienda, va.
+Cada entrada lleva un título corto y, debajo, la explicación entera: qué da por cierto ahí sin haberlo puesto nunca en duda, por qué se lo cree con lo que ha vivido -eso está en su texto-, y qué parte de eso no se sostiene. Explicado hasta el final, no apuntado. Cuatro o cinco frases, y si hace falta una más para que se entienda, va.
 
 En esta caja, la resistencia y la señal van vacías.`;
     }
@@ -387,7 +387,7 @@ Cada entrada lleva cuatro cosas, y las cuatro son obligatorias:
 
 TÍTULO: corto, y que diga la acción, no el tema.
 
-TEXTO: de cuatro a seis frases. Empieza por el momento exacto de su vida en el que esto se aplica -uno que salga de su texto, no uno inventado ni uno que le pase a cualquiera-, y sigue con qué hace ahí exactamente: qué dice, qué deja de hacer, cuándo. Tan claro que pueda hacerlo mañana sin preguntarle a nadie. Y dentro, en una frase, por qué a ella en concreto esto le va a mover algo. Si lo que escribes le vale igual a otra persona, bórralo y empieza otra vez.
+TEXTO: de cuatro a seis frases. Empieza por el momento exacto de su vida en el que esto se aplica -uno que salga de su texto, no uno inventado ni uno que le pase a cualquiera-, y sigue con qué hace ahí exactamente: qué dice, qué deja de hacer, cuándo. Tan claro que pueda hacerlo mañana sin preguntarle a nadie. Y dentro, en una frase, por qué a esta persona en concreto le va a mover algo. Si lo que escribes le vale igual a otra persona, bórralo y empieza otra vez.
 
 RESISTENCIA: de dos a cuatro frases. Qué se le va a poner en contra la primera vez que lo intente -lo que va a sentir, lo que se va a decir por dentro para no hacerlo, o lo que va a hacer en su lugar-, y qué hace cuando eso aparezca. Sin esto no sirve de nada: lo intenta una vez, le sale lo de siempre, lo deja, y se queda pensando que el fallo es suyo. Sale de su texto, que ahí está escrito lo que hace cuando algo le remueve.
 
@@ -415,9 +415,9 @@ El título de esta parte ya está puesto y no lo escribes tú: "${area.titulo}".
 
 APERTURA: de cuatro a seis frases, y va hacia delante.
 
-Arranca enganchando: por qué esto va con ella en concreto y no con cualquiera, sacado de algo que su texto ya dice. Tienes que poder señalar de qué frase suya sale; si no puedes, coge otra. Pero es un enganche, no un repaso: aquí no se le vuelve a contar lo que le pasa, que eso ya se lo contaron entero.
+Arranca enganchando: por qué esto va con esta persona en concreto y no con cualquiera, sacado de algo que su texto ya dice. Tienes que poder señalar de qué frase suya sale; si no puedes, coge otra. Pero es un enganche, no un repaso: aquí no se le vuelve a contar lo que le pasa, que eso ya se lo contaron entero.
 
-El resto es lo nuevo: cómo se mueve ella en esta parte de su vida cuando hace las cosas de otra manera, qué hace distinto, y qué le cambia alrededor cuando lo hace. En presente, como algo que ya puede hacer, no como una promesa de lo que será algún día.
+El resto es lo nuevo: cómo se mueve en esta parte de su vida cuando hace las cosas de otra manera, qué hace distinto, y qué le cambia alrededor cuando lo hace. En presente, como algo que ya puede hacer, no como una promesa de lo que será algún día.
 
 NO EMPIECES LA APERTURA CON SU NOMBRE seguido de "tú". Esa construcción no se usa aquí.
 
