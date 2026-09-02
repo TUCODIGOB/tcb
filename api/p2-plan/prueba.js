@@ -296,13 +296,17 @@ async function leer(compra) {
 // TERCERA PARTE: ESCRIBIR UNA DE LAS SIETE
 // ════════════════════════════════════════════════════════════════
 
-// Techo por parte. Una parte escrita entera ronda las 350 palabras; con esto
-// sobra de largo, y es un techo, no un objetivo: solo se paga lo que escribe.
-const TECHO_DE_TEXTO = 3000;
+// Techo por parte. Es un techo, no un objetivo: solo se paga lo que escribe.
+//
+// Estuvo en 3.500 y el texto salia telegrafico: consejos de una linea, de los
+// que da cualquier herramienta gratis. No era culpa del modelo, era del sitio
+// que le dejabamos. Aqui cada cosa que se le pide a la clienta va explicada
+// entera, y para eso hace falta espacio.
+const TECHO_DE_TEXTO = 8000;
 
-// Una parte tarda entre 15 y 30 segundos. Pasado el minuto no esta tardando:
-// esta colgada, y esperar mas no la arregla.
-const ESPERA_MAXIMA_MS = 60000;
+// Una parte escrita a fondo tarda entre 40 y 70 segundos. Pasados dos minutos
+// no esta tardando: esta colgada, y esperar mas no la arregla.
+const ESPERA_MAXIMA_MS = 120000;
 
 // El molde de la respuesta. Pedido asi, no hay que adivinar donde empieza cada
 // cosa: viene cada trozo en su casilla y se pinta directamente.
@@ -323,9 +327,10 @@ function esquema(area) {
                 properties: {
                   titulo: { type: 'string' },
                   texto: { type: 'string' },
+                  resistencia: { type: 'string' },
                   senal: { type: 'string' },
                 },
-                required: ['titulo', 'texto', 'senal'],
+                required: ['titulo', 'texto', 'resistencia', 'senal'],
                 additionalProperties: false,
               },
             },
@@ -341,18 +346,57 @@ function esquema(area) {
   };
 }
 
-// El encargo de una parte. Se arma con lo que dice reglas.js, para que cambiar
-// una caja de sitio sea cambiar una linea alli y no reescribir esto.
+// El encargo de una parte.
+//
+// LO QUE AQUI SE ARREGLO. La primera version pedia "titulo corto y una o dos
+// frases" por cada cosa que hacer. Con ese corse solo caben consejos sueltos:
+// "pon una hora fija", "deja una tarea a medias". Eso lo da cualquier
+// herramienta gratis y no vale lo que cuesta este informe.
+//
+// Ahora cada cosa que se le pide va entera: que hacer, en que momento suyo,
+// QUE SE LE VA A PONER EN CONTRA cuando lo intente y que hace con eso, y en
+// que lo nota. Esa tercera parte es la que separa un metodo de un consejo:
+// sin ella, la clienta lo intenta una vez, le sale la resistencia de siempre,
+// lo deja, y piensa que el fallo es suyo.
+//
+// Y AQUI NO SE ESCRIBE NI UN EJEMPLO. Ni una frase de muestra, ni un trozo de
+// informe de otra persona. Lo que se le enseñe escrito lo copia, y entonces el
+// informe deja de ser de quien lo ha comprado. Solo reglas.
 function encargo(area) {
   const cajas = area.cajas.map((c, i) => {
-    const cuantas = c.min === c.max ? `${c.min}` : `entre ${c.min} y ${c.max}`;
+    const cuantas = c.min === c.max
+      ? `${c.min} ${c.min === 1 ? 'entrada' : 'entradas'}`
+      : `entre ${c.min} y ${c.max} entradas`;
     if (c.tipo === 'comprender') {
-      return `CAJA ${i + 1} — "${c.titulo}": ${cuantas} entradas. Es la única caja que no pide hacer nada: le das lo que necesita entender para poder mover esto. Dicho hacia delante -lo que cambia cuando lo entiende-, no como un repaso de lo que le pasó. Cada entrada lleva un título corto y dos o tres frases. La señal va vacía.`;
+      return `CAJA ${i + 1} — "${c.titulo}": ${cuantas}. Es la única caja que no pide hacer nada: le das lo que necesita entender para poder mover esto. Dicho hacia delante -lo que cambia cuando lo entiende-, no como un repaso de lo que le pasó.
+
+Cada entrada lleva un título corto y, debajo, la explicación entera: qué es lo que ella da por cierto ahí sin haberlo puesto nunca en duda, por qué se lo cree con lo que ha vivido -eso está en su texto-, y qué parte de eso no se sostiene. Explicado hasta el final, no apuntado. Cuatro o cinco frases, y si hace falta una más para que se entienda, va.
+
+En esta caja, la resistencia y la señal van vacías.`;
     }
-    return `CAJA ${i + 1} — "${c.titulo}": ${cuantas} entradas. Cada una es algo que hace, no algo que piense. Título corto, y después una o dos frases que digan exactamente qué hacer, de forma que pueda hacerlo en los próximos siete días sin preguntar nada a nadie. En la señal, una frase: en qué va a notar que está funcionando. Algo que pueda ver, no cómo se va a sentir.`;
+    return `CAJA ${i + 1} — "${c.titulo}": ${cuantas}. Cada una es algo que hace, no algo que piense, y cada una va EXPLICADA ENTERA. Esto es lo que ha comprado: si lo lees y te quedas con ganas de preguntar "¿y cómo hago eso exactamente?", está mal escrito.
+
+Cada entrada lleva cuatro cosas, y las cuatro son obligatorias:
+
+TÍTULO: corto, y que diga la acción, no el tema.
+
+TEXTO: de cuatro a seis frases. Empieza por el momento exacto de su vida en el que esto se aplica -uno que salga de su texto, no uno inventado ni uno que le pase a cualquiera-, y sigue con qué hace ahí exactamente: qué dice, qué deja de hacer, cuándo. Tan claro que pueda hacerlo mañana sin preguntarle a nadie. Y dentro, en una frase, por qué a ella en concreto esto le va a mover algo. Si lo que escribes le vale igual a otra persona, bórralo y empieza otra vez.
+
+RESISTENCIA: de dos a cuatro frases. Qué se le va a poner en contra la primera vez que lo intente -lo que va a sentir, lo que se va a decir por dentro para no hacerlo, o lo que va a hacer en su lugar-, y qué hace cuando eso aparezca. Sin esto no sirve de nada: lo intenta una vez, le sale lo de siempre, lo deja, y se queda pensando que el fallo es suyo. Sale de su texto, que ahí está escrito lo que hace cuando algo le remueve.
+
+SEÑAL: una frase. Un hecho que ella pueda ver desde fuera, no cómo se va a sentir. Y no es repetir la acción con otras palabras: es lo que va a pasar alrededor cuando lo haga. No empieza con "sabrás que funciona cuando" ni con "vas a notar que": se dice el hecho y ya.`;
   }).join('\n\n');
 
   return `${EL_P2_NO_ES_EL_P1}
+
+
+ESTO SE LEE UNA VEZ Y SE ENTIENDE
+
+Lo lee una persona que ha pagado por ello y que no sabe nada de esto. No tiene a quién preguntarle.
+
+Así que no des nada por sabido y no dejes nada a medio explicar. Cortar una explicación no es escribir conciso, es dejarla coja. Cada cosa que le pides tiene que quedar entendida del todo, y si para eso hace falta una frase más, va esa frase.
+
+Lo que sí sobra es repetir con otras palabras algo ya dicho. Eso fuera, siempre.
 
 
 LA PARTE QUE ESCRIBES AHORA
@@ -361,17 +405,21 @@ Es una de las siete, y solo tienes delante lo suyo. No hables de las otras ni la
 
 El título de esta parte ya está puesto y no lo escribes tú: "${area.titulo}". Todo lo que escribas tiene que ir con él.
 
-APERTURA: de dos a cuatro frases, y va hacia delante.
+APERTURA: de cuatro a seis frases, y va hacia delante.
 
-La PRIMERA engancha: una sola frase que le diga por qué esto va con ella en concreto, sacada de algo que su texto ya dice. Tienes que poder señalar de qué frase suya sale; si no puedes, coge otra. Una frase, no dos: aquí no se repasa lo que le pasa, que eso ya se lo contaron.
+Arranca enganchando: por qué esto va con ella en concreto y no con cualquiera, sacado de algo que su texto ya dice. Tienes que poder señalar de qué frase suya sale; si no puedes, coge otra. Pero es un enganche, no un repaso: aquí no se le vuelve a contar lo que le pasa, que eso ya se lo contaron entero.
 
-Las que siguen son lo nuevo: cómo se mueve ella en esta parte de su vida cuando hace las cosas de otra manera. Qué hace distinto y qué le cambia. En presente, como algo que ya puede hacer, no como una promesa de lo que será algún día.
+El resto es lo nuevo: cómo se mueve ella en esta parte de su vida cuando hace las cosas de otra manera, qué hace distinto, y qué le cambia alrededor cuando lo hace. En presente, como algo que ya puede hacer, no como una promesa de lo que será algún día.
+
+NO EMPIECES LA APERTURA CON SU NOMBRE seguido de "tú". Esa construcción no se usa aquí.
 
 ${cajas}
 
 CIERRE: una sola frase, una sola idea, veinte palabras como mucho. No unas dos ideas con "y" ni con un guion. Si te salen dos, quédate con la que más pese y tira la otra.
 
-Su nombre, un par de veces en la parte, separadas y donde caiga natural. Nunca en el cierre.`;
+EL CIERRE NO PUEDE SER DEL TIPO "esto no te quita A, te da B" ni "no te hace A, te hace B". Esa forma está prohibida: dale la vuelta y dilo derecho.
+
+Su nombre, un par de veces en la parte, separadas y donde caiga natural. Nunca en el cierre y nunca en la primera palabra.`;
 }
 
 // Lo que se le enseña: su texto de esta area y sus rasgos de esta area.
@@ -454,6 +502,7 @@ async function escribirParte({ area, nombre, textoDelArea, rasgos, hechas }) {
     entradas: (escrito.cajas?.[i]?.entradas || []).map(e => ({
       titulo: String(e.titulo || '').trim(),
       texto: String(e.texto || '').trim(),
+      resistencia: String(e.resistencia || '').trim(),
       senal: String(e.senal || '').trim(),
     })).filter(e => e.titulo || e.texto),
   }));
@@ -555,11 +604,20 @@ const PAGINA = `<!DOCTYPE html>
   .apertura { margin-bottom:1.4rem; }
   .cajita { background:rgba(189,144,72,.07); border-radius:6px; padding:1rem 1.2rem; margin-bottom:1rem; }
   .cajita h3 { font-family:system-ui,sans-serif; font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:var(--gold); margin-bottom:.8rem; }
-  .entrada { margin-bottom:.9rem; }
+  .entrada { margin-bottom:1.5rem; }
   .entrada:last-child { margin-bottom:0; }
   .entrada b { color:var(--teal); }
-  .senal { display:block; font-family:system-ui,sans-serif; font-size:.85rem; color:#6b6b6b; margin-top:.25rem; }
+  .resistencia, .senal { font-size:.92rem; margin-top:.5rem; padding-left:.9rem; border-left:2px solid rgba(189,144,72,.35); }
+  .resistencia span, .senal span { display:block; font-family:system-ui,sans-serif; font-size:.7rem; text-transform:uppercase; letter-spacing:.09em; color:var(--gold); margin-bottom:.15rem; }
+  .senal { color:#4a4a4a; }
   .cierre { font-style:italic; color:var(--teal); border-top:1px solid rgba(189,144,72,.25); padding-top:1rem; margin-top:.4rem; }
+  /* Al imprimir solo sale el texto. Sin esto, el aviso de la pantalla -"Listo."-
+     se colaba arriba del todo en el PDF. */
+  @media print {
+    h1, .sub, select, button, .aviso { display:none !important; }
+    body { padding:0; }
+    .parte { border:0; box-shadow:none; padding:0 0 1.5rem; page-break-inside:avoid; }
+  }
 </style>
 </head>
 <body>
@@ -637,8 +695,9 @@ function pintar(p) {
   const cajas = (p.cajas||[]).map(c =>
     '<div class="cajita"><h3>' + escapar(c.titulo) + '</h3>' +
     (c.entradas||[]).map(e =>
-      '<p class="entrada"><b>' + escapar(e.titulo) + '</b> — ' + escapar(e.texto) +
-      (e.senal ? '<span class="senal">Lo notas en: ' + escapar(e.senal) + '</span>' : '') + '</p>'
+      '<div class="entrada"><p><b>' + escapar(e.titulo) + '</b> — ' + escapar(e.texto) + '</p>' +
+      (e.resistencia ? '<p class="resistencia"><span>Cuando te cueste</span> ' + escapar(e.resistencia) + '</p>' : '') +
+      (e.senal ? '<p class="senal"><span>Lo notas en</span> ' + escapar(e.senal) + '</p>' : '') + '</div>'
     ).join('') + '</div>'
   ).join('');
   return '<div class="parte"><h2>' + escapar(p.titulo) + '</h2>' +
