@@ -700,7 +700,106 @@ async function escribirParte({ area, nombre, textoDelArea, rasgos, hechas, asign
 }
 
 // ════════════════════════════════════════════════════════════════
-// QUINTA PARTE: LA PAGINA
+// QUINTA PARTE: LA HOJA QUE SE QUEDA
+// ════════════════════════════════════════════════════════════════
+
+// POR QUE HACE FALTA.
+//
+// Al acabar las siete partes se le han pedido catorce o quince cosas. Catorce
+// cosas no las hace nadie: se leen, se cierran y no se vuelve. Y no por falta
+// de ganas, sino porque delante de catorce hay que elegir, y elegir cansa mas
+// que empezar.
+//
+// Esta hoja es la que quita esa decision. El resto del documento se lee una
+// vez; esta se queda encima de la mesa.
+//
+// LLEVA TRES COSAS Y NINGUNA MAS:
+//   Por donde empieza. UNA, no catorce.
+//   El orden de las demas, para que no tenga que decidir otra vez.
+//   Que hacer el dia que lo deje, que lo va a dejar.
+//
+// DE DONDE SALE LO QUE DICE. De las cosas que se le han pedido de verdad -las
+// que han acabado escritas en su documento, no las que se planearon- y de su
+// estudio, que es donde esta escrito COMO abandona ella: si desaparece del
+// todo, si lo cambia por otra tarea, si se castiga por haberlo dejado.
+//
+// SI ESTA LLAMADA FALLA, el documento sigue entero: se queda sin su ultima
+// hoja, y se puede volver a pedir sola.
+
+const ESPERA_DE_LA_HOJA_MS = 90000;
+const TECHO_DE_LA_HOJA = 4000;
+
+const MOLDE_DE_LA_HOJA = {
+  type: 'object',
+  properties: {
+    primera: {
+      type: 'object',
+      properties: { titulo: { type: 'string' }, porque: { type: 'string' } },
+      required: ['titulo', 'porque'],
+      additionalProperties: false,
+    },
+    orden: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { titulo: { type: 'string' }, cuando: { type: 'string' } },
+        required: ['titulo', 'cuando'],
+        additionalProperties: false,
+      },
+    },
+    alFallar: { type: 'string' },
+  },
+  required: ['primera', 'orden', 'alFallar'],
+  additionalProperties: false,
+};
+
+const ENCARGO_DE_LA_HOJA = `El documento ya está escrito. Te doy debajo las cosas que se le han pedido, todas, y su estudio.
+
+Escribes la última hoja. Es la que se queda encima de la mesa: el resto se lee una vez y se guarda, esta se mira el lunes por la mañana.
+
+Y existe por un motivo concreto: se le han pedido catorce o quince cosas, y catorce cosas no las hace nadie. Delante de catorce hay que elegir, y elegir cansa más que empezar. Esta hoja le quita esa decisión.
+
+LLEVA TRES COSAS Y NINGUNA MÁS.
+
+POR DÓNDE EMPIEZA. Eliges UNA de la lista. Una sola. La que más le va a mover si la hace, no la más fácil ni la más cómoda de explicar. Y le dices por qué esa y no otra, en dos o tres frases, con algo de su estudio. Si empieza una, sigue. Si le das catorce, no empieza ninguna.
+
+EL ORDEN DE LAS DEMÁS. Todas las otras, en el orden en que le conviene cogerlas, y cada una con una línea que diga cuándo le toca. Cuándo no es una fecha: es qué tiene que estar pasando ya en su vida para que le toque esa. Se ponen todas, ninguna se queda fuera.
+
+EL DÍA QUE LO DEJE. Lo va a dejar, así que se lo dices antes y sin dramatizarlo.
+
+Cómo lo deja ella en concreto está en su estudio: si desaparece del todo, si lo cambia por otra tarea que la mantenga ocupada, si se castiga por haberlo dejado. De ahí sacas lo que se va a decir por dentro cuando lleve dos semanas sin tocarlo, y le dices qué hace con esa frase.
+
+Y le dices que no vuelve a la lista. Vuelve a la primera, a esa sola. Volver a catorce es no volver.
+
+Nada de animarla, nada de "no pasa nada" y nada de empezar de cero. Se retoma por donde se dijo, y ya.`;
+
+async function escribirLaHoja({ nombre, areas, pedidas }) {
+  const cuerpo = AREAS.map((a, i) => `━━━ ${a.del_p1} ━━━\n\n${areas[i] || '(no guardada)'}`).join('\n\n');
+  const lista = pedidas.map(t => `- ${t}`).join('\n');
+
+  const dicho = await pedirAlModelo({
+    que: 'la hoja',
+    system: `${REGLAS_COMUNES}\n\n\n${ENCARGO_DE_LA_HOJA}`,
+    user: `Se llama ${nombre}.\n\nLO QUE SE LE HA PEDIDO EN TODO EL DOCUMENTO:\n\n${lista}\n\nSU ESTUDIO ENTERO:\n\n${cuerpo}`,
+    molde: MOLDE_DE_LA_HOJA,
+    techo: TECHO_DE_LA_HOJA,
+    espera: ESPERA_DE_LA_HOJA_MS,
+  });
+
+  return {
+    primera: {
+      titulo: String(dicho.primera?.titulo || '').trim(),
+      porque: String(dicho.primera?.porque || '').trim(),
+    },
+    orden: (dicho.orden || [])
+      .map(o => ({ titulo: String(o.titulo || '').trim(), cuando: String(o.cuando || '').trim() }))
+      .filter(o => o.titulo),
+    alFallar: String(dicho.alFallar || '').trim(),
+  };
+}
+
+// ════════════════════════════════════════════════════════════════
+// SEXTA PARTE: LA PAGINA
 // ════════════════════════════════════════════════════════════════
 
 export default async function handler(req, res) {
@@ -766,6 +865,21 @@ export default async function handler(req, res) {
       return res.status(200).json({ parte });
     }
 
+    if (accion === 'hoja') {
+      const { compra, pedidas } = req.body || {};
+      const lista = (Array.isArray(pedidas) ? pedidas : []).map(t => String(t || '').trim()).filter(Boolean);
+      if (lista.length === 0) {
+        return res.status(400).json({ error: 'La hoja se escribe con lo que se le ha pedido, y no ha llegado nada' });
+      }
+      const informe = await leer(compra);
+      const hoja = await escribirLaHoja({
+        nombre: informe?.cliente?.nombre || 'esta persona',
+        areas: informe?.areas || [],
+        pedidas: lista,
+      });
+      return res.status(200).json({ hoja });
+    }
+
     return res.status(400).json({ error: 'Acción no válida' });
   } catch (err) {
     console.error('[p2-plan/prueba]', err);
@@ -807,6 +921,9 @@ const PAGINA = `<!DOCTYPE html>
   .resistencia, .senal { font-size:.92rem; margin-top:.5rem; padding-left:.9rem; border-left:2px solid rgba(189,144,72,.35); }
   .resistencia span, .senal span { display:block; font-family:system-ui,sans-serif; font-size:.7rem; text-transform:uppercase; letter-spacing:.09em; color:var(--gold); margin-bottom:.15rem; }
   .senal { color:#4a4a4a; }
+  .hoja { border-left-color:var(--teal); }
+  .paso { margin-bottom:.6rem; }
+  .paso b { color:var(--teal); }
   .cierre { font-style:italic; color:var(--teal); border-top:1px solid rgba(189,144,72,.25); padding-top:1rem; margin-top:.4rem; }
   /* Al imprimir solo sale el texto. Sin esto, el aviso de la pantalla -"Listo."-
      se colaba arriba del todo en el PDF. */
@@ -892,7 +1009,11 @@ ir.addEventListener('click', async () => {
     const otras = AREAS.filter((_, j) => j !== i).flatMap(a => reparto[a] || []);
     try {
       const { parte } = await llamar({ accion:'parte', compra, indice:i, hechas, asignadas:mias, tomadas:otras });
-      hechas.push({ apertura: parte.apertura, cierre: parte.cierre });
+      hechas.push({
+        apertura: parte.apertura,
+        cierre: parte.cierre,
+        pedidas: (parte.cajas||[]).flatMap(c => (c.entradas||[]).map(e => e.titulo)).filter(Boolean),
+      });
       salida.insertAdjacentHTML('beforeend', pintar(parte));
     } catch (e) {
       salida.insertAdjacentHTML('beforeend',
@@ -900,9 +1021,36 @@ ir.addEventListener('click', async () => {
     }
   }
 
+  // Y al final la hoja, con lo que de verdad ha acabado escrito en el
+  // documento -no con lo que se planeo-, que es lo que ella va a leer.
+  const pedidas = hechas.flatMap(p => p.pedidas || []);
+  if (pedidas.length) {
+    aviso.textContent = 'Escribiendo la hoja que se queda…';
+    try {
+      const { hoja } = await llamar({ accion:'hoja', compra, pedidas });
+      salida.insertAdjacentHTML('beforeend', pintarHoja(hoja));
+    } catch (e) {
+      salida.insertAdjacentHTML('beforeend',
+        '<p class="aviso error">La hoja final ha fallado: ' + escapar(e.message) + '</p>');
+    }
+  }
+
   aviso.textContent = 'Listo.';
   ir.disabled = false; quien.disabled = false;
 });
+
+function pintarHoja(h) {
+  const orden = (h.orden||[]).map((o, i) =>
+    '<p class="paso"><b>' + (i+2) + '. ' + escapar(o.titulo) + '</b> — ' + escapar(o.cuando) + '</p>'
+  ).join('');
+  return '<div class="parte hoja"><p class="cual">La hoja que se queda</p>' +
+    '<h2>Por dónde empiezas</h2>' +
+    '<p class="entrada"><b>' + escapar(h.primera?.titulo) + '</b></p>' +
+    '<p class="apertura">' + escapar(h.primera?.porque) + '</p>' +
+    (orden ? '<div class="cajita"><h3>Y después, en este orden</h3>' + orden + '</div>' : '') +
+    '<div class="cajita"><h3>El día que lo dejes</h3><p>' + escapar(h.alFallar) + '</p></div>' +
+    '</div>';
+}
 
 function pintar(p) {
   const cajas = (p.cajas||[]).map(c =>
