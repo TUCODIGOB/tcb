@@ -364,6 +364,15 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
   const yAsc = -Math.cos(LASTR);
   const xAsc = Math.sin(LASTR)*Math.cos(epsTR) + Math.tan(latR)*Math.sin(epsTR);
   const ASC  = _mod(_D(Math.atan2(yAsc, xAsc)) + 180, 360);
+
+  // Medio Cielo: el grado de la ecliptica que cruza el meridiano en ese
+  // instante. Sale del tiempo sidereo local y de la oblicuidad, los dos ya
+  // calculados aqui arriba. El IC es su punto opuesto.
+  // Hasta ahora no se calculaba: el "MC" que sale en la rueda del PDF es solo
+  // una etiqueta pintada arriba del circulo, no este valor.
+  const MC = _mod(_D(Math.atan2(Math.sin(LASTR), Math.cos(LASTR) * Math.cos(epsTR))), 360);
+  const IC = _mod(MC + 180, 360);
+
  // Casas Whole Sign (la más precisa de implementar, 0° error por definición)
   const ascSignIdx = Math.floor(ASC / 30);
   const casas = [];
@@ -389,6 +398,8 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
   const plutL = plutonLongitude(T);
   const quirL = quironLongitude(T);
   const nodeL = lunarNode(T);
+  // El Nodo Sur es siempre el punto exactamente opuesto al Norte.
+  const nodeSurL = _mod(nodeL + 180, 360);
 
   const mercRetro = _retrogrado(mercuryLongitude, T);
   const venRetro  = _retrogrado(venusLongitude,   T);
@@ -452,14 +463,17 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     casaDe[nombre] = i >= 0 ? i + 1 : null;
   }
 
-  // Y la casa del Nodo Norte, con la misma cuenta. Se hace aparte y NO se mete
-  // en _CUERPOS a proposito: esa lista es la que forma los aspectos, y meterlo
-  // ahi cambiaria la parrilla de aspectos del PDF y el texto de la carta, que
-  // no se tocan. Aqui solo se añade una casa mas a la lista de casas.
-  {
-    const inicioSigno = Math.floor(_mod(nodeL, 360) / 30) * 30;
+  // Y la casa del Nodo Norte, del Nodo Sur y del MC, con la misma cuenta. Se
+  // hacen aparte y NO se meten en _CUERPOS a proposito: esa lista es la que
+  // forma los aspectos, y meterlos ahi cambiaria la parrilla de aspectos del
+  // PDF y el texto de la carta, que no se tocan. Aqui solo se añaden casas a
+  // la lista de casas.
+  // OJO con el MC: las casas son de signo completo, asi que el MC no cae
+  // necesariamente en la casa 10. Esto es correcto, no es un fallo.
+  for (const [clave, lon] of Object.entries({ nodo: nodeL, nodoSur: nodeSurL, mc: MC })) {
+    const inicioSigno = Math.floor(_mod(lon, 360) / 30) * 30;
     const i = casas.indexOf(inicioSigno);
-    casaDe.nodo = i >= 0 ? i + 1 : null;
+    casaDe[clave] = i >= 0 ? i + 1 : null;
   }
 
   // Aspectos: mismos angulos y orbes que dibuja la parrilla del PDF.
@@ -502,6 +516,12 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
     pluton:     signoNombre(plutL),
     quiron:     signoNombre(quirL),
     nodoNorte:  signoNombre(nodeL),
+    nodoSur:    signoNombre(nodeSurL),
+    medioCielo: signoNombre(MC),
+    inicioCielo: signoNombre(IC),
+    mcRaw:   MC,
+    icRaw:   IC,
+    nodeSurRaw: nodeSurL,
     ascRaw:  ASC,
     casas:   casas,
     casaDe:  casaDe,

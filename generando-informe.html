@@ -708,6 +708,14 @@ async function generarDiagnosticoSilencioso(nombre, sexo, fechaNice, hora, lugar
 ${lineas.join('\n')}`;
   })();
 
+  // El signo que rige cada una de las doce casas. Sale de carta.casas, que ya
+  // se calculaba pero no llegaba al modelo.
+  const SIGNOS = ['Aries','Tauro','Géminis','Cáncer','Leo','Virgo','Libra','Escorpio','Sagitario','Capricornio','Acuario','Piscis'];
+  const cuspidesTexto = (Array.isArray(carta.casas) && carta.casas.length === 12)
+    ? `\n\nSigno que rige cada casa (son casas de signo completo: por eso el MC no tiene por que caer en la casa 10, y cuando cae en otra es correcto, no un fallo):\n` +
+      carta.casas.map((grados, i) => `- Casa ${i + 1}: ${SIGNOS[Math.floor(grados / 30)]}`).join('\n')
+    : '';
+
   const cartaTexto = `Carta natal calculada:
 - Ascendente: ${carta.ascendente}
 - Sol: ${carta.sol}${casa('sol')}
@@ -721,7 +729,10 @@ ${lineas.join('\n')}`;
 - Neptuno: ${carta.neptuno}${casa('neptuno')}${retro(carta.nepRetro)}
 - Plutón: ${carta.pluton}${casa('pluton')}${retro(carta.plutRetro)}
 - Quirón: ${carta.quiron}${casa('quiron')}${retro(carta.quirRetro)}
-- Nodo Norte: ${carta.nodoNorte}
+- Nodo Norte: ${carta.nodoNorte}${casa('nodo')}
+- Nodo Sur: ${carta.nodoSur}${casa('nodoSur')}
+- Medio Cielo (MC): ${carta.medioCielo}${casa('mc')}
+- Inicio del Cielo (IC): ${carta.inicioCielo}${cuspidesTexto}
 
 Aspectos (que partes de la persona chocan entre si y cuales se apoyan):
 ${listaAspectos || '- sin aspectos dentro de orbe'}`;
