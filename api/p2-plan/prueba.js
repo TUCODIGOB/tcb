@@ -391,7 +391,17 @@ TEXTO: de cuatro a seis frases. Empieza por el momento exacto de su vida en el q
 
 RESISTENCIA: de dos a cuatro frases. Qué se le va a poner en contra la primera vez que lo intente -lo que va a sentir, lo que se va a decir por dentro para no hacerlo, o lo que va a hacer en su lugar-, y qué hace cuando eso aparezca. Sin esto no sirve de nada: lo intenta una vez, le sale lo de siempre, lo deja, y se queda pensando que el fallo es suyo. Sale de su texto, que ahí está escrito lo que hace cuando algo le remueve.
 
-SEÑAL: una frase. Un hecho que ella pueda ver desde fuera, no cómo se va a sentir. Y no es repetir la acción con otras palabras: es lo que va a pasar alrededor cuando lo haga. No empieza con "sabrás que funciona cuando" ni con "vas a notar que": se dice el hecho y ya.`;
+SEÑAL: una frase, y tiene que poder comprobarla en solitario.
+
+LO QUE HAGAN LOS DEMÁS NO VALE. Nadie sabe si alguien va a preguntar, a responder o a acercarse, así que ponerlo ahí es prometer algo que no se puede prometer. En cuanto la señal depende de otra persona, está mal y se cambia.
+
+Cómo se vaya a sentir tampoco vale: eso cambia de un día para otro y no se puede mirar.
+
+Lo que vale es un cambio en lo que hace, y que se pueda mirar y contestar sí o no: algo que hacía siempre y esta vez no ha hecho, o algo que ha aparecido en su semana y antes no estaba.
+
+Y no es la acción dicha otra vez con otras palabras: es la huella que deja.
+
+No empieza con "sabrás que funciona cuando" ni con "vas a notar que": se dice el hecho y ya.`;
   }).join('\n\n');
 
   return `${EL_P2_NO_ES_EL_P1}
