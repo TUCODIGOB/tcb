@@ -659,7 +659,57 @@ export default async function handler(req, res) {
     wrapText(fx('Los aspectos muestran cómo se relacionan esas partes entre sí: los equilibrios, las tensiones y las conexiones que forman tu manera de vincularte, decidir y reaccionar.'),18,py5,175,5.5);
     addPageNum(5);
 
-    // ── PAGS 6-19 LAS 7 AREAS ────────────────────────────────────────────────
+    // ── PAG 6 EJES, CASAS Y NODOS ────────────────────────────────────────────
+    // Datos que la carta ya calcula y que hasta ahora no salian impresos en
+    // ninguna parte: el Medio Cielo y su opuesto, el signo que rige cada una de
+    // las doce casas, y los dos Nodos con su casa. Van en pagina propia porque
+    // la 5 (posiciones + parrilla de aspectos) ya llega hasta abajo.
+    // El indice de la pagina 2 numera secciones, no paginas, asi que meter una
+    // pagina aqui no lo descuadra; lo que si hay que mover es el contador de
+    // las areas, que arranca justo debajo.
+    doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
+    doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(207,177,128);
+    doc.text(fx('EJES Y CASAS: los puntos que ordenan tu programación inicial'),18,30);
+
+    // El signo que rige cada casa sale del mismo array "casas" que ya usa la
+    // columna Casa de la tabla de posiciones.
+    var SIGNOS_CASA = ['Aries','Tauro','Géminis','Cáncer','Leo','Virgo','Libra','Escorpio','Sagitario','Capricornio','Acuario','Piscis'];
+    function signoDeCasa(i) {
+      if (!carta.casas || carta.casas[i] === undefined || carta.casas[i] === null) return '-';
+      return SIGNOS_CASA[Math.floor(((((carta.casas[i]) % 360) + 360) % 360) / 30)];
+    }
+    // Cada linea se pinta de una sola llamada, sin columnas de ancho fijo, para
+    // que una etiqueta larga no pueda montarse encima de su valor.
+    function lineaDato(etiqueta, valor, y) {
+      doc.setFont('Roboto','normal'); doc.setFontSize(9); doc.setTextColor(40,40,40);
+      doc.text(fx(etiqueta + '  ' + valor),18,y);
+    }
+
+    var py6 = 45;
+    doc.setFont('Roboto','bold'); doc.setFontSize(9); doc.setTextColor(14,63,75);
+    doc.text(fx('MEDIO CIELO E INICIO DEL CIELO'),18,py6); py6 += 7;
+    lineaDato('Medio Cielo (MC):', (carta.medioCielo||'-') + '   ·   casa ' + casaDe(carta.mcRaw), py6); py6 += 6;
+    lineaDato('Inicio del Cielo (IC):', (carta.inicioCielo||'-') + '   ·   casa ' + casaDe(carta.icRaw), py6); py6 += 12;
+
+    doc.setFont('Roboto','bold'); doc.setFontSize(9); doc.setTextColor(14,63,75);
+    doc.text(fx('CÚSPIDES DE LAS CASAS'),18,py6); py6 += 7;
+    doc.setFont('Roboto','normal'); doc.setFontSize(9); doc.setTextColor(40,40,40);
+    for (var hc = 0; hc < 6; hc++) {
+      doc.text(fx('Casa ' + (hc+1) + ': ' + signoDeCasa(hc)),18,py6 + hc*6);
+      doc.text(fx('Casa ' + (hc+7) + ': ' + signoDeCasa(hc+6)),105,py6 + hc*6);
+    }
+    py6 += 6*6 + 6;
+
+    doc.setFont('Roboto','bold'); doc.setFontSize(9); doc.setTextColor(14,63,75);
+    doc.text(fx('NODOS'),18,py6); py6 += 7;
+    lineaDato('Nodo Norte:', (carta.nodoNorte||'-') + '   ·   casa ' + casaDe(carta.nodeRaw), py6); py6 += 6;
+    lineaDato('Nodo Sur:', (carta.nodoSur||'-') + '   ·   casa ' + casaDe(carta.nodeSurRaw), py6); py6 += 12;
+
+    doc.setFont('Roboto','italic'); doc.setFontSize(9); doc.setTextColor(60,60,60);
+    py6 = wrapText(fx('Las casas de esta carta son de signo completo: cada casa ocupa un signo entero, empezando por el del Ascendente. Por eso el Medio Cielo no cae necesariamente en la casa 10, y cuando cae en otra es correcto, no un error de cálculo.'),18,py6,175,5.5);
+    addPageNum(6);
+
+    // ── PAGS 7-20 LAS 7 AREAS ────────────────────────────────────────────────
     var areaTitles=[
       {tit:fx('IDENTIDAD'),sub:fx('Por que eres como eres y por que tu vida es como es')},
       {tit:fx('PATRONES'),sub:fx('Por que siempre te pasa lo mismo y que repites sin poder parar')},
@@ -669,7 +719,7 @@ export default async function handler(req, res) {
       {tit:fx('RELACIONES'),sub:fx('Como te vinculas con los demas y que rol ocupas sin darte cuenta')},
       {tit:fx('DINERO'),sub:fx('Por que el dinero no termina de fluir en tu vida')},
     ];
-    var pageC=6;
+    var pageC=7;   // la 6 la ocupa ahora la pagina de ejes, casas y nodos
     // NINGUN SUBTITULO SE REPITE ENTRE AREAS. Las siete se escriben por
     // separado y ninguna sabe lo que ponen las otras, asi que el que ya haya
     // salido antes no se pinta: el parrafo empieza sin el y nadie lo echa de
