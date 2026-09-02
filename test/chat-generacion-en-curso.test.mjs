@@ -109,7 +109,7 @@ globalThis.fetch = async (url, opciones) => {
     try {
       const cuerpo = JSON.parse(opciones.body);
       const sistema = String(cuerpo.system || '');
-      esRasgos = sistema.startsWith('Eres astrologa');
+      esRasgos = sistema.startsWith('Eres astróloga');
       // Las dos listas devuelven titulos distintos, igual que en la realidad:
       // la de fortalezas no sabe lo que escribe la de desafios, pero no escriben
       // lo mismo palabra por palabra.
