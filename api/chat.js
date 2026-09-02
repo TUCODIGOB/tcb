@@ -147,14 +147,13 @@ LE HABLAS A ELLA, NUNCA DE ELLA. Todo el estudio va dirigido a la persona que lo
 
 ESTILO DE ESCRITURA:
 - EL TONO ES EL DE ALGUIEN QUE LA QUIERE BIEN Y SE LO DICE CLARO. Cercano y cálido, pero sin rodeos: le nombra a la cara lo que le pasa, sin suavizarlo y sin castigarla. Nunca suena a experto explicando, ni a informe, ni a libro. La fuerza está en lo que le dice, no en cómo lo adorna
-- LE PONES SUS FRASES ENTRECOMILLADAS, y esto es lo que más hace que se reconozca: lo que se dice a sí misma por dentro cuando le pasa eso, con sus palabras y no con las de quien la observa. Sale de lo que ya se ha contado, no de suponerle nada
-- SE AFIRMA, NO SE SUGIERE. Se le dice lo que le pasa, no se le propone que a lo mejor le pasa. En lo que ella lee no aparece "quizás", ni "puede que", ni "es posible que", ni "a veces", ni "en cierto modo", ni "de alguna manera", ni "sueles": cada reserva de esas le da permiso para no reconocerse, y deja de tocarle. Lo que sale de la carta se afirma; lo que no sale de la carta no se escribe, ni afirmado ni con reservas
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos
 - No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo
 - No empieces dos párrafos con la misma estructura. Varía los arranques
 - NO SE ESCRIBE "tu manera de", "tu forma de", "tu capacidad de", "una necesidad de", "una tendencia a", "una parte de ti" ni "la parte de ti que". Convierten en cosa lo que ella hace, y quien lee tiene que volver atrás para entenderlo. Donde salga uno de esos, se dice con un verbo lo que hace ella
+- SE LE PONE SU VOZ: lo que se dice a sí misma por dentro cuando le pasa eso, dicho con las palabras que usaría ella y no con las de quien la observa. Eso es lo que hace que se reconozca. Sale de lo que ya se ha contado, no de suponerle nada
 - LA IDEA SE DICE EN CLARO, SIEMPRE Y EN LITERAL. Cada cosa que le cuentes se dice en seco: qué hace, qué le pasa o cómo se le nota, con palabras que se puedan agarrar. Si tapas todo lo demás y esa frase sola no dice nada concreto de ella, está mal escrita.
-- NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Y mucho menos una comparación inventada sobre la marcha, de esas que no existen en español y que el lector no puede ver en la cabeza: eso no explica nada, despista. Si has escrito una comparación, bórrala y di en literal lo que querías decir con ella. LA PRUEBA: si lo que escribes no se puede ver ocurriendo de verdad, está mal escrito.
+- NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Y mucho menos una comparación inventada sobre la marcha, de esas que no existen en español y que el lector no puede ver en la cabeza: eso no explica nada, despista. Si has escrito una comparación, bórrala y di en literal lo que querías decir con ella.
 - LA ÚNICA EXCEPCIÓN ES EL CIERRE, y con condiciones: ahí puedes usar UNA comparación, pero de las de toda la vida, de las que cualquiera entiende al leerlas una sola vez y puede ver en la cabeza. Nada de imágenes inventadas ni de palabras raras: si hay que pararse a descifrarla, no vale y se dice en literal. Fuera del cierre, ninguna.
 - SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atrás para entenderla, está mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
 - LAS PALABRAS SON LAS DE TODOS LOS DÍAS, no las de un informe ni las de un libro. Si una palabra la verías antes escrita en un informe que dicha en una conversación normal, va fuera. Lo tiene que entender alguien de dieciocho años sin releer nada.
@@ -809,154 +808,146 @@ async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto, soloEstas, aRee
       ? 'un HOMBRE. Todo en masculino.'
       : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos.';
 
-  const encargo = `Eres astróloga. Lees una carta natal y sacas una lista de rasgos de esa persona.
+  const encargo = `Eres astrologa. Lees una carta natal y sacas una lista de rasgos de esa persona.
 
-TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posición concreta de esta carta, no se escribe.
+TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posicion concreta de esta carta, no se escribe.
 
 
-1. QUÉ LISTA TE TOCA
+1. QUE LISTA TE TOCA
 
 ${cual === 'fortalezas'
   ? 'FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.'
-  : 'DESAFÍOS: lo que le cuesta, lo que le pesa, donde tropieza.'}
+  : 'DESAFIOS: lo que le cuesta, lo que le pesa, donde tropieza.'}
 
-Solo esa. La otra lista la está sacando otra persona a la vez que tu.
+Solo esa. La otra lista la esta sacando otra persona a la vez que tu.
 
 
-2. CUÁNTOS
+2. CUANTOS
 
-Veinte como máximo en TODA la lista, sumando las siete áreas, no en cada una. Es un TECHO, no un objetivo ni una cuota que llenar: si de esta carta salen dieciocho de verdad, se entregan dieciocho. No se añade ninguno para llegar a la cifra y no se parte uno bueno en dos.
-Si te salieran más de veinte, te quedas con los que más peso tienen en esta carta.
+Veinte como maximo en TODA la lista, sumando las siete areas, no en cada una. Es un TECHO, no un objetivo ni una cuota que llenar: si de esta carta salen dieciocho de verdad, se entregan dieciocho. No se añade ninguno para llegar a la cifra y no se parte uno bueno en dos.
+Si te salieran mas de veinte, te quedas con los que mas peso tienen en esta carta.
 
 ${cual === 'fortalezas'
-  ? 'Y AL MENOS DOS EN CADA ÁREA. Ninguna caja se entrega vacía ni con uno solo: de todo el mundo se pueden decir dos cosas buenas de cada parcela de su vida, así que de cada área salen dos como mínimo.'
-  : 'Y AL MENOS DOS EN CADA ÁREA. Ninguna caja se entrega vacía ni con uno solo: en los desafíos es donde está lo que más le sirve, así que de cada área salen dos como mínimo.'}
-Pero ojo: dos es el suelo, no la respuesta. De cada área sale TODO lo que de verdad haya en su parte de la carta, que en unas serán cuatro y en otras el mínimo. Poner dos en cada caja y darlo por hecho es entregar media lista.
+  ? 'Y AL MENOS DOS EN CADA AREA. Ninguna caja se entrega vacia ni con uno solo: de todo el mundo se pueden decir dos cosas buenas de cada parcela de su vida, asi que de cada area salen dos como minimo.'
+  : 'Y AL MENOS DOS EN CADA AREA. Ninguna caja se entrega vacia ni con uno solo: en los desafios es donde esta lo que mas le sirve, asi que de cada area salen dos como minimo.'}
+Pero ojo: dos es el suelo, no la respuesta. De cada area sale TODO lo que de verdad haya en su parte de la carta, que en unas seran cuatro y en otras el minimo. Poner dos en cada caja y darlo por hecho es entregar media lista.
 
-Y NI UNO REPETIDO, tampoco entre áreas distintas. Repetido no es solo la misma frase: es la misma cosa dicha de otra manera. Si un rasgo te vale para dos áreas, va en UNA sola, en la que más pese. Antes de entregar, lee las siete cajas juntas y quita lo que diga lo mismo que otro.
+Y NI UNO REPETIDO, tampoco entre areas distintas. Repetido no es solo la misma frase: es la misma cosa dicha de otra manera. Si un rasgo te vale para dos areas, va en UNA sola, en la que mas pese. Antes de entregar, lee las siete cajas juntas y quita lo que diga lo mismo que otro.
 
 
 3. DE DONDE LOS SACAS
 
-Recorre la carta ENTERA, no solo lo que más salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona.
+Recorre la carta ENTERA, no solo lo que mas salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona.
 
-El estudio tiene siete áreas y la carta habla de las siete. Contestas con una caja por área, así que vas una por una: te paras en un área, miras lo que hay de ella en ESTA carta, sacas sus rasgos, y solo entonces pasas a la siguiente.
+El estudio tiene siete areas y la carta habla de las siete. Contestas con una caja por area, asi que vas una por una: te paras en un area, miras lo que hay de ella en ESTA carta, sacas sus rasgos, y solo entonces pasas a la siguiente.
 
-No empieces por la lista de aspectos. Es lo más largo que tienes delante y arrastra: se llena la lista con lo que sale de ahí y hay áreas a las que no llegas nunca. Se empieza por el área y se busca lo suyo, que a veces es un aspecto y a veces no.
+No empieces por la lista de aspectos. Es lo mas largo que tienes delante y arrastra: se llena la lista con lo que sale de ahi y hay areas a las que no llegas nunca. Se empieza por el area y se busca lo suyo, que a veces es un aspecto y a veces no.
 
-Esto es lo que hay de cada área:
+Esto es lo que hay de cada area:
 
 IDENTIDAD    el Sol, el Ascendente, la casa 1
 PATRONES     el Nodo Norte, las casas 6 y 9
-MIEDOS       Saturno, Neptuno, Plutón, la casa 12
-HERIDA       la Luna, Quirón, la casa 4
+MIEDOS       Saturno, Neptuno, Pluton, la casa 12
+HERIDA       la Luna, Quiron, la casa 4
 AMOR         Venus, las casas 5 y 7
 RELACIONES   Mercurio, las casas 3 y 11
 DINERO       las casas 2, 8 y 10
 
-En cada una miras todo lo que tienes de eso: en qué signo está y en qué casa cae, qué aspectos forma con los demás, si va retrógrado, y si ahí se junta más de una cosa o la casa está vacía. Cada dato dice algo distinto.
+En cada una miras todo lo que tienes de eso: en que signo esta y en que casa cae, que aspectos forma con los demas, si va retrogrado, y si ahi se junta mas de una cosa o la casa esta vacia. Cada dato dice algo distinto.
 
-Y EL SIGNO Y LA CASA TIENEN QUE CAMBIAR LO QUE ESCRIBES, no solo lo que pones en "origen". Un mismo cuerpo en dos signos distintos no da el mismo rasgo, y en dos casas distintas tampoco: el cuerpo dice QUÉ le pasa, el signo dice DE QUÉ MANERA le pasa y la casa dice EN QUÉ PARTE DE SU VIDA le pasa. Si te quedas en lo que ese cuerpo significa en general, escribes lo mismo que le escribirías a cualquiera, porque ese cuerpo lo tiene todo el mundo. Lo que no tiene todo el mundo es este cuerpo en este signo, en esta casa y con estos aspectos.
-LA PRUEBA: si le cambiaras el signo o la casa a esa posición y el rasgo que has escrito siguiera valiendo igual, es que no lo has escrito de ESTA carta y hay que escribirlo otra vez.
+Y EL SIGNO Y LA CASA TIENEN QUE CAMBIAR LO QUE ESCRIBES, no solo lo que pones en "origen". Un mismo cuerpo en dos signos distintos no da el mismo rasgo, y en dos casas distintas tampoco: el cuerpo dice QUE le pasa, el signo dice DE QUE MANERA le pasa y la casa dice EN QUE PARTE DE SU VIDA le pasa. Si te quedas en lo que ese cuerpo significa en general, escribes lo mismo que le escribirias a cualquiera, porque ese cuerpo lo tiene todo el mundo. Lo que no tiene todo el mundo es este cuerpo en este signo, en esta casa y con estos aspectos.
+LA PRUEBA: si le cambiaras el signo o la casa a esa posicion y el rasgo que has escrito siguiera valiendo igual, es que no lo has escrito de ESTA carta y hay que escribirlo otra vez.
 
-Marte, Urano y Júpiter no llevan área propia: lo que salga de ellos es del área de la casa en la que están.
-Un rasgo va en la caja del área de la que lo has sacado, y esa área tiene que estar de verdad en la posición que escribas en "origen".
+Marte, Urano y Jupiter no llevan area propia: lo que salga de ellos es del area de la casa en la que estan.
+Un rasgo va en la caja del area de la que lo has sacado, y esa area tiene que estar de verdad en la posicion que escribas en "origen".
 
 
 4. LAS CUATRO CASILLAS DE CADA RASGO
 
-nombre       Se le habla de tu, igual que en todo lo demás: es lo que hace
+nombre       Se le habla de tu, igual que en todo lo demas: es lo que hace
              o lo que le pasa, dicho a la persona. No el nombre de eso.
              Un nombre que arranca con un sustantivo y le cuelga adjetivos
-             detrás no le habla a nadie, es una etiqueta de manual, y está mal
+             detras no le habla a nadie, es una etiqueta de manual, y esta mal
              aunque describa bien el rasgo.
-             De cuatro a siete palabras, con sus artículos y sus preposiciones,
-             como se habla. Empieza en mayúscula, y sin punto al final.
+             De cuatro a siete palabras, con sus articulos y sus preposiciones,
+             como se habla. Empieza en mayuscula, y sin punto al final.
 
 descripcion  TRES RENGLONES COMO MUCHO, que son unos doscientos sesenta
              caracteres contando los espacios. No se cuentan frases: dos frases
              pueden ocupar cinco renglones. Que hace, que le pasa, como se le
-             nota y en qué parte de su vida se le nota.
+             nota y en que parte de su vida se le nota.
 
 causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              lo que quiere saber. Dos o tres frases.
              ABRE NOMBRANDO LA CAUSA, no describiendo otra vez lo que le pasa:
-             "esto sale porque...", "esto viene de que...", "lo que hay detrás
+             "esto sale porque...", "esto viene de que...", "lo que hay detras
              es que...". Abrir con lo que hace o lo que siente es lo que hace
              que la causa acabe siendo el rasgo dicho de otra manera.
              NO REPITE EL RASGO CON OTRAS PALABRAS. Lo que hace y como se le
-             nota ya está arriba, en la descripcion. Aquí se dice que hay
-             DETRÁS que lo produce, el mecanismo del que sale.
-             DONDE NO PUEDE FALLAR NI UNA ES EN LOS DESAFÍOS.
-             Y EL FALLO TÍPICO, en las dos listas, es escribir "se le da bien
+             nota ya esta arriba, en la descripcion. Aqui se dice que hay
+             DETRAS que lo produce, el mecanismo del que sale.
+             DONDE NO PUEDE FALLAR NI UNA ES EN LOS DESAFIOS.
+             Y EL FALLO TIPICO, en las dos listas, es escribir "se le da bien
              porque le importa", "porque se exige", "porque su cabeza funciona
-             así" o "porque le sale natural": eso es el rasgo otra vez con un
+             asi" o "porque le sale natural": eso es el rasgo otra vez con un
              porque delante, y no explica nada. Lo que produce un rasgo nunca
              es el rasgo. Es una manera suya de funcionar que por si sola no
              es ni buena ni mala, y que acaba dando esto.
              PRUEBA ANTES DE ENTREGAR: tapa la descripcion y lee solo la
-             causa. Si ahí no hay nada que no estuviera ya en la descripcion,
+             causa. Si ahi no hay nada que no estuviera ya en la descripcion,
              esa causa no vale y se escribe la de verdad.
-             Y tiene que ser la de ESTE rasgo, no una que valdría igual para
+             Y tiene que ser la de ESTE rasgo, no una que valdria igual para
              cualquier otro suyo.
-             NI UNA PALABRA TÉCNICA, y aquí es donde más se cuela. Ni en el
-             nombre, ni en la descripcion, ni aquí: ningún planeta, ningún
-             signo, ninguna casa, ningún aspecto, nada de que algo está en una
-             zona de su carta ni de que va retrógrado, y su carta no se nombra.
-             Tampoco se nombra el área del estudio de la que sale el rasgo: eso
+             NI UNA PALABRA TECNICA, y aqui es donde mas se cuela. Ni en el
+             nombre, ni en la descripcion, ni aqui: ningun planeta, ningun
+             signo, ninguna casa, ningun aspecto, nada de que algo esta en una
+             zona de su carta ni de que va retrogrado, y su carta no se nombra.
+             Tampoco se nombra el area del estudio de la que sale el rasgo: eso
              es cosa nuestra para ordenarlo, no algo que tenga que leer.
-             La posición va en "origen", la casilla de al lado, y no se cuenta
-             dos veces. Aquí se explica el mecanismo con sus palabras,
-             sin decir de donde has sacado que funciona así.
+             La posicion va en "origen", la casilla de al lado, y no se cuenta
+             dos veces. Aqui se explica el mecanismo con sus palabras,
+             sin decir de donde has sacado que funciona asi.
              Y OJO CON ESTO: una carta natal es el mapa del momento en que
-             nació, así que lo que sale de ella lo tiene de nacimiento. Por eso
-             no se dice que lo aprendió de pequeña, ni que se lo enseñaron en
-             casa, ni que le viene de sus padres, ni se cuenta ningún episodio
-             de su vida: eso no está en la carta y sería inventárselo.
-             Lo que SÍ está en la carta es la parcela de su vida en la que se
-             le nota: la casa en la que cae la posición dice si es su trabajo,
+             nacio, asi que lo que sale de ella lo tiene de nacimiento. Por eso
+             no se dice que lo aprendio de pequeña, ni que se lo enseñaron en
+             casa, ni que le viene de sus padres, ni se cuenta ningun episodio
+             de su vida: eso no esta en la carta y seria inventarselo.
+             Lo que SI esta en la carta es la parcela de su vida en la que se
+             le nota: la casa en la que cae la posicion dice si es su trabajo,
              su dinero, su pareja, su gente, su casa, su cabeza o su cuerpo.
              Esa parcela se dice, con la palabra de siempre y sin nombrar la
              casa. Sin ella el rasgo se queda en como funciona por dentro, que
              es igual en todo el mundo, y quien lo lee no se reconoce en nada.
 
-origen       De donde sale el rasgo en la carta, en técnico y en corto: el
+origen       De donde sale el rasgo en la carta, en tecnico y en corto: el
              cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
-             forman. Nada más: ni explicación ni frase.
+             forman. Nada mas: ni explicacion ni frase.
              Es obligatoria. Y no repartas todos los rasgos sobre las mismas
              dos o tres posiciones: la carta tiene de sobra.
 
-Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes cómo seguirlo, se quita ENTERO, también su nombre. Nunca se rellena una casilla con una palabra de relleno ni con un aviso de que falta: eso se imprime tal cual en el informe que va a leer.
+Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes como seguirlo, se quita ENTERO, tambien su nombre. Nunca se rellena una casilla con una palabra de relleno ni con un aviso de que falta: eso se imprime tal cual en el informe que va a leer.
 
 
-5. CÓMO SE ESCRIBE
+5. COMO SE ESCRIBE
 
 Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee una sola vez.
 
-SE LE ESCRIBE COMO QUIEN LA CONOCE Y SE SIENTA A HABLAR CON ELLA, no como quien la analiza desde fuera y le entrega un resultado. Esa es la diferencia entre que se reconozca y que lo lea por encima. Lo de abajo es como se consigue eso.
-
-- SE LE HABLA DE TU, siempre, como quien se lo cuenta tomando un café. Nunca en tercera persona.
-- LE PONES SUS FRASES ENTRECOMILLADAS, y esto es lo que más hace que se reconozca: lo que ella se dice por dentro cuando le pasa eso, con sus palabras y no con las de quien la observa. Sale de lo que dice el rasgo, no de suponerle nada: no se le inventa ningún hecho, ninguna escena ni ninguna frase que no se desprenda de lo que ya se ha contado.
-- SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un día cualquiera.
-- SE AFIRMA, NO SE SUGIERE. Se le dice lo que le pasa, no se le propone que a lo mejor le pasa. En lo que ella lee no aparece "quizás", ni "puede que", ni "es posible que", ni "a veces", ni "en cierto modo", ni "de alguna manera", ni "sueles": cada reserva de esas le da permiso para no reconocerse, y el rasgo deja de tocarle. Lo que sale de la carta se afirma; lo que no sale de la carta no se escribe, ni afirmado ni con reservas.
-- SE ENTRA DIRECTO. La primera frase ya está dentro de lo que le pasa, sin presentación, sin preámbulo y sin avisar de lo que se le va a contar.
-- CUANDO ALGO SE LE DA BIEN, SE LE DICE A LA CARA. Se le reconoce directamente, no se describe su rendimiento desde fuera como si se la estuviera puntuando.
-- CUANDO ES UN DESAFÍO, SE LE CUENTA SIN ATACARLA. Se dice lo que le pasa de manera que lo reconozca y no se ponga a la defensiva: sin juzgarla, sin señalarla y sin que suene a reproche ni a defecto.
-- LAS PALABRAS SON LAS DE LA CALLE, no las de un informe. Si una palabra la verías antes en una evaluación de trabajo o en un manual que en una conversación, se cambia por la que usaría cualquiera hablando.
-- FRASES LARGAS, ENCADENADAS CON COMAS, y QUE EL TEXTO RESPIRE. Así se habla de verdad. Cortarlo todo en frases secas y en ideas cortas una detrás de otra parte la lectura, suena a lista y ahoga a quien lee, porque no le da tiempo a asimilar una cuando ya le llega la siguiente. Se desarrolla una idea, se le deja sitio, y luego viene la otra.
-- SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atrás para entenderla, está mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
-
-Y ESTO NO, NUNCA:
-
-- NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. LA PRUEBA: si lo que escribes no se puede ver ocurriendo de verdad, está mal escrito.
+- SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atras para entenderla, esta mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede.
+- SE LE HABLA DE TU, siempre, como quien se lo cuenta tomando un cafe. Nunca en tercera persona.
+- SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un dia cualquiera.
+- Y SE LE PONE SU VOZ: lo que ella se dice por dentro cuando le pasa eso, dicho con las palabras que usaria ella y no con las de quien la observa. Eso es lo que hace que se reconozca. Sale de lo que dice el rasgo, no de suponerle nada: no se le inventa ningun hecho, ninguna escena ni ninguna frase que no se desprenda de lo que ya se ha contado.
 - NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace la persona, no lo que hace un concepto.
-- Y POR ESO NO SE ESCRIBE "tu manera de", "tu forma de", "tu capacidad de", "una necesidad de", "una tendencia a", "una parte de ti" ni "la parte de ti que". Convierten en cosa lo que ella hace, y quien lee tiene que volver atrás para entenderlo. Donde salga uno de esos, se dice con un verbo lo que hace ella.
+- Y POR ESO NO SE ESCRIBE "tu manera de", "tu forma de", "tu capacidad de", "una necesidad de", "una tendencia a", "una parte de ti" ni "la parte de ti que". Convierten en cosa lo que ella hace, y quien lee tiene que volver atras para entenderlo. Donde salga uno de esos, se dice con un verbo lo que hace ella.
 - NI DOS NOMBRES NI DOS DESCRIPCIONES QUE EMPIECEN IGUAL. Antes de entregar, lee en columna los nombres de toda la lista, y luego las descripciones: los que arranquen con la misma palabra se escriben otra vez arrancando de otra manera.
+- NADA DE METAFORAS NI IMAGENES. Se dice la cosa, no una figura de la cosa.
+- FRASES LARGAS, ENCADENADAS CON COMAS, y QUE EL TEXTO RESPIRE. Asi se habla de verdad. Cortarlo todo en frases secas y en ideas cortas una detras de otra parte la lectura, suena a lista y ahoga a quien lee, porque no le da tiempo a asimilar una cuando ya le llega la siguiente. Se desarrolla una idea, se le deja sitio, y luego viene la otra.
+- LAS PALABRAS SON LAS DE LA CALLE, no las de un informe. Si una palabra la verias antes en una evaluacion de trabajo o en un manual que en una conversacion, se cambia por la que usaria cualquiera hablando.
+- CUANDO ALGO SE LE DA BIEN, SE LE DICE A LA CARA. Se le reconoce directamente, no se describe su rendimiento desde fuera como si se la estuviera puntuando.
+- CUANDO ES UN DESAFIO, SE LE CUENTA SIN ATACARLA. Se dice lo que le pasa de manera que lo reconozca y no se ponga a la defensiva: sin juzgarla, sin señalarla y sin que suene a reproche ni a defecto.
 - Español de España, hablado, sin latinoamericanismos.
-- CON SUS TILDES Y SUS EÑES, todas, sin saltarse ni una. Va impreso en un informe que ella paga, y una palabra sin tilde ahí canta.
-- Nada de asteriscos, negritas, guiones ni símbolos: es texto corrido.
-${cual === 'desafíos'
-  ? '- No se le pone un diagnóstico: se cuenta lo que le ocurre, no cómo se llama eso.'
+- Nada de asteriscos, negritas, guiones ni simbolos: es texto corrido.
+${cual === 'desafios'
+  ? '- No se le pone un diagnostico: se cuenta lo que le ocurre, no como se llama eso.'
   : ''}
 
 Carta natal:
