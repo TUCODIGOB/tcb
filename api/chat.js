@@ -953,6 +953,7 @@ Y ESTO NO, NUNCA:
 - Y POR ESO NO SE ESCRIBE "tu manera de", "tu forma de", "tu capacidad de", "una necesidad de", "una tendencia a", "una parte de ti" ni "la parte de ti que". Convierten en cosa lo que ella hace, y quien lee tiene que volver atrás para entenderlo. Donde salga uno de esos, se dice con un verbo lo que hace ella.
 - NI DOS NOMBRES NI DOS DESCRIPCIONES QUE EMPIECEN IGUAL. Antes de entregar, lee en columna los nombres de toda la lista, y luego las descripciones: los que arranquen con la misma palabra se escriben otra vez arrancando de otra manera.
 - Español de España, hablado, sin latinoamericanismos.
+- CON SUS TILDES Y SUS EÑES, todas, sin saltarse ni una. Va impreso en un informe que ella paga, y una palabra sin tilde ahí canta.
 - Nada de asteriscos, negritas, guiones ni símbolos: es texto corrido.
 ${cual === 'desafíos'
   ? '- No se le pone un diagnóstico: se cuenta lo que le ocurre, no cómo se llama eso.'
