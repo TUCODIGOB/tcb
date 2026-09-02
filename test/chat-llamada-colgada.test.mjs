@@ -154,7 +154,7 @@ globalThis.fetch = async (url, opciones) => {
   try {
     const cuerpo = JSON.parse(opciones.body);
     const sistema = String(cuerpo.system || '');
-    esLista = sistema.startsWith('Eres astróloga');
+    esLista = sistema.startsWith('Eres astrologa');
     cualLista = sistema.includes('FORTALEZAS: lo que se le da bien') ? 'Fortaleza' : 'Desafio';
     esClasificar = sistema.startsWith('Un estudio de personalidad');
     if (esClasificar) {
