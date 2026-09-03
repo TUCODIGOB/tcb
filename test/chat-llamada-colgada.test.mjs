@@ -46,8 +46,6 @@ const ENPRODUCCION = [
   ['el tope de cada area',          'signal: reloj.senal(90000)'],
   ['el tope de elegir',            'const TOPE_DE_ELEGIR = 100000'],
   ['el tope de escribir',          'const TOPE_DE_ESCRIBIR = 110000'],
-  ['el tope del repaso',            'const TOPE_DE_REPASO = 50000'],
-  ['el sitio que el repaso no toca','const LO_QUE_VIENE_DETRAS = 155000'],
 ];
 console.log('\n  api/chat.js — una llamada colgada ya no se lleva el informe por delante\n');
 for (const [que, texto] of ENPRODUCCION) {
@@ -87,10 +85,7 @@ function aEscala(texto, presupuesto) {
     .replace('const TOPE_DE_ELEGIR = 100000', 'const TOPE_DE_ELEGIR = 2000')
     .replace('const TOPE_DE_ESCRIBIR = 110000', 'const TOPE_DE_ESCRIBIR = 2500')
     .replace('reloj.senal(90000)', 'reloj.senal(2500)')
-    .replace('hayTiempoPara(180)', 'hayTiempoPara(5)')
-    .replace('const TOPE_DE_REPASO = 50000', 'const TOPE_DE_REPASO = 1500')
-    .replace('const LO_QUE_VIENE_DETRAS = 155000', 'const LO_QUE_VIENE_DETRAS = 3000')
-    .replace('const REPASO_MINIMO = 25000', 'const REPASO_MINIMO = 800');
+    .replace('hayTiempoPara(180)', 'hayTiempoPara(5)');
 }
 
 const stripeFalsoRuta = path.join(AQUI, '.stripe-falso.mjs');
@@ -169,16 +164,15 @@ globalThis.fetch = async (url, opciones) => {
   llamadas++;
   if (!opciones || !opciones.signal) sinSenal++;
 
-  let esElegir = false, esRepaso = false, esEscribir = false, cuantos = 0;
+  let esElegir = false, esEscribir = false, cuantos = 0;
   try {
     const cuerpo = JSON.parse(opciones.body);
     const sistema = String(cuerpo.system || '');
     esElegir = sistema.includes('AQUÍ NO SE ESCRIBE EL INFORME');
-    esRepaso = sistema.includes('AQUÍ NO SE ESCRIBEN TEXTOS Y NO SE EMPIEZA DE CERO');
     esEscribir = sistema.includes('AQUÍ NO SE ELIGE NADA');
     if (esEscribir) cuantos = cuantosPide(cuerpo);
   } catch (e) {}
-  const esLista = esElegir || esRepaso || esEscribir;
+  const esLista = esElegir || esEscribir;
 
   // LA LLAMADA QUE NO CONTESTA. Solo termina si la cortan: si el codigo no le
   // pone senal, esta promesa no se resuelve jamas y la prueba se cuelga, igual
@@ -195,7 +189,7 @@ globalThis.fetch = async (url, opciones) => {
   // La de elegir razona, asi que su respuesta trae delante un bloque de
   // pensamiento y detras el texto, como hace la API de verdad. Las demas
   // contestan con un bloque solo.
-  if (esElegir || esRepaso) {
+  if (esElegir) {
     return { ok: true, status: 200, json: async () => ({ content: [
       { type: 'thinking', thinking: '' },
       { type: 'text', text: LOS_ELEGIDOS },
@@ -245,7 +239,7 @@ try {
   comprobar('la peticion no se queda colgada', !a.colgado, `${(tardo / 1000).toFixed(1)}s`);
   comprobar('el informe sale igual', a.code === 200, 'HTTP ' + a.code);
   comprobar('la colgada se corta y se vuelve a pedir esa sola',
-    llamadas === 12, `${llamadas} llamadas (11 + la que se corto)`);
+    llamadas === 11, `${llamadas} llamadas (10 + la que se corto)`);
   comprobar('ninguna llamada al modelo va sin tope de tiempo', sinSenal === 0,
     `${sinSenal} sin tope`);
 
