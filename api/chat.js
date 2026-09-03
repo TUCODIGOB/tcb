@@ -955,9 +955,23 @@ Un rasgo es su nombre y su posición. Si empiezas uno y no sabes de dónde lo sa
 
 Esto no es un consejo: es la mitad del trabajo, y va con las dos listas escritas delante.
 
-PRIMERO, LOS QUE DICEN LO MISMO. Lees los rasgos de las dos listas, todos, y los comparas de dos en dos. Dos son el mismo si al leer uno ya sabes lo que dice el otro, aunque estén escritos con palabras distintas, aunque estén en áreas distintas y aunque uno esté en fortalezas y el otro en desafíos. De cada pareja se queda UNO, el que más pese, y el otro se va.
+PRIMERO, LOS QUE NACEN DE LO MISMO. Lees los rasgos de las dos listas, todos, y los comparas de dos en dos.
 
-DESPUÉS, EL ÁREA DE CADA UNO. Lees cada rasgo entero -el nombre y la descripción, no la posición de la que salió- y te preguntas de qué habla. Si habla de otra área, lo mueves a esa. Un rasgo que sacaste del Sol y que acaba hablando de cómo se lleva con su gente es de RELACIONES, aunque el Sol sea de IDENTIDAD. Quien lo lee ve lo que dice el rasgo, no de dónde lo sacaste.
+Y no compares cómo están escritos: compara la conducta que hay debajo. Dos rasgos son el mismo cuando la persona está haciendo lo mismo en los dos, aunque uno hable del trabajo y otro de su casa, aunque estén en áreas distintas y aunque uno esté en fortalezas y el otro en desafíos. La prueba es esta: si al corregir uno el otro se corrige solo, son el mismo. De cada pareja se queda UNO, el que más pese, y el otro se va.
+
+Y así es como se cuela lo repetido: una sola conducta suya se reparte en tres o cuatro rasgos, cada uno contándola en una parcela distinta de su vida. Con nombres distintos parecen cuatro. Son uno. Eso es lo que hay que cazar, y para verlo hay que mirar qué está haciendo ella, no qué palabras se han usado.
+
+Y UN MISMO TERRENO NO SALE EN LAS DOS LISTAS. Si de algo has sacado una fortaleza y también un desafío, no son dos rasgos: es uno con sus dos caras, y quien lo lee ve una contradicción, porque en el informe van en páginas distintas y nada le dice que van juntas. Se queda la cara que más peso tenga hoy en su vida y la otra se va.
+
+DESPUÉS, EL ÁREA DE CADA UNO, Y AQUÍ NO MANDA LA POSICIÓN.
+
+Tapa de dónde lo sacaste. Lee solo el rasgo y pregúntate de qué habla, con la lista de las siete delante. Ahí es donde va, aunque la posición diga otra cosa.
+
+La posición sirvió para encontrarlo; a partir de aquí no decide nada, porque quien lo lee no la ve: solo ve la etiqueta y el texto, juntos. Si los dos no cuadran, la etiqueta está mal y punto.
+
+Ojo con las áreas que en la carta miran a más de una cosa: ahí es donde el rasgo se queda pegado a la posición y acaba con una etiqueta que no habla de lo que él cuenta.
+
+Esto se hace rasgo por rasgo y sin saltarse ninguno: es el paso que más veces sale mal.
 
 DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas, área por área, cuántas fortalezas y cuántos desafíos han quedado. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale rescatar el que acabas de quitar ni escribir una variante suya.
 
@@ -980,9 +994,11 @@ Nombre de pila: ${nombrePila}`;
     // sin esto no puede comparar, y sin comparar salen los repetidos y las
     // etiquetas cambiadas de sitio.
     //
-    // El esfuerzo bajo llega de sobra: comparar treinta cosas y ver cuales se
-    // pisan no da para mas, y el rato que se pase pensando sale del reloj de la
-    // clienta.
+    // EL ESFUERZO, MEDIO. Estuvo en bajo mientras esta llamada ademas escribia
+    // los treinta y tantos rasgos enteros y se comia el reloj. Ya no escribe:
+    // devuelve una linea por rasgo, asi que le sobra sitio para pensar. Y aqui
+    // es donde se decide todo lo que salia mal -los repetidos y las etiquetas
+    // cambiadas de sitio-, que es justo lo que necesita pensarse.
     razona: true,
     techo: 8000,
     system: encargo,
@@ -1145,7 +1161,7 @@ async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, es
   };
   if (razona) {
     cuerpo.thinking = { type: 'adaptive' };
-    cuerpo.output_config.effort = 'low';
+    cuerpo.output_config.effort = 'medium';
   } else {
     cuerpo.thinking = { type: 'disabled' };
   }
