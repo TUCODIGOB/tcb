@@ -770,29 +770,27 @@ function casaEnElTramo(t, cuerpo) {
   return casaQueNombra(t.slice(desde, hasta));
 }
 
-// Todas las areas que hay DE VERDAD en una posicion de la carta. Una posicion
-// suele tocar dos o tres: "Venus trigono Jupiter" es amor por Venus y dinero
-// por Jupiter, y las dos son ciertas.
-function areasQueHayEn(origen) {
-  const t = sinTildes(origen);
-  const dentro = new Set();
-  for (const c of ORDEN_PERSONAL) {
-    if (new RegExp('\\b' + c + '\\b').test(t)) dentro.add(AREA_DEL_CUERPO[c]);
-  }
-  for (const m of t.matchAll(/casa\s*(\d{1,2})/g)) {
-    const a = AREA_DE_LA_CASA[Number(m[1])];
-    if (a) dentro.add(a);
-  }
-  return dentro;
-}
-
-// El area de un rasgo. La elige el modelo, porque es el unico que sabe de que
-// va el rasgo: la misma posicion sirve para dos areas y solo lo escrito decide
-// cual. Pero solo se le acepta si esa area esta de verdad en su posicion, asi
-// que no puede colocarlo donde le venga bien. Si no la dice, o si la que dice
-// no esta ahi, decide la posicion como hasta ahora.
+// El area de un rasgo. La decide el modelo, y se le hace caso.
+//
+// POR QUE SE LE HACE CASO Y ANTES NO. La etiqueta tiene que decir de que HABLA
+// el rasgo, no de que posicion nacio, que es lo unico que ve quien lo lee. Un
+// rasgo que sale del Sol y acaba hablando de su gente es de RELACIONES, aunque
+// el Sol sea de IDENTIDAD.
+//
+// Antes eso no se podia saber aqui, asi que se exigia que el area elegida
+// estuviera en la posicion; si no, mandaba la posicion. Era una red util
+// mientras el modelo colocaba a ciegas, pero tambien devolvia a su sitio de
+// nacimiento los rasgos que hablaban de otra cosa, que es el fallo que se
+// intentaba arreglar con una llamada aparte.
+//
+// Ahora el repaso del encargo le pide releer cada rasgo entero y ponerlo en el
+// area de lo que dice. Eso lo hace pensando y con el texto delante, que es la
+// unica forma de saberlo. Pisarselo desde aqui seria deshacerlo.
+//
+// La posicion sigue decidiendo cuando el modelo no dice area o dice una que no
+// existe: ahi no hay nada que respetar.
 function areaDelRasgo(origen, elegida) {
-  if (elegida && areasQueHayEn(origen).has(elegida)) return elegida;
+  if (elegida && NOMBRES_DE_AREA.includes(elegida)) return elegida;
   return areaPorLaPosicion(origen);
 }
 
@@ -916,7 +914,7 @@ Y EL SIGNO Y LA CASA TIENEN QUE CAMBIAR LO QUE ESCRIBES, no solo lo que pones en
 LA PRUEBA: si le cambiaras el signo o la casa a esa posición y el rasgo que has escrito siguiera valiendo igual, es que no lo has escrito de ESTA carta y hay que escribirlo otra vez.
 
 Marte, Urano y Júpiter no llevan área propia: lo que salga de ellos es del área de la casa en la que están.
-Un rasgo va en la caja del área de la que lo has sacado, y esa área tiene que estar de verdad en la posición que escribas en "origen".
+Al escribirlo, ponlo en la caja del área de la que lo sacaste; en el repaso del punto 6 lo mueves si al leerlo ves que habla de otra.
 
 
 4. LAS CUATRO CASILLAS DE CADA RASGO
@@ -1011,6 +1009,8 @@ Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee un
 Esto no es un consejo: es la mitad del trabajo, y va con las dos listas escritas delante.
 
 PRIMERO, LOS QUE DICEN LO MISMO. Lees los rasgos de las dos listas, todos, y los comparas de dos en dos. Dos son el mismo si al leer uno ya sabes lo que dice el otro, aunque estén escritos con palabras distintas, aunque estén en áreas distintas y aunque uno esté en fortalezas y el otro en desafíos. De cada pareja se queda UNO, el que más pese, y el otro se va.
+
+DESPUÉS, EL ÁREA DE CADA UNO. Lees cada rasgo entero -el nombre y la descripción, no la posición de la que salió- y te preguntas de qué habla. Si habla de otra área, lo mueves a esa. Un rasgo que sacaste del Sol y que acaba hablando de cómo se lleva con su gente es de RELACIONES, aunque el Sol sea de IDENTIDAD. Quien lo lee ve lo que dice el rasgo, no de dónde lo sacaste.
 
 DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas lo que ha quedado en cada una de las catorce cajas. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale rescatar el que acabas de quitar ni escribir una variante suya.
 
@@ -1222,36 +1222,28 @@ function esElMismoTitulo(a, b) {
 
 function sinTituloRepetido(fortalezas, desafios) {
   const vistos = [];
-  // UN REPETIDO NO SE QUITA SI DEJA EL AREA CORTA.
+  // EL REPETIDO SE QUITA SIEMPRE.
   //
-  // Quitarlo obligaba a pedir otro para esa area, y eso es una llamada mas y
-  // medio minuto mas de espera. Entre dos titulos parecidos y una llamada
-  // extra, se queda el parecido: al cliente le cuesta menos.
-  const cribar = (lista, cual) => {
-    const minimo = POR_AREA[cual]?.min || 1;
-    const quedan = {};
-    for (const r of lista) quedan[r.area] = (quedan[r.area] || 0) + 1;
-    return lista.filter(r => {
-      const t = comoSeCompara(r && r.nombre);
-      if (!t) return true;
-      const palabras = palabrasConPeso(r.nombre);
-      if (vistos.some(v => v.texto === t || esElMismoTitulo(v.palabras, palabras))) {
-        // El rasgo sin area reconocida no cuenta para ningun minimo, asi que
-        // si es repetido se quita igual que antes.
-        if (NOMBRES_DE_AREA.includes(r.area) && (quedan[r.area] || 0) - 1 < minimo) {
-          console.warn(`Se deja un rasgo con el titulo repetido para no dejar corta ${r.area}: ${r.nombre}`);
-          return true;
-        }
-        quedan[r.area] -= 1;
-        console.warn(`Se quita un rasgo con el titulo repetido: ${r.nombre}`);
-        return false;
-      }
-      vistos.push({ texto: t, palabras });
-      return true;
-    });
-  };
+  // Antes se dejaba si al quitarlo el area bajaba del minimo, porque llenarla
+  // otra vez costaba una llamada mas y medio minuto de espera. Esa llamada ya
+  // no existe: el suelo se lo comprueba el modelo dentro, pensando.
+  //
+  // Asi que lo unico que se decide aqui es que ve la clienta, y prefiere un
+  // area con un rasgo menos que dos titulos iguales seguidos en la misma
+  // pagina. Aqui ya no llega casi ninguno; esto es la ultima red.
+  const cribar = lista => lista.filter(r => {
+    const t = comoSeCompara(r && r.nombre);
+    if (!t) return true;
+    const palabras = palabrasConPeso(r.nombre);
+    if (vistos.some(v => v.texto === t || esElMismoTitulo(v.palabras, palabras))) {
+      console.warn(`Se quita un rasgo con el titulo repetido: ${r.nombre}`);
+      return false;
+    }
+    vistos.push({ texto: t, palabras });
+    return true;
+  });
   // Las fortalezas primero, que es el orden en que van en el informe.
-  return [cribar(fortalezas, 'fortalezas'), cribar(desafios, 'desafios')];
+  return [cribar(fortalezas), cribar(desafios)];
 }
 
 // LOS RASGOS, DE PRINCIPIO A FIN.
