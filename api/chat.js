@@ -1024,7 +1024,12 @@ Nombre de pila: ${nombrePila}`;
     // misma conducta, en que area va cada uno. Eso es justo lo que mejora
     // pensando mas, y lo unico que seguia saliendo mal.
     razona: true,
-    techo: 8000,
+    // EL TECHO, HOLGADO, Y NO POR LO QUE ESCRIBE. Lo que escribe son treinta y
+    // tantas lineas, dos mil tokens a lo sumo. Pero pensar sale del MISMO
+    // presupuesto, y con el esfuerzo en alto piensa mucho: si se lo come, la
+    // respuesta llega cortada, el JSON no se puede leer y hay que pedirlo todo
+    // otra vez. Es un techo, no un objetivo: solo se paga lo que sale.
+    techo: 24000,
     system: encargo,
     mensaje: 'Elige los rasgos de esta carta, siguiendo el esquema.',
     molde: ESQUEMA_DE_ELEGIR,
