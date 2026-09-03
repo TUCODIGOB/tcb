@@ -90,18 +90,23 @@ const rasgoDe = (origen, i, lista) => ({
 });
 // Las posiciones son inventadas para la prueba, de nadie: solo tienen que
 // caer en el area de su caja para que el codigo las acepte.
-const cajasDe = lista => ({
-  IDENTIDAD:  [rasgoDe('Sol en Aries casa 1', 0, lista), rasgoDe('Ascendente en Aries', 1, lista)],
-  PATRONES:   [rasgoDe('Nodo Norte en Acuario', 2, lista), rasgoDe('casa 9 en Aries', 3, lista)],
-  MIEDOS:     [rasgoDe('Saturno en Acuario casa 12', 4, lista), rasgoDe('Neptuno en Acuario', 5, lista)],
-  HERIDA:     [rasgoDe('Luna en Aries casa 4', 6, lista), rasgoDe('Quiron en Acuario', 7, lista)],
-  AMOR:       [rasgoDe('Venus en Acuario', 8, lista), rasgoDe('casa 5 en Aries', 9, lista)],
-  RELACIONES: [rasgoDe('Mercurio en Aries', 10, lista), rasgoDe('casa 11 en Acuario', 11, lista)],
-  DINERO:     [rasgoDe('casa 2 en Aries', 12, lista), rasgoDe('casa 10 en Acuario', 13, lista)],
-});
-// Las dos listas vienen en la MISMA respuesta, que es como las pide chat.js.
+// Todos los rasgos en una sola lista, cada uno con su lista y su area, que es
+// como los pide chat.js.
+const POR_AREAS = [
+  ['IDENTIDAD',  'Sol en Aries casa 1',        'Ascendente en Aries'],
+  ['PATRONES',   'Nodo Norte en Acuario',      'casa 9 en Aries'],
+  ['MIEDOS',     'Saturno en Acuario casa 12', 'Neptuno en Acuario'],
+  ['HERIDA',     'Luna en Aries casa 4',       'Quiron en Acuario'],
+  ['AMOR',       'Venus en Acuario',           'casa 5 en Aries'],
+  ['RELACIONES', 'Mercurio en Aries',          'casa 11 en Acuario'],
+  ['DINERO',     'casa 2 en Aries',            'casa 10 en Acuario'],
+];
+const deLaLista = (cual, l) => POR_AREAS.flatMap(([area, a, b], k) => [
+  { ...rasgoDe(a, k * 2, l),     lista: cual, area },
+  { ...rasgoDe(b, k * 2 + 1, l), lista: cual, area },
+]);
 const listasDeMentira = () => JSON.stringify({
-  fortalezas: cajasDe('Fortaleza'), desafios: cajasDe('Desafio'),
+  rasgos: deLaLista('fortalezas', 'Fortaleza').concat(deLaLista('desafios', 'Desafio')),
 });
 
 globalThis.fetch = async (url, opciones) => {

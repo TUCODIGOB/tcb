@@ -124,18 +124,24 @@ const rasgoDe = (origen, i, lista) => ({
   nombre: TITULOS[lista][i], descripcion: 'Sigues de pie donde otros se bajan.',
   causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen,
 });
-const caja = (a, b, i, l) => [rasgoDe(a, i, l), rasgoDe(b, i + 1, l)];
-const cajas = l => ({
-  IDENTIDAD:  caja('Sol en Aries casa 1', 'Ascendente en Aries', 0, l),
-  PATRONES:   caja('Nodo Norte en Acuario', 'casa 9 en Aries', 2, l),
-  MIEDOS:     caja('Saturno en Acuario casa 12', 'Neptuno en Acuario', 4, l),
-  HERIDA:     caja('Luna en Aries casa 4', 'Quiron en Acuario', 6, l),
-  AMOR:       caja('Venus en Acuario', 'casa 5 en Aries', 8, l),
-  RELACIONES: caja('Mercurio en Aries', 'casa 11 en Acuario', 10, l),
-  DINERO:     caja('casa 2 en Aries', 'casa 10 en Acuario', 12, l),
+// Todos los rasgos en una sola lista, y cada uno diciendo de que lista y de que
+// area es, que es como los pide ahora chat.js.
+const POR_AREAS = [
+  ['IDENTIDAD',  'Sol en Aries casa 1',        'Ascendente en Aries'],
+  ['PATRONES',   'Nodo Norte en Acuario',      'casa 9 en Aries'],
+  ['MIEDOS',     'Saturno en Acuario casa 12', 'Neptuno en Acuario'],
+  ['HERIDA',     'Luna en Aries casa 4',       'Quiron en Acuario'],
+  ['AMOR',       'Venus en Acuario',           'casa 5 en Aries'],
+  ['RELACIONES', 'Mercurio en Aries',          'casa 11 en Acuario'],
+  ['DINERO',     'casa 2 en Aries',            'casa 10 en Acuario'],
+];
+const deLaLista = (cual, l) => POR_AREAS.flatMap(([area, a, b], k) => [
+  { ...rasgoDe(a, k * 2, l),     lista: cual, area },
+  { ...rasgoDe(b, k * 2 + 1, l), lista: cual, area },
+]);
+const listas = () => JSON.stringify({
+  rasgos: deLaLista('fortalezas', 'Fortaleza').concat(deLaLista('desafios', 'Desafio')),
 });
-// Las dos listas vienen en la MISMA respuesta, como las pide ahora chat.js.
-const listas = () => JSON.stringify({ fortalezas: cajas('Fortaleza'), desafios: cajas('Desafio') });
 
 let llamadas = 0, sinSenal = 0, colgarLaPrimera = false, yaColgada = false;
 

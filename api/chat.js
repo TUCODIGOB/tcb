@@ -611,46 +611,42 @@ ${cartaTexto}`;
 // Las siete areas del estudio, en el orden en que salen en el informe.
 const NOMBRES_DE_AREA = ['IDENTIDAD', 'PATRONES', 'MIEDOS', 'HERIDA', 'AMOR', 'RELACIONES', 'DINERO'];
 
-const CASILLAS_DEL_RASGO = {
+// EL MOLDE DE LA RESPUESTA: UNA SOLA LISTA, Y CADA RASGO DICE DE QUE ES.
+//
+// Antes eran catorce cajas -siete areas por cada lista-, y la API lo rechazo:
+// "the compiled grammar is too large". El molde se convierte en una gramatica
+// que el modelo tiene que cumplir letra a letra, y catorce listas del mismo
+// objeto la hacen enorme. Con siete pasaba justo; con catorce, no.
+//
+// Asi que se le pide una lista y ya. Cada rasgo lleva escrito de que lista es y
+// de que area, y el codigo los reparte. Sale la misma informacion con una
+// gramatica pequeña.
+//
+// LO QUE SE PIERDE Y COMO SE COMPENSA. Las cajas obligaban a pasar por las
+// siete areas para poder contestar, y una vacia se veia. Eso ahora lo pide el
+// encargo por escrito -area por area, y ninguna se queda sin los suyos- y lo
+// comprueba el codigo despues, que avisa de la que venga corta.
+//
+// Las dos casillas que se eligen entre unas pocas van con su lista cerrada: asi
+// no puede escribir un area que no existe ni inventarse una tercera lista.
+const RASGO_SUELTO = {
   type: 'object',
   properties: {
+    lista:       { type: 'string', enum: ['fortalezas', 'desafios'] },
+    area:        { type: 'string', enum: NOMBRES_DE_AREA },
     nombre:      { type: 'string' },
     descripcion: { type: 'string' },
     causa:       { type: 'string' },
     origen:      { type: 'string' },
   },
-  required: ['nombre', 'descripcion', 'causa', 'origen'],
-  additionalProperties: false,
-};
-
-// UNA CAJA POR AREA, NO UNA LISTA SEGUIDA.
-//
-// Pidiendo una lista seguida, la rellenaba recorriendo los aspectos, que es lo
-// mas largo y concreto que tiene delante, y habia areas a las que no llegaba
-// nunca: el Nodo Norte, por ejemplo, no forma ningun aspecto, asi que el area
-// que sale de el se quedaba a cero. La regla de "al menos uno de cada" estaba
-// escrita y aun asi no se cumplia.
-//
-// Con una caja por area tiene que pasar por las siete para contestar, y dejar
-// una vacia es algo que hace a la vista y no un descuido. El area de cada
-// rasgo ya no hace falta preguntarla: es la caja en la que viene.
-//
-// Y LAS DOS LISTAS VIENEN EN LA MISMA RESPUESTA, cada una con sus siete cajas.
-// Antes se pedian por separado y en paralelo, asi que ninguna sabia lo que
-// escribia la otra: la de fortalezas decia "sabes mirarte con honestidad" y la
-// de desafios "evitas mirar lo que te falta". Ninguna regla puede arreglar eso
-// cuando el modelo no tiene delante la otra lista. Aqui si la tiene.
-const CAJAS_DE_UNA_LISTA = {
-  type: 'object',
-  properties: Object.fromEntries(NOMBRES_DE_AREA.map(a => [a, { type: 'array', items: CASILLAS_DEL_RASGO }])),
-  required: NOMBRES_DE_AREA,
+  required: ['lista', 'area', 'nombre', 'descripcion', 'causa', 'origen'],
   additionalProperties: false,
 };
 
 const ESQUEMA_DE_LAS_LISTAS = {
   type: 'object',
-  properties: { fortalezas: CAJAS_DE_UNA_LISTA, desafios: CAJAS_DE_UNA_LISTA },
-  required: ['fortalezas', 'desafios'],
+  properties: { rasgos: { type: 'array', items: RASGO_SUELTO } },
+  required: ['rasgos'],
   additionalProperties: false,
 };
 
@@ -894,7 +890,7 @@ QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida -tiem
 
 Recorre la carta ENTERA, no solo lo que más salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona.
 
-El estudio tiene siete áreas y la carta habla de las siete. Contestas con una caja por área, así que vas una por una: te paras en un área, miras lo que hay de ella en ESTA carta, sacas sus rasgos, y solo entonces pasas a la siguiente.
+El estudio tiene siete áreas y la carta habla de las siete. Las recorres UNA POR UNA y en el orden en que están escritas abajo: te paras en un área, miras lo que hay de ella en ESTA carta, sacas sus rasgos -los que se le dan bien y los que le cuestan- y solo entonces pasas a la siguiente. Ninguna se queda sin los suyos, y de ninguna te saltas la mitad.
 
 No empieces por la lista de aspectos. Es lo más largo que tienes delante y arrastra: se llena la lista con lo que sale de ahí y hay áreas a las que no llegas nunca. Se empieza por el área y se busca lo suyo, que a veces es un aspecto y a veces no.
 
@@ -914,10 +910,15 @@ Y EL SIGNO Y LA CASA TIENEN QUE CAMBIAR LO QUE ESCRIBES, no solo lo que pones en
 LA PRUEBA: si le cambiaras el signo o la casa a esa posición y el rasgo que has escrito siguiera valiendo igual, es que no lo has escrito de ESTA carta y hay que escribirlo otra vez.
 
 Marte, Urano y Júpiter no llevan área propia: lo que salga de ellos es del área de la casa en la que están.
-Al escribirlo, ponlo en la caja del área de la que lo sacaste; en el repaso del punto 6 lo mueves si al leerlo ves que habla de otra.
+Al escribirlo, ponle el área de la que lo sacaste; en el repaso del punto 6 se la cambias si al leerlo ves que habla de otra.
 
 
-4. LAS CUATRO CASILLAS DE CADA RASGO
+4. LAS CASILLAS DE CADA RASGO
+
+Todos van en una sola lista, seguidos, y cada uno dice de cuál de las dos listas es y de qué área:
+
+lista        "fortalezas" o "desafios", tal cual.
+area         una de las siete, escrita como están escritas arriba.
 
 nombre       Se le habla de tu, igual que en todo lo demás: es lo que hace
              o lo que le pasa, dicho a la persona. No el nombre de eso.
@@ -933,7 +934,7 @@ descripcion  TRES RENGLONES, ni dos ni cuatro. Son unos doscientos sesenta
              TRES ES LA MEDIDA, NO EL TECHO. Con dos se queda a medias: se
              enuncia el rasgo y no da tiempo a que se entienda, y quien lo lee
              pasa al siguiente sin haberse reconocido en ninguno. Si te sale en
-             dos, es que le falta una de las cuatro cosas de abajo.
+             dos, es que le falta una de las cuatro cosas que cuenta.
              Que hace, que le pasa, como se le nota y en qué parte de su vida se
              le nota.
 
@@ -985,7 +986,7 @@ origen       De donde sale el rasgo en la carta, en técnico y en corto: el
              Es obligatoria. Y no repartas todos los rasgos sobre las mismas
              dos o tres posiciones: la carta tiene de sobra.
 
-Un rasgo son sus cuatro casillas escritas de verdad. Si empiezas uno y no sabes cómo seguirlo, se quita ENTERO, también su nombre. Nunca se rellena una casilla con una palabra de relleno ni con un aviso de que falta: eso se imprime tal cual en el informe que va a leer.
+Un rasgo son sus casillas escritas de verdad. Si empiezas uno y no sabes cómo seguirlo, se quita ENTERO, también su nombre. Nunca se rellena una casilla con una palabra de relleno ni con un aviso de que falta: eso se imprime tal cual en el informe que va a leer.
 
 
 5. CÓMO SE ESCRIBE
@@ -1017,7 +1018,7 @@ PRIMERO, LOS QUE DICEN LO MISMO. Lees los rasgos de las dos listas, todos, y los
 
 DESPUÉS, EL ÁREA DE CADA UNO. Lees cada rasgo entero -el nombre y la descripción, no la posición de la que salió- y te preguntas de qué habla. Si habla de otra área, lo mueves a esa. Un rasgo que sacaste del Sol y que acaba hablando de cómo se lleva con su gente es de RELACIONES, aunque el Sol sea de IDENTIDAD. Quien lo lee ve lo que dice el rasgo, no de dónde lo sacaste.
 
-DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas lo que ha quedado en cada una de las catorce cajas. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale rescatar el que acabas de quitar ni escribir una variante suya.
+DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas, área por área, cuántas fortalezas y cuántos desafíos han quedado. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale rescatar el que acabas de quitar ni escribir una variante suya.
 
 DESPUÉS, EL TECHO. Si un área pasa de su máximo, se quedan los que más pesan y los demás se van.
 
@@ -1081,34 +1082,30 @@ Nombre de pila: ${nombrePila}`;
     throw err;
   }
 
-  return {
-    fortalezas: enLista(salida.fortalezas),
-    desafios: enLista(salida.desafios),
-  };
+  return repartirLasDos(salida.rasgos);
 }
 
-// Las siete cajas se juntan en una lista, en el orden de las areas, que es como
-// se pintan en el PDF.
+// La lista plana se reparte en las dos, cada una ordenada por area, que es como
+// las pinta el PDF.
 //
 // Si a un rasgo le faltara una casilla, se queda vacia. Sin esto se imprimia en
 // el PDF la palabra "undefined", que es lo mismo que paso con "placeholder".
-function enLista(cajas) {
-  const lista = [];
-  for (const area of NOMBRES_DE_AREA) {
-    for (const r of (Array.isArray(cajas?.[area]) ? cajas[area] : [])) {
-      const origen = String(r?.origen ?? '').trim();
-      lista.push({
-        nombre: String(r?.nombre ?? '').trim(),
-        descripcion: String(r?.descripcion ?? '').trim(),
-        causa: String(r?.causa ?? '').trim(),
-        origen,
-        // La caja dice de que area es, pero solo se le hace caso si esa area
-        // esta de verdad en la posicion de la que sale el rasgo.
-        area: areaDelRasgo(origen, area),
-      });
-    }
+function repartirLasDos(rasgos) {
+  const fortalezas = [], desafios = [];
+  for (const r of (Array.isArray(rasgos) ? rasgos : [])) {
+    const area = String(r?.area ?? '').trim();
+    const rasgo = {
+      nombre: String(r?.nombre ?? '').trim(),
+      descripcion: String(r?.descripcion ?? '').trim(),
+      causa: String(r?.causa ?? '').trim(),
+      origen: String(r?.origen ?? '').trim(),
+      // El area la dice el modelo, que es el unico que ha leido el rasgo. Si no
+      // la dice, o dice una que no existe, la saca el codigo de la posicion.
+      area: areaDelRasgo(String(r?.origen ?? '').trim(), area),
+    };
+    (String(r?.lista ?? '').trim() === 'desafios' ? desafios : fortalezas).push(rasgo);
   }
-  return lista;
+  return { fortalezas, desafios };
 }
 
 // SE REINTENTA, PERO SOLO SI CABE.
