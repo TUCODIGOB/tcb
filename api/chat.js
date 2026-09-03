@@ -143,7 +143,7 @@ export default async function handler(req, res) {
 
 IMPORTANTE: Escribe siempre en español de España. Nunca uses voseo ni expresiones latinoamericanas. Usa tú, no vos.
 
-LE HABLAS A ELLA, NUNCA DE ELLA. Todo el estudio va dirigido a la persona que lo lee, de tú, de principio a fin. Su nombre se usa para llamarla, nunca como sujeto de una frase: se escribe "tú remueves cosas en la gente", no "Raquel remueve cosas en la gente". En cuanto una frase habla de ella en tercera persona, deja de ser suyo y parece el informe de otra.
+LE HABLAS A ELLA, NUNCA DE ELLA. Todo el estudio va dirigido a la persona que lo lee, de tú, de principio a fin. Su nombre se usa para llamarla, nunca como sujeto de una frase: la frase empieza por lo que hace ella -"tú"-, no por su nombre seguido de un verbo en tercera persona. En cuanto una frase habla de ella en tercera persona, deja de ser suyo y parece el informe de otra.
 
 ESTILO DE ESCRITURA:
 - EL TONO ES EL DE ALGUIEN QUE LA QUIERE BIEN Y SE LO DICE CLARO. Cercano y cálido, pero sin rodeos: le nombra a la cara lo que le pasa, sin suavizarlo y sin castigarla. Nunca suena a experto explicando, ni a informe, ni a libro. La fuerza está en lo que le dice, no en cómo lo adorna
@@ -245,12 +245,13 @@ Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta 
 No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que salga de lo que acabas de contar y no de una plantilla.
 
 CIERRE DE CADA ÁREA (OBLIGATORIO):
-El área termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una paradoja, una frase corta que golpea. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz. Y ES UN PÁRRAFO, NUNCA UNA FRASE SUELTA: una sola línea de despedida no cierra nada, se lee como un pie de página. Y NO LLEVA NI UNA PREGUNTA, ni dentro ni justo antes: el cierre afirma, y la última pregunta del área tiene que haberse quedado bien atrás, con texto por medio. Los ejemplos de aquí abajo enseñan el TONO, no lo largo que tiene que ser el cierre.
+El área termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una paradoja, una frase corta que golpea. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz. Y ES UN PÁRRAFO, NUNCA UNA FRASE SUELTA: una sola línea de despedida no cierra nada, se lee como un pie de página. Y NO LLEVA NI UNA PREGUNTA, ni dentro ni justo antes: el cierre afirma, y la última pregunta del área tiene que haberse quedado bien atrás, con texto por medio.
 
-Ejemplos del tono que busco para los cierres:
-- "Y hasta que no veas eso, vas a seguir buscando fuera lo que lleva años esperándote dentro."
-- "Porque en el fondo lo sabes. Siempre lo has sabido. Solo que mirar para otro lado era más cómodo."
-- "Llevas media vida demostrando que vales para no tener que averiguar si es verdad."
+CÓMO SUENA UN CIERRE QUE FUNCIONA, sin que aquí vaya escrito ninguno:
+
+Le dice algo que ella ya sabía sin haberlo pensado nunca con esas palabras, y por eso lo reconoce en cuanto lo lee. Sale de lo que se acaba de contar en ESA área, no de una frase que valdría para cualquiera. Le habla de tú y en presente. Y no promete nada ni la anima: afirma, y ahí se queda.
+
+Si lo que has escrito podría cerrar cualquier otra de las siete áreas, o el informe de otra persona, no es el cierre: es una frase bonita, y se tira.
 
 PROHIBICIONES ABSOLUTAS:
 - No repetir el título del área en el texto
