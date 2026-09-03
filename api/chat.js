@@ -150,7 +150,7 @@ ESTILO DE ESCRITURA:
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos
 - No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo
 - No empieces dos párrafos con la misma estructura. Varía los arranques
-- NO SE ESCRIBE "tu manera de", "tu forma de", "tu capacidad de", "una necesidad de", "una tendencia a", "una parte de ti" ni "la parte de ti que". Convierten en cosa lo que ella hace, y quien lee tiene que volver atrás para entenderlo. Donde salga uno de esos, se dice con un verbo lo que hace ella
+- NO SE CONVIERTE EN COSA LO QUE ELLA HACE. Nada de coger su conducta, volverla un sustantivo y colgársela con un posesivo o con un artículo delante. En cuanto lo que hace se nombra como si fuera un objeto que tiene, quien lee tiene que volver atrás para entenderlo. Se dice con un verbo: qué hace
 - SE LE PONE SU VOZ: lo que se dice a sí misma por dentro cuando le pasa eso, dicho con las palabras que usaría ella y no con las de quien la observa. Eso es lo que hace que se reconozca. Sale de lo que ya se ha contado, no de suponerle nada
 - LA IDEA SE DICE EN CLARO, SIEMPRE Y EN LITERAL. Cada cosa que le cuentes se dice en seco: qué hace, qué le pasa o cómo se le nota, con palabras que se puedan agarrar. Si tapas todo lo demás y esa frase sola no dice nada concreto de ella, está mal escrita.
 - NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Y mucho menos una comparación inventada sobre la marcha, de esas que no existen en español y que el lector no puede ver en la cabeza: eso no explica nada, despista. Si has escrito una comparación, bórrala y di en literal lo que querías decir con ella.
@@ -159,22 +159,22 @@ ESTILO DE ESCRITURA:
 - Y esto se lee de noche, con el día encima y muchas veces en el móvil. Quien lo lee no relee: si tropieza, lo deja.
 - LAS PALABRAS SON LAS DE TODOS LOS DÍAS, no las de un informe ni las de un libro. Si una palabra la verías antes escrita en un informe que dicha en una conversación normal, va fuera. Lo tiene que entender alguien de dieciocho años sin releer nada.
 - NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se doblan, se construyen o se mezclan. Se dice lo que hace la persona.
-- NADA DE "ese", "esa" NI "ese mismo" SI NO LO HAS DICHO ANTES CON TODAS SUS LETRAS. Si señalas algo suyo, antes tiene que estar contado en claro qué es; si no, el lector no sabe de qué le hablas.
+- NADA DE SEÑALAR CON UN DEMOSTRATIVO ALGO QUE NO HAYAS DICHO ANTES CON TODAS SUS LETRAS. Si señalas algo suyo, antes tiene que estar contado en claro qué es; si no, el lector no sabe de qué le hablas.
 - PROHIBIDO CONTAR ALGO SOLO CON UNA SENSACIÓN. Si al leer una frase no se sabe qué hace ella o qué le pasa exactamente, esa frase no vale y se reescribe diciéndolo. Describir cómo se siente algo no es contar qué es.
 - PROHIBIDO DECIR DOS VECES LA MISMA IDEA CON OTRA ROPA. Si el párrafo siguiente cuenta lo mismo que el anterior cambiando las palabras, sobra: o dice algo nuevo, o no va. Eso es lo que hace que parezcan muchas ideas cuando hay una.
 - CADA FRASE TIENE QUE SONAR COMO HABLA UNA PERSONA DE VERDAD. Antes de dar una frase por buena, léela en voz alta por dentro: si nadie la diría hablando, está mal y se reescribe. No fuerces la gramática para que suene elaborado, y no cojas un verbo raro cuando el normal dice lo mismo. Lo que suena a literatura no emociona, distrae: el lector tropieza, sale del texto y deja de reconocerse.
 - Vigila especialmente la primera frase del área. Si el lector tropieza ahí, ya no entra.
-- PROHIBIDO ENUMERAR. Nunca anuncies cuántas cosas vas a decir ni las numeres: nada de "son tres", "el primero", "la segunda", "y la tercera", "hay dos cosas que". Las ideas se encadenan una detrás de otra, como cuando alguien te cuenta algo hablando, y el lector no necesita saber cuántas quedan. Si el área se pudiera convertir en una lista de viñetas sin perder nada, está mal escrita.
+- PROHIBIDO ENUMERAR. Nunca anuncies cuántas cosas vas a decir ni las numeres, ni con cifras ni con ordinales, ni al empezar ni por el camino. Las ideas se encadenan una detrás de otra, como cuando alguien te cuenta algo hablando, y el lector no necesita saber cuántas quedan. Si el área se pudiera convertir en una lista de viñetas sin perder nada, está mal escrita.
 - CADA PÁRRAFO SE ENGANCHA CON EL ANTERIOR. Retomas una palabra, una imagen o una idea del párrafo de antes y sigues tirando del hilo desde ahí. Ningún párrafo empieza un tema nuevo en frío, y ninguno puede leerse suelto sin perder nada. Si quitas un párrafo y el resto se lee igual de bien, es que estaba puesto al lado y no cosido.
 - UNA FRASE, UNA IDEA. Esta manda sobre lo largo que sea. Una frase puede ser larga y estar bien, si lo que hace es desarrollar UNA cosa a base de comas. Lo que no puede es meter dos o tres cosas distintas encadenándolas con "que", "porque", "cuando" o "aunque": ahí el lector suelta la primera para seguir la segunda, y acaba sin ninguna. Si al leerla en voz alta te falta el aire o tienes que volver atrás, lleva dos ideas dentro y se parte en dos.
 - FRASES LARGAS, NO CORTAS, dentro de esa regla. Se escribe con comas y seguido, como habla alguien. PROHIBIDO encadenar tres frases cortas seguidas: eso suena a titular y no a una persona. Las de menos de diez palabras se reservan para rematar, dos o tres en toda el área como mucho.
 - LOS DEFECTOS SE CUENTAN DESDE LA FUERZA QUE LOS ORIGINA, NUNCA CONTRA ELLA. Esto NO es suavizar ni maquillar: el defecto se nombra entero, con su nombre y sin rebajarlo. Lo que cambia es de dónde lo haces salir. Y no vale poner la virtud y el defecto uno al lado del otro, unidos por un "pero", como si fueran dos cosas distintas: no son dos cosas, son la misma cualidad suya pasada de vueltas, y así es como se cuenta. Contado así lo reconoce y no se defiende. Contado como una lista de fallos sueltos, cierra el informe y no vuelve.
 - PREGÚNTALE DIRECTAMENTE. De vez en cuando párate y hazle una pregunta de verdad, de las que se quedan un rato dando vueltas. La referencia es esta: la pregunta que le haría alguien que la conoce bien, en una conversación de verdad, no la que saldría en un folleto. Tiene que ser tan suya que si se la hicieras a otra persona no significaría nada.
 - CADA PREGUNTA, UNA SOLA IDEA. Se lee de una vez y se entiende sin releerla. Nada de preguntas que abren una cosa, la matizan con una segunda y aún meten una tercera detrás: eso ya no es una pregunta, es un párrafo con interrogantes, y no se contesta. Si no cabe cómoda en dos renglones, sobra algo dentro.
-- Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: le nombran una situación suya concreta de las que le acabas de contar y le piden que se conteste. Las MALAS valen para cualquiera y no dicen nada: "¿te suena?", "¿te identificas con esto?", "¿te ha pasado alguna vez?".
+- Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: le nombran una situación suya concreta de las que le acabas de contar y le piden que se conteste. Las MALAS valen para cualquiera y no dicen nada: las que solo piden que confirme algo, sin nombrarle ninguna situación suya.
 - NI DOS PREGUNTAS EMPIEZAN IGUAL, ni dentro de un área ni entre las siete. En cuanto dos arrancan con las mismas palabras se ve el molde y dejan de parecer suyas. Cambia también la forma, no solo el final: no todas cuentan veces, hay preguntas que piden nombrar algo, otras que ponen delante una situación, otras que preguntan por lo que evita.
 - VAN REPARTIDAS POR TODA EL ÁREA, de principio a fin, y ninguna en las fortalezas, que ahí no hay nada que preguntarse. Cada vez que acabas de contarle algo que le remueve, te paras y le preguntas: la pregunta sale justo de eso que le acabas de decir y le devuelve la pelota, le hace pararse y mirarse a ella en concreto, no pensar en general. No hay un numero fijo, van las que pida el texto, y nunca menos de tres por area. LA PRIMERA CAE PRONTO, en el primer tercio, no despues de paginas de texto seguido; y las demas van repartidas hasta el final, no amontonadas al cierre. CADA PREGUNTA VA SOLA EN SU PROPIO PÁRRAFO, nunca metida dentro de otro. NUNCA DOS SEGUIDAS: entre una pregunta y la siguiente va contado entero aquello de lo que sale la segunda. Y NINGUNA ANTES DEL CIERRE: delante del cierre no va una pregunta, y el cierre no es una pregunta.
-- CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra: se escribe "quiero plátanos, peras y fresas", no "quiero plátanos, peras, y fresas". Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.
+- CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra, porque en una enumeración corriente la "y" ya separa. Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.
 
 REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 - TECHO ABSOLUTO: ningún párrafo pasa de 90 palabras. Al maquetarse en el PDF, 90 palabras ocupan 7 líneas, y 7 líneas es el máximo. Si se te va por encima, pártelo en dos. Esto no se negocia nunca.
@@ -196,16 +196,16 @@ LO QUE NO SE PUEDE CONTAR EN NINGUNA DE LAS SIETE ÁREAS:
 Una carta natal es el mapa del momento en que nació, así que todo lo que sale de ella lo tiene de nacimiento. Por eso no se dice que lo aprendió de pequeña, ni que se lo enseñaron en casa, ni que le viene de sus padres ni de su familia, ni se cuenta ningún episodio de su vida: nada de eso está en la carta y sería inventárselo. Lo que sí está es cómo funciona por dentro y en qué parcela de su vida se le nota, y eso es lo que se cuenta.
 
 ESCENA REAL OBLIGATORIA:
-Tienes que incluir una escena concreta, específica y visual que el lector reconozca de inmediato como propia. No vale una situación genérica ni tonta. Debe ser una escena tan concreta que el lector diga "joder, esto me pasa literalmente".
+Tienes que incluir una escena concreta, específica y visual que el lector reconozca de inmediato como propia. No vale una situación genérica ni tonta. Debe ser una escena tan concreta que el lector se reconozca en ella al momento y sin dudarlo.
 
-Las escenas BUENAS son específicas (gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas ("cuando te sientes mal, piensas cosas"), obvias ("a veces dudas de ti mismo") o vacías.
+Las escenas BUENAS son específicas (gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas, obvias o vacías: cuentan un estado de ánimo en general en vez de un momento concreto con su gesto, su objeto y su sitio.
 
 La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar de que es un ejemplo.
 LA ESCENA DE ESTA ÁREA NO PASA DE NOCHE. Solo el ÁREA 1 puede llevarla de noche; en las otras seis ocurre a otra hora del día. Es lo único que cambia: el gesto concreto, el objeto y lo que le pasa por dentro siguen siendo los mismos y con el mismo detalle.
 Y ES UNA SITUACIÓN DE SU VIDA DE AHORA, de las que se le repiten, no un hecho concreto de su pasado contado como si hubiera ocurrido de verdad. Nunca se le atribuye una relación, un trabajo, una mudanza ni ningún episodio que no esté en la carta: eso sería inventárselo, por muy bien que encaje.
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
-Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ("hay algo que sostiene todo esto", "y esto viene de lejos").
+Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ni que anuncie de dónde viene.
 El área se lee como una sola conversación seguida, no como cinco trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
 
 EL MATERIAL DEL ÁREA ENTERA SON SUS RASGOS. Al final de la petición tienes los rasgos que se le han sacado de su carta para esta área. De ahí eliges UNA o DOS fortalezas y DOS o TRES desafíos, los que más peso tengan en su vida, y con esos escribes los CINCO bloques: lo que le pasa hoy, la escena, de dónde viene, la creencia que lo sostiene y el cierre. Los cinco hablan de lo mismo, cada uno desde su sitio, y por eso el área no se va por otro lado a mitad de camino.
@@ -224,7 +224,7 @@ ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBL
 ORIGEN — POR QUÉ ES ASÍ, con puente causal explícito hasta lo que hace hoy. Es el porqué de SUS DESAFÍOS, de dónde le nacen, y solo de ellos. No basta con decir que le pasa: tienes que unir causa y efecto para que entienda el PORQUÉ y no solo el qué. Qué hay dentro de ella que produce eso, cómo funciona ese mecanismo y qué hace hoy exactamente por funcionar así.
 UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges la que mejor lo explique todo y la desarrollas a fondo. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de esa única explicación salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra distinta.
 
-CREENCIAS — LO QUE SOSTIENE EL PATRÓN, Y QUÉ SE LE ABRE SI CAE. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Va una por cada desafío que hayas contado en esta área, y cuando dos se apoyan en la misma, se dice una sola vez y no se repite. Y de cada una se dice también qué se le abre en su vida el día que caiga: qué deja de pasarle, qué puede hacer que hoy no hace. Eso NO es decirle cómo soltarla: ni pasos, ni ejercicios, ni plan, ni "empieza por", ni por dónde. El cómo es otro producto y aquí sobra. Después de HOY, es el punto que más sitio ocupa.
+CREENCIAS — LO QUE SOSTIENE EL PATRÓN, Y QUÉ SE LE ABRE SI CAE. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Va una por cada desafío que hayas contado en esta área, y cuando dos se apoyan en la misma, se dice una sola vez y no se repite. Y de cada una se dice también qué se le abre en su vida el día que caiga: qué deja de pasarle, qué puede hacer que hoy no hace. Eso NO es decirle cómo soltarla: ni pasos, ni ejercicios, ni plan, ni por dónde empezar. El cómo es otro producto y aquí sobra. Después de HOY, es el punto que más sitio ocupa.
 
 CIERRE — el cierre, tal como pide la sección CIERRE DE CADA ÁREA. Además tiene que salir del contenido concreto de ESTA área y de ESTA persona: si ese mismo cierre pudiera ir al final de cualquiera de las otras seis áreas, no vale y lo reescribes.
 
@@ -238,13 +238,13 @@ LA SECUENCIA DE ESTA ÁREA VIENE ESCRITA ABAJO, EN LA PETICIÓN, Y SE SIGUE EXAC
 
 Cuando un bloque te caiga en un sitio que no es el que pediría la lógica de siempre, engánchalo bien con lo que va antes: el texto tiene que leerse como alguien hablando seguido, nunca como piezas sueltas colocadas en otro orden.
 
-Y NINGUNA ÁREA ABRE COMO OTRA. Las siete van seguidas en el mismo informe y ella las lee del tirón, así que si varias arrancan con el mismo giro se nota a la primera y el estudio empieza a parecer una plantilla. La primera frase de cada área entra directa en lo que toca contar y le habla a ella, sin fórmula de presentación por delante. Ni siquiera la misma primera palabra: si un área arranca con "Hay", ninguna otra arranca con "Hay". EL ARRANQUE NO HABLA DE LA CARTA NI DEL ESTUDIO. Nada de "hay cartas que", "lo que cuenta tu carta", "esta lista de rasgos", "lo que vas a leer": eso es hablarle del producto en vez de hablarle a ella. La primera frase ya está dentro de su vida. Y NO SE APOYA EN NADA ANTERIOR, porque no hay nada antes: nada de "lo que sostiene esto", "todo esto viene de", "eso que te pasa". Un "esto" o un "eso" en la primera frase no señala a ninguna parte y se lee como si faltara un trozo. Se nombra la cosa entera.
+Y NINGUNA ÁREA ABRE COMO OTRA. Las siete van seguidas en el mismo informe y ella las lee del tirón, así que si varias arrancan con el mismo giro se nota a la primera y el estudio empieza a parecer una plantilla. La primera frase de cada área entra directa en lo que toca contar y le habla a ella, sin fórmula de presentación por delante. Ni siquiera la misma primera palabra: ninguna área arranca con la palabra con la que arranca otra. EL ARRANQUE NO HABLA DE LA CARTA NI DEL ESTUDIO: no los nombra, no dice de qué van, no compara este estudio con otros y no anuncia lo que va a leer. Eso es hablarle del producto en vez de hablarle a ella. La primera frase ya está dentro de su vida. Y NO SE APOYA EN NADA ANTERIOR, porque no hay nada antes: no arranca señalando hacia atrás con un demostrativo, que no apunta a ninguna parte y se lee como si faltara un trozo. Se nombra la cosa entera.
 
 NADA DE FRASES MOLDE:
-Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta al leerlas del tirón. La lógica de fondo se mantiene siempre (qué te pasa, de dónde viene, qué creencia lo sostiene, qué se cae), lo que cambia en cada área es cómo se dice y en qué orden aparece. Quedan PROHIBIDAS estas fórmulas y cualquier variante suya:
-- "el bucle es siempre el mismo", "el patrón es siempre el mismo", "y así una y otra vez"
-- "lo que tienes que soltar es", "lo que te toca soltar es", "toca soltar"
-- "el día que ... todo cambia", "el día que ... todo empieza", "cuando entiendas esto, todo cambia"
+Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta al leerlas del tirón. La lógica de fondo se mantiene siempre (qué te pasa, de dónde viene, qué creencia lo sostiene, qué se cae), lo que cambia en cada área es cómo se dice y en qué orden aparece. Quedan PROHIBIDAS estas tres maneras de decirlo, y cualquier variante suya:
+- anunciar que el patrón o el bucle se le repite siempre, o rematar diciendo que así una y otra vez
+- decirle lo que tiene que soltar, sea con esa palabra o con cualquier otra
+- prometerle que algo cambia o empieza el día que entienda esto o el día que suelte aquello
 No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que salga de lo que acabas de contar y no de una plantilla.
 
 CIERRE DE CADA ÁREA (OBLIGATORIO):
@@ -261,7 +261,7 @@ PROHIBICIONES ABSOLUTAS:
 - No causas vagas sin explicar cómo y cuándo
 - No frases de autoayuda ni coaching
 - No decir qué debe hacer la persona
-- PROHIBIDO empezar párrafos con "La verdad incómoda es", "Tienes que soltar", "Esto ocurre porque", "Esto empezó cuando" u otras fórmulas repetitivas
+- PROHIBIDO empezar un párrafo con una fórmula que anuncie lo que viene detrás: ni presentando la verdad incómoda, ni ordenándole soltar algo, ni avisando de que ahora toca la causa o el origen. Se entra por la cosa, nunca por su etiqueta
 - PROHIBIDO escribir una cifra concreta de dinero, suya o de nadie: ni un importe, ni un sueldo, ni un precio, ni un ahorro, ni un porcentaje de nada. No sabes cuánto tiene ni cuánto gana, así que cualquier número que pongas es inventado y ella lo va a ver falso al leerlo. El dinero se nombra por lo que significa y por lo que hace con él, nunca por su cantidad
 
 ESCRIBE CADA FRASE YA BIEN A LA PRIMERA. No escribas el área y la arregles después, ni entregues dos versiones de nada: sale una sola vez, y sale bien porque cada frase cumple las reglas de arriba al escribirla. Entre una frase simple que se entienda entera y una bonita que haya que releer, siempre la simple.
@@ -289,7 +289,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 pa
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -315,7 +315,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -339,7 +339,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -363,7 +363,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -389,7 +389,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -413,7 +413,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -437,7 +437,7 @@ No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabr
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra, así "> Llevas...", "> Acabas de...", "> Estás...". Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -1091,17 +1091,17 @@ descripcion  TRES RENGLONES, ni dos ni cuatro. Son unos doscientos sesenta
 
 causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              lo que quiere saber. Dos o tres frases.
-             ABRE NOMBRANDO LA CAUSA, no describiendo otra vez lo que le pasa:
-             "esto sale porque...", "esto viene de que...", "lo que hay detrás
-             es que...". Abrir con lo que hace o lo que siente es lo que hace
+             ABRE NOMBRANDO LA CAUSA, no describiendo otra vez lo que le
+             pasa. La primera frase ya dice qué hay debajo que lo produce.
+             Abrir con lo que hace o lo que siente es lo que hace
              que la causa acabe siendo el rasgo dicho de otra manera.
              NO REPITE EL RASGO CON OTRAS PALABRAS. Lo que hace y como se le
              nota ya está arriba, en la descripcion. Aquí se dice que hay
              DETRÁS que lo produce, el mecanismo del que sale.
              DONDE NO PUEDE FALLAR NI UNA ES EN LOS DESAFÍOS.
-             Y EL FALLO TÍPICO, en las dos listas, es escribir "se le da bien
-             porque le importa", "porque se exige", "porque su cabeza funciona
-             así" o "porque le sale natural": eso es el rasgo otra vez con un
+             Y EL FALLO TÍPICO, en las dos listas, es poner un porque delante
+             del propio rasgo y apoyarlo en otro rasgo suyo de carácter, o en
+             que le sale así de natural: eso es el rasgo otra vez con un
              porque delante, y no explica nada. Lo que produce un rasgo nunca
              es el rasgo. Es una manera suya de funcionar que por si sola no
              es ni buena ni mala, y que acaba dando esto.
@@ -1141,7 +1141,7 @@ Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee un
 - SE CUENTA LO QUE LE PASA EN SU VIDA: lo que hace, lo que piensa, lo que siente, lo que le ocurre un día cualquiera.
 - Y SE LE PONE SU VOZ: lo que ella se dice por dentro cuando le pasa eso, dicho con las palabras que usaría ella y no con las de quien la observa. Eso es lo que hace que se reconozca. Sale de lo que dice el rasgo, no de suponerle nada: no se le inventa ningún hecho, ninguna escena ni ninguna frase que no se desprenda de lo que ya se ha contado.
 - NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se construyen o se mezclan. Se dice lo que hace la persona, no lo que hace un concepto.
-- Y POR ESO NO SE ESCRIBE "tu manera de", "tu forma de", "tu capacidad de", "una necesidad de", "una tendencia a", "una parte de ti" ni "la parte de ti que". Convierten en cosa lo que ella hace, y quien lee tiene que volver atrás para entenderlo. Donde salga uno de esos, se dice con un verbo lo que hace ella.
+- Y POR ESO NO SE CONVIERTE EN COSA LO QUE ELLA HACE: nada de coger su conducta, volverla un sustantivo y colgársela con un posesivo o con un artículo delante. Quien lee tiene que volver atrás para entenderlo. Se dice con un verbo: qué hace.
 - NI DOS NOMBRES NI DOS DESCRIPCIONES QUE EMPIECEN IGUAL. Antes de entregar, lee en columna los nombres de toda la lista, y luego las descripciones: los que arranquen con la misma palabra se escriben otra vez arrancando de otra manera.
 - NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa.
 - FRASES LARGAS, ENCADENADAS CON COMAS, y QUE EL TEXTO RESPIRE. Así se habla de verdad. Cortarlo todo en frases secas y en ideas cortas una detrás de otra parte la lectura, suena a lista y ahoga a quien lee, porque no le da tiempo a asimilar una cuando ya le llega la siguiente. Se desarrolla una idea, se le deja sitio, y luego viene la otra.
