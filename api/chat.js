@@ -820,8 +820,8 @@ function areaPorLaPosicion(origen) {
 // Es la misma idea que se probo antes de una tirada, partida donde tocaba.
 // ═════════════════════════════════════════════════════════════════
 
-// Elegir piensa y escribe poco: ronda el minuto largo. Pasados dos minutos no
-// esta pensando, esta colgada.
+// Elegir piensa y escribe poco: con el esfuerzo medio ronda el minuto. Pasados
+// dos minutos no esta pensando, esta colgada.
 const TOPE_DE_ELEGIR = 125000;
 // Escribir no piensa, pero suelta varios miles de palabras.
 const TOPE_DE_ESCRIBIR = 110000;
@@ -1015,14 +1015,19 @@ Nombre de pila: ${nombrePila}`;
     // sin esto no puede comparar, y sin comparar salen los repetidos y las
     // etiquetas cambiadas de sitio.
     //
-    // EL ESFUERZO, ALTO. Estuvo en bajo mientras esta llamada ademas escribia
-    // los treinta y tantos rasgos enteros y se comia el reloj, y en medio
-    // mientras se veia cuanto tardaba. Ya no escribe -devuelve una linea por
-    // rasgo- y tarda poco mas de un minuto, asi que le sobra sitio.
+    // EL ESFUERZO, MEDIO, Y MEDIDO.
     //
-    // Y aqui todo es criterio: cual de dos rasgos se queda, si dos nacen de la
-    // misma conducta, en que area va cada uno. Eso es justo lo que mejora
-    // pensando mas, y lo unico que seguia saliendo mal.
+    // Con este esfuerzo la llamada termina: la tirada que salio entera y con el
+    // informe completo fue con medio. Se subio a alto para afinar el criterio y
+    // se paso del tope de dos minutos, y una compra de verdad se quedo sin
+    // informe. Alto no cabe con la clienta esperando delante.
+    //
+    // Y no hacia falta: a aquella tirada no le faltaba pensar mas, le faltaba
+    // el paso de ponerle nombre a la conducta de cada rasgo antes de comparar,
+    // que entonces no estaba y ahora si. Primero se prueba eso.
+    //
+    // SI ALGUN DIA HAY QUE SUBIRLO, no se sube y ya: hay que quitarle trabajo a
+    // la peticion antes, porque el reloj es el mismo.
     razona: true,
     // EL TECHO, HOLGADO, Y NO POR LO QUE ESCRIBE. Lo que escribe son treinta y
     // tantas lineas, dos mil tokens a lo sumo. Pero pensar sale del MISMO
@@ -1209,7 +1214,7 @@ async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, es
   };
   if (razona) {
     cuerpo.thinking = { type: 'adaptive' };
-    cuerpo.output_config.effort = 'high';
+    cuerpo.output_config.effort = 'medium';
   } else {
     cuerpo.thinking = { type: 'disabled' };
   }
