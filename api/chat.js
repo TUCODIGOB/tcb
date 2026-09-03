@@ -1068,7 +1068,7 @@ async function escribirLosRasgos(cual, rasgos, nombrePila, sexo, cartaTexto, rel
 
   const encargo = `Eres astróloga. Se le está escribiendo a una persona el estudio de su carta natal, y te toca la parte de ${cual === 'fortalezas' ? 'lo que se le da bien' : 'lo que le cuesta'}.
 
-AQUÍ NO SE ELIGE NADA. Los rasgos ya están decididos y te los doy abajo con su nombre y con la posición de la carta de la que salen. Tú escribes, de cada uno, sus dos casillas: la descripción y la causa. Ni quitas ninguno, ni añades ninguno, ni cambias un nombre.
+AQUÍ NO SE ELIGE NADA. Los rasgos ya están decididos y te los doy abajo con su nombre, con el área de la vida a la que pertenecen y con la posición de la carta de la que salen. Tú escribes, de cada uno, sus dos casillas: la descripción y la causa. Ni quitas ninguno, ni añades ninguno, ni cambias un nombre.
 
 Contestas con un texto por rasgo, y en cada uno repites su nombre TAL CUAL te lo doy, sin cambiarle ni una palabra. Es lo que hace que cada texto acabe en su rasgo.
 
@@ -1158,8 +1158,22 @@ ${cartaTexto}
 Persona: ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombrePila}
 
+EL ÁREA DE CADA RASGO MANDA SOBRE SU TEXTO.
+Cada rasgo viene con su área, y es la parcela de la vida de la persona en la que ese rasgo se le nota. Estas son las siete y de qué va cada una:
+
+IDENTIDAD    quién es y cómo se planta delante de los demás
+PATRONES     lo que repite, su día a día, su manera de funcionar
+MIEDOS       lo que le frena y lo que evita
+HERIDA       lo que le duele de antiguo, su casa y los suyos
+AMOR         la pareja, el deseo y el disfrute
+RELACIONES   la gente, hablar, los grupos, los amigos
+DINERO       el dinero, el trabajo y lo que vale lo suyo
+
+La descripción y la causa se escriben DENTRO de esa parcela: es ahí donde se cuenta dónde se le ve y qué le pasa. La posición de la carta te dice de dónde sale, no de qué se habla; si esa posición te tira hacia otra parcela, mandas el texto al área que lleva escrita el rasgo, no a la que sugiere la posición.
+Es la etiqueta que la persona va a leer justo encima de tu texto, así que si el texto habla de otra cosa, lo que lee no cuadra.
+
 LOS RASGOS QUE TE TOCAN, en este orden:
-${rasgos.map((r, i) => `${i + 1}. ${r.nombre}  —  sale de: ${r.origen}`).join('\n')}`;
+${rasgos.map((r, i) => `${i + 1}. ${r.nombre}\n   área: ${r.area}  —  sale de: ${r.origen}`).join('\n')}`;
 
   const salida = await alModelo({
     que: `escribir ${cual}`,
