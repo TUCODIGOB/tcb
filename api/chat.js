@@ -851,9 +851,15 @@ function areaPorLaPosicion(origen) {
 // llega cortada, el JSON no se puede leer y se pierden las dos listas.
 // ═════════════════════════════════════════════════════════════════
 
-// Lo que tarda como mucho. Con las dos listas y pensando, ronda los noventa
-// segundos; pasados los ciento cincuenta no esta tardando, esta colgada.
-const TOPE_DE_LAS_LISTAS = 150000;
+// Lo que tarda como mucho.
+//
+// Estuvo en 150 s y se corto una compra de verdad a los dos minutos y medio: no
+// estaba colgada, es que no le daba tiempo. Aqui no se escribe una lista corta,
+// se escriben treinta y tantos rasgos con su descripcion y su causa, y eso son
+// varios miles de palabras ademas de lo que piensa.
+//
+// 195 s deja sitio para eso y para las siete areas detras, que son otros 60.
+const TOPE_DE_LAS_LISTAS = 195000;
 
 async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
   const trato = sexo === 'mujer'
@@ -1051,9 +1057,12 @@ Nombre de pila: ${nombrePila}`;
       max_tokens: 24000,
       system: encargo,
       output_config: {
-        // Ni al minimo ni a tope: lo que hace falta para comparar una lista sin
-        // que la clienta se quede esperando de mas.
-        effort: 'medium',
+        // EL ESFUERZO, BAJO. No es pereza: aqui lo caro no es pensar, es
+        // escribir treinta y tantos rasgos enteros, y el rato que se pasa
+        // pensando sale del mismo reloj. Comparar treinta cosas y ver cuales se
+        // pisan no necesita mas: con 'medium' se paso de los dos minutos y medio
+        // y la clienta se quedo sin informe.
+        effort: 'low',
         format: { type: 'json_schema', schema: ESQUEMA_DE_LAS_LISTAS },
       },
       messages: [{ role: 'user', content: 'Saca las dos listas de esta carta, siguiendo el esquema.' }],
@@ -1123,7 +1132,10 @@ async function sacarLasListas(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
       ultimoError = err;
       const temporal = err.temporal !== false;
       if (!temporal || intento === INTENTOS) break;
-      if (!reloj.hayTiempoPara(210)) {
+      // Para reintentar tienen que caber otra tirada entera y las siete areas.
+      // Si la primera se comio el reloj, no se reintenta: vale mas avisar que
+      // dejar a la clienta esperando a un segundo intento que tampoco cabe.
+      if (!reloj.hayTiempoPara(255)) {
         console.warn('Listas: fallo y ya no cabe otro intento con las siete areas detras');
         break;
       }
