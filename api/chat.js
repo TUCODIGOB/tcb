@@ -847,8 +847,17 @@ const ESQUEMA_DE_ELEGIR = {
   additionalProperties: false,
 };
 
-// Al escribir se contesta en el mismo orden en que se le dan, y se casan por
-// posicion. Sin nombre ni area aqui: eso ya esta decidido y no se toca.
+// CADA TEXTO DICE DE QUE RASGO ES, Y SE CASAN POR EL NOMBRE.
+//
+// Antes se casaban por su sitio en la lista: el primer texto para el primer
+// rasgo, y asi. Y se colo un informe con las descripciones corridas tres
+// puestos -tres rasgos con el texto de otros y tres sin nada-, porque el modelo
+// devolvio dieciocho textos para veintiun rasgos. Un hueco en medio y todo lo
+// que venia detras se pego al rasgo equivocado, sin que nada saltara.
+//
+// Con el nombre delante eso no puede pasar: el texto va al rasgo que nombra, y
+// el que no reciba ninguno se queda vacio y se ve, en vez de llevarse el del
+// vecino.
 const ESQUEMA_DE_ESCRIBIR = {
   type: 'object',
   properties: {
@@ -857,10 +866,11 @@ const ESQUEMA_DE_ESCRIBIR = {
       items: {
         type: 'object',
         properties: {
+          nombre:      { type: 'string' },
           descripcion: { type: 'string' },
           causa:       { type: 'string' },
         },
-        required: ['descripcion', 'causa'],
+        required: ['nombre', 'descripcion', 'causa'],
         additionalProperties: false,
       },
     },
@@ -1039,7 +1049,9 @@ async function escribirLosRasgos(cual, rasgos, nombrePila, sexo, cartaTexto, rel
 
 AQUÍ NO SE ELIGE NADA. Los rasgos ya están decididos y te los doy abajo con su nombre y con la posición de la carta de la que salen. Tú escribes, de cada uno, sus dos casillas: la descripción y la causa. Ni quitas ninguno, ni añades ninguno, ni cambias un nombre.
 
-Contestas con un texto por rasgo, en el MISMO ORDEN en que te los doy.
+Contestas con un texto por rasgo, y en cada uno repites su nombre TAL CUAL te lo doy, sin cambiarle ni una palabra. Es lo que hace que cada texto acabe en su rasgo.
+
+Van todos: si te dejas uno, ese rasgo se cae del informe.
 
 TODO SALE DE LA CARTA Y DEL RASGO. Si algo no se puede sacar de ahí, no se escribe.
 
@@ -1136,21 +1148,38 @@ ${rasgos.map((r, i) => `${i + 1}. ${r.nombre}  —  sale de: ${r.origen}`).join(
     razona: false,
     techo: 16000,
     system: encargo,
-    mensaje: `Escribe la descripción y la causa de cada uno de los ${rasgos.length} rasgos, en el mismo orden.`,
+    mensaje: `Escribe la descripción y la causa de cada uno de los ${rasgos.length} rasgos. Contesta ${rasgos.length} textos, ni uno menos, cada uno con el nombre de su rasgo.`,
     molde: ESQUEMA_DE_ESCRIBIR,
     espera: reloj.senal(TOPE_DE_ESCRIBIR),
   });
 
-  // Se casan por posicion. El que se quede sin texto sale con sus casillas
-  // vacias antes que desaparecer: el codigo de mas abajo lo vera y avisara.
-  const textos = Array.isArray(salida.textos) ? salida.textos : [];
-  return rasgos.map((r, i) => ({
-    nombre: r.nombre,
-    descripcion: String(textos[i]?.descripcion ?? '').trim(),
-    causa: String(textos[i]?.causa ?? '').trim(),
-    origen: r.origen,
-    area: r.area,
-  }));
+  // Se casan por el nombre, no por el sitio. Se compara en minusculas y sin
+  // tildes, que es lo unico que el modelo suele cambiar al copiarlo.
+  const porNombre = new Map();
+  for (const t of (Array.isArray(salida.textos) ? salida.textos : [])) {
+    const clave = comoSeCompara(String(t?.nombre ?? ''));
+    if (clave && !porNombre.has(clave)) porNombre.set(clave, t);
+  }
+
+  const escritos = rasgos.map(r => {
+    const t = porNombre.get(comoSeCompara(r.nombre));
+    return {
+      nombre: r.nombre,
+      descripcion: String(t?.descripcion ?? '').trim(),
+      causa: String(t?.causa ?? '').trim(),
+      origen: r.origen,
+      area: r.area,
+    };
+  });
+
+  // EL QUE SE QUEDA SIN TEXTO NO SE ENTREGA. Un rasgo con el titulo solo y sin
+  // nada debajo se imprime igual en el PDF y se ve a la primera. Vale mas un
+  // area con un rasgo menos.
+  const enteros = escritos.filter(r => r.descripcion && r.causa);
+  if (enteros.length < rasgos.length) {
+    console.warn(`${cual}: ${rasgos.length - enteros.length} rasgos se quedaron sin texto y no se entregan`);
+  }
+  return enteros;
 }
 
 // La unica puerta al modelo de este fichero para las listas: mismo trato de los
