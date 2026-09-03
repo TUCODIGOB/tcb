@@ -44,8 +44,7 @@ const original = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
 const ENPRODUCCION = [
   ['el presupuesto de la peticion', 'const TOPE_DE_LA_PETICION = 285000'],
   ['el tope de cada area',          'signal: reloj.senal(90000)'],
-  ['el tope de cada lista',         'signal: reloj.senal(100000)'],
-  ['el tope de la clasificacion',   'signal: reloj.senal(70000)'],
+  ['el tope de las listas',        'const TOPE_DE_LAS_LISTAS = 150000'],
 ];
 console.log('\n  api/chat.js — una llamada colgada ya no se lleva el informe por delante\n');
 for (const [que, texto] of ENPRODUCCION) {
@@ -82,12 +81,9 @@ function aEscala(texto, presupuesto) {
   return texto
     .replace("import Stripe from 'stripe';", "import Stripe from './.stripe-falso.mjs';")
     .replace('const TOPE_DE_LA_PETICION = 285000', `const TOPE_DE_LA_PETICION = ${presupuesto}`)
+    .replace('const TOPE_DE_LAS_LISTAS = 150000', 'const TOPE_DE_LAS_LISTAS = 3000')
     .replace('reloj.senal(90000)', 'reloj.senal(2500)')
-    .replace('reloj.senal(100000)', 'reloj.senal(3000)')
-    .replace('reloj.senal(70000)', 'reloj.senal(2000)')
-    .replace('hayTiempoPara(190)', 'hayTiempoPara(8)')
-    .replace('hayTiempoPara(110)', 'hayTiempoPara(4.6)')
-    .replace('hayTiempoPara(90)', 'hayTiempoPara(3.8)');
+    .replace('hayTiempoPara(210)', 'hayTiempoPara(5)');
 }
 
 const stripeFalsoRuta = path.join(AQUI, '.stripe-falso.mjs');
@@ -103,8 +99,7 @@ process.env.BREVO_API_KEY = '';
 
 // ── 3. El modelo de mentira.
 // Cada rasgo con su titulo, distintos entre si: dos titulos que dicen lo mismo
-// los quita el filtro de repetidos, el area se queda bajo el minimo y se pide
-// relleno, que es una llamada mas y aqui se cuentan llamadas.
+// los quita el filtro de repetidos y el area se quedaria coja.
 const TITULOS = {
   Fortaleza: [
     'Aguantas cuando todo aprieta', 'Miras de frente lo incomodo',
@@ -130,8 +125,7 @@ const rasgoDe = (origen, i, lista) => ({
   causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen,
 });
 const caja = (a, b, i, l) => [rasgoDe(a, i, l), rasgoDe(b, i + 1, l)];
-// Las dos listas escriben titulos distintos, como en la realidad.
-const listas = l => JSON.stringify({
+const cajas = l => ({
   IDENTIDAD:  caja('Sol en Aries casa 1', 'Ascendente en Aries', 0, l),
   PATRONES:   caja('Nodo Norte en Acuario', 'casa 9 en Aries', 2, l),
   MIEDOS:     caja('Saturno en Acuario casa 12', 'Neptuno en Acuario', 4, l),
@@ -140,6 +134,8 @@ const listas = l => JSON.stringify({
   RELACIONES: caja('Mercurio en Aries', 'casa 11 en Acuario', 10, l),
   DINERO:     caja('casa 2 en Aries', 'casa 10 en Acuario', 12, l),
 });
+// Las dos listas vienen en la MISMA respuesta, como las pide ahora chat.js.
+const listas = () => JSON.stringify({ fortalezas: cajas('Fortaleza'), desafios: cajas('Desafio') });
 
 let llamadas = 0, sinSenal = 0, colgarLaPrimera = false, yaColgada = false;
 
@@ -150,16 +146,10 @@ globalThis.fetch = async (url, opciones) => {
   llamadas++;
   if (!opciones || !opciones.signal) sinSenal++;
 
-  let esLista = false, esClasificar = false, cuantos = 0, cualLista = 'Fortaleza';
+  let esLista = false;
   try {
     const cuerpo = JSON.parse(opciones.body);
-    const sistema = String(cuerpo.system || '');
-    esLista = sistema.startsWith('Eres astróloga');
-    cualLista = sistema.includes('FORTALEZAS: lo que se le da bien') ? 'Fortaleza' : 'Desafio';
-    esClasificar = sistema.startsWith('Un estudio de personalidad');
-    if (esClasificar) {
-      cuantos = String(cuerpo.messages[0].content).split('\n').filter(l => /^\d+\. /.test(l)).length;
-    }
+    esLista = String(cuerpo.system || '').startsWith('Eres astróloga');
   } catch (e) {}
 
   // LA LLAMADA QUE NO CONTESTA. Solo termina si la cortan: si el codigo no le
@@ -174,15 +164,18 @@ globalThis.fetch = async (url, opciones) => {
   }
 
   await espera(120);
-  if (esClasificar) {
-    const A = ['IDENTIDAD','PATRONES','MIEDOS','HERIDA','AMOR','RELACIONES','DINERO'];
-    return { ok: true, status: 200, json: async () => ({ content: [{ text: JSON.stringify({
-      areas: Array.from({ length: cuantos }, (_, i) => A[Math.floor(i / 2) % 7]),
-      sobran: [], nombres: [],
-    }) }] }) };
+  // La de las listas razona, asi que su respuesta trae delante un bloque de
+  // pensamiento y detras el texto, como hace la API de verdad. Las areas no
+  // razonan y contestan con un bloque solo.
+  if (esLista) {
+    return { ok: true, status: 200, json: async () => ({ content: [
+      { type: 'thinking', thinking: '' },
+      { type: 'text', text: listas() },
+    ] }) };
   }
-  const texto = esLista ? listas(cualLista) : 'Texto de area generado para la prueba. '.repeat(10);
-  return { ok: true, status: 200, json: async () => ({ content: [{ text: texto }] }) };
+  return { ok: true, status: 200, json: async () => ({ content: [
+    { type: 'text', text: 'Texto de area generado para la prueba. '.repeat(10) },
+  ] }) };
 };
 
 const respuesta = () => {
@@ -219,7 +212,7 @@ try {
   comprobar('la peticion no se queda colgada', !a.colgado, `${(tardo / 1000).toFixed(1)}s`);
   comprobar('el informe sale igual', a.code === 200, 'HTTP ' + a.code);
   comprobar('la colgada se corta y se vuelve a pedir esa sola',
-    llamadas === 11, `${llamadas} llamadas (10 + la que se corto)`);
+    llamadas === 9, `${llamadas} llamadas (8 + la que se corto)`);
   comprobar('ninguna llamada al modelo va sin tope de tiempo', sinSenal === 0,
     `${sinSenal} sin tope`);
 
@@ -233,8 +226,8 @@ try {
   ]);
 
   comprobar('con el tiempo justo el informe tambien sale', b.code === 200 && !b.colgado, 'HTTP ' + b.code);
-  comprobar('no se pide ni una llamada de mas por ir justo de tiempo', llamadas === 9,
-    `${llamadas} llamadas (2 listas + 7 areas)`);
+  comprobar('no se pide ni una llamada de mas por ir justo de tiempo', llamadas === 8,
+    `${llamadas} llamadas (1 de listas + 7 areas)`);
   comprobar('el informe llega entero al cliente, con sus siete areas',
     typeof b.body?.texto === 'string' && b.body.texto.split(SEPARADOR).length === 7,
     (b.body?.texto ? b.body.texto.split(SEPARADOR).length : 0) + ' areas');

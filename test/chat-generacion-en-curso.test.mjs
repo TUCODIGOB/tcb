@@ -90,7 +90,7 @@ const rasgoDe = (origen, i, lista) => ({
 });
 // Las posiciones son inventadas para la prueba, de nadie: solo tienen que
 // caer en el area de su caja para que el codigo las acepte.
-const listasDeMentira = lista => JSON.stringify({
+const cajasDe = lista => ({
   IDENTIDAD:  [rasgoDe('Sol en Aries casa 1', 0, lista), rasgoDe('Ascendente en Aries', 1, lista)],
   PATRONES:   [rasgoDe('Nodo Norte en Acuario', 2, lista), rasgoDe('casa 9 en Aries', 3, lista)],
   MIEDOS:     [rasgoDe('Saturno en Acuario casa 12', 4, lista), rasgoDe('Neptuno en Acuario', 5, lista)],
@@ -99,40 +99,33 @@ const listasDeMentira = lista => JSON.stringify({
   RELACIONES: [rasgoDe('Mercurio en Aries', 10, lista), rasgoDe('casa 11 en Acuario', 11, lista)],
   DINERO:     [rasgoDe('casa 2 en Aries', 12, lista), rasgoDe('casa 10 en Acuario', 13, lista)],
 });
+// Las dos listas vienen en la MISMA respuesta, que es como las pide chat.js.
+const listasDeMentira = () => JSON.stringify({
+  fortalezas: cajasDe('Fortaleza'), desafios: cajasDe('Desafio'),
+});
 
 globalThis.fetch = async (url, opciones) => {
   const u = String(url);
   if (u.includes('api.anthropic.com')) {
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
-    let esRasgos = false, esAreaDelRasgo = false, cuantos = 0, cualLista = 'Fortaleza';
+    let esRasgos = false;
     try {
-      const cuerpo = JSON.parse(opciones.body);
-      const sistema = String(cuerpo.system || '');
-      esRasgos = sistema.startsWith('Eres astróloga');
-      // Las dos listas devuelven titulos distintos, igual que en la realidad:
-      // la de fortalezas no sabe lo que escribe la de desafios, pero no escriben
-      // lo mismo palabra por palabra.
-      cualLista = sistema.includes('FORTALEZAS: lo que se le da bien') ? 'Fortaleza' : 'Desafio';
-      // La peticion que pone el area de cada rasgo. Contesta una por rasgo,
-      // en el mismo orden, que es lo que espera api/chat.js.
-      esAreaDelRasgo = sistema.startsWith('Un estudio de personalidad');
-      if (esAreaDelRasgo) {
-        cuantos = String(cuerpo.messages[0].content).split('\n').filter(l => /^\d+\. /.test(l)).length;
-      }
+      esRasgos = String(JSON.parse(opciones.body).system || '').startsWith('Eres astróloga');
     } catch (e) {}
-    if (esAreaDelRasgo) {
-      const AREAS = ['IDENTIDAD','PATRONES','MIEDOS','HERIDA','AMOR','RELACIONES','DINERO'];
-      const respuesta = JSON.stringify({
-        areas: Array.from({ length: cuantos }, (_, i) => AREAS[Math.floor(i / 2) % 7]),
-        sobran: [], nombres: [], descripciones: [],
-      });
-      return { ok: true, status: 200, json: async () => ({ content: [{ text: respuesta }] }) };
+    // La de las listas razona: su respuesta trae delante un bloque de
+    // pensamiento y detras el texto, como la API de verdad.
+    if (esRasgos) {
+      return { ok: true, status: 200, json: async () => ({ content: [
+        { type: 'thinking', thinking: '' },
+        { type: 'text', text: listasDeMentira() },
+      ] }) };
     }
     // api/chat.js descarta cualquier area de menos de 100 caracteres y la
     // reintenta, asi que la respuesta de mentira tiene que dar la talla.
-    const texto = esRasgos ? listasDeMentira(cualLista) : 'Texto de area generado para la prueba. '.repeat(10);
-    return { ok: true, status: 200, json: async () => ({ content: [{ text: texto }] }) };
+    return { ok: true, status: 200, json: async () => ({ content: [
+      { type: 'text', text: 'Texto de area generado para la prueba. '.repeat(10) },
+    ] }) };
   }
   return { ok: true, status: 200, json: async () => ({}) };   // Brevo
 };
@@ -215,7 +208,7 @@ try {
   // que le pone el area a cada uno, mas las 7 areas del informe. Lo que se
   // vigila aqui no es el numero, sino que la segunda peticion no haya lanzado
   // NINGUNA generacion mas.
-  comprobar('en total solo se generó una vez', llamadasAlModelo === 10, llamadasAlModelo + ' llamadas');
+  comprobar('en total solo se generó una vez', llamadasAlModelo === 8, llamadasAlModelo + ' llamadas');
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);

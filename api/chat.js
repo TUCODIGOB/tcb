@@ -557,12 +557,12 @@ ${cartaTexto}`;
     // de las siete areas recibe el mismo texto de siempre, sin una letra de
     // mas: lo suyo se arma arriba con cartaTexto a secas.
     const cartaConLasCasas = casasTexto ? `${cartaTexto}\n\n${casasTexto}` : cartaTexto;
-    const { paraLasAreas, ...rasgos } = await sacarRasgos(nombrePila, sexo, cartaConLasCasas, INTENTOS_POR_AREA, reloj);
+    const rasgos = await sacarRasgos(nombrePila, sexo, cartaConLasCasas, INTENTOS_POR_AREA, reloj);
 
-    // Despues, las 7 areas a la vez. Cada una recibe SOLO los rasgos que caben
-    // en ella; en el PDF salen todos, que eso va por su lado.
+    // Despues, las 7 areas a la vez. Cada una recibe los rasgos que el codigo
+    // etiqueto con ella, que son los mismos que la clienta va a leer en el PDF.
     const resultados = await Promise.all(
-      AREAS.map(area => generarArea(area, paraLasAreas))
+      AREAS.map(area => generarArea(area, rasgos))
     );
 
     // Unir con el separador. Es U+001F (Unit Separator), un caracter de
@@ -634,11 +634,38 @@ const CASILLAS_DEL_RASGO = {
 // Con una caja por area tiene que pasar por las siete para contestar, y dejar
 // una vacia es algo que hace a la vista y no un descuido. El area de cada
 // rasgo ya no hace falta preguntarla: es la caja en la que viene.
-const ESQUEMA_UNA_LISTA = {
+//
+// Y LAS DOS LISTAS VIENEN EN LA MISMA RESPUESTA, cada una con sus siete cajas.
+// Antes se pedian por separado y en paralelo, asi que ninguna sabia lo que
+// escribia la otra: la de fortalezas decia "sabes mirarte con honestidad" y la
+// de desafios "evitas mirar lo que te falta". Ninguna regla puede arreglar eso
+// cuando el modelo no tiene delante la otra lista. Aqui si la tiene.
+const CAJAS_DE_UNA_LISTA = {
   type: 'object',
   properties: Object.fromEntries(NOMBRES_DE_AREA.map(a => [a, { type: 'array', items: CASILLAS_DEL_RASGO }])),
   required: NOMBRES_DE_AREA,
   additionalProperties: false,
+};
+
+const ESQUEMA_DE_LAS_LISTAS = {
+  type: 'object',
+  properties: { fortalezas: CAJAS_DE_UNA_LISTA, desafios: CAJAS_DE_UNA_LISTA },
+  required: ['fortalezas', 'desafios'],
+  additionalProperties: false,
+};
+
+// CUANTOS RASGOS LLEVA CADA AREA, arriba y abajo.
+//
+// El suelo es lo que hace que ningun area se entregue coja. El techo es lo que
+// impide que el informe acabe con cuarenta rasgos que se pisan: pasado ese
+// numero, quien lo lee ya no distingue ninguno.
+//
+// No se le pide poco de entrada. Se le pide TODO lo que haya y despues, en el
+// repaso, se quedan los que pesan: pedir pocos y limpiar despues deja areas por
+// debajo del suelo, y entonces hace falta otra llamada para rellenarlas.
+const POR_AREA = {
+  fortalezas: { min: 1, max: 2 },
+  desafios: { min: 2, max: 3 },
 };
 
 // ═════════════════════════════════════════════════════════════════
@@ -801,38 +828,68 @@ function areaPorLaPosicion(origen) {
   return '';
 }
 
-async function pedirUnaLista(cual, nombrePila, sexo, cartaTexto, soloEstas, aReescribir, reloj) {
+// ═════════════════════════════════════════════════════════════════
+// LAS DOS LISTAS DE RASGOS, EN UNA SOLA LLAMADA Y PENSANDO
+//
+// POR QUE ASI, DESPUES DE UN MES PROBANDO LO OTRO.
+//
+// Antes eran cinco llamadas: una por lista, otra para reescribir las que le
+// nombraban la carta a la clienta, otra para ponerle a cada rasgo su area y
+// quitar los que se pisaban, y otra por lista para rellenar las areas que se
+// quedaban cortas. Cuatro de esas cinco eran parches de lo mismo.
+//
+// Y ninguna arreglaba el fondo, porque el fondo era este: al modelo se le
+// pedia COMPARAR -"lee las siete cajas juntas y quita lo que diga lo mismo"-
+// con el razonamiento apagado. Comparar veinte cosas entre si y decidir cual
+// sobra no se puede hacer sin pensar, por bien escrita que este la orden. Un
+// mes de reglas nuevas no lo arreglo, y no iba a arreglarlo.
+//
+// Ahora es UNA llamada que piensa, y dentro hace lo que hacian las cinco:
+// saca los rasgos, los compara entre si -las dos listas a la vez, que es donde
+// nacia la mitad de los repetidos-, comprueba el suelo de cada area y, si al
+// quitar uno un area se queda corta, vuelve a la carta a buscar otro. Eso
+// ultimo era una llamada aparte que ademas se saltaba cuando el reloj apretaba.
+//
+// EL TECHO DE TOKENS VA HOLGADO A PROPOSITO. Pensar y escribir salen del mismo
+// presupuesto. Cuando esto se probo con el techo de escribir un area -3.500-,
+// se lo gastaba pensando y devolvia la respuesta vacia. Con las dos listas
+// enteras dentro hace falta sitio de sobra: si se queda corta, la respuesta
+// llega cortada, el JSON no se puede leer y se pierden las dos listas.
+// ═════════════════════════════════════════════════════════════════
+
+// Lo que tarda como mucho. Con las dos listas y pensando, ronda los noventa
+// segundos; pasados los ciento cincuenta no esta tardando, esta colgada.
+const TOPE_DE_LAS_LISTAS = 150000;
+
+async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
   const trato = sexo === 'mujer'
     ? 'una MUJER. Todo en femenino.'
     : sexo === 'hombre'
       ? 'un HOMBRE. Todo en masculino.'
       : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos.';
 
-  const encargo = `Eres astróloga. Lees una carta natal y sacas una lista de rasgos de esa persona.
+  const encargo = `Eres astróloga. Lees una carta natal y sacas las dos listas de rasgos de esa persona.
 
 TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posición concreta de esta carta, no se escribe.
 
 
-1. QUÉ LISTA TE TOCA
+1. LAS DOS LISTAS, Y LAS DOS DE UNA VEZ
 
-${cual === 'fortalezas'
-  ? 'FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.'
-  : 'DESAFÍOS: lo que le cuesta, lo que le pesa, donde tropieza.'}
+FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.
+DESAFÍOS: lo que le cuesta, lo que le pesa, dónde tropieza.
 
-Solo esa. La otra lista la está sacando otra persona a la vez que tu.
+Las dos se escriben en la misma respuesta y con las dos delante. Eso es lo importante: puedes ver si algo que has puesto en una ya está dicho, del revés, en la otra. Un "sabes mirarte de frente" en fortalezas y un "evitas mirar lo que no te gusta" en desafíos son el mismo rasgo contado dos veces, y solo se ve teniéndolas juntas.
 
 
 2. CUÁNTOS
 
-Veinte como máximo en TODA la lista, sumando las siete áreas, no en cada una. Es un TECHO, no un objetivo ni una cuota que llenar: si de esta carta salen dieciocho de verdad, se entregan dieciocho. No se añade ninguno para llegar a la cifra y no se parte uno bueno en dos.
-Si te salieran más de veinte, te quedas con los que más peso tienen en esta carta.
+Al final, de cada área salen ${POR_AREA.fortalezas.min} o ${POR_AREA.fortalezas.max} fortalezas y ${POR_AREA.desafios.min} o ${POR_AREA.desafios.max} desafíos. Ninguna área se entrega vacía ni por debajo de eso, y ninguna pasa de ahí.
 
-${cual === 'fortalezas'
-  ? 'Y AL MENOS DOS EN CADA ÁREA. Ninguna caja se entrega vacía ni con uno solo: de todo el mundo se pueden decir dos cosas buenas de cada parcela de su vida, así que de cada área salen dos como mínimo.'
-  : 'Y AL MENOS DOS EN CADA ÁREA. Ninguna caja se entrega vacía ni con uno solo: en los desafíos es donde está lo que más le sirve, así que de cada área salen dos como mínimo.'}
-Pero ojo: dos es el suelo, no la respuesta. De cada área sale TODO lo que de verdad haya en su parte de la carta, que en unas serán cuatro y en otras el mínimo. Poner dos en cada caja y darlo por hecho es entregar media lista.
+Pero eso es el final, no el principio. Primero sacas de la carta TODO lo que haya de verdad en cada área, sin contar y sin quedarte corta. Después, en el repaso del punto 6, comparas, quitas lo que se repite y te quedas con los que pesan hasta ese número.
 
-Y NI UNO REPETIDO, tampoco entre áreas distintas. Repetido no es solo la misma frase: es la misma cosa dicha de otra manera. Si un rasgo te vale para dos áreas, va en UNA sola, en la que más pese. Antes de entregar, lee las siete cajas juntas y quita lo que diga lo mismo que otro.
+Hacerlo al revés -sacar justo los que caben y limpiar después- deja áreas por debajo del suelo, porque al quitar un repetido ya no hay de dónde sacar el que falta.
+
+QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. No que suene bien ni que esté bien escrito. Entre dos que dicen casi lo mismo, se queda el que más le cuesta o más le da, y el otro se va.
 
 
 3. DE DONDE LOS SACAS
@@ -946,9 +1003,22 @@ Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee un
 - CUANDO ES UN DESAFÍO, SE LE CUENTA SIN ATACARLA. Se dice lo que le pasa de manera que lo reconozca y no se ponga a la defensiva: sin juzgarla, sin señalarla y sin que suene a reproche ni a defecto.
 - Español de España, hablado, sin latinoamericanismos.
 - Nada de asteriscos, negritas, guiones ni símbolos: es texto corrido.
-${cual === 'desafíos'
-  ? '- No se le pone un diagnóstico: se cuenta lo que le ocurre, no cómo se llama eso.'
-  : ''}
+- A ella no se le pone un diagnóstico: se cuenta lo que le ocurre, no cómo se llama eso.
+
+
+6. EL REPASO, ANTES DE ENTREGAR
+
+Esto no es un consejo: es la mitad del trabajo, y va con las dos listas escritas delante.
+
+PRIMERO, LOS QUE DICEN LO MISMO. Lees los rasgos de las dos listas, todos, y los comparas de dos en dos. Dos son el mismo si al leer uno ya sabes lo que dice el otro, aunque estén escritos con palabras distintas, aunque estén en áreas distintas y aunque uno esté en fortalezas y el otro en desafíos. De cada pareja se queda UNO, el que más pese, y el otro se va.
+
+DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas lo que ha quedado en cada una de las catorce cajas. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale rescatar el que acabas de quitar ni escribir una variante suya.
+
+DESPUÉS, EL TECHO. Si un área pasa de su máximo, se quedan los que más pesan y los demás se van.
+
+Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ningún rasgo nombre la carta ni nada técnico en el nombre, la descripción o la causa, y que a ninguno le falte una casilla.
+
+Devuelve solo las listas ya repasadas. No expliques lo que has quitado.
 
 Carta natal:
 ${cartaTexto}
@@ -958,48 +1028,42 @@ Nombre de pila: ${nombrePila}`;
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    // Una lista tarda menos de un minuto. Pasados cien segundos no esta
-    // tardando: esta colgada, y el reintento hace mas que seguir esperando.
-    signal: reloj.senal(100000),
+    signal: reloj.senal(TOPE_DE_LAS_LISTAS),
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': process.env.ANTHROPIC_API_KEY,
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-5',
-      // Igual que las areas: sin razonamiento. Ver el comentario de pedirArea.
-      thinking: { type: 'disabled' },
-      // Sin tope de rasgos, la lista puede ser larga. Si la respuesta se corta,
-      // el JSON no se puede leer y se pierden las DOS listas enteras, asi que
-      // el techo va holgado. Es un techo, no un objetivo: solo se paga lo que
-      // el modelo escribe.
-      max_tokens: 16000,
+      // El modelo bueno, y aqui solo aqui: es la unica llamada del informe que
+      // no escribe, sino que decide. Las siete areas siguen con el de siempre.
+      model: 'claude-opus-5',
+      // PENSANDO. Es todo el cambio. Sin esto no puede comparar, y sin comparar
+      // salen los repetidos y las etiquetas cambiadas de sitio.
+      thinking: { type: 'adaptive' },
+      // El techo, holgado. Ver el comentario de arriba: aqui es donde reventaba.
+      max_tokens: 24000,
       system: encargo,
-      output_config: { format: { type: 'json_schema', schema: ESQUEMA_UNA_LISTA } },
-      messages: [{ role: 'user', content:
-        aReescribir && aReescribir.length > 0
-          ? [`Estos ${cual} que has sacado de esta carta le nombran la carta a la persona que lo lee, y eso no puede salir en el informe. Devuelvemelos otra vez, cada uno en la caja de su area, con el MISMO nombre y el MISMO origen, cambiando solo la frase que nombra la carta por lo que le pasa a ella con sus palabras. Las demas cajas las dejas vacias.`, '']
-              .concat(aReescribir.map(r => `- area: ${r.area}\n  nombre: ${r.nombre}\n  descripcion: ${r.descripcion}\n  causa: ${r.causa}\n  origen: ${r.origen}`))
-              .join('\n')
-          : soloEstas && soloEstas.length > 0
-            ? `De esta carta faltan ${cual} de estas areas: ${soloEstas.join(', ')}. Sacalos ahora, siguiendo el esquema. Las demas cajas las dejas vacias.`
-            : `Saca la lista de ${cual} de esta carta, siguiendo el esquema.` }],
+      output_config: {
+        // Ni al minimo ni a tope: lo que hace falta para comparar una lista sin
+        // que la clienta se quede esperando de mas.
+        effort: 'medium',
+        format: { type: 'json_schema', schema: ESQUEMA_DE_LAS_LISTAS },
+      },
+      messages: [{ role: 'user', content: 'Saca las dos listas de esta carta, siguiendo el esquema.' }],
     }),
   });
 
   if (!response.ok) {
     const detalle = await response.text();
-    const err = new Error(`${cual}: ${response.status} — ${detalle.slice(0, 300)}`);
-    // Igual que en las areas: la saturacion y los errores del servidor se
-    // reintentan; una peticion mal formada o la clave mal no van a mejorar.
+    const err = new Error(`Listas: ${response.status} — ${detalle.slice(0, 300)}`);
     err.temporal = response.status === 429 || response.status >= 500;
     throw err;
   }
 
   const data = await response.json();
   const texto = (data.content || [])
-    .filter(b => b && typeof b.text === 'string')
+    .filter(b => b && b.type === 'text' && typeof b.text === 'string')
     .map(b => b.text)
     .join('');
 
@@ -1007,20 +1071,26 @@ Nombre de pila: ${nombrePila}`;
   try {
     salida = JSON.parse(texto);
   } catch (e) {
-    const err = new Error(`${cual}: la respuesta no es JSON valido`);
+    const err = new Error('Listas: la respuesta no es JSON valido');
     err.temporal = true;
     throw err;
   }
 
-  // Las siete cajas se juntan otra vez en una lista, en el orden de las areas,
-  // que es como se pintan en el PDF. De ahi para adelante nada cambia.
-  //
-  // Si a un rasgo le faltara una casilla, se queda vacia. Sin esto se imprimia
-  // en el PDF la palabra "undefined", que es lo mismo que paso con la palabra
-  // "placeholder".
+  return {
+    fortalezas: enLista(salida.fortalezas),
+    desafios: enLista(salida.desafios),
+  };
+}
+
+// Las siete cajas se juntan en una lista, en el orden de las areas, que es como
+// se pintan en el PDF.
+//
+// Si a un rasgo le faltara una casilla, se queda vacia. Sin esto se imprimia en
+// el PDF la palabra "undefined", que es lo mismo que paso con "placeholder".
+function enLista(cajas) {
   const lista = [];
   for (const area of NOMBRES_DE_AREA) {
-    for (const r of (Array.isArray(salida[area]) ? salida[area] : [])) {
+    for (const r of (Array.isArray(cajas?.[area]) ? cajas[area] : [])) {
       const origen = String(r?.origen ?? '').trim();
       lista.push({
         nombre: String(r?.nombre ?? '').trim(),
@@ -1036,22 +1106,26 @@ Nombre de pila: ${nombrePila}`;
   return lista;
 }
 
-// CADA LISTA SE REINTENTA POR SU CUENTA, igual que cada area.
+// SE REINTENTA, PERO SOLO SI CABE.
 //
-// Si falla la de desafios, se vuelve a pedir solo esa: la de fortalezas ya
-// estaba bien y no se tira ni se paga dos veces. Es exactamente lo que hace
-// generarArea con cada una de las siete areas.
-async function sacarUnaLista(cual, nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
+// Ahora el informe entero cuelga de esta llamada: si no sale, no hay rasgos. Y
+// como tarda mas que las de antes, un reintento a destiempo se come el sitio de
+// las siete areas y deja a la clienta sin informe habiendo pagado. Asi que se
+// reintenta mientras quepan el segundo intento y las areas detras.
+async function sacarLasListas(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   let ultimoError;
   for (let intento = 1; intento <= INTENTOS; intento++) {
     try {
-      return await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, null, null, reloj);
+      return await pedirLasListas(nombrePila, sexo, cartaTexto, reloj);
     } catch (err) {
       ultimoError = err;
-      // Un corte de red llega sin marca; se trata como temporal.
       const temporal = err.temporal !== false;
       if (!temporal || intento === INTENTOS) break;
-      console.warn(`Lista de ${cual}: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
+      if (!reloj.hayTiempoPara(210)) {
+        console.warn('Listas: fallo y ya no cabe otro intento con las siete areas detras');
+        break;
+      }
+      console.warn(`Listas: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
       await new Promise(r => setTimeout(r, 1500 * intento));
     }
   }
@@ -1094,109 +1168,6 @@ const PALABRAS_DE_ASTROLOGIA = [
 function hablaDeAstrologia(rasgo) {
   const texto = sinTildes(`${rasgo.nombre} ${rasgo.descripcion} ${rasgo.causa}`);
   return PALABRAS_DE_ASTROLOGIA.some(re => re.test(texto));
-}
-
-// UN RASGO BUENO NO SE TIRA POR UNA FRASE.
-//
-// Un rasgo puede estar bien entero y tener una sola frase que nombra la carta.
-// Tirarlo seria perder lo bueno, asi que se le devuelven esos rasgos y se le
-// pide que reescriban SOLO esa frase, con el mismo nombre y el mismo origen.
-// Si alguno vuelve nombrandola otra vez, ese si se cae.
-async function sinNombrarLaCarta(cual, nombrePila, sexo, cartaTexto, lista, reloj) {
-  const sucios = lista.filter(hablaDeAstrologia);
-  if (sucios.length === 0) return lista;
-
-  // Esto solo pule. Si no quedan tiempo para esta llamada y para todo lo que
-  // viene detras, se deja: el filtro de mas abajo quita esos rasgos y el
-  // informe sale. Perder un rasgo es menos malo que perder el informe.
-  if (!reloj.hayTiempoPara(190)) {
-    console.warn(`Lista de ${cual}: ${sucios.length} rasgos nombraban la carta, no da tiempo a reescribirlos`);
-    return lista;
-  }
-
-  console.warn(`Lista de ${cual}: ${sucios.length} rasgos nombraban la carta, se piden reescritos`);
-  let arreglados;
-  try {
-    arreglados = await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, null, sucios, reloj);
-  } catch (err) {
-    console.error(`Lista de ${cual}: no se pudo reescribir: ${err.message.slice(0, 80)}`);
-    return lista;
-  }
-
-  // Cada uno vuelve a su sitio por el nombre, que es lo que se le ha pedido que
-  // no cambie. El que no vuelva, o vuelva igual de sucio, se queda como estaba
-  // y lo quita el filtro de mas abajo.
-  const porNombre = new Map(arreglados.filter(r => !hablaDeAstrologia(r)).map(r => [r.nombre, r]));
-  return lista.map(r => (hablaDeAstrologia(r) && porNombre.has(r.nombre)) ? porNombre.get(r.nombre) : r);
-}
-
-// EL MINIMO POR AREA, GARANTIZADO.
-//
-// El esquema obliga a que existan las siete cajas, pero no puede obligar a que
-// lleven algo dentro: la API no admite pedir un minimo por caja. Asi que lo
-// comprueba el codigo. Si alguna area no llega al minimo se piden SOLO esas,
-// una vez, y se juntan con lo que ya habia. Cuando el minimo se cumple, que es
-// lo normal, esto no gasta ni una llamada.
-const MINIMO_POR_AREA = { fortalezas: 2, desafios: 2 };
-
-async function conElMinimoPorArea(cual, nombrePila, sexo, cartaTexto, listaCruda, reloj) {
-  // Fuera los que nombran la carta a la clienta. Si al quitarlos algun area se
-  // queda corta, el relleno de aqui abajo la vuelve a pedir; no hace falta
-  // ninguna llamada nueva para esto.
-  const lista = listaCruda.filter(r => !hablaDeAstrologia(r));
-  if (lista.length < listaCruda.length) {
-    console.warn(`Lista de ${cual}: ${listaCruda.length - lista.length} rasgos nombraban la carta a la clienta, se quitan`);
-  }
-
-  const minimo = MINIMO_POR_AREA[cual] || 1;
-  const faltan = NOMBRES_DE_AREA.filter(a => lista.filter(r => r.area === a).length < minimo);
-  if (faltan.length === 0) return lista;
-
-  // Igual que la reescritura: si no cabe esta llamada y las siete areas
-  // detras, se entrega el area corta antes que quedarse sin informe.
-  if (!reloj.hayTiempoPara(110)) {
-    console.warn(`Lista de ${cual}: no llega al minimo en ${faltan.join(', ')}, no da tiempo a completarlo`);
-    return lista;
-  }
-
-  console.warn(`Lista de ${cual}: no llega al minimo en ${faltan.join(', ')}, se piden aparte`);
-  try {
-    const extra = await pedirUnaLista(cual, nombrePila, sexo, cartaTexto, faltan, null, reloj);
-    return lista.concat(extra.filter(r => faltan.includes(r.area) && !hablaDeAstrologia(r)));
-  } catch (err) {
-    // Si esta segunda peticion falla, se entrega lo que ya habia: vale mas el
-    // informe con un area corta que sin listas.
-    console.error(`Lista de ${cual}: no se pudo completar el minimo: ${err.message.slice(0, 80)}`);
-    return lista;
-  }
-}
-
-// LO QUE SE COMPRUEBA CONTANDO, NO OPINANDO.
-//
-// El encargo pide que se le hable de tu y aun asi se cuela alguno en tercera
-// persona. Eso no es criterio: se cuenta y se ve.
-//
-// El nombre largo NO se toca. Se probo pedir uno nuevo cuando pasaba de siete
-// palabras y salio peor: los que volvian eran cortos pero no se entendian a la
-// primera, etiquetas del tipo "Fiable en el trabajo silencioso" en vez de algo
-// que le hable a ella. Un titulo de mas se lee; uno que no se entiende, no.
-//
-// Un nombre que empieza por "Le cuesta" habla de la persona en vez de hablarle
-// a ella. Pero "Le sacas partido" esta bien: el verbo en segunda persona acaba
-// en ese. Por eso se mira el verbo, no el "le".
-function nombreEnTercera(nombre) {
-  const t = sinTildes(nombre).trim();
-  const le = t.match(/^(se le|le)\s+([a-zñ]+)/);
-  if (le && !le[2].endsWith('s')) return true;
-  return /^(ella|su)\s/.test(t);
-}
-
-// Devuelve por que no vale ese nombre, o cadena vacia si vale.
-function nombreQueNoVale(rasgo) {
-  const nombre = String(rasgo.nombre || '').trim();
-  if (!nombre) return '';
-  if (nombreEnTercera(nombre)) return 'habla de el en vez de hablarle a el';
-  return '';
 }
 
 // DOS RASGOS CON EL MISMO TITULO SON EL MISMO RASGO DICHO DOS VECES.
@@ -1257,7 +1228,7 @@ function sinTituloRepetido(fortalezas, desafios) {
   // medio minuto mas de espera. Entre dos titulos parecidos y una llamada
   // extra, se queda el parecido: al cliente le cuesta menos.
   const cribar = (lista, cual) => {
-    const minimo = MINIMO_POR_AREA[cual] || 1;
+    const minimo = POR_AREA[cual]?.min || 1;
     const quedan = {};
     for (const r of lista) quedan[r.area] = (quedan[r.area] || 0) + 1;
     return lista.filter(r => {
@@ -1283,322 +1254,72 @@ function sinTituloRepetido(fortalezas, desafios) {
   return [cribar(fortalezas, 'fortalezas'), cribar(desafios, 'desafios')];
 }
 
-// EL AREA LA DECIDE LO QUE DICE EL RASGO, NO DE DONDE SALIO.
+// LOS RASGOS, DE PRINCIPIO A FIN.
 //
-// Al escribirlos area por area, cada rasgo se queda en la caja donde nacio
-// aunque acabe hablando de otra cosa: "encajas con naturalidad en cualquier
-// grupo" salio trabajando IDENTIDAD, porque venia del Sol, y se quedo ahi
-// aunque hable de gente. Nadie le preguntaba despues de que habla.
-//
-// Aqui se le pregunta. Se le pasan SOLO los rasgos escritos, sin la carta y
-// sin las posiciones, para que no pueda dejarse llevar por el planeta del que
-// salieron: lo unico que puede mirar es lo que dice el rasgo.
-const QUE_CUBRE_CADA_AREA = `IDENTIDAD    quien es por dentro y por que es como es
-PATRONES     lo que repite una y otra vez sin poder parar
-MIEDOS       lo que teme y lo que evita, y como eso gobierna su vida sin que lo sepa
-HERIDA       lo que le duele A EL, por dentro, y hoy sigue frenandole
-AMOR         como quiere, como le quieren, a quien atrae
-RELACIONES   como le va CON LOS DEMAS: como los trata, como le tratan, que papel ocupa
-DINERO       el dinero, lo material, lo que vale su trabajo Y lo que comparte con otros
-
-DONDE MAS SE FALLA, y como se decide:
-- Si el rasgo va de OTRA GENTE (leerlos, caerles bien, calmarlos, hablar con ellos,
-  el ambiente que hay con ellos) es RELACIONES, aunque haya emocion de por medio y
-  aunque esa gente sea su familia. HERIDA es lo que le duele a EL, no lo que percibe
-  de los demas.
-- Si el rasgo va de dinero, bienes, herencias, deudas o de lo que es de dos, es
-  DINERO, aunque lo que cuente sea el miedo a perderlo o las ganas de controlarlo.
-- MIEDOS solo cuando el rasgo no cae en una parcela concreta. Si hay parcela
-  (dinero, pareja, gente, casa), manda la parcela.
-- Que le hayan hecho daño, o que le cueste reconocerlo, es HERIDA, no MIEDOS.`;
-
-const ESQUEMA_AREAS = {
-  type: 'object',
-  properties: {
-    areas: { type: 'array', items: { type: 'string' } },
-    sobran: { type: 'array', items: { type: 'integer' } },
-    nombres: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: { numero: { type: 'integer' }, nombre: { type: 'string' } },
-        required: ['numero', 'nombre'],
-        additionalProperties: false,
-      },
-    },
-    masPeso: { type: 'array', items: { type: 'integer' } },
-  },
-  required: ['areas', 'sobran', 'nombres', 'masPeso'],
-  additionalProperties: false,
-};
-
-async function porLoQueDiceElRasgo(rasgos, cuantasFortalezas, reloj) {
-  if (rasgos.length === 0) return { rasgos, sobran: new Set() };
-
-  const listado = rasgos
-    .map((r, i) => `${i === 0 ? 'FORTALEZAS\n' : ''}${i === cuantasFortalezas ? '\nDESAFIOS\n' : ''}${i + 1}. ${r.nombre}. ${r.descripcion}`)
-    .join('\n');
-
-  // Cual esta mal lo decide el codigo contando, no el modelo. El modelo solo
-  // escribe lo nuevo, que eso si es cosa suya.
-  const aArreglar = [];
-  const pedidos = new Set();
-  for (let i = 0; i < rasgos.length; i++) {
-    const n = nombreQueNoVale(rasgos[i]);
-    if (n) { aArreglar.push(`- el nombre del ${i + 1}, que ${n}`); pedidos.add(i); }
-  }
-  if (aArreglar.length > 0) console.warn(`Mal puestos: ${aArreglar.length} nombres de ${rasgos.length} rasgos`);
-
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    // Esta es la llamada corta de las tres. Pasados setenta segundos, colgada.
-    signal: reloj.senal(70000),
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-5',
-      thinking: { type: 'disabled' },
-      // La respuesta son un area por rasgo, los numeros que sobran y algun
-      // nombre nuevo. Poco, pero con cuarenta rasgos ya no cabia en dos mil, y
-      // una respuesta cortada no se puede leer y gasta los tres intentos.
-      max_tokens: 6000,
-      system: `Un estudio de personalidad tiene siete areas:
-
-${QUE_CUBRE_CADA_AREA}
-
-Te paso los rasgos de una persona, numerados. Vienen de dos listas: primero sus FORTALEZAS y despues sus DESAFIOS, y en el listado se ve donde empieza cada una.
-
-Haces dos cosas.
-
-1. "areas": a cual de las siete pertenece cada rasgo POR LO QUE DICE, no por otra cosa. Si toca dos, la que mas pesa en lo que esta escrito. Una area por rasgo, en el mismo orden y sin saltarte ninguno, escritas tal cual estan arriba.
-
-2. "sobran": los numeros de los rasgos que hay que quitar. Las dos listas se han escrito por separado y ninguna sabia lo que decia la otra, asi que se pisan. Se quita un rasgo cuando:
-   - DICE LO MISMO que otro, aunque sea con otras palabras. Se queda el que este mejor contado y el otro sobra.
-   - DICE LO CONTRARIO que uno de la otra lista: una fortaleza que afirma justo lo que un desafio niega, o al reves. No pueden convivir las dos, asi que sobra una: se queda la que este mejor contada y mejor apoyada.
-   Solo eso. Un rasgo duro no sobra por ser duro, y dos rasgos de la misma parcela de su vida no sobran si dicen cosas distintas. Si no hay nada que quitar, devuelves la lista vacia.
-
-3. "nombres": abajo te digo que rasgos tienen el nombre mal puesto, y por que. De cada uno devuelves su numero con el nombre nuevo.
-   El nombre nuevo dice lo mismo que el que tenia y con sus mismas palabras, cambiando solo que le hable de tu. No es una etiqueta: es lo que hace o lo que le pasa, dicho a ella.
-   Si abajo no te digo ninguno, devuelves la lista vacia.
-
-4. "masPeso": los numeros de los rasgos que MAS PESAN en su vida, mirando area por area. De cada area, como mucho DOS fortalezas y TRES desafios, y de las siete areas.
-   Eres el unico que ve las dos listas enteras, por eso lo decides tu. Son los que se van a desarrollar a fondo en el estudio, asi que eliges los que mas la van a mover al leerlos, no los que mejor suenan escritos. Los que no elijas salen igual en su lista, solo que no se desarrollan.
-   Si de un area hay menos de esos, pones los que haya.`,
-      output_config: { format: { type: 'json_schema', schema: ESQUEMA_AREAS } },
-      messages: [{ role: 'user', content: aArreglar.length > 0
-        ? `${listado}\n\nESTO HAY QUE CAMBIARLO (el numero es el del rasgo de arriba):\n${aArreglar.join('\n')}`
-        : listado }],
-    }),
-  });
-
-  if (!response.ok) {
-    const err = new Error(`clasificar areas: ${response.status}`);
-    // Igual que en las listas: la saturacion y los errores del servidor se
-    // reintentan; una peticion mal formada o la clave mal no van a mejorar.
-    err.temporal = response.status === 429 || response.status >= 500;
-    throw err;
-  }
-
-  const data = await response.json();
-  const texto = (data.content || []).filter(b => b && typeof b.text === 'string').map(b => b.text).join('');
-
-  let dichas, marcados, renombrados, pesan;
-  try {
-    const leido = JSON.parse(texto);
-    dichas = (leido.areas || []).map(a => String(a).trim().toUpperCase());
-    marcados = (leido.sobran || []).map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= rasgos.length);
-    // Lo nuevo tiene que pasar la misma prueba que lo viejo; si no, el rasgo se
-    // queda con lo que tenia, que al menos es suyo.
-    pesan = (leido.masPeso || []).map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= rasgos.length).map(n => n - 1);
-    renombrados = new Map();
-    for (const x of (leido.nombres || [])) {
-      const i = Number(x && x.numero) - 1;
-      const nuevo = String((x && x.nombre) || '').trim();
-      if (!Number.isInteger(i) || i < 0 || i >= rasgos.length) continue;
-      // SOLO SE CAMBIA LO QUE SE HA PEDIDO CAMBIAR.
-      //
-      // Cual esta mal lo cuenta el codigo, y aun asi aqui se aceptaba cualquier
-      // numero que devolviera. En el informe 116 se pidieron unos pocos y se
-      // reescribieron 19 nombres: rasgos que estaban bien salieron con otro
-      // titulo, escrito sin haberlo mirado nadie.
-      if (!pedidos.has(i)) continue;
-      if (!nuevo || nombreQueNoVale({ nombre: nuevo })) continue;
-      renombrados.set(i, nuevo);
-    }
-  } catch (e) {
-    const err = new Error('clasificar areas: la respuesta no es JSON valido');
-    err.temporal = true;
-    throw err;
-  }
-
-  // Solo se hace caso si contesta una por rasgo. Si se salta alguno no se sabe
-  // cual, asi que no vale nada de lo que ha dicho y se vuelve a pedir.
-  if (dichas.length !== rasgos.length) {
-    const err = new Error(`clasificar areas: dijo ${dichas.length} de ${rasgos.length}`);
-    err.temporal = true;
-    throw err;
-  }
-
-  // Si dice que sobra media lista, no se le hace caso: algo ha entendido mal y
-  // vaciar el informe es peor que dejar un rasgo repetido. El tope es la quinta
-  // parte, que da de sobra para lo que de verdad se pisa.
-  const TOPE = Math.max(1, Math.floor(rasgos.length / 5));
-  const sobran = new Set(marcados.length > TOPE ? [] : marcados.map(n => n - 1));
-  if (marcados.length > TOPE) {
-    console.warn(`Areas: decia que sobraban ${marcados.length} de ${rasgos.length} rasgos, demasiados, no se quita ninguno`);
-  }
-
-  if (renombrados.size > 0) console.warn(`Se cambia el nombre a ${renombrados.size} rasgos`);
-
-  // Y el rasgo al que le diga algo que no es un area se queda con la suya.
-  const nuevos = rasgos.map((r, i) => ({
-    ...r,
-    area: NOMBRES_DE_AREA.includes(dichas[i]) ? dichas[i] : r.area,
-    nombre: renombrados.has(i) ? renombrados.get(i) : r.nombre,
-  }));
-  // Los que mas pesan se devuelven como los rasgos mismos, no como numeros:
-  // mas abajo se quitan rasgos y los numeros dejarian de cuadrar.
-  return { rasgos: nuevos, sobran, masPeso: new Set(pesan.map(i => nuevos[i])) };
-}
-
-// Se reintenta por su cuenta, igual que cada lista y cada area. Sin esto, un
-// 429 de los que salen cuando hay siete peticiones a la vez dejaba los rasgos
-// con el area de su caja sin que se notara, que es justo lo que se arregla
-// aqui. Si aun asi no sale, el informe se entrega con las areas de las cajas.
-async function conElAreaDeLoQueDice(rasgos, cuantasFortalezas, INTENTOS, reloj) {
-  let ultimoError;
-  for (let intento = 1; intento <= INTENTOS; intento++) {
-    try {
-      return await porLoQueDiceElRasgo(rasgos, cuantasFortalezas, reloj);
-    } catch (err) {
-      ultimoError = err;
-      // Un corte de red llega sin marca; se trata como temporal.
-      const temporal = err.temporal !== false;
-      if (!temporal || intento === INTENTOS) break;
-      console.warn(`Area por lo que dice el rasgo: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
-      await new Promise(r => setTimeout(r, 1500 * intento));
-    }
-  }
-  throw ultimoError;
-}
-
-// LO QUE SE LE MANDA A CADA AREA: SOLO LO QUE CABE.
-//
-// A cada area se le mandaban TODOS sus rasgos. Si a MIEDOS le tocaban cinco
-// desafios, el area desarrollaba los cinco, y con cinco cosas contadas no queda
-// sitio para desarrollar ninguna a fondo. El encargo pedia "una o dos
-// fortalezas y dos o tres desafios" y no se cumplia: contar es cosa del codigo,
-// no del modelo. Asi que ahora el area solo recibe los que caben, y lo que no
-// tiene delante no lo puede desarrollar.
-//
-// Cuales pesan mas lo dice la llamada que ya ve las dos listas enteras, la
-// misma que le pone el area a cada rasgo: es la unica que las tiene delante a
-// la vez. Si no lo dice, o dice menos de los que caben, se completan por el
-// orden en que estan escritos, que es el orden en que el encargo le pide
-// escribirlos: primero los de mas peso.
-//
-// Los que se quedan fuera NO se pierden: salen igual en su lista del PDF.
-const CUANTOS_POR_AREA = { fortalezas: 2, desafios: 3 };
-
-function losQuePesan(lista, cual, masPeso) {
-  const tope = CUANTOS_POR_AREA[cual] || 2;
-  const salen = [];
-  for (const area of NOMBRES_DE_AREA) {
-    const suyos = lista.filter(r => r.area === area);
-    const dichos = suyos.filter(r => masPeso.has(r));
-    const resto = suyos.filter(r => !masPeso.has(r));
-    salen.push(...dichos.slice(0, tope));
-    salen.push(...resto.slice(0, Math.max(0, tope - dichos.length)));
-  }
-  return salen;
-}
-
-// Las dos listas se piden A LA VEZ, una llamada cada una. Juntas escriben lo
-// mismo que antes escribia una sola, pero tardan la mitad porque van en
-// paralelo, igual que las siete areas.
+// Una llamada -la que piensa- y tres redes de codigo detras. Las redes no
+// opinan: cuentan y comparan cadenas. Estan porque el modelo se despista, no
+// porque decidan nada.
 async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
-  // 1. Las dos listas, a la vez, y sin nombrarle la carta a quien lo lee.
-  let [fortalezas, desafios] = await Promise.all([
-    sacarUnaLista('fortalezas', nombrePila, sexo, cartaTexto, INTENTOS, reloj)
-      .then(l => sinNombrarLaCarta('fortalezas', nombrePila, sexo, cartaTexto, l, reloj)),
-    sacarUnaLista('desafios', nombrePila, sexo, cartaTexto, INTENTOS, reloj)
-      .then(l => sinNombrarLaCarta('desafios', nombrePila, sexo, cartaTexto, l, reloj)),
-  ]);
+  // 1. Las dos listas, ya comparadas entre si, etiquetadas y con su suelo y su
+  //    techo por area. Todo lo que antes eran cinco llamadas.
+  let { fortalezas, desafios } = await sacarLasListas(nombrePila, sexo, cartaTexto, INTENTOS, reloj);
 
-  // 2. Ya escritos, se les pone el area de lo que dicen, y se quita lo que se
-  //    pisa. Las dos listas van juntas en la misma peticion a proposito: es el
-  //    unico sitio donde se ven las dos a la vez.
-  //
-  //    Se escriben en paralelo, cada una en su llamada, asi que la de fortalezas
-  //    no sabe lo que ha escrito la de desafios. De ahi salia que una dijera
-  //    "sabes mirarte con honestidad" y la otra "evitas mirar lo que te falta".
-  //    Ninguna regla del encargo puede arreglar eso, porque el modelo no tiene
-  //    delante la otra lista. Aqui si.
-  //
-  //    Si falla, cada rasgo se queda con el area de su caja, no se quita nada y
-  //    el informe sale igual.
-  let masPeso = new Set();
-  try {
-    // Tambien esta se salta si ya no cabe con las siete areas detras: sin ella
-    // cada rasgo se queda con el area de su caja y el informe sale igual.
-    if (!reloj.hayTiempoPara(90)) throw new Error('no da tiempo, se deja el area de cada caja');
-    const cuantasFortalezas = fortalezas.length;
-    const { rasgos: todos, sobran, masPeso: pesan } = await conElAreaDeLoQueDice(
-      fortalezas.concat(desafios), cuantasFortalezas, INTENTOS, reloj);
-    masPeso = pesan || new Set();
-    if (sobran.size > 0) console.warn(`Se quitan ${sobran.size} rasgos que se pisaban con otro`);
-    const buenos = todos.filter((r, i) => !sobran.has(i));
-    // El corte se hace por la lista de la que venia cada uno, no por el numero,
-    // porque al quitar rasgos los sitios ya no cuadran.
-    const cuantasQuedan = todos.filter((r, i) => i < cuantasFortalezas && !sobran.has(i)).length;
-    fortalezas = buenos.slice(0, cuantasQuedan);
-    desafios = buenos.slice(cuantasQuedan);
-  } catch (err) {
-    console.error(`No se pudo poner el area por lo que dice el rasgo: ${err.message.slice(0, 90)}`);
-  }
+  // 2. RED: fuera el que le nombra la carta a la clienta. El encargo lo prohibe
+  //    y aun asi se cuela alguno; esto no es criterio, son palabras que se
+  //    buscan y se ven.
+  const limpios = lista => {
+    const quedan = lista.filter(r => !hablaDeAstrologia(r));
+    if (quedan.length < lista.length) {
+      console.warn(`${lista.length - quedan.length} rasgos nombraban la carta a la clienta, se quitan`);
+    }
+    return quedan;
+  };
+  fortalezas = limpios(fortalezas);
+  desafios = limpios(desafios);
 
-  // 3. Fuera el que repite el titulo de otro. Va ANTES del minimo, no despues:
-  //    quitar un repetido puede dejar un area con un rasgo, y el minimo es el
-  //    paso que la vuelve a llenar. Al reves, el area se quedaba corta y asi se
-  //    entregaba. En el informe 114 habria pasado justo eso en DINERO.
-  //
-  //    Casi nunca cuesta nada: solo se pide relleno si al quitar el repetido un
-  //    area baja del minimo, que es lo que el encargo pide de todas formas.
+  // 3. RED: dos rasgos con el mismo titulo son el mismo rasgo dicho dos veces.
+  //    Comparar dos cadenas no se le pregunta a nadie.
   [fortalezas, desafios] = sinTituloRepetido(fortalezas, desafios);
 
-  // 3b. Y con las areas ya en su sitio y sin repetidos, se comprueba el minimo.
-  //     En este orden, porque mover un rasgo de area, o quitar uno repetido,
-  //     puede dejar la de origen corta.
-  [fortalezas, desafios] = await Promise.all([
-    conElMinimoPorArea('fortalezas', nombrePila, sexo, cartaTexto, fortalezas, reloj),
-    conElMinimoPorArea('desafios', nombrePila, sexo, cartaTexto, desafios, reloj),
-  ]);
+  // 4. RED: el techo por area. Si sobran, se quedan los primeros, que es el
+  //    orden en que el encargo le pide escribirlos: primero los que mas pesan.
+  const conSuTecho = (lista, cual) => {
+    const tope = POR_AREA[cual].max;
+    const salen = [];
+    for (const area of NOMBRES_DE_AREA) {
+      const suyos = lista.filter(r => r.area === area);
+      if (suyos.length > tope) console.warn(`${cual} en ${area}: ${suyos.length}, se dejan ${tope}`);
+      salen.push(...suyos.slice(0, tope));
+    }
+    // Los que no llevan area reconocida no se pierden: van al final.
+    salen.push(...lista.filter(r => !NOMBRES_DE_AREA.includes(r.area)));
+    return salen;
+  };
+  fortalezas = conSuTecho(fortalezas, 'fortalezas');
+  desafios = conSuTecho(desafios, 'desafios');
 
-  // 4. Y se ordenan por area. Salian agrupadas porque se escriben caja por
-  //    caja, pero al cambiarle el area a un rasgo, y al añadir los del relleno
-  //    por el final, el orden se rompia y en el PDF aparecian las etiquetas
-  //    salteadas. El PDF los pinta tal cual se los damos, asi que se ordenan
-  //    aqui, en el orden en que van las areas en el informe.
-  // El rasgo cuya posicion no se reconoce se queda sin area y va al final, que
-  // es donde menos se nota que no lleva etiqueta.
+  // 5. Y si aun asi alguna area se ha quedado corta, se deja aviso. Ya no se
+  //    pide relleno: eso era una llamada mas que ademas se saltaba cuando el
+  //    reloj apretaba. Ahora el suelo se lo comprueba el modelo pensando, que
+  //    es cuando de verdad puede volver a la carta a buscar otro.
+  for (const [cual, lista] of [['fortalezas', fortalezas], ['desafios', desafios]]) {
+    const cortas = NOMBRES_DE_AREA.filter(a => lista.filter(r => r.area === a).length < POR_AREA[cual].min);
+    if (cortas.length) console.warn(`${cual}: por debajo del minimo en ${cortas.join(', ')}`);
+  }
+
+  // 6. Ordenados por area, que es como los pinta el PDF. El rasgo cuya posicion
+  //    no se reconoce se queda sin area y va al final, que es donde menos se
+  //    nota que no lleva etiqueta.
   const sitio = r => (NOMBRES_DE_AREA.indexOf(r.area) + 1) || NOMBRES_DE_AREA.length + 1;
   const porArea = (a, b) => sitio(a) - sitio(b);
   fortalezas = fortalezas.slice().sort(porArea);
   desafios = desafios.slice().sort(porArea);
 
-  // 5. Y aparte, lo que se le manda a las areas: solo los que caben. La lista
-  //    del PDF sigue llevandolos todos; esto es otra cosa y va por su lado.
-  return {
-    fortalezas,
-    desafios,
-    paraLasAreas: {
-      fortalezas: losQuePesan(fortalezas, 'fortalezas', masPeso),
-      desafios: losQuePesan(desafios, 'desafios', masPeso),
-    },
-  };
+  // UNA SOLA LISTA PARA LAS DOS COSAS. Antes habia dos: la entera para el PDF y
+  // otra recortada para las areas, porque la entera traia hasta cuarenta rasgos
+  // y no cabian en el texto. Ahora sale ya con los que caben, asi que la clienta
+  // lee en el PDF exactamente los mismos con los que se ha escrito su informe.
+  return { fortalezas, desafios };
 }
 
 
