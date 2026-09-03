@@ -820,9 +820,10 @@ function areaPorLaPosicion(origen) {
 // Es la misma idea que se probo antes de una tirada, partida donde tocaba.
 // ═════════════════════════════════════════════════════════════════
 
-// Elegir piensa y escribe poco: con el esfuerzo medio ronda el minuto. Pasados
-// dos minutos no esta pensando, esta colgada.
-const TOPE_DE_ELEGIR = 125000;
+// Elegir piensa y escribe poco: con el esfuerzo medio ronda el minuto. Este es
+// el tope con el que salio un informe entero, y se deja aqui a proposito: si
+// se estira, la segunda tirada -la de abajo, pensando menos- ya no cabe detras.
+const TOPE_DE_ELEGIR = 100000;
 // Escribir no piensa, pero suelta varios miles de palabras.
 const TOPE_DE_ESCRIBIR = 110000;
 
@@ -889,7 +890,7 @@ function comoSeLeHabla(sexo) {
 }
 
 // ── PASO 1: ELEGIR ──────────────────────────────────────────
-async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj) {
+async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'medium') {
   const encargo = `Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
 
 AQUÍ NO SE ESCRIBE EL INFORME. Aquí se ELIGE. De cada rasgo sale solo su nombre y de qué posición de la carta lo has sacado; lo que se le cuenta a la persona lo escribe otro después. Por eso puedes dedicarle el rato a lo que de verdad importa: decidir cuáles entran y cuáles no.
@@ -1028,7 +1029,7 @@ Nombre de pila: ${nombrePila}`;
     //
     // SI ALGUN DIA HAY QUE SUBIRLO, no se sube y ya: hay que quitarle trabajo a
     // la peticion antes, porque el reloj es el mismo.
-    razona: true,
+    razona: esfuerzo,
     // EL TECHO, HOLGADO, Y NO POR LO QUE ESCRIBE. Lo que escribe son treinta y
     // tantas lineas, dos mil tokens a lo sumo. Pero pensar sale del MISMO
     // presupuesto, y con el esfuerzo en alto piensa mucho: si se lo come, la
@@ -1165,7 +1166,7 @@ ${rasgos.map((r, i) => `${i + 1}. ${r.nombre}  —  sale de: ${r.origen}`).join(
     modelo: 'claude-sonnet-5',
     // Sin razonamiento: aqui no hay nada que decidir, y encendido se gasta el
     // presupuesto pensando en vez de escribir.
-    razona: false,
+    razona: '',
     techo: 16000,
     system: encargo,
     mensaje: `Escribe la descripción y la causa de cada uno de los ${rasgos.length} rasgos. Contesta ${rasgos.length} textos, ni uno menos, cada uno con el nombre de su rasgo.`,
@@ -1204,6 +1205,7 @@ ${rasgos.map((r, i) => `${i + 1}. ${r.nombre}  —  sale de: ${r.origen}`).join(
 
 // La unica puerta al modelo de este fichero para las listas: mismo trato de los
 // fallos y mismo molde, para no tener dos sitios donde cambiar lo mismo.
+// "razona" es con cuanto esfuerzo piensa: 'low' o 'medium'. Vacio, no piensa.
 async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, espera }) {
   const cuerpo = {
     model: modelo,
@@ -1214,7 +1216,7 @@ async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, es
   };
   if (razona) {
     cuerpo.thinking = { type: 'adaptive' };
-    cuerpo.output_config.effort = 'medium';
+    cuerpo.output_config.effort = razona;
   } else {
     cuerpo.thinking = { type: 'disabled' };
   }
@@ -1254,8 +1256,8 @@ async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, es
 
 // Los dos pasos, encadenados: se elige una vez y se escriben las dos listas a
 // la vez.
-async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
-  const elegidos = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj);
+async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj, esfuerzo) {
+  const elegidos = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo);
 
   const [fortalezas, desafios] = await Promise.all([
     escribirLosRasgos('fortalezas', elegidos.filter(r => r.lista === 'fortalezas'), nombrePila, sexo, cartaTexto, reloj),
@@ -1270,24 +1272,34 @@ async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
 // como tarda mas que las de antes, un reintento a destiempo se come el sitio de
 // las siete areas y deja a la clienta sin informe habiendo pagado. Asi que se
 // reintenta mientras quepan el segundo intento y las areas detras.
+// LA SEGUNDA TIRADA PIENSA MENOS, PERO LLEGA.
+//
+// Si la primera se pasa de tiempo, repetirla igual no arregla nada: va a tardar
+// lo mismo y ademas ya no cabe. Asi que la segunda va con el esfuerzo bajo, que
+// es la mitad de rato. Los rasgos salen algo menos afinados, y eso es mucho
+// mejor que dejar sin informe a alguien que ha pagado.
+//
+// Se le pide antes de empezar que quepan los dos pasos y las siete areas
+// detras: reintentar sin sitio es hacerla esperar para nada.
+const ESFUERZO_POR_INTENTO = ['medium', 'low'];
+
 async function sacarLasListas(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   let ultimoError;
-  for (let intento = 1; intento <= INTENTOS; intento++) {
+  const tiradas = Math.min(INTENTOS, ESFUERZO_POR_INTENTO.length);
+  for (let intento = 1; intento <= tiradas; intento++) {
+    const esfuerzo = ESFUERZO_POR_INTENTO[intento - 1];
     try {
-      return await pedirLasListas(nombrePila, sexo, cartaTexto, reloj);
+      return await pedirLasListas(nombrePila, sexo, cartaTexto, reloj, esfuerzo);
     } catch (err) {
       ultimoError = err;
       const temporal = err.temporal !== false;
-      if (!temporal || intento === INTENTOS) break;
-      // Para reintentar tienen que caber los dos pasos otra vez -elegir y
-      // escribir- y las siete areas detras. Si no caben, se avisa: vale mas eso
-      // que dejar a la clienta esperando a un intento que tampoco llega.
-      if (!reloj.hayTiempoPara(270)) {
-        console.warn('Listas: fallo y ya no cabe otro intento con las siete areas detras');
+      if (!temporal || intento === tiradas) break;
+      if (!reloj.hayTiempoPara(180)) {
+        console.warn('Listas: fallo y ya no cabe otra tirada con las siete areas detras');
         break;
       }
-      console.warn(`Listas: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
-      await new Promise(r => setTimeout(r, 1500 * intento));
+      console.warn(`Listas: la tirada con esfuerzo ${esfuerzo} fallo (${err.message.slice(0, 80)}), se repite pensando menos`);
+      await new Promise(r => setTimeout(r, 1000));
     }
   }
   throw ultimoError;

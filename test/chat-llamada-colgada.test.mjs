@@ -44,7 +44,7 @@ const original = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
 const ENPRODUCCION = [
   ['el presupuesto de la peticion', 'const TOPE_DE_LA_PETICION = 285000'],
   ['el tope de cada area',          'signal: reloj.senal(90000)'],
-  ['el tope de elegir',            'const TOPE_DE_ELEGIR = 125000'],
+  ['el tope de elegir',            'const TOPE_DE_ELEGIR = 100000'],
   ['el tope de escribir',          'const TOPE_DE_ESCRIBIR = 110000'],
 ];
 console.log('\n  api/chat.js — una llamada colgada ya no se lleva el informe por delante\n');
@@ -82,10 +82,10 @@ function aEscala(texto, presupuesto) {
   return texto
     .replace("import Stripe from 'stripe';", "import Stripe from './.stripe-falso.mjs';")
     .replace('const TOPE_DE_LA_PETICION = 285000', `const TOPE_DE_LA_PETICION = ${presupuesto}`)
-    .replace('const TOPE_DE_ELEGIR = 125000', 'const TOPE_DE_ELEGIR = 2000')
+    .replace('const TOPE_DE_ELEGIR = 100000', 'const TOPE_DE_ELEGIR = 2000')
     .replace('const TOPE_DE_ESCRIBIR = 110000', 'const TOPE_DE_ESCRIBIR = 2500')
     .replace('reloj.senal(90000)', 'reloj.senal(2500)')
-    .replace('hayTiempoPara(270)', 'hayTiempoPara(5)');
+    .replace('hayTiempoPara(180)', 'hayTiempoPara(5)');
 }
 
 const stripeFalsoRuta = path.join(AQUI, '.stripe-falso.mjs');
