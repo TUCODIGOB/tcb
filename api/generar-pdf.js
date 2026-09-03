@@ -858,10 +858,17 @@ export default async function handler(req, res) {
     //
     // Lo que ocupa la ficha entera y los renglones ya partidos, para no partirla
     // entre dos paginas: se mide antes de escribir nada.
+    // La etiqueta del area va encima del nombre, chica y en dorado. Estuvo
+    // quitada un tiempo porque la etiqueta salia mal puesta y era peor verla que
+    // no verla; ahora la pone el modelo leyendo el rasgo entero y se vuelve a
+    // pintar.
+    var ALTO_DEL_AREA = 5;
+
     function medirFicha(r) {
       doc.setFontSize(12);
       var lDesc = doc.splitTextToSize(fx(r.descripcion), 175);
-      return { desc: lDesc, alto: 8 + lDesc.length*5.5 };
+      var conArea = r.area ? ALTO_DEL_AREA : 0;
+      return { desc: lDesc, alto: conArea + 8 + lDesc.length*5.5 };
     }
 
     // Las dos listas van seguidas: los desafios NO empiezan pagina nueva, siguen
@@ -925,12 +932,19 @@ export default async function handler(req, res) {
           ry += AIRE_BAJO_LINEA;
         }
 
-        // 1. El nombre del rasgo
+        // 1. De que area es
+        if (r.area) {
+          doc.setFont('Roboto','bold'); doc.setFontSize(8); doc.setTextColor(189,144,72);
+          doc.text(fx(r.area), 18, ry);
+          ry += ALTO_DEL_AREA;
+        }
+
+        // 2. El nombre del rasgo
         doc.setFont('Roboto','bold'); doc.setFontSize(13); doc.setTextColor(14,63,75);
         doc.text(fx(r.nombre), 18, ry);
         ry += 8;
 
-        // 2. La descripcion
+        // 3. La descripcion
         doc.setFont('Roboto','normal'); doc.setFontSize(12); doc.setTextColor(40,40,40);
         for (var d = 0; d < lDesc.length; d++) { doc.text(lDesc[d], 18, ry); ry += 5.5; }
 

@@ -927,10 +927,15 @@ nombre       Se le habla de tu, igual que en todo lo demás: es lo que hace
              De cuatro a siete palabras, con sus artículos y sus preposiciones,
              como se habla. Empieza en mayúscula, y sin punto al final.
 
-descripcion  TRES RENGLONES COMO MUCHO, que son unos doscientos sesenta
+descripcion  TRES RENGLONES, ni dos ni cuatro. Son unos doscientos sesenta
              caracteres contando los espacios. No se cuentan frases: dos frases
-             pueden ocupar cinco renglones. Que hace, que le pasa, como se le
-             nota y en qué parte de su vida se le nota.
+             pueden ocupar cinco renglones.
+             TRES ES LA MEDIDA, NO EL TECHO. Con dos se queda a medias: se
+             enuncia el rasgo y no da tiempo a que se entienda, y quien lo lee
+             pasa al siguiente sin haberse reconocido en ninguno. Si te sale en
+             dos, es que le falta una de las cuatro cosas de abajo.
+             Que hace, que le pasa, como se le nota y en qué parte de su vida se
+             le nota.
 
 causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              lo que quiere saber. Dos o tres frases.
