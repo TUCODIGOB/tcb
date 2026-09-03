@@ -90,8 +90,8 @@ const rasgoDe = (origen, i, lista) => ({
 });
 // Las posiciones son inventadas para la prueba, de nadie: solo tienen que
 // caer en el area de su caja para que el codigo las acepte.
-// Todos los rasgos en una sola lista, cada uno con su lista y su area, que es
-// como los pide chat.js.
+// Ahora los rasgos van en dos pasos: uno elige y otro escribe. Aqui se contesta
+// a los dos, cada uno con lo suyo.
 const POR_AREAS = [
   ['IDENTIDAD',  'Sol en Aries casa 1',        'Ascendente en Aries'],
   ['PATRONES',   'Nodo Norte en Acuario',      'casa 9 en Aries'],
@@ -101,29 +101,45 @@ const POR_AREAS = [
   ['RELACIONES', 'Mercurio en Aries',          'casa 11 en Acuario'],
   ['DINERO',     'casa 2 en Aries',            'casa 10 en Acuario'],
 ];
-const deLaLista = (cual, l) => POR_AREAS.flatMap(([area, a, b], k) => [
-  { ...rasgoDe(a, k * 2, l),     lista: cual, area },
-  { ...rasgoDe(b, k * 2 + 1, l), lista: cual, area },
+const elegidosDe = (cual, l) => POR_AREAS.flatMap(([area, a, b], k) => [
+  { lista: cual, area, nombre: TITULOS[l][k * 2],     origen: a },
+  { lista: cual, area, nombre: TITULOS[l][k * 2 + 1], origen: b },
 ]);
-const listasDeMentira = () => JSON.stringify({
-  rasgos: deLaLista('fortalezas', 'Fortaleza').concat(deLaLista('desafios', 'Desafio')),
+const LOS_ELEGIDOS = JSON.stringify({
+  rasgos: elegidosDe('fortalezas', 'Fortaleza').concat(elegidosDe('desafios', 'Desafio')),
 });
+const losTextos = cuantos => JSON.stringify({
+  textos: Array.from({ length: cuantos }, () => ({
+    descripcion: 'Sigues de pie donde otros se bajan del todo, y quien te tiene cerca ya cuenta con eso.',
+    causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
+  })),
+});
+const cuantosPide = cuerpo => String(cuerpo.messages?.[0]?.content || '').match(/de los (\d+) rasgos/)?.[1] | 0;
 
 globalThis.fetch = async (url, opciones) => {
   const u = String(url);
   if (u.includes('api.anthropic.com')) {
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
-    let esRasgos = false;
+    let esElegir = false, esEscribir = false, cuantos = 0;
     try {
-      esRasgos = String(JSON.parse(opciones.body).system || '').startsWith('Eres astróloga');
+      const cuerpo = JSON.parse(opciones.body);
+      const sistema = String(cuerpo.system || '');
+      esElegir = sistema.includes('AQUÍ NO SE ESCRIBE EL INFORME');
+      esEscribir = sistema.includes('AQUÍ NO SE ELIGE NADA');
+      if (esEscribir) cuantos = cuantosPide(cuerpo);
     } catch (e) {}
-    // La de las listas razona: su respuesta trae delante un bloque de
-    // pensamiento y detras el texto, como la API de verdad.
-    if (esRasgos) {
+    // La de elegir razona: su respuesta trae delante un bloque de pensamiento y
+    // detras el texto, como la API de verdad.
+    if (esElegir) {
       return { ok: true, status: 200, json: async () => ({ content: [
         { type: 'thinking', thinking: '' },
-        { type: 'text', text: listasDeMentira() },
+        { type: 'text', text: LOS_ELEGIDOS },
+      ] }) };
+    }
+    if (esEscribir) {
+      return { ok: true, status: 200, json: async () => ({ content: [
+        { type: 'text', text: losTextos(cuantos) },
       ] }) };
     }
     // api/chat.js descarta cualquier area de menos de 100 caracteres y la
@@ -213,7 +229,7 @@ try {
   // que le pone el area a cada uno, mas las 7 areas del informe. Lo que se
   // vigila aqui no es el numero, sino que la segunda peticion no haya lanzado
   // NINGUNA generacion mas.
-  comprobar('en total solo se generó una vez', llamadasAlModelo === 8, llamadasAlModelo + ' llamadas');
+  comprobar('en total solo se generó una vez', llamadasAlModelo === 10, llamadasAlModelo + ' llamadas');
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);

@@ -611,45 +611,6 @@ ${cartaTexto}`;
 // Las siete areas del estudio, en el orden en que salen en el informe.
 const NOMBRES_DE_AREA = ['IDENTIDAD', 'PATRONES', 'MIEDOS', 'HERIDA', 'AMOR', 'RELACIONES', 'DINERO'];
 
-// EL MOLDE DE LA RESPUESTA: UNA SOLA LISTA, Y CADA RASGO DICE DE QUE ES.
-//
-// Antes eran catorce cajas -siete areas por cada lista-, y la API lo rechazo:
-// "the compiled grammar is too large". El molde se convierte en una gramatica
-// que el modelo tiene que cumplir letra a letra, y catorce listas del mismo
-// objeto la hacen enorme. Con siete pasaba justo; con catorce, no.
-//
-// Asi que se le pide una lista y ya. Cada rasgo lleva escrito de que lista es y
-// de que area, y el codigo los reparte. Sale la misma informacion con una
-// gramatica pequeña.
-//
-// LO QUE SE PIERDE Y COMO SE COMPENSA. Las cajas obligaban a pasar por las
-// siete areas para poder contestar, y una vacia se veia. Eso ahora lo pide el
-// encargo por escrito -area por area, y ninguna se queda sin los suyos- y lo
-// comprueba el codigo despues, que avisa de la que venga corta.
-//
-// Las dos casillas que se eligen entre unas pocas van con su lista cerrada: asi
-// no puede escribir un area que no existe ni inventarse una tercera lista.
-const RASGO_SUELTO = {
-  type: 'object',
-  properties: {
-    lista:       { type: 'string', enum: ['fortalezas', 'desafios'] },
-    area:        { type: 'string', enum: NOMBRES_DE_AREA },
-    nombre:      { type: 'string' },
-    descripcion: { type: 'string' },
-    causa:       { type: 'string' },
-    origen:      { type: 'string' },
-  },
-  required: ['lista', 'area', 'nombre', 'descripcion', 'causa', 'origen'],
-  additionalProperties: false,
-};
-
-const ESQUEMA_DE_LAS_LISTAS = {
-  type: 'object',
-  properties: { rasgos: { type: 'array', items: RASGO_SUELTO } },
-  required: ['rasgos'],
-  additionalProperties: false,
-};
-
 // CUANTOS RASGOS LLEVA CADA AREA, arriba y abajo.
 //
 // El suelo es lo que hace que ningun area se entregue coja. El techo es lo que
@@ -823,52 +784,100 @@ function areaPorLaPosicion(origen) {
 }
 
 // ═════════════════════════════════════════════════════════════════
-// LAS DOS LISTAS DE RASGOS, EN UNA SOLA LLAMADA Y PENSANDO
+// LOS RASGOS, EN DOS PASOS: PRIMERO SE ELIGEN, DESPUES SE ESCRIBEN
 //
-// POR QUE ASI, DESPUES DE UN MES PROBANDO LO OTRO.
+// POR QUE ASI, Y NO DE UNA TIRADA.
 //
-// Antes eran cinco llamadas: una por lista, otra para reescribir las que le
-// nombraban la carta a la clienta, otra para ponerle a cada rasgo su area y
-// quitar los que se pisaban, y otra por lista para rellenar las areas que se
-// quedaban cortas. Cuatro de esas cinco eran parches de lo mismo.
+// El fondo del problema, despues de un mes: al modelo se le pedia COMPARAR
+// -"lee las listas juntas y quita lo que diga lo mismo"- con el razonamiento
+// apagado. Comparar treinta cosas entre si y decidir cual sobra no se puede
+// hacer sin pensar, por bien escrita que este la orden. Ningun retoque del
+// encargo lo arreglo nunca, y no iba a arreglarlo.
 //
-// Y ninguna arreglaba el fondo, porque el fondo era este: al modelo se le
-// pedia COMPARAR -"lee las siete cajas juntas y quita lo que diga lo mismo"-
-// con el razonamiento apagado. Comparar veinte cosas entre si y decidir cual
-// sobra no se puede hacer sin pensar, por bien escrita que este la orden. Un
-// mes de reglas nuevas no lo arreglo, y no iba a arreglarlo.
+// Pero pensarlo Y escribirlo en la misma llamada tampoco cabe. Se probo y se
+// corto una compra de verdad a los dos minutos y medio: aqui no se escribe una
+// lista corta, son treinta y tantos rasgos con su descripcion de tres renglones
+// y su causa, varios miles de palabras. Pensar y escribir salen del mismo
+// reloj, y el reloj lo tiene la clienta esperando delante.
 //
-// Ahora es UNA llamada que piensa, y dentro hace lo que hacian las cinco:
-// saca los rasgos, los compara entre si -las dos listas a la vez, que es donde
-// nacia la mitad de los repetidos-, comprueba el suelo de cada area y, si al
-// quitar uno un area se queda corta, vuelve a la carta a buscar otro. Eso
-// ultimo era una llamada aparte que ademas se saltaba cuando el reloj apretaba.
+// Asi que son dos pasos, y ninguno hace el trabajo del otro:
 //
-// EL TECHO DE TOKENS VA HOLGADO A PROPOSITO. Pensar y escribir salen del mismo
-// presupuesto. Cuando esto se probo con el techo de escribir un area -3.500-,
-// se lo gastaba pensando y devolvia la respuesta vacia. Con las dos listas
-// enteras dentro hace falta sitio de sobra: si se queda corta, la respuesta
-// llega cortada, el JSON no se puede leer y se pierden las dos listas.
+//   ELEGIR    piensa. Recorre la carta, saca todos los rasgos que haya, los
+//             compara, quita los que dicen lo mismo, comprueba el suelo de cada
+//             area y les pone su etiqueta. Devuelve UNA LINEA por rasgo: de que
+//             lista es, de que area, como se llama y de donde sale. Poco texto,
+//             asi que lo que tarda es lo que piensa.
+//
+//   ESCRIBIR  no piensa, y no elige nada. Recibe esos rasgos ya decididos y les
+//             escribe la descripcion y la causa. Las dos listas van en paralelo
+//             porque a estas alturas ya no hay nada que comparar: lo que se
+//             podia pisar se quito antes.
+//
+// Es la misma idea que se probo antes de una tirada, partida donde tocaba.
 // ═════════════════════════════════════════════════════════════════
 
-// Lo que tarda como mucho.
-//
-// Estuvo en 150 s y se corto una compra de verdad a los dos minutos y medio: no
-// estaba colgada, es que no le daba tiempo. Aqui no se escribe una lista corta,
-// se escriben treinta y tantos rasgos con su descripcion y su causa, y eso son
-// varios miles de palabras ademas de lo que piensa.
-//
-// 195 s deja sitio para eso y para las siete areas detras, que son otros 60.
-const TOPE_DE_LAS_LISTAS = 195000;
+// Elegir piensa y escribe poco: rara vez pasa del minuto.
+const TOPE_DE_ELEGIR = 100000;
+// Escribir no piensa, pero suelta varios miles de palabras.
+const TOPE_DE_ESCRIBIR = 110000;
 
-async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
-  const trato = sexo === 'mujer'
+const ESQUEMA_DE_ELEGIR = {
+  type: 'object',
+  properties: {
+    rasgos: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          lista:  { type: 'string', enum: ['fortalezas', 'desafios'] },
+          area:   { type: 'string', enum: NOMBRES_DE_AREA },
+          nombre: { type: 'string' },
+          origen: { type: 'string' },
+        },
+        required: ['lista', 'area', 'nombre', 'origen'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['rasgos'],
+  additionalProperties: false,
+};
+
+// Al escribir se contesta en el mismo orden en que se le dan, y se casan por
+// posicion. Sin nombre ni area aqui: eso ya esta decidido y no se toca.
+const ESQUEMA_DE_ESCRIBIR = {
+  type: 'object',
+  properties: {
+    textos: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          descripcion: { type: 'string' },
+          causa:       { type: 'string' },
+        },
+        required: ['descripcion', 'causa'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['textos'],
+  additionalProperties: false,
+};
+
+function comoSeLeHabla(sexo) {
+  return sexo === 'mujer'
     ? 'una MUJER. Todo en femenino.'
     : sexo === 'hombre'
       ? 'un HOMBRE. Todo en masculino.'
       : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos.';
+}
 
-  const encargo = `Eres astróloga. Lees una carta natal y sacas las dos listas de rasgos de esa persona.
+// ── PASO 1: ELEGIR ──────────────────────────────────────────
+async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj) {
+  const encargo = `Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
+
+AQUÍ NO SE ESCRIBE EL INFORME. Aquí se ELIGE. De cada rasgo sale solo su nombre y de qué posición de la carta lo has sacado; lo que se le cuenta a la persona lo escribe otro después. Por eso puedes dedicarle el rato a lo que de verdad importa: decidir cuáles entran y cuáles no.
 
 TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posición concreta de esta carta, no se escribe.
 
@@ -878,7 +887,7 @@ TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de 
 FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.
 DESAFÍOS: lo que le cuesta, lo que le pesa, dónde tropieza.
 
-Las dos se escriben en la misma respuesta y con las dos delante. Eso es lo importante: puedes ver si algo que has puesto en una ya está dicho, del revés, en la otra. Un "sabes mirarte de frente" en fortalezas y un "evitas mirar lo que no te gusta" en desafíos son el mismo rasgo contado dos veces, y solo se ve teniéndolas juntas.
+Las dos se deciden a la vez y con las dos delante. Eso es lo importante: puedes ver si algo que has puesto en una ya está dicho, del revés, en la otra. Un "sabes mirarte de frente" en fortalezas y un "evitas mirar lo que no te gusta" en desafíos son el mismo rasgo contado dos veces, y solo se ve teniéndolas juntas.
 
 
 2. CUÁNTOS
@@ -919,7 +928,7 @@ Marte, Urano y Júpiter no llevan área propia: lo que salga de ellos es del ár
 Al escribirlo, ponle el área de la que lo sacaste; en el repaso del punto 6 se la cambias si al leerlo ves que habla de otra.
 
 
-4. LAS CASILLAS DE CADA RASGO
+4. LAS CASILLAS QUE SE ELIGEN AQUÍ
 
 Todos van en una sola lista, seguidos, y cada uno dice de cuál de las dos listas es y de qué área:
 
@@ -933,6 +942,89 @@ nombre       Se le habla de tu, igual que en todo lo demás: es lo que hace
              aunque describa bien el rasgo.
              De cuatro a siete palabras, con sus artículos y sus preposiciones,
              como se habla. Empieza en mayúscula, y sin punto al final.
+origen       De donde sale el rasgo en la carta, en técnico y en corto: el
+             cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
+             forman. Nada más: ni explicación ni frase.
+             Es obligatoria. Y no repartas todos los rasgos sobre las mismas
+             dos o tres posiciones: la carta tiene de sobra.
+
+Un rasgo es su nombre y su posición. Si empiezas uno y no sabes de dónde lo sacas, se quita entero.
+
+
+6. EL REPASO, ANTES DE ENTREGAR
+
+Esto no es un consejo: es la mitad del trabajo, y va con las dos listas escritas delante.
+
+PRIMERO, LOS QUE DICEN LO MISMO. Lees los rasgos de las dos listas, todos, y los comparas de dos en dos. Dos son el mismo si al leer uno ya sabes lo que dice el otro, aunque estén escritos con palabras distintas, aunque estén en áreas distintas y aunque uno esté en fortalezas y el otro en desafíos. De cada pareja se queda UNO, el que más pese, y el otro se va.
+
+DESPUÉS, EL ÁREA DE CADA UNO. Lees cada rasgo entero -el nombre y la descripción, no la posición de la que salió- y te preguntas de qué habla. Si habla de otra área, lo mueves a esa. Un rasgo que sacaste del Sol y que acaba hablando de cómo se lleva con su gente es de RELACIONES, aunque el Sol sea de IDENTIDAD. Quien lo lee ve lo que dice el rasgo, no de dónde lo sacaste.
+
+DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas, área por área, cuántas fortalezas y cuántos desafíos han quedado. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale rescatar el que acabas de quitar ni escribir una variante suya.
+
+DESPUÉS, EL TECHO. Si un área pasa de su máximo, se quedan los que más pesan y los demás se van.
+
+Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ningún rasgo nombre la carta ni nada técnico en el nombre, la descripción o la causa, y que a ninguno le falte una casilla.
+
+Devuelve solo la lista ya repasada. No expliques lo que has quitado.
+
+Carta natal:
+${cartaTexto}
+
+Persona: ${comoSeLeHabla(sexo)}
+Nombre de pila: ${nombrePila}`;
+
+  const salida = await alModelo({
+    que: 'elegir los rasgos',
+    modelo: 'claude-opus-5',
+    // PENSANDO, y esta es la unica del informe que lo hace. Es todo el cambio:
+    // sin esto no puede comparar, y sin comparar salen los repetidos y las
+    // etiquetas cambiadas de sitio.
+    //
+    // El esfuerzo bajo llega de sobra: comparar treinta cosas y ver cuales se
+    // pisan no da para mas, y el rato que se pase pensando sale del reloj de la
+    // clienta.
+    razona: true,
+    techo: 8000,
+    system: encargo,
+    mensaje: 'Elige los rasgos de esta carta, siguiendo el esquema.',
+    molde: ESQUEMA_DE_ELEGIR,
+    espera: reloj.senal(TOPE_DE_ELEGIR),
+  });
+
+  const rasgos = [];
+  for (const r of (Array.isArray(salida.rasgos) ? salida.rasgos : [])) {
+    const nombre = String(r?.nombre ?? '').trim();
+    const origen = String(r?.origen ?? '').trim();
+    if (!nombre) continue;
+    rasgos.push({
+      nombre, origen,
+      // El area la dice el modelo, que es el unico que ha leido el rasgo. Si no
+      // la dice, o dice una que no existe, la saca el codigo de la posicion.
+      area: areaDelRasgo(origen, String(r?.area ?? '').trim()),
+      lista: String(r?.lista ?? '').trim() === 'desafios' ? 'desafios' : 'fortalezas',
+    });
+  }
+  return rasgos;
+}
+
+// ── PASO 2: ESCRIBIR ────────────────────────────────────────
+//
+// Una llamada por lista, las dos a la vez. Que no se vean entre ellas ya no
+// importa: lo que se podia pisar se quito al elegir, y aqui solo se redacta lo
+// que ya esta decidido.
+async function escribirLosRasgos(cual, rasgos, nombrePila, sexo, cartaTexto, reloj) {
+  if (rasgos.length === 0) return [];
+
+  const encargo = `Eres astróloga. Se le está escribiendo a una persona el estudio de su carta natal, y te toca la parte de ${cual === 'fortalezas' ? 'lo que se le da bien' : 'lo que le cuesta'}.
+
+AQUÍ NO SE ELIGE NADA. Los rasgos ya están decididos y te los doy abajo con su nombre y con la posición de la carta de la que salen. Tú escribes, de cada uno, sus dos casillas: la descripción y la causa. Ni quitas ninguno, ni añades ninguno, ni cambias un nombre.
+
+Contestas con un texto por rasgo, en el MISMO ORDEN en que te los doy.
+
+TODO SALE DE LA CARTA Y DEL RASGO. Si algo no se puede sacar de ahí, no se escribe.
+
+
+LAS DOS CASILLAS QUE ESCRIBES
 
 descripcion  TRES RENGLONES, ni dos ni cuatro. Son unos doscientos sesenta
              caracteres contando los espacios. No se cuentan frases: dos frases
@@ -986,14 +1078,6 @@ causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
              casa. Sin ella el rasgo se queda en como funciona por dentro, que
              es igual en todo el mundo, y quien lo lee no se reconoce en nada.
 
-origen       De donde sale el rasgo en la carta, en técnico y en corto: el
-             cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
-             forman. Nada más: ni explicación ni frase.
-             Es obligatoria. Y no repartas todos los rasgos sobre las mismas
-             dos o tres posiciones: la carta tiene de sobra.
-
-Un rasgo son sus casillas escritas de verdad. Si empiezas uno y no sabes cómo seguirlo, se quita ENTERO, también su nombre. Nunca se rellena una casilla con una palabra de relleno ni con un aviso de que falta: eso se imprime tal cual en el informe que va a leer.
-
 
 5. CÓMO SE ESCRIBE
 
@@ -1015,63 +1099,71 @@ Esto lo lee una persona normal, que no ha estudiado nada de esto y que lo lee un
 - Nada de asteriscos, negritas, guiones ni símbolos: es texto corrido.
 - A ella no se le pone un diagnóstico: se cuenta lo que le ocurre, no cómo se llama eso.
 
-
-6. EL REPASO, ANTES DE ENTREGAR
-
-Esto no es un consejo: es la mitad del trabajo, y va con las dos listas escritas delante.
-
-PRIMERO, LOS QUE DICEN LO MISMO. Lees los rasgos de las dos listas, todos, y los comparas de dos en dos. Dos son el mismo si al leer uno ya sabes lo que dice el otro, aunque estén escritos con palabras distintas, aunque estén en áreas distintas y aunque uno esté en fortalezas y el otro en desafíos. De cada pareja se queda UNO, el que más pese, y el otro se va.
-
-DESPUÉS, EL ÁREA DE CADA UNO. Lees cada rasgo entero -el nombre y la descripción, no la posición de la que salió- y te preguntas de qué habla. Si habla de otra área, lo mueves a esa. Un rasgo que sacaste del Sol y que acaba hablando de cómo se lleva con su gente es de RELACIONES, aunque el Sol sea de IDENTIDAD. Quien lo lee ve lo que dice el rasgo, no de dónde lo sacaste.
-
-DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas, área por área, cuántas fortalezas y cuántos desafíos han quedado. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale rescatar el que acabas de quitar ni escribir una variante suya.
-
-DESPUÉS, EL TECHO. Si un área pasa de su máximo, se quedan los que más pesan y los demás se van.
-
-Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ningún rasgo nombre la carta ni nada técnico en el nombre, la descripción o la causa, y que a ninguno le falte una casilla.
-
-Devuelve solo las listas ya repasadas. No expliques lo que has quitado.
-
 Carta natal:
 ${cartaTexto}
 
-Persona: ${trato}
-Nombre de pila: ${nombrePila}`;
+Persona: ${comoSeLeHabla(sexo)}
+Nombre de pila: ${nombrePila}
+
+LOS RASGOS QUE TE TOCAN, en este orden:
+${rasgos.map((r, i) => `${i + 1}. ${r.nombre}  —  sale de: ${r.origen}`).join('\n')}`;
+
+  const salida = await alModelo({
+    que: `escribir ${cual}`,
+    modelo: 'claude-sonnet-5',
+    // Sin razonamiento: aqui no hay nada que decidir, y encendido se gasta el
+    // presupuesto pensando en vez de escribir.
+    razona: false,
+    techo: 16000,
+    system: encargo,
+    mensaje: `Escribe la descripción y la causa de cada uno de los ${rasgos.length} rasgos, en el mismo orden.`,
+    molde: ESQUEMA_DE_ESCRIBIR,
+    espera: reloj.senal(TOPE_DE_ESCRIBIR),
+  });
+
+  // Se casan por posicion. El que se quede sin texto sale con sus casillas
+  // vacias antes que desaparecer: el codigo de mas abajo lo vera y avisara.
+  const textos = Array.isArray(salida.textos) ? salida.textos : [];
+  return rasgos.map((r, i) => ({
+    nombre: r.nombre,
+    descripcion: String(textos[i]?.descripcion ?? '').trim(),
+    causa: String(textos[i]?.causa ?? '').trim(),
+    origen: r.origen,
+    area: r.area,
+  }));
+}
+
+// La unica puerta al modelo de este fichero para las listas: mismo trato de los
+// fallos y mismo molde, para no tener dos sitios donde cambiar lo mismo.
+async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, espera }) {
+  const cuerpo = {
+    model: modelo,
+    max_tokens: techo,
+    system,
+    output_config: { format: { type: 'json_schema', schema: molde } },
+    messages: [{ role: 'user', content: mensaje }],
+  };
+  if (razona) {
+    cuerpo.thinking = { type: 'adaptive' };
+    cuerpo.output_config.effort = 'low';
+  } else {
+    cuerpo.thinking = { type: 'disabled' };
+  }
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
-    signal: reloj.senal(TOPE_DE_LAS_LISTAS),
+    signal: espera,
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': process.env.ANTHROPIC_API_KEY,
       'anthropic-version': '2023-06-01',
     },
-    body: JSON.stringify({
-      // El modelo bueno, y aqui solo aqui: es la unica llamada del informe que
-      // no escribe, sino que decide. Las siete areas siguen con el de siempre.
-      model: 'claude-opus-5',
-      // PENSANDO. Es todo el cambio. Sin esto no puede comparar, y sin comparar
-      // salen los repetidos y las etiquetas cambiadas de sitio.
-      thinking: { type: 'adaptive' },
-      // El techo, holgado. Ver el comentario de arriba: aqui es donde reventaba.
-      max_tokens: 24000,
-      system: encargo,
-      output_config: {
-        // EL ESFUERZO, BAJO. No es pereza: aqui lo caro no es pensar, es
-        // escribir treinta y tantos rasgos enteros, y el rato que se pasa
-        // pensando sale del mismo reloj. Comparar treinta cosas y ver cuales se
-        // pisan no necesita mas: con 'medium' se paso de los dos minutos y medio
-        // y la clienta se quedo sin informe.
-        effort: 'low',
-        format: { type: 'json_schema', schema: ESQUEMA_DE_LAS_LISTAS },
-      },
-      messages: [{ role: 'user', content: 'Saca las dos listas de esta carta, siguiendo el esquema.' }],
-    }),
+    body: JSON.stringify(cuerpo),
   });
 
   if (!response.ok) {
     const detalle = await response.text();
-    const err = new Error(`Listas: ${response.status} — ${detalle.slice(0, 300)}`);
+    const err = new Error(`${que}: ${response.status} — ${detalle.slice(0, 300)}`);
     err.temporal = response.status === 429 || response.status >= 500;
     throw err;
   }
@@ -1082,38 +1174,24 @@ Nombre de pila: ${nombrePila}`;
     .map(b => b.text)
     .join('');
 
-  let salida;
   try {
-    salida = JSON.parse(texto);
+    return JSON.parse(texto);
   } catch (e) {
-    const err = new Error('Listas: la respuesta no es JSON valido');
+    const err = new Error(`${que}: la respuesta no es JSON valido`);
     err.temporal = true;
     throw err;
   }
-
-  return repartirLasDos(salida.rasgos);
 }
 
-// La lista plana se reparte en las dos, cada una ordenada por area, que es como
-// las pinta el PDF.
-//
-// Si a un rasgo le faltara una casilla, se queda vacia. Sin esto se imprimia en
-// el PDF la palabra "undefined", que es lo mismo que paso con "placeholder".
-function repartirLasDos(rasgos) {
-  const fortalezas = [], desafios = [];
-  for (const r of (Array.isArray(rasgos) ? rasgos : [])) {
-    const area = String(r?.area ?? '').trim();
-    const rasgo = {
-      nombre: String(r?.nombre ?? '').trim(),
-      descripcion: String(r?.descripcion ?? '').trim(),
-      causa: String(r?.causa ?? '').trim(),
-      origen: String(r?.origen ?? '').trim(),
-      // El area la dice el modelo, que es el unico que ha leido el rasgo. Si no
-      // la dice, o dice una que no existe, la saca el codigo de la posicion.
-      area: areaDelRasgo(String(r?.origen ?? '').trim(), area),
-    };
-    (String(r?.lista ?? '').trim() === 'desafios' ? desafios : fortalezas).push(rasgo);
-  }
+// Los dos pasos, encadenados: se elige una vez y se escriben las dos listas a
+// la vez.
+async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
+  const elegidos = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj);
+
+  const [fortalezas, desafios] = await Promise.all([
+    escribirLosRasgos('fortalezas', elegidos.filter(r => r.lista === 'fortalezas'), nombrePila, sexo, cartaTexto, reloj),
+    escribirLosRasgos('desafios',   elegidos.filter(r => r.lista === 'desafios'),   nombrePila, sexo, cartaTexto, reloj),
+  ]);
   return { fortalezas, desafios };
 }
 
@@ -1132,10 +1210,10 @@ async function sacarLasListas(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
       ultimoError = err;
       const temporal = err.temporal !== false;
       if (!temporal || intento === INTENTOS) break;
-      // Para reintentar tienen que caber otra tirada entera y las siete areas.
-      // Si la primera se comio el reloj, no se reintenta: vale mas avisar que
-      // dejar a la clienta esperando a un segundo intento que tampoco cabe.
-      if (!reloj.hayTiempoPara(255)) {
+      // Para reintentar tienen que caber los dos pasos otra vez -elegir y
+      // escribir- y las siete areas detras. Si no caben, se avisa: vale mas eso
+      // que dejar a la clienta esperando a un intento que tampoco llega.
+      if (!reloj.hayTiempoPara(270)) {
         console.warn('Listas: fallo y ya no cabe otro intento con las siete areas detras');
         break;
       }

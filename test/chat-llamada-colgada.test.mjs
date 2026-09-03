@@ -44,7 +44,8 @@ const original = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
 const ENPRODUCCION = [
   ['el presupuesto de la peticion', 'const TOPE_DE_LA_PETICION = 285000'],
   ['el tope de cada area',          'signal: reloj.senal(90000)'],
-  ['el tope de las listas',        'const TOPE_DE_LAS_LISTAS = 195000'],
+  ['el tope de elegir',            'const TOPE_DE_ELEGIR = 100000'],
+  ['el tope de escribir',          'const TOPE_DE_ESCRIBIR = 110000'],
 ];
 console.log('\n  api/chat.js — una llamada colgada ya no se lleva el informe por delante\n');
 for (const [que, texto] of ENPRODUCCION) {
@@ -81,9 +82,10 @@ function aEscala(texto, presupuesto) {
   return texto
     .replace("import Stripe from 'stripe';", "import Stripe from './.stripe-falso.mjs';")
     .replace('const TOPE_DE_LA_PETICION = 285000', `const TOPE_DE_LA_PETICION = ${presupuesto}`)
-    .replace('const TOPE_DE_LAS_LISTAS = 195000', 'const TOPE_DE_LAS_LISTAS = 3000')
+    .replace('const TOPE_DE_ELEGIR = 100000', 'const TOPE_DE_ELEGIR = 2000')
+    .replace('const TOPE_DE_ESCRIBIR = 110000', 'const TOPE_DE_ESCRIBIR = 2500')
     .replace('reloj.senal(90000)', 'reloj.senal(2500)')
-    .replace('hayTiempoPara(255)', 'hayTiempoPara(5)');
+    .replace('hayTiempoPara(270)', 'hayTiempoPara(5)');
 }
 
 const stripeFalsoRuta = path.join(AQUI, '.stripe-falso.mjs');
@@ -124,8 +126,9 @@ const rasgoDe = (origen, i, lista) => ({
   nombre: TITULOS[lista][i], descripcion: 'Sigues de pie donde otros se bajan.',
   causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen,
 });
-// Todos los rasgos en una sola lista, y cada uno diciendo de que lista y de que
-// area es, que es como los pide ahora chat.js.
+// Ahora los rasgos van en dos pasos: uno elige -nombre, area y de donde sale- y
+// otro escribe la descripcion y la causa de cada uno. Aqui se contesta a los
+// dos, cada uno con lo suyo.
 const POR_AREAS = [
   ['IDENTIDAD',  'Sol en Aries casa 1',        'Ascendente en Aries'],
   ['PATRONES',   'Nodo Norte en Acuario',      'casa 9 en Aries'],
@@ -135,13 +138,22 @@ const POR_AREAS = [
   ['RELACIONES', 'Mercurio en Aries',          'casa 11 en Acuario'],
   ['DINERO',     'casa 2 en Aries',            'casa 10 en Acuario'],
 ];
-const deLaLista = (cual, l) => POR_AREAS.flatMap(([area, a, b], k) => [
-  { ...rasgoDe(a, k * 2, l),     lista: cual, area },
-  { ...rasgoDe(b, k * 2 + 1, l), lista: cual, area },
+const elegidosDe = (cual, l) => POR_AREAS.flatMap(([area, a, b], k) => [
+  { lista: cual, area, nombre: TITULOS[l][k * 2],     origen: a },
+  { lista: cual, area, nombre: TITULOS[l][k * 2 + 1], origen: b },
 ]);
-const listas = () => JSON.stringify({
-  rasgos: deLaLista('fortalezas', 'Fortaleza').concat(deLaLista('desafios', 'Desafio')),
+const LOS_ELEGIDOS = JSON.stringify({
+  rasgos: elegidosDe('fortalezas', 'Fortaleza').concat(elegidosDe('desafios', 'Desafio')),
 });
+// El que escribe contesta un texto por rasgo, en el mismo orden en que se los dan.
+const losTextos = cuantos => JSON.stringify({
+  textos: Array.from({ length: cuantos }, () => ({
+    descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
+    causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
+  })),
+});
+// Cuantos rasgos le han dado a esta peticion de escribir.
+const cuantosPide = cuerpo => String(cuerpo.messages?.[0]?.content || '').match(/de los (\d+) rasgos/)?.[1] | 0;
 
 let llamadas = 0, sinSenal = 0, colgarLaPrimera = false, yaColgada = false;
 
@@ -152,16 +164,20 @@ globalThis.fetch = async (url, opciones) => {
   llamadas++;
   if (!opciones || !opciones.signal) sinSenal++;
 
-  let esLista = false;
+  let esElegir = false, esEscribir = false, cuantos = 0;
   try {
     const cuerpo = JSON.parse(opciones.body);
-    esLista = String(cuerpo.system || '').startsWith('Eres astróloga');
+    const sistema = String(cuerpo.system || '');
+    esElegir = sistema.includes('AQUÍ NO SE ESCRIBE EL INFORME');
+    esEscribir = sistema.includes('AQUÍ NO SE ELIGE NADA');
+    if (esEscribir) cuantos = cuantosPide(cuerpo);
   } catch (e) {}
+  const esLista = esElegir || esEscribir;
 
   // LA LLAMADA QUE NO CONTESTA. Solo termina si la cortan: si el codigo no le
   // pone senal, esta promesa no se resuelve jamas y la prueba se cuelga, igual
   // que se colgo la funcion en produccion.
-  if (colgarLaPrimera && esLista && !yaColgada) {
+  if (colgarLaPrimera && esElegir && !yaColgada) {
     yaColgada = true;
     await new Promise((_, rechazar) => {
       if (!opciones.signal) return;
@@ -170,13 +186,18 @@ globalThis.fetch = async (url, opciones) => {
   }
 
   await espera(120);
-  // La de las listas razona, asi que su respuesta trae delante un bloque de
-  // pensamiento y detras el texto, como hace la API de verdad. Las areas no
-  // razonan y contestan con un bloque solo.
-  if (esLista) {
+  // La de elegir razona, asi que su respuesta trae delante un bloque de
+  // pensamiento y detras el texto, como hace la API de verdad. Las demas
+  // contestan con un bloque solo.
+  if (esElegir) {
     return { ok: true, status: 200, json: async () => ({ content: [
       { type: 'thinking', thinking: '' },
-      { type: 'text', text: listas() },
+      { type: 'text', text: LOS_ELEGIDOS },
+    ] }) };
+  }
+  if (esEscribir) {
+    return { ok: true, status: 200, json: async () => ({ content: [
+      { type: 'text', text: losTextos(cuantos) },
     ] }) };
   }
   return { ok: true, status: 200, json: async () => ({ content: [
@@ -218,7 +239,7 @@ try {
   comprobar('la peticion no se queda colgada', !a.colgado, `${(tardo / 1000).toFixed(1)}s`);
   comprobar('el informe sale igual', a.code === 200, 'HTTP ' + a.code);
   comprobar('la colgada se corta y se vuelve a pedir esa sola',
-    llamadas === 9, `${llamadas} llamadas (8 + la que se corto)`);
+    llamadas === 11, `${llamadas} llamadas (10 + la que se corto)`);
   comprobar('ninguna llamada al modelo va sin tope de tiempo', sinSenal === 0,
     `${sinSenal} sin tope`);
 
@@ -232,8 +253,8 @@ try {
   ]);
 
   comprobar('con el tiempo justo el informe tambien sale', b.code === 200 && !b.colgado, 'HTTP ' + b.code);
-  comprobar('no se pide ni una llamada de mas por ir justo de tiempo', llamadas === 8,
-    `${llamadas} llamadas (1 de listas + 7 areas)`);
+  comprobar('no se pide ni una llamada de mas por ir justo de tiempo', llamadas === 10,
+    `${llamadas} llamadas (elegir + 2 de escribir + 7 areas)`);
   comprobar('el informe llega entero al cliente, con sus siete areas',
     typeof b.body?.texto === 'string' && b.body.texto.split(SEPARADOR).length === 7,
     (b.body?.texto ? b.body.texto.split(SEPARADOR).length : 0) + ' areas');
