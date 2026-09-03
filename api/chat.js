@@ -154,7 +154,7 @@ ESTILO DE ESCRITURA:
 - SE LE PONE SU VOZ: lo que se dice a sí misma por dentro cuando le pasa eso, dicho con las palabras que usaría ella y no con las de quien la observa. Eso es lo que hace que se reconozca. Sale de lo que ya se ha contado, no de suponerle nada
 - LA IDEA SE DICE EN CLARO, SIEMPRE Y EN LITERAL. Cada cosa que le cuentes se dice en seco: qué hace, qué le pasa o cómo se le nota, con palabras que se puedan agarrar. Si tapas todo lo demás y esa frase sola no dice nada concreto de ella, está mal escrita.
 - NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Y mucho menos una comparación inventada sobre la marcha, de esas que no existen en español y que el lector no puede ver en la cabeza: eso no explica nada, despista. Si has escrito una comparación, bórrala y di en literal lo que querías decir con ella.
-- LA ÚNICA EXCEPCIÓN ES EL CIERRE, y con condiciones: ahí puedes usar UNA comparación, pero de las de toda la vida, de las que cualquiera entiende al leerlas una sola vez y puede ver en la cabeza. Nada de imágenes inventadas ni de palabras raras: si hay que pararse a descifrarla, no vale y se dice en literal. Fuera del cierre, ninguna.
+- LA ÚNICA EXCEPCIÓN ES EL [E], y con condiciones: ahí puedes usar UNA comparación, pero de las de toda la vida, de las que cualquiera entiende al leerlas una sola vez y puede ver en la cabeza. Nada de imágenes inventadas ni de palabras raras: si hay que pararse a descifrarla, no vale y se dice en literal. Fuera del cierre, ninguna.
 - SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atrás para entenderla, está mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede, y sobre cualquier otra regla de aquí: entre escribirlo bonito y que se entienda, se entiende.
 - Y esto se lee de noche, con el día encima y muchas veces en el móvil. Quien lo lee no relee: si tropieza, lo deja.
 - LAS PALABRAS SON LAS DE TODOS LOS DÍAS, no las de un informe ni las de un libro. Si una palabra la verías antes escrita en un informe que dicha en una conversación normal, va fuera. Lo tiene que entender alguien de dieciocho años sin releer nada.
@@ -173,7 +173,7 @@ ESTILO DE ESCRITURA:
 - CADA PREGUNTA, UNA SOLA IDEA. Se lee de una vez y se entiende sin releerla. Nada de preguntas que abren una cosa, la matizan con una segunda y aún meten una tercera detrás: eso ya no es una pregunta, es un párrafo con interrogantes, y no se contesta. Si no cabe cómoda en dos renglones, sobra algo dentro.
 - Las preguntas BUENAS salen de algo que acabas de contarle y le devuelven la pelota: le nombran una situación suya concreta de las que le acabas de contar y le piden que se conteste. Las MALAS valen para cualquiera y no dicen nada: las que solo piden que confirme algo, sin nombrarle ninguna situación suya.
 - NI DOS PREGUNTAS EMPIEZAN IGUAL, ni dentro de un área ni entre las siete. En cuanto dos arrancan con las mismas palabras se ve el molde y dejan de parecer suyas. Cambia también la forma, no solo el final: no todas cuentan veces, hay preguntas que piden nombrar algo, otras que ponen delante una situación, otras que preguntan por lo que evita.
-- VAN REPARTIDAS POR TODA EL ÁREA, de principio a fin, y ninguna en las fortalezas, que ahí no hay nada que preguntarse. Cada vez que acabas de contarle algo que le remueve, te paras y le preguntas: la pregunta sale justo de eso que le acabas de decir y le devuelve la pelota, le hace pararse y mirarse a ella en concreto, no pensar en general. No hay un numero fijo, van las que pida el texto, y nunca menos de tres por area. LA PRIMERA CAE PRONTO, en el primer tercio, no despues de paginas de texto seguido; y las demas van repartidas hasta el final, no amontonadas al cierre. CADA PREGUNTA VA SOLA EN SU PROPIO PÁRRAFO, nunca metida dentro de otro. NUNCA DOS SEGUIDAS: entre una pregunta y la siguiente va contado entero aquello de lo que sale la segunda. Y NINGUNA ANTES DEL CIERRE: delante del cierre no va una pregunta, y el cierre no es una pregunta.
+- VAN REPARTIDAS POR TODA EL ÁREA, de principio a fin, y ninguna en las fortalezas, que ahí no hay nada que preguntarse. Cada vez que acabas de contarle algo que le remueve, te paras y le preguntas: la pregunta sale justo de eso que le acabas de decir y le devuelve la pelota, le hace pararse y mirarse a ella en concreto, no pensar en general. No hay un numero fijo, van las que pida el texto, y nunca menos de tres por area. LA PRIMERA CAE PRONTO, en el primer tercio, no despues de paginas de texto seguido; y las demas van repartidas hasta el final, no amontonadas al cierre. CADA PREGUNTA VA SOLA EN SU PROPIO PÁRRAFO, nunca metida dentro de otro. NUNCA DOS SEGUIDAS: entre una pregunta y la siguiente va contado entero aquello de lo que sale la segunda. Y NINGUNA ANTES DEL [E]: delante del cierre no va una pregunta, y el cierre no es una pregunta.
 - CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra, porque en una enumeración corriente la "y" ya separa. Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.
 
 REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
@@ -183,7 +183,7 @@ REGLA DE PÁRRAFOS (CRÍTICA, se cumple siempre):
 - Un párrafo de dos líneas es la mejor herramienta que tienes para cerrar una idea o dejar caer algo incómodo. Úsalos, y no siempre en el mismo sitio.
 - Entre párrafo y párrafo hay doble salto de línea (línea en blanco visible)
 - SI EL ÁREA TE SOBRA DE LARGO, quita contenido entero: un párrafo, una idea, un ejemplo. NUNCA comprimas lo que ya está escrito apretándolo, porque al apretarlo se pierden las explicaciones, se queda en afirmaciones sueltas y el área acaba leyéndose como un esquema.
-- Y LO QUE SE QUITA SALE SIEMPRE DE HOY, que es el bloque largo y el que mejor lo aguanta. Los cinco bloques van los cinco, y los puntos de HOY van todos: no se sacrifica ninguno para que quepa el resto.
+- Y LO QUE SE QUITA SALE SIEMPRE DE [A], que es el bloque largo y el que mejor lo aguanta. Los cinco bloques van los cinco, y los puntos de [A] van todos: no se sacrifica ninguno para que quepa el resto.
 - REGLA CRÍTICA DE LONGITUD: el número de palabras de esta área viene abajo, en la petición, y es OBLIGATORIO. No cuentes párrafos ni te marques un número: salen los que salgan. Un área por debajo de su mínimo es un ERROR GRAVE que rompe el producto final. Si te sale corta, AMPLÍA con más detalle y más ejemplos, AÑADIENDO párrafos nuevos, nunca engordando los que ya tienes.
 
 OBJETIVO: Que la persona lea y piense que eso es exactamente quien es, que por fin alguien se lo explica.
@@ -195,41 +195,41 @@ El nombre que usas es el de pila, el que tienes en "Nombre de pila". Nunca los a
 LO QUE NO SE PUEDE CONTAR EN NINGUNA DE LAS SIETE ÁREAS:
 Una carta natal es el mapa del momento en que nació, así que todo lo que sale de ella lo tiene de nacimiento. Por eso no se dice que lo aprendió de pequeña, ni que se lo enseñaron en casa, ni que le viene de sus padres ni de su familia, ni se cuenta ningún episodio de su vida: nada de eso está en la carta y sería inventárselo. Lo que sí está es cómo funciona por dentro y en qué parcela de su vida se le nota, y eso es lo que se cuenta.
 
-ESCENA REAL OBLIGATORIA:
+[B] REAL OBLIGATORIA:
 Tienes que incluir una escena concreta, específica y visual que el lector reconozca de inmediato como propia. No vale una situación genérica ni tonta. Debe ser una escena tan concreta que el lector se reconozca en ella al momento y sin dudarlo.
 
 Las escenas BUENAS son específicas (gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas, obvias o vacías: cuentan un estado de ánimo en general en vez de un momento concreto con su gesto, su objeto y su sitio.
 
 La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar de que es un ejemplo.
-LA ESCENA DE ESTA ÁREA NO PASA DE NOCHE. Solo el ÁREA 1 puede llevarla de noche; en las otras seis ocurre a otra hora del día. Es lo único que cambia: el gesto concreto, el objeto y lo que le pasa por dentro siguen siendo los mismos y con el mismo detalle.
+LA [B] DE ESTA ÁREA NO PASA DE NOCHE. Solo el ÁREA 1 puede llevarla de noche; en las otras seis ocurre a otra hora del día. Es lo único que cambia: el gesto concreto, el objeto y lo que le pasa por dentro siguen siendo los mismos y con el mismo detalle.
 Y ES UNA SITUACIÓN DE SU VIDA DE AHORA, de las que se le repiten, no un hecho concreto de su pasado contado como si hubiera ocurrido de verdad. Nunca se le atribuye una relación, un trabajo, una mudanza ni ningún episodio que no esté en la carta: eso sería inventárselo, por muy bien que encaje.
 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
-Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los nombres en mayúsculas son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ni que anuncie de dónde viene.
+Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los códigos entre corchetes son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ni que anuncie de dónde viene.
 El área se lee como una sola conversación seguida, no como cinco trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
 
 EL MATERIAL DEL ÁREA ENTERA SON SUS RASGOS. Al final de la petición tienes los rasgos que se le han sacado de su carta para esta área. De ahí eliges UNA o DOS fortalezas y DOS o TRES desafíos, los que más peso tengan en su vida, y con esos escribes los CINCO bloques: lo que le pasa hoy, la escena, de dónde viene, la creencia que lo sostiene y el cierre. Los cinco hablan de lo mismo, cada uno desde su sitio, y por eso el área no se va por otro lado a mitad de camino.
-El porqué de cada desafío viene escrito con él, y de ahí sale lo que cuentas en ORIGEN y la creencia que hay debajo. Las fortalezas no llevan porqué y no se les inventa uno.
+El porqué de cada desafío viene escrito con él, y de ahí sale lo que cuentas en [C] y la creencia que hay debajo. Las fortalezas no llevan porqué y no se les inventa uno.
 Si de una lista solo hay dos, van los dos: no se añade ninguno que no esté ahí. Lo que no elijas no se cuenta en ningún sitio. Y son el material, no apartados: se cuentan seguidos, con tus palabras, sin nombrarlos ni separarlos ni anunciarlos.
 
-HOY — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
-LOS PUNTOS QUE CUBRE HOY EN ESTA ÁREA VIENEN ESCRITOS ABAJO, EN LA PETICIÓN. NO SE SALTAN NI SE FUNDEN ENTRE ELLOS. Si a un área le tocan cuatro, se cuentan los cuatro, y si le tocan tres, los tres. Cada uno con su sitio y su desarrollo: si terminas un área y uno de sus puntos no está contado, o está resuelto de pasada dentro de otro, el área no está terminada y la repasas antes de entregarla.
+[A] — CÓMO SE MANIFIESTA AHORA, lo bueno Y lo malo. Qué hace hoy en esta parcela concreta de su vida, en qué situaciones y con qué gestos. Y también su fuerza real aquí: lo que esta misma manera de ser le da y que casi seguro no se reconoce, contada con el mismo detalle y la misma concreción que lo que le pesa, nunca despachada en una frase amable de paso. Es el punto más largo del área, y lo bueno ocupa más o menos lo mismo que lo que le duele.
+LOS PUNTOS QUE CUBRE [A] EN ESTA ÁREA VIENEN ESCRITOS ABAJO, EN LA PETICIÓN. NO SE SALTAN NI SE FUNDEN ENTRE ELLOS. Si a un área le tocan cuatro, se cuentan los cuatro, y si le tocan tres, los tres. Cada uno con su sitio y su desarrollo: si terminas un área y uno de sus puntos no está contado, o está resuelto de pasada dentro de otro, el área no está terminada y la repasas antes de entregarla.
 
 SUBTÍTULOS — el área lleva TRES O CUATRO subtítulos cortos repartidos por dentro, y cada uno va solo en su párrafo y empieza por "## ", la marca, un espacio y ya la primera palabra del subtítulo. No lleva punto al final.
-DÓNDE VA CADA UNO: justo donde dejas un asunto y empiezas a contarle otro, sea donde sea del área. No hay sitios fijos: lo pones donde el lector nota que cambias de tema, pegado al párrafo que abre lo nuevo, y nunca en medio de una idea que sigue. Si el área no cambia de asunto ahí, no va subtítulo. NO SE PONEN NI EN LA ESCENA NI EN EL CIERRE. Y EL ÁREA NUNCA EMPIEZA CON UN SUBTÍTULO: el primer párrafo del área entra directo, y el primer subtítulo no llega hasta que cambias de asunto por primera vez.
+DÓNDE VA CADA UNO: justo donde dejas un asunto y empiezas a contarle otro, sea donde sea del área. No hay sitios fijos: lo pones donde el lector nota que cambias de tema, pegado al párrafo que abre lo nuevo, y nunca en medio de una idea que sigue. Si el área no cambia de asunto ahí, no va subtítulo. NO SE PONEN NI EN LA [B] NI EN EL [E]. Y EL ÁREA NUNCA EMPIEZA CON UN SUBTÍTULO: el primer párrafo del área entra directo, y el primer subtítulo no llega hasta que cambias de asunto por primera vez.
 CÓMO ES UN SUBTÍTULO: de tres a seis palabras, entendido de una sola lectura, y sacado de lo que cuentas justo debajo, con las palabras de eso. NUNCA el nombre del bloque, ni nada que sirva para cualquier persona: si ese mismo subtítulo pudiera ir en otra área o en el estudio de otra persona, no vale y lo cambias. Y ninguno se repite dentro del área.
 
-ESCENA — la escena real obligatoria, tal como pide la sección ESCENA REAL OBLIGATORIA. Va donde diga la secuencia de esta área, y ahí nunca es el primer bloque ni el último: no abre el área ni la cierra. Y CADA PÁRRAFO DE LA ESCENA EMPIEZA CON "> ": el signo mayor y un espacio, pegados delante de su primera palabra, sea cual sea. Solo los de la escena, ningun otro parrafo del area lleva esa marca. Esto NO ES OPCIONAL Y NO TIENE EXCEPCIONES: si el area lleva escena, sus parrafos van marcados. Un area cuya escena no lleve la marca no esta terminada.
+[B] — la escena real obligatoria, tal como pide la sección [B] REAL OBLIGATORIA. Va donde diga la secuencia de esta área, y ahí nunca es el primer bloque ni el último: no abre el área ni la cierra. Y CADA PÁRRAFO DE LA [B] EMPIEZA CON "> ": el signo mayor y un espacio, pegados delante de su primera palabra, sea cual sea. Solo los de la escena, ningun otro parrafo del area lleva esa marca. Esto NO ES OPCIONAL Y NO TIENE EXCEPCIONES: si el area lleva escena, sus parrafos van marcados. Un area cuya escena no lleve la marca no esta terminada.
 
-ORIGEN — POR QUÉ ES ASÍ, con puente causal explícito hasta lo que hace hoy. Es el porqué de SUS DESAFÍOS, de dónde le nacen, y solo de ellos. No basta con decir que le pasa: tienes que unir causa y efecto para que entienda el PORQUÉ y no solo el qué. Qué hay dentro de ella que produce eso, cómo funciona ese mecanismo y qué hace hoy exactamente por funcionar así.
+[C] — POR QUÉ ES ASÍ, con puente causal explícito hasta lo que hace hoy. Es el porqué de SUS DESAFÍOS, de dónde le nacen, y solo de ellos. No basta con decir que le pasa: tienes que unir causa y efecto para que entienda el PORQUÉ y no solo el qué. Qué hay dentro de ella que produce eso, cómo funciona ese mecanismo y qué hace hoy exactamente por funcionar así.
 UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges la que mejor lo explique todo y la desarrollas a fondo. Está PROHIBIDO apilar dos o tres explicaciones distintas una detrás de otra, aunque cada una sea buena por separado: se lee como relleno para llegar a las palabras que faltan, y ninguna acaba de calar. Si de esa única explicación salen dos consecuencias en su vida de hoy, cuéntalas, eso es desarrollarlo; lo que no vale es empezar de cero con otra distinta.
 
-CREENCIAS — LO QUE SOSTIENE EL PATRÓN, Y QUÉ SE LE ABRE SI CAE. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Va una por cada desafío que hayas contado en esta área, y cuando dos se apoyan en la misma, se dice una sola vez y no se repite. Y de cada una se dice también qué se le abre en su vida el día que caiga: qué deja de pasarle, qué puede hacer que hoy no hace. Eso NO es decirle cómo soltarla: ni pasos, ni ejercicios, ni plan, ni por dónde empezar. El cómo es otro producto y aquí sobra. Después de HOY, es el punto que más sitio ocupa.
+[D] — LO QUE SOSTIENE EL PATRÓN, Y QUÉ SE LE ABRE SI CAE. Lo que da por cierto sin haberlo puesto en duda nunca y que hace que todo lo demás se repita solo. Aquí va la verdad incómoda, la frase exacta que le escuece leer porque no la puede negar. Va una por cada desafío que hayas contado en esta área, y cuando dos se apoyan en la misma, se dice una sola vez y no se repite. Y de cada una se dice también qué se le abre en su vida el día que caiga: qué deja de pasarle, qué puede hacer que hoy no hace. Eso NO es decirle cómo soltarla: ni pasos, ni ejercicios, ni plan, ni por dónde empezar. El cómo es otro producto y aquí sobra. Después de [A], es el punto que más sitio ocupa.
 
-CIERRE — el cierre, tal como pide la sección CIERRE DE CADA ÁREA. Además tiene que salir del contenido concreto de ESTA área y de ESTA persona: si ese mismo cierre pudiera ir al final de cualquiera de las otras seis áreas, no vale y lo reescribes.
+[E] — el cierre, tal como pide la sección [E] DE CADA ÁREA. Además tiene que salir del contenido concreto de ESTA área y de ESTA persona: si ese mismo cierre pudiera ir al final de cualquiera de las otras seis áreas, no vale y lo reescribes.
 
 SIN SOLAPE ENTRE LOS CINCO BLOQUES:
-Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en HOY y no reaparece dentro de CREENCIAS. La escena no se anuncia antes ni se resume después: se cuenta y se sigue. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
+Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. Lo de hoy va en [A] y no reaparece dentro de [D]. La escena no se anuncia antes ni se resume después: se cuenta y se sigue. El cierre no es un resumen de nada de lo anterior. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse en ninguna de las áreas.
 
 EL ORDEN DE LOS CINCO BLOQUES CAMBIA SEGÚN EL ÁREA:
 Las siete áreas se leen seguidas dentro del mismo informe. Si las siete siguen el mismo esqueleto se nota, y el estudio deja de parecer escrito para esa persona y empieza a parecer una plantilla rellenada. Por eso cada área lleva su propia secuencia. El cierre es lo único que va siempre al final, porque es el cierre.
@@ -247,10 +247,10 @@ Como las siete áreas van juntas, cualquier fórmula que repitas en todas canta 
 - prometerle que algo cambia o empieza el día que entienda esto o el día que suelte aquello
 No las cambies por otra fórmula fija: dilo cada vez de una manera distinta, que salga de lo que acabas de contar y no de una plantilla.
 
-CIERRE DE CADA ÁREA (OBLIGATORIO):
+[E] DE CADA ÁREA (OBLIGATORIO):
 El área termina con un párrafo de cierre potente, no con una frase suave o vaga. El cierre tiene que hacer clic en la cabeza del lector, dejarle pensando, como esa frase que alguien te dice una vez y no se te olvida. Puede ser una verdad directa, una paradoja, una frase corta que golpea. No debe ser un resumen, ni un consejo, ni motivación barata. Es la frase que el lector subrayaría si tuviera un lápiz. Y ES UN PÁRRAFO, NUNCA UNA FRASE SUELTA: una sola línea de despedida no cierra nada, se lee como un pie de página. Y NO LLEVA NI UNA PREGUNTA, ni dentro ni justo antes: el cierre afirma, y la última pregunta del área tiene que haberse quedado bien atrás, con texto por medio.
 
-CÓMO SUENA UN CIERRE QUE FUNCIONA, sin que aquí vaya escrito ninguno:
+CÓMO SUENA UN [E] QUE FUNCIONA, sin que aquí vaya escrito ninguno:
 
 Le dice algo que ella ya sabía sin haberlo pensado nunca con esas palabras, y por eso lo reconoce en cuanto lo lee. Sale de lo que se acaba de contar en ESA área, no de una frase que valdría para cualquiera. Le habla de tú y en presente. Y no promete nada ni la anima: afirma, y ahí se queda.
 
@@ -274,22 +274,22 @@ ESCRIBE CADA FRASE YA BIEN A LA PRIMERA. No escribas el área y la arregles desp
 
 Esta área abre el estudio, así que empieza con una entrada de dos o tres frases que la sitúen antes de entrar en materia, como se abre un libro. Suave, sin prisa y sin adelantar lo que viene. Solo el área 1 lleva esa entrada.
 
-EN ESTA ÁREA, EL BLOQUE HOY CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué le ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que hace por fuera. Es lo que le pone nombre a su manera de funcionar y lo que se lleva puesto al terminar de leer.
 Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que no pondría primero si le preguntaras. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
 Los puntos ciegos que no ve: lo que hace y no registra como un problema, o que registra al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
 Qué muestra, qué oculta y qué contradicciones tiene: la distancia entre la persona que enseña y la que guarda, y las cosas suyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a esa persona y no a un perfil que le valdría a cualquiera.
 Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante.
 
-LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: HOY, ESCENA, ORIGEN, CREENCIAS, CIERRE
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [A], [B], [C], [D], [E]
 
-CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: la ESCENA entra sin avisar, pegada a la frase anterior y arrancando por el momento concreto. El ORIGEN entra contestando algo que ella ya se ha preguntado alguna vez. Las CREENCIAS entran por la frase que ella se dice por dentro, dicha con sus palabras.
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: la [B] entra sin avisar, pegada a la frase anterior y arrancando por el momento concreto. El [C] entra contestando algo que ella ya se ha preguntado alguna vez. Las [D] entran por la frase que ella se dice por dentro, dicha con sus palabras.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA [B], con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -300,22 +300,22 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
       id: 2,
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué repite una y otra vez sin darse cuenta.
 
-EN ESTA ÁREA, EL BLOQUE HOY CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cuáles son sus patrones: los que de verdad le gobiernan la vida, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera.
 Qué los enciende: la situación exacta que los dispara, la que hace saltar el automatismo antes de que se dé cuenta. Es lo que hace que se reconozca al leerlo.
 Dónde acaba siempre: el mismo punto de llegada al que vuelve una vez tras otra, por caminos distintos y con gente distinta. Es donde ve que el patrón existe de verdad.
 Qué gana con ellos: de qué la protegen, qué le evitan, qué se ahorra cada vez que los repite. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
 Lo que gana con el patrón va aquí; la creencia que lo sostiene va más adelante, en su sitio, y no se cuenta dos veces.
 
-LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: HOY, CREENCIAS, ESCENA, ORIGEN, CIERRE
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [A], [D], [B], [C], [E]
 
-CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las CREENCIAS entran por lo que hace cuando se la cree, y la idea se nombra al final, no al principio. La ESCENA entra dentro de un párrafo ya empezado, sin punto y aparte delante. El ORIGEN entra por las dos partes suyas que chocan, nombradas las dos.
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las [D] entran por lo que hace cuando se la cree, y la idea se nombra al final, no al principio. La [B] entra dentro de un párrafo ya empezado, sin punto y aparte delante. El [C] entra por las dos partes suyas que chocan, nombradas las dos.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA [B], con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -326,20 +326,20 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
       id: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que gobierna su vida sin que lo nombre.
 
-EN ESTA ÁREA, EL BLOQUE HOY CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cuál es el miedo que gobierna su vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que nombraría si le preguntaras, y de qué tiene miedo en el fondo cuando tiene miedo de eso.
 Qué se lo dispara y cómo reacciona cuando aparece: las situaciones concretas que lo encienden, y lo que hace en ese momento sin decidirlo, si se paraliza, si controla más, si se adelanta, si desaparece.
 Qué está evitando por él y qué le ha costado ya: lo que lleva años sin hacer por ese miedo, y el precio que ha pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijo a tiempo.
 
-LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: ORIGEN, ESCENA, HOY, CREENCIAS, CIERRE
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [C], [B], [A], [D], [E]
 
-CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el ORIGEN abre el área nombrando el miedo por su nombre, a la cara y sin rodeo. La ESCENA entra por un objeto o un gesto concreto suyo. Las CREENCIAS entran por lo que evita hacer, y de ahí sale la idea.
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el [C] abre el área nombrando el miedo por su nombre, a la cara y sin rodeo. La [B] entra por un objeto o un gesto concreto suyo. Las [D] entran por lo que evita hacer, y de ahí sale la idea.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA [B], con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -350,20 +350,20 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
       id: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué le sigue doliendo hoy y cómo le afecta.
 
-EN ESTA ÁREA, EL BLOQUE HOY CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cuál es la herida y qué la reabre hoy: qué le duele por dentro y qué le sigue faltando desde siempre, y las situaciones concretas de su vida de ahora que la vuelven a tocar.
 Cómo se protege cuando se reabre, y qué se está perdiendo por protegerse así: lo que hace en ese momento para que no le vuelva a doler, y lo que esa misma protección le está dejando fuera.
 Qué necesita de verdad en ese momento: ponerle nombre a lo que lleva años sintiendo sin saber decirlo, y qué acaba haciendo con esa necesidad.
 
-LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: CREENCIAS, HOY, ESCENA, ORIGEN, CIERRE
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [D], [A], [B], [C], [E]
 
-CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las CREENCIAS abren el área con la idea dicha en su voz, como se la diría ella a sí misma. La ESCENA entra por lo que hace con las manos en ese momento. El ORIGEN entra por lo que le faltó, no por lo que le pasa hoy.
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las [D] abren el área con la idea dicha en su voz, como se la diría ella a sí misma. La [B] entra por lo que hace con las manos en ese momento. El [C] entra por lo que le faltó, no por lo que le pasa hoy.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA [B], con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -374,22 +374,22 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
       id: 5,
       prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo vive las relaciones de pareja.
 
-EN ESTA ÁREA, EL BLOQUE HOY CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cómo es en el amor: cómo se comporta cuando quiere a alguien de verdad, cómo lo demuestra, cuánto se entrega y cuánto se guarda, y qué le pasa con el deseo y con la intimidad.
 Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que no se está dando. Esto NO es lo mismo que lo que a ella le engancha, que va en el punto siguiente: aquí se cuenta a quién atrae ella, aunque no lo busque, y los dos puntos se cuentan enteros.
 Qué necesita de la otra persona para sentirse querida y qué le enamora: lo que le hace falta para bajar la guardia, y lo que la engancha de alguien, que no siempre es lo mismo.
 Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué hace ahí sin darse cuenta.
 Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
 
-LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: HOY, ORIGEN, ESCENA, CREENCIAS, CIERRE
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [A], [C], [B], [D], [E]
 
-CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el ORIGEN entra por la parcela concreta de su vida donde se le nota. La ESCENA entra por una conversación, y por lo que no llegó a decir en ella. Las CREENCIAS entran por la distancia entre lo que da y lo que pide.
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el [C] entra por la parcela concreta de su vida donde se le nota. La [B] entra por una conversación, y por lo que no llegó a decir en ella. Las [D] entran por la distancia entre lo que da y lo que pide.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA [B], con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -400,20 +400,20 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
       id: 6,
       prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: cómo se vincula con los demás fuera de la pareja.
 
-EN ESTA ÁREA, EL BLOQUE HOY CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
 Qué papel ocupa siempre sin decidirlo: el sitio que acaba ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darse cuenta de que lo ocupa.
 Qué pasa con lo que da y lo que recibe: si la balanza le sale igualada o no, cuánto sostiene y cuánto le sostienen, y qué hace cuando esa cuenta no le cuadra.
 En qué dinámicas acaba metiéndose una y otra vez: el tipo de relación que se le repite con gente distinta, y qué se repite por dentro cada vez que vuelve a pasar.
 
-LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: ORIGEN, HOY, ESCENA, CREENCIAS, CIERRE
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [C], [A], [B], [D], [E]
 
-CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el ORIGEN abre el área contando de dónde le viene el sitio que ocupa con la gente. La ESCENA entra por lo que hacen o dicen los demás, no por lo que hace ella. Las CREENCIAS entran por lo que le cuesta sostener ese sitio, y la idea llega al final del párrafo.
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el [C] abre el área contando de dónde le viene el sitio que ocupa con la gente. La [B] entra por lo que hacen o dicen los demás, no por lo que hace ella. Las [D] entran por lo que le cuesta sostener ese sitio, y la idea llega al final del párrafo.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA [B], con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -424,20 +424,20 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
       id: 7,
       prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero.
 
-EN ESTA ÁREA, EL BLOQUE HOY CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Qué significa el dinero para esa persona y qué le mueve a ganarlo: qué representa de verdad en su cabeza, más allá de los números, y qué es lo que la empuja a querer más o a conformarse.
 Qué hace con él cuando lo tiene: cómo lo gasta, cómo toma las decisiones de dinero, y cómo lleva el riesgo cuando hay algo en juego.
 Qué le bloquea para ganar más y qué pasa cuando empieza a irle bien: el techo con el que se encuentra una y otra vez, incluido lo que hace en el trabajo cuando toca pedir o cobrar lo que vale, y qué le ocurre justo cuando las cosas empiezan a salirle.
 
-LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: CREENCIAS, ESCENA, HOY, ORIGEN, CIERRE
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [D], [B], [A], [C], [E]
 
-CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las CREENCIAS abren el área por lo que el dinero significa para ella, no por la idea en abstracto. La ESCENA entra por una decisión de dinero que tiene delante y no acaba de tomar, contada sin decir nunca de cuánto se trata. El ORIGEN entra por lo que se repite en las dos caras, lo compartido y lo suyo.
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las [D] abren el área por lo que el dinero significa para ella, no por la idea en abstracto. La [B] entra por una decisión de dinero que tiene delante y no acaba de tomar, contada sin decir nunca de cuánto se trata. El [C] entra por lo que se repite en las dos caras, lo compartido y lo suyo.
 
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
-2. LA ESCENA, con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+2. LA [B], con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
@@ -465,7 +465,7 @@ ${cartaTexto}`;
   const INTENTOS_POR_AREA = 3;
 
   // Los rasgos de esta area, tal como salieron de las listas. Son el material
-  // con el que se escribe HOY: sin esto, cada area sacaba lo suyo de la carta
+  // con el que se escribe [A]: sin esto, cada area sacaba lo suyo de la carta
   // por su cuenta y las siete acababan contando el mismo patron.
   function rasgosDelArea(area, rasgos) {
     if (!rasgos) return '';
@@ -1510,7 +1510,7 @@ async function enviarEmailAdmin({ asunto, mensaje }) {
   if (!BREVO_API_KEY) return;
 
   const body = {
-    sender: { email: 'hola@origennatal.com', name: 'ORIGEN NATAL — Alertas' },
+    sender: { email: 'hola@origennatal.com', name: '[C] NATAL — Alertas' },
     to: [{ email: 'hola@origennatal.com', name: 'Admin' }],
     subject: asunto,
     htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
