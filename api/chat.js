@@ -20,9 +20,9 @@ const SEPARADOR_AREAS = '\u001F';
 // El reloj arranca al entrar la peticion y hace dos cosas:
 //   - le pone tope a cada llamada, y nunca mas de lo que quede de presupuesto,
 //     para que una colgada se corte sola y entre el reintento;
-//   - deja saltarse los pasos que solo pulen (reescribir un rasgo que nombra la
-//     carta, rellenar un area corta) cuando ya no queda tiempo para ellos y
-//     para las siete areas. Vale mas el informe entero que un rasgo mejor.
+//   - decide si un reintento cabe. La llamada de los rasgos tarda, y volver a
+//     pedirla sin sitio para las siete areas detras deja a la clienta sin
+//     informe habiendo pagado. Vale mas el informe entero.
 //
 // No añade ni una llamada: las quita cuando el tiempo aprieta.
 const TOPE_DE_LA_PETICION = 285000; // 15 segundos por debajo del corte de Vercel
