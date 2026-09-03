@@ -1254,10 +1254,155 @@ async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, es
   }
 }
 
-// Los dos pasos, encadenados: se elige una vez y se escriben las dos listas a
-// la vez.
+// ── PASO 2: EL REPASO ───────────────────────────────────────
+//
+// QUIEN ELIGE NO PUEDE REVISARSE A SI MISMO.
+//
+// El encargo de elegir ya le pide comparar, quitar repetidos y colocar las
+// etiquetas. Lo hace, y aun asi en un informe de verdad se colaron un rasgo
+// repetido, dos conductas que salian en las dos listas y un area mal puesta.
+// No es que le falte pensar: es que compara mientras todavia esta sacando
+// rasgos, y lo suyo le parece bueno. Pedirselo mas veces en el mismo encargo
+// no lo arregla, solo lo alarga.
+//
+// Asi que revisa otra llamada, que llega sin nada escrito de antes y con la
+// lista entera delante en una sola pagina. Es corta porque no escribe informe:
+// lee treinta y tantas lineas y devuelve la lista ya limpia.
+//
+// SI ESTE PASO FALLA O NO CABE, SE SIGUE CON LA LISTA DE ANTES. Nunca deja a
+// nadie sin informe: como mucho deja la lista como estaba.
+// EL REPASO SOLO GASTA LO QUE SOBRA. Escribir las dos listas y las siete areas
+// es lo que va detras, y eso no se toca: primero se aparta su tiempo, y el
+// repaso vive del hueco que quede. Si el hueco no da ni para empezar, no se
+// pide: hacerla esperar para nada es peor que no repasar.
+const TOPE_DE_REPASO = 50000;
+const LO_QUE_VIENE_DETRAS = 155000;
+const REPASO_MINIMO = 25000;
+
+async function repasarLosRasgos(rasgos, sexo, cartaTexto, reloj, hueco) {
+  const encargo = `Lees cartas natales. Alguien ha elegido ya los rasgos de esta persona a partir de la suya, y tu trabajo es repasar esa lista antes de que se escriba el informe.
+
+AQUÍ NO SE ESCRIBEN TEXTOS Y NO SE EMPIEZA DE CERO. Se devuelve la misma lista, corregida.
+
+Tienes la lista y tienes la carta. La carta solo la usas para lo del punto 4.
+
+1. PONLE NOMBRE A LA CONDUCTA DE CADA UNO
+
+Uno por uno, para ti, sin escribirlo en la respuesta: en tres o cuatro palabras, qué está haciendo esa persona en ese rasgo. No de qué habla ni dónde le pasa: qué HACE.
+
+Todo lo demás se decide mirando esa lista de conductas, no cómo están escritos los rasgos.
+
+2. LO QUE ESTÁ DICHO DOS VECES
+
+Conductas repetidas quiere decir un solo rasgo escrito varias veces, aunque cada uno lo cuente en una parcela distinta de su vida, con otras palabras y hasta en áreas distintas. La prueba: si al corregir uno el otro se corrige solo, son el mismo.
+
+De cada grupo se queda UNO, el que más pese, y los demás se van.
+
+QUÉ ES QUE PESE: que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. No que suene bien ni que esté bien escrito.
+
+3. LA MISMA CONDUCTA EN LAS DOS LISTAS
+
+Si una conducta aparece en fortalezas y también en desafíos, no son dos rasgos: es uno con sus dos caras. En el informe van en páginas distintas y nada le dice que hablan de lo mismo, así que lo que se lee es que una cosa se le da bien y esa misma cosa le cuesta, y eso rompe la lectura.
+
+Se queda la cara que más peso tenga hoy en su vida. La otra se va.
+
+4. EL ÁREA DE CADA UNO
+
+Tapa de dónde salió. Lee solo el rasgo y pregúntate de qué habla, con las siete delante:
+
+IDENTIDAD    quién es
+PATRONES     lo que repite cada día
+MIEDOS       lo que frena y lo que se evita
+HERIDA       lo antiguo, la casa, los suyos
+AMOR         la pareja y el deseo
+RELACIONES   la gente, hablar, los grupos
+DINERO       el dinero, el trabajo, lo que se tiene
+
+Ahí es donde va, aunque la posición diga otra cosa. La posición sirvió para encontrarlo; quien lo lee no la ve, solo ve la etiqueta y el texto juntos. Si no cuadran, la etiqueta está mal.
+
+Esto se mira rasgo por rasgo y sin saltarse ninguno.
+
+5. LAS CUENTAS
+
+De cada área tienen que salir ${POR_AREA.fortalezas.min} o ${POR_AREA.fortalezas.max} fortalezas y ${POR_AREA.desafios.min} o ${POR_AREA.desafios.max} desafíos.
+
+Si al quitar rasgos un área se queda corta, vas a la carta, a la parte que le toca a esa área, y sacas otro distinto de verdad. No vale rescatar el que acabas de quitar ni escribir una variante suya.
+
+Si un área pasa de su máximo, se quedan los que más pesan y los demás se van.
+
+6. LO QUE NO TOCAS
+
+Los rasgos que están bien se devuelven TAL CUAL, con su mismo nombre, su misma lista y su mismo origen. No los reescribes, no les cambias las palabras, no los mejoras. Solo se toca lo que está mal.
+
+Devuelve la lista entera ya repasada, no solo lo que has cambiado. No expliques lo que has quitado.
+
+Carta natal:
+${cartaTexto}
+
+Persona: ${comoSeLeHabla(sexo)}`;
+
+  const salida = await alModelo({
+    que: 'repasar los rasgos',
+    modelo: 'claude-opus-5',
+    // Piensa, porque comparar conductas es justo lo que no se puede hacer sin
+    // pensar. Bajo: el trabajo es mucho menor que el de elegir -no recorre la
+    // carta entera, lee una lista- y detras todavia van escribir y las areas.
+    razona: 'low',
+    techo: 16000,
+    system: encargo,
+    mensaje: `Esta es la lista elegida. Repásala y devuélvela entera, siguiendo el esquema.
+
+${rasgos.map((r, i) => `${i + 1}. [${r.lista}] [${r.area}] ${r.nombre}  —  sale de: ${r.origen}`).join('\n')}`,
+    molde: ESQUEMA_DE_ELEGIR,
+    espera: reloj.senal(hueco),
+  });
+
+  const repasados = [];
+  for (const r of (Array.isArray(salida.rasgos) ? salida.rasgos : [])) {
+    const nombre = String(r?.nombre ?? '').trim();
+    const origen = String(r?.origen ?? '').trim();
+    if (!nombre) continue;
+    repasados.push({
+      nombre, origen,
+      area: areaDelRasgo(origen, String(r?.area ?? '').trim()),
+      lista: String(r?.lista ?? '').trim() === 'desafios' ? 'desafios' : 'fortalezas',
+    });
+  }
+  return repasados;
+}
+
+// El repaso solo puede mejorar la lista o dejarla como estaba. Si falla, si no
+// cabe en el reloj o si vuelve medio vacio, se sigue con la de antes.
+async function conElRepaso(rasgos, sexo, cartaTexto, reloj) {
+  if (!rasgos.length) return rasgos;
+  const hueco = Math.min(TOPE_DE_REPASO, reloj.quedan() - LO_QUE_VIENE_DETRAS);
+  if (hueco < REPASO_MINIMO) {
+    console.warn('Repaso: no cabe con escribir y las siete areas detras, se sigue sin el');
+    return rasgos;
+  }
+  try {
+    const repasados = await repasarLosRasgos(rasgos, sexo, cartaTexto, reloj, hueco);
+    // Si vuelve con menos de la mitad, algo ha ido mal: no se cambia una lista
+    // buena por una coja.
+    if (repasados.length < Math.ceil(rasgos.length / 2)) {
+      console.warn(`Repaso: volvio con ${repasados.length} de ${rasgos.length}, se queda la lista de antes`);
+      return rasgos;
+    }
+    console.log(`Repaso: ${rasgos.length} rasgos entraron y ${repasados.length} salieron`);
+    return repasados;
+  } catch (err) {
+    console.warn(`Repaso: fallo (${err.message.slice(0, 80)}), se sigue con la lista de antes`);
+    return rasgos;
+  }
+}
+
+// Los pasos, encadenados: se elige una vez, se repasa lo elegido y se escriben
+// las dos listas a la vez.
 async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj, esfuerzo) {
-  const elegidos = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo);
+  const elegidos = await conElRepaso(
+    await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo),
+    sexo, cartaTexto, reloj,
+  );
 
   const [fortalezas, desafios] = await Promise.all([
     escribirLosRasgos('fortalezas', elegidos.filter(r => r.lista === 'fortalezas'), nombrePila, sexo, cartaTexto, reloj),
