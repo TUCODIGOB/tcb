@@ -820,8 +820,9 @@ function areaPorLaPosicion(origen) {
 // Es la misma idea que se probo antes de una tirada, partida donde tocaba.
 // ═════════════════════════════════════════════════════════════════
 
-// Elegir piensa y escribe poco: rara vez pasa del minuto.
-const TOPE_DE_ELEGIR = 100000;
+// Elegir piensa y escribe poco: ronda el minuto largo. Pasados dos minutos no
+// esta pensando, esta colgada.
+const TOPE_DE_ELEGIR = 125000;
 // Escribir no piensa, pero suelta varios miles de palabras.
 const TOPE_DE_ESCRIBIR = 110000;
 
@@ -969,13 +970,19 @@ Un rasgo es su nombre y su posición. Si empiezas uno y no sabes de dónde lo sa
 
 Esto no es un consejo: es la mitad del trabajo, y va con las dos listas escritas delante.
 
-PRIMERO, LOS QUE NACEN DE LO MISMO. Lees los rasgos de las dos listas, todos, y los comparas de dos en dos.
+PRIMERO, PONLE NOMBRE A LA CONDUCTA DE CADA UNO. Uno por uno, y para ti, sin escribirlo en la respuesta: en tres o cuatro palabras, qué está haciendo esa persona en ese rasgo. No de qué habla ni dónde le pasa: qué HACE.
+
+Y ahora mira esa lista de conductas. Las que se repitan te están diciendo que ahí hay un solo rasgo escrito varias veces, aunque cada uno lo cuente en una parcela distinta de su vida y con otras palabras. De cada grupo se queda UNO, el que más pese, y los demás se van. Sin este paso los repetidos no se ven: leídos de uno en uno, todos parecen distintos.
+
+DESPUÉS, LOS QUE NACEN DE LO MISMO. Lees los rasgos de las dos listas, todos, y los comparas de dos en dos.
 
 Y no compares cómo están escritos: compara la conducta que hay debajo. Dos rasgos son el mismo cuando la persona está haciendo lo mismo en los dos, aunque uno hable del trabajo y otro de su casa, aunque estén en áreas distintas y aunque uno esté en fortalezas y el otro en desafíos. La prueba es esta: si al corregir uno el otro se corrige solo, son el mismo. De cada pareja se queda UNO, el que más pese, y el otro se va.
 
 Y así es como se cuela lo repetido: una sola conducta suya se reparte en tres o cuatro rasgos, cada uno contándola en una parcela distinta de su vida. Con nombres distintos parecen cuatro. Son uno. Eso es lo que hay que cazar, y para verlo hay que mirar qué está haciendo ella, no qué palabras se han usado.
 
-Y UN MISMO TERRENO NO SALE EN LAS DOS LISTAS. Si de algo has sacado una fortaleza y también un desafío, no son dos rasgos: es uno con sus dos caras, y quien lo lee ve una contradicción, porque en el informe van en páginas distintas y nada le dice que van juntas. Se queda la cara que más peso tenga hoy en su vida y la otra se va.
+Y UNA MISMA CONDUCTA NO SALE EN LAS DOS LISTAS. Esto se comprueba con la misma lista de conductas de antes: si una aparece en fortalezas y también en desafíos, no son dos rasgos, es uno con sus dos caras.
+
+Y ahí no vale quedarse con las dos. En el informe van en páginas distintas y nada le dice que están hablando de lo mismo, así que lo que lee es que una cosa se le da bien y esa misma cosa le cuesta. Eso la saca del texto. Se queda la cara que más peso tenga hoy en su vida, y la otra se va.
 
 DESPUÉS, EL ÁREA DE CADA UNO, Y AQUÍ NO MANDA LA POSICIÓN.
 
@@ -1008,11 +1015,14 @@ Nombre de pila: ${nombrePila}`;
     // sin esto no puede comparar, y sin comparar salen los repetidos y las
     // etiquetas cambiadas de sitio.
     //
-    // EL ESFUERZO, MEDIO. Estuvo en bajo mientras esta llamada ademas escribia
-    // los treinta y tantos rasgos enteros y se comia el reloj. Ya no escribe:
-    // devuelve una linea por rasgo, asi que le sobra sitio para pensar. Y aqui
-    // es donde se decide todo lo que salia mal -los repetidos y las etiquetas
-    // cambiadas de sitio-, que es justo lo que necesita pensarse.
+    // EL ESFUERZO, ALTO. Estuvo en bajo mientras esta llamada ademas escribia
+    // los treinta y tantos rasgos enteros y se comia el reloj, y en medio
+    // mientras se veia cuanto tardaba. Ya no escribe -devuelve una linea por
+    // rasgo- y tarda poco mas de un minuto, asi que le sobra sitio.
+    //
+    // Y aqui todo es criterio: cual de dos rasgos se queda, si dos nacen de la
+    // misma conducta, en que area va cada uno. Eso es justo lo que mejora
+    // pensando mas, y lo unico que seguia saliendo mal.
     razona: true,
     techo: 8000,
     system: encargo,
@@ -1194,7 +1204,7 @@ async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, es
   };
   if (razona) {
     cuerpo.thinking = { type: 'adaptive' };
-    cuerpo.output_config.effort = 'medium';
+    cuerpo.output_config.effort = 'high';
   } else {
     cuerpo.thinking = { type: 'disabled' };
   }
