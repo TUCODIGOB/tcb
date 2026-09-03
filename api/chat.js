@@ -887,7 +887,7 @@ TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de 
 FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.
 DESAFÍOS: lo que le cuesta, lo que le pesa, dónde tropieza.
 
-Las dos se deciden a la vez y con las dos delante. Eso es lo importante: puedes ver si algo que has puesto en una ya está dicho, del revés, en la otra. Un "sabes mirarte de frente" en fortalezas y un "evitas mirar lo que no te gusta" en desafíos son el mismo rasgo contado dos veces, y solo se ve teniéndolas juntas.
+Las dos se deciden a la vez y con las dos delante. Eso es lo importante: un rasgo puesto en una lista puede estar ya dicho, del revés, en la otra. Lo que se le da bien y lo que le cuesta son muchas veces la misma conducta suya mirada por sus dos caras, y eso solo se ve teniendo las dos listas delante a la vez.
 
 
 2. CUÁNTOS
