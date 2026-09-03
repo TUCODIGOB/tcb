@@ -945,7 +945,7 @@ export default async function handler(req, res) {
         // 3. Y debajo, de que area es
         if (r.area) {
           ry += 1;
-          doc.setFont('Roboto','bold'); doc.setFontSize(12); doc.setTextColor(189,144,72);
+          doc.setFont('Roboto','bold'); doc.setFontSize(12); doc.setTextColor(207,177,128);
           doc.text(fx(r.area), 18, ry);
           ry += ALTO_DEL_AREA - 1;
         }
