@@ -72,13 +72,13 @@ Lo que sí se dice es cómo funciona: lo que hace siempre que le pasa eso. Eso e
 
 NO SE LE INVENTA NADA DE SU VIDA
 
-Ni su infancia, ni sus padres, ni una pareja, ni hijos, ni un trabajo, ni de dónde le viene el dinero, ni un episodio que le pasó. Si no está escrito en lo que te paso, no existe.
+Ni su infancia, ni sus padres, ni una pareja, ni hijos, ni un trabajo, ni de dónde le viene el dinero, ni un episodio que le pasó. Si no está escrito en lo que tienes abajo, no existe.
 
-Si nombras a alguien de su alrededor, esa persona tiene que estar en lo que te paso; y no le pongas sexo, ni parentesco, ni nombre que no le hayan puesto.
+Si nombras a alguien de su alrededor, esa persona tiene que estar en lo que tienes abajo; y no le pongas sexo, ni parentesco, ni nombre que no le hayan puesto.
 
 Y no lo arregles con un momento de los que le pasan a cualquiera: eso también es ponerle una vida que no sabes si tiene.
 
-Y nada de lo que escribas puede contradecir lo que te paso: si ahí pone que se le da bien algo, no vale decirle que le cuesta.
+Y nada de lo que escribas puede contradecir lo que tienes abajo: si ahí pone que se le da bien algo, no vale decirle que le cuesta.
 
 
 CÓMO SE HABLA
@@ -172,6 +172,17 @@ const BLOQUES = {
   freno:        'Lo que va a aparecer para frenarte',
   senal:        'En qué lo vas a notar',
 };
+
+// A QUIEN SE LE ESCRIBE. El informe del P1 guarda si quien compro es mujer u
+// hombre, y hay que decirselo: los textos van en femenino o en masculino y sin
+// esto el modelo lo adivina. La herramienta no tiene sexo; quien lee, si.
+function comoSeLeHabla(sexo) {
+  return sexo === 'mujer'
+    ? 'una MUJER. Todo en femenino.'
+    : sexo === 'hombre'
+      ? 'un HOMBRE. Todo en masculino.'
+      : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el género en los adjetivos.';
+}
 
 // Cuantos movimientos lleva cada parte. Dos o tres: uno se queda corto para
 // una parte entera, y con cuatro ya no se acuerda de ninguno.
@@ -443,12 +454,12 @@ const MOLDE_DEL_PLAN = {
   additionalProperties: false,
 };
 
-async function decidirElPlan({ nombre, rasgos }) {
+async function decidirElPlan({ nombre, sexo, rasgos }) {
   const encargo = `Estás preparando el plan de una persona: lo que tiene que hacer para llegar a ser quien quiere ser.
 
-Abajo tienes lo que ya se sabe de ella, sacado de su carta natal y repartido en las siete partes de su vida. Ya se lo han contado todo eso en otro documento que se ha leído entero.
+Abajo tienes lo que ya se sabe de esa persona, sacado de su carta natal y repartido en las siete partes de su vida. Ya se lo han contado todo eso en otro documento que se ha leído entero.
 
-AQUÍ NO SE ESCRIBE EL DOCUMENTO. Aquí se DECIDE. Todo sale en corto, en una línea cada cosa, y lo que ella va a leer lo escribe otro después. Por eso puedes dedicarle el rato a lo que de verdad importa: decidir qué le va a mover la vida y qué no.
+AQUÍ NO SE ESCRIBE EL DOCUMENTO. Aquí se DECIDE. Todo sale en corto, en una línea cada cosa, y lo que se va a leer lo escribe otro después. Por eso puedes dedicarle el rato a lo que de verdad importa: decidir qué le va a mover la vida y qué no.
 
 Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene: eso ya lo tiene. Lo suyo solo aparece para enganchar lo que tiene que hacer.
 
@@ -462,19 +473,19 @@ Decides las siete de una vez y con las siete delante. Eso es lo importante, y es
 
 De cada una de las siete sacas cinco cosas, y ninguna se queda vacía:
 
-nuevaVersion   Cómo es ella en esa parcela de su vida cuando ya no repite lo
-               que le pesa. En presente y en positivo, contando lo que HACE
-               esa versión suya, no lo que ha dejado de hacer. Una frase.
+nuevaVersion   Cómo es en esa parcela de su vida cuando ya no repite lo que
+               le pesa. En presente y en positivo, contando lo que HACE esa
+               versión suya, no lo que ha dejado de hacer. Una frase.
 
 cambio         Qué deja de hacer y qué hace en su lugar. Las dos mitades en
                una frase, y las dos concretas.
 
 movimientos    De ${MOVIMIENTOS.min} a ${MOVIMIENTOS.max}, y son lo más importante de todo el
                documento. Cada uno tiene dos mitades:
-               "cuando"  la señal que ella misma va a notar por dentro, o algo
-                         que se pilla haciendo. Es el disparador, y tiene que
-                         ser algo que pueda reconocer en el momento en que
-                         pasa, no una situación general.
+               "cuando"  la señal que va a notar por dentro, o algo que se
+                         pilla haciendo. Es el disparador, y tiene que ser
+                         algo que pueda reconocer en el momento en que pasa,
+                         no una situación general.
                "haces"   lo que hace justo ahí, en ese momento. Concreto hasta
                          el punto de que se pueda hacer el martes sin
                          preguntarle nada a nadie.
@@ -498,7 +509,7 @@ Por eso los movimientos arrancan por algo suyo -lo que nota, lo que se dice, lo 
 
 Nada de consejos que le valgan igual a cualquiera. Si lo que has escrito se le podría mandar a otra persona distinta, está mal y se cambia.
 
-Y nada técnico: ni planetas, ni signos, ni casas. Ella no ve la carta.
+Y nada técnico: ni planetas, ni signos, ni casas. Quien lo lee no ve la carta.
 
 
 4. POR DÓNDE EMPIEZA
@@ -533,10 +544,11 @@ Y POR ÚLTIMO: que ninguna de las cinco casillas de ninguna parte se haya quedad
 Devuelve solo lo decidido. No expliques lo que has quitado.
 
 
-LO QUE SE SABE DE ELLA:
+LO QUE SE SABE DE ESA PERSONA:
 
 ${susRasgos(rasgos)}
 
+Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}`;
 
   const salida = await alModelo({
@@ -624,7 +636,7 @@ const MOLDE_DE_LA_PARTE = {
   additionalProperties: false,
 };
 
-async function escribirLaParte({ area, nombre, decidido }) {
+async function escribirLaParte({ area, nombre, sexo, decidido }) {
   const encargo = `${EL_P2_NO_ES_EL_P1}
 
 ${REGLAS_COMUNES}
@@ -634,12 +646,12 @@ LO QUE TE TOCA AHORA
 
 Escribes UNA parte del documento: la de ${area.titulo.toLowerCase()}.
 
-Lo que va en ella ya está decidido y te lo doy abajo en corto. Tú no eliges nada, no añades cosas que hacer, no quitas ninguna y no cambias por cuál se empieza. Lo que haces es convertir cada línea en lo que ella va a leer.
+Lo que va en esa parte ya está decidido y te lo doy abajo en corto. Tú no eliges nada, no añades cosas que hacer y no quitas ninguna. Lo que haces es convertir cada línea en lo que se va a leer.
 
 Van cinco cosas, en este orden, y cada una con su trabajo:
 
 "${BLOQUES.nuevaVersion}"
-Cómo es ella aquí cuando ya no repite lo que le pesa. Se lo cuentas en presente, como algo que hace, no como algo que va a conseguir algún día. Dos o tres frases.
+Cómo es aquí cuando ya no repite lo que le pesa. Se lo cuentas en presente, como algo que hace, no como algo que va a conseguir algún día. Dos o tres frases.
 
 "${BLOQUES.cambio}"
 Qué deja de hacer y qué hace en su lugar. Sin rodeos y sin suavizarlo. Dos o tres frases.
@@ -666,17 +678,18 @@ Y NO PONGAS TÍTULOS NI NÚMEROS dentro del texto: los pone el programa.
 
 LO QUE SE HA DECIDIDO PARA ESTA PARTE:
 
-Así es ella aquí: ${decidido.nuevaVersion}
+Así es aquí: ${decidido.nuevaVersion}
 
 Lo que cambia: ${decidido.cambio}
 
 Los movimientos:
 ${decidido.movimientos.map((m, i) => `${i + 1}. Cuando: ${m.cuando}\n   Hace: ${m.haces}`).join('\n')}
 
-Lo que va a frenarla: ${decidido.freno}
+Lo que va a frenar: ${decidido.freno}
 
-En qué lo notará: ${decidido.senal}
+En qué lo va a notar: ${decidido.senal}
 
+Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}`;
 
   const salida = await alModelo({
@@ -736,7 +749,7 @@ const MOLDE_DEL_MARCO = {
 
 const tituloDe = id => (AREAS.find(a => a.id === id) || {}).titulo || id;
 
-async function escribirElMarco({ nombre, plan }) {
+async function escribirElMarco({ nombre, sexo, plan }) {
   const encargo = `${EL_P2_NO_ES_EL_P1}
 
 ${REGLAS_COMUNES}
@@ -759,7 +772,7 @@ Las otras seis, en el orden en que le conviene ir. De cada una:
 NADA DE FECHAS NI DE SEMANAS. No sabemos cómo es su vida. Se salta por lo que le está pasando, no por el calendario.
 
 "recaida"
-Qué hace el día que lo deje o vuelva a lo de antes. Y que eso iba a pasar, que estaba contado y que no significa que no sirva. No la animes: dile el paso concreto para volver. Cuatro o cinco frases.
+Qué hace el día que lo deje o vuelva a lo de antes. Y que eso iba a pasar, que estaba contado y que no significa que no sirva. Nada de animar: el paso concreto para volver. Cuatro o cinco frases.
 
 
 LO QUE SE HA DECIDIDO:
@@ -772,6 +785,7 @@ ${plan.orden.map((o, i) => `${i + 1}. ${tituloDe(o.area)} — se salta a ella cu
 
 El día que falle: ${plan.recaida}
 
+Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}`;
 
   const salida = await alModelo({
@@ -840,32 +854,42 @@ export default async function handler(req, res) {
       }
       const plan = await decidirElPlan({
         nombre: informe?.cliente?.nombre || 'esta persona',
+        sexo: informe?.cliente?.sexo || '',
         rasgos: informe.rasgos,
       });
       if (!plan.partes.length) {
         return res.status(422).json({ error: 'El plan ha venido vacío' });
       }
-      return res.status(200).json({ plan });
+      // El nombre y el sexo viajan con el plan: los pasos siguientes escriben
+      // con ellos y asi no hay que volver a abrir el informe en cada uno.
+      return res.status(200).json({
+        plan,
+        quien: {
+          nombre: informe?.cliente?.nombre || 'esta persona',
+          sexo: informe?.cliente?.sexo || '',
+        },
+      });
     }
 
     if (accion === 'parte') {
-      const { nombre, decidido } = req.body || {};
+      const { nombre, sexo, decidido } = req.body || {};
       const area = AREAS.find(a => a.id === String(decidido?.area || ''));
       if (!area) return res.status(400).json({ error: 'Esa parte no existe' });
       const parte = await escribirLaParte({
         area,
         nombre: String(nombre || 'esta persona'),
+        sexo: String(sexo || ''),
         decidido,
       });
       return res.status(200).json({ parte });
     }
 
     if (accion === 'marco') {
-      const { nombre, plan } = req.body || {};
+      const { nombre, sexo, plan } = req.body || {};
       if (!plan?.empiezaPor?.area) {
         return res.status(400).json({ error: 'El marco se escribe con el plan, y no ha llegado' });
       }
-      const marco = await escribirElMarco({ nombre: String(nombre || 'esta persona'), plan });
+      const marco = await escribirElMarco({ nombre: String(nombre || 'esta persona'), sexo: String(sexo || ''), plan });
       return res.status(200).json({ marco });
     }
 
@@ -976,7 +1000,7 @@ ir.addEventListener('click', async () => {
   salida.innerHTML = '';
   aviso.className = 'aviso';
   const compra = quien.value;
-  const nombre = (quien.options[quien.selectedIndex].textContent.split(' — ')[0] || '').trim();
+  let quienEs = { nombre:'esta persona', sexo:'' };
 
   // 1. La llamada que piensa y decide el documento entero.
   let plan;
@@ -984,6 +1008,7 @@ ir.addEventListener('click', async () => {
   try {
     const r = await llamar({ accion:'plan', compra });
     plan = r.plan;
+    if (r.quien) quienEs = r.quien;
   } catch (e) {
     aviso.className = 'aviso error';
     aviso.textContent = 'No se ha podido decidir el plan: ' + e.message;
@@ -995,7 +1020,7 @@ ir.addEventListener('click', async () => {
   aviso.textContent = 'Escribiendo por dónde empieza…';
   let marco = null;
   try {
-    const r = await llamar({ accion:'marco', nombre, plan });
+    const r = await llamar({ accion:'marco', nombre:quienEs.nombre, sexo:quienEs.sexo, plan });
     marco = r.marco;
     salida.insertAdjacentHTML('beforeend', pintarArranque(marco));
   } catch (e) {
@@ -1007,7 +1032,7 @@ ir.addEventListener('click', async () => {
   for (let i = 0; i < plan.partes.length; i++) {
     aviso.textContent = 'Escribiendo la parte ' + (i+1) + ' de ' + plan.partes.length + '…';
     try {
-      const { parte } = await llamar({ accion:'parte', nombre, decidido: plan.partes[i] });
+      const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo, decidido: plan.partes[i] });
       salida.insertAdjacentHTML('beforeend', pintarParte(parte, i+1));
     } catch (e) {
       salida.insertAdjacentHTML('beforeend',
