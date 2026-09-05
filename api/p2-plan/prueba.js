@@ -93,6 +93,8 @@ Se lee de noche, con el día encima, muchas veces en el móvil. Si hay que relee
 - LAS PALABRAS SON LAS DE TODOS LOS DÍAS. Si una palabra la verías antes escrita en un informe que dicha en una conversación, fuera.
 - NO LE EXPLIQUES UNA IDEA, CUÉNTALE LO QUE LE PASA. En cuanto empiezas a explicar algo en general, deja de leerte. Cada frase va pegada a algo que hace, dice o le pasa.
 - NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Si lo que escribes no se puede ver ocurriendo de verdad, está mal escrito.
+- NO SE HABLA DEL DOCUMENTO, SE HABLA DE SU VIDA. Ni áreas, ni partes, ni capítulos, ni apartados, ni "lo que viene después", ni "las otras seis". Quien lee no ve el andamio, ve su vida. En cuanto le nombras un trozo del documento, deja de entender de qué le hablas.
+- Y NO SE LE NOMBRA UN TÍTULO COMO SI FUERA UNA COSA QUE HACER. Los títulos son etiquetas para encontrar las cosas, no acciones. Lo que hace se dice con un verbo y con lo que hace.
 - LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice por dentro, con sus palabras y en primera persona. Es lo que hace que se reconozca.
 - LE PREGUNTAS. De vez en cuando le haces una pregunta directa y la dejas ahí, sin contestársela tú. Le da aire y la mete dentro.
 - LE DAS LA RAZÓN ANTES DE CORREGIRLA. Nunca de frente.
@@ -168,12 +170,14 @@ const AREAS = [
 
 // Las cinco cosas que lleva cada parte, con el nombre que ve la clienta. Se
 // escriben aqui por lo mismo que los titulos.
+// Eran cinco y sobraba uno: "Asi eres aqui" y "Lo que cambia" contaban lo
+// mismo, los dos en abstracto, asi que cada parte abria con dos parrafos que
+// no decian nada y quien leia no sabia de que le estaban hablando.
 const BLOQUES = {
-  nuevaVersion: 'Así eres aquí',
-  cambio:       'Lo que cambia',
-  movimientos:  'Qué haces',
-  freno:        'Lo que va a aparecer para frenarte',
-  senal:        'En qué lo vas a notar',
+  cambio:      'Lo que cambia',
+  movimientos: 'Qué haces',
+  freno:       'Lo que va a aparecer para frenarte',
+  senal:       'En qué lo vas a notar',
 };
 
 // A QUIEN SE LE ESCRIBE. El informe del P1 guarda si quien compro es mujer u
@@ -408,9 +412,8 @@ const MOLDE_DEL_PLAN = {
       items: {
         type: 'object',
         properties: {
-          area:         { type: 'string', enum: AREAS.map(a => a.id) },
-          nuevaVersion: { type: 'string' },
-          cambio:       { type: 'string' },
+          area:   { type: 'string', enum: AREAS.map(a => a.id) },
+          cambio: { type: 'string' },
           movimientos: {
             type: 'array',
             items: {
@@ -426,7 +429,7 @@ const MOLDE_DEL_PLAN = {
           freno: { type: 'string' },
           senal: { type: 'string' },
         },
-        required: ['area', 'nuevaVersion', 'cambio', 'movimientos', 'freno', 'senal'],
+        required: ['area', 'cambio', 'movimientos', 'freno', 'senal'],
         additionalProperties: false,
       },
     },
@@ -474,14 +477,12 @@ Decides las siete de una vez y con las siete delante. Eso es lo importante, y es
 
 2. QUÉ DECIDES DE CADA PARTE
 
-De cada una de las siete sacas cinco cosas, y ninguna se queda vacía:
+De cada una de las siete sacas cuatro cosas, y ninguna se queda vacía:
 
-nuevaVersion   Cómo es en esa parcela de su vida cuando ya no repite lo que
-               le pesa. En presente y en positivo, contando lo que HACE esa
-               versión suya, no lo que ha dejado de hacer. Una frase.
-
-cambio         Qué deja de hacer y qué hace en su lugar. Las dos mitades en
-               una frase, y las dos concretas.
+cambio         Qué deja de hacer y qué hace en su lugar, las dos mitades en
+               una frase. Y las dos con nombre de conducta, no de idea: algo
+               que se pueda ver haciendo o dejando de hacer. Si lo que escribes
+               no se puede ver ocurriendo, está mal y se cambia.
 
 movimientos    De ${MOVIMIENTOS.min} a ${MOVIMIENTOS.max}, y son lo más importante de todo el
                documento. Cada uno tiene dos mitades:
@@ -573,7 +574,6 @@ Nombre de pila: ${nombre}`;
     if (!id || porArea.has(id)) continue;
     porArea.set(id, {
       area: id,
-      nuevaVersion: String(p.nuevaVersion || '').trim(),
       cambio: String(p.cambio || '').trim(),
       movimientos: (Array.isArray(p.movimientos) ? p.movimientos : [])
         .map(m => ({ cuando: String(m?.cuando || '').trim(), haces: String(m?.haces || '').trim() }))
@@ -590,8 +590,7 @@ Nombre de pila: ${nombre}`;
   // rellena por su cuenta, y entonces se inventa algo de su vida que no sale
   // de su carta. Vale mas entregar seis partes buenas que siete con una
   // inventada dentro.
-  const entera = p => p.nuevaVersion && p.cambio && p.freno && p.senal
-    && p.movimientos.length >= 1;
+  const entera = p => p.cambio && p.freno && p.senal && p.movimientos.length >= 1;
 
   const partes = AREAS.map(a => porArea.get(a.id)).filter(p => p && entera(p));
   const cojas = AREAS.map(a => porArea.get(a.id)).filter(p => p && !entera(p)).map(p => p.area);
@@ -729,8 +728,7 @@ const TECHO_DE_ESCRIBIR = 5000;
 const MOLDE_DE_LA_PARTE = {
   type: 'object',
   properties: {
-    nuevaVersion: { type: 'string' },
-    cambio:       { type: 'string' },
+    cambio: { type: 'string' },
     movimientos: {
       type: 'array',
       items: {
@@ -746,7 +744,7 @@ const MOLDE_DE_LA_PARTE = {
     freno: { type: 'string' },
     senal: { type: 'string' },
   },
-  required: ['nuevaVersion', 'cambio', 'movimientos', 'freno', 'senal'],
+  required: ['cambio', 'movimientos', 'freno', 'senal'],
   additionalProperties: false,
 };
 
@@ -762,14 +760,13 @@ Escribes UNA parte del documento: la de ${area.titulo.toLowerCase()}.
 
 Lo que va en esa parte ya está decidido y te lo doy abajo en corto. Tú no eliges nada, no añades cosas que hacer y no quitas ninguna. Lo que haces es convertir cada línea en lo que se va a leer.
 
-Van cinco casillas, y NINGUNA SE PUEDE QUEDAR VACIA. En cada una va texto escrito para quien lo lee, nunca un título ni el nombre de la casilla: los títulos los pone el programa y si los escribes tú salen dos veces.
+Van cuatro casillas, y NINGUNA SE PUEDE QUEDAR VACIA. En cada una va texto escrito para quien lo lee, nunca un título ni el nombre de la casilla: los títulos los pone el programa y si los escribes tú salen dos veces.
 
-nuevaVersion   Cómo es aquí cuando ya no repite lo que le pesa. Se lo cuentas
-               en presente, como algo que hace, no como algo que va a
-               conseguir algún día. Dos o tres frases enteras.
-
-cambio         Qué deja de hacer y qué hace en su lugar. Sin rodeos y sin
-               suavizarlo. Dos o tres frases enteras.
+cambio         Qué hacía hasta ahora en esa parcela de su vida y qué va a hacer
+               en su lugar. Las dos cosas contadas como conductas que se pueden
+               ver, no como ideas. Se entra directamente por lo que hace, sin
+               presentar nada y sin anunciar de qué se va a hablar. Dos o tres
+               frases enteras.
 
 movimientos    Los movimientos, uno por uno. De cada uno:
                titulo   Cuatro o cinco palabras que digan qué hace. Le hablas
@@ -794,8 +791,6 @@ Y NO PONGAS TÍTULOS NI NÚMEROS dentro del texto: los pone el programa.
 
 LO QUE SE HA DECIDIDO PARA ESTA PARTE:
 
-Así es aquí: ${decidido.nuevaVersion}
-
 Lo que cambia: ${decidido.cambio}
 
 Los movimientos:
@@ -812,8 +807,7 @@ Nombre de pila: ${nombre}`;
     que: `la parte de ${area.id}`,
     // Ademas de la carta, aqui se mira que las cinco casillas traigan texto:
     // el mismo reintento sirve para las dos cosas.
-    cojo: p => estaVacia(p.nuevaVersion, BLOQUES.nuevaVersion)
-            || estaVacia(p.cambio, BLOQUES.cambio)
+    cojo: p => estaVacia(p.cambio, BLOQUES.cambio)
             || estaVacia(p.freno, BLOQUES.freno)
             || estaVacia(p.senal, BLOQUES.senal)
             || !(p.movimientos || []).length
@@ -825,18 +819,17 @@ Nombre de pila: ${nombre}`;
       piensa: '',
       techo: TECHO_DE_ESCRIBIR,
       system: encargo,
-      mensaje: `Escribe esta parte entera, con sus cinco cosas y ${decidido.movimientos.length === 1 ? 'su movimiento' : `sus ${decidido.movimientos.length} movimientos`}.${recordatorio}`,
+      mensaje: `Escribe esta parte entera, con sus cuatro casillas y ${decidido.movimientos.length === 1 ? 'su movimiento' : `sus ${decidido.movimientos.length} movimientos`}.${recordatorio}`,
       molde: MOLDE_DE_LA_PARTE,
       espera: AbortSignal.timeout(ESPERA_DE_ESCRIBIR_MS),
     }),
-    texto: p => [p.nuevaVersion, p.cambio, p.freno, p.senal]
+    texto: p => [p.cambio, p.freno, p.senal]
       .concat((p.movimientos || []).flatMap(m => [m.titulo, m.texto])).join(' '),
   });
 
   return {
     id: area.id,
     titulo: area.titulo,
-    nuevaVersion: String(salida.nuevaVersion || '').trim(),
     cambio: String(salida.cambio || '').trim(),
     movimientos: (Array.isArray(salida.movimientos) ? salida.movimientos : [])
       .map(m => ({ titulo: String(m?.titulo || '').trim(), texto: String(m?.texto || '').trim() }))
@@ -899,7 +892,11 @@ El documento ya está escrito: son siete partes, una por cada parcela de su vida
 Escribes tres cosas:
 
 "empiezaPor"
-Va lo primero de todo, antes de las siete partes. Le dices por cuál empieza y por qué esa mueve a las demás. Y le quitas el agobio: no tiene que hacer las siete, tiene que empezar por una. Tres o cuatro frases.
+Va lo primero de todo. Le dices POR QUÉ CONDUCTA SUYA empieza -la de abajo, dicha con lo que hace, no con el título que lleva- y por qué mover esa arrastra lo demás.
+
+Se entra directamente por lo que hace. Nada de presentar el documento, nada de "esto empieza por", nada de nombrarle títulos ni trozos. Y se le quita el agobio sin nombrar cuántas cosas hay: lo que tiene que hacer ahora es una, y lo demás puede esperar.
+
+Tres o cuatro frases.
 
 "orden"
 Las otras seis, en el orden en que le conviene ir. De cada una:
@@ -919,8 +916,8 @@ Qué hace el día que lo deje o vuelva a lo de antes. Y que eso iba a pasar, que
 
 LO QUE SE HA DECIDIDO:
 
-Empieza por: ${tituloDe(plan.empiezaPor.area)}
-Porque: ${plan.empiezaPor.porque}
+La conducta por la que empieza: ${(plan.partes.find(p => p.area === plan.empiezaPor.area) || {}).cambio || ''}
+Y empieza por ahí porque: ${plan.empiezaPor.porque}
 
 Después, en este orden:
 ${plan.orden.map((o, i) => `${i + 1}. ${tituloDe(o.area)} — se salta a ella cuando: ${o.saltas}`).join('\n')}
@@ -1053,7 +1050,7 @@ export default async function handler(req, res) {
       // si viniera a medias, el hueco lo rellenaria el modelo por su cuenta y
       // acabaria inventandose algo de su vida.
       if (!Array.isArray(decidido.movimientos) || !decidido.movimientos.length
-          || !decidido.nuevaVersion || !decidido.cambio || !decidido.freno || !decidido.senal) {
+          || !decidido.cambio || !decidido.freno || !decidido.senal) {
         return res.status(400).json({ error: 'Esa parte llega a medias y no se escribe' });
       }
       const parte = await escribirLaParte({
@@ -1274,7 +1271,6 @@ function pintarParte(p, n) {
     '<div class="bloque"><h3>' + escapar(titulo) + '</h3>' + cuerpo + '</div>';
   return '<div class="parte"><p class="cual">' + n + ' · ' + escapar(NOMBRES[p.id] || '') + '</p>' +
     '<h2>' + escapar(p.titulo) + '</h2>' +
-    bloque(BLOQUES.nuevaVersion, parrafos(p.nuevaVersion)) +
     bloque(BLOQUES.cambio, parrafos(p.cambio)) +
     bloque(BLOQUES.movimientos, movs) +
     bloque(BLOQUES.freno, parrafos(p.freno)) +
