@@ -579,6 +579,8 @@ Eliges UNA de las siete. La que, si se mueve, arrastra a las demás: normalmente
 
 Y dices por qué esa, en una frase, mirando lo suyo. No vale un porqué general que le sirva a cualquiera: tiene que salir de lo que le pasa a esta persona.
 
+Y OJO CON LOS MOVIMIENTOS DE ESA: de ellos sale lo primero que va a hacer, así que tienen que ser los más concretos de las siete, y de los que se pueden empezar mañana sin que le haga falta nada ni nadie.
+
 
 6. EL ORDEN
 
@@ -729,7 +731,7 @@ const PALABRAS_DE_ASTROLOGIA = [
   // el encargo le cuenta que ya se leyo un estudio suyo, asi que la tentacion
   // de escribir "en tu estudio te contaron" la tiene delante. Quien lee no
   // sabe que es eso ni tiene que saberlo.
-  /\b(tu|su) (informe|estudio|lectura|analisis)\b/,
+  /\b(tu|su) (informe|estudio)\b/,
   /\b(el|ese|aquel) (informe|estudio) (que|suyo|anterior|tuyo)\b/,
   /\b(primer|otro) (informe|estudio|documento)\b/,
 ];
@@ -1043,7 +1045,7 @@ LO PRIMERO QUE HACE, EN TRES PIEZAS QUE SE LEEN SEGUIDAS. Aquí es donde este do
 Con cuál de esos movimientos empieza, y por qué ese antes que los otros. Lo nombras por lo que hace, nunca por su título. Dos o tres frases.
 
 "comoEmpiezas"
-Cómo lo hace las primeras veces, cuando todavía no le sale solo. Tan concreto que lo pueda hacer mañana sin preguntarle a nadie: en qué momento, qué hace exactamente y qué hace con lo que sienta al hacerlo. Y qué hace el día que se le pase. Cuatro o cinco frases, y aquí no se ahorra ni una.
+Cómo lo hace las primeras veces, cuando todavía no le sale solo. Tan concreto que lo pueda hacer mañana sin preguntarle a nadie: en qué momento lo hace, y ese momento se dice por lo que va a notar y nunca por una hora ni un día, qué hace exactamente ahí, y qué hace con lo que sienta al hacerlo. Y qué hace el día que se le pase. Cuatro o cinco frases, y aquí no se ahorra ni una.
 
 "cuandoSumas"
 Cuándo añade el siguiente movimiento: qué tiene que estar pasando ya para que toque, y no cuántos días. Y en qué mira para saber que va bien, que tiene que ser algo que pueda ver ocurriendo y que llegue pronto: de lo que se nota a las pocas veces de hacerlo, no de lo que se ve al cabo de mucho tiempo. Tres o cuatro frases.

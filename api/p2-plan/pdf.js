@@ -3,8 +3,8 @@
 //
 // EL PDF DEL P2.
 //
-// Recibe el documento ya escrito -el principio, las siete partes y el final- y
-// lo monta en un PDF con la marca. No le pide nada al modelo, no lee el
+// Recibe el documento ya escrito -el principio, las siete partes, lo primero
+// que hace y el final- y lo monta en un PDF con la marca. No le pide nada al modelo, no lee el
 // informe del P1 y no cobra: solo maqueta lo que le llega.
 //
 // LAS MEDIDAS SON LAS DEL P1, a proposito. Los dos documentos se leen seguidos
@@ -14,7 +14,8 @@
 // lisa, porque el P2 no tiene una ilustracion por parte.
 //
 // CADA SECCION EMPIEZA EN HOJA NUEVA: el principio, cada una de las siete
-// partes, el orden y el dia que lo deje. Ninguna se pega a la anterior.
+// partes, lo primero que hace, el orden y el dia que lo deje. Ninguna se pega
+// a la anterior.
 // ════════════════════════════════════════════════════════════════
 
 import { createRequire } from 'module';
