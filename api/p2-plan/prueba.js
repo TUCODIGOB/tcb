@@ -859,8 +859,20 @@ const MARCAS_DE_QUE_HACER = [
 
 const MARCAS_MINIMAS = 3;
 
+// LO QUE ELLA SE DICE POR DENTRO NO CUENTA COMO DIAGNOSTICO.
+//
+// Las reglas piden que se le pongan sus frases entrecomilladas, y dentro de
+// una de esas cabe perfectamente "lo que me pasa es que estoy cansada" o "por
+// eso soy asi". Eso no es el documento explicandole de donde le viene: es ella
+// diciendoselo, que es justo lo que hay que escribir. Asi que lo que va entre
+// comillas se quita antes de mirar.
+// Las comillas se escriben de muchas maneras y hay que cogerlas todas: las
+// angulares, las tipograficas de abrir y de cerrar, y las rectas.
+const sinLoEntrecomillado = txt =>
+  String(txt || '').replace(/[\u00ab\u201c\u2018"']([^\u00ab\u00bb\u201c\u201d\u2018\u2019"']{0,300})[\u00bb\u201d\u2019"']/g, ' ');
+
 function cuentaComoEs(texto, frasesQuePerdona = 3) {
-  const frases = String(texto || '').split(/(?<=[.!?])\s+/);
+  const frases = sinLoEntrecomillado(texto).split(/(?<=[.!?])\s+/);
   const resto = sinTildes(frases.slice(frasesQuePerdona).join(' '));
   if (!resto.trim()) return false;
   if (PALABRAS_DE_DIAGNOSTICO.some(re => re.test(resto))) return true;
@@ -1015,11 +1027,13 @@ ARRANCAS POR LO QUE HACE HOY, Y EN DOS O TRES FRASES. Las justas para que sepa q
 
 Y ENSEGUIDA, QUÉ CAMBIA. Qué deja de hacer y qué hace en su lugar, en claro y sin suavizarlo.
 
-Y DE AHÍ HASTA EL FINAL, TODO ES CÓMO SE HACE. Esto es lo que ocupa la mayor parte de lo que escribas, y es por lo que ha pagado. Cómo lo hace las primeras veces, cuando todavía no le sale solo. Qué hace con lo que sienta mientras lo hace. Qué se va a encontrar por el camino, y cómo lo sostiene cuando ya no sea nuevo y deje de apetecerle. Se cuenta hacia delante, como quien le explica algo a alguien que lo va a hacer mañana, no como quien le explica cómo es.
+Y DE AHÍ HASTA EL FINAL, TODO ES CÓMO SE HACE. Esto es lo que ocupa la mayor parte de lo que escribas, y es por lo que ha pagado. Cómo lo hace las primeras veces, cuando todavía no le sale solo. Por dónde empieza si le cuesta demasiado, y qué es lo mínimo que ya cuenta. Y cómo lo sostiene cuando deje de ser nuevo y deje de apetecerle. Se cuenta hacia delante, como quien le explica algo a alguien que lo va a hacer mañana, no como quien le explica cómo es.
 
 Y ESTA ES LA PRUEBA DE QUE ESTÁ BIEN ESCRITO: tapa las tres primeras frases y lee lo que queda. Si lo que queda le sirve para hacer algo, está bien. Si lo que queda vuelve a ser cómo es, está mal y se reescribe entero.
 
-LO QUE VA A FRENARLE Y EN QUÉ LO VA A NOTAR TAMBIÉN VAN APARTE, cada uno en el suyo, y NO se cuentan dentro del texto seguido. Si lo cuentas ahí y luego otra vez debajo, sobra una de las dos.
+LO QUE VA A FRENARLE Y EN QUÉ LO VA A NOTAR TAMBIÉN VAN APARTE, cada uno en el suyo, y NO se cuentan dentro del texto seguido.
+
+Y AQUÍ ESTÁ LA RAYA, que es lo que más se cruza: en el texto seguido no aparece lo que va a sentir, ni lo que se va a decir por dentro para librarse, ni lo que se va a encontrar que le eche para atrás. Todo eso es del freno y va abajo. El texto seguido cuenta cómo se hace, y nada más. Si lo cuentas en los dos sitios, sobra uno de los dos y se nota.
 
 "freno"
 Lo que va a aparecer para que no lo haga: lo que va a sentir, o lo que se va a decir por dentro para librarse, dicho con sus palabras. Se lo avisas antes de que le pase, y le dices que eso es señal de que va bien y no de que se esté equivocando, y qué hace cuando llegue. Cuatro o cinco frases.
@@ -1029,7 +1043,7 @@ En qué va a notar que está funcionando. Algo que va a ver ocurriendo en su vid
 
 LOS MOVIMIENTOS SON EL PASO A PASO, Y VAN APARTE. En el texto seguido no repites lo que ellos ya dicen: ahí no se cuenta el momento ni el paso, que van debajo y en su sitio.
 
-Lo que cuenta el texto es lo otro, lo que ningún paso explica: cómo se hace eso cuando no le sale, qué hace con lo que sienta al hacerlo, qué se va a encontrar y cómo lo sostiene cuando deje de ser nuevo. Si algo de lo que has escrito en el texto se pudiera meter dentro de un movimiento, es que va en el movimiento y no ahí.
+Lo que cuenta el texto es lo otro, lo que ningún paso explica: cómo se hace eso cuando no le sale, por dónde empieza si le cuesta, qué es lo mínimo que ya cuenta y cómo lo sostiene cuando deje de ser nuevo. Si algo de lo que has escrito en el texto se pudiera meter dentro de un movimiento, es que va en el movimiento y no ahí.
 
 "movimientos"
 Los que te doy abajo, uno por uno, ni uno más ni uno menos. De cada uno:
