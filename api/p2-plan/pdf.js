@@ -272,6 +272,10 @@ export default async function handler(req, res) {
         subtitulo(parte?.nombres?.freno || 'Lo que te va a frenar');
         corrido(parte.freno);
       }
+      if (t(parte?.evita)) {
+        subtitulo(parte?.nombres?.evita || 'Lo que no hagas');
+        corrido(parte.evita);
+      }
       if (t(parte?.senal)) {
         subtitulo(parte?.nombres?.senal || 'En qué lo vas a notar');
         corrido(parte.senal);
