@@ -959,6 +959,34 @@ const LARGO_MINIMO = 60;
 const comoSeCompara = txt =>
   sinTildes(txt).replace(/[^a-z0-9ñ ]/g, ' ').replace(/\s+/g, ' ').trim();
 
+// ── Y QUE NINGUNO SE QUEDE A MEDIA FRASE ────────────────────
+//
+// En un plan de verdad una parte llego terminada en "y entonces lo que haces
+// es". Paso todas las comprobaciones: tenia palabras de sobra, venia en
+// parrafos y no le contaba como es. Ninguna miraba como acababa.
+//
+// Un corte grande ya lo caza la cuenta de palabras, porque el texto se queda
+// corto. Esto tapa el hueco de en medio: el que es lo bastante largo para
+// pasar y aun asi acaba colgado.
+//
+// NO SE MIRA QUE ACABE EN PUNTO, SE MIRA QUE NO ACABE COLGADO. Pidiendo el
+// punto habria que acertar la lista entera de finales buenos, y uno raro pero
+// legitimo -unas comillas de las que se le piden, unos puntos suspensivos, un
+// parentesis- se reescribiria sin motivo. Asi que se mira al reves: solo lo
+// que no puede cerrar una frase nunca.
+//
+// Y ahi entran dos cosas. Lo que se queda a medias -una letra, un numero, una
+// coma, un punto y coma, dos puntos-, que es como acaba un texto cortado. Y lo
+// que se acaba de abrir -unas comillas, un parentesis, un signo de abrir
+// interrogacion o exclamacion-, que ademas del corte delata que lo que venia
+// detras no llego.
+//
+// LOS GUIONES NO ENTRAN, aunque parezcan de lo mismo. Un inciso se cierra con
+// su guion y puede caer justo al final -asi-, y eso es un final bueno. Contarlo
+// como cortado reescribiria textos correctos, que es lo unico que esta red no
+// se puede permitir.
+const acabaColgado = txt => /[\p{L}\p{N},;:«¿¡([“‘]$/u.test(String(txt || '').trim());
+
 function estaVacia(texto, titulo) {
   const limpio = String(texto || '').trim();
   if (limpio.length < LARGO_MINIMO) return true;
@@ -1121,6 +1149,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
   // en blanco, y sin ella el punto mas largo sale como un muro de texto.
   const parrafosDe = t => String(t || '').split(/\n+/).filter(x => x.trim()).length;
   const cortos = p => PUNTOS.filter(punto => cuantas(p[punto]) < PALABRAS_MINIMAS[punto]);
+  const colgados = p => PUNTOS.filter(punto => acabaColgado(p[punto]));
 
   const salida = await sinNombrarLaCarta({
     que: `la parte de ${area.id}`,
@@ -1130,12 +1159,15 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
     // que explica como se hace algo. A donde va o que le frena se cuentan de
     // otra manera y exigirselas alli haria reescribir textos buenos.
     cojo: p => cortos(p).length > 0
+            || colgados(p).length > 0
             || parrafosDe(p.elPlan) < 2
             || cuentaComoEs(p.elPlan, 0)
             || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto])),
     aviso: p => cuentaComoEs(p.elPlan, 0) || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto]))
       ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta a dónde va, qué se lo impide hoy, qué hace, dónde se cae y cómo vuelve.'
-      : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cinco se cuenta entero, y el plan va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
+      : colgados(p).length
+        ? `\n\nY OJO: la vez anterior algo se quedó a media frase (${colgados(p).map(x => BLOQUES[x]).join(', ')}). Se termina lo que se empieza: cada uno de los cinco acaba su última frase.`
+        : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cinco se cuenta entero, y el plan va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
       que: `escribir ${area.id}`,
@@ -1248,6 +1280,9 @@ ${REGLA_DEL_NOMBRE(false)}`;
     que: 'la hoja de ruta',
     cojo: h => estaVacia(h.porDondeEmpiezas, 'por dónde empiezas')
             || estaVacia(h.siLoDejas, 'si lo dejas')
+            || acabaColgado(h.porDondeEmpiezas)
+            || acabaColgado(h.siLoDejas)
+            || (h.elOrden || []).some(o => acabaColgado(o?.queHaces))
             || !hay.has(String(h.empiezaPor || '').trim())
             // Un paso con nombre pero sin nada escrito cuenta como que falta:
             // si se deja pasar, en la hoja sale el titulo de esa parcela con un
@@ -1255,7 +1290,7 @@ ${REGLA_DEL_NOMBRE(false)}`;
             || new Set((h.elOrden || [])
                  .filter(o => String(o?.queHaces || '').trim())
                  .map(o => o?.area).filter(x => hay.has(x))).size !== hay.size,
-    aviso: `\n\nY OJO: la vez anterior algo vino vacío o faltó alguna parte del orden. El orden lleva las ${AREAS.length}, cada una con su nombre en clave copiado tal cual y con lo que tiene que hacer ahí.`,
+    aviso: `\n\nY OJO: la vez anterior algo vino vacío, se quedó a media frase o faltó alguna parte del orden. El orden lleva las ${AREAS.length}, cada una con su nombre en clave copiado tal cual y con lo que tiene que hacer ahí.`,
     tope: ESPERA_DE_LA_HOJA_MS,
     pedir: (recordatorio, cuanto) => alModelo({
       que: 'escribir la hoja de ruta',
