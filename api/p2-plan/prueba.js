@@ -974,7 +974,7 @@ LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que h
 
 LO QUE SE HA DECIDIDO PARA ESTA PARTE:
 
-${PUNTOS.map(punto => `${BLOQUES[punto]}: ${decidido[punto]}`).join('\n\n')}
+${PUNTOS.map(punto => `"${punto}"\n${decidido[punto]}`).join('\n\n')}
 
 Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}
@@ -1069,7 +1069,7 @@ QUÉ ES ESTA HOJA. Es la que se queda a mano cuando ya ha cerrado el documento. 
 
 NO SE ESCRIBE NADA NUEVO. Todo lo que pongas sale de lo que ya está escrito abajo. Aquí no se decide nada ni se añade ninguna idea que no esté ya en el documento.
 
-Escribes tres cosas:
+Esto es lo que devuelves:
 
 "empiezaPor"
 El nombre en clave de la parte por la que empieza, copiado tal cual de la lista de abajo. No es texto para leer: es para que el programa sepa cuál es.
