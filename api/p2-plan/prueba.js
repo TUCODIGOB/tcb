@@ -505,7 +505,7 @@ senal          En qué va a notar que está funcionando. Algo que pueda ver
 
 No sabemos nada de su vida que no esté escrito abajo. No tiene pareja, ni hijos, ni jefe, ni familia, ni trabajo, ni casa, mientras no aparezcan ahí. No los nombres, no los supongas y no los uses para montar un movimiento.
 
-Por eso los movimientos arrancan por algo suyo -lo que nota, lo que se dice, lo que se pilla haciendo- y nunca por otra persona.
+Por eso los movimientos arrancan siempre por algo que ocurre dentro de esa persona, y nunca por otra.
 
 Nada de consejos que le valgan igual a cualquiera. Si lo que has escrito se le podría mandar a otra persona distinta, está mal y se cambia.
 
@@ -761,7 +761,7 @@ Nombre de pila: ${nombre}`;
       piensa: '',
       techo: TECHO_DE_ESCRIBIR,
       system: encargo,
-      mensaje: `Escribe esta parte entera, con sus cinco cosas y sus ${decidido.movimientos.length} movimientos.${recordatorio}`,
+      mensaje: `Escribe esta parte entera, con sus cinco cosas y ${decidido.movimientos.length === 1 ? 'su movimiento' : `sus ${decidido.movimientos.length} movimientos`}.${recordatorio}`,
       molde: MOLDE_DE_LA_PARTE,
       espera: AbortSignal.timeout(ESPERA_DE_ESCRIBIR_MS),
     }),
