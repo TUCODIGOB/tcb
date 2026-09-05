@@ -670,7 +670,11 @@ async function sinNombrarLaCarta({ que, pedir, texto }) {
 // CADA UNA VE SOLO SU PARTE. No hace falta que vea las demas: el paso que
 // piensa ya se encargo de que no se repitan.
 
-const ESPERA_DE_ESCRIBIR_MS = 90000;
+// EL TOPE CABE DOS VECES. Si se le cuela una palabra de la carta se vuelve a
+// pedir, asi que los dos intentos juntos tienen que caber en los 150 segundos
+// que aguanta esta peticion. Escribir una parte ronda el medio minuto, asi que
+// sesenta y cinco segundos ya es de sobra para una.
+const ESPERA_DE_ESCRIBIR_MS = 65000;
 const TECHO_DE_ESCRIBIR = 5000;
 
 const MOLDE_DE_LA_PARTE = {
@@ -788,7 +792,9 @@ Nombre de pila: ${nombre}`;
 // agobio de tener siete cosas que arreglar. El orden y el dia que falle van al
 // final. Los tres salen de la misma decision y se escriben de una vez.
 
-const ESPERA_DEL_MARCO_MS = 90000;
+// El mismo tope que las partes, y por lo mismo: aqui tambien se puede pedir
+// dos veces.
+const ESPERA_DEL_MARCO_MS = 65000;
 const TECHO_DEL_MARCO = 4000;
 
 const MOLDE_DEL_MARCO = {
