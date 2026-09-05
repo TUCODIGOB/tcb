@@ -706,7 +706,7 @@ Nombre de pila: ${nombre}`;
 
   const salida = await alModelo({
     que: 'decidir el plan',
-    modelo: 'claude-opus-5',
+    modelo: 'claude-sonnet-5',
     piensa: 'medium',
     techo: TECHO_DEL_PLAN,
     system: encargo,
