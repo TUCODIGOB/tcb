@@ -32,10 +32,9 @@
 //
 //   1. POR DONDE EMPIEZA. Una parte, y por que esa mueve a las demas. Va
 //      delante para quitarle el agobio de tener siete cosas que arreglar.
-//   2. LAS SIETE PARTES, todas iguales, cada una con cinco cosas: como es ella
-//      ahi en su nueva version, que hace esa version que ella todavia no, los
-//      movimientos concretos, lo que va a aparecer para frenarla y en que lo va
-//      a notar.
+//   2. LAS SIETE PARTES, todas iguales, cada una con cuatro cosas: que deja de
+//      hacer y que hace en su lugar, los movimientos concretos, lo que va a
+//      aparecer para frenarle y en que lo va a notar.
 //   3. EL ORDEN. Cual va despues de cual, y que tiene que estar pasando para
 //      saltar a la siguiente. Sin fechas: no sabemos su vida.
 //   4. EL DIA QUE FALLE. Que hace, y que fallar entra en el plan.
@@ -104,9 +103,9 @@ ESTILO DE ESCRITURA:
 - CADA PÁRRAFO SE ENGANCHA CON EL ANTERIOR. Retomas una palabra o una idea del párrafo de antes y sigues tirando del hilo desde ahí. Ningún párrafo empieza un tema nuevo en frío, y ninguno puede leerse suelto sin perder nada. Si quitas un párrafo y el resto se lee igual de bien, es que estaba puesto al lado y no cosido.
 - UNA FRASE, UNA IDEA. Esta manda sobre lo largo que sea. Una frase puede ser larga y estar bien, si lo que hace es desarrollar UNA cosa a base de comas. Lo que no puede es meter dos o tres cosas distintas encadenándolas con "que", "porque", "cuando" o "aunque": ahí el lector suelta la primera para seguir la segunda, y acaba sin ninguna. Si al leerla en voz alta te falta el aire o tienes que volver atrás, lleva dos ideas dentro y se parte en dos.
 - FRASES LARGAS, NO CORTAS, dentro de esa regla. Se escribe con comas y seguido, como habla alguien. PROHIBIDO encadenar tres frases cortas seguidas: eso suena a titular y no a una persona. Las de menos de diez palabras se reservan para rematar, dos o tres en todo el texto como mucho.
-- NO SE HABLA DEL DOCUMENTO, SE HABLA DE SU VIDA. Ni áreas, ni partes, ni capítulos, ni apartados, ni "lo que viene después", ni "las otras seis". Quien lee no ve el andamio, ve su vida. En cuanto le nombras un trozo del documento, deja de entender de qué le hablas.
+- NO SE HABLA DEL DOCUMENTO, SE HABLA DE SU VIDA. Ni áreas, ni partes, ni capítulos, ni apartados, ni lo que viene antes o después, ni cuántas cosas hay. Quien lee no ve el andamio, ve su vida. En cuanto le nombras un trozo del documento, deja de entender de qué le hablas.
 - Y NO SE LE NOMBRA UN TÍTULO COMO SI FUERA UNA COSA QUE HACER. Los títulos son etiquetas para encontrar las cosas, no acciones. Lo que hace se dice con un verbo y con lo que hace.
-- NADA DE CONDICIONALES ENCADENADOS. Nada de "si no haces esto, lo que consigas allí se te irá por allá". Quien lo lee tiene que seguir dos suposiciones a la vez y suelta. Se cuenta lo que pasa, en presente y en directo.
+- NADA DE CONDICIONALES ENCADENADOS. Una suposición que arrastra a otra obliga a quien lee a sostener las dos a la vez, y suelta. Se cuenta lo que pasa, en presente y en directo.
 - UN PÁRRAFO, UNA IDEA. Dos o tres líneas y punto y aparte. Cinco ideas seguidas en el mismo párrafo no se leen, se abandonan, y da igual lo buenas que sean.
 - LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice por dentro, con sus palabras y en primera persona. Es lo que hace que se reconozca.
 - LE DAS LA RAZÓN ANTES DE CORREGIR. Nunca de frente.
@@ -180,7 +179,7 @@ const AREAS = [
   { id: 'dinero',      del_p1: 'DINERO',      titulo: 'Con el dinero y el trabajo, decides tú' },
 ];
 
-// Las cinco cosas que lleva cada parte, con el nombre que ve la clienta. Se
+// Las cuatro cosas que lleva cada parte, con el nombre que ve la clienta. Se
 // escriben aqui por lo mismo que los titulos.
 // Eran cinco y sobraba uno: "Asi eres aqui" y "Lo que cambia" contaban lo
 // mismo, los dos en abstracto, asi que cada parte abria con dos parrafos que
@@ -555,7 +554,7 @@ PRIMERO, MIRA LOS MOVIMIENTOS DE LAS SIETE JUNTOS. Los que le pidan lo mismo con
 
 DESPUÉS, MIRA QUE CADA PARTE HABLE DE LO SUYO. Lo de una parte no se cuenta en otra.
 
-Y POR ÚLTIMO: que ninguna de las cinco casillas de ninguna parte se haya quedado vacía o resuelta de pasada.
+Y POR ÚLTIMO: que ninguna de las cuatro casillas de ninguna parte se haya quedado vacía o resuelta de pasada.
 
 Devuelve solo lo decidido. No expliques lo que has quitado.
 
@@ -817,7 +816,7 @@ Nombre de pila: ${nombre}`;
 
   const salida = await sinNombrarLaCarta({
     que: `la parte de ${area.id}`,
-    // Ademas de la carta, aqui se mira que las cinco casillas traigan texto:
+    // Ademas de la carta, aqui se mira que las cuatro casillas traigan texto:
     // el mismo reintento sirve para las dos cosas.
     cojo: p => estaVacia(p.cambio, BLOQUES.cambio)
             || estaVacia(p.freno, BLOQUES.freno)
@@ -904,9 +903,9 @@ El documento ya está escrito: son siete partes, una por cada parcela de su vida
 Escribes tres cosas:
 
 "empiezaPor"
-Va lo primero de todo. Le dices POR QUÉ CONDUCTA SUYA empieza -la de abajo, dicha con lo que hace, no con el título que lleva- y por qué mover esa arrastra lo demás.
+Va lo primero de todo. Le dices POR QUÉ CONDUCTA SUYA empieza, que es la que tienes abajo, contada con lo que hace y nunca con el título que lleva, y por qué mover esa arrastra lo demás.
 
-Se entra directamente por lo que hace. Nada de presentar el documento, nada de "esto empieza por", nada de nombrarle títulos ni trozos. Y se le quita el agobio sin nombrar cuántas cosas hay: lo que tiene que hacer ahora es una, y lo demás puede esperar.
+Se entra directamente por lo que hace. Nada de presentar el documento, nada de anunciar por dónde se empieza y nada de nombrarle títulos ni trozos. Y se le quita el agobio sin decirle cuántas cosas hay: lo que tiene que hacer ahora es una, y lo demás puede esperar.
 
 Tres o cuatro frases.
 
