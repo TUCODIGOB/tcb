@@ -146,9 +146,9 @@ Así que aquí no se diagnostica. No le explicas de dónde le viene lo que hace,
 
 De ahí salen las dos reglas que mandan sobre todas las demás:
 
-1. DE LO SUYO SOLO SE CUENTA LO QUE HACE HOY, y se cuenta para que se reconozca y sepa desde dónde arranca lo que va a cambiar. Eso sí va con detalle. Lo que no vuelve a aparecer es el porqué: de dónde le viene, quién se lo hizo, cómo se llama lo que le pasa. Eso ya se lo contaron y repetirlo es darle dos veces lo mismo. Y lo que hace hoy tiene que poder rastrearse a lo que tienes abajo: si no puedes señalar de dónde sale, no lo escribes.
+1. DE LO SUYO SE CUENTA POCO Y SOLO PARA ENGANCHAR. Lo que hace hoy, en dos o tres frases, las justas para que sepa que esto va con ella. Y nada del porqué: de dónde le viene, quién se lo hizo, cómo se llama lo que le pasa. Todo eso se lo contaron ya, y aquí ocupa el sitio de lo que ha venido a buscar. Lo poco que cuentes tiene que poder rastrearse a lo que tienes abajo: si no puedes señalar de dónde sale, no lo escribes.
 
-2. Y EN CUANTO SE RECONOCE, TODO LO DEMÁS ES QUÉ HACER. Eso no está en su estudio y lo pones tú. Es lo que este documento añade, es a lo que ha venido, y es lo que tiene que ocupar la mayor parte de lo que escribas.
+2. TODO LO DEMÁS ES QUÉ HACE Y CÓMO. No solo qué: sobre todo cómo, que es lo que nadie le explica. Eso no está en su estudio y lo pones tú, es a lo que ha venido, y tiene que ocupar la mayor parte de lo que escribas.
 
 Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que hace hoy y de lo que va a hacer con ello.`;
 
@@ -875,21 +875,27 @@ Escribes UNA parte del documento. La parcela de su vida que te toca es esta: ${a
 
 Y SE ESCRIBE DE UNA TIRADA, seguido, como cuando alguien que la conoce se sienta a contarle algo. Nada de apartados, nada de bloques, nada de anunciar lo que viene. Un párrafo lleva al siguiente.
 
-TIENE QUE OCUPAR SU SITIO: al menos ${PALABRAS_MINIMAS} palabras. No es por llenar. Es que en cuatro frases no cabe una voz, y en cuatro frases no se reconoce nadie. Si te sale corto, no engordes las frases: cuéntale más de lo que hace, con más detalle.
+TIENE QUE OCUPAR SU SITIO: al menos ${PALABRAS_MINIMAS} palabras. No es por llenar. Es que explicarle bien cómo se hace algo no cabe en cuatro frases, y en cuatro frases tampoco cabe una voz. Si te sale corto, no engordes las frases ni alargues el arranque: cuéntale con más detalle cómo se hace lo que tiene que hacer.
 
 POR DÓNDE ENTRA ESTA PARTE: ${area.porDondeEntra}. Se entra por ahí, directamente, sin presentar nada.
 
 Y ESTE ES EL ORDEN DE LO QUE PASA POR DENTRO DEL TEXTO, sin que se vean las costuras:
 
-Primero le cuentas lo que hace hoy en esa parcela, con detalle y sin juzgarla, hasta que se reconozca. Esa parte no es para informarla: es para que asienta y siga leyendo.
+ARRANCAS POR LO QUE HACE HOY, Y EN DOS O TRES FRASES. Las justas para que sepa que esto va con ella y no con cualquiera. Ni una más. Eso ya se lo contaron entero en otro sitio, y volver a contárselo aquí, aunque sea con otras palabras, es quitarle el sitio a lo único que ha venido a buscar.
 
-Después le dices qué cambia. Qué deja de hacer y qué hace en su lugar, en claro y sin suavizarlo.
+Y ENSEGUIDA, QUÉ CAMBIA. Qué deja de hacer y qué hace en su lugar, en claro y sin suavizarlo.
 
-Después le cuentas lo que va a aparecer para que no lo haga: lo que va a sentir o lo que se va a decir por dentro para librarse, avisado antes de que le pase, y que eso es la señal de que va bien.
+Y DE AHÍ HASTA EL FINAL, TODO ES CÓMO SE HACE. Esto es lo que ocupa la mayor parte de lo que escribas, y es por lo que ha pagado. Cómo lo hace las primeras veces, cuando todavía no le sale solo. Qué hace con lo que sienta mientras lo hace. Qué se va a encontrar por el camino, y cómo lo sostiene cuando ya no sea nuevo y deje de apetecerle. Se cuenta hacia delante, como quien le explica algo a alguien que lo va a hacer mañana, no como quien le explica cómo es.
 
-Y cierras con en qué lo va a notar. Algo que va a ver ocurriendo en su vida, no un estado de ánimo.
+AHÍ DENTRO LE AVISAS DE LO QUE VA A APARECER PARA QUE NO LO HAGA: lo que va a sentir o lo que se va a decir por dentro para librarse. Se lo dices antes de que le pase, y le dices que eso es señal de que va bien, no de que se esté equivocando.
 
-LOS MOVIMIENTOS VAN APARTE Y NO SE CUENTAN AQUÍ. En el texto seguido no explicas lo que tiene que hacer paso a paso: eso va en su sitio, debajo, y si lo cuentas dos veces sobra una.
+Y CIERRAS CON EN QUÉ LO VA A NOTAR. Algo que va a ver ocurriendo en su vida, no un estado de ánimo, y de las primeras: algo que pase en semanas.
+
+Y ESTA ES LA PRUEBA DE QUE ESTÁ BIEN ESCRITO: tapa las tres primeras frases y lee lo que queda. Si lo que queda le sirve para hacer algo, está bien. Si lo que queda vuelve a ser cómo es, está mal y se reescribe entero.
+
+LOS MOVIMIENTOS SON EL PASO A PASO, Y VAN APARTE. En el texto seguido no repites lo que ellos ya dicen: ahí no se cuenta el momento ni el paso, que van debajo y en su sitio.
+
+Lo que cuenta el texto es lo otro, lo que ningún paso explica: cómo se hace eso cuando no le sale, qué hace con lo que sienta al hacerlo, qué se va a encontrar y cómo lo sostiene cuando deje de ser nuevo. Si algo de lo que has escrito en el texto se pudiera meter dentro de un movimiento, es que va en el movimiento y no ahí.
 
 "movimientos"
 Los que te doy abajo, uno por uno, ni uno más ni uno menos. De cada uno:
@@ -935,7 +941,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
             || parrafosDe(p.texto) < 3
             || !(p.movimientos || []).length
             || (p.movimientos || []).some(m => !m.titulo || cuantas(m.texto) < 25),
-    aviso: `\n\nY OJO: la vez anterior salió corto o vino de una pieza. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras, ir repartido en párrafos separados por una línea en blanco, y cada movimiento contarse entero. Cuéntale más de lo que hace, con más detalle, en vez de alargar las frases que ya tienes.`,
+    aviso: `\n\nY OJO: la vez anterior salió corto o vino de una pieza. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras, ir repartido en párrafos separados por una línea en blanco, y cada movimiento contarse entero. Lo que falta no es arranque, es cómo se hace: eso es lo que se cuenta con más detalle.`,
     pedir: recordatorio => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
@@ -968,7 +974,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
 // El mismo tope que las partes, y por lo mismo: aqui tambien se puede pedir
 // dos veces.
 const ESPERA_DEL_MARCO_MS = 65000;
-const TECHO_DEL_MARCO = 10000;
+const TECHO_DEL_MARCO = 12000;
 
 const MOLDE_DEL_MARCO = {
   type: 'object',
@@ -976,6 +982,11 @@ const MOLDE_DEL_MARCO = {
     laConducta: { type: 'string' },
     porQueEsa:  { type: 'string' },
     soloEsto:   { type: 'string' },
+    // EL ARRANQUE. Van seguidas y sin titulo entre ellas: se leen como un solo
+    // texto, pero se piden por separado para que ninguna se quede sin decir.
+    conQue:       { type: 'string' },
+    comoEmpiezas: { type: 'string' },
+    cuandoSumas:  { type: 'string' },
     orden: {
       type: 'array',
       items: {
@@ -990,7 +1001,7 @@ const MOLDE_DEL_MARCO = {
     },
     recaida: { type: 'string' },
   },
-  required: ['laConducta', 'porQueEsa', 'soloEsto', 'orden', 'recaida'],
+  required: ['laConducta', 'porQueEsa', 'soloEsto', 'conQue', 'comoEmpiezas', 'cuandoSumas', 'orden', 'recaida'],
   additionalProperties: false,
 };
 
@@ -1002,6 +1013,10 @@ const comoSeCompara = txt =>
   sinTildes(txt).replace(/[^a-z0-9ñ ]/g, ' ').replace(/\s+/g, ' ').trim();
 
 async function escribirElMarco({ nombre, sexo, plan }) {
+  // La parte por la que empieza: de sus movimientos sale el arranque, asi que
+  // se busca una vez y se usa en los dos sitios del encargo.
+  const laDeEmpezar = plan.partes.find(p => p.area === plan.empiezaPor.area) || {};
+
   const encargo = `${EL_P2_NO_ES_EL_P1}
 
 ${REGLAS_COMUNES}
@@ -1009,9 +1024,7 @@ ${REGLAS_COMUNES}
 
 LO QUE TE TOCA AHORA
 
-El resto del documento ya está escrito. Te toca lo que va delante de todo y lo que va al final.
-
-Escribes tres cosas:
+El resto del documento ya está escrito. Te toca lo que va delante de todo, lo primero que hace y lo que va al final.
 
 El principio son TRES COSAS SEPARADAS, y cada una hace UN SOLO trabajo. No las mezcles ni las repitas entre ellas: si algo ya está dicho en una, en las otras no vuelve.
 
@@ -1023,6 +1036,17 @@ Por qué mover esa mueve lo demás. Dos o tres frases, y en presente: lo que le 
 
 "soloEsto"
 Que ahora mismo no le toca nada más que eso. Una o dos frases, tranquilas, sin decirle cuántas cosas hay ni cuándo llegan las demás.
+
+LO PRIMERO QUE HACE, EN TRES PIEZAS QUE SE LEEN SEGUIDAS. Aquí es donde este documento deja de ser algo que se lee y pasa a ser algo que se hace, así que es lo más importante que escribes. Abajo tienes los movimientos de la parte por la que empieza: de esos sale todo esto, y de ningún otro.
+
+"conQue"
+Con cuál de esos movimientos empieza, y por qué ese antes que los otros. Lo nombras por lo que hace, nunca por su título. Dos o tres frases.
+
+"comoEmpiezas"
+Cómo lo hace las primeras veces, cuando todavía no le sale solo. Tan concreto que lo pueda hacer mañana sin preguntarle a nadie: en qué momento, qué hace exactamente y qué hace con lo que sienta al hacerlo. Y qué hace el día que se le pase. Cuatro o cinco frases, y aquí no se ahorra ni una.
+
+"cuandoSumas"
+Cuándo añade el siguiente movimiento: qué tiene que estar pasando ya para que toque, y no cuántos días. Y en qué mira para saber que va bien, que tiene que ser algo que pueda ver ocurriendo y que llegue pronto: de lo que se nota a las pocas veces de hacerlo, no de lo que se ve al cabo de mucho tiempo. Tres o cuatro frases.
 
 "orden"
 Las demás, en el orden en que le conviene ir. De cada una:
@@ -1046,8 +1070,14 @@ Qué hace el día que lo deje o vuelva a lo de antes. Y que eso iba a pasar, que
 
 LO QUE SE HA DECIDIDO:
 
-La conducta por la que empieza: ${(plan.partes.find(p => p.area === plan.empiezaPor.area) || {}).cambio || ''}
+La conducta por la que empieza: ${laDeEmpezar.cambio || ''}
 Y empieza por ahí porque: ${plan.empiezaPor.porque}
+
+Los movimientos de esa parte, que son de donde sale lo primero que hace:
+${(laDeEmpezar.movimientos || []).map(m => `- Cuando: ${m.cuando}\n  Hace: ${m.haces}`).join('\n') || '(no ha venido ninguno)'}
+
+Lo que va a aparecer para frenarle ahí: ${laDeEmpezar.freno || ''}
+Y en qué lo va a notar: ${laDeEmpezar.senal || ''}
 
 Después, en este orden:
 ${plan.orden.map((o, i) => {
@@ -1078,20 +1108,23 @@ ${REGLA_DEL_NOMBRE(true)}`;
     cojo: m => estaVacia(m.laConducta, 'por dónde empiezas')
             || estaVacia(m.porQueEsa, 'por qué esa')
             || estaVacia(m.soloEsto, 'solo esto')
+            || estaVacia(m.conQue, 'con qué empiezas')
+            || estaVacia(m.comoEmpiezas, 'cómo empiezas')
+            || estaVacia(m.cuandoSumas, 'cuándo sumas')
             || estaVacia(m.recaida, 'el día que lo dejes')
             || faltaAlguno(m),
-    aviso: `\n\nY OJO: la vez anterior algo vino vacío o faltó algún paso del orden. El principio y el día que falle llevan texto escrito para quien lo lee, y el orden lleva las ${esperados.length} partes que te doy, cada una con su cuándo.`,
+    aviso: `\n\nY OJO: la vez anterior algo vino vacío o faltó algún paso del orden. El principio, lo primero que hace y el día que falle llevan texto escrito para quien lo lee, y el orden lleva las ${esperados.length} partes que te doy, cada una con su cuándo.`,
     pedir: recordatorio => alModelo({
       que: 'escribir el principio y el final',
       modelo: 'claude-sonnet-5',
       piensa: 'low',
       techo: TECHO_DEL_MARCO,
       system: encargo,
-      mensaje: `Escribe las tres cosas, siguiendo el esquema.${recordatorio}`,
+      mensaje: `Escribe el principio, lo primero que hace y el final, siguiendo el esquema.${recordatorio}`,
       molde: MOLDE_DEL_MARCO,
       espera: AbortSignal.timeout(ESPERA_DEL_MARCO_MS),
     }),
-    texto: m => [m.laConducta, m.porQueEsa, m.soloEsto, m.recaida]
+    texto: m => [m.laConducta, m.porQueEsa, m.soloEsto, m.conQue, m.comoEmpiezas, m.cuandoSumas, m.recaida]
       .concat((m.orden || []).map(o => o.saltas)).join(' '),
   });
 
@@ -1124,6 +1157,9 @@ ${REGLA_DEL_NOMBRE(true)}`;
     laConducta: String(salida.laConducta || '').trim(),
     porQueEsa: String(salida.porQueEsa || '').trim(),
     soloEsto: String(salida.soloEsto || '').trim(),
+    conQue: String(salida.conQue || '').trim(),
+    comoEmpiezas: String(salida.comoEmpiezas || '').trim(),
+    cuandoSumas: String(salida.cuandoSumas || '').trim(),
     orden,
     recaida: String(salida.recaida || '').trim(),
   };
@@ -1484,7 +1520,11 @@ function pintarFinal(m, empiezaPor) {
   const orden = primero + (m.orden||[]).map(o =>
     '<p class="paso">Cuando ' + escapar(o.saltas) + ', pasas a <b>' + escapar(o.titulo) + '</b>.</p>'
   ).join('');
+  // LO PRIMERO QUE HACE VA DELANTE DEL ORDEN. Las tres piezas se pintan
+  // seguidas y sin titulo entre ellas: se leen como un texto solo.
+  const arranque = [m.conQue, m.comoEmpiezas, m.cuandoSumas].filter(Boolean).map(parrafos).join('');
   return '<div class="parte marco"><p class="cual">Para terminar</p>' +
+    (arranque ? '<h2>Lo primero que haces</h2><div class="bloque">' + arranque + '</div>' : '') +
     (orden ? '<div class="bloque"><h3>Y después, en este orden</h3>' + orden + '</div>' : '') +
     '<div class="bloque"><h3>El día que lo dejes</h3>' + parrafos(m.recaida) + '</div></div>';
 }

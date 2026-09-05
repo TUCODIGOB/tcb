@@ -209,6 +209,19 @@ export default async function handler(req, res) {
       }
     }
 
+    // ── LO PRIMERO QUE HACE ───────────────────────────────────
+    //
+    // Es la hoja por la que este documento deja de leerse y empieza a hacerse,
+    // asi que va sola y con su sitio, delante del orden.
+    const arranque = [marco.conQue, marco.comoEmpiezas, marco.cuandoSumas].filter(x => t(x));
+    if (arranque.length) {
+      abrirSeccion('Para terminar', 'Lo primero que haces');
+      for (let i = 0; i < arranque.length; i++) {
+        corrido(arranque[i]);
+        if (i < arranque.length - 1) y += ENTRE_PARRAFOS;
+      }
+    }
+
     // ── EL ORDEN ──────────────────────────────────────────────
     const orden = Array.isArray(marco.orden) ? marco.orden : [];
     if (orden.length) {
