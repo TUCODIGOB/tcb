@@ -38,7 +38,7 @@
 //   LAS SIETE PARTES, todas iguales, cada una con cinco cosas:
 //     1. A donde va en esa parcela.
 //     2. Que se lo impide hoy.
-//     3. El plan: todo lo que tiene que hacer y soltar.
+//     3. El plan: la unica cosa que tiene que hacer ahi, contada entera.
 //     4. Donde se va a caer intentandolo.
 //     5. Como se levanta el dia que lo deja.
 //
@@ -547,9 +547,9 @@ function susRasgos(rasgos) {
 // la clienta se queda mirando una pantalla en blanco; se probo en el P1 y
 // costo un informe entero.
 //
-// Y EL TOPE CABE DOS VECES, como en las que escriben: si el plan viene a
-// medias se pide otra vez, y los dos intentos juntos tienen que caber en los
-// 300 segundos que aguanta esta peticion.
+// Y SI VIENE A MEDIAS SE PIDE OTRA VEZ, pero dos intentos de esto no caben en
+// los 300 segundos que aguanta la peticion: el segundo no pide otros 200, pide
+// lo que sobre del primero, y si no sobra bastante no se pide.
 
 const ESPERA_DEL_PLAN_MS = 200000;
 const TECHO_DEL_PLAN = 16000;
@@ -563,6 +563,17 @@ const MARGEN_DEL_SERVIDOR_MS = 285000;
 // minuto por delante no termina: gasta dinero, se corta igual y encima se lleva
 // por delante el plan que ya habia, que estaba a medias pero estaba.
 const ESPERA_MINIMA_PARA_REHACER_MS = 90000;
+
+// LO QUE LE QUEDA A ESTA PETICION.
+//
+// Cada llamada del navegador tiene el tiempo del servidor y nada mas. El
+// primer intento puede llevarse casi todo, y entonces el segundo no arranca
+// con el tope entero: arranca con lo que sobre. Sin esto, el reintento se
+// ponia a pedir un intento entero que ya no cabia y se cortaba en seco,
+// perdiendo tambien lo que habia salido bien a la primera.
+function loQueQueda(arranque, tope) {
+  return Math.min(tope, MARGEN_DEL_SERVIDOR_MS - (Date.now() - arranque));
+}
 
 const MOLDE_DEL_PLAN = {
   type: 'object',
@@ -781,7 +792,7 @@ async function decidirElPlan({ nombre, sexo, rasgos, respuestas }) {
 
   // Y SOLO SE PIDE OTRA VEZ SI CABE. Lo que quede del tiempo del servidor, y
   // nunca menos de lo que tarda en salir uno entero.
-  const queda = MARGEN_DEL_SERVIDOR_MS - (Date.now() - arranque);
+  const queda = loQueQueda(arranque, ESPERA_DEL_PLAN_MS);
   if (queda < ESPERA_MINIMA_PARA_REHACER_MS) {
     console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), pero ya no queda tiempo para rehacerlo`);
     return primero.plan;
@@ -790,7 +801,7 @@ async function decidirElPlan({ nombre, sexo, rasgos, respuestas }) {
   console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), se pide otra vez`);
   const segundo = await pedirElPlan({
     nombre, sexo, rasgos, respuestas,
-    espera: Math.min(ESPERA_DEL_PLAN_MS, queda),
+    espera: queda,
     recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, cada una con sus cinco cosas escritas enteras, y en cada una UNA sola cosa que hacer, distinta de verdad de las de las otras seis.`,
   });
 
@@ -962,20 +973,12 @@ const NO_NOMBRES_LA_CARTA =
   'Ni un planeta, ni un signo, ni una casa, ni un aspecto, ni la carta, ni el mapa. ' +
   'Quien lo lee no ha visto nada de eso y no sabe de qué le hablas.';
 
-// LO QUE LE QUEDA A ESTA PETICION.
-//
-// Cada llamada del navegador tiene el tiempo del servidor y nada mas. El
-// primer intento puede llevarse casi todo, y entonces el segundo no arranca
-// con el tope entero: arranca con lo que sobre. Sin esto, el reintento se
-// ponia a pedir otros dos minutos que ya no existian y se cortaba en seco,
-// perdiendo tambien lo que habia salido bien a la primera.
-function loQueQueda(arranque, tope) {
-  return Math.min(tope, MARGEN_DEL_SERVIDOR_MS - (Date.now() - arranque));
-}
-
-async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso = '', tope = 0 }) {
+// "tope" es lo que se le da al primer intento, y va sin valor por defecto a
+// proposito: quien llame tiene que decirlo. Un defecto de cero apagaria el
+// reloj sin avisar y el reintento se saldria del tiempo del servidor.
+async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso = '', tope }) {
   const arranque = Date.now();
-  const primera = await pedir('', tope || undefined);
+  const primera = await pedir('', tope);
   const laCarta = hablaDeAstrologia(texto(primera));
   const aMedias = cojo(primera);
   if (!laCarta && !aMedias) return primera;
@@ -983,15 +986,15 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
   // Y SOLO SE PIDE OTRA VEZ SI CABE. Si del tiempo del servidor no queda ni
   // para la mitad de un intento, no se pide: se entrega lo que hay, que es
   // mejor que quedarse sin nada por haberlo intentado.
-  const queda = tope ? loQueQueda(arranque, tope) : 0;
-  if (tope && queda < tope / 2) {
+  const queda = loQueQueda(arranque, tope);
+  if (queda < tope / 2) {
     console.warn(`[p2] ${que}: ${laCarta ? 'se ha colado una palabra de la carta' : 'ha venido a medias'}, pero ya no queda tiempo para pedirlo otra vez`);
     return primera;
   }
 
   console.warn(`[p2] ${que}: ${laCarta ? 'se ha colado una palabra de la carta' : 'ha venido a medias'}, se pide otra vez`);
   const elAviso = typeof aviso === 'function' ? aviso(primera) : aviso;
-  const segunda = await pedir((laCarta ? `\n\n${NO_NOMBRES_LA_CARTA}` : '') + (aMedias ? elAviso : ''), queda || undefined);
+  const segunda = await pedir((laCarta ? `\n\n${NO_NOMBRES_LA_CARTA}` : '') + (aMedias ? elAviso : ''), queda);
 
   // Y SE ENTREGA LA MENOS MALA DE LAS DOS. Pedir otra vez no garantiza que
   // salga mejor: puede venir mas corta, o colarsele lo que a la primera no se
@@ -1141,7 +1144,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
       system: encargo,
       mensaje: `Escribe las cinco partes de esta parcela, enteras.${recordatorio}`,
       molde: MOLDE_DE_LA_PARTE,
-      espera: AbortSignal.timeout(cuanto || ESPERA_DE_ESCRIBIR_MS),
+      espera: AbortSignal.timeout(cuanto),
     }),
     texto: p => PUNTOS.map(punto => p[punto]).join(' '),
   });
@@ -1160,6 +1163,9 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
 // LEE LAS SIETE PARTES YA ESCRITAS, no lo decidido. Es un resumen de lo que
 // pone de verdad en el documento, asi que tiene que ver el documento. Por eso
 // va al final y no en paralelo con las demas.
+//
+// El tiempo, el mismo que el de escribir una parte: sale mas corta, pero se
+// lee las siete enteras antes de empezar y eso tambien cuesta.
 const ESPERA_DE_LA_HOJA_MS = 170000;
 const TECHO_DE_LA_HOJA = 12000;
 
@@ -1253,7 +1259,7 @@ ${REGLA_DEL_NOMBRE(false)}`;
       system: encargo,
       mensaje: `Escribe la hoja de ruta, siguiendo el esquema.${recordatorio}`,
       molde: MOLDE_DE_LA_HOJA,
-      espera: AbortSignal.timeout(cuanto || ESPERA_DE_LA_HOJA_MS),
+      espera: AbortSignal.timeout(cuanto),
     }),
     texto: h => [h.porDondeEmpiezas, h.siLoDejas].concat((h.elOrden || []).map(o => o?.queHaces)).join(' '),
   });
