@@ -30,8 +30,9 @@
 //
 // ── QUE LLEVA EL DOCUMENTO ──────────────────────────────────
 //
-//   1. POR DONDE EMPIEZA. Una parte, y por que esa mueve a las demas. Va
-//      delante para quitarle el agobio de tener siete cosas que arreglar.
+//   1. POR DONDE EMPIEZA. La conducta por la que empieza, contada con lo que
+//      hace, y por que mover esa arrastra lo demas. Va delante para quitarle
+//      el agobio de tener siete cosas que arreglar.
 //   2. LAS SIETE PARTES, todas iguales, cada una con cuatro cosas: que deja de
 //      hacer y que hace en su lugar, los movimientos concretos, lo que va a
 //      aparecer para frenarle y en que lo va a notar.
@@ -114,7 +115,7 @@ ESTILO DE ESCRITURA:
 - NADA DE ANIMAR NI DE CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
 - PROHIBIDAS ESTAS PALABRAS Y CUALQUIER VARIANTE SUYA: sanar, empoderarte, gestionar tus emociones, tu mejor yo, trabajar en ti, tu proceso, tu camino, y "mejor versión" en todas sus formas.
 - "Nueva versión" sí se puede decir, pero no es una muletilla: como mucho una vez, y solo si cae sola.
-- SU NOMBRE APARECE, un par de veces por parte, repartidas y donde caiga natural. Nunca en la frase de cierre.
+- SU NOMBRE APARECE, un par de veces en lo que escribas, repartidas y donde caiga natural. Nunca en la última frase.
 - Español de España, hablado. Ni una palabra en otro idioma.
 - Sin asteriscos, sin listas, sin símbolos, sin guiones de adorno y sin numerar nada: la maqueta la pone el programa, no tú.
 
