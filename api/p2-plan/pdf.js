@@ -3,8 +3,8 @@
 //
 // EL PDF DEL P2.
 //
-// Recibe el documento ya escrito -el principio, las siete partes, lo primero
-// que hace y el final- y lo monta en un PDF con la marca. No le pide nada al modelo, no lee el
+// Recibe el documento ya escrito -las siete partes y la hoja de ruta- y lo
+// monta en un PDF con la marca. No le pide nada al modelo, no lee el
 // informe del P1 y no cobra: solo maqueta lo que le llega.
 //
 // LAS MEDIDAS SON LAS DEL P1, a proposito. Los dos documentos se leen seguidos
@@ -13,9 +13,8 @@
 // siempre. Lo unico que cambia es que aqui todas las paginas van sobre la base
 // lisa, porque el P2 no tiene una ilustracion por parte.
 //
-// CADA SECCION EMPIEZA EN HOJA NUEVA: el principio, cada una de las siete
-// partes, lo primero que hace, el orden, el dia que lo deje y la hoja con todo
-// junto. Ninguna se pega a la anterior.
+// CADA SECCION EMPIEZA EN HOJA NUEVA: cada una de las siete partes y la hoja
+// de ruta. Ninguna se pega a la anterior.
 // ════════════════════════════════════════════════════════════════
 
 import { createRequire } from 'module';
@@ -70,8 +69,8 @@ const ENTRE_CAJAS = 5;
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
-  const { nombre, marco, partes, empiezaPor } = req.body || {};
-  if (!marco || !Array.isArray(partes) || !partes.length) {
+  const { nombre, hoja, partes } = req.body || {};
+  if (!hoja || !Array.isArray(partes) || !partes.length) {
     return res.status(400).json({ error: 'Falta el documento que hay que maquetar' });
   }
 
@@ -246,107 +245,52 @@ export default async function handler(req, res) {
       doc.text(t(nombre).toUpperCase(), W / 2, 145, { align: 'center' });
     }
 
-    // ── EL PRINCIPIO ──────────────────────────────────────────
-    abrirSeccion('Antes de nada', 'Por dónde empiezas');
-    for (const pieza of [marco.laConducta, marco.porQueEsa, marco.soloEsto]) {
-      if (!t(pieza)) continue;
-      corrido(pieza);
-      y += ENTRE_PARRAFOS;
-    }
-
     // ── LAS SIETE PARTES ──────────────────────────────────────
+    //
+    // Cada una en su hoja, con sus cinco puntos y el nombre de cada uno: sin
+    // ellos quien lee no sabe de que le habla cada trozo, ni puede volver a
+    // buscar uno el dia que le haga falta.
+    const PUNTOS = ['adondeVas', 'queTeFrena', 'elPlan', 'dondeTeCaes', 'comoTeLevantas'];
+    const PORDEFECTO = {
+      adondeVas: 'Adónde vas', queTeFrena: 'Qué te frena', elPlan: 'El plan',
+      dondeTeCaes: 'Dónde te vas a caer', comoTeLevantas: 'Cómo te levantas',
+    };
+
     for (const parte of partes) {
       abrirSeccion(parte?.etiqueta, t(parte?.titulo));
-      corrido(parte?.texto);
-
-      const movimientos = Array.isArray(parte?.movimientos) ? parte.movimientos : [];
-      if (movimientos.length) {
-        subtitulo(parte?.nombres?.movimientos || 'Qué haces');
-        // Cada movimiento en su caja: son lo que ella va a hacer, y tienen que
-        // verse como piezas sueltas y no como mas texto del de arriba.
-        for (const m of movimientos) caja(m?.titulo, m?.texto);
-      }
-      // Y las otras dos, con su nombre para que sepa de que le hablan y para
-      // poder volver a buscarlas el dia que le hagan falta.
-      if (t(parte?.freno)) {
-        subtitulo(parte?.nombres?.freno || 'Lo que te va a frenar');
-        corrido(parte.freno);
-      }
-      if (t(parte?.evita)) {
-        subtitulo(parte?.nombres?.evita || 'Lo que no hagas');
-        corrido(parte.evita);
-      }
-      if (t(parte?.senal)) {
-        subtitulo(parte?.nombres?.senal || 'En qué lo vas a notar');
-        corrido(parte.senal);
+      for (const punto of PUNTOS) {
+        if (!t(parte?.[punto])) continue;
+        subtitulo(parte?.nombres?.[punto] || PORDEFECTO[punto]);
+        corrido(parte[punto]);
       }
     }
 
-    // ── LO PRIMERO QUE HACE ───────────────────────────────────
+    // ── LA HOJA DE RUTA ───────────────────────────────────────
     //
-    // Es la hoja por la que este documento deja de leerse y empieza a hacerse,
-    // asi que va sola y con su sitio, delante del orden.
-    const arranque = [marco.conQue, marco.comoEmpiezas, marco.cuandoSumas].filter(x => t(x));
-    if (arranque.length) {
-      abrirSeccion('Para terminar', 'Lo primero que haces');
-      for (let i = 0; i < arranque.length; i++) {
-        corrido(arranque[i]);
-        if (i < arranque.length - 1) y += ENTRE_PARRAFOS;
-      }
-    }
+    // La ultima hoja y la que se queda a mano: por donde empieza, las siete en
+    // orden con lo que hace en cada una, y que hacer si lo deja del todo.
+    abrirSeccion('Para tener a mano', 'Tu hoja de ruta');
 
-    // ── EL ORDEN ──────────────────────────────────────────────
-    const orden = Array.isArray(marco.orden) ? marco.orden : [];
-    if (orden.length) {
-      abrirSeccion('Para terminar', 'Y después, en este orden');
-      // EMPIEZA POR LA PARTE POR LA QUE EMPIEZA. Al principio del documento se
-      // le cuenta la conducta por la que arranca, pero sin decirle de que parte
-      // sale; sin esto la lista empieza por la segunda y no ata una con otra.
-      if (t(empiezaPor)) caja(t(empiezaPor), 'Es por aquí por donde empiezas.');
-      // Y cada paso en su caja, que es como se lee una hoja de ruta: uno,
-      // luego el siguiente, y viendo donde acaba cada uno.
-      for (const paso of orden) {
-        // "PASAS AQUI CUANDO", no "cuando" a secas. En una caja el titulo va
-        // arriba, asi que un "cuando..." suelto debajo se lee como si fuera de
-        // esa parte, y no lo es: es lo que tiene que estar pasando para dar por
-        // hecha la anterior. Dicho asi se entiende sin explicar nada.
-        caja(t(paso?.titulo), t(paso?.saltas) ? `Pasas aquí cuando ${t(paso.saltas)}.` : '');
-      }
-    }
-
-    // ── EL DIA QUE LO DEJE ────────────────────────────────────
-    if (t(marco.recaida)) {
-      abrirSeccion('Para terminar', 'El día que lo dejes');
-      corrido(marco.recaida);
-    }
-
-    // ── TODO JUNTO, EN UNA HOJA ───────────────────────────────
-    //
-    // Es la ultima, y es la que de verdad se va a usar. Todo lo demas se lee
-    // una vez; esto se tiene delante. Van sus pasos en el orden en que los va a
-    // hacer, cada uno con su cuadrito para marcarlo.
-    const aMano = Array.isArray(req.body?.aMano) ? req.body.aMano : [];
-    if (aMano.length) {
-      abrirSeccion('Para tener a mano', 'Tu plan en una hoja');
-      corrido('Todo lo que tienes que hacer, en el orden en que lo vas a hacer. Ve marcando lo que ya hagas.');
-      y += ENTRE_PARRAFOS;
-
-      for (const bloque of aMano) {
-        const pasos = Array.isArray(bloque?.pasos) ? bloque.pasos.filter(x => t(x)) : [];
-        if (!pasos.length) continue;
-        // El titulo no se queda solo al pie: se lleva consigo su primer paso.
-        cabe(RENGLON * 3);
-        escribir(t(bloque?.titulo), { fuente: 'bold', tam: 13, color: VERDE });
+    if (t(hoja.porDondeEmpiezas)) {
+      subtitulo('Por dónde empiezas');
+      if (t(hoja.tituloDelPrimero)) {
+        escribir(t(hoja.tituloDelPrimero), { fuente: 'bold', tam: 13, color: VERDE });
         y += 2;
-        for (const paso of pasos) {
-          cabe(RENGLON * 2);
-          doc.setDrawColor(DORADO[0], DORADO[1], DORADO[2]);
-          doc.setLineWidth(0.4);
-          doc.rect(X + 1, y - 3.6, 4, 4);
-          escribir(t(paso), { x: X + 9, ancho: ANCHO - 9 });
-        }
-        y += ENTRE_PARRAFOS;
       }
+      corrido(hoja.porDondeEmpiezas);
+    }
+
+    const elOrden = Array.isArray(hoja.elOrden) ? hoja.elOrden : [];
+    if (elOrden.length) {
+      subtitulo('El orden');
+      // Cada una en su caja: se leen sueltas, una detras de otra, y asi se ve
+      // donde acaba una y empieza la siguiente.
+      elOrden.forEach((paso, i) => caja(`${i + 1}. ${t(paso?.titulo)}`, t(paso?.queHaces)));
+    }
+
+    if (t(hoja.siLoDejas)) {
+      subtitulo('Si lo dejas del todo');
+      corrido(hoja.siLoDejas);
     }
 
     numeroDePagina();
