@@ -663,6 +663,56 @@ Nombre de pila: ${nombre}`;
   // inventada dentro.
   const entera = p => p.cambio && p.freno && p.senal && p.movimientos.length >= 1;
 
+  // ── Y NI UN MOVIMIENTO REPETIDO EN TODO EL DOCUMENTO ──────
+  //
+  // Es el fallo que mata este producto: siete partes que le mandan hacer lo
+  // mismo con otras palabras. Ella lee veinte cosas que hacer y en realidad
+  // son diez, y a la semana no hace ninguna.
+  //
+  // Al encargo se le pide que lo mire, y lo mira, pero pedirlo no basta. Aqui
+  // se comprueba: el que ya salio antes se cae, y se queda en la parte donde
+  // aparecio primero. No se vuelve a pedir el plan -no cabria en el tiempo del
+  // servidor- y no hace falta: quitar el repetido es justo lo que habria que
+  // hacer con el.
+  // Se comparan por las palabras que llevan dentro, cortadas a cinco letras:
+  // asi "paras" y "para", o "cuentas" y "cuenta", cuentan como la misma. Sin
+  // ese corte, el mismo movimiento escrito con otro tiempo verbal se colaba.
+  //
+  // El liston esta medido, no puesto a ojo: con pares escritos a mano, dos
+  // maneras de decir lo mismo dan de 0,82 a 1, y dos cosas distintas que
+  // comparten palabras no pasan de 0,31. En medio hay sitio de sobra.
+  const comoSeParece = txt => new Set(
+    sinTildes(txt).replace(/[^a-z0-9ñ ]/g, ' ').split(/\s+/)
+      .filter(w => w.length >= 4).map(w => w.slice(0, 5)));
+
+  const seParecen = (a, b) => {
+    if (!a.size || !b.size) return false;
+    let juntos = 0;
+    for (const w of a) if (b.has(w)) juntos++;
+    return juntos / (a.size + b.size - juntos) >= 0.55;
+  };
+
+  // PERO NUNCA SE QUEDA UNA PARTE SIN NINGUNO. Si a una le sobran todos porque
+  // ya salieron antes, esa parte se caeria entera y la clienta perderia una
+  // parcela de su vida. Antes que eso, se le deja el primero: repetir uno es
+  // malo, quedarse sin area es peor.
+  const yaSalieron = [];
+  for (const a of AREAS) {
+    const parte = porArea.get(a.id);
+    if (!parte) continue;
+    const quedan = [];
+    for (const m of parte.movimientos) {
+      const suyo = comoSeParece(`${m.cuando} ${m.haces}`);
+      if (quedan.length && yaSalieron.some(otro => seParecen(suyo, otro))) {
+        console.warn(`[p2] en ${a.id} venia un movimiento que ya estaba en otra parte, se quita`);
+        continue;
+      }
+      yaSalieron.push(suyo);
+      quedan.push(m);
+    }
+    parte.movimientos = quedan;
+  }
+
   const partes = AREAS.map(a => porArea.get(a.id)).filter(p => p && entera(p));
   const cojas = AREAS.map(a => porArea.get(a.id)).filter(p => p && !entera(p)).map(p => p.area);
   const faltan = AREAS.filter(a => !porArea.has(a.id)).map(a => a.id);
