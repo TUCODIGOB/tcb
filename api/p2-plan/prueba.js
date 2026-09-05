@@ -386,6 +386,16 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
     system,
     messages: [{ role: 'user', content: mensaje }],
     output_config: { format: { type: 'json_schema', schema: molde } },
+    // SE PIDE A TROZOS, NO DE GOLPE.
+    //
+    // Una peticion normal se queda callada mientras el modelo escribe y solo
+    // contesta al final. Con respuestas largas eso se corta por el camino: al
+    // llegar al tope, la peticion muere aunque el modelo siguiera trabajando,
+    // y se pierde todo lo que llevaba escrito.
+    //
+    // A trozos la respuesta va llegando segun se escribe. Nada se queda callado
+    // esperando, y aqui abajo se puede ver que sigue viniendo.
+    stream: true,
   };
   if (piensa) {
     cuerpo.thinking = { type: 'adaptive' };
@@ -397,6 +407,8 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
   // EL AVISO SE ENTIENDE. Si se pasa del tiempo, lo que llega de serie es
   // "The operation was aborted due to timeout", que quien lo lee no sabe lo que
   // es y encima esta en ingles.
+  const cortado = err => err && (err.name === 'TimeoutError' || err.name === 'AbortError');
+
   let resp;
   try {
     resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -410,9 +422,7 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
       body: JSON.stringify(cuerpo),
     });
   } catch (err) {
-    if (err && (err.name === 'TimeoutError' || err.name === 'AbortError')) {
-      throw new Error(`${que}: ha tardado más de la cuenta y se ha cortado. Vuelve a intentarlo.`);
-    }
+    if (cortado(err)) throw new Error(`${que}: ha tardado más de la cuenta y se ha cortado. Vuelve a intentarlo.`);
     throw err;
   }
 
@@ -421,12 +431,38 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
     throw new Error(`${que}: el modelo ha contestado ${resp.status} — ${detalle}`);
   }
 
-  const datos = await resp.json();
-  // Cuando piensa, la respuesta trae delante un bloque de pensamiento y detras
-  // el texto. Se cogen solo los de texto y se pegan.
-  const texto = (datos.content || [])
-    .filter(b => b && b.type === 'text' && typeof b.text === 'string')
-    .map(b => b.text).join('');
+  // Los trozos llegan como lineas "data: {...}". Se juntan solo los de texto:
+  // cuando piensa, lo que piensa viene en otros trozos aparte y aqui no entra.
+  let texto = '';
+  try {
+    const lector = resp.body.getReader();
+    const aLetras = new TextDecoder();
+    let resto = '';
+    for (;;) {
+      const { done, value } = await lector.read();
+      if (done) break;
+      resto += aLetras.decode(value, { stream: true });
+      const lineas = resto.split('\n');
+      resto = lineas.pop();
+      for (const linea of lineas) {
+        if (!linea.startsWith('data:')) continue;
+        const crudo = linea.slice(5).trim();
+        if (!crudo || crudo === '[DONE]') continue;
+        let trozo;
+        try { trozo = JSON.parse(crudo); } catch { continue; }
+        if (trozo.type === 'error') {
+          throw new Error(`${que}: el modelo ha cortado — ${trozo.error?.message || 'sin detalle'}`);
+        }
+        if (trozo.type === 'content_block_delta' && trozo.delta?.type === 'text_delta') {
+          texto += trozo.delta.text;
+        }
+      }
+    }
+  } catch (err) {
+    if (cortado(err)) throw new Error(`${que}: ha tardado más de la cuenta y se ha cortado. Vuelve a intentarlo.`);
+    throw err;
+  }
+
   if (!texto.trim()) throw new Error(`${que}: el modelo ha devuelto una respuesta vacía`);
 
   try {
@@ -853,15 +889,36 @@ const NO_NOMBRES_LA_CARTA =
   'Ni un planeta, ni un signo, ni una casa, ni un aspecto, ni la carta, ni el mapa. ' +
   'Quien lo lee no ha visto nada de eso y no sabe de qué le hablas.';
 
-async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso = '' }) {
-  const primera = await pedir('');
+// LO QUE LE QUEDA A ESTA PETICION.
+//
+// Cada llamada del navegador tiene el tiempo del servidor y nada mas. El
+// primer intento puede llevarse casi todo, y entonces el segundo no arranca
+// con el tope entero: arranca con lo que sobre. Sin esto, el reintento se
+// ponia a pedir otros dos minutos que ya no existian y se cortaba en seco,
+// perdiendo tambien lo que habia salido bien a la primera.
+function loQueQueda(arranque, tope) {
+  return Math.min(tope, MARGEN_DEL_SERVIDOR_MS - (Date.now() - arranque));
+}
+
+async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso = '', tope = 0 }) {
+  const arranque = Date.now();
+  const primera = await pedir('', tope || undefined);
   const laCarta = hablaDeAstrologia(texto(primera));
   const aMedias = cojo(primera);
   if (!laCarta && !aMedias) return primera;
 
+  // Y SOLO SE PIDE OTRA VEZ SI CABE. Si del tiempo del servidor no queda ni
+  // para la mitad de un intento, no se pide: se entrega lo que hay, que es
+  // mejor que quedarse sin nada por haberlo intentado.
+  const queda = tope ? loQueQueda(arranque, tope) : 0;
+  if (tope && queda < tope / 2) {
+    console.warn(`[p2] ${que}: ${laCarta ? 'se ha colado una palabra de la carta' : 'ha venido a medias'}, pero ya no queda tiempo para pedirlo otra vez`);
+    return primera;
+  }
+
   console.warn(`[p2] ${que}: ${laCarta ? 'se ha colado una palabra de la carta' : 'ha venido a medias'}, se pide otra vez`);
   const elAviso = typeof aviso === 'function' ? aviso(primera) : aviso;
-  const segunda = await pedir((laCarta ? `\n\n${NO_NOMBRES_LA_CARTA}` : '') + (aMedias ? elAviso : ''));
+  const segunda = await pedir((laCarta ? `\n\n${NO_NOMBRES_LA_CARTA}` : '') + (aMedias ? elAviso : ''), queda || undefined);
 
   // Y SE ENTREGA LA MENOS MALA DE LAS DOS. Pedir otra vez no garantiza que
   // salga mejor: puede venir mas corta, o colarsele lo que a la primera no se
@@ -904,7 +961,13 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 // y doscientas sesenta palabras. Ahora son seis casillas y trescientas, y con
 // sesenta y cinco se cortaba antes de terminar. Ciento veinte caben dos veces
 // de sobra y no cuestan nada mientras no se usen.
-const ESPERA_DE_ESCRIBIR_MS = 120000;
+// LO QUE SE LE DA A CADA INTENTO.
+//
+// Con 120 segundos se corto una parte real: escribir esto es una respuesta
+// larga y no cabia. Se le da mas, y de manera que los dos intentos juntos
+// sigan cabiendo en el tiempo del servidor: el primero se lleva esto, y el
+// segundo lo que sobre.
+const ESPERA_DE_ESCRIBIR_MS = 170000;
 const TECHO_DE_ESCRIBIR = 12000;
 
 const MOLDE_DE_LA_PARTE = {
@@ -1000,7 +1063,8 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
     aviso: p => cuentaComoEs(p.elPlan, 0) || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto]))
       ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta a dónde va, qué se lo impide hoy, qué hace, dónde se cae y cómo vuelve.'
       : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cinco se cuenta entero, y el plan va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
-    pedir: recordatorio => alModelo({
+    tope: ESPERA_DE_ESCRIBIR_MS,
+    pedir: (recordatorio, cuanto) => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
       piensa: 'medium',
@@ -1008,7 +1072,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
       system: encargo,
       mensaje: `Escribe las cinco partes de esta parcela, enteras.${recordatorio}`,
       molde: MOLDE_DE_LA_PARTE,
-      espera: AbortSignal.timeout(ESPERA_DE_ESCRIBIR_MS),
+      espera: AbortSignal.timeout(cuanto || ESPERA_DE_ESCRIBIR_MS),
     }),
     texto: p => PUNTOS.map(punto => p[punto]).join(' '),
   });
@@ -1027,7 +1091,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
 // LEE LAS SIETE PARTES YA ESCRITAS, no lo decidido. Es un resumen de lo que
 // pone de verdad en el documento, asi que tiene que ver el documento. Por eso
 // va al final y no en paralelo con las demas.
-const ESPERA_DE_LA_HOJA_MS = 120000;
+const ESPERA_DE_LA_HOJA_MS = 170000;
 const TECHO_DE_LA_HOJA = 12000;
 
 const MOLDE_DE_LA_HOJA = {
@@ -1111,7 +1175,8 @@ ${REGLA_DEL_NOMBRE(false)}`;
             || !hay.has(String(h.empiezaPor || '').trim())
             || new Set((h.elOrden || []).map(o => o?.area).filter(x => hay.has(x))).size !== hay.size,
     aviso: `\n\nY OJO: la vez anterior algo vino vacío o faltó alguna parte del orden. El orden lleva las ${AREAS.length}, cada una con su nombre en clave copiado tal cual y con lo que tiene que hacer ahí.`,
-    pedir: recordatorio => alModelo({
+    tope: ESPERA_DE_LA_HOJA_MS,
+    pedir: (recordatorio, cuanto) => alModelo({
       que: 'escribir la hoja de ruta',
       modelo: 'claude-sonnet-5',
       piensa: 'medium',
@@ -1119,7 +1184,7 @@ ${REGLA_DEL_NOMBRE(false)}`;
       system: encargo,
       mensaje: `Escribe la hoja de ruta, siguiendo el esquema.${recordatorio}`,
       molde: MOLDE_DE_LA_HOJA,
-      espera: AbortSignal.timeout(ESPERA_DE_LA_HOJA_MS),
+      espera: AbortSignal.timeout(cuanto || ESPERA_DE_LA_HOJA_MS),
     }),
     texto: h => [h.porDondeEmpiezas, h.siLoDejas].concat((h.elOrden || []).map(o => o?.queHaces)).join(' '),
   });
