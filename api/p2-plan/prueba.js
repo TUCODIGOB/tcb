@@ -157,13 +157,13 @@ Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que
 // documento y se leen del tiron: si todos arrancan igual se ve el molde a la
 // primera y esto empieza a parecer una plantilla.
 const AREAS = [
-  { id: 'identidad',   del_p1: 'IDENTIDAD',   titulo: 'Quién eres cuando estás en tu sitio' },
+  { id: 'identidad',   del_p1: 'IDENTIDAD',   titulo: 'Quién eres cuando ocupas tu sitio' },
   { id: 'patrones',    del_p1: 'PATRONES',    titulo: 'Tu día cuando dejas de repetirte' },
   { id: 'miedos',      del_p1: 'MIEDOS',      titulo: 'Lo que haces cuando el miedo deja de mandar' },
-  { id: 'herida',      del_p1: 'HERIDA',      titulo: 'Cuando dejas de sostener lo que no es tuyo' },
+  { id: 'herida',      del_p1: 'HERIDA',      titulo: 'Cuando sueltas lo que no te toca cargar' },
   { id: 'amor',        del_p1: 'AMOR',        titulo: 'Querer sin el patrón de siempre' },
   { id: 'relaciones',  del_p1: 'RELACIONES',  titulo: 'El sitio que ocupas entre los demás' },
-  { id: 'dinero',      del_p1: 'DINERO',      titulo: 'Con el dinero y el trabajo decides tú' },
+  { id: 'dinero',      del_p1: 'DINERO',      titulo: 'Con el dinero y el trabajo, decides tú' },
 ];
 
 // Las cinco cosas que lleva cada parte, con el nombre que ve la clienta. Se
