@@ -581,19 +581,47 @@ Nombre de pila: ${nombre}`;
     });
   }
 
-  const partes = AREAS.map(a => porArea.get(a.id)).filter(Boolean);
+  // UNA PARTE A MEDIAS NO SE ESCRIBE.
+  //
+  // Si viene con una casilla vacia, quien escribe se encuentra un hueco y lo
+  // rellena por su cuenta, y entonces se inventa algo de su vida que no sale
+  // de su carta. Vale mas entregar seis partes buenas que siete con una
+  // inventada dentro.
+  const entera = p => p.nuevaVersion && p.cambio && p.freno && p.senal
+    && p.movimientos.length >= 1;
+
+  const partes = AREAS.map(a => porArea.get(a.id)).filter(p => p && entera(p));
+  const cojas = AREAS.map(a => porArea.get(a.id)).filter(p => p && !entera(p)).map(p => p.area);
   const faltan = AREAS.filter(a => !porArea.has(a.id)).map(a => a.id);
+  if (cojas.length) console.warn(`[p2] estas partes han venido a medias y no se escriben: ${cojas.join(', ')}`);
   if (faltan.length) console.warn(`[p2] el plan ha venido sin estas partes: ${faltan.join(', ')}`);
+
+  // POR DONDE EMPIEZA TIENE QUE SER UNA DE LAS QUE SE VAN A ESCRIBIR.
+  // Si el modelo nombra una que no existe, o una que se ha caido, el documento
+  // abriria mandandola a un sitio que no esta. Se coge la primera que si esta.
+  const hay = new Set(partes.map(p => p.area));
+  let empieza = String(salida.empiezaPor?.area || '').trim();
+  if (!hay.has(empieza)) {
+    console.warn(`[p2] por donde empieza venia como "${empieza}", que no esta; se pone la primera`);
+    empieza = partes[0]?.area || '';
+  }
+
+  // Y EL ORDEN, SOLO CON LAS QUE QUEDAN Y SIN REPETIR. Ni la de empezar, que
+  // ya va delante.
+  const puestas = new Set([empieza]);
+  const orden = [];
+  for (const o of (Array.isArray(salida.orden) ? salida.orden : [])) {
+    const area = String(o?.area || '').trim();
+    const saltas = String(o?.saltas || '').trim();
+    if (!hay.has(area) || puestas.has(area) || !saltas) continue;
+    puestas.add(area);
+    orden.push({ area, saltas });
+  }
 
   return {
     partes,
-    empiezaPor: {
-      area: String(salida.empiezaPor?.area || '').trim(),
-      porque: String(salida.empiezaPor?.porque || '').trim(),
-    },
-    orden: (Array.isArray(salida.orden) ? salida.orden : [])
-      .map(o => ({ area: String(o?.area || '').trim(), saltas: String(o?.saltas || '').trim() }))
-      .filter(o => o.area),
+    empiezaPor: { area: empieza, porque: String(salida.empiezaPor?.porque || '').trim() },
+    orden,
     recaida: String(salida.recaida || '').trim(),
   };
 }
@@ -821,6 +849,11 @@ const MOLDE_DEL_MARCO = {
 
 const tituloDe = id => (AREAS.find(a => a.id === id) || {}).titulo || id;
 
+// Dos titulos son el mismo aunque cambien las mayusculas, las tildes o la
+// puntuacion. Comparar dos cadenas no es criterio: lo hace el codigo.
+const comoSeCompara = txt =>
+  sinTildes(txt).replace(/[^a-z0-9ñ ]/g, ' ').replace(/\s+/g, ' ').trim();
+
 async function escribirElMarco({ nombre, sexo, plan }) {
   const encargo = `${EL_P2_NO_ES_EL_P1}
 
@@ -838,7 +871,9 @@ Va lo primero de todo, antes de las siete partes. Le dices por cuál empieza y p
 
 "orden"
 Las otras seis, en el orden en que le conviene ir. De cada una:
-  area     el nombre de esa parte, tal cual te lo doy abajo.
+  area     el nombre de esa parte, copiado TAL CUAL te lo doy abajo, sin
+           cambiarle ni una palabra. Es lo que hace que cada texto acabe en su
+           parte y no en la de al lado.
   saltas   qué tiene que estar pasando ya en su vida para dar por hecha la
            anterior y pasar a esta. Una o dos frases.
 NADA DE FECHAS NI DE SEMANAS. No sabemos cómo es su vida. Se salta por lo que le está pasando, no por el calendario.
@@ -876,16 +911,34 @@ Nombre de pila: ${nombre}`;
       .concat((m.orden || []).map(o => o.saltas)).join(' '),
   });
 
+  // CADA TEXTO VA A LA PARTE QUE NOMBRA, NO A LA QUE LE TOCA POR SU SITIO.
+  //
+  // Emparejarlos por su puesto en la lista es lo que en el P1 corrio las
+  // descripciones tres sitios en el informe de una clienta: el modelo devolvio
+  // menos de las que se le pidieron, todo lo de detras se pego a lo que no era
+  // y nada salto. Aqui pasaria igual: el titulo saldria de una parte y el
+  // texto de otra.
+  //
+  // Con el nombre delante eso no puede pasar. Y el titulo lo pone el codigo,
+  // que es el que lo tiene bien escrito y con sus tildes.
+  const porTitulo = new Map();
+  for (const o of (Array.isArray(salida.orden) ? salida.orden : [])) {
+    const clave = comoSeCompara(o?.area);
+    const saltas = String(o?.saltas || '').trim();
+    if (clave && saltas && !porTitulo.has(clave)) porTitulo.set(clave, saltas);
+  }
+
+  const orden = [];
+  for (const paso of plan.orden) {
+    const titulo = tituloDe(paso.area);
+    const saltas = porTitulo.get(comoSeCompara(titulo));
+    if (saltas) orden.push({ titulo, saltas });
+    else console.warn(`[p2] el orden ha venido sin la parte de ${paso.area}`);
+  }
+
   return {
     empiezaPor: String(salida.empiezaPor || '').trim(),
-    // El titulo de cada area lo pone el codigo, no el modelo: asi sale siempre
-    // igual que el de su parte y con sus tildes.
-    orden: (Array.isArray(salida.orden) ? salida.orden : [])
-      .map((o, i) => ({
-        titulo: tituloDe(plan.orden[i]?.area) || String(o?.area || '').trim(),
-        saltas: String(o?.saltas || '').trim(),
-      }))
-      .filter(o => o.titulo && o.saltas),
+    orden,
     recaida: String(salida.recaida || '').trim(),
   };
 }
@@ -952,6 +1005,13 @@ export default async function handler(req, res) {
       const { nombre, sexo, decidido } = req.body || {};
       const area = AREAS.find(a => a.id === String(decidido?.area || ''));
       if (!area) return res.status(400).json({ error: 'Esa parte no existe' });
+      // Lo que llega del navegador se comprueba antes de meterlo en el encargo:
+      // si viniera a medias, el hueco lo rellenaria el modelo por su cuenta y
+      // acabaria inventandose algo de su vida.
+      if (!Array.isArray(decidido.movimientos) || !decidido.movimientos.length
+          || !decidido.nuevaVersion || !decidido.cambio || !decidido.freno || !decidido.senal) {
+        return res.status(400).json({ error: 'Esa parte llega a medias y no se escribe' });
+      }
       const parte = await escribirLaParte({
         area,
         nombre: String(nombre || 'esta persona'),
