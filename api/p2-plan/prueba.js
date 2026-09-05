@@ -20,7 +20,8 @@
 //   lo que va en las siete partes, por cual empieza, en que orden siguen y que
 //   hace el dia que falle. No escribe ni una linea del documento.
 //
-//   LAS DEMAS SOLO ESCRIBEN, sin pensar, lo que ya esta decidido.
+//   LAS DEMAS SOLO ESCRIBEN lo que ya esta decidido. Piensan un poco, lo justo
+//   para releerse antes de entregar, pero no deciden nada.
 //
 // Por que asi y no como antes: antes se pedian las siete partes de una en una
 // y ninguna veia a las demas, asi que varias llegaban por su cuenta a la misma
@@ -108,16 +109,15 @@ ESTILO DE ESCRITURA:
 - Y NO SE LE NOMBRA UN TÍTULO COMO SI FUERA UNA COSA QUE HACER. Los títulos son etiquetas para encontrar las cosas, no acciones. Lo que hace se dice con un verbo y con lo que hace.
 - NADA DE CONDICIONALES ENCADENADOS. Una suposición que arrastra a otra obliga a quien lee a sostener las dos a la vez, y suelta. Se cuenta lo que pasa, en presente y en directo.
 - LOS PÁRRAFOS RESPIRAN. Cuatro o cinco líneas, no dos: un párrafo cuenta una cosa entera, con su desarrollo. Cortar cada dos líneas llena el texto de puntos y lo vuelve entrecortado, que es lo contrario de alguien hablando. Y tampoco al revés: cinco ideas seguidas en el mismo párrafo no se leen, se abandonan.
-- LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice por dentro, con sus palabras y en primera persona. Es lo que hace que se reconozca.
-- LE DAS LA RAZÓN ANTES DE CORREGIR. Nunca de frente.
+- LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice por dentro, con sus palabras y en primera persona. Es lo que hace que se reconozca. Una o dos en lo que escribas, no más: en cuanto se repiten en cada párrafo se convierten en una muletilla y dejan de sonar suyas.
+- LE DAS LA RAZÓN ANTES DE CORREGIR: primero le reconoces por qué hace lo que hace, que en su momento le sirvió, y después le dices lo que cambia. Reconocerlo no es suavizarlo: lo que viene detrás se dice igual de claro y sin rodeos.
 - NO DES NADA POR SABIDO. No tiene a quién preguntarle. Cortar una explicación no es escribir conciso, es dejarla coja: si hace falta una frase más para que se entienda, va esa frase.
 - NI UNA PALABRA TÉCNICA: ningún planeta, ningún signo, ninguna casa, ningún aspecto. Su carta no se nombra, y no se dice tu informe ni tu estudio.
 - NADA DE ANIMAR NI DE CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
 - PROHIBIDAS ESTAS PALABRAS Y CUALQUIER VARIANTE SUYA: sanar, empoderarte, gestionar tus emociones, tu mejor yo, trabajar en ti, tu proceso, tu camino, y "mejor versión" en todas sus formas.
 - "Nueva versión" sí se puede decir, pero no es una muletilla: como mucho una vez, y solo si cae sola.
-- SU NOMBRE APARECE, un par de veces en lo que escribas, repartidas y donde caiga natural. Nunca en la última frase.
 - Español de España, hablado. Ni una palabra en otro idioma.
-- Sin asteriscos, sin listas, sin símbolos, sin guiones de adorno y sin numerar nada: la maqueta la pone el programa, no tú.
+- Sin asteriscos, sin listas, sin símbolos, sin guiones de adorno y sin numerar nada: la maqueta la pone el programa, no tú. Lo único que marcas tú es dónde acaba un párrafo y empieza el siguiente, dejando una línea en blanco entre los dos.
 
 SE ESCRIBE EN ESPAÑOL CORRECTO, CON TODAS SUS TILDES Y TODAS SUS EÑES
 
@@ -176,7 +176,7 @@ const AREAS = [
     porDondeEntra: 'entra por lo que hace nada más llegar a un sitio, delante de otros'  },
   { id: 'patrones',    del_p1: 'PATRONES',    titulo: 'Tu día cuando dejas de repetirte',
     deQueVa: 'lo que repite, su día a día, su manera de funcionar',
-    porDondeEntra: 'entra por una hora cualquiera de su día, por lo que se repite sin que nadie se lo pida'  },
+    porDondeEntra: 'entra por lo que repite cada día sin que nadie se lo pida, y sigue haciendo aunque ya no le sirva'  },
   { id: 'miedos',      del_p1: 'MIEDOS',      titulo: 'Lo que haces cuando el miedo deja de mandar',
     deQueVa: 'lo que le frena y lo que evita',
     porDondeEntra: 'entra por lo que deja de hacer, por el paso que no da'  },
@@ -215,6 +215,22 @@ function comoSeLeHabla(sexo) {
 // Cuantos movimientos lleva cada parte. Dos o tres: uno se queda corto para
 // una parte entera, y con cuatro ya no se acuerda de ninguno.
 const MOVIMIENTOS = { min: 2, max: 3 };
+
+// DONDE PUEDE LLAMARLA POR SU NOMBRE, Y DONDE NO.
+//
+// Antes la regla estaba entre las comunes y decia "un par de veces en lo que
+// escribas". Eso valia cuando escribia una sola llamada; aqui escriben ocho, y
+// ninguna ve lo que han puesto las otras, asi que el documento acababa con el
+// nombre repetido quince o veinte veces. Eso no suena cercano, suena a carta
+// de publicidad.
+//
+// Asi que lo reparte el codigo: el principio y dos partes separadas entre si.
+// Tres veces en todo el documento.
+const NOMBRE_EN = new Set(['identidad', 'amor']);
+
+const REGLA_DEL_NOMBRE = puede => puede
+  ? 'Puedes llamarla por su nombre UNA vez en lo que escribas, donde caiga natural. Nunca en la última frase.'
+  : 'Y NO LA LLAMES POR SU NOMBRE en lo que escribas: ya se lo dicen en otro sitio, y repetido cansa.';
 // ════════════════════════════════════════════════════════════════
 // EL INFORME DEL P1 QUE YA ESTA GUARDADO
 // ════════════════════════════════════════════════════════════════
@@ -407,7 +423,9 @@ function susRasgos(rasgos) {
 // PASO 1: DECIDIR EL PLAN ENTERO, PENSANDO
 // ════════════════════════════════════════════════════════════════
 //
-// Esta es la unica llamada que piensa, y es todo el cambio.
+// Esta es la unica llamada que decide, y es todo el cambio. Tambien es la
+// unica que piensa a fondo: las que escriben piensan poco, y solo para
+// releerse.
 //
 // Recibe sus rasgos de las siete partes de golpe y decide el documento entero
 // en corto: que va en cada parte, por cual empieza, en que orden siguen y que
@@ -706,6 +724,13 @@ const PALABRAS_DE_ASTROLOGIA = [
   /\b(tu|su) (sol|luna|venus|marte|mercurio|jupiter|saturno|signo)\b/,
   /\b(los|tus|sus) planetas\b/,
   /\b(zodiaco|horoscopo|astrolog|efemerides)\b/,
+  // Y TAMPOCO SE NOMBRA EL OTRO DOCUMENTO. Las reglas lo prohiben, pero aqui
+  // el encargo le cuenta que ya se leyo un estudio suyo, asi que la tentacion
+  // de escribir "en tu estudio te contaron" la tiene delante. Quien lee no
+  // sabe que es eso ni tiene que saberlo.
+  /\b(tu|su) (informe|estudio|lectura|analisis)\b/,
+  /\b(el|ese|aquel) (informe|estudio) (que|suyo|anterior|tuyo)\b/,
+  /\b(primer|otro) (informe|estudio|documento)\b/,
 ];
 
 function sinTildes(txt) {
@@ -878,6 +903,8 @@ NO TE SALGAS DE LO DECIDIDO. Los movimientos son los que te doy. Lo demás lo es
 
 Y NO PONGAS TÍTULOS NI NÚMEROS: los pone el programa.
 
+LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que haces tú, y hace falta: sin esa línea todo sale pegado en un bloque y no hay quien lo lea en un móvil.
+
 
 LO QUE SE HA DECIDIDO PARA ESTA PARTE:
 
@@ -891,18 +918,23 @@ Lo que va a frenar: ${decidido.freno}
 En qué lo va a notar: ${decidido.senal}${rasgosDeLaParte(area, rasgos)}
 
 Quien lo va a leer es ${comoSeLeHabla(sexo)}
-Nombre de pila: ${nombre}`;
+Nombre de pila: ${nombre}
+${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
 
   const cuantas = t => String(t || '').trim().split(/\s+/).filter(Boolean).length;
+  const parrafosDe = t => String(t || '').split(/\n+/).filter(x => x.trim()).length;
 
   const salida = await sinNombrarLaCarta({
     que: `la parte de ${area.id}`,
     // Aqui se mira que el texto tenga su sitio y que esten los movimientos:
     // el mismo reintento sirve para eso y para la carta.
+    // Y que venga en parrafos, no en un solo bloque: la separacion la marca el
+    // modelo con una linea en blanco, y si no la pone sale un muro de texto.
     cojo: p => cuantas(p.texto) < PALABRAS_MINIMAS
+            || parrafosDe(p.texto) < 3
             || !(p.movimientos || []).length
             || (p.movimientos || []).some(m => !m.titulo || cuantas(m.texto) < 25),
-    aviso: `\n\nY OJO: la vez anterior salió corto. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras y cada movimiento contarse entero. Cuéntale más de lo que hace, con más detalle, en vez de alargar las frases que ya tienes.`,
+    aviso: `\n\nY OJO: la vez anterior salió corto o vino de una pieza. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras, ir repartido en párrafos separados por una línea en blanco, y cada movimiento contarse entero. Cuéntale más de lo que hace, con más detalle, en vez de alargar las frases que ya tienes.`,
     pedir: recordatorio => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
@@ -1026,7 +1058,8 @@ ${plan.orden.map((o, i) => {
 El día que falle: ${plan.recaida}
 
 Quien lo va a leer es ${comoSeLeHabla(sexo)}
-Nombre de pila: ${nombre}`;
+Nombre de pila: ${nombre}
+${REGLA_DEL_NOMBRE(true)}`;
 
   // LOS PASOS QUE SE ESPERAN, POR SU NOMBRE. Si vuelve con menos, la hoja de
   // ruta sale coja y quien lee se queda sin saber cuando le toca esa parte;
@@ -1043,6 +1076,7 @@ Nombre de pila: ${nombre}`;
     que: 'el principio y el final',
     cojo: m => estaVacia(m.laConducta, 'por dónde empiezas')
             || estaVacia(m.porQueEsa, 'por qué esa')
+            || estaVacia(m.soloEsto, 'solo esto')
             || estaVacia(m.recaida, 'el día que lo dejes')
             || faltaAlguno(m),
     aviso: `\n\nY OJO: la vez anterior algo vino vacío o faltó algún paso del orden. El principio y el día que falle llevan texto escrito para quien lo lee, y el orden lleva las ${esperados.length} partes que te doy, cada una con su cuándo.`,
@@ -1374,9 +1408,12 @@ ir.addEventListener('click', async () => {
 });
 
 function pintarArranque(m) {
+  // Los parrafos van dentro de un bloque, como los de las siete partes. Sueltos
+  // salian pegados unos a otros: la separacion entre parrafos la pone la hoja
+  // de estilo dentro de .bloque, y fuera de ahi no la pone nadie.
   return '<div class="parte marco"><p class="cual">Antes de nada</p>' +
-    '<h2>Por dónde empiezas</h2>' + parrafos(m.laConducta) +
-    parrafos(m.porQueEsa) + parrafos(m.soloEsto) + '</div>';
+    '<h2>Por dónde empiezas</h2><div class="bloque">' + parrafos(m.laConducta) +
+    parrafos(m.porQueEsa) + parrafos(m.soloEsto) + '</div></div>';
 }
 
 function pintarFinal(m, empiezaPor) {
