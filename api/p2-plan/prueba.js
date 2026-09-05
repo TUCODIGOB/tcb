@@ -158,12 +158,12 @@ Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que
 // primera y esto empieza a parecer una plantilla.
 const AREAS = [
   { id: 'identidad',   del_p1: 'IDENTIDAD',   titulo: 'Quién eres cuando estás en tu sitio' },
-  { id: 'patrones',    del_p1: 'PATRONES',    titulo: 'Tu día cuando deja de repetirse' },
-  { id: 'miedos',      del_p1: 'MIEDOS',      titulo: 'Lo que haces cuando el miedo ya no manda' },
-  { id: 'herida',      del_p1: 'HERIDA',      titulo: 'Cuando dejas de sostenerlo todo' },
-  { id: 'amor',        del_p1: 'AMOR',        titulo: 'Querer sin repetir lo de siempre' },
-  { id: 'relaciones',  del_p1: 'RELACIONES',  titulo: 'El sitio que ocupas con la gente' },
-  { id: 'dinero',      del_p1: 'DINERO',      titulo: 'Decidir tú con el dinero y el trabajo' },
+  { id: 'patrones',    del_p1: 'PATRONES',    titulo: 'Tu día cuando dejas de repetirte' },
+  { id: 'miedos',      del_p1: 'MIEDOS',      titulo: 'Lo que haces cuando el miedo deja de mandar' },
+  { id: 'herida',      del_p1: 'HERIDA',      titulo: 'Cuando dejas de sostener lo que no es tuyo' },
+  { id: 'amor',        del_p1: 'AMOR',        titulo: 'Querer sin el patrón de siempre' },
+  { id: 'relaciones',  del_p1: 'RELACIONES',  titulo: 'El sitio que ocupas entre los demás' },
+  { id: 'dinero',      del_p1: 'DINERO',      titulo: 'Con el dinero y el trabajo decides tú' },
 ];
 
 // Las cinco cosas que lleva cada parte, con el nombre que ve la clienta. Se
@@ -1101,6 +1101,9 @@ const PAGINA = `<!DOCTYPE html>
 </div>
 <script>
 const BLOQUES = ${JSON.stringify(BLOQUES)};
+// El nombre de cada area, el mismo que lleva en el P1, para ponerlo encima del
+// titulo con su numero.
+const NOMBRES = ${JSON.stringify(Object.fromEntries(AREAS.map(a => [a.id, a.del_p1])))};
 const quien = document.getElementById('quien');
 const ir = document.getElementById('ir');
 const aviso = document.getElementById('aviso');
@@ -1186,7 +1189,8 @@ ir.addEventListener('click', async () => {
   const huecos = plan.partes.map((_, i) => {
     const hueco = document.createElement('div');
     hueco.className = 'parte';
-    hueco.innerHTML = '<p class="cual">Parte ' + (i+1) + '</p><p class="aviso">Escribiéndose…</p>';
+    hueco.innerHTML = '<p class="cual">' + (i+1) + ' · ' + escapar(NOMBRES[plan.partes[i].area] || '') +
+      '</p><p class="aviso">Escribiéndose…</p>';
     salida.appendChild(hueco);
     return hueco;
   });
@@ -1196,8 +1200,8 @@ ir.addEventListener('click', async () => {
       const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo, decidido });
       huecos[i].outerHTML = pintarParte(parte, i+1);
     } catch (e) {
-      huecos[i].innerHTML = '<p class="cual">Parte ' + (i+1) + '</p>' +
-        '<p class="error">' + escapar(e.message) + '</p>';
+      huecos[i].innerHTML = '<p class="cual">' + (i+1) + ' · ' + escapar(NOMBRES[decidido.area] || '') +
+        '</p><p class="error">' + escapar(e.message) + '</p>';
     }
   }));
 
@@ -1232,7 +1236,7 @@ function pintarParte(p, n) {
   ).join('');
   const bloque = (titulo, cuerpo) =>
     '<div class="bloque"><h3>' + escapar(titulo) + '</h3>' + cuerpo + '</div>';
-  return '<div class="parte"><p class="cual">Parte ' + n + '</p>' +
+  return '<div class="parte"><p class="cual">' + n + ' · ' + escapar(NOMBRES[p.id] || '') + '</p>' +
     '<h2>' + escapar(p.titulo) + '</h2>' +
     bloque(BLOQUES.nuevaVersion, parrafos(p.nuevaVersion)) +
     bloque(BLOQUES.cambio, parrafos(p.cambio)) +
