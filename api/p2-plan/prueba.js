@@ -170,13 +170,20 @@ Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que
 // documento y se leen del tiron: si todos arrancan igual se ve el molde a la
 // primera y esto empieza a parecer una plantilla.
 const AREAS = [
-  { id: 'identidad',   del_p1: 'IDENTIDAD',   titulo: 'Quién eres cuando ocupas tu sitio' },
-  { id: 'patrones',    del_p1: 'PATRONES',    titulo: 'Tu día cuando dejas de repetirte' },
-  { id: 'miedos',      del_p1: 'MIEDOS',      titulo: 'Lo que haces cuando el miedo deja de mandar' },
-  { id: 'herida',      del_p1: 'HERIDA',      titulo: 'Cuando sueltas lo que no te toca cargar' },
-  { id: 'amor',        del_p1: 'AMOR',        titulo: 'Querer sin el patrón de siempre' },
-  { id: 'relaciones',  del_p1: 'RELACIONES',  titulo: 'El sitio que ocupas entre los demás' },
-  { id: 'dinero',      del_p1: 'DINERO',      titulo: 'Con el dinero y el trabajo, decides tú' },
+  { id: 'identidad',   del_p1: 'IDENTIDAD',   titulo: 'Quién eres cuando ocupas tu sitio',
+    deQueVa: 'quién es y cómo se planta delante de los demás' },
+  { id: 'patrones',    del_p1: 'PATRONES',    titulo: 'Tu día cuando dejas de repetirte',
+    deQueVa: 'lo que repite, su día a día, su manera de funcionar' },
+  { id: 'miedos',      del_p1: 'MIEDOS',      titulo: 'Lo que haces cuando el miedo deja de mandar',
+    deQueVa: 'lo que le frena y lo que evita' },
+  { id: 'herida',      del_p1: 'HERIDA',      titulo: 'Cuando sueltas lo que no te toca cargar',
+    deQueVa: 'lo que le duele de antiguo, su casa y los suyos' },
+  { id: 'amor',        del_p1: 'AMOR',        titulo: 'Querer sin el patrón de siempre',
+    deQueVa: 'la pareja, el deseo y el disfrute' },
+  { id: 'relaciones',  del_p1: 'RELACIONES',  titulo: 'El sitio que ocupas entre los demás',
+    deQueVa: 'la gente, hablar, los grupos, los amigos' },
+  { id: 'dinero',      del_p1: 'DINERO',      titulo: 'Con el dinero y el trabajo, decides tú',
+    deQueVa: 'el dinero, el trabajo y lo que vale lo suyo' },
 ];
 
 // Las cuatro cosas que lleva cada parte, con el nombre que ve la clienta. Se
@@ -631,6 +638,18 @@ Nombre de pila: ${nombre}`;
     orden.push({ area, saltas });
   }
 
+  // LA HOJA DE RUTA LAS LLEVA TODAS. Si quien decide se deja alguna fuera, esa
+  // parte se escribiria y luego no aparecerian en el orden, asi que quien lo
+  // lee no sabria cuando le toca. Las que falten se ponen al final, en el
+  // orden del documento, y quien escribe les pone el cuando a partir de lo que
+  // cambia en ellas.
+  for (const p of partes) {
+    if (puestas.has(p.area)) continue;
+    puestas.add(p.area);
+    orden.push({ area: p.area, saltas: '' });
+    console.warn(`[p2] el orden venia sin la parte de ${p.area}, se pone al final`);
+  }
+
   return {
     partes,
     empiezaPor: { area: empieza, porque: String(salida.empiezaPor?.porque || '').trim() },
@@ -767,7 +786,7 @@ ${REGLAS_COMUNES}
 
 LO QUE TE TOCA AHORA
 
-Escribes UNA parte del documento: la de ${area.titulo.toLowerCase()}.
+Escribes UNA parte del documento. La parcela de su vida que te toca es esta: ${area.deQueVa}.
 
 Lo que va en esa parte ya está decidido y te lo doy abajo en corto. Tú no eliges nada, no añades cosas que hacer y no quitas ninguna. Lo que haces es convertir cada línea en lo que se va a leer.
 
@@ -898,7 +917,7 @@ ${REGLAS_COMUNES}
 
 LO QUE TE TOCA AHORA
 
-El documento ya está escrito: son siete partes, una por cada parcela de su vida. Te toca lo que va delante y lo que va al final.
+El resto del documento ya está escrito. Te toca lo que va delante de todo y lo que va al final.
 
 Escribes tres cosas:
 
@@ -910,15 +929,17 @@ Se entra directamente por lo que hace. Nada de presentar el documento, nada de a
 Tres o cuatro frases.
 
 "orden"
-Las otras seis, en el orden en que le conviene ir. De cada una:
+Las demás, en el orden en que le conviene ir. De cada una:
   area     el nombre de esa parte, copiado TAL CUAL te lo doy abajo, sin
            cambiarle ni una palabra. Es lo que hace que cada texto acabe en su
            parte y no en la de al lado.
   saltas   qué tiene que estar pasando ya en su vida para dar por hecha la
            anterior y pasar a esta. Una o dos frases.
-           Y SALE DE ESA PARTE, no de otra: lo que escribas aquí tiene que
-           poder reconocerse en lo que se le ha pedido en esa misma parte.
-           Si lo que escribes vale para cualquiera de las siete, está mal.
+           Y SALE DE ESA PARTE, no de otra: debajo de cada una tienes lo que
+           cambia ahí, y de eso sale el cuándo. Si lo que escribes vale para
+           cualquiera de las siete, está mal.
+           Algunas traen ya apuntado el cuándo y otras no; a las que no lo
+           traen les pones tú uno sacado de lo que cambia ahí.
 NADA DE FECHAS NI DE SEMANAS. No sabemos cómo es su vida. Se salta por lo que le está pasando, no por el calendario.
 
 "recaida"
@@ -931,7 +952,11 @@ La conducta por la que empieza: ${(plan.partes.find(p => p.area === plan.empieza
 Y empieza por ahí porque: ${plan.empiezaPor.porque}
 
 Después, en este orden:
-${plan.orden.map((o, i) => `${i + 1}. ${tituloDe(o.area)} — se salta a ella cuando: ${o.saltas}`).join('\n')}
+${plan.orden.map((o, i) => {
+  const suya = plan.partes.find(p => p.area === o.area) || {};
+  return `${i + 1}. ${tituloDe(o.area)}\n   lo que cambia ahí: ${suya.cambio || ''}` +
+    (o.saltas ? `\n   se salta a ella cuando: ${o.saltas}` : '');
+}).join('\n')}
 
 El día que falle: ${plan.recaida}
 
