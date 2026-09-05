@@ -402,16 +402,27 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
     cuerpo.thinking = { type: 'disabled' };
   }
 
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    signal: espera,
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify(cuerpo),
-  });
+  // EL AVISO SE ENTIENDE. Si se pasa del tiempo, lo que llega de serie es
+  // "The operation was aborted due to timeout", que quien lo lee no sabe lo que
+  // es y encima esta en ingles.
+  let resp;
+  try {
+    resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      signal: espera,
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify(cuerpo),
+    });
+  } catch (err) {
+    if (err && (err.name === 'TimeoutError' || err.name === 'AbortError')) {
+      throw new Error(`${que}: ha tardado más de la cuenta y se ha cortado. Vuelve a intentarlo.`);
+    }
+    throw err;
+  }
 
   if (!resp.ok) {
     const detalle = (await resp.text()).slice(0, 300);
@@ -474,8 +485,18 @@ function susRasgos(rasgos) {
 // medias se pide otra vez, y los dos intentos juntos tienen que caber en los
 // 300 segundos que aguanta esta peticion.
 
-const ESPERA_DEL_PLAN_MS = 120000;
+const ESPERA_DEL_PLAN_MS = 200000;
 const TECHO_DEL_PLAN = 16000;
+
+// LO QUE AGUANTA LA PETICION, MENOS UN MARGEN PARA CONTESTAR. El servidor corta
+// a los 300 segundos, y si corta el, la clienta ve una pagina rota en vez de un
+// aviso. Aqui se corta antes y con un mensaje.
+const MARGEN_DEL_SERVIDOR_MS = 285000;
+
+// Y POR DEBAJO DE ESTO NO SE VUELVE A PEDIR. Un segundo intento con medio
+// minuto por delante no termina: gasta dinero, se corta igual y encima se lleva
+// por delante el plan que ya habia, que estaba a medias pero estaba.
+const ESPERA_MINIMA_PARA_REHACER_MS = 90000;
 
 const MOLDE_DEL_PLAN = {
   type: 'object',
@@ -535,7 +556,7 @@ const MOLDE_DEL_PLAN = {
   additionalProperties: false,
 };
 
-async function pedirElPlan({ nombre, sexo, rasgos, recordatorio = '' }) {
+async function pedirElPlan({ nombre, sexo, rasgos, recordatorio = '', espera = ESPERA_DEL_PLAN_MS }) {
   const encargo = `Estás preparando el plan de una persona: lo que tiene que hacer para llegar a ser quien quiere ser.
 
 Abajo tienes lo que ya se sabe de esa persona, sacado de su carta natal y repartido en las siete partes de su vida. Ya se lo han contado todo eso en otro documento que se ha leído entero.
@@ -691,7 +712,7 @@ Nombre de pila: ${nombre}`;
     system: encargo,
     mensaje: `Decide su plan entero, siguiendo el esquema.${recordatorio}`,
     molde: MOLDE_DEL_PLAN,
-    espera: AbortSignal.timeout(ESPERA_DEL_PLAN_MS),
+    espera: AbortSignal.timeout(espera),
   });
 
   // Se ordena como van en el documento y se deja solo una parte por area: si
@@ -868,12 +889,22 @@ Nombre de pila: ${nombre}`;
 // ya esta arreglado, y volver a pedirlo costaria un minuto y un dinero para
 // acabar en lo mismo.
 async function decidirElPlan({ nombre, sexo, rasgos }) {
+  const arranque = Date.now();
   const primero = await pedirElPlan({ nombre, sexo, rasgos });
   if (!primero.falla.length) return primero.plan;
+
+  // Y SOLO SE PIDE OTRA VEZ SI CABE. Lo que quede de los 300 segundos, y nunca
+  // menos de lo que tarda en salir uno entero.
+  const queda = MARGEN_DEL_SERVIDOR_MS - (Date.now() - arranque);
+  if (queda < ESPERA_MINIMA_PARA_REHACER_MS) {
+    console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), pero ya no queda tiempo para rehacerlo`);
+    return primero.plan;
+  }
 
   console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), se pide otra vez`);
   const segundo = await pedirElPlan({
     nombre, sexo, rasgos,
+    espera: Math.min(ESPERA_DEL_PLAN_MS, queda),
     recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, y cada una con sus ${MOVIMIENTOS.min} o ${MOVIMIENTOS.max} movimientos, distintos de los de las demás. Un movimiento que ya le hayas puesto a otra parte no cuenta: se sustituye por uno de verdad distinto, no se quita.`,
   });
 
@@ -1047,9 +1078,13 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 
 // EL TOPE CABE DOS VECES. Si se le cuela una palabra de la carta se vuelve a
 // pedir, asi que los dos intentos juntos tienen que caber en los 300 segundos
-// que aguanta esta peticion. Escribir una parte ronda el medio minuto, asi que
-// sesenta y cinco segundos ya es de sobra para una.
-const ESPERA_DE_ESCRIBIR_MS = 65000;
+// que aguanta esta peticion.
+//
+// Eran sesenta y cinco segundos, medidos cuando una parte eran cuatro casillas
+// y doscientas sesenta palabras. Ahora son seis casillas y trescientas, y con
+// sesenta y cinco se cortaba antes de terminar. Ciento veinte caben dos veces
+// de sobra y no cuestan nada mientras no se usen.
+const ESPERA_DE_ESCRIBIR_MS = 120000;
 const TECHO_DE_ESCRIBIR = 12000;
 
 const MOLDE_DE_LA_PARTE = {
