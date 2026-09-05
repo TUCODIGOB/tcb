@@ -758,10 +758,17 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 // PASO 2: ESCRIBIR LO QUE YA ESTA DECIDIDO
 // ════════════════════════════════════════════════════════════════
 //
-// Estas llamadas NO deciden nada y NO piensan. Reciben lo que salio del paso
-// anterior y lo convierten en el texto que ella va a leer, con el tono de la
-// marca. Si aqui se dejara pensar, se gastaria el presupuesto razonando en vez
-// de escribiendo y el texto llegaria cortado.
+// Estas llamadas NO deciden nada: reciben lo que salio del paso anterior y lo
+// convierten en el texto que ella va a leer, con el tono de la marca.
+//
+// PERO SI PIENSAN, Y POCO. No para decidir, que eso ya esta hecho, sino para
+// releerse antes de entregar. La regla que mas se saltaban -leerla por dentro
+// y, si nadie la diria hablando, reescribirla- es justo la que no se puede
+// cumplir sin pararse a comprobarla.
+//
+// El esfuerzo, bajo: aqui no hay nada que comparar ni que elegir, solo repasar
+// lo que se acaba de escribir. Y el techo sube, porque pensar sale del mismo
+// presupuesto que escribir y con el de antes la respuesta llegaria cortada.
 //
 // CADA UNA VE SOLO SU PARTE. No hace falta que vea las demas: el paso que
 // piensa ya se encargo de que no se repitan.
@@ -771,7 +778,7 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 // que aguanta esta peticion. Escribir una parte ronda el medio minuto, asi que
 // sesenta y cinco segundos ya es de sobra para una.
 const ESPERA_DE_ESCRIBIR_MS = 65000;
-const TECHO_DE_ESCRIBIR = 5000;
+const TECHO_DE_ESCRIBIR = 12000;
 
 const MOLDE_DE_LA_PARTE = {
   type: 'object',
@@ -864,7 +871,7 @@ Nombre de pila: ${nombre}`;
     pedir: recordatorio => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
-      piensa: '',
+      piensa: 'low',
       techo: TECHO_DE_ESCRIBIR,
       system: encargo,
       mensaje: `Escribe esta parte entera, con sus cuatro casillas y ${decidido.movimientos.length === 1 ? 'su movimiento' : `sus ${decidido.movimientos.length} movimientos`}.${recordatorio}`,
@@ -896,7 +903,7 @@ Nombre de pila: ${nombre}`;
 // El mismo tope que las partes, y por lo mismo: aqui tambien se puede pedir
 // dos veces.
 const ESPERA_DEL_MARCO_MS = 65000;
-const TECHO_DEL_MARCO = 4000;
+const TECHO_DEL_MARCO = 10000;
 
 const MOLDE_DEL_MARCO = {
   type: 'object',
@@ -999,7 +1006,7 @@ Nombre de pila: ${nombre}`;
     pedir: recordatorio => alModelo({
       que: 'escribir el principio y el final',
       modelo: 'claude-sonnet-5',
-      piensa: '',
+      piensa: 'low',
       techo: TECHO_DEL_MARCO,
       system: encargo,
       mensaje: `Escribe las tres cosas, siguiendo el esquema.${recordatorio}`,
