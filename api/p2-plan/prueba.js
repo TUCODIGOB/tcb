@@ -172,19 +172,26 @@ Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que
 // primera y esto empieza a parecer una plantilla.
 const AREAS = [
   { id: 'identidad',   del_p1: 'IDENTIDAD',   titulo: 'Quién eres cuando ocupas tu sitio',
-    deQueVa: 'quién es y cómo se planta delante de los demás' },
+    deQueVa: 'quién es y cómo se planta delante de los demás',
+    porDondeEntra: 'entra por lo que hace nada más llegar a un sitio, delante de otros'  },
   { id: 'patrones',    del_p1: 'PATRONES',    titulo: 'Tu día cuando dejas de repetirte',
-    deQueVa: 'lo que repite, su día a día, su manera de funcionar' },
+    deQueVa: 'lo que repite, su día a día, su manera de funcionar',
+    porDondeEntra: 'entra por una hora cualquiera de su día, por lo que se repite sin que nadie se lo pida'  },
   { id: 'miedos',      del_p1: 'MIEDOS',      titulo: 'Lo que haces cuando el miedo deja de mandar',
-    deQueVa: 'lo que le frena y lo que evita' },
+    deQueVa: 'lo que le frena y lo que evita',
+    porDondeEntra: 'entra por lo que deja de hacer, por el paso que no da'  },
   { id: 'herida',      del_p1: 'HERIDA',      titulo: 'Cuando sueltas lo que no te toca cargar',
-    deQueVa: 'lo que le duele de antiguo, su casa y los suyos' },
+    deQueVa: 'lo que le duele de antiguo, su casa y los suyos',
+    porDondeEntra: 'entra por lo que sostiene sin que se le note, y por lo que le cuesta pedir'  },
   { id: 'amor',        del_p1: 'AMOR',        titulo: 'Querer sin el patrón de siempre',
-    deQueVa: 'la pareja, el deseo y el disfrute' },
+    deQueVa: 'la pareja, el deseo y el disfrute',
+    porDondeEntra: 'entra por lo que da y por lo que no dice cuando quiere a alguien'  },
   { id: 'relaciones',  del_p1: 'RELACIONES',  titulo: 'El sitio que ocupas entre los demás',
-    deQueVa: 'la gente, hablar, los grupos, los amigos' },
+    deQueVa: 'la gente, hablar, los grupos, los amigos',
+    porDondeEntra: 'entra por lo que calla delante de la gente, o por lo que dice de más'  },
   { id: 'dinero',      del_p1: 'DINERO',      titulo: 'Con el dinero y el trabajo, decides tú',
-    deQueVa: 'el dinero, el trabajo y lo que vale lo suyo' },
+    deQueVa: 'el dinero, el trabajo y lo que vale lo suyo',
+    porDondeEntra: 'entra por una decisión suya de dinero o de trabajo que lleva tiempo sin tomar'  },
 ];
 
 // Las cuatro cosas que lleva cada parte, con el nombre que ve la clienta. Se
@@ -192,12 +199,7 @@ const AREAS = [
 // Eran cinco y sobraba uno: "Asi eres aqui" y "Lo que cambia" contaban lo
 // mismo, los dos en abstracto, asi que cada parte abria con dos parrafos que
 // no decian nada y quien leia no sabia de que le estaban hablando.
-const BLOQUES = {
-  cambio:      'Lo que cambia',
-  movimientos: 'Qué haces',
-  freno:       'Lo que va a aparecer para frenarte',
-  senal:       'En qué lo vas a notar',
-};
+const BLOQUES = { movimientos: 'Qué haces' };
 
 // A QUIEN SE LE ESCRIBE. El informe del P1 guarda si quien compro es mujer u
 // hombre, y hay que decirselo: los textos van en femenino o en masculino y sin
@@ -783,7 +785,7 @@ const TECHO_DE_ESCRIBIR = 12000;
 const MOLDE_DE_LA_PARTE = {
   type: 'object',
   properties: {
-    cambio: { type: 'string' },
+    texto: { type: 'string' },
     movimientos: {
       type: 'array',
       items: {
@@ -796,14 +798,37 @@ const MOLDE_DE_LA_PARTE = {
         additionalProperties: false,
       },
     },
-    freno: { type: 'string' },
-    senal: { type: 'string' },
   },
-  required: ['cambio', 'movimientos', 'freno', 'senal'],
+  required: ['texto', 'movimientos'],
   additionalProperties: false,
 };
 
-async function escribirLaParte({ area, nombre, sexo, decidido }) {
+// EL AREA SE ESCRIBE DE UNA TIRADA, NO POR CASILLAS.
+//
+// Antes salia en cuatro casillas de dos o tres frases cada una. Cada casilla
+// empezaba en frio, no venia de nada y no llevaba a nada, y el documento
+// entero sonaba a formulario. Eso no es que se entienda mal: es que no suena a
+// nadie hablando, y por eso no entra.
+//
+// Ahora el area es UN texto seguido, con su sitio para respirar. Los
+// movimientos siguen aparte porque son lo que se hace el martes y hay que
+// poder encontrarlos, pero todo lo demas se cuenta corrido.
+const PALABRAS_MINIMAS = 320;
+
+// Lo que se sabe de ella en esta parcela, tal como se lo conto el P1. Sin esto
+// quien escribe solo tiene el esquema de lo decidido, y con un esquema no se
+// escribe nada que suene a persona.
+function rasgosDeLaParte(area, rasgos) {
+  const linea = (r, conPorque) =>
+    `- ${r.nombre}: ${r.descripcion}` + (conPorque && r.causa ? ` POR QUÉ LE PASA: ${r.causa}` : '');
+  const suyos = l => (l || []).filter(r => r && r.area === area.del_p1);
+  const f = suyos(rasgos?.fortalezas).map(r => linea(r, false));
+  const d = suyos(rasgos?.desafios).map(r => linea(r, true));
+  if (!f.length && !d.length) return '';
+  return `\n\nLO QUE YA SE LE HA CONTADO DE ESTA PARCELA DE SU VIDA:\n\nSE LE DA BIEN\n${f.join('\n') || '(nada)'}\n\nLE CUESTA\n${d.join('\n') || '(nada)'}`;
+}
+
+async function escribirLaParte({ area, nombre, sexo, decidido, rasgos }) {
   const encargo = `${EL_P2_NO_ES_EL_P1}
 
 ${REGLAS_COMUNES}
@@ -813,35 +838,36 @@ LO QUE TE TOCA AHORA
 
 Escribes UNA parte del documento. La parcela de su vida que te toca es esta: ${area.deQueVa}.
 
-Lo que va en esa parte ya está decidido y te lo doy abajo en corto. Tú no eliges nada, no añades cosas que hacer y no quitas ninguna. Lo que haces es convertir cada línea en lo que se va a leer.
+Y SE ESCRIBE DE UNA TIRADA, seguido, como cuando alguien que la conoce se sienta a contarle algo. Nada de apartados, nada de bloques, nada de anunciar lo que viene. Un párrafo lleva al siguiente.
 
-Van cuatro casillas, y NINGUNA SE PUEDE QUEDAR VACIA. En cada una va texto escrito para quien lo lee, nunca un título ni el nombre de la casilla: los títulos los pone el programa y si los escribes tú salen dos veces.
+TIENE QUE OCUPAR SU SITIO: al menos ${PALABRAS_MINIMAS} palabras. No es por llenar. Es que en cuatro frases no cabe una voz, y en cuatro frases no se reconoce nadie. Si te sale corto, no engordes las frases: cuéntale más de lo que hace, con más detalle.
 
-cambio         Qué hacía hasta ahora en esa parcela de su vida y qué va a hacer
-               en su lugar. Las dos cosas contadas como conductas que se pueden
-               ver, no como ideas. Se entra directamente por lo que hace, sin
-               presentar nada y sin anunciar de qué se va a hablar. Dos o tres
-               frases enteras.
+POR DÓNDE ENTRA ESTA PARTE: ${area.porDondeEntra}. Se entra por ahí, directamente, sin presentar nada.
 
-movimientos    Los movimientos, uno por uno. De cada uno:
-               titulo   Cuatro o cinco palabras que digan qué hace. Le hablas
-                        de tú, empieza en mayúscula y no lleva punto al final.
-               texto    Primero cuándo: la señal por la que sabe que es ese
-                        momento y no otro. Y después qué hace exactamente ahí.
-                        Tan claro que lo pueda hacer sin preguntarle a nadie.
-                        Tres o cuatro frases.
+Y ESTE ES EL ORDEN DE LO QUE PASA POR DENTRO DEL TEXTO, sin que se vean las costuras:
 
-freno          Lo que va a aparecer para que no lo haga, contado antes de que
-               le pase, y que eso es la señal de que va por buen camino. Dos o
-               tres frases enteras.
+Primero le cuentas lo que hace hoy en esa parcela, con detalle y sin juzgarla, hasta que se reconozca. Esa parte no es para informarla: es para que asienta y siga leyendo.
 
-senal          En qué va a ver que está funcionando. Algo que pase en su vida y
-               que pueda reconocer. Dos o tres frases enteras.
+Después le dices qué cambia. Qué deja de hacer y qué hace en su lugar, en claro y sin suavizarlo.
+
+Después le cuentas lo que va a aparecer para que no lo haga: lo que va a sentir o lo que se va a decir por dentro para librarse, avisado antes de que le pase, y que eso es la señal de que va bien.
+
+Y cierras con en qué lo va a notar. Algo que va a ver ocurriendo en su vida, no un estado de ánimo.
+
+LOS MOVIMIENTOS VAN APARTE Y NO SE CUENTAN AQUÍ. En el texto seguido no explicas lo que tiene que hacer paso a paso: eso va en su sitio, debajo, y si lo cuentas dos veces sobra una.
+
+"movimientos"
+Los que te doy abajo, uno por uno, ni uno más ni uno menos. De cada uno:
+  titulo   Cuatro o cinco palabras que digan qué hace. Le hablas de tú, empieza
+           en mayúscula y no lleva punto al final.
+  texto    Primero cuándo: la señal por la que sabe que es ese momento y no
+           otro. Y después qué hace exactamente ahí. Tan claro que lo pueda
+           hacer sin preguntarle a nadie. Tres o cuatro frases.
 
 
-NO TE SALGAS DE LO DECIDIDO. Si en lo de abajo hay tres movimientos, escribes tres. Si te parece que falta algo, no lo añades: no ves las otras seis partes y lo que a ti te falta puede estar ya escrito en otra.
+NO TE SALGAS DE LO DECIDIDO. Los movimientos son los que te doy. Lo demás lo escribes tú, pero de lo que ya se sabe de ella, no de lo que te imagines.
 
-Y NO PONGAS TÍTULOS NI NÚMEROS dentro del texto: los pone el programa.
+Y NO PONGAS TÍTULOS NI NÚMEROS: los pone el programa.
 
 
 LO QUE SE HA DECIDIDO PARA ESTA PARTE:
@@ -853,44 +879,41 @@ ${decidido.movimientos.map((m, i) => `${i + 1}. Cuando: ${m.cuando}\n   Hace: ${
 
 Lo que va a frenar: ${decidido.freno}
 
-En qué lo va a notar: ${decidido.senal}
+En qué lo va a notar: ${decidido.senal}${rasgosDeLaParte(area, rasgos)}
 
 Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}`;
 
+  const cuantas = t => String(t || '').trim().split(/\s+/).filter(Boolean).length;
+
   const salida = await sinNombrarLaCarta({
     que: `la parte de ${area.id}`,
-    // Ademas de la carta, aqui se mira que las cuatro casillas traigan texto:
-    // el mismo reintento sirve para las dos cosas.
-    cojo: p => estaVacia(p.cambio, BLOQUES.cambio)
-            || estaVacia(p.freno, BLOQUES.freno)
-            || estaVacia(p.senal, BLOQUES.senal)
+    // Aqui se mira que el texto tenga su sitio y que esten los movimientos:
+    // el mismo reintento sirve para eso y para la carta.
+    cojo: p => cuantas(p.texto) < PALABRAS_MINIMAS
             || !(p.movimientos || []).length
-            || (p.movimientos || []).some(m => estaVacia(m.texto, BLOQUES.movimientos) || !m.titulo),
-    aviso: '\n\nY OJO: la vez anterior alguna casilla vino vacía o con su título dentro. Las cinco llevan texto escrito para quien lo lee, ninguna se queda en blanco y en ninguna se copia el nombre de la casilla.',
+            || (p.movimientos || []).some(m => !m.titulo || cuantas(m.texto) < 25),
+    aviso: `\n\nY OJO: la vez anterior salió corto. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras y cada movimiento contarse entero. Cuéntale más de lo que hace, con más detalle, en vez de alargar las frases que ya tienes.`,
     pedir: recordatorio => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
       piensa: 'low',
       techo: TECHO_DE_ESCRIBIR,
       system: encargo,
-      mensaje: `Escribe esta parte entera, con sus cuatro casillas y ${decidido.movimientos.length === 1 ? 'su movimiento' : `sus ${decidido.movimientos.length} movimientos`}.${recordatorio}`,
+      mensaje: `Escribe esta parte entera, seguida, y ${decidido.movimientos.length === 1 ? 'su movimiento' : `sus ${decidido.movimientos.length} movimientos`}.${recordatorio}`,
       molde: MOLDE_DE_LA_PARTE,
       espera: AbortSignal.timeout(ESPERA_DE_ESCRIBIR_MS),
     }),
-    texto: p => [p.cambio, p.freno, p.senal]
-      .concat((p.movimientos || []).flatMap(m => [m.titulo, m.texto])).join(' '),
+    texto: p => [p.texto].concat((p.movimientos || []).flatMap(m => [m.titulo, m.texto])).join(' '),
   });
 
   return {
     id: area.id,
     titulo: area.titulo,
-    cambio: String(salida.cambio || '').trim(),
+    texto: String(salida.texto || '').trim(),
     movimientos: (Array.isArray(salida.movimientos) ? salida.movimientos : [])
       .map(m => ({ titulo: String(m?.titulo || '').trim(), texto: String(m?.texto || '').trim() }))
       .filter(m => m.titulo && m.texto),
-    freno: String(salida.freno || '').trim(),
-    senal: String(salida.senal || '').trim(),
   };
 }
 
@@ -1115,7 +1138,7 @@ export default async function handler(req, res) {
     }
 
     if (accion === 'parte') {
-      const { nombre, sexo, decidido } = req.body || {};
+      const { compra, nombre, sexo, decidido } = req.body || {};
       const area = AREAS.find(a => a.id === String(decidido?.area || ''));
       if (!area) return res.status(400).json({ error: 'Esa parte no existe' });
       // Lo que llega del navegador se comprueba antes de meterlo en el encargo:
@@ -1125,11 +1148,19 @@ export default async function handler(req, res) {
           || !decidido.cambio || !decidido.freno || !decidido.senal) {
         return res.status(400).json({ error: 'Esa parte llega a medias y no se escribe' });
       }
+      // Se vuelve a abrir el informe para darle sus rasgos de esta parcela:
+      // con el esquema de lo decidido a secas no se escribe nada que suene a
+      // persona. Si no se puede abrir, se escribe igual, con menos material.
+      let rasgos = null;
+      try { rasgos = (await leer(compra))?.rasgos || null; }
+      catch (e) { console.warn(`[p2] no se ha podido abrir el informe para ${area.id}: ${e.message}`); }
+
       const parte = await escribirLaParte({
         area,
         nombre: String(nombre || 'esta persona'),
         sexo: String(sexo || ''),
         decidido,
+        rasgos,
       });
       return res.status(200).json({ parte });
     }
@@ -1302,7 +1333,7 @@ ir.addEventListener('click', async () => {
 
   await Promise.all(plan.partes.map(async (decidido, i) => {
     try {
-      const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo, decidido });
+      const { parte } = await llamar({ accion:'parte', compra, nombre:quienEs.nombre, sexo:quienEs.sexo, decidido });
       huecos[i].outerHTML = pintarParte(parte, i+1);
     } catch (e) {
       huecos[i].innerHTML = '<p class="cual">' + (i+1) + ' · ' + escapar(NOMBRES[decidido.area] || '') +
@@ -1344,14 +1375,10 @@ function pintarParte(p, n) {
   const movs = (p.movimientos||[]).map(m =>
     '<div class="mov"><b>' + escapar(m.titulo) + '</b>' + parrafos(m.texto) + '</div>'
   ).join('');
-  const bloque = (titulo, cuerpo) =>
-    '<div class="bloque"><h3>' + escapar(titulo) + '</h3>' + cuerpo + '</div>';
   return '<div class="parte"><p class="cual">' + n + ' · ' + escapar(NOMBRES[p.id] || '') + '</p>' +
     '<h2>' + escapar(p.titulo) + '</h2>' +
-    bloque(BLOQUES.cambio, parrafos(p.cambio)) +
-    bloque(BLOQUES.movimientos, movs) +
-    bloque(BLOQUES.freno, parrafos(p.freno)) +
-    bloque(BLOQUES.senal, parrafos(p.senal)) +
+    '<div class="bloque">' + parrafos(p.texto) + '</div>' +
+    '<div class="bloque"><h3>' + escapar(BLOQUES.movimientos) + '</h3>' + movs + '</div>' +
     '</div>';
 }
 </script>
