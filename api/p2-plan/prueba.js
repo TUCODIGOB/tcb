@@ -35,12 +35,19 @@
 //   1. POR DONDE EMPIEZA. La conducta por la que empieza, contada con lo que
 //      hace, y por que mover esa arrastra lo demas. Va delante para quitarle
 //      el agobio de tener siete cosas que arreglar.
-//   2. LAS SIETE PARTES, todas iguales, cada una con cuatro cosas: que deja de
+//   2. LAS SIETE PARTES, todas iguales, cada una con cinco cosas: que deja de
 //      hacer y que hace en su lugar, los movimientos concretos, lo que va a
-//      aparecer para frenarle y en que lo va a notar.
+//      aparecer para frenarle, el fallo que va a cometer intentandolo y en que
+//      lo va a notar. Y CADA UNA ARRANCA POR UN SITIO DISTINTO, que lo elige
+//      quien decide: van seguidas, y si las siete empiezan igual se ve el
+//      molde y deja de parecer escrito para ella.
 //   3. EL ORDEN. Cual va despues de cual, y que tiene que estar pasando para
 //      saltar a la siguiente. Sin fechas: no sabemos su vida.
 //   4. EL DIA QUE FALLE. Que hace, y que fallar entra en el plan.
+//   5. TODO EN UNA HOJA. Sus pasos juntos, en el orden en que los va a hacer y
+//      con su cuadrito para marcarlos. Va al final y es la que se queda a
+//      mano: lo demas se lee una vez, esto se usa. No cuesta nada, son los
+//      mismos pasos que ya estan escritos arriba.
 //
 // ── COMO SE USA ─────────────────────────────────────────────
 //
@@ -195,22 +202,25 @@ const AREAS = [
     porDondeEntra: 'entra por una decisión suya de dinero o de trabajo que lleva tiempo sin tomar'  },
 ];
 
-// Las cuatro cosas que lleva cada parte, con el nombre que ve la clienta. Se
-// escriben aqui por lo mismo que los titulos.
-// Eran cinco y sobraba uno: "Asi eres aqui" y "Lo que cambia" contaban lo
-// mismo, los dos en abstracto, asi que cada parte abria con dos parrafos que
-// no decian nada y quien leia no sabia de que le estaban hablando.
-// LOS TRES NOMBRES QUE VE DENTRO DE CADA PARTE.
+// LOS CUATRO NOMBRES QUE VE DENTRO DE CADA PARTE, escritos aqui por lo mismo
+// que los titulos.
 //
-// Antes solo habia uno y todo lo demas iba en un bloque de texto sin nombre:
-// dentro habia cuatro cosas y quien leia no sabia de que le hablaba cada una,
-// ni podia volver a buscar una el dia que le hiciera falta.
+// Antes todo iba en un bloque de texto sin nombre: dentro habia varias cosas y
+// quien leia no sabia de que le hablaba cada una, ni podia volver a buscar una
+// el dia que le hiciera falta. Y sirven para otra cosa igual de importante: un
+// documento de veinte hojas de texto seguido cansa la vista, y estos son los
+// sitios donde el ojo para y descansa.
 //
 // El texto corrido se queda sin nombre a proposito: es lo primero que se lee y
 // no necesita etiqueta. Lo que sale con nombre es lo que se busca despues.
+//
+// VAN EN ESTE ORDEN, que es el de lo que le pasa: primero lo que hace, luego
+// lo que la va a parar, luego la manera de hacerlo que no sirve, y al final en
+// que va a ver que funciona.
 const BLOQUES = {
   movimientos: 'Qué haces',
-  freno: 'Lo que va a aparecer para que no lo hagas',
+  freno: 'Lo que te va a frenar',
+  evita: 'Lo que no hagas',
   senal: 'En qué lo vas a notar',
 };
 
@@ -452,9 +462,13 @@ function susRasgos(rasgos) {
 // EL ESFUERZO, MEDIO. Es el que termina a tiempo. Con alto se pasa del tope y
 // la clienta se queda mirando una pantalla en blanco; se probo en el P1 y
 // costo un informe entero.
+//
+// Y EL TOPE CABE DOS VECES, como en las que escriben: si el plan viene a
+// medias se pide otra vez, y los dos intentos juntos tienen que caber en los
+// 300 segundos que aguanta esta peticion.
 
 const ESPERA_DEL_PLAN_MS = 120000;
-const TECHO_DEL_PLAN = 12000;
+const TECHO_DEL_PLAN = 16000;
 
 const MOLDE_DEL_PLAN = {
   type: 'object',
@@ -465,6 +479,7 @@ const MOLDE_DEL_PLAN = {
         type: 'object',
         properties: {
           area:   { type: 'string', enum: AREAS.map(a => a.id) },
+          entra:  { type: 'string' },
           cambio: { type: 'string' },
           movimientos: {
             type: 'array',
@@ -480,8 +495,9 @@ const MOLDE_DEL_PLAN = {
           },
           freno: { type: 'string' },
           senal: { type: 'string' },
+          evita: { type: 'string' },
         },
-        required: ['area', 'cambio', 'movimientos', 'freno', 'senal'],
+        required: ['area', 'entra', 'cambio', 'movimientos', 'freno', 'senal', 'evita'],
         additionalProperties: false,
       },
     },
@@ -512,7 +528,7 @@ const MOLDE_DEL_PLAN = {
   additionalProperties: false,
 };
 
-async function decidirElPlan({ nombre, sexo, rasgos }) {
+async function pedirElPlan({ nombre, sexo, rasgos, recordatorio = '' }) {
   const encargo = `Estás preparando el plan de una persona: lo que tiene que hacer para llegar a ser quien quiere ser.
 
 Abajo tienes lo que ya se sabe de esa persona, sacado de su carta natal y repartido en las siete partes de su vida. Ya se lo han contado todo eso en otro documento que se ha leído entero.
@@ -544,7 +560,19 @@ Decides las siete de una vez y con las siete delante. Eso es lo importante, y es
 
 3. QUÉ DECIDES DE CADA PARTE
 
-De cada una de las siete sacas cuatro cosas, y ninguna se queda vacía:
+De cada una de las siete sacas seis cosas, y ninguna se queda vacía:
+
+entra          POR DÓNDE ARRANCA ESA PARTE, en una línea. Es lo primero que va
+               a leer ahí, y LAS SIETE ENTRAN POR SITIOS DISTINTOS. Puede
+               arrancar por algo que hace, por lo que va a hacer distinto a
+               partir de ahora, por lo que se va a encontrar cuando lo intente,
+               por el primer paso, o por lo que gana cuando lo mueva. Eliges el
+               que mejor le entre a ESTA parte suya, y miras que no se te
+               repita con las otras seis.
+
+               Y ESTO IMPORTA MÁS DE LO QUE PARECE: las siete se leen seguidas,
+               y si las siete arrancan igual se ve el molde a la primera y deja
+               de parecer escrito para ella, por bueno que sea lo de dentro.
 
 cambio         Qué deja de hacer y qué hace en su lugar, las dos mitades en
                una frase. Y las dos con nombre de conducta, no de idea: algo
@@ -570,6 +598,14 @@ freno          Lo que va a aparecer para que no lo haga: lo que va a sentir o
 senal          En qué va a notar que está funcionando. Algo que pueda ver
                ocurriendo en su vida, no un estado de ánimo. Y de las
                primeras: algo que pase en semanas, no en años.
+
+evita          EL FALLO QUE VA A COMETER INTENTÁNDOLO, y qué hace en su lugar.
+               No es lo que la frena, que eso ya está arriba: es la manera
+               equivocada de hacerlo, la que va a coger porque parece que va
+               más deprisa y la deja peor que antes. Sale de lo que ya sabes de
+               ella y de lo que le has puesto que haga: el fallo que le pega a
+               ESTA persona en ESTA parte. Si el que escribes le valdría igual
+               a cualquiera, está mal y se cambia.
 
 
 4. LO QUE NO SE PUEDE ESCRIBIR
@@ -612,7 +648,9 @@ Con las siete partes escritas delante:
 
 PRIMERO, MIRA LOS MOVIMIENTOS DE LAS SIETE JUNTOS. Los que le pidan lo mismo con otras palabras son uno solo escrito varias veces. Se queda en la parte donde más le pese, y en las otras se sustituye por algo distinto de verdad.
 
-DESPUÉS, MIRA QUE CADA PARTE HABLE DE SU PARCELA Y NO DE OTRA. Tapa de dónde venía cada rasgo, lee lo que has decidido y mira si habla de la parcela en la que lo has puesto. Si no, se mueve.
+DESPUÉS, MIRA LAS SIETE ENTRADAS JUNTAS. Si dos arrancan por el mismo sitio, cambia una: entre las siete tiene que haber sitios de entrada distintos, y ninguna pareja igual.
+
+Y MIRA QUE CADA PARTE HABLE DE SU PARCELA Y NO DE OTRA. Tapa de dónde venía cada rasgo, lee lo que has decidido y mira si habla de la parcela en la que lo has puesto. Si no, se mueve.
 
 Y POR ÚLTIMO: que ninguna de las cuatro casillas de ninguna parte se haya quedado vacía o resuelta de pasada.
 
@@ -632,7 +670,7 @@ Nombre de pila: ${nombre}`;
     piensa: 'medium',
     techo: TECHO_DEL_PLAN,
     system: encargo,
-    mensaje: 'Decide su plan entero, siguiendo el esquema.',
+    mensaje: `Decide su plan entero, siguiendo el esquema.${recordatorio}`,
     molde: MOLDE_DEL_PLAN,
     espera: AbortSignal.timeout(ESPERA_DEL_PLAN_MS),
   });
@@ -645,6 +683,7 @@ Nombre de pila: ${nombre}`;
     if (!id || porArea.has(id)) continue;
     porArea.set(id, {
       area: id,
+      entra: String(p.entra || '').trim(),
       cambio: String(p.cambio || '').trim(),
       movimientos: (Array.isArray(p.movimientos) ? p.movimientos : [])
         .map(m => ({ cuando: String(m?.cuando || '').trim(), haces: String(m?.haces || '').trim() }))
@@ -652,8 +691,17 @@ Nombre de pila: ${nombre}`;
         .slice(0, MOVIMIENTOS.max),
       freno: String(p.freno || '').trim(),
       senal: String(p.senal || '').trim(),
+      evita: String(p.evita || '').trim(),
     });
   }
+
+  // CUANTOS MOVIMIENTOS TRAJO EL MODELO, antes de que aqui abajo se le quiten
+  // los repetidos. Es lo que se mira para decidir si el plan hay que pedirlo
+  // otra vez, y tiene que ser esto y no lo que quede al final: si lo que pasa
+  // es que se ha repetido, pedirlo de nuevo cuesta un minuto y un dinero para
+  // volver a lo mismo, y el repetido ya se ha quitado, que es justo lo que
+  // habria que hacer con el.
+  const traidos = new Map([...porArea].map(([id, p]) => [id, p.movimientos.length]));
 
   // UNA PARTE A MEDIAS NO SE ESCRIBE.
   //
@@ -661,7 +709,7 @@ Nombre de pila: ${nombre}`;
   // rellena por su cuenta, y entonces se inventa algo de su vida que no sale
   // de su carta. Vale mas entregar seis partes buenas que siete con una
   // inventada dentro.
-  const entera = p => p.cambio && p.freno && p.senal && p.movimientos.length >= 1;
+  const entera = p => p.cambio && p.freno && p.senal && p.evita && p.entra && p.movimientos.length >= 1;
 
   // ── Y NI UN MOVIMIENTO REPETIDO EN TODO EL DOCUMENTO ──────
   //
@@ -692,25 +740,40 @@ Nombre de pila: ${nombre}`;
     return juntos / (a.size + b.size - juntos) >= 0.55;
   };
 
-  // PERO NUNCA SE QUEDA UNA PARTE SIN NINGUNO. Si a una le sobran todos porque
-  // ya salieron antes, esa parte se caeria entera y la clienta perderia una
-  // parcela de su vida. Antes que eso, se le deja el primero: repetir uno es
-  // malo, quedarse sin area es peor.
+  // PERO NINGUNA PARTE BAJA DE DOS. Si a una le sobraran todos porque ya
+  // salieron antes, se quedaria con uno o con ninguno y la clienta perderia lo
+  // que ha pagado.
+  //
+  // Y ESO PASA SIN QUE NADIE SE HAYA REPETIDO: dos movimientos que dicen cosas
+  // distintas, pero escritos con la misma forma de frase, comparten casi todas
+  // las palabras, y esto compara palabras y los toma por el mismo. Asi que la
+  // red se pone aqui: se quitan los repetidos mientras queden dos, y si por
+  // quitarlos se quedaria en menos, se le devuelven los ultimos que cayeron.
+  // Colar un repetido es malo; dejarle una parte con un solo paso, cuando las
+  // otras llevan tres, es peor y encima se ve.
   const yaSalieron = [];
   for (const a of AREAS) {
     const parte = porArea.get(a.id);
     if (!parte) continue;
-    const quedan = [];
-    for (const m of parte.movimientos) {
-      const suyo = comoSeParece(`${m.cuando} ${m.haces}`);
-      if (quedan.length && yaSalieron.some(otro => seParecen(suyo, otro))) {
-        console.warn(`[p2] en ${a.id} venia un movimiento que ya estaba en otra parte, se quita`);
-        continue;
-      }
+
+    const comoSonar = parte.movimientos.map(m => comoSeParece(`${m.cuando} ${m.haces}`));
+    const caidos = new Set();
+    comoSonar.forEach((suyo, i) => {
+      if (yaSalieron.some(otro => seParecen(suyo, otro))) { caidos.add(i); return; }
       yaSalieron.push(suyo);
-      quedan.push(m);
+    });
+
+    // Los rescatados vuelven a su sitio, no al final: el orden en el que se
+    // decidieron es el orden en el que se van a hacer.
+    for (const i of [...caidos]) {
+      if (parte.movimientos.length - caidos.size >= MOVIMIENTOS.min) break;
+      caidos.delete(i);
+      yaSalieron.push(comoSonar[i]);
     }
-    parte.movimientos = quedan;
+    if (caidos.size) {
+      console.warn(`[p2] en ${a.id} venian ${caidos.size} movimiento(s) que ya estaban en otra parte, se quitan`);
+    }
+    parte.movimientos = parte.movimientos.filter((_, i) => !caidos.has(i));
   }
 
   const partes = AREAS.map(a => porArea.get(a.id)).filter(p => p && entera(p));
@@ -753,12 +816,54 @@ Nombre de pila: ${nombre}`;
     console.warn(`[p2] el orden venia sin la parte de ${p.area}, se pone al final`);
   }
 
-  return {
+  const plan = {
     partes,
     empiezaPor: { area: empieza, porque: String(salida.empiezaPor?.porque || '').trim() },
     orden,
     recaida: String(salida.recaida || '').trim(),
   };
+
+  // LO QUE HA VENIDO MAL DE VERDAD, que es lo unico por lo que merece la pena
+  // volver a pedirlo.
+  const falla = [];
+  const sinVenir = AREAS.filter(a => !partes.some(x => x.area === a.id));
+  if (sinVenir.length) falla.push(`faltan estas partes enteras: ${sinVenir.map(a => a.del_p1).join(', ')}`);
+  const flojas = AREAS.filter(a => porArea.has(a.id) && (traidos.get(a.id) || 0) < MOVIMIENTOS.min);
+  if (flojas.length) falla.push(`estas partes traen menos de ${MOVIMIENTOS.min} movimientos: ${flojas.map(a => a.del_p1).join(', ')}`);
+  if (!plan.empiezaPor.area || !plan.empiezaPor.porque) falla.push('no ha venido por dónde empieza');
+  if (!plan.recaida) falla.push('no ha venido el día que falle');
+
+  return { plan, falla };
+}
+
+// ── Y SI EL PLAN VIENE A MEDIAS, SE PIDE OTRA VEZ ───────────
+//
+// Es la unica llamada que decide, y de ella cuelga el documento entero: si
+// vuelve con seis partes en vez de siete, la clienta se queda sin una parcela
+// de su vida y paga lo mismo. Antes eso salia asi y solo quedaba un aviso en
+// el registro que no leia nadie.
+//
+// SOLO SE PIDE OTRA VEZ POR LO QUE PEDIRLO ARREGLA: una parte que no ha
+// venido, una casilla vacia, o una parte a la que el modelo le ha puesto un
+// solo movimiento. Que aqui se le haya quitado uno por repetido NO cuenta: eso
+// ya esta arreglado, y volver a pedirlo costaria un minuto y un dinero para
+// acabar en lo mismo.
+async function decidirElPlan({ nombre, sexo, rasgos }) {
+  const primero = await pedirElPlan({ nombre, sexo, rasgos });
+  if (!primero.falla.length) return primero.plan;
+
+  console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), se pide otra vez`);
+  const segundo = await pedirElPlan({
+    nombre, sexo, rasgos,
+    recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, y cada una con sus ${MOVIMIENTOS.min} o ${MOVIMIENTOS.max} movimientos, distintos de los de las demás. Un movimiento que ya le hayas puesto a otra parte no cuenta: se sustituye por uno de verdad distinto, no se quita.`,
+  });
+
+  // Y SE QUEDA EL MEJOR DE LOS DOS. Pedir otra vez no garantiza que salga
+  // mejor: el segundo puede venir peor que el primero, y quedarse con el a
+  // ciegas seria cambiar un fallo por otro mas gordo.
+  if (segundo.falla.length < primero.falla.length) return segundo.plan;
+  console.warn('[p2] el segundo plan no ha mejorado, se entrega el primero');
+  return primero.plan;
 }
 // ── LO QUE LA CLIENTA NO PUEDE LEER ─────────────────────────
 //
@@ -834,31 +939,6 @@ const PALABRAS_DE_DIAGNOSTICO = [
   /\blo que te pasa es\b/,
 ];
 
-// Y EL DIAGNOSTICO TAMBIEN SE ESCRIBE SIN NINGUNA DE ESAS PALABRAS.
-//
-// "Te cuesta pedir. Sostienes lo que no te toca. Eres la que aguanta." Ahi no
-// hay ni infancia ni padres ni patron, y sigue siendo contarle como es.
-//
-// Asi que ademas de mirar lo que no puede haber, se mira lo que TIENE que
-// haber. Un texto que de verdad le explica como se hace algo no puede
-// escribirse sin decir cuando lo hace, que pasa si no le sale, que hace en vez
-// de lo de antes o que se va a encontrar. Esas marcas caen solas y muchas
-// veces. Una descripcion de como es no las lleva casi ninguna.
-//
-// El liston esta bajo a proposito: tres marcas distintas en todo lo que queda
-// despues del arranque. Un texto bueno pasa de sobra; uno que solo la describe
-// no llega.
-const MARCAS_DE_QUE_HACER = [
-  /\bcuando\b/, /\ben vez de\b/, /\ben lugar de\b/, /\bantes de\b/,
-  /\bdespues de\b/, /\bhasta que\b/, /\bmientras\b/, /\bcada vez que\b/,
-  /\bvas a\b/, /\bte va a\b/, /\ba partir de\b/, /\bde ahora en adelante\b/,
-  /\bsi te\b/, /\bsi lo\b/, /\bsi se te\b/, /\bel dia que\b/,
-  /\blo que haces es\b/, /\bla primera vez\b/, /\blas primeras veces\b/,
-  /\bya no\b/, /\bnada de\b/, /\bsin\b/,
-];
-
-const MARCAS_MINIMAS = 3;
-
 // LO QUE ELLA SE DICE POR DENTRO NO CUENTA COMO DIAGNOSTICO.
 //
 // Las reglas piden que se le pongan sus frases entrecomilladas, y dentro de
@@ -875,11 +955,7 @@ function cuentaComoEs(texto, frasesQuePerdona = 3) {
   const frases = sinLoEntrecomillado(texto).split(/(?<=[.!?])\s+/);
   const resto = sinTildes(frases.slice(frasesQuePerdona).join(' '));
   if (!resto.trim()) return false;
-  if (PALABRAS_DE_DIAGNOSTICO.some(re => re.test(resto))) return true;
-  // Y contar marcas solo tiene sentido en un texto largo. Una casilla de dos
-  // frases no puede llevar tres, y exigirselas la haria reescribir siempre.
-  if (resto.trim().split(/\s+/).length < 120) return false;
-  return MARCAS_DE_QUE_HACER.filter(re => re.test(resto)).length < MARCAS_MINIMAS;
+  return PALABRAS_DE_DIAGNOSTICO.some(re => re.test(resto));
 }
 
 // UNA CASILLA VACIA O CON SU PROPIO TITULO DENTRO NO VALE.
@@ -951,7 +1027,7 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 // piensa ya se encargo de que no se repitan.
 
 // EL TOPE CABE DOS VECES. Si se le cuela una palabra de la carta se vuelve a
-// pedir, asi que los dos intentos juntos tienen que caber en los 150 segundos
+// pedir, asi que los dos intentos juntos tienen que caber en los 300 segundos
 // que aguanta esta peticion. Escribir una parte ronda el medio minuto, asi que
 // sesenta y cinco segundos ya es de sobra para una.
 const ESPERA_DE_ESCRIBIR_MS = 65000;
@@ -963,6 +1039,7 @@ const MOLDE_DE_LA_PARTE = {
     texto: { type: 'string' },
     freno: { type: 'string' },
     senal: { type: 'string' },
+    evita: { type: 'string' },
     movimientos: {
       type: 'array',
       items: {
@@ -976,7 +1053,7 @@ const MOLDE_DE_LA_PARTE = {
       },
     },
   },
-  required: ['texto', 'freno', 'senal', 'movimientos'],
+  required: ['texto', 'freno', 'senal', 'evita', 'movimientos'],
   additionalProperties: false,
 };
 
@@ -990,7 +1067,7 @@ const MOLDE_DE_LA_PARTE = {
 // Ahora el area es UN texto seguido, con su sitio para respirar. Los
 // movimientos siguen aparte porque son lo que se hace el martes y hay que
 // poder encontrarlos, pero todo lo demas se cuenta corrido.
-const PALABRAS_MINIMAS = 260;
+const PALABRAS_MINIMAS = 300;
 
 // Lo que se sabe de ella en esta parcela, tal como se lo conto el P1. Sin esto
 // quien escribe solo tiene el esquema de lo decidido, y con un esquema no se
@@ -1019,11 +1096,13 @@ Y SE ESCRIBE DE UNA TIRADA, seguido, como cuando alguien que la conoce se sienta
 
 EL TEXTO SEGUIDO TIENE QUE OCUPAR SU SITIO: al menos ${PALABRAS_MINIMAS} palabras, sin contar lo que va debajo. No es por llenar. Es que explicarle bien cómo se hace algo no cabe en cuatro frases, y en cuatro frases tampoco cabe una voz. Si te sale corto, no engordes las frases ni alargues el arranque: cuéntale con más detalle cómo se hace lo que tiene que hacer.
 
-POR DÓNDE ENTRA ESTA PARTE: ${area.porDondeEntra}. Se entra por ahí, directamente, sin presentar nada.
+ESTA PARCELA SE TOCA POR AQUÍ: ${area.porDondeEntra}.
+
+Y POR DÓNDE ARRANCA ESTE TEXTO, QUE NO ES LO MISMO EN LAS SIETE PARTES: ${decidido.entra}. Empiezas por ahí, con la primera frase, directo y sin presentar nada. No lo anuncies ni lo expliques: entra y ya está.
 
 Y ESTE ES EL ORDEN DE LO QUE PASA POR DENTRO DEL TEXTO, sin que se vean las costuras:
 
-ARRANCAS POR LO QUE HACE HOY, Y EN DOS O TRES FRASES. Las justas para que sepa que esto va con ella y no con cualquiera. Ni una más. Eso ya se lo contaron entero en otro sitio, y volver a contárselo aquí, aunque sea con otras palabras, es quitarle el sitio a lo único que ha venido a buscar.
+DE LO QUE HACE HOY, DOS O TRES FRASES Y NI UNA MÁS. Las justas para que sepa que esto va con ella y no con cualquiera. Van donde las pida la entrada que te han dado: si entras por algo que hace, son las primeras; si entras por otro sitio, caen justo detrás. Eso ya se lo contaron entero, y volver a contárselo aquí, aunque sea con otras palabras, es quitarle el sitio a lo único que ha venido a buscar.
 
 Y ENSEGUIDA, QUÉ CAMBIA. Qué deja de hacer y qué hace en su lugar, en claro y sin suavizarlo.
 
@@ -1037,6 +1116,9 @@ Y AQUÍ ESTÁ LA RAYA, que es lo que más se cruza: en el texto seguido no apare
 
 "freno"
 Lo que va a aparecer para que no lo haga: lo que va a sentir, o lo que se va a decir por dentro para librarse, dicho con sus palabras. Se lo avisas antes de que le pase, y le dices que eso es señal de que va bien y no de que se esté equivocando, y qué hace cuando llegue. Cuatro o cinco frases.
+
+"evita"
+EL FALLO QUE VA A COMETER INTENTÁNDOLO, y qué hace en su lugar. No es lo que la frena, que eso va arriba: es la manera equivocada de hacerlo, la que va a coger porque parece que va más deprisa y la deja peor que antes. Se lo dices en claro, sin regañarle, y con lo que hace en vez de eso. Tres o cuatro frases.
 
 "senal"
 En qué va a notar que está funcionando. Algo que va a ver ocurriendo en su vida, no un estado de ánimo, y de lo primero que llega: de lo que se nota a las pocas veces, no de lo que se ve al cabo de mucho tiempo. Tres o cuatro frases.
@@ -1070,6 +1152,8 @@ ${decidido.movimientos.map((m, i) => `${i + 1}. Cuando: ${m.cuando}\n   Hace: ${
 
 Lo que va a frenar: ${decidido.freno}
 
+El fallo que va a cometer intentándolo: ${decidido.evita}
+
 En qué lo va a notar: ${decidido.senal}${rasgosDeLaParte(area, rasgos)}
 
 Quien lo va a leer es ${comoSeLeHabla(sexo)}
@@ -1089,13 +1173,13 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
     cojo: p => cuantas(p.texto) < PALABRAS_MINIMAS
             || parrafosDe(p.texto) < 3
             || cuentaComoEs(p.texto)
-            || cuantas(p.freno) < 30 || cuantas(p.senal) < 20
-            || cuentaComoEs(p.freno, 0) || cuentaComoEs(p.senal, 0)
-            || !(p.movimientos || []).length
+            || cuantas(p.freno) < 30 || cuantas(p.senal) < 20 || cuantas(p.evita) < 25
+            || cuentaComoEs(p.freno, 0) || cuentaComoEs(p.senal, 0) || cuentaComoEs(p.evita, 0)
+            || (p.movimientos || []).length !== decidido.movimientos.length
             || (p.movimientos || []).some(m => !m.titulo || cuantas(m.texto) < 25),
     aviso: p => cuentaComoEs(p.texto)
       ? `\n\nY OJO: la vez anterior, pasadas las tres primeras frases, seguías contándole cómo es y de dónde le viene. Eso ya se lo contaron entero y no se repite aquí. Deja las tres primeras frases y reescribe todo lo demás contando cómo se hace lo que tiene que hacer: cómo lo hace las primeras veces, qué hace con lo que sienta, qué se va a encontrar y cómo lo sostiene.`
-      : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras y ir repartido en párrafos separados por una línea en blanco; lo que va a frenarle, en qué lo va a notar y cada movimiento se cuentan enteros y no de pasada. Lo que falta no es arranque, es cómo se hace: eso es lo que se cuenta con más detalle.`,
+      : `\n\nY OJO: la vez anterior algo salió corto, vino de una pieza o se quedó sin alguno de los movimientos. Van los ${decidido.movimientos.length} que te doy, ni uno menos, cada uno con el suyo escrito entero. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras y ir repartido en párrafos separados por una línea en blanco; lo que va a frenarle y en qué lo va a notar se cuentan enteros y no de pasada. Lo que falta no es arranque, es cómo se hace: eso es lo que se cuenta con más detalle.`,
     pedir: recordatorio => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
@@ -1106,7 +1190,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
       molde: MOLDE_DE_LA_PARTE,
       espera: AbortSignal.timeout(ESPERA_DE_ESCRIBIR_MS),
     }),
-    texto: p => [p.texto, p.freno, p.senal].concat((p.movimientos || []).flatMap(m => [m.titulo, m.texto])).join(' '),
+    texto: p => [p.texto, p.freno, p.senal, p.evita].concat((p.movimientos || []).flatMap(m => [m.titulo, m.texto])).join(' '),
   });
 
   return {
@@ -1114,6 +1198,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
     titulo: area.titulo,
     texto: String(salida.texto || '').trim(),
     freno: String(salida.freno || '').trim(),
+    evita: String(salida.evita || '').trim(),
     senal: String(salida.senal || '').trim(),
     movimientos: (Array.isArray(salida.movimientos) ? salida.movimientos : [])
       .map(m => ({ titulo: String(m?.titulo || '').trim(), texto: String(m?.texto || '').trim() }))
@@ -1395,7 +1480,8 @@ export default async function handler(req, res) {
       // si viniera a medias, el hueco lo rellenaria el modelo por su cuenta y
       // acabaria inventandose algo de su vida.
       if (!Array.isArray(decidido.movimientos) || !decidido.movimientos.length
-          || !decidido.cambio || !decidido.freno || !decidido.senal) {
+          || !decidido.cambio || !decidido.freno || !decidido.senal
+          || !decidido.evita || !decidido.entra) {
         return res.status(400).json({ error: 'Esa parte llega a medias y no se escribe' });
       }
       // Se vuelve a abrir el informe para darle sus rasgos de esta parcela:
@@ -1547,7 +1633,7 @@ ir.addEventListener('click', async () => {
 
   // 1. La llamada que piensa y decide el documento entero.
   let plan;
-  aviso.textContent = 'Decidiendo su plan… (es la parte que piensa, tarda un minuto)';
+  aviso.textContent = 'Decidiendo su plan… (es la parte que piensa: un minuto, y dos si tiene que rehacerlo)';
   try {
     const r = await llamar({ accion:'plan', compra });
     plan = r.plan;
@@ -1613,9 +1699,27 @@ ir.addEventListener('click', async () => {
   // documento con un agujero dentro, y eso no se le ensena a nadie.
   const completas = escritas.filter(Boolean);
   if (marco && completas.length === plan.partes.length) {
+    // TODO LO QUE TIENE QUE HACER, JUNTO Y EN UNA HOJA.
+    //
+    // El documento son veinte hojas y las cosas que hacer estan repartidas por
+    // dentro: para saber que le toca hoy tendria que releerselo entero, y no lo
+    // va a hacer. Esta hoja es la que se queda a mano.
+    //
+    // No se le pide nada al modelo: son los mismos pasos que ya ha escrito,
+    // puestos en el orden en que los va a hacer, que es el suyo y no el del
+    // documento.
+    const enOrden = [...new Set([plan.empiezaPor.area].concat(plan.orden.map(o => o.area)))];
+    const aMano = enOrden
+      .map(id => completas.find(p => p.id === id))
+      .filter(Boolean)
+      .map(p => ({ titulo: p.titulo, pasos: (p.movimientos || []).map(m => m.titulo).filter(Boolean) }))
+      .filter(b => b.pasos.length);
+    salida.insertAdjacentHTML('beforeend', pintarAMano(aMano));
+
     elDocumento = {
       nombre: quienEs.nombre,
       marco,
+      aMano,
       empiezaPor: TITULOS[plan.empiezaPor.area] || '',
       // La etiqueta pequena de cada parte y el titulo de sus movimientos van
       // desde aqui: el que maqueta no tiene que saberse las siete partes.
@@ -1690,6 +1794,20 @@ function pintarFinal(m, empiezaPor) {
     '<div class="bloque"><h3>El día que lo dejes</h3>' + parrafos(m.recaida) + '</div></div>';
 }
 
+function pintarAMano(bloques) {
+  if (!bloques.length) return '';
+  // Cada parte con sus pasos, y un cuadradito delante de cada uno: es lo que
+  // convierte una lista en algo que se usa.
+  const dentro = bloques.map(b =>
+    '<div class="bloque"><h3>' + escapar(b.titulo) + '</h3>' +
+    b.pasos.map(t => '<p class="paso">☐ ' + escapar(t) + '</p>').join('') + '</div>'
+  ).join('');
+  return '<div class="parte marco"><p class="cual">Para tener a mano</p>' +
+    '<h2>Tu plan en una hoja</h2>' +
+    '<p>Todo lo que tienes que hacer, en el orden en que lo vas a hacer. Ve marcando lo que ya hagas.</p>' +
+    dentro + '</div>';
+}
+
 function pintarParte(p, n) {
   const movs = (p.movimientos||[]).map(m =>
     '<div class="mov"><b>' + escapar(m.titulo) + '</b>' + parrafos(m.texto) + '</div>'
@@ -1703,6 +1821,7 @@ function pintarParte(p, n) {
     '<div class="bloque">' + parrafos(p.texto) + '</div>' +
     conNombre(BLOQUES.movimientos, movs) +
     conNombre(BLOQUES.freno, parrafos(p.freno)) +
+    conNombre(BLOQUES.evita, parrafos(p.evita)) +
     conNombre(BLOQUES.senal, parrafos(p.senal)) +
     '</div>';
 }
