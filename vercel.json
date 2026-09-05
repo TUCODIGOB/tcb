@@ -12,7 +12,7 @@
     },
     "api/p2-plan/prueba.js": {
       "memory": 1024,
-      "maxDuration": 150
+      "maxDuration": 300
     },
     "api/p2-plan/pdf.js": {
       "memory": 1024,

@@ -14,8 +14,8 @@
 // lisa, porque el P2 no tiene una ilustracion por parte.
 //
 // CADA SECCION EMPIEZA EN HOJA NUEVA: el principio, cada una de las siete
-// partes, lo primero que hace, el orden y el dia que lo deje. Ninguna se pega
-// a la anterior.
+// partes, lo primero que hace, el orden, el dia que lo deje y la hoja con todo
+// junto. Ninguna se pega a la anterior.
 // ════════════════════════════════════════════════════════════════
 
 import { createRequire } from 'module';
@@ -269,7 +269,7 @@ export default async function handler(req, res) {
       // Y las otras dos, con su nombre para que sepa de que le hablan y para
       // poder volver a buscarlas el dia que le hagan falta.
       if (t(parte?.freno)) {
-        subtitulo(parte?.nombres?.freno || 'Lo que va a aparecer para que no lo hagas');
+        subtitulo(parte?.nombres?.freno || 'Lo que te va a frenar');
         corrido(parte.freno);
       }
       if (t(parte?.senal)) {
@@ -314,6 +314,35 @@ export default async function handler(req, res) {
     if (t(marco.recaida)) {
       abrirSeccion('Para terminar', 'El día que lo dejes');
       corrido(marco.recaida);
+    }
+
+    // ── TODO JUNTO, EN UNA HOJA ───────────────────────────────
+    //
+    // Es la ultima, y es la que de verdad se va a usar. Todo lo demas se lee
+    // una vez; esto se tiene delante. Van sus pasos en el orden en que los va a
+    // hacer, cada uno con su cuadrito para marcarlo.
+    const aMano = Array.isArray(req.body?.aMano) ? req.body.aMano : [];
+    if (aMano.length) {
+      abrirSeccion('Para tener a mano', 'Tu plan en una hoja');
+      corrido('Todo lo que tienes que hacer, en el orden en que lo vas a hacer. Ve marcando lo que ya hagas.');
+      y += ENTRE_PARRAFOS;
+
+      for (const bloque of aMano) {
+        const pasos = Array.isArray(bloque?.pasos) ? bloque.pasos.filter(x => t(x)) : [];
+        if (!pasos.length) continue;
+        // El titulo no se queda solo al pie: se lleva consigo su primer paso.
+        cabe(RENGLON * 3);
+        escribir(t(bloque?.titulo), { fuente: 'bold', tam: 13, color: VERDE });
+        y += 2;
+        for (const paso of pasos) {
+          cabe(RENGLON * 2);
+          doc.setDrawColor(DORADO[0], DORADO[1], DORADO[2]);
+          doc.setLineWidth(0.4);
+          doc.rect(X + 1, y - 3.6, 4, 4);
+          escribir(t(paso), { x: X + 9, ancho: ANCHO - 9 });
+        }
+        y += ENTRE_PARRAFOS;
+      }
     }
 
     numeroDePagina();

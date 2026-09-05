@@ -41,6 +41,10 @@
 //   3. EL ORDEN. Cual va despues de cual, y que tiene que estar pasando para
 //      saltar a la siguiente. Sin fechas: no sabemos su vida.
 //   4. EL DIA QUE FALLE. Que hace, y que fallar entra en el plan.
+//   5. TODO EN UNA HOJA. Sus pasos juntos, en el orden en que los va a hacer y
+//      con su cuadrito para marcarlos. Va al final y es la que se queda a
+//      mano: lo demas se lee una vez, esto se usa. No cuesta nada, son los
+//      mismos pasos que ya estan escritos arriba.
 //
 // ── COMO SE USA ─────────────────────────────────────────────
 //
@@ -210,7 +214,7 @@ const AREAS = [
 // no necesita etiqueta. Lo que sale con nombre es lo que se busca despues.
 const BLOQUES = {
   movimientos: 'Qué haces',
-  freno: 'Lo que va a aparecer para que no lo hagas',
+  freno: 'Lo que te va a frenar',
   senal: 'En qué lo vas a notar',
 };
 
@@ -452,6 +456,10 @@ function susRasgos(rasgos) {
 // EL ESFUERZO, MEDIO. Es el que termina a tiempo. Con alto se pasa del tope y
 // la clienta se queda mirando una pantalla en blanco; se probo en el P1 y
 // costo un informe entero.
+//
+// Y EL TOPE CABE DOS VECES, como en las que escriben: si el plan viene a
+// medias se pide otra vez, y los dos intentos juntos tienen que caber en los
+// 300 segundos que aguanta esta peticion.
 
 const ESPERA_DEL_PLAN_MS = 120000;
 const TECHO_DEL_PLAN = 12000;
@@ -512,7 +520,7 @@ const MOLDE_DEL_PLAN = {
   additionalProperties: false,
 };
 
-async function decidirElPlan({ nombre, sexo, rasgos }) {
+async function pedirElPlan({ nombre, sexo, rasgos, recordatorio = '' }) {
   const encargo = `Estás preparando el plan de una persona: lo que tiene que hacer para llegar a ser quien quiere ser.
 
 Abajo tienes lo que ya se sabe de esa persona, sacado de su carta natal y repartido en las siete partes de su vida. Ya se lo han contado todo eso en otro documento que se ha leído entero.
@@ -632,7 +640,7 @@ Nombre de pila: ${nombre}`;
     piensa: 'medium',
     techo: TECHO_DEL_PLAN,
     system: encargo,
-    mensaje: 'Decide su plan entero, siguiendo el esquema.',
+    mensaje: `Decide su plan entero, siguiendo el esquema.${recordatorio}`,
     molde: MOLDE_DEL_PLAN,
     espera: AbortSignal.timeout(ESPERA_DEL_PLAN_MS),
   });
@@ -759,6 +767,48 @@ Nombre de pila: ${nombre}`;
     orden,
     recaida: String(salida.recaida || '').trim(),
   };
+}
+
+// ── Y SI EL PLAN VIENE A MEDIAS, SE PIDE OTRA VEZ ───────────
+//
+// Es la unica llamada que decide, y de ella cuelga todo lo demas: si vuelve
+// con seis partes en vez de siete, la clienta se queda sin una parcela entera
+// de su vida y paga lo mismo. Y si una parte vuelve con un solo movimiento,
+// esa parte le da una cosa que hacer donde las otras le dan tres.
+//
+// Antes eso salia asi y solo quedaba un aviso en el registro que no leia
+// nadie. Ahora se mira, y si falta algo se pide una segunda vez diciendole
+// exactamente que fallo. Solo cuesta cuando falla.
+function loQueLeFalta(plan) {
+  const fallos = [];
+  const sinEscribir = AREAS.filter(a => !plan.partes.some(p => p.area === a.id));
+  if (sinEscribir.length) fallos.push(`faltan estas partes enteras: ${sinEscribir.map(a => a.del_p1).join(', ')}`);
+  const cortas = plan.partes.filter(p => p.movimientos.length < MOVIMIENTOS.min);
+  if (cortas.length) fallos.push(`estas partes traen menos de ${MOVIMIENTOS.min} movimientos: ${cortas.map(p => p.area).join(', ')}`);
+  if (!plan.empiezaPor.area || !plan.empiezaPor.porque) fallos.push('no ha venido por dónde empieza');
+  if (!plan.recaida) fallos.push('no ha venido el día que falle');
+  return fallos;
+}
+
+async function decidirElPlan({ nombre, sexo, rasgos }) {
+  const primero = await pedirElPlan({ nombre, sexo, rasgos });
+  const falla = loQueLeFalta(primero);
+  if (!falla.length) return primero;
+
+  console.warn(`[p2] el plan ha venido a medias (${falla.join('; ')}), se pide otra vez`);
+  const segundo = await pedirElPlan({
+    nombre, sexo, rasgos,
+    recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, y cada una con sus ${MOVIMIENTOS.min} o ${MOVIMIENTOS.max} movimientos, distintos de los de las demás. Un movimiento repetido en otra parte no cuenta y hay que sustituirlo por uno de verdad distinto, no quitarlo.`,
+  });
+
+  // Y SE QUEDA EL MEJOR DE LOS DOS. Pedir otra vez no garantiza que salga
+  // mejor: el segundo puede venir peor que el primero, y quedarse con el a
+  // ciegas seria cambiar un fallo por otro mas gordo.
+  const nota = plan => plan.partes.filter(p => p.movimientos.length >= MOVIMIENTOS.min).length * 10
+                     + plan.partes.length;
+  if (nota(segundo) > nota(primero)) return segundo;
+  console.warn('[p2] el segundo plan no ha mejorado, se entrega el primero');
+  return primero;
 }
 // ── LO QUE LA CLIENTA NO PUEDE LEER ─────────────────────────
 //
@@ -951,7 +1001,7 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 // piensa ya se encargo de que no se repitan.
 
 // EL TOPE CABE DOS VECES. Si se le cuela una palabra de la carta se vuelve a
-// pedir, asi que los dos intentos juntos tienen que caber en los 150 segundos
+// pedir, asi que los dos intentos juntos tienen que caber en los 300 segundos
 // que aguanta esta peticion. Escribir una parte ronda el medio minuto, asi que
 // sesenta y cinco segundos ya es de sobra para una.
 const ESPERA_DE_ESCRIBIR_MS = 65000;
@@ -1091,11 +1141,11 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
             || cuentaComoEs(p.texto)
             || cuantas(p.freno) < 30 || cuantas(p.senal) < 20
             || cuentaComoEs(p.freno, 0) || cuentaComoEs(p.senal, 0)
-            || !(p.movimientos || []).length
+            || (p.movimientos || []).length !== decidido.movimientos.length
             || (p.movimientos || []).some(m => !m.titulo || cuantas(m.texto) < 25),
     aviso: p => cuentaComoEs(p.texto)
       ? `\n\nY OJO: la vez anterior, pasadas las tres primeras frases, seguías contándole cómo es y de dónde le viene. Eso ya se lo contaron entero y no se repite aquí. Deja las tres primeras frases y reescribe todo lo demás contando cómo se hace lo que tiene que hacer: cómo lo hace las primeras veces, qué hace con lo que sienta, qué se va a encontrar y cómo lo sostiene.`
-      : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras y ir repartido en párrafos separados por una línea en blanco; lo que va a frenarle, en qué lo va a notar y cada movimiento se cuentan enteros y no de pasada. Lo que falta no es arranque, es cómo se hace: eso es lo que se cuenta con más detalle.`,
+      : `\n\nY OJO: la vez anterior algo salió corto, vino de una pieza o se quedó sin alguno de los movimientos. Van los ${decidido.movimientos.length} que te doy, ni uno menos, cada uno con el suyo escrito entero. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras y ir repartido en párrafos separados por una línea en blanco; lo que va a frenarle y en qué lo va a notar se cuentan enteros y no de pasada. Lo que falta no es arranque, es cómo se hace: eso es lo que se cuenta con más detalle.`,
     pedir: recordatorio => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
@@ -1613,9 +1663,27 @@ ir.addEventListener('click', async () => {
   // documento con un agujero dentro, y eso no se le ensena a nadie.
   const completas = escritas.filter(Boolean);
   if (marco && completas.length === plan.partes.length) {
+    // TODO LO QUE TIENE QUE HACER, JUNTO Y EN UNA HOJA.
+    //
+    // El documento son veinte hojas y las cosas que hacer estan repartidas por
+    // dentro: para saber que le toca hoy tendria que releerselo entero, y no lo
+    // va a hacer. Esta hoja es la que se queda a mano.
+    //
+    // No se le pide nada al modelo: son los mismos pasos que ya ha escrito,
+    // puestos en el orden en que los va a hacer, que es el suyo y no el del
+    // documento.
+    const enOrden = [...new Set([plan.empiezaPor.area].concat(plan.orden.map(o => o.area)))];
+    const aMano = enOrden
+      .map(id => completas.find(p => p.id === id))
+      .filter(Boolean)
+      .map(p => ({ titulo: p.titulo, pasos: (p.movimientos || []).map(m => m.titulo).filter(Boolean) }))
+      .filter(b => b.pasos.length);
+    salida.insertAdjacentHTML('beforeend', pintarAMano(aMano));
+
     elDocumento = {
       nombre: quienEs.nombre,
       marco,
+      aMano,
       empiezaPor: TITULOS[plan.empiezaPor.area] || '',
       // La etiqueta pequena de cada parte y el titulo de sus movimientos van
       // desde aqui: el que maqueta no tiene que saberse las siete partes.
@@ -1688,6 +1756,20 @@ function pintarFinal(m, empiezaPor) {
     (arranque ? '<h2>Lo primero que haces</h2><div class="bloque">' + arranque + '</div>' : '') +
     (orden ? '<div class="bloque"><h3>Y después, en este orden</h3>' + orden + '</div>' : '') +
     '<div class="bloque"><h3>El día que lo dejes</h3>' + parrafos(m.recaida) + '</div></div>';
+}
+
+function pintarAMano(bloques) {
+  if (!bloques.length) return '';
+  // Cada parte con sus pasos, y un cuadradito delante de cada uno: es lo que
+  // convierte una lista en algo que se usa.
+  const dentro = bloques.map(b =>
+    '<div class="bloque"><h3>' + escapar(b.titulo) + '</h3>' +
+    b.pasos.map(t => '<p class="paso">☐ ' + escapar(t) + '</p>').join('') + '</div>'
+  ).join('');
+  return '<div class="parte marco"><p class="cual">Para tener a mano</p>' +
+    '<h2>Tu plan en una hoja</h2>' +
+    '<p>Todo lo que tienes que hacer, en el orden en que lo vas a hacer. Ve marcando lo que ya hagas.</p>' +
+    dentro + '</div>';
 }
 
 function pintarParte(p, n) {
