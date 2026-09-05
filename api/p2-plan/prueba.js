@@ -560,9 +560,19 @@ DINERO       el dinero, el trabajo y lo que vale lo suyo
 CADA PARTE HABLA SOLO DE LO SUYO. Abajo te llegan sus rasgos repartidos en las siete, pero ese reparto no siempre está fino: si un rasgo que te llega en una parcela habla de otra, lo que decidas con él va donde habla, no donde estaba puesto. Si acabas escribiendo de grupos en la parcela del día a día, o de dinero en la de los miedos, está mal y se cambia.
 
 
-2. LAS SIETE PARTES, Y LAS SIETE A LA VEZ
+2. CADA PARTE SALE DEL RASGO QUE MÁS LE PESE EN ESA PARCELA
 
-Decides las siete de una vez y con las siete delante. Eso es lo importante, y es la razón de que esto se haga en un solo sitio: una misma cosa que hacer, dicha con otras palabras, puede colarse en cuatro partes distintas, y quien lo lee cree que tiene veinte cosas cuando en realidad son diez. Eso solo se ve teniéndolas todas delante.
+Esto es lo primero que haces, y de aquí sale todo lo demás.
+
+De cada parcela coges UNO de sus rasgos, el que más le pese, y de ese rasgo sale todo lo que decidas para esa parte. Ese rasgo es la parte: lo que cambia, sus movimientos, lo que va a frenarle, el fallo que va a cometer y en qué lo va a notar, todo tiene que estar hablando de esa conducta suya y de ninguna otra.
+
+QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida, tiempo, dinero, salud, gente o calma. No que suene bien ni que esté bien escrito. Entre dos que dicen casi lo mismo, se queda el que más le cuesta.
+
+Y AQUÍ ESTÁ LO QUE MÁS SE FALLA: leer los rasgos de las siete, hacerte una idea general de cómo es esa persona, y decidir desde esa idea. Eso da cosas que hacer que le valdrían igual a otra mujer distinta, y es exactamente lo que no puede pasar. Se decide desde el rasgo, no desde la idea.
+
+De cada parte que decidas tienes que poder señalar de qué rasgo suyo sale. Si no puedes señalarlo, esa parte está mal y se hace otra vez.
+
+Y LAS SIETE A LA VEZ, PERO SOLO PARA COMPROBAR. Las tienes todas delante para ver que no se te repiten entre ellas, no para sacar de ahí un tema común y colgar de él las siete. Cada parcela tiene lo suyo, y lo suyo no es lo mismo que lo de al lado.
 
 
 3. QUÉ DECIDES DE CADA PARTE
@@ -653,13 +663,15 @@ Qué hace exactamente el día que se le olvide, lo deje o vuelva a lo de antes. 
 
 Con las siete partes escritas delante:
 
-PRIMERO, MIRA LOS MOVIMIENTOS DE LAS SIETE JUNTOS. Los que le pidan lo mismo con otras palabras son uno solo escrito varias veces. Se queda en la parte donde más le pese, y en las otras se sustituye por algo distinto de verdad.
+PRIMERO, MIRA DE QUÉ VA CADA PARTE. En una línea para ti, sin escribirla: qué conducta suya está tratando esa parte. Lee las siete líneas seguidas. Si dos tratan la misma conducta con otras palabras, para una de las dos coges otro rasgo de su parcela, el siguiente que más le pese, y rehaces esa parte entera con él.
+
+DESPUÉS, MIRA LOS MOVIMIENTOS DE LAS SIETE JUNTOS. Los que le pidan lo mismo con otras palabras son uno solo escrito varias veces. Se queda en la parte donde más le pese, y en las otras se sustituye por algo distinto de verdad.
 
 DESPUÉS, MIRA LAS SIETE ENTRADAS JUNTAS. Si dos arrancan por el mismo sitio, cambia una: entre las siete tiene que haber sitios de entrada distintos, y ninguna pareja igual.
 
 Y MIRA QUE CADA PARTE HABLE DE SU PARCELA Y NO DE OTRA. Tapa de dónde venía cada rasgo, lee lo que has decidido y mira si habla de la parcela en la que lo has puesto. Si no, se mueve.
 
-Y POR ÚLTIMO: que ninguna de las cuatro casillas de ninguna parte se haya quedado vacía o resuelta de pasada.
+Y POR ÚLTIMO: que ninguna casilla de ninguna parte se haya quedado vacía o resuelta de pasada.
 
 Devuelve solo lo decidido. No expliques lo que has quitado.
 
