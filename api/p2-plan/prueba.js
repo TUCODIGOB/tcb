@@ -199,7 +199,7 @@ const AREAS = [
     deQueVa: 'el dinero, el trabajo y lo que vale lo suyo' },
 ];
 
-// LOS CUATRO NOMBRES QUE VE DENTRO DE CADA PARTE, escritos aqui por lo mismo
+// LOS CINCO NOMBRES QUE VE DENTRO DE CADA PARTE, escritos aqui por lo mismo
 // que los titulos.
 //
 // Antes todo iba en un bloque de texto sin nombre: dentro habia varias cosas y
@@ -208,8 +208,8 @@ const AREAS = [
 // documento de veinte hojas de texto seguido cansa la vista, y estos son los
 // sitios donde el ojo para y descansa.
 //
-// El texto corrido se queda sin nombre a proposito: es lo primero que se lee y
-// no necesita etiqueta. Lo que sale con nombre es lo que se busca despues.
+// Los cinco llevan nombre, tambien el primero: si uno entra sin etiqueta, la
+// parte arranca con un texto suelto y el molde de las cinco no se ve.
 //
 // VAN EN ESTE ORDEN, que es el de lo que le pasa: primero lo que hace, luego
 // lo que la va a parar, luego la manera de hacerlo que no sirve, y al final en
@@ -535,8 +535,9 @@ function susRasgos(rasgos) {
 // releerse.
 //
 // Recibe sus rasgos de las siete partes de golpe y decide el documento entero
-// en corto: que va en cada parte, por cual empieza, en que orden siguen y que
-// hace el dia que falle. No escribe ni una linea de lo que ella va a leer.
+// en corto: los cinco puntos de cada una de las siete. Ni el orden ni por cual
+// empieza salen de aqui -eso lo saca la hoja de ruta al final, leyendo lo que
+// de verdad se ha escrito-, y no escribe ni una linea de lo que ella va a leer.
 //
 // POR QUE DE GOLPE. Lo que hay que evitar es que las siete partes le manden
 // hacer lo mismo con otras palabras, y eso solo se ve teniendo las siete
@@ -1248,7 +1249,12 @@ ${REGLA_DEL_NOMBRE(false)}`;
     cojo: h => estaVacia(h.porDondeEmpiezas, 'por dónde empiezas')
             || estaVacia(h.siLoDejas, 'si lo dejas')
             || !hay.has(String(h.empiezaPor || '').trim())
-            || new Set((h.elOrden || []).map(o => o?.area).filter(x => hay.has(x))).size !== hay.size,
+            // Un paso con nombre pero sin nada escrito cuenta como que falta:
+            // si se deja pasar, en la hoja sale el titulo de esa parcela con un
+            // hueco debajo, que es peor que no tenerla.
+            || new Set((h.elOrden || [])
+                 .filter(o => String(o?.queHaces || '').trim())
+                 .map(o => o?.area).filter(x => hay.has(x))).size !== hay.size,
     aviso: `\n\nY OJO: la vez anterior algo vino vacío o faltó alguna parte del orden. El orden lleva las ${AREAS.length}, cada una con su nombre en clave copiado tal cual y con lo que tiene que hacer ahí.`,
     tope: ESPERA_DE_LA_HOJA_MS,
     pedir: (recordatorio, cuanto) => alModelo({
@@ -1453,8 +1459,6 @@ const PAGINA = `<!DOCTYPE html>
   .bloque h3 { font-family:system-ui,sans-serif; font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--gold); margin-bottom:.45rem; }
   .bloque p { margin-bottom:.6rem; }
   .bloque p:last-child { margin-bottom:0; }
-  .mov { background:rgba(189,144,72,.07); border-radius:6px; padding:.9rem 1.1rem; margin-bottom:.7rem; }
-  .mov b { color:var(--teal); display:block; margin-bottom:.3rem; }
   .paso { margin-bottom:1rem; }
   .paso b { color:var(--teal); display:block; margin-bottom:.2rem; }
   .empieza { color:var(--teal); font-weight:600; margin-bottom:.5rem; }
@@ -1510,8 +1514,8 @@ const ir = document.getElementById('ir');
 const pdf = document.getElementById('pdf');
 // LAS TRES RESPUESTAS. Son lo unico que sabemos de su vida de hoy: el informe
 // del P1 dice como es, no que hace ni con quien. Viajan con la peticion del
-// plan, que es la que decide, y de momento el motor no las lee: eso es el
-// siguiente paso.
+// plan y entran enteras en el encargo de la que decide, que es de donde sale
+// que el plan sea suyo y no le valga a cualquiera.
 const preguntas = ['p1', 'p2', 'p3'].map(id => document.getElementById(id));
 const aviso = document.getElementById('aviso');
 const salida = document.getElementById('salida');
