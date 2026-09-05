@@ -597,6 +597,67 @@ Nombre de pila: ${nombre}`;
     recaida: String(salida.recaida || '').trim(),
   };
 }
+// ── LO QUE LA CLIENTA NO PUEDE LEER ─────────────────────────
+//
+// El encargo prohibe nombrar la carta y aun asi se cuela: en el P1 pasaba, y
+// aqui pasaria igual. Pedirlo no basta, asi que se comprueba.
+//
+// Solo se buscan las palabras que en castellano no significan otra cosa.
+// "Casa", "signo" o "aspecto" sueltas son palabras corrientes y no cuentan.
+//
+// Es la misma lista que el P1, copiada a proposito: este fichero no depende de
+// ningun otro, y el dia que se borre la carpeta no se lleva nada por delante.
+const PALABRAS_DE_ASTROLOGIA = [
+  /\b(mercurio|jupiter|saturno|urano|neptuno|pluton|quiron|ascendente)\b/,
+  /\bnodo (norte|sur)\b/,
+  /\b(aries|tauro|geminis|virgo|escorpio|sagitario|capricornio|acuario|piscis)\b/,
+  // Cancer, Leo y Libra son enfermedad y dos verbos, asi que sueltas no cuentan:
+  // se buscan como se nombra un signo, detras de "en".
+  /\ben (cancer|leo|libra)\b/,
+  /\b(tu|su|la|mi) carta\b/,
+  /\b(carta|mapa) (natal|astral)\b/,
+  /\bretrograd[oa]\b/,
+  /\bcasa \d{1,2}\b/,
+  /\b(conjuncion|oposicion|cuadratura|trigono|sextil) (a|con|al)?\s*(el|la)?\s*(mercurio|jupiter|saturno|urano|neptuno|pluton|quiron|sol|luna|venus|marte)\b/,
+  // "aspecto" y "signo" solas son palabras corrientes, asi que se buscan solo
+  // pegadas a lo que las convierte en tecnicas.
+  /\bsin (ningun )?aspecto/,
+  /\baspectos? (que (conect|sostien|un|enlac)|entre)/,
+  /\b(tu|su) (sol|luna|venus|marte|mercurio|jupiter|saturno|signo)\b/,
+  /\b(los|tus|sus) planetas\b/,
+  /\b(zodiaco|horoscopo|astrolog|efemerides)\b/,
+];
+
+function sinTildes(txt) {
+  return String(txt || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+}
+
+function hablaDeAstrologia(texto) {
+  const limpio = sinTildes(texto);
+  return PALABRAS_DE_ASTROLOGIA.some(re => re.test(limpio));
+}
+
+// SI SE LE CUELA, SE VUELVE A PEDIR. Una sola vez: aqui no se puede tirar el
+// trozo como en el P1 -eso dejaria un hueco en el documento-, asi que se pide
+// otra vez recordandoselo. Si a la segunda sigue colandose, se avisa en el
+// registro y se entrega, que es mejor que dejar la parte en blanco.
+const NO_NOMBRES_LA_CARTA =
+  'Y esto por encima de todo: en lo que escribas no puede aparecer ni una palabra de astrología. ' +
+  'Ni un planeta, ni un signo, ni una casa, ni un aspecto, ni la carta, ni el mapa. ' +
+  'Quien lo lee no ha visto nada de eso y no sabe de qué le hablas.';
+
+async function sinNombrarLaCarta({ que, pedir, texto }) {
+  const primera = await pedir('');
+  if (!hablaDeAstrologia(texto(primera))) return primera;
+
+  console.warn(`[p2] ${que}: se ha colado una palabra de la carta, se pide otra vez`);
+  const segunda = await pedir(`\n\n${NO_NOMBRES_LA_CARTA}`);
+  if (hablaDeAstrologia(texto(segunda))) {
+    console.warn(`[p2] ${que}: sigue colandose a la segunda, se entrega igual`);
+  }
+  return segunda;
+}
+
 // ════════════════════════════════════════════════════════════════
 // PASO 2: ESCRIBIR LO QUE YA ESTA DECIDIDO
 // ════════════════════════════════════════════════════════════════
@@ -692,15 +753,20 @@ En qué lo va a notar: ${decidido.senal}
 Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}`;
 
-  const salida = await alModelo({
-    que: `escribir ${area.id}`,
-    modelo: 'claude-sonnet-5',
-    piensa: '',
-    techo: TECHO_DE_ESCRIBIR,
-    system: encargo,
-    mensaje: `Escribe esta parte entera, con sus cinco cosas y sus ${decidido.movimientos.length} movimientos.`,
-    molde: MOLDE_DE_LA_PARTE,
-    espera: AbortSignal.timeout(ESPERA_DE_ESCRIBIR_MS),
+  const salida = await sinNombrarLaCarta({
+    que: `la parte de ${area.id}`,
+    pedir: recordatorio => alModelo({
+      que: `escribir ${area.id}`,
+      modelo: 'claude-sonnet-5',
+      piensa: '',
+      techo: TECHO_DE_ESCRIBIR,
+      system: encargo,
+      mensaje: `Escribe esta parte entera, con sus cinco cosas y sus ${decidido.movimientos.length} movimientos.${recordatorio}`,
+      molde: MOLDE_DE_LA_PARTE,
+      espera: AbortSignal.timeout(ESPERA_DE_ESCRIBIR_MS),
+    }),
+    texto: p => [p.nuevaVersion, p.cambio, p.freno, p.senal]
+      .concat((p.movimientos || []).flatMap(m => [m.titulo, m.texto])).join(' '),
   });
 
   return {
@@ -788,15 +854,20 @@ El día que falle: ${plan.recaida}
 Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}`;
 
-  const salida = await alModelo({
-    que: 'escribir el principio y el final',
-    modelo: 'claude-sonnet-5',
-    piensa: '',
-    techo: TECHO_DEL_MARCO,
-    system: encargo,
-    mensaje: 'Escribe las tres cosas, siguiendo el esquema.',
-    molde: MOLDE_DEL_MARCO,
-    espera: AbortSignal.timeout(ESPERA_DEL_MARCO_MS),
+  const salida = await sinNombrarLaCarta({
+    que: 'el principio y el final',
+    pedir: recordatorio => alModelo({
+      que: 'escribir el principio y el final',
+      modelo: 'claude-sonnet-5',
+      piensa: '',
+      techo: TECHO_DEL_MARCO,
+      system: encargo,
+      mensaje: `Escribe las tres cosas, siguiendo el esquema.${recordatorio}`,
+      molde: MOLDE_DEL_MARCO,
+      espera: AbortSignal.timeout(ESPERA_DEL_MARCO_MS),
+    }),
+    texto: m => [m.empiezaPor, m.recaida]
+      .concat((m.orden || []).map(o => o.saltas)).join(' '),
   });
 
   return {
