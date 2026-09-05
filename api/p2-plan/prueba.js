@@ -1158,32 +1158,52 @@ ir.addEventListener('click', async () => {
     return;
   }
 
-  // 2. El principio y el final, que ya se pueden escribir.
-  aviso.textContent = 'Escribiendo por dónde empieza…';
-  let marco = null;
-  try {
-    const r = await llamar({ accion:'marco', nombre:quienEs.nombre, sexo:quienEs.sexo, plan });
-    marco = r.marco;
-    salida.insertAdjacentHTML('beforeend', pintarArranque(marco));
-  } catch (e) {
-    salida.insertAdjacentHTML('beforeend',
-      '<p class="aviso error">El principio ha fallado: ' + escapar(e.message) + '</p>');
-  }
+  // 2. El principio y el final se piden ya, pero no se espera a que lleguen:
+  // van a la vez que las siete partes. Su sitio se reserva ahora, arriba del
+  // todo, y se rellena cuando llega.
+  const arranque = document.createElement('div');
+  arranque.className = 'parte marco';
+  arranque.innerHTML = '<p class="cual">Antes de nada</p><p class="aviso">Escribiéndose…</p>';
+  salida.appendChild(arranque);
 
-  // 3. Las siete partes, en orden, cada una en su peticion.
-  for (let i = 0; i < plan.partes.length; i++) {
-    aviso.textContent = 'Escribiendo la parte ' + (i+1) + ' de ' + plan.partes.length + '…';
+  const elMarco = llamar({ accion:'marco', nombre:quienEs.nombre, sexo:quienEs.sexo, plan })
+    .then(r => r.marco)
+    .catch(e => { arranque.innerHTML = '<p class="cual">Antes de nada</p>' +
+      '<p class="error">El principio ha fallado: ' + escapar(e.message) + '</p>'; return null; });
+
+  // 3. Las siete partes, TODAS A LA VEZ.
+  //
+  // Cada una es su propia peticion, asi que lanzarlas juntas no acerca a
+  // ninguna al tiempo maximo del servidor. De una en una esto tardaba lo que
+  // tardan las siete sumadas; asi tarda lo que tarde la mas lenta.
+  //
+  // Se pintan en su hueco, en el orden del documento, y no segun van llegando:
+  // el sitio se reserva antes y cada una cae en el suyo.
+  aviso.textContent = 'Escribiendo las ' + plan.partes.length + ' partes a la vez…';
+  const huecos = plan.partes.map((_, i) => {
+    const hueco = document.createElement('div');
+    hueco.className = 'parte';
+    hueco.innerHTML = '<p class="cual">Parte ' + (i+1) + '</p><p class="aviso">Escribiéndose…</p>';
+    salida.appendChild(hueco);
+    return hueco;
+  });
+
+  await Promise.all(plan.partes.map(async (decidido, i) => {
     try {
-      const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo, decidido: plan.partes[i] });
-      salida.insertAdjacentHTML('beforeend', pintarParte(parte, i+1));
+      const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo, decidido });
+      huecos[i].outerHTML = pintarParte(parte, i+1);
     } catch (e) {
-      salida.insertAdjacentHTML('beforeend',
-        '<div class="parte"><h2>Parte ' + (i+1) + '</h2><p class="error">' + escapar(e.message) + '</p></div>');
+      huecos[i].innerHTML = '<p class="cual">Parte ' + (i+1) + '</p>' +
+        '<p class="error">' + escapar(e.message) + '</p>';
     }
-  }
+  }));
 
-  // 4. Y el final, que se escribio en el paso 2 pero va aqui.
-  if (marco) salida.insertAdjacentHTML('beforeend', pintarFinal(marco));
+  // 4. Y cuando llega el marco, su principio arriba y su final abajo.
+  const marco = await elMarco;
+  if (marco) {
+    arranque.outerHTML = pintarArranque(marco);
+    salida.insertAdjacentHTML('beforeend', pintarFinal(marco));
+  }
 
   aviso.textContent = 'Listo.';
   ir.disabled = false; quien.disabled = false;
