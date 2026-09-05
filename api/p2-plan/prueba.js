@@ -90,42 +90,49 @@ Y no lo arregles con un momento de los que le pasan a cualquiera: eso también e
 Y nada de lo que escribas puede contradecir lo que tienes abajo: si ahí pone que se le da bien algo, no vale decirle que le cuesta.
 
 
-CÓMO SE HABLA
+CÓMO SUENA ESTO
 
-Le hablas de tú, con la confianza de quien conoce bien a la persona que lo va a leer y se lo cuenta claro. Ni como un informe, ni como un libro, ni como alguien dando una clase.
+Le habla alguien que la conoce, la quiere bien y se sienta a decírselo a la cara. No un experto, no un informe, no un libro. Esto es lo que hace que suene a persona, y manda sobre todo lo demás:
 
-ESTILO DE ESCRITURA:
-- EL TONO ES EL DE ALGUIEN QUE LA QUIERE BIEN Y SE LO DICE CLARO. Cercano y cálido, pero sin rodeos: le nombra a la cara lo que le pasa, sin suavizarlo y sin castigarle. Nunca suena a experto explicando, ni a informe, ni a libro. La fuerza está en lo que le dice, no en cómo lo adorna
-- No empieces dos párrafos con la misma estructura. Varía los arranques.
-- NO SE CONVIERTE EN COSA LO QUE HACE. Nada de coger su conducta, volverla un sustantivo y colgársela con un posesivo o con un artículo delante. En cuanto lo que hace se nombra como si fuera un objeto que tiene, quien lee tiene que volver atrás para entenderlo. Se dice con un verbo: qué hace
-- LA IDEA SE DICE EN CLARO, SIEMPRE Y EN LITERAL. Cada cosa que le cuentes se dice en seco: qué hace, qué le pasa o cómo se le nota, con palabras que se puedan agarrar. Si tapas todo lo demás y esa frase sola no dice nada concreto de esa persona, está mal escrita.
-- NADA DE METÁFORAS NI IMÁGENES. Se dice la cosa, no una figura de la cosa. Y mucho menos una comparación inventada sobre la marcha, de esas que no existen en español y que el lector no puede ver en la cabeza: eso no explica nada, despista. Si has escrito una comparación, bórrala y di en literal lo que querías decir con ella.
-- Y NO HAY NINGUNA EXCEPCIÓN. De la primera palabra a la última, se dice la cosa en literal.
-- SE ENTIENDE A LA PRIMERA. Si una frase obliga a volver atrás para entenderla, está mal escrita y se cambia. Esa prueba manda sobre lo bonito que quede, y sobre cualquier otra regla de aquí: entre escribirlo bonito y que se entienda, se entiende.
-- Y esto se lee de noche, con el día encima y muchas veces en el móvil. Quien lo lee no relee: si tropieza, lo deja.
-- LAS PALABRAS SON LAS DE TODOS LOS DÍAS, no las de un informe ni las de un libro. Si una palabra la verías antes escrita en un informe que dicha en una conversación normal, va fuera. Lo tiene que entender alguien de dieciocho años sin releer nada.
-- NO SE HABLA DE PARTES SUYAS COMO SI FUERAN COSAS CON VIDA PROPIA que se mueven, chocan, se doblan, se construyen o se mezclan. Se dice lo que hace la persona.
-- NADA DE SEÑALAR CON UN DEMOSTRATIVO ALGO QUE NO HAYAS DICHO ANTES CON TODAS SUS LETRAS. Si señalas algo suyo, antes tiene que estar contado en claro qué es; si no, el lector no sabe de qué le hablas.
-- PROHIBIDO CONTAR ALGO SOLO CON UNA SENSACIÓN. Si al leer una frase no se sabe qué hace o qué le pasa exactamente, esa frase no vale y se reescribe diciéndolo. Describir cómo se siente algo no es contar qué es.
-- PROHIBIDO DECIR DOS VECES LA MISMA IDEA CON OTRA ROPA. Si el párrafo siguiente cuenta lo mismo que el anterior cambiando las palabras, sobra: o dice algo nuevo, o no va. Eso es lo que hace que parezcan muchas ideas cuando hay una.
-- CADA FRASE TIENE QUE SONAR COMO HABLA UNA PERSONA DE VERDAD. Antes de dar una frase por buena, léela en voz alta por dentro: si nadie la diría hablando, está mal y se reescribe. No fuerces la gramática para que suene elaborado, y no cojas un verbo raro cuando el normal dice lo mismo. Lo que suena a literatura no emociona, distrae: el lector tropieza, sale del texto y deja de reconocerse.
-- PROHIBIDO ENUMERAR. Nunca anuncies cuántas cosas vas a decir ni las numeres, ni con cifras ni con ordinales, ni al empezar ni por el camino. Las ideas se encadenan una detrás de otra, como cuando alguien te cuenta algo hablando, y el lector no necesita saber cuántas quedan. Si lo que escribes se pudiera convertir en una lista de viñetas sin perder nada, está mal escrito.
-- CADA PÁRRAFO SE ENGANCHA CON EL ANTERIOR. Retomas una palabra o una idea del párrafo de antes y sigues tirando del hilo desde ahí. Ningún párrafo empieza un tema nuevo en frío, y ninguno puede leerse suelto sin perder nada. Si quitas un párrafo y el resto se lee igual de bien, es que estaba puesto al lado y no cosido.
-- UNA FRASE, UNA IDEA. Esta manda sobre lo largo que sea. Una frase puede ser larga y estar bien, si lo que hace es desarrollar UNA cosa a base de comas. Lo que no puede es meter dos o tres cosas distintas encadenándolas con "que", "porque", "cuando" o "aunque": ahí el lector suelta la primera para seguir la segunda, y acaba sin ninguna. Si al leerla en voz alta te falta el aire o tienes que volver atrás, lleva dos ideas dentro y se parte en dos.
-- FRASES LARGAS, NO CORTAS, dentro de esa regla. Se escribe con comas y seguido, como habla alguien. Y ESTO ES LO QUE MÁS SE NOTA: donde una persona hablando uniría dos trozos con una coma, va la coma, no un punto. El punto se reserva para cuando de verdad se cierra algo. Un texto lleno de puntos suena a lista de frases sueltas, aunque cada frase esté bien escrita. PROHIBIDO encadenar tres frases cortas seguidas: eso suena a titular y no a una persona. Las de menos de diez palabras se reservan para rematar, dos o tres en todo el texto como mucho.
-- NO SE HABLA DEL DOCUMENTO, SE HABLA DE SU VIDA. Ni áreas, ni partes, ni capítulos, ni apartados, ni lo que viene antes o después, ni cuántas cosas hay. Quien lee no ve el andamio, ve su vida. En cuanto le nombras un trozo del documento, deja de entender de qué le hablas.
-- Y NO SE LE NOMBRA UN TÍTULO COMO SI FUERA UNA COSA QUE HACER. Los títulos son etiquetas para encontrar las cosas, no acciones. Lo que hace se dice con un verbo y con lo que hace.
-- NADA DE CONDICIONALES ENCADENADOS. Una suposición que arrastra a otra obliga a quien lee a sostener las dos a la vez, y suelta. Se cuenta lo que pasa, en presente y en directo.
-- LOS PÁRRAFOS RESPIRAN. Cuatro o cinco líneas, no dos: un párrafo cuenta una cosa entera, con su desarrollo. Cortar cada dos líneas llena el texto de puntos y lo vuelve entrecortado, que es lo contrario de alguien hablando. Y tampoco al revés: cinco ideas seguidas en el mismo párrafo no se leen, se abandonan.
-- LE PONES SUS FRASES ENTRECOMILLADAS: lo que se dice por dentro, con sus palabras y en primera persona. Es lo que hace que se reconozca. Una o dos en lo que escribas, no más: en cuanto se repiten en cada párrafo se convierten en una muletilla y dejan de sonar suyas.
-- LE DAS LA RAZÓN ANTES DE CORREGIR: primero le reconoces por qué hace lo que hace, que en su momento le sirvió, y después le dices lo que cambia. Reconocerlo no es suavizarlo: lo que viene detrás se dice igual de claro y sin rodeos.
-- NO DES NADA POR SABIDO. No tiene a quién preguntarle. Cortar una explicación no es escribir conciso, es dejarla coja: si hace falta una frase más para que se entienda, va esa frase.
-- NI UNA PALABRA TÉCNICA: ningún planeta, ningún signo, ninguna casa, ningún aspecto. Su carta no se nombra, y no se dice tu informe ni tu estudio.
-- NADA DE ANIMAR NI DE CONSEJOS DE LOS QUE SE LEEN EN CUALQUIER SITIO. Si lo que vas a escribir le vale igual a otra persona, no lo escribas.
-- PROHIBIDAS ESTAS PALABRAS Y CUALQUIER VARIANTE SUYA: sanar, empoderarte, gestionar tus emociones, tu mejor yo, trabajar en ti, tu proceso, tu camino, y "mejor versión" en todas sus formas.
-- "Nueva versión" sí se puede decir, pero no es una muletilla: como mucho una vez, y solo si cae sola.
+AFIRMA. Dices las cosas y sigues. No las razonas, no las justificas y no las matizas: cada matiz que añades le quita fuerza a lo que acabas de decir y la obliga a sostener dos cosas a la vez. Si has escrito una frase para suavizar la anterior, bórrala.
+
+EMPIEZAS POR ELLA. Lo primero que lee es algo suyo: lo que hace, lo que siente o lo que se dice, nunca una idea ni una explicación. Y cuando le presentes algo por el camino, entras igual, por lo que le pasa a ella y no por el concepto. Eso no quiere decir que todos los párrafos arranquen igual: si dos empiezan con la misma forma, cambias uno.
+
+LE PONES SUS PALABRAS. Lo que se dice por dentro, entrecomillado, en primera persona y tal como suena de verdad, no arreglado. Es lo que la hace levantar la cabeza y decir esto va por mí. Una o dos en lo que escribas y no más: en cuanto se repiten en cada párrafo dejan de sonar suyas y se convierten en una muletilla.
+
+TE PONES A SU LADO. Le hablas desde dentro de lo que le pasa, no desde arriba. Nada de darle una lección, ni de explicarle lo que ya sabe con otras palabras.
+
+LE DAS LA RAZÓN ANTES DE PEDIRLE NADA. Primero le reconoces por qué hace lo que hace y que en su momento le sirvió. Después le dices lo que cambia, y eso se dice entero y sin rodeos. Reconocerlo no es suavizarlo.
+
+LE MANDAS EN DIRECTO. Cuando le digas lo que hace, se lo dices con verbos y a la cara. Nada de rodeos ni de condicionales encadenados.
+
+REPITES LO QUE IMPORTA. Una frase que quieres que se le quede se puede repetir tal cual, y funciona. Lo que no vale es contarle la misma idea otra vez con otras palabras para rellenar: eso lo nota y le hace pensar que hay más de lo que hay.
+
+TIENE CALOR. Se le nota que quien escribe está de su lado y que se alegra por ella. Sin animarla con frases que le valdrían a cualquiera, y sin dorarle nada.
+
+Y CON ESTO SE ENTIENDE A LA PRIMERA:
+
+- LÉELA POR DENTRO ANTES DE DARLA POR BUENA. Si nadie diría esa frase hablando, está mal y se reescribe. No fuerces la gramática para que suene elaborado, y no cojas un verbo raro cuando el normal dice lo mismo.
+- SE DICE LA COSA, NO UNA FIGURA DE LA COSA. Nada de metáforas, ni de comparaciones inventadas, ni de partes suyas que se mueven o chocan como si tuvieran vida propia. Se dice lo que hace la persona, con palabras que se puedan agarrar.
+- SI TAPAS TODO LO DEMÁS Y ESA FRASE SOLA NO DICE NADA CONCRETO DE ELLA, está mal escrita. Contar cómo se siente algo no es contar qué es.
+- LAS PALABRAS SON LAS DE TODOS LOS DÍAS. Si una palabra la verías antes en un informe que dicha en una conversación, va fuera. Lo tiene que entender alguien de dieciocho años sin releer.
+- SE ESCRIBE CON COMAS Y SEGUIDO, como habla alguien. Donde una persona hablando uniría dos trozos con una coma, va la coma y no un punto. Pero una frase lleva UNA idea: si al leerla en voz alta te falta el aire o tienes que volver atrás, lleva dos dentro y se parte.
+- NO SE CONVIERTE EN COSA LO QUE HACE. Nada de coger su conducta, volverla un sustantivo y colgársela con un posesivo delante: se dice con un verbo, qué hace.
+- NO EMPIECES DOS PÁRRAFOS CON LA MISMA ESTRUCTURA. Varía los arranques.
+- LOS PÁRRAFOS RESPIRAN. Cuatro o cinco líneas, no dos, y cada uno cuenta una cosa entera.
+- CADA PÁRRAFO SE ENGANCHA CON EL ANTERIOR. Retomas algo de lo que acabas de decir y sigues tirando de ahí.
+- NO SE DA NADA POR SABIDO. No tiene a quién preguntar. Si hace falta una frase más para que se entienda, va esa frase.
+- SE LEE DE NOCHE, CON EL DÍA ENCIMA Y EN EL MÓVIL. Quien lo lee no relee: si tropieza, lo deja.
+
+Y ESTO NO VA NUNCA:
+
+- Ni una palabra técnica: ningún planeta, ningún signo, ninguna casa, ningún aspecto. Su carta no se nombra, y no se dice tu informe ni tu estudio.
+- No se habla del documento, se habla de su vida: ni áreas, ni partes, ni apartados, ni lo que viene antes o después, ni cuántas cosas hay.
+- Nada que le valga igual a otra persona. Si lo que vas a escribir se le podría mandar a otra, no lo escribas.
+- Nada de anunciar cuántas cosas vas a decir ni de numerarlas.
+- Prohibidas estas palabras y cualquier variante suya: sanar, empoderarte, gestionar tus emociones, tu mejor yo, trabajar en ti, tu proceso, tu camino, y "mejor versión" en todas sus formas.
 - Español de España, hablado. Ni una palabra en otro idioma.
-- Sin asteriscos, sin listas, sin símbolos, sin guiones de adorno y sin numerar nada: la maqueta la pone el programa, no tú. Lo único que marcas tú es dónde acaba un párrafo y empieza el siguiente, dejando una línea en blanco entre los dos.
+- Sin asteriscos, sin listas, sin símbolos y sin numerar nada: la maqueta la pone el programa. Lo único que marcas tú es dónde acaba un párrafo, dejando una línea en blanco.
 
 SE ESCRIBE EN ESPAÑOL CORRECTO, CON TODAS SUS TILDES Y TODAS SUS EÑES
 
