@@ -141,15 +141,15 @@ Esto no le explica a nadie cómo es. Eso ya lo tiene: se leyó entero un estudio
 
 Esto es la parte que le falta. Lo que tiene que hacer para llegar a ser quien quiere ser y tener la vida que quiere.
 
-Así que aquí no se diagnostica nada. No le cuentas otra vez su patrón, ni le explicas su herida, ni le pones nombre a lo que le pasa. Todo eso está dicho ya, y repetírselo con otras palabras es quitarle el sitio a lo único que ha venido a buscar: qué hace a partir de mañana.
+Así que aquí no se diagnostica. No le explicas de dónde le viene lo que hace, ni le buscas la causa en su casa o en su infancia, ni le pones nombre a lo que le pasa, porque todo eso está dicho ya, y repetírselo con otras palabras es quitarle el sitio a lo único que ha venido a buscar, que es qué hace a partir de mañana.
 
 De ahí salen las dos reglas que mandan sobre todas las demás:
 
-1. LO QUE YA ES SOLO APARECE PARA ENGANCHAR LA ACCIÓN. Una frase, la justa para que entienda por qué esto va con esta persona en concreto y no con cualquiera. Y esa frase tiene que poder rastrearse a algo que su estudio ya dice: si no puedes señalar de dónde sale, no la escribes.
+1. DE LO SUYO SOLO SE CUENTA LO QUE HACE HOY, y se cuenta para que se reconozca y sepa desde dónde arranca lo que va a cambiar. Eso sí va con detalle. Lo que no vuelve a aparecer es el porqué: de dónde le viene, quién se lo hizo, cómo se llama lo que le pasa. Eso ya se lo contaron y repetirlo es darle dos veces lo mismo. Y lo que hace hoy tiene que poder rastrearse a lo que tienes abajo: si no puedes señalar de dónde sale, no lo escribes.
 
-2. TODO LO DEMÁS ES QUÉ HACER. Eso no está en su estudio y lo pones tú. Es lo que este documento añade, y es a lo que ha venido.
+2. Y EN CUANTO SE RECONOCE, TODO LO DEMÁS ES QUÉ HACER. Eso no está en su estudio y lo pones tú. Es lo que este documento añade, es a lo que ha venido, y es lo que tiene que ocupar la mayor parte de lo que escribas.
 
-Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que va a hacer.`;
+Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que hace hoy y de lo que va a hacer con ello.`;
 
 // ── LAS SIETE PARTES ────────────────────────────────────────
 //
@@ -750,10 +750,19 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 
   console.warn(`[p2] ${que}: ${laCarta ? 'se ha colado una palabra de la carta' : 'ha venido a medias'}, se pide otra vez`);
   const segunda = await pedir((laCarta ? `\n\n${NO_NOMBRES_LA_CARTA}` : '') + (aMedias ? aviso : ''));
-  if (hablaDeAstrologia(texto(segunda)) || cojo(segunda)) {
+
+  // Y SE ENTREGA LA MENOS MALA DE LAS DOS. Pedir otra vez no garantiza que
+  // salga mejor: puede venir mas corta, o colarsele lo que a la primera no se
+  // le colo. Quedarse con la segunda a ciegas seria cambiar un fallo por otro.
+  const fallos = r => (hablaDeAstrologia(texto(r)) ? 1 : 0) + (cojo(r) ? 1 : 0);
+  const deLaSegunda = fallos(segunda);
+  if (!deLaSegunda) return segunda;
+  if (deLaSegunda < (laCarta ? 1 : 0) + (aMedias ? 1 : 0)) {
     console.warn(`[p2] ${que}: sigue mal a la segunda, se entrega igual`);
+    return segunda;
   }
-  return segunda;
+  console.warn(`[p2] ${que}: la segunda no ha mejorado, se entrega la primera`);
+  return primera;
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1019,13 +1028,24 @@ El día que falle: ${plan.recaida}
 Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}`;
 
+  // LOS PASOS QUE SE ESPERAN, POR SU NOMBRE. Si vuelve con menos, la hoja de
+  // ruta sale coja y quien lee se queda sin saber cuando le toca esa parte;
+  // por eso cuenta como venir a medias y se pide otra vez.
+  const esperados = plan.orden.map(paso => comoSeCompara(tituloDe(paso.area)));
+  const faltaAlguno = m => {
+    const traidos = new Set((Array.isArray(m?.orden) ? m.orden : [])
+      .filter(o => String(o?.saltas || '').trim())
+      .map(o => comoSeCompara(o?.area)));
+    return esperados.some(t => !traidos.has(t));
+  };
+
   const salida = await sinNombrarLaCarta({
     que: 'el principio y el final',
     cojo: m => estaVacia(m.laConducta, 'por dónde empiezas')
             || estaVacia(m.porQueEsa, 'por qué esa')
             || estaVacia(m.recaida, 'el día que lo dejes')
-            || !(m.orden || []).length,
-    aviso: '\n\nY OJO: la vez anterior algo vino vacío. El principio, el orden y el día que falle llevan texto escrito para quien lo lee, y ninguno se queda en blanco.',
+            || faltaAlguno(m),
+    aviso: `\n\nY OJO: la vez anterior algo vino vacío o faltó algún paso del orden. El principio y el día que falle llevan texto escrito para quien lo lee, y el orden lleva las ${esperados.length} partes que te doy, cada una con su cuándo.`,
     pedir: recordatorio => alModelo({
       que: 'escribir el principio y el final',
       modelo: 'claude-sonnet-5',
@@ -1240,6 +1260,7 @@ const BLOQUES = ${JSON.stringify(BLOQUES)};
 // El nombre de cada area, el mismo que lleva en el P1, para ponerlo encima del
 // titulo con su numero.
 const NOMBRES = ${JSON.stringify(Object.fromEntries(AREAS.map(a => [a.id, a.del_p1])))};
+const TITULOS = ${JSON.stringify(Object.fromEntries(AREAS.map(a => [a.id, a.titulo])))};
 const quien = document.getElementById('quien');
 const ir = document.getElementById('ir');
 const aviso = document.getElementById('aviso');
@@ -1345,7 +1366,7 @@ ir.addEventListener('click', async () => {
   const marco = await elMarco;
   if (marco) {
     arranque.outerHTML = pintarArranque(marco);
-    salida.insertAdjacentHTML('beforeend', pintarFinal(marco));
+    salida.insertAdjacentHTML('beforeend', pintarFinal(marco, TITULOS[plan.empiezaPor.area] || ''));
   }
 
   aviso.textContent = 'Listo.';
@@ -1358,12 +1379,20 @@ function pintarArranque(m) {
     parrafos(m.porQueEsa) + parrafos(m.soloEsto) + '</div>';
 }
 
-function pintarFinal(m) {
+function pintarFinal(m, empiezaPor) {
   // PRIMERO LA CONDICION Y DESPUES A DONDE PASA. Al reves -el titulo delante y
   // la condicion debajo- se lee como si la condicion fuera de esa parte, y no
   // lo es: es lo que tiene que estar pasando ya para dar por hecha la anterior.
   // Puesto asi se entiende sin explicar nada.
-  const orden = (m.orden||[]).map(o =>
+  //
+  // Y LA HOJA DE RUTA ABRE CON LA PARTE POR LA QUE EMPIEZA. Arriba del todo se
+  // le cuenta la conducta por la que arranca, pero sin decirle de que parte
+  // sale; sin esta linea la lista empieza por la segunda y quien lee no sabe
+  // atar una cosa con la otra.
+  const primero = empiezaPor
+    ? '<p class="paso">Empiezas por <b>' + escapar(empiezaPor) + '</b>.</p>'
+    : '';
+  const orden = primero + (m.orden||[]).map(o =>
     '<p class="paso">Cuando ' + escapar(o.saltas) + ', pasas a <b>' + escapar(o.titulo) + '</b>.</p>'
   ).join('');
   return '<div class="parte marco"><p class="cual">Para terminar</p>' +
