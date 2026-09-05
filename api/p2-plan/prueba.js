@@ -668,6 +668,22 @@ function hablaDeAstrologia(texto) {
   return PALABRAS_DE_ASTROLOGIA.some(re => re.test(limpio));
 }
 
+// UNA CASILLA VACIA O CON SU PROPIO TITULO DENTRO NO VALE.
+//
+// En un plan de verdad salieron casillas en blanco y otras con el nombre del
+// bloque escrito como si fuera el texto -"Asi eres aqui" dentro de la casilla
+// que ya se titula asi-, y el documento parecia roto.
+//
+// Se comprueba lo que se puede comprobar sin opinar: que hay texto, que no es
+// una linea suelta y que no es el titulo repetido.
+const LARGO_MINIMO = 60;
+
+function estaVacia(texto, titulo) {
+  const limpio = String(texto || '').trim();
+  if (limpio.length < LARGO_MINIMO) return true;
+  return comoSeCompara(limpio) === comoSeCompara(titulo);
+}
+
 // SI SE LE CUELA, SE VUELVE A PEDIR. Una sola vez: aqui no se puede tirar el
 // trozo como en el P1 -eso dejaria un hueco en el documento-, asi que se pide
 // otra vez recordandoselo. Si a la segunda sigue colandose, se avisa en el
@@ -677,14 +693,16 @@ const NO_NOMBRES_LA_CARTA =
   'Ni un planeta, ni un signo, ni una casa, ni un aspecto, ni la carta, ni el mapa. ' +
   'Quien lo lee no ha visto nada de eso y no sabe de qué le hablas.';
 
-async function sinNombrarLaCarta({ que, pedir, texto }) {
+async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso = '' }) {
   const primera = await pedir('');
-  if (!hablaDeAstrologia(texto(primera))) return primera;
+  const laCarta = hablaDeAstrologia(texto(primera));
+  const aMedias = cojo(primera);
+  if (!laCarta && !aMedias) return primera;
 
-  console.warn(`[p2] ${que}: se ha colado una palabra de la carta, se pide otra vez`);
-  const segunda = await pedir(`\n\n${NO_NOMBRES_LA_CARTA}`);
-  if (hablaDeAstrologia(texto(segunda))) {
-    console.warn(`[p2] ${que}: sigue colandose a la segunda, se entrega igual`);
+  console.warn(`[p2] ${que}: ${laCarta ? 'se ha colado una palabra de la carta' : 'ha venido a medias'}, se pide otra vez`);
+  const segunda = await pedir((laCarta ? `\n\n${NO_NOMBRES_LA_CARTA}` : '') + (aMedias ? aviso : ''));
+  if (hablaDeAstrologia(texto(segunda)) || cojo(segunda)) {
+    console.warn(`[p2] ${que}: sigue mal a la segunda, se entrega igual`);
   }
   return segunda;
 }
@@ -744,27 +762,29 @@ Escribes UNA parte del documento: la de ${area.titulo.toLowerCase()}.
 
 Lo que va en esa parte ya está decidido y te lo doy abajo en corto. Tú no eliges nada, no añades cosas que hacer y no quitas ninguna. Lo que haces es convertir cada línea en lo que se va a leer.
 
-Van cinco cosas, en este orden, y cada una con su trabajo:
+Van cinco casillas, y NINGUNA SE PUEDE QUEDAR VACIA. En cada una va texto escrito para quien lo lee, nunca un título ni el nombre de la casilla: los títulos los pone el programa y si los escribes tú salen dos veces.
 
-"${BLOQUES.nuevaVersion}"
-Cómo es aquí cuando ya no repite lo que le pesa. Se lo cuentas en presente, como algo que hace, no como algo que va a conseguir algún día. Dos o tres frases.
+nuevaVersion   Cómo es aquí cuando ya no repite lo que le pesa. Se lo cuentas
+               en presente, como algo que hace, no como algo que va a
+               conseguir algún día. Dos o tres frases enteras.
 
-"${BLOQUES.cambio}"
-Qué deja de hacer y qué hace en su lugar. Sin rodeos y sin suavizarlo. Dos o tres frases.
+cambio         Qué deja de hacer y qué hace en su lugar. Sin rodeos y sin
+               suavizarlo. Dos o tres frases enteras.
 
-"${BLOQUES.movimientos}"
-Los movimientos, uno por uno. De cada uno:
-  titulo   Cuatro o cinco palabras que digan qué hace. Le hablas de tú, empieza
-           en mayúscula y no lleva punto al final.
-  texto    Primero cuándo: la señal por la que sabe que es ese momento y no
-           otro. Y después qué hace exactamente ahí. Tiene que quedar tan claro
-           que lo pueda hacer sin preguntarle a nadie. Tres o cuatro frases.
+movimientos    Los movimientos, uno por uno. De cada uno:
+               titulo   Cuatro o cinco palabras que digan qué hace. Le hablas
+                        de tú, empieza en mayúscula y no lleva punto al final.
+               texto    Primero cuándo: la señal por la que sabe que es ese
+                        momento y no otro. Y después qué hace exactamente ahí.
+                        Tan claro que lo pueda hacer sin preguntarle a nadie.
+                        Tres o cuatro frases.
 
-"${BLOQUES.freno}"
-Lo que va a aparecer para que no lo haga, contado antes de que le pase, y que eso es la señal de que va por buen camino. Dos o tres frases.
+freno          Lo que va a aparecer para que no lo haga, contado antes de que
+               le pase, y que eso es la señal de que va por buen camino. Dos o
+               tres frases enteras.
 
-"${BLOQUES.senal}"
-En qué va a ver que está funcionando. Algo que pase en su vida y que pueda reconocer. Dos o tres frases.
+senal          En qué va a ver que está funcionando. Algo que pase en su vida y
+               que pueda reconocer. Dos o tres frases enteras.
 
 
 NO TE SALGAS DE LO DECIDIDO. Si en lo de abajo hay tres movimientos, escribes tres. Si te parece que falta algo, no lo añades: no ves las otras seis partes y lo que a ti te falta puede estar ya escrito en otra.
@@ -790,6 +810,15 @@ Nombre de pila: ${nombre}`;
 
   const salida = await sinNombrarLaCarta({
     que: `la parte de ${area.id}`,
+    // Ademas de la carta, aqui se mira que las cinco casillas traigan texto:
+    // el mismo reintento sirve para las dos cosas.
+    cojo: p => estaVacia(p.nuevaVersion, BLOQUES.nuevaVersion)
+            || estaVacia(p.cambio, BLOQUES.cambio)
+            || estaVacia(p.freno, BLOQUES.freno)
+            || estaVacia(p.senal, BLOQUES.senal)
+            || !(p.movimientos || []).length
+            || (p.movimientos || []).some(m => estaVacia(m.texto, BLOQUES.movimientos) || !m.titulo),
+    aviso: '\n\nY OJO: la vez anterior alguna casilla vino vacía o con su título dentro. Las cinco llevan texto escrito para quien lo lee, ninguna se queda en blanco y en ninguna se copia el nombre de la casilla.',
     pedir: recordatorio => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
@@ -879,6 +908,9 @@ Las otras seis, en el orden en que le conviene ir. De cada una:
            parte y no en la de al lado.
   saltas   qué tiene que estar pasando ya en su vida para dar por hecha la
            anterior y pasar a esta. Una o dos frases.
+           Y SALE DE ESA PARTE, no de otra: lo que escribas aquí tiene que
+           poder reconocerse en lo que se le ha pedido en esa misma parte.
+           Si lo que escribes vale para cualquiera de las siete, está mal.
 NADA DE FECHAS NI DE SEMANAS. No sabemos cómo es su vida. Se salta por lo que le está pasando, no por el calendario.
 
 "recaida"
@@ -900,6 +932,10 @@ Nombre de pila: ${nombre}`;
 
   const salida = await sinNombrarLaCarta({
     que: 'el principio y el final',
+    cojo: m => estaVacia(m.empiezaPor, 'por dónde empiezas')
+            || estaVacia(m.recaida, 'el día que lo dejes')
+            || !(m.orden || []).length,
+    aviso: '\n\nY OJO: la vez anterior algo vino vacío. El principio, el orden y el día que falle llevan texto escrito para quien lo lee, y ninguno se queda en blanco.',
     pedir: recordatorio => alModelo({
       que: 'escribir el principio y el final',
       modelo: 'claude-sonnet-5',
