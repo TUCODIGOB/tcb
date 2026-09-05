@@ -226,7 +226,9 @@ export default async function handler(req, res) {
     // mayusculas, con aire por arriba y pegado a lo que presenta.
     function subtitulo(texto) {
       y += 6;
-      cabe(20);
+      // Y NO SE QUEDA SOLO AL PIE: si no caben el y cuatro renglones de lo que
+      // presenta, se va entero a la hoja siguiente y se lleva su contenido.
+      cabe(RENGLON * 5);
       escribir(String(texto).toUpperCase(), { fuente: 'bold', tam: 13, color: DORADO, alto: 7 });
       y += 3;
     }
@@ -259,10 +261,20 @@ export default async function handler(req, res) {
 
       const movimientos = Array.isArray(parte?.movimientos) ? parte.movimientos : [];
       if (movimientos.length) {
-        subtitulo(t(parte?.bloque) || 'Qué haces');
+        subtitulo(parte?.nombres?.movimientos || 'Qué haces');
         // Cada movimiento en su caja: son lo que ella va a hacer, y tienen que
         // verse como piezas sueltas y no como mas texto del de arriba.
         for (const m of movimientos) caja(m?.titulo, m?.texto);
+      }
+      // Y las otras dos, con su nombre para que sepa de que le hablan y para
+      // poder volver a buscarlas el dia que le hagan falta.
+      if (t(parte?.freno)) {
+        subtitulo(parte?.nombres?.freno || 'Lo que va a aparecer para que no lo hagas');
+        corrido(parte.freno);
+      }
+      if (t(parte?.senal)) {
+        subtitulo(parte?.nombres?.senal || 'En qué lo vas a notar');
+        corrido(parte.senal);
       }
     }
 

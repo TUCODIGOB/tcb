@@ -200,7 +200,19 @@ const AREAS = [
 // Eran cinco y sobraba uno: "Asi eres aqui" y "Lo que cambia" contaban lo
 // mismo, los dos en abstracto, asi que cada parte abria con dos parrafos que
 // no decian nada y quien leia no sabia de que le estaban hablando.
-const BLOQUES = { movimientos: 'Qué haces' };
+// LOS TRES NOMBRES QUE VE DENTRO DE CADA PARTE.
+//
+// Antes solo habia uno y todo lo demas iba en un bloque de texto sin nombre:
+// dentro habia cuatro cosas y quien leia no sabia de que le hablaba cada una,
+// ni podia volver a buscar una el dia que le hiciera falta.
+//
+// El texto corrido se queda sin nombre a proposito: es lo primero que se lee y
+// no necesita etiqueta. Lo que sale con nombre es lo que se busca despues.
+const BLOQUES = {
+  movimientos: 'Qué haces',
+  freno: 'Lo que va a aparecer para que no lo hagas',
+  senal: 'En qué lo vas a notar',
+};
 
 // A QUIEN SE LE ESCRIBE. El informe del P1 guarda si quien compro es mujer u
 // hombre, y hay que decirselo: los textos van en femenino o en masculino y sin
@@ -887,6 +899,8 @@ const MOLDE_DE_LA_PARTE = {
   type: 'object',
   properties: {
     texto: { type: 'string' },
+    freno: { type: 'string' },
+    senal: { type: 'string' },
     movimientos: {
       type: 'array',
       items: {
@@ -900,7 +914,7 @@ const MOLDE_DE_LA_PARTE = {
       },
     },
   },
-  required: ['texto', 'movimientos'],
+  required: ['texto', 'freno', 'senal', 'movimientos'],
   additionalProperties: false,
 };
 
@@ -914,7 +928,7 @@ const MOLDE_DE_LA_PARTE = {
 // Ahora el area es UN texto seguido, con su sitio para respirar. Los
 // movimientos siguen aparte porque son lo que se hace el martes y hay que
 // poder encontrarlos, pero todo lo demas se cuenta corrido.
-const PALABRAS_MINIMAS = 320;
+const PALABRAS_MINIMAS = 260;
 
 // Lo que se sabe de ella en esta parcela, tal como se lo conto el P1. Sin esto
 // quien escribe solo tiene el esquema de lo decidido, y con un esquema no se
@@ -941,7 +955,7 @@ Escribes UNA parte del documento. La parcela de su vida que te toca es esta: ${a
 
 Y SE ESCRIBE DE UNA TIRADA, seguido, como cuando alguien que la conoce se sienta a contarle algo. Nada de apartados, nada de bloques, nada de anunciar lo que viene. Un párrafo lleva al siguiente.
 
-TIENE QUE OCUPAR SU SITIO: al menos ${PALABRAS_MINIMAS} palabras. No es por llenar. Es que explicarle bien cómo se hace algo no cabe en cuatro frases, y en cuatro frases tampoco cabe una voz. Si te sale corto, no engordes las frases ni alargues el arranque: cuéntale con más detalle cómo se hace lo que tiene que hacer.
+EL TEXTO SEGUIDO TIENE QUE OCUPAR SU SITIO: al menos ${PALABRAS_MINIMAS} palabras, sin contar lo que va debajo. No es por llenar. Es que explicarle bien cómo se hace algo no cabe en cuatro frases, y en cuatro frases tampoco cabe una voz. Si te sale corto, no engordes las frases ni alargues el arranque: cuéntale con más detalle cómo se hace lo que tiene que hacer.
 
 POR DÓNDE ENTRA ESTA PARTE: ${area.porDondeEntra}. Se entra por ahí, directamente, sin presentar nada.
 
@@ -953,11 +967,15 @@ Y ENSEGUIDA, QUÉ CAMBIA. Qué deja de hacer y qué hace en su lugar, en claro y
 
 Y DE AHÍ HASTA EL FINAL, TODO ES CÓMO SE HACE. Esto es lo que ocupa la mayor parte de lo que escribas, y es por lo que ha pagado. Cómo lo hace las primeras veces, cuando todavía no le sale solo. Qué hace con lo que sienta mientras lo hace. Qué se va a encontrar por el camino, y cómo lo sostiene cuando ya no sea nuevo y deje de apetecerle. Se cuenta hacia delante, como quien le explica algo a alguien que lo va a hacer mañana, no como quien le explica cómo es.
 
-AHÍ DENTRO LE AVISAS DE LO QUE VA A APARECER PARA QUE NO LO HAGA: lo que va a sentir o lo que se va a decir por dentro para librarse. Se lo dices antes de que le pase, y le dices que eso es señal de que va bien, no de que se esté equivocando.
-
-Y CIERRAS CON EN QUÉ LO VA A NOTAR. Algo que va a ver ocurriendo en su vida, no un estado de ánimo, y de las primeras: algo que pase en semanas.
-
 Y ESTA ES LA PRUEBA DE QUE ESTÁ BIEN ESCRITO: tapa las tres primeras frases y lee lo que queda. Si lo que queda le sirve para hacer algo, está bien. Si lo que queda vuelve a ser cómo es, está mal y se reescribe entero.
+
+LO QUE VA A FRENARLE Y EN QUÉ LO VA A NOTAR TAMBIÉN VAN APARTE, cada uno en el suyo, y NO se cuentan dentro del texto seguido. Si lo cuentas ahí y luego otra vez debajo, sobra una de las dos.
+
+"freno"
+Lo que va a aparecer para que no lo haga: lo que va a sentir, o lo que se va a decir por dentro para librarse, dicho con sus palabras. Se lo avisas antes de que le pase, y le dices que eso es señal de que va bien y no de que se esté equivocando, y qué hace cuando llegue. Cuatro o cinco frases.
+
+"senal"
+En qué va a notar que está funcionando. Algo que va a ver ocurriendo en su vida, no un estado de ánimo, y de lo primero que llega: de lo que se nota a las pocas veces, no de lo que se ve al cabo de mucho tiempo. Tres o cuatro frases.
 
 LOS MOVIMIENTOS SON EL PASO A PASO, Y VAN APARTE. En el texto seguido no repites lo que ellos ya dicen: ahí no se cuenta el momento ni el paso, que van debajo y en su sitio.
 
@@ -1007,11 +1025,13 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
     cojo: p => cuantas(p.texto) < PALABRAS_MINIMAS
             || parrafosDe(p.texto) < 3
             || cuentaComoEs(p.texto)
+            || cuantas(p.freno) < 30 || cuantas(p.senal) < 20
+            || cuentaComoEs(p.freno, 0) || cuentaComoEs(p.senal, 0)
             || !(p.movimientos || []).length
             || (p.movimientos || []).some(m => !m.titulo || cuantas(m.texto) < 25),
     aviso: p => cuentaComoEs(p.texto)
       ? `\n\nY OJO: la vez anterior, pasadas las tres primeras frases, seguías contándole cómo es y de dónde le viene. Eso ya se lo contaron entero y no se repite aquí. Deja las tres primeras frases y reescribe todo lo demás contando cómo se hace lo que tiene que hacer: cómo lo hace las primeras veces, qué hace con lo que sienta, qué se va a encontrar y cómo lo sostiene.`
-      : `\n\nY OJO: la vez anterior salió corto o vino de una pieza. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras, ir repartido en párrafos separados por una línea en blanco, y cada movimiento contarse entero. Lo que falta no es arranque, es cómo se hace: eso es lo que se cuenta con más detalle.`,
+      : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras y ir repartido en párrafos separados por una línea en blanco; lo que va a frenarle, en qué lo va a notar y cada movimiento se cuentan enteros y no de pasada. Lo que falta no es arranque, es cómo se hace: eso es lo que se cuenta con más detalle.`,
     pedir: recordatorio => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
@@ -1022,13 +1042,15 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
       molde: MOLDE_DE_LA_PARTE,
       espera: AbortSignal.timeout(ESPERA_DE_ESCRIBIR_MS),
     }),
-    texto: p => [p.texto].concat((p.movimientos || []).flatMap(m => [m.titulo, m.texto])).join(' '),
+    texto: p => [p.texto, p.freno, p.senal].concat((p.movimientos || []).flatMap(m => [m.titulo, m.texto])).join(' '),
   });
 
   return {
     id: area.id,
     titulo: area.titulo,
     texto: String(salida.texto || '').trim(),
+    freno: String(salida.freno || '').trim(),
+    senal: String(salida.senal || '').trim(),
     movimientos: (Array.isArray(salida.movimientos) ? salida.movimientos : [])
       .map(m => ({ titulo: String(m?.titulo || '').trim(), texto: String(m?.texto || '').trim() }))
       .filter(m => m.titulo && m.texto),
@@ -1533,7 +1555,9 @@ ir.addEventListener('click', async () => {
       empiezaPor: TITULOS[plan.empiezaPor.area] || '',
       // La etiqueta pequena de cada parte y el titulo de sus movimientos van
       // desde aqui: el que maqueta no tiene que saberse las siete partes.
-      partes: completas.map(p => ({ ...p, etiqueta: NOMBRES[p.id] || '', bloque: BLOQUES.movimientos })),
+      // Los nombres de los tres bloques viajan con cada parte: el que maqueta
+      // no tiene que saberse como se llaman aqui.
+      partes: completas.map(p => ({ ...p, etiqueta: NOMBRES[p.id] || '', nombres: BLOQUES })),
     };
     pdf.hidden = false;
     aviso.textContent = 'Listo. Ya se puede bajar el PDF.';
@@ -1606,10 +1630,16 @@ function pintarParte(p, n) {
   const movs = (p.movimientos||[]).map(m =>
     '<div class="mov"><b>' + escapar(m.titulo) + '</b>' + parrafos(m.texto) + '</div>'
   ).join('');
+  // Y cada cosa con su nombre: el texto corrido no lo lleva, que es lo primero
+  // que se lee; las tres de debajo si, que son las que se buscan despues.
+  const conNombre = (cual, dentro) => dentro
+    ? '<div class="bloque"><h3>' + escapar(cual) + '</h3>' + dentro + '</div>' : '';
   return '<div class="parte"><p class="cual">' + n + ' · ' + escapar(NOMBRES[p.id] || '') + '</p>' +
     '<h2>' + escapar(p.titulo) + '</h2>' +
     '<div class="bloque">' + parrafos(p.texto) + '</div>' +
-    '<div class="bloque"><h3>' + escapar(BLOQUES.movimientos) + '</h3>' + movs + '</div>' +
+    conNombre(BLOQUES.movimientos, movs) +
+    conNombre(BLOQUES.freno, parrafos(p.freno)) +
+    conNombre(BLOQUES.senal, parrafos(p.senal)) +
     '</div>';
 }
 </script>
