@@ -489,12 +489,27 @@ AQUÍ NO SE ESCRIBE EL DOCUMENTO. Aquí se DECIDE. Todo sale en corto, en una l�
 Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene: eso ya lo tiene. Lo suyo solo aparece para enganchar lo que tiene que hacer.
 
 
-1. LAS SIETE PARTES, Y LAS SIETE A LA VEZ
+1. QUÉ ES CADA PARTE
+
+Las siete parcelas de su vida, y de qué va cada una:
+
+IDENTIDAD    quién es y cómo se planta delante de los demás
+PATRONES     lo que repite, su día a día, su manera de funcionar
+MIEDOS       lo que le frena y lo que evita
+HERIDA       lo que le duele de antiguo, su casa y los suyos
+AMOR         la pareja, el deseo y el disfrute
+RELACIONES   la gente, hablar, los grupos, los amigos
+DINERO       el dinero, el trabajo y lo que vale lo suyo
+
+CADA PARTE HABLA SOLO DE LO SUYO. Abajo te llegan sus rasgos repartidos en las siete, pero ese reparto no siempre está fino: si un rasgo que te llega en una parcela habla de otra, lo que decidas con él va donde habla, no donde estaba puesto. Si acabas escribiendo de grupos en la parcela del día a día, o de dinero en la de los miedos, está mal y se cambia.
+
+
+2. LAS SIETE PARTES, Y LAS SIETE A LA VEZ
 
 Decides las siete de una vez y con las siete delante. Eso es lo importante, y es la razón de que esto se haga en un solo sitio: una misma cosa que hacer, dicha con otras palabras, puede colarse en cuatro partes distintas, y quien lo lee cree que tiene veinte cosas cuando en realidad son diez. Eso solo se ve teniéndolas todas delante.
 
 
-2. QUÉ DECIDES DE CADA PARTE
+3. QUÉ DECIDES DE CADA PARTE
 
 De cada una de las siete sacas cuatro cosas, y ninguna se queda vacía:
 
@@ -524,7 +539,7 @@ senal          En qué va a notar que está funcionando. Algo que pueda ver
                primeras: algo que pase en semanas, no en años.
 
 
-3. LO QUE NO SE PUEDE ESCRIBIR
+4. LO QUE NO SE PUEDE ESCRIBIR
 
 No sabemos nada de su vida que no esté escrito abajo. No tiene pareja, ni hijos, ni jefe, ni familia, ni trabajo, ni casa, mientras no aparezcan ahí. No los nombres, no los supongas y no los uses para montar un movimiento.
 
@@ -532,35 +547,37 @@ Por eso los movimientos arrancan siempre por algo que ocurre dentro de esa perso
 
 Nada de consejos que le valgan igual a cualquiera. Si lo que has escrito se le podría mandar a otra persona distinta, está mal y se cambia.
 
+Y NADA DE EJERCICIOS DE TERAPIA. Ni buscar de dónde le viene algo, ni ponerle nombre a quién se lo hizo, ni rituales, ni papeles que se rompen, ni nada que se parezca a una consulta. Lo que hace es algo que ya haría en su vida corriente, hecho distinto.
+
 Y nada técnico: ni planetas, ni signos, ni casas. Quien lo lee no ve la carta.
 
 
-4. POR DÓNDE EMPIEZA
+5. POR DÓNDE EMPIEZA
 
 Eliges UNA de las siete. La que, si se mueve, arrastra a las demás: normalmente es la que está por debajo de varias, la que si sigue igual hace que lo demás vuelva.
 
 Y dices por qué esa, en una frase, mirando lo suyo. No vale un porqué general que le sirva a cualquiera: tiene que salir de lo que le pasa a esta persona.
 
 
-5. EL ORDEN
+6. EL ORDEN
 
 Las otras seis, en el orden en que le conviene ir. De cada una dices cuándo salta a la siguiente: qué tiene que estar pasando ya en su vida para dar por hecha la anterior.
 
 NO PONGAS FECHAS NI SEMANAS. No sabemos cómo es su vida ni cuánto tiempo tiene. Se salta por lo que pasa, no por el calendario.
 
 
-6. EL DÍA QUE FALLE
+7. EL DÍA QUE FALLE
 
 Qué hace exactamente el día que se le olvide, lo deje o vuelva a lo de antes. No es animarla: es el paso concreto para volver, y dejarle claro que eso iba a pasar y está contado.
 
 
-7. EL REPASO, ANTES DE ENTREGAR
+8. EL REPASO, ANTES DE ENTREGAR
 
 Con las siete partes escritas delante:
 
 PRIMERO, MIRA LOS MOVIMIENTOS DE LAS SIETE JUNTOS. Los que le pidan lo mismo con otras palabras son uno solo escrito varias veces. Se queda en la parte donde más le pese, y en las otras se sustituye por algo distinto de verdad.
 
-DESPUÉS, MIRA QUE CADA PARTE HABLE DE LO SUYO. Lo de una parte no se cuenta en otra.
+DESPUÉS, MIRA QUE CADA PARTE HABLE DE SU PARCELA Y NO DE OTRA. Tapa de dónde venía cada rasgo, lee lo que has decidido y mira si habla de la parcela en la que lo has puesto. Si no, se mueve.
 
 Y POR ÚLTIMO: que ninguna de las cuatro casillas de ninguna parte se haya quedado vacía o resuelta de pasada.
 
@@ -884,7 +901,9 @@ const TECHO_DEL_MARCO = 4000;
 const MOLDE_DEL_MARCO = {
   type: 'object',
   properties: {
-    empiezaPor: { type: 'string' },
+    laConducta: { type: 'string' },
+    porQueEsa:  { type: 'string' },
+    soloEsto:   { type: 'string' },
     orden: {
       type: 'array',
       items: {
@@ -899,7 +918,7 @@ const MOLDE_DEL_MARCO = {
     },
     recaida: { type: 'string' },
   },
-  required: ['empiezaPor', 'orden', 'recaida'],
+  required: ['laConducta', 'porQueEsa', 'soloEsto', 'orden', 'recaida'],
   additionalProperties: false,
 };
 
@@ -922,12 +941,16 @@ El resto del documento ya está escrito. Te toca lo que va delante de todo y lo 
 
 Escribes tres cosas:
 
-"empiezaPor"
-Va lo primero de todo. Le dices POR QUÉ CONDUCTA SUYA empieza, que es la que tienes abajo, contada con lo que hace y nunca con el título que lleva, y por qué mover esa arrastra lo demás.
+El principio son TRES COSAS SEPARADAS, y cada una hace UN SOLO trabajo. No las mezcles ni las repitas entre ellas: si algo ya está dicho en una, en las otras no vuelve.
 
-Se entra directamente por lo que hace. Nada de presentar el documento, nada de anunciar por dónde se empieza y nada de nombrarle títulos ni trozos. Y se le quita el agobio sin decirle cuántas cosas hay: lo que tiene que hacer ahora es una, y lo demás puede esperar.
+"laConducta"
+UNA sola cosa que hace, la de abajo, dicha en dos frases como se lo diría alguien que la conoce. Se entra por lo que hace, sin presentar nada, sin anunciar que esto empieza y sin nombrar títulos ni trozos del documento. Nada de encadenar dos conductas: una.
 
-Tres o cuatro frases.
+"porQueEsa"
+Por qué mover esa mueve lo demás. Dos o tres frases, y en presente: lo que le pasa hoy por seguir haciéndolo, no lo que pasaría si no lo cambiara. Nada de suposiciones encadenadas.
+
+"soloEsto"
+Que ahora mismo no le toca nada más que eso. Una o dos frases, tranquilas, sin decirle cuántas cosas hay ni cuándo llegan las demás.
 
 "orden"
 Las demás, en el orden en que le conviene ir. De cada una:
@@ -935,7 +958,9 @@ Las demás, en el orden en que le conviene ir. De cada una:
            cambiarle ni una palabra. Es lo que hace que cada texto acabe en su
            parte y no en la de al lado.
   saltas   qué tiene que estar pasando ya en su vida para dar por hecha la
-           anterior y pasar a esta. Una o dos frases.
+           anterior y pasar a esta. Una frase, y ESCRITA PARA IR DETRÁS DE UN
+           "Cuando": empieza directamente por lo que le está pasando, en
+           minúscula, sin punto al final y sin repetir la palabra cuando.
            Y SALE DE ESA PARTE, no de otra: debajo de cada una tienes lo que
            cambia ahí, y de eso sale el cuándo. Si lo que escribes vale para
            cualquiera de las siete, está mal.
@@ -966,7 +991,8 @@ Nombre de pila: ${nombre}`;
 
   const salida = await sinNombrarLaCarta({
     que: 'el principio y el final',
-    cojo: m => estaVacia(m.empiezaPor, 'por dónde empiezas')
+    cojo: m => estaVacia(m.laConducta, 'por dónde empiezas')
+            || estaVacia(m.porQueEsa, 'por qué esa')
             || estaVacia(m.recaida, 'el día que lo dejes')
             || !(m.orden || []).length,
     aviso: '\n\nY OJO: la vez anterior algo vino vacío. El principio, el orden y el día que falle llevan texto escrito para quien lo lee, y ninguno se queda en blanco.',
@@ -980,7 +1006,7 @@ Nombre de pila: ${nombre}`;
       molde: MOLDE_DEL_MARCO,
       espera: AbortSignal.timeout(ESPERA_DEL_MARCO_MS),
     }),
-    texto: m => [m.empiezaPor, m.recaida]
+    texto: m => [m.laConducta, m.porQueEsa, m.soloEsto, m.recaida]
       .concat((m.orden || []).map(o => o.saltas)).join(' '),
   });
 
@@ -1010,7 +1036,9 @@ Nombre de pila: ${nombre}`;
   }
 
   return {
-    empiezaPor: String(salida.empiezaPor || '').trim(),
+    laConducta: String(salida.laConducta || '').trim(),
+    porQueEsa: String(salida.porQueEsa || '').trim(),
+    soloEsto: String(salida.soloEsto || '').trim(),
     orden,
     recaida: String(salida.recaida || '').trim(),
   };
@@ -1288,12 +1316,17 @@ ir.addEventListener('click', async () => {
 
 function pintarArranque(m) {
   return '<div class="parte marco"><p class="cual">Antes de nada</p>' +
-    '<h2>Por dónde empiezas</h2>' + parrafos(m.empiezaPor) + '</div>';
+    '<h2>Por dónde empiezas</h2>' + parrafos(m.laConducta) +
+    parrafos(m.porQueEsa) + parrafos(m.soloEsto) + '</div>';
 }
 
 function pintarFinal(m) {
-  const orden = (m.orden||[]).map((o, i) =>
-    '<p class="paso"><b>' + (i+2) + '. ' + escapar(o.titulo) + '</b> — ' + escapar(o.saltas) + '</p>'
+  // PRIMERO LA CONDICION Y DESPUES A DONDE PASA. Al reves -el titulo delante y
+  // la condicion debajo- se lee como si la condicion fuera de esa parte, y no
+  // lo es: es lo que tiene que estar pasando ya para dar por hecha la anterior.
+  // Puesto asi se entiende sin explicar nada.
+  const orden = (m.orden||[]).map(o =>
+    '<p class="paso">Cuando ' + escapar(o.saltas) + ', pasas a <b>' + escapar(o.titulo) + '</b>.</p>'
   ).join('');
   return '<div class="parte marco"><p class="cual">Para terminar</p>' +
     (orden ? '<div class="bloque"><h3>Y después, en este orden</h3>' + orden + '</div>' : '') +
