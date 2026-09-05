@@ -438,6 +438,7 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
   // se veria luego es "la respuesta no es JSON valido", que no dice nada de lo
   // que ha pasado ni de como arreglarlo.
   let porQueParo = '';
+  if (!resp.body) throw new Error(`${que}: el modelo ha contestado sin nada dentro`);
   try {
     const lector = resp.body.getReader();
     const aLetras = new TextDecoder();
@@ -460,6 +461,12 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
         if (trozo.type === 'content_block_delta' && trozo.delta?.type === 'text_delta') {
           texto += trozo.delta.text;
         }
+        // Y por si el JSON con molde viniera en su propio tipo de trozo en vez
+        // de como texto: aqui no se piden herramientas, asi que esto solo puede
+        // ser el mismo JSON por otro camino. Si nunca llega, no hace nada.
+        if (trozo.type === 'content_block_delta' && trozo.delta?.type === 'input_json_delta') {
+          texto += trozo.delta.partial_json || '';
+        }
         if (trozo.type === 'message_delta' && trozo.delta?.stop_reason) {
           porQueParo = trozo.delta.stop_reason;
         }
@@ -470,13 +477,13 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
     throw err;
   }
 
-  if (!texto.trim()) throw new Error(`${que}: el modelo ha devuelto una respuesta vacía`);
   if (porQueParo === 'max_tokens') {
     throw new Error(`${que}: se ha quedado sin sitio y ha salido a medias. Hay que darle más techo.`);
   }
   if (porQueParo === 'refusal') {
     throw new Error(`${que}: el modelo se ha negado a contestar.`);
   }
+  if (!texto.trim()) throw new Error(`${que}: el modelo ha devuelto una respuesta vacía`);
 
   try {
     return JSON.parse(texto);
@@ -737,7 +744,7 @@ Nombre de pila: ${nombre}`;
     'toda','todo','solo','sola','veces','nada','algo','otra','otro','cosa',
     'cosas','hace','hacer','haces','dice','dices','decir','esta','este']);
 
-  const comoSeParece = txt => new Set(
+  const palabrasDe = txt => new Set(
     sinTildes(txt).replace(/[^a-z0-9ñ ]/g, ' ').split(/\s+/)
       .filter(w => w.length >= 4).map(w => w.slice(0, 5))
       .filter(w => !ARMAZON.has(w)));
@@ -752,7 +759,7 @@ Nombre de pila: ${nombre}`;
   const repetidas = [];
   for (let i = 0; i < partes.length; i++) {
     for (let j = i + 1; j < partes.length; j++) {
-      if (seParecen(comoSeParece(partes[i].elPlan), comoSeParece(partes[j].elPlan))) {
+      if (seParecen(palabrasDe(partes[i].elPlan), palabrasDe(partes[j].elPlan))) {
         repetidas.push(`${partes[i].area} y ${partes[j].area}`);
       }
     }
@@ -1019,20 +1026,16 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 // CADA UNA VE SOLO SU PARTE. No hace falta que vea las demas: el paso que
 // piensa ya se encargo de que no se repitan.
 
-// EL TOPE CABE DOS VECES. Si se le cuela una palabra de la carta se vuelve a
-// pedir, asi que los dos intentos juntos tienen que caber en los 300 segundos
-// que aguanta esta peticion.
-//
-// Eran sesenta y cinco segundos, medidos cuando una parte eran cuatro casillas
-// y doscientas sesenta palabras. Ahora son seis casillas y trescientas, y con
-// sesenta y cinco se cortaba antes de terminar. Ciento veinte caben dos veces
-// de sobra y no cuestan nada mientras no se usen.
 // LO QUE SE LE DA A CADA INTENTO.
 //
-// Con 120 segundos se corto una parte real: escribir esto es una respuesta
-// larga y no cabia. Se le da mas, y de manera que los dos intentos juntos
-// sigan cabiendo en el tiempo del servidor: el primero se lleva esto, y el
-// segundo lo que sobre.
+// Escribir una parte son cinco casillas y trescientas y pico palabras, y es la
+// respuesta mas larga que se pide. Con 120 segundos se corto una de verdad, y
+// con 65 -medidos cuando eran cuatro casillas y doscientas sesenta- se cortaba
+// siempre.
+//
+// Ahora 170. Dos intentos de 170 no caben en los 300 segundos que aguanta esta
+// peticion, y por eso el segundo no pide otros 170: pide lo que sobre del
+// primero (loQueQueda), y si no sobra ni para medio intento no se pide.
 const ESPERA_DE_ESCRIBIR_MS = 170000;
 const TECHO_DE_ESCRIBIR = 12000;
 
