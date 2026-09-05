@@ -1617,7 +1617,12 @@ const PAGINA = `<!DOCTYPE html>
   h1 { font-size:1.5rem; color:var(--teal); margin-bottom:.3rem; }
   .sub { color:#6b6b6b; font-size:.85rem; margin-bottom:2rem; font-family:system-ui,sans-serif; }
   select, button { font:inherit; font-family:system-ui,sans-serif; font-size:.95rem; }
-  select { width:100%; padding:.7rem; border:1px solid rgba(14,63,75,.3); border-radius:6px; background:#fff; margin-bottom:1rem; }
+  select, textarea { width:100%; padding:.7rem; border:1px solid rgba(14,63,75,.3); border-radius:6px; background:#fff; }
+  select { margin-bottom:1.4rem; }
+  textarea { font:inherit; font-family:system-ui,sans-serif; font-size:.95rem; resize:vertical; }
+  .pregunta { margin-bottom:1.2rem; }
+  .pregunta label { display:block; font-family:system-ui,sans-serif; font-size:.95rem; font-weight:600; color:var(--teal); margin-bottom:.25rem; }
+  .pista { font-family:system-ui,sans-serif; font-size:.82rem; color:#6b6b6b; margin-bottom:.45rem; }
   button { background:var(--gold); color:#fff; border:0; border-radius:6px; padding:.8rem 1.6rem; cursor:pointer; font-weight:600; letter-spacing:.03em; }
   button:disabled { opacity:.45; cursor:default; }
   #pdf { margin-left:.6rem; background:var(--teal); }
@@ -1651,6 +1656,26 @@ const PAGINA = `<!DOCTYPE html>
   <p class="sub">Solo para ver cómo sale. No manda nada a nadie.</p>
 
   <select id="quien"><option>Cargando informes…</option></select>
+
+  <div class="pregunta">
+    <label for="p1">1. ¿Cómo es tu vida hoy?</label>
+    <p class="pista">El trabajo, la casa, la pareja, la familia, los amigos, lo que haces con tu tiempo libre. Una semana normal tuya.</p>
+    <textarea id="p1" rows="5"></textarea>
+  </div>
+
+  <div class="pregunta">
+    <label for="p2">2. ¿Cómo te gustaría que fuera tu vida?</label>
+    <p class="pista">El trabajo, la casa, la pareja, la familia, los amigos, tu tiempo. Tu día a día.</p>
+    <textarea id="p2" rows="5"></textarea>
+  </div>
+
+  <div class="pregunta">
+    <label for="p3">3. ¿Qué llevas años intentando cambiar y no cambia?</label>
+    <textarea id="p3" rows="3"></textarea>
+  </div>
+
+  <p class="pista">Cuanto más cuentes, más tuyo será el plan.</p>
+
   <button id="ir" disabled>Escribir su plan</button>
   <button id="pdf" hidden>Bajar el PDF</button>
 
@@ -1666,6 +1691,11 @@ const TITULOS = ${JSON.stringify(Object.fromEntries(AREAS.map(a => [a.id, a.titu
 const quien = document.getElementById('quien');
 const ir = document.getElementById('ir');
 const pdf = document.getElementById('pdf');
+// LAS TRES RESPUESTAS. Son lo unico que sabemos de su vida de hoy: el informe
+// del P1 dice como es, no que hace ni con quien. Viajan con la peticion del
+// plan, que es la que decide, y de momento el motor no las lee: eso es el
+// siguiente paso.
+const preguntas = ['p1', 'p2', 'p3'].map(id => document.getElementById(id));
 const aviso = document.getElementById('aviso');
 const salida = document.getElementById('salida');
 
@@ -1682,6 +1712,13 @@ async function llamar(cuerpo) {
   const d = await r.json().catch(() => ({ error:'Respuesta ilegible' }));
   if (!r.ok) throw new Error(d.error || ('Error ' + r.status));
   return d;
+}
+
+// Lo que ha escrito, sin espacios de mas. Si deja una en blanco, va vacia: no
+// se le inventa nada por ella.
+function laVidaQueCuenta() {
+  const [hoy, comoLeGustaria, loQueNoCambia] = preguntas.map(c => String(c.value || '').trim());
+  return { hoy, comoLeGustaria, loQueNoCambia };
 }
 
 (async function cargarLista() {
@@ -1719,7 +1756,7 @@ ir.addEventListener('click', async () => {
   let plan;
   aviso.textContent = 'Decidiendo su plan… (es la parte que piensa: un minuto, y dos si tiene que rehacerlo)';
   try {
-    const r = await llamar({ accion:'plan', compra });
+    const r = await llamar({ accion:'plan', compra, respuestas: laVidaQueCuenta() });
     plan = r.plan;
     if (r.quien) quienEs = r.quien;
   } catch (e) {
