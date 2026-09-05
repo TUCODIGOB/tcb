@@ -708,18 +708,17 @@ Nombre de pila: ${nombre}`;
     return juntos / (a.size + b.size - juntos) >= 0.55;
   };
 
-  // PERO NUNCA SE QUEDA UNA PARTE SIN NINGUNO. Si a una le sobran todos porque
-  // ya salieron antes, esa parte se quedaria con uno o con ninguno y la clienta
-  // perderia lo que ha pagado.
+  // PERO NINGUNA PARTE BAJA DE DOS. Si a una le sobraran todos porque ya
+  // salieron antes, se quedaria con uno o con ninguno y la clienta perderia lo
+  // que ha pagado.
   //
   // Y ESO PASA SIN QUE NADIE SE HAYA REPETIDO: dos movimientos que dicen cosas
   // distintas, pero escritos con la misma forma de frase, comparten casi todas
-  // las palabras y esto los toma por el mismo. Comparar palabras no sabe la
-  // diferencia, asi que la red se pone aqui: NINGUNA PARTE BAJA DEL MINIMO. Se
-  // quitan los repetidos mientras queden dos, y si por quitarlos
-  // se quedaria en menos, se le devuelven los ultimos que cayeron. Colar un
-  // repetido es malo; dejarle una parte con un solo paso, cuando las otras
-  // llevan tres, es peor y encima se ve.
+  // las palabras, y esto compara palabras y los toma por el mismo. Asi que la
+  // red se pone aqui: se quitan los repetidos mientras queden dos, y si por
+  // quitarlos se quedaria en menos, se le devuelven los ultimos que cayeron.
+  // Colar un repetido es malo; dejarle una parte con un solo paso, cuando las
+  // otras llevan tres, es peor y encima se ve.
   const yaSalieron = [];
   for (const a of AREAS) {
     const parte = porArea.get(a.id);
@@ -1621,7 +1620,7 @@ ir.addEventListener('click', async () => {
 
   // 1. La llamada que piensa y decide el documento entero.
   let plan;
-  aviso.textContent = 'Decidiendo su plan… (es la parte que piensa, tarda un minuto)';
+  aviso.textContent = 'Decidiendo su plan… (es la parte que piensa: un minuto, y dos si tiene que rehacerlo)';
   try {
     const r = await llamar({ accion:'plan', compra });
     plan = r.plan;
