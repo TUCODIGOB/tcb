@@ -5,9 +5,10 @@
 //
 // VA JUNTO A PROPOSITO. Todo el P2 esta aqui dentro: como se le habla, sus
 // siete partes, como se lee el informe del P1 que ya quedo guardado, como se
-// decide el plan, como se escribe y la pagina para leerlo. Si algun dia hay
-// que borrarlo, se borra esta carpeta y no se cae nada: no hay un solo trozo
-// de esto repartido por los ficheros del P1.
+// decide el plan, como se escribe y la pagina para leerlo. Lo unico que vive
+// fuera de este fichero es el que lo maqueta en PDF, que esta al lado, en
+// pdf.js. Si algun dia hay que borrarlo, se borra esta carpeta y no se cae
+// nada: no hay un solo trozo de esto repartido por los ficheros del P1.
 //
 // LO UNICO QUE COGE DE FUERA es el informe del P1, y SOLO PARA LEERLO. No
 // escribe nada en ningun sitio, no manda correos, no cobra y no toca la compra.
@@ -1254,6 +1255,7 @@ const PAGINA = `<!DOCTYPE html>
   select { width:100%; padding:.7rem; border:1px solid rgba(14,63,75,.3); border-radius:6px; background:#fff; margin-bottom:1rem; }
   button { background:var(--gold); color:#fff; border:0; border-radius:6px; padding:.8rem 1.6rem; cursor:pointer; font-weight:600; letter-spacing:.03em; }
   button:disabled { opacity:.45; cursor:default; }
+  #pdf { margin-left:.6rem; background:var(--teal); }
   .aviso { font-family:system-ui,sans-serif; font-size:.9rem; color:#6b6b6b; margin:1.2rem 0; }
   .error { color:#c0392b; }
   .parte { background:#fff; border:1px solid rgba(189,144,72,.25); border-left:4px solid var(--gold); border-radius:8px; padding:1.6rem 1.8rem; margin-top:1.6rem; }
@@ -1285,6 +1287,7 @@ const PAGINA = `<!DOCTYPE html>
 
   <select id="quien"><option>Cargando informes…</option></select>
   <button id="ir" disabled>Escribir su plan</button>
+  <button id="pdf" hidden>Bajar el PDF</button>
 
   <p class="aviso" id="aviso"></p>
   <div id="salida"></div>
@@ -1297,6 +1300,7 @@ const NOMBRES = ${JSON.stringify(Object.fromEntries(AREAS.map(a => [a.id, a.del_
 const TITULOS = ${JSON.stringify(Object.fromEntries(AREAS.map(a => [a.id, a.titulo])))};
 const quien = document.getElementById('quien');
 const ir = document.getElementById('ir');
+const pdf = document.getElementById('pdf');
 const aviso = document.getElementById('aviso');
 const salida = document.getElementById('salida');
 
@@ -1334,8 +1338,13 @@ async function llamar(cuerpo) {
   }
 })();
 
+// Lo que se va escribiendo se guarda tal cual: el PDF se monta con esto
+// mismo, sin volver a pedirle nada al modelo.
+let elDocumento = null;
+
 ir.addEventListener('click', async () => {
   ir.disabled = true; quien.disabled = true;
+  pdf.hidden = true; elDocumento = null;
   salida.innerHTML = '';
   aviso.className = 'aviso';
   const compra = quien.value;
@@ -1386,9 +1395,11 @@ ir.addEventListener('click', async () => {
     return hueco;
   });
 
+  const escritas = [];
   await Promise.all(plan.partes.map(async (decidido, i) => {
     try {
       const { parte } = await llamar({ accion:'parte', compra, nombre:quienEs.nombre, sexo:quienEs.sexo, decidido });
+      escritas[i] = parte;
       huecos[i].outerHTML = pintarParte(parte, i+1);
     } catch (e) {
       huecos[i].innerHTML = '<p class="cual">' + (i+1) + ' · ' + escapar(NOMBRES[decidido.area] || '') +
@@ -1403,8 +1414,49 @@ ir.addEventListener('click', async () => {
     salida.insertAdjacentHTML('beforeend', pintarFinal(marco, TITULOS[plan.empiezaPor.area] || ''));
   }
 
-  aviso.textContent = 'Listo.';
+  // EL PDF SOLO SE OFRECE SI ESTA TODO. Con una parte caida saldria un
+  // documento con un agujero dentro, y eso no se le ensena a nadie.
+  const completas = escritas.filter(Boolean);
+  if (marco && completas.length === plan.partes.length) {
+    elDocumento = {
+      nombre: quienEs.nombre,
+      marco,
+      empiezaPor: TITULOS[plan.empiezaPor.area] || '',
+      // La etiqueta pequena de cada parte y el titulo de sus movimientos van
+      // desde aqui: el que maqueta no tiene que saberse las siete partes.
+      partes: completas.map(p => ({ ...p, etiqueta: NOMBRES[p.id] || '', bloque: BLOQUES.movimientos })),
+    };
+    pdf.hidden = false;
+    aviso.textContent = 'Listo. Ya se puede bajar el PDF.';
+  } else {
+    aviso.textContent = 'Listo, pero falta alguna pieza: el PDF no se monta a medias.';
+  }
   ir.disabled = false; quien.disabled = false;
+});
+
+pdf.addEventListener('click', async () => {
+  if (!elDocumento) return;
+  pdf.disabled = true;
+  const antes = aviso.textContent;
+  aviso.className = 'aviso';
+  aviso.textContent = 'Montando el PDF…';
+  try {
+    const r = await fetch('/api/p2-plan/pdf', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(elDocumento),
+    });
+    const d = await r.json().catch(() => ({ error:'Respuesta ilegible' }));
+    if (!r.ok) throw new Error(d.error || ('Error ' + r.status));
+    const a = document.createElement('a');
+    a.href = d.pdfBase64;
+    a.download = 'TuPlanDeOrigen_' + String(elDocumento.nombre || 'plan').replace(/[^A-Za-z0-9]/g,'_') + '.pdf';
+    a.click();
+    aviso.textContent = d.fallos ? ('PDF bajado, pero no cargó: ' + d.fallos.join(', ')) : antes;
+  } catch (e) {
+    aviso.className = 'aviso error';
+    aviso.textContent = 'No se ha podido montar el PDF: ' + e.message;
+  }
+  pdf.disabled = false;
 });
 
 function pintarArranque(m) {

@@ -13,6 +13,10 @@
     "api/p2-plan/prueba.js": {
       "memory": 1024,
       "maxDuration": 150
+    },
+    "api/p2-plan/pdf.js": {
+      "memory": 1024,
+      "maxDuration": 60
     }
   },
   "redirects": [
