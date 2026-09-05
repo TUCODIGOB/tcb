@@ -745,6 +745,39 @@ function hablaDeAstrologia(texto) {
   return PALABRAS_DE_ASTROLOGIA.some(re => re.test(limpio));
 }
 
+// ── LA PRUEBA DE LAS TRES PRIMERAS FRASES, HECHA POR EL CODIGO ──
+//
+// El encargo dice que de lo suyo se cuentan dos o tres frases y que de ahi
+// hasta el final todo es como se hace. Pedirlo no basta: en el P1 se pidieron
+// cosas asi durante semanas y se colaban igual.
+//
+// Asi que se tapa el arranque -las tres primeras frases, que son las que
+// tienen permiso- y se mira lo que queda. Si ahi sigue explicandole de donde
+// le viene lo que hace, quien se lo hizo o como se llama lo que le pasa, eso
+// es el diagnostico que ya pago en el P1, y se pide otra vez.
+//
+// La lista es corta y de palabras que solo aparecen explicando el origen. Una
+// palabra normal aqui dentro haria reescribir textos buenos, que es peor que
+// dejar pasar uno malo.
+const PALABRAS_DE_DIAGNOSTICO = [
+  /\bde (pequen|nin|cri)[ao]\b/,
+  /\bdesde (pequen|nin|cri)[ao]\b/,
+  /\btu infancia\b/,
+  /\baprendiste (a|que)\b/,
+  /\b(te )?viene de (tu|ahi|lo|esa|ese)\b/,
+  /\b(tus padres|tu madre|tu padre|tu familia)\b/,
+  /\btu (patron|herida|programacion)\b/,
+  /\bpor eso eres\b/,
+  /\besa es la razon\b/,
+  /\blo que te pasa es\b/,
+];
+
+function cuentaComoEs(texto, frasesQuePerdona = 3) {
+  const frases = String(texto || '').split(/(?<=[.!?])\s+/);
+  const resto = sinTildes(frases.slice(frasesQuePerdona).join(' '));
+  return PALABRAS_DE_DIAGNOSTICO.some(re => re.test(resto));
+}
+
 // UNA CASILLA VACIA O CON SU PROPIO TITULO DENTRO NO VALE.
 //
 // En un plan de verdad salieron casillas en blanco y otras con el nombre del
@@ -777,7 +810,8 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
   if (!laCarta && !aMedias) return primera;
 
   console.warn(`[p2] ${que}: ${laCarta ? 'se ha colado una palabra de la carta' : 'ha venido a medias'}, se pide otra vez`);
-  const segunda = await pedir((laCarta ? `\n\n${NO_NOMBRES_LA_CARTA}` : '') + (aMedias ? aviso : ''));
+  const elAviso = typeof aviso === 'function' ? aviso(primera) : aviso;
+  const segunda = await pedir((laCarta ? `\n\n${NO_NOMBRES_LA_CARTA}` : '') + (aMedias ? elAviso : ''));
 
   // Y SE ENTREGA LA MENOS MALA DE LAS DOS. Pedir otra vez no garantiza que
   // salga mejor: puede venir mas corta, o colarsele lo que a la primera no se
@@ -939,11 +973,15 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
     // el mismo reintento sirve para eso y para la carta.
     // Y que venga en parrafos, no en un solo bloque: la separacion la marca el
     // modelo con una linea en blanco, y si no la pone sale un muro de texto.
+    // Y que pasadas las tres primeras frases deje de contarle como es.
     cojo: p => cuantas(p.texto) < PALABRAS_MINIMAS
             || parrafosDe(p.texto) < 3
+            || cuentaComoEs(p.texto)
             || !(p.movimientos || []).length
             || (p.movimientos || []).some(m => !m.titulo || cuantas(m.texto) < 25),
-    aviso: `\n\nY OJO: la vez anterior salió corto o vino de una pieza. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras, ir repartido en párrafos separados por una línea en blanco, y cada movimiento contarse entero. Lo que falta no es arranque, es cómo se hace: eso es lo que se cuenta con más detalle.`,
+    aviso: p => cuentaComoEs(p.texto)
+      ? `\n\nY OJO: la vez anterior, pasadas las tres primeras frases, seguías contándole cómo es y de dónde le viene. Eso ya se lo contaron entero y no se repite aquí. Deja las tres primeras frases y reescribe todo lo demás contando cómo se hace lo que tiene que hacer: cómo lo hace las primeras veces, qué hace con lo que sienta, qué se va a encontrar y cómo lo sostiene.`
+      : `\n\nY OJO: la vez anterior salió corto o vino de una pieza. El texto seguido tiene que pasar de ${PALABRAS_MINIMAS} palabras, ir repartido en párrafos separados por una línea en blanco, y cada movimiento contarse entero. Lo que falta no es arranque, es cómo se hace: eso es lo que se cuenta con más detalle.`,
     pedir: recordatorio => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
@@ -1114,8 +1152,11 @@ ${REGLA_DEL_NOMBRE(true)}`;
             || estaVacia(m.comoEmpiezas, 'cómo empiezas')
             || estaVacia(m.cuandoSumas, 'cuándo sumas')
             || estaVacia(m.recaida, 'el día que lo dejes')
+            || [m.porQueEsa, m.conQue, m.comoEmpiezas, m.cuandoSumas].some(x => cuentaComoEs(x, 0))
             || faltaAlguno(m),
-    aviso: `\n\nY OJO: la vez anterior algo vino vacío o faltó algún paso del orden. El principio, lo primero que hace y el día que falle llevan texto escrito para quien lo lee, y el orden lleva las ${esperados.length} partes que te doy, cada una con su cuándo.`,
+    aviso: m => [m.porQueEsa, m.conQue, m.comoEmpiezas, m.cuandoSumas].some(x => cuentaComoEs(x, 0))
+      ? '\n\nY OJO: la vez anterior te pusiste a explicarle de dónde le viene lo que hace. Eso ya se lo contaron y aquí no va. Por qué esa parte y lo primero que hace se cuentan mirando hacia delante: qué le pasa hoy por seguir así, y qué hace a partir de ahora.'
+      : `\n\nY OJO: la vez anterior algo vino vacío o faltó algún paso del orden. El principio, lo primero que hace y el día que falle llevan texto escrito para quien lo lee, y el orden lleva las ${esperados.length} partes que te doy, cada una con su cuándo.`,
     pedir: recordatorio => alModelo({
       que: 'escribir el principio y el final',
       modelo: 'claude-sonnet-5',
