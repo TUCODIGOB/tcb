@@ -663,6 +663,14 @@ Nombre de pila: ${nombre}`;
     });
   }
 
+  // CUANTOS MOVIMIENTOS TRAJO EL MODELO, antes de que aqui abajo se le quiten
+  // los repetidos. Es lo que se mira para decidir si el plan hay que pedirlo
+  // otra vez, y tiene que ser esto y no lo que quede al final: si lo que pasa
+  // es que se ha repetido, pedirlo de nuevo cuesta un minuto y un dinero para
+  // volver a lo mismo, y el repetido ya se ha quitado, que es justo lo que
+  // habria que hacer con el.
+  const traidos = new Map([...porArea].map(([id, p]) => [id, p.movimientos.length]));
+
   // UNA PARTE A MEDIAS NO SE ESCRIBE.
   //
   // Si viene con una casilla vacia, quien escribe se encuentra un hueco y lo
@@ -701,24 +709,40 @@ Nombre de pila: ${nombre}`;
   };
 
   // PERO NUNCA SE QUEDA UNA PARTE SIN NINGUNO. Si a una le sobran todos porque
-  // ya salieron antes, esa parte se caeria entera y la clienta perderia una
-  // parcela de su vida. Antes que eso, se le deja el primero: repetir uno es
-  // malo, quedarse sin area es peor.
+  // ya salieron antes, esa parte se quedaria con uno o con ninguno y la clienta
+  // perderia lo que ha pagado.
+  //
+  // Y ESO PASA SIN QUE NADIE SE HAYA REPETIDO: dos movimientos que dicen cosas
+  // distintas, pero escritos con la misma forma de frase, comparten casi todas
+  // las palabras y esto los toma por el mismo. Comparar palabras no sabe la
+  // diferencia, asi que la red se pone aqui: NINGUNA PARTE BAJA DEL MINIMO. Se
+  // quitan los repetidos mientras queden dos, y si por quitarlos
+  // se quedaria en menos, se le devuelven los ultimos que cayeron. Colar un
+  // repetido es malo; dejarle una parte con un solo paso, cuando las otras
+  // llevan tres, es peor y encima se ve.
   const yaSalieron = [];
   for (const a of AREAS) {
     const parte = porArea.get(a.id);
     if (!parte) continue;
-    const quedan = [];
-    for (const m of parte.movimientos) {
-      const suyo = comoSeParece(`${m.cuando} ${m.haces}`);
-      if (quedan.length && yaSalieron.some(otro => seParecen(suyo, otro))) {
-        console.warn(`[p2] en ${a.id} venia un movimiento que ya estaba en otra parte, se quita`);
-        continue;
-      }
+
+    const comoSonar = parte.movimientos.map(m => comoSeParece(`${m.cuando} ${m.haces}`));
+    const caidos = new Set();
+    comoSonar.forEach((suyo, i) => {
+      if (yaSalieron.some(otro => seParecen(suyo, otro))) { caidos.add(i); return; }
       yaSalieron.push(suyo);
-      quedan.push(m);
+    });
+
+    // Los rescatados vuelven a su sitio, no al final: el orden en el que se
+    // decidieron es el orden en el que se van a hacer.
+    for (const i of [...caidos]) {
+      if (parte.movimientos.length - caidos.size >= MOVIMIENTOS.min) break;
+      caidos.delete(i);
+      yaSalieron.push(comoSonar[i]);
     }
-    parte.movimientos = quedan;
+    if (caidos.size) {
+      console.warn(`[p2] en ${a.id} venian ${caidos.size} movimiento(s) que ya estaban en otra parte, se quitan`);
+    }
+    parte.movimientos = parte.movimientos.filter((_, i) => !caidos.has(i));
   }
 
   const partes = AREAS.map(a => porArea.get(a.id)).filter(p => p && entera(p));
@@ -761,54 +785,54 @@ Nombre de pila: ${nombre}`;
     console.warn(`[p2] el orden venia sin la parte de ${p.area}, se pone al final`);
   }
 
-  return {
+  const plan = {
     partes,
     empiezaPor: { area: empieza, porque: String(salida.empiezaPor?.porque || '').trim() },
     orden,
     recaida: String(salida.recaida || '').trim(),
   };
+
+  // LO QUE HA VENIDO MAL DE VERDAD, que es lo unico por lo que merece la pena
+  // volver a pedirlo.
+  const falla = [];
+  const sinVenir = AREAS.filter(a => !partes.some(x => x.area === a.id));
+  if (sinVenir.length) falla.push(`faltan estas partes enteras: ${sinVenir.map(a => a.del_p1).join(', ')}`);
+  const flojas = AREAS.filter(a => porArea.has(a.id) && (traidos.get(a.id) || 0) < MOVIMIENTOS.min);
+  if (flojas.length) falla.push(`estas partes traen menos de ${MOVIMIENTOS.min} movimientos: ${flojas.map(a => a.del_p1).join(', ')}`);
+  if (!plan.empiezaPor.area || !plan.empiezaPor.porque) falla.push('no ha venido por dónde empieza');
+  if (!plan.recaida) falla.push('no ha venido el día que falle');
+
+  return { plan, falla };
 }
 
 // ── Y SI EL PLAN VIENE A MEDIAS, SE PIDE OTRA VEZ ───────────
 //
-// Es la unica llamada que decide, y de ella cuelga todo lo demas: si vuelve
-// con seis partes en vez de siete, la clienta se queda sin una parcela entera
-// de su vida y paga lo mismo. Y si una parte vuelve con un solo movimiento,
-// esa parte le da una cosa que hacer donde las otras le dan tres.
+// Es la unica llamada que decide, y de ella cuelga el documento entero: si
+// vuelve con seis partes en vez de siete, la clienta se queda sin una parcela
+// de su vida y paga lo mismo. Antes eso salia asi y solo quedaba un aviso en
+// el registro que no leia nadie.
 //
-// Antes eso salia asi y solo quedaba un aviso en el registro que no leia
-// nadie. Ahora se mira, y si falta algo se pide una segunda vez diciendole
-// exactamente que fallo. Solo cuesta cuando falla.
-function loQueLeFalta(plan) {
-  const fallos = [];
-  const sinEscribir = AREAS.filter(a => !plan.partes.some(p => p.area === a.id));
-  if (sinEscribir.length) fallos.push(`faltan estas partes enteras: ${sinEscribir.map(a => a.del_p1).join(', ')}`);
-  const cortas = plan.partes.filter(p => p.movimientos.length < MOVIMIENTOS.min);
-  if (cortas.length) fallos.push(`estas partes traen menos de ${MOVIMIENTOS.min} movimientos: ${cortas.map(p => p.area).join(', ')}`);
-  if (!plan.empiezaPor.area || !plan.empiezaPor.porque) fallos.push('no ha venido por dónde empieza');
-  if (!plan.recaida) fallos.push('no ha venido el día que falle');
-  return fallos;
-}
-
+// SOLO SE PIDE OTRA VEZ POR LO QUE PEDIRLO ARREGLA: una parte que no ha
+// venido, una casilla vacia, o una parte a la que el modelo le ha puesto un
+// solo movimiento. Que aqui se le haya quitado uno por repetido NO cuenta: eso
+// ya esta arreglado, y volver a pedirlo costaria un minuto y un dinero para
+// acabar en lo mismo.
 async function decidirElPlan({ nombre, sexo, rasgos }) {
   const primero = await pedirElPlan({ nombre, sexo, rasgos });
-  const falla = loQueLeFalta(primero);
-  if (!falla.length) return primero;
+  if (!primero.falla.length) return primero.plan;
 
-  console.warn(`[p2] el plan ha venido a medias (${falla.join('; ')}), se pide otra vez`);
+  console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), se pide otra vez`);
   const segundo = await pedirElPlan({
     nombre, sexo, rasgos,
-    recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, y cada una con sus ${MOVIMIENTOS.min} o ${MOVIMIENTOS.max} movimientos, distintos de los de las demás. Un movimiento repetido en otra parte no cuenta y hay que sustituirlo por uno de verdad distinto, no quitarlo.`,
+    recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, y cada una con sus ${MOVIMIENTOS.min} o ${MOVIMIENTOS.max} movimientos, distintos de los de las demás. Un movimiento que ya le hayas puesto a otra parte no cuenta: se sustituye por uno de verdad distinto, no se quita.`,
   });
 
   // Y SE QUEDA EL MEJOR DE LOS DOS. Pedir otra vez no garantiza que salga
   // mejor: el segundo puede venir peor que el primero, y quedarse con el a
   // ciegas seria cambiar un fallo por otro mas gordo.
-  const nota = plan => plan.partes.filter(p => p.movimientos.length >= MOVIMIENTOS.min).length * 10
-                     + plan.partes.length;
-  if (nota(segundo) > nota(primero)) return segundo;
+  if (segundo.falla.length < primero.falla.length) return segundo.plan;
   console.warn('[p2] el segundo plan no ha mejorado, se entrega el primero');
-  return primero;
+  return primero.plan;
 }
 // ── LO QUE LA CLIENTA NO PUEDE LEER ─────────────────────────
 //
