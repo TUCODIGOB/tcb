@@ -434,6 +434,10 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
   // Los trozos llegan como lineas "data: {...}". Se juntan solo los de texto:
   // cuando piensa, lo que piensa viene en otros trozos aparte y aqui no entra.
   let texto = '';
+  // POR QUE PARO. Si se queda sin sitio, el JSON llega cortado y lo unico que
+  // se veria luego es "la respuesta no es JSON valido", que no dice nada de lo
+  // que ha pasado ni de como arreglarlo.
+  let porQueParo = '';
   try {
     const lector = resp.body.getReader();
     const aLetras = new TextDecoder();
@@ -456,6 +460,9 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
         if (trozo.type === 'content_block_delta' && trozo.delta?.type === 'text_delta') {
           texto += trozo.delta.text;
         }
+        if (trozo.type === 'message_delta' && trozo.delta?.stop_reason) {
+          porQueParo = trozo.delta.stop_reason;
+        }
       }
     }
   } catch (err) {
@@ -464,6 +471,12 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
   }
 
   if (!texto.trim()) throw new Error(`${que}: el modelo ha devuelto una respuesta vacía`);
+  if (porQueParo === 'max_tokens') {
+    throw new Error(`${que}: se ha quedado sin sitio y ha salido a medias. Hay que darle más techo.`);
+  }
+  if (porQueParo === 'refusal') {
+    throw new Error(`${que}: el modelo se ha negado a contestar.`);
+  }
 
   try {
     return JSON.parse(texto);
