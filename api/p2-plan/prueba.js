@@ -979,7 +979,12 @@ export default async function handler(req, res) {
     if (accion === 'plan') {
       const { compra } = req.body || {};
       const informe = await leer(compra);
-      if (!informe?.rasgos) {
+      // SIN SUS RASGOS NO HAY PLAN. Es lo unico que se le manda al modelo, asi
+      // que con la lista vacia se lo inventaria todo. Los informes de antes de
+      // que se guardaran los rasgos entran por aqui.
+      const cuantos = (informe?.rasgos?.fortalezas?.length || 0)
+                    + (informe?.rasgos?.desafios?.length || 0);
+      if (!cuantos) {
         return res.status(422).json({ error: 'Ese informe se guardó sin los rasgos, y sin ellos no hay plan' });
       }
       const plan = await decidirElPlan({
