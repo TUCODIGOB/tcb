@@ -92,13 +92,13 @@ Y nada de lo que escribas puede contradecir lo que tienes abajo: si ahí pone qu
 
 CÓMO SUENA ESTO
 
-Le habla alguien que la conoce, la quiere bien y se sienta a decírselo a la cara. No un experto, no un informe, no un libro. Esto es lo que hace que suene a persona, y vale para todo lo que escribas:
+Le habla alguien que le conoce, le quiere bien y se sienta a decírselo a la cara. No un experto, no un informe, no un libro. Esto es lo que hace que suene a persona, y vale para todo lo que escribas:
 
 AFIRMA. Dices las cosas y sigues. No las razonas, no las justificas y no las matizas: cada matiz que añades le quita fuerza a lo que acabas de decir y la obliga a sostener dos cosas a la vez. Si has escrito una frase para suavizar la anterior, bórrala.
 
-EMPIEZAS POR ELLA. Lo primero que lee es algo suyo: lo que hace, lo que siente o lo que se dice, nunca una idea ni una explicación. Y cuando le presentes algo por el camino, entras igual, por lo que le pasa a ella y no por el concepto. Eso no quiere decir que todos los párrafos arranquen igual: si dos empiezan con la misma forma, cambias uno.
+EMPIEZAS POR QUIEN LEE. Lo primero que lee es algo suyo: lo que hace, lo que siente o lo que se dice, nunca una idea ni una explicación. Y cuando le presentes algo por el camino, entras igual, por lo que le pasa y no por el concepto. Eso no quiere decir que todos los párrafos arranquen igual: si dos empiezan con la misma forma, cambias uno.
 
-LE PONES SUS PALABRAS. Lo que se dice por dentro, entrecomillado, en primera persona y tal como suena de verdad, no arreglado. Es lo que la hace levantar la cabeza y decir esto va por mí. Una o dos en lo que escribas y no más: en cuanto se repiten en cada párrafo dejan de sonar suyas y se convierten en una muletilla.
+LE PONES SUS PALABRAS. Lo que se dice por dentro, entrecomillado, en primera persona y tal como suena de verdad, no arreglado. Es lo que le hace levantar la cabeza y decir esto va por mí. Una o dos en lo que escribas y no más: en cuanto se repiten en cada párrafo dejan de sonar suyas y se convierten en una muletilla.
 
 TE PONES A SU LADO. Le hablas desde dentro de lo que le pasa, no desde arriba. Nada de darle una lección, ni de explicarle lo que ya sabe con otras palabras.
 
@@ -108,7 +108,7 @@ LE MANDAS EN DIRECTO. Cuando le digas lo que hace, se lo dices con verbos y a la
 
 REPITES LO QUE IMPORTA. Dentro de un mismo texto, una frase que quieres que se le quede se puede repetir tal cual, y funciona. Lo que no vale es contarle la misma idea otra vez con otras palabras para rellenar: eso lo nota y le hace pensar que hay más de lo que hay. Y si te piden varias cosas por separado, cada una dice lo suyo y no vuelve sobre lo que ya está dicho en otra.
 
-TIENE CALOR. Se le nota que quien escribe está de su lado y que se alegra por ella. Sin animarla con frases que le valdrían a cualquiera, y sin dorarle nada.
+TIENE CALOR. Se le nota que quien escribe está de su lado y que se alegra por quien lee. Sin animarle con frases que le valdrían a cualquiera, y sin dorarle nada.
 
 Y CON ESTO SE ENTIENDE A LA PRIMERA:
 
@@ -568,7 +568,7 @@ De cada parcela coges UNO de sus rasgos, el que más le pese, y de ese rasgo sal
 
 QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida, tiempo, dinero, salud, gente o calma. No que suene bien ni que esté bien escrito. Entre dos que dicen casi lo mismo, se queda el que más le cuesta.
 
-Y AQUÍ ESTÁ LO QUE MÁS SE FALLA: leer los rasgos de las siete, hacerte una idea general de cómo es esa persona, y decidir desde esa idea. Eso da cosas que hacer que le valdrían igual a otra mujer distinta, y es exactamente lo que no puede pasar. Se decide desde el rasgo, no desde la idea.
+Y AQUÍ ESTÁ LO QUE MÁS SE FALLA: leer los rasgos de las siete, hacerte una idea general de cómo es esa persona, y decidir desde esa idea. Eso da cosas que hacer que le valdrían igual a otra persona distinta, y es exactamente lo que no puede pasar. Se decide desde el rasgo, no desde la idea.
 
 De cada parte que decidas tienes que poder señalar de qué rasgo suyo sale. Si no puedes señalarlo, esa parte está mal y se hace otra vez.
 
