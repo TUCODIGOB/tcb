@@ -153,14 +153,17 @@ Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que
 //
 // "del_p1" es la etiqueta con la que el P1 marca los rasgos de cada area.
 
+// NI DOS EMPIEZAN CON LA MISMA PALABRA. Van los siete seguidos en el mismo
+// documento y se leen del tiron: si todos arrancan igual se ve el molde a la
+// primera y esto empieza a parecer una plantilla.
 const AREAS = [
-  { id: 'identidad',   del_p1: 'IDENTIDAD',   titulo: 'Así eres cuando estás en tu sitio' },
-  { id: 'patrones',    del_p1: 'PATRONES',    titulo: 'Así te funciona el día cuando no se repite' },
-  { id: 'miedos',      del_p1: 'MIEDOS',      titulo: 'Así avanzas cuando el miedo no manda' },
-  { id: 'herida',      del_p1: 'HERIDA',      titulo: 'Así te tratas cuando dejas de sostenerlo todo' },
-  { id: 'amor',        del_p1: 'AMOR',        titulo: 'Así quieres cuando no repites' },
-  { id: 'relaciones',  del_p1: 'RELACIONES',  titulo: 'Así estás con la gente cuando ocupas tu sitio' },
-  { id: 'dinero',      del_p1: 'DINERO',      titulo: 'Así llevas el dinero y el trabajo cuando decides tú' },
+  { id: 'identidad',   del_p1: 'IDENTIDAD',   titulo: 'Quién eres cuando estás en tu sitio' },
+  { id: 'patrones',    del_p1: 'PATRONES',    titulo: 'Tu día cuando deja de repetirse' },
+  { id: 'miedos',      del_p1: 'MIEDOS',      titulo: 'Lo que haces cuando el miedo ya no manda' },
+  { id: 'herida',      del_p1: 'HERIDA',      titulo: 'Cuando dejas de sostenerlo todo' },
+  { id: 'amor',        del_p1: 'AMOR',        titulo: 'Querer sin repetir lo de siempre' },
+  { id: 'relaciones',  del_p1: 'RELACIONES',  titulo: 'El sitio que ocupas con la gente' },
+  { id: 'dinero',      del_p1: 'DINERO',      titulo: 'Decidir tú con el dinero y el trabajo' },
 ];
 
 // Las cinco cosas que lleva cada parte, con el nombre que ve la clienta. Se
