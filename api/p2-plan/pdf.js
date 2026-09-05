@@ -56,6 +56,17 @@ const VERDE = [14, 63, 75];
 const DORADO = [207, 177, 128];
 const TINTA = [40, 40, 40];
 
+// EL BEIGE DE LAS CAJAS. Es el dorado de la marca muy rebajado, el mismo tono
+// que tienen en la pantalla. Lo justo para que el ojo vea donde acaba una cosa
+// y empieza otra, sin que parezca una tabla.
+const BEIGE = [250, 245, 234];
+
+// Lo que respira una caja por dentro y lo que la separa de la de abajo.
+const CAJA_LADOS = 6;
+const CAJA_ARRIBA = 6;
+const CAJA_ABAJO = 5;
+const ENTRE_CAJAS = 5;
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
@@ -122,7 +133,7 @@ export default async function handler(req, res) {
       if (y + loQueViene > HASTA) hojaNueva();
     }
 
-    function escribir(texto, { fuente = 'normal', tam = CUERPO, color = TINTA, alto = RENGLON, ancho = ANCHO } = {}) {
+    function escribir(texto, { fuente = 'normal', tam = CUERPO, color = TINTA, alto = RENGLON, ancho = ANCHO, x = X } = {}) {
       doc.setFont('Roboto', fuente);
       doc.setFontSize(tam);
       doc.setTextColor(color[0], color[1], color[2]);
@@ -133,7 +144,7 @@ export default async function handler(req, res) {
           doc.setFontSize(tam);
           doc.setTextColor(color[0], color[1], color[2]);
         }
-        doc.text(linea, X, y);
+        doc.text(linea, x, y);
         y += alto;
       }
     }
@@ -158,6 +169,57 @@ export default async function handler(req, res) {
       }
       escribir(titulo, { fuente: 'bold', tam: 17, color: VERDE, alto: 8.5 });
       y += 10;
+    }
+
+    // ── LAS CAJAS ─────────────────────────────────────────────
+    //
+    // Un documento de veinte hojas de texto seguido no se lee: el ojo no
+    // encuentra donde parar. Las cosas que se leen sueltas -cada movimiento,
+    // cada paso de la hoja de ruta- van sobre un fondo beige que las separa,
+    // igual que en la pantalla.
+    //
+    // UNA CAJA NO SE PARTE NUNCA entre dos hojas: se mide antes, y si no cabe
+    // entera se va a la siguiente. Media caja al pie es peor que un hueco.
+    function alturaDeCaja(titulo, texto) {
+      let alto = CAJA_ARRIBA + CAJA_ABAJO;
+      const dentro = ANCHO - CAJA_LADOS * 2;
+      if (t(titulo)) {
+        doc.setFont('Roboto', 'bold'); doc.setFontSize(13);
+        alto += doc.splitTextToSize(t(titulo), dentro).length * RENGLON + 1;
+      }
+      doc.setFont('Roboto', 'normal'); doc.setFontSize(CUERPO);
+      for (const parrafo of t(texto).split(/\n+/).map(x => x.trim()).filter(Boolean)) {
+        alto += doc.splitTextToSize(parrafo, dentro).length * RENGLON;
+      }
+      return alto;
+    }
+
+    function caja(titulo, texto) {
+      const alto = alturaDeCaja(titulo, texto);
+      const cabeEnUnaHoja = alto <= HASTA - ARRIBA;
+      if (y + alto > HASTA && cabeEnUnaHoja) hojaNueva();
+
+      // Si fuera tan larga que no cabe ni en una hoja vacia, se pinta el texto
+      // sin fondo: el fondo se quedaria en la hoja de antes y el texto seguiria
+      // en la siguiente, que es peor que no tener caja.
+      if (cabeEnUnaHoja) {
+        doc.setFillColor(BEIGE[0], BEIGE[1], BEIGE[2]);
+        doc.roundedRect(X, y - RENGLON + 1.5, ANCHO, alto, 2.5, 2.5, 'F');
+      }
+
+      const antes = y;
+      const x = X + CAJA_LADOS;
+      const dentro = ANCHO - CAJA_LADOS * 2;
+      y += CAJA_ARRIBA - 1.5;
+      if (t(titulo)) {
+        escribir(titulo, { fuente: 'bold', tam: 13, color: VERDE, ancho: dentro, x });
+        y += 1;
+      }
+      for (const parrafo of t(texto).split(/\n+/).map(p => p.trim()).filter(Boolean)) {
+        escribir(parrafo, { ancho: dentro, x });
+      }
+      if (cabeEnUnaHoja) y = antes + alto + ENTRE_CAJAS;
+      else y += ENTRE_CAJAS;
     }
 
     // El subtitulo de dentro de una parte, igual que los del P1: dorado, en
@@ -198,15 +260,9 @@ export default async function handler(req, res) {
       const movimientos = Array.isArray(parte?.movimientos) ? parte.movimientos : [];
       if (movimientos.length) {
         subtitulo(t(parte?.bloque) || 'Qué haces');
-        for (const m of movimientos) {
-          // El titulo del movimiento no se queda solo al pie: si no caben el y
-          // dos renglones de lo suyo, se van los dos a la hoja siguiente.
-          cabe(RENGLON * 3);
-          escribir(m?.titulo, { fuente: 'bold', tam: 13, color: VERDE, alto: 7 });
-          y += 1;
-          corrido(m?.texto);
-          y += ENTRE_PARRAFOS;
-        }
+        // Cada movimiento en su caja: son lo que ella va a hacer, y tienen que
+        // verse como piezas sueltas y no como mas texto del de arriba.
+        for (const m of movimientos) caja(m?.titulo, m?.texto);
       }
     }
 
@@ -230,22 +286,15 @@ export default async function handler(req, res) {
       // EMPIEZA POR LA PARTE POR LA QUE EMPIEZA. Al principio del documento se
       // le cuenta la conducta por la que arranca, pero sin decirle de que parte
       // sale; sin esto la lista empieza por la segunda y no ata una con otra.
-      if (t(empiezaPor)) {
-        escribir('Empiezas por:');
-        escribir(t(empiezaPor), { fuente: 'bold', color: VERDE });
-        y += ENTRE_PARRAFOS;
-      }
+      if (t(empiezaPor)) caja(t(empiezaPor), 'Es por aquí por donde empiezas.');
+      // Y cada paso en su caja, que es como se lee una hoja de ruta: uno,
+      // luego el siguiente, y viendo donde acaba cada uno.
       for (const paso of orden) {
-        cabe(RENGLON * 2);
-        // Primero la condicion y despues a donde pasa, como en la pantalla: al
-        // reves se lee como si la condicion fuera de esa parte, y no lo es.
-        if (t(paso?.saltas)) {
-          escribir(`Cuando ${t(paso.saltas)}, pasas a:`);
-          escribir(t(paso?.titulo), { fuente: 'bold', color: VERDE });
-        } else {
-          escribir(t(paso?.titulo), { fuente: 'bold', color: VERDE });
-        }
-        y += ENTRE_PARRAFOS;
+        // "PASAS AQUI CUANDO", no "cuando" a secas. En una caja el titulo va
+        // arriba, asi que un "cuando..." suelto debajo se lee como si fuera de
+        // esa parte, y no lo es: es lo que tiene que estar pasando para dar por
+        // hecha la anterior. Dicho asi se entiende sin explicar nada.
+        caja(t(paso?.titulo), t(paso?.saltas) ? `Pasas aquí cuando ${t(paso.saltas)}.` : '');
       }
     }
 
