@@ -989,6 +989,32 @@ const PALABRAS_DE_DIAGNOSTICO = [
   /\blo que te pasa es\b/,
 ];
 
+// Y EL DIAGNOSTICO TAMBIEN SE ESCRIBE SIN NINGUNA DE ESAS PALABRAS.
+//
+// "Te cuesta pedir. Sostienes lo que no te toca. Eres la que aguanta." Ahi no
+// hay ni infancia ni padres ni patron, y sigue siendo contarle como es, que es
+// lo que ya pago en el P1.
+//
+// Asi que ademas de mirar lo que no puede haber, se mira lo que TIENE que
+// haber. Un texto que de verdad le explica como se hace algo no puede
+// escribirse sin decir cuando lo hace, que pasa si no le sale, que hace en vez
+// de lo de antes o las primeras veces. Esas marcas caen solas y muchas; una
+// descripcion de como es no lleva casi ninguna.
+//
+// El liston esta bajo a proposito: tres marcas distintas en todo lo que queda
+// despues del arranque. Un texto bueno pasa de sobra; uno que solo la describe
+// no llega.
+const MARCAS_DE_QUE_HACER = [
+  /\bcuando\b/, /\ben vez de\b/, /\ben lugar de\b/, /\bantes de\b/,
+  /\bdespues de\b/, /\bhasta que\b/, /\bmientras\b/, /\bcada vez que\b/,
+  /\bvas a\b/, /\bte va a\b/, /\ba partir de\b/, /\bde ahora en adelante\b/,
+  /\bsi te\b/, /\bsi lo\b/, /\bsi se te\b/, /\bel dia que\b/,
+  /\blo que haces es\b/, /\bla primera vez\b/, /\blas primeras veces\b/,
+  /\bya no\b/, /\bnada de\b/, /\bsin\b/,
+];
+
+const MARCAS_MINIMAS = 3;
+
 // LO QUE ELLA SE DICE POR DENTRO NO CUENTA COMO DIAGNOSTICO.
 //
 // Las reglas piden que se le pongan sus frases entrecomilladas, y dentro de
@@ -1005,7 +1031,11 @@ function cuentaComoEs(texto, frasesQuePerdona = 3) {
   const frases = sinLoEntrecomillado(texto).split(/(?<=[.!?])\s+/);
   const resto = sinTildes(frases.slice(frasesQuePerdona).join(' '));
   if (!resto.trim()) return false;
-  return PALABRAS_DE_DIAGNOSTICO.some(re => re.test(resto));
+  if (PALABRAS_DE_DIAGNOSTICO.some(re => re.test(resto))) return true;
+  // Y contar marcas solo tiene sentido en un texto largo. Una casilla de dos
+  // frases no puede llevar tres, y exigirselas la haria reescribir siempre.
+  if (resto.trim().split(/\s+/).length < 120) return false;
+  return MARCAS_DE_QUE_HACER.filter(re => re.test(resto)).length < MARCAS_MINIMAS;
 }
 
 // UNA CASILLA VACIA O CON SU PROPIO TITULO DENTRO NO VALE.
