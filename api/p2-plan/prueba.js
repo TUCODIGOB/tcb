@@ -38,7 +38,7 @@
 //   LAS SIETE PARTES, todas iguales, cada una con cinco cosas:
 //     1. A donde va en esa parcela.
 //     2. Que se lo impide hoy.
-//     3. El plan: todo lo que tiene que hacer y soltar.
+//     3. El plan: la unica cosa que tiene que hacer ahi, contada entera.
 //     4. Donde se va a caer intentandolo.
 //     5. Como se levanta el dia que lo deja.
 //
@@ -199,7 +199,7 @@ const AREAS = [
     deQueVa: 'el dinero, el trabajo y lo que vale lo suyo' },
 ];
 
-// LOS CUATRO NOMBRES QUE VE DENTRO DE CADA PARTE, escritos aqui por lo mismo
+// LOS CINCO NOMBRES QUE VE DENTRO DE CADA PARTE, escritos aqui por lo mismo
 // que los titulos.
 //
 // Antes todo iba en un bloque de texto sin nombre: dentro habia varias cosas y
@@ -208,8 +208,8 @@ const AREAS = [
 // documento de veinte hojas de texto seguido cansa la vista, y estos son los
 // sitios donde el ojo para y descansa.
 //
-// El texto corrido se queda sin nombre a proposito: es lo primero que se lee y
-// no necesita etiqueta. Lo que sale con nombre es lo que se busca despues.
+// Los cinco llevan nombre, tambien el primero: si uno entra sin etiqueta, la
+// parte arranca con un texto suelto y el molde de las cinco no se ve.
 //
 // VAN EN ESTE ORDEN, que es el de lo que le pasa: primero lo que hace, luego
 // lo que la va a parar, luego la manera de hacerlo que no sirve, y al final en
@@ -386,6 +386,16 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
     system,
     messages: [{ role: 'user', content: mensaje }],
     output_config: { format: { type: 'json_schema', schema: molde } },
+    // SE PIDE A TROZOS, NO DE GOLPE.
+    //
+    // Una peticion normal se queda callada mientras el modelo escribe y solo
+    // contesta al final. Con respuestas largas eso se corta por el camino: al
+    // llegar al tope, la peticion muere aunque el modelo siguiera trabajando,
+    // y se pierde todo lo que llevaba escrito.
+    //
+    // A trozos la respuesta va llegando segun se escribe. Nada se queda callado
+    // esperando, y aqui abajo se puede ver que sigue viniendo.
+    stream: true,
   };
   if (piensa) {
     cuerpo.thinking = { type: 'adaptive' };
@@ -397,6 +407,8 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
   // EL AVISO SE ENTIENDE. Si se pasa del tiempo, lo que llega de serie es
   // "The operation was aborted due to timeout", que quien lo lee no sabe lo que
   // es y encima esta en ingles.
+  const cortado = err => err && (err.name === 'TimeoutError' || err.name === 'AbortError');
+
   let resp;
   try {
     resp = await fetch('https://api.anthropic.com/v1/messages', {
@@ -410,9 +422,7 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
       body: JSON.stringify(cuerpo),
     });
   } catch (err) {
-    if (err && (err.name === 'TimeoutError' || err.name === 'AbortError')) {
-      throw new Error(`${que}: ha tardado más de la cuenta y se ha cortado. Vuelve a intentarlo.`);
-    }
+    if (cortado(err)) throw new Error(`${que}: ha tardado más de la cuenta y se ha cortado. Vuelve a intentarlo.`);
     throw err;
   }
 
@@ -421,12 +431,58 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
     throw new Error(`${que}: el modelo ha contestado ${resp.status} — ${detalle}`);
   }
 
-  const datos = await resp.json();
-  // Cuando piensa, la respuesta trae delante un bloque de pensamiento y detras
-  // el texto. Se cogen solo los de texto y se pegan.
-  const texto = (datos.content || [])
-    .filter(b => b && b.type === 'text' && typeof b.text === 'string')
-    .map(b => b.text).join('');
+  // Los trozos llegan como lineas "data: {...}". Se juntan solo los de texto:
+  // cuando piensa, lo que piensa viene en otros trozos aparte y aqui no entra.
+  let texto = '';
+  // POR QUE PARO. Si se queda sin sitio, el JSON llega cortado y lo unico que
+  // se veria luego es "la respuesta no es JSON valido", que no dice nada de lo
+  // que ha pasado ni de como arreglarlo.
+  let porQueParo = '';
+  if (!resp.body) throw new Error(`${que}: el modelo ha contestado sin nada dentro`);
+  try {
+    const lector = resp.body.getReader();
+    const aLetras = new TextDecoder();
+    let resto = '';
+    for (;;) {
+      const { done, value } = await lector.read();
+      if (done) break;
+      resto += aLetras.decode(value, { stream: true });
+      const lineas = resto.split('\n');
+      resto = lineas.pop();
+      for (const linea of lineas) {
+        if (!linea.startsWith('data:')) continue;
+        const crudo = linea.slice(5).trim();
+        if (!crudo || crudo === '[DONE]') continue;
+        let trozo;
+        try { trozo = JSON.parse(crudo); } catch { continue; }
+        if (trozo.type === 'error') {
+          throw new Error(`${que}: el modelo ha cortado — ${trozo.error?.message || 'sin detalle'}`);
+        }
+        if (trozo.type === 'content_block_delta' && trozo.delta?.type === 'text_delta') {
+          texto += trozo.delta.text;
+        }
+        // Y por si el JSON con molde viniera en su propio tipo de trozo en vez
+        // de como texto: aqui no se piden herramientas, asi que esto solo puede
+        // ser el mismo JSON por otro camino. Si nunca llega, no hace nada.
+        if (trozo.type === 'content_block_delta' && trozo.delta?.type === 'input_json_delta') {
+          texto += trozo.delta.partial_json || '';
+        }
+        if (trozo.type === 'message_delta' && trozo.delta?.stop_reason) {
+          porQueParo = trozo.delta.stop_reason;
+        }
+      }
+    }
+  } catch (err) {
+    if (cortado(err)) throw new Error(`${que}: ha tardado más de la cuenta y se ha cortado. Vuelve a intentarlo.`);
+    throw err;
+  }
+
+  if (porQueParo === 'max_tokens') {
+    throw new Error(`${que}: se ha quedado sin sitio y ha salido a medias. Hay que darle más techo.`);
+  }
+  if (porQueParo === 'refusal') {
+    throw new Error(`${que}: el modelo se ha negado a contestar.`);
+  }
   if (!texto.trim()) throw new Error(`${que}: el modelo ha devuelto una respuesta vacía`);
 
   try {
@@ -479,8 +535,9 @@ function susRasgos(rasgos) {
 // releerse.
 //
 // Recibe sus rasgos de las siete partes de golpe y decide el documento entero
-// en corto: que va en cada parte, por cual empieza, en que orden siguen y que
-// hace el dia que falle. No escribe ni una linea de lo que ella va a leer.
+// en corto: los cinco puntos de cada una de las siete. Ni el orden ni por cual
+// empieza salen de aqui -eso lo saca la hoja de ruta al final, leyendo lo que
+// de verdad se ha escrito-, y no escribe ni una linea de lo que ella va a leer.
 //
 // POR QUE DE GOLPE. Lo que hay que evitar es que las siete partes le manden
 // hacer lo mismo con otras palabras, y eso solo se ve teniendo las siete
@@ -491,9 +548,9 @@ function susRasgos(rasgos) {
 // la clienta se queda mirando una pantalla en blanco; se probo en el P1 y
 // costo un informe entero.
 //
-// Y EL TOPE CABE DOS VECES, como en las que escriben: si el plan viene a
-// medias se pide otra vez, y los dos intentos juntos tienen que caber en los
-// 300 segundos que aguanta esta peticion.
+// Y SI VIENE A MEDIAS SE PIDE OTRA VEZ, pero dos intentos de esto no caben en
+// los 300 segundos que aguanta la peticion: el segundo no pide otros 200, pide
+// lo que sobre del primero, y si no sobra bastante no se pide.
 
 const ESPERA_DEL_PLAN_MS = 200000;
 const TECHO_DEL_PLAN = 16000;
@@ -507,6 +564,17 @@ const MARGEN_DEL_SERVIDOR_MS = 285000;
 // minuto por delante no termina: gasta dinero, se corta igual y encima se lleva
 // por delante el plan que ya habia, que estaba a medias pero estaba.
 const ESPERA_MINIMA_PARA_REHACER_MS = 90000;
+
+// LO QUE LE QUEDA A ESTA PETICION.
+//
+// Cada llamada del navegador tiene el tiempo del servidor y nada mas. El
+// primer intento puede llevarse casi todo, y entonces el segundo no arranca
+// con el tope entero: arranca con lo que sobre. Sin esto, el reintento se
+// ponia a pedir un intento entero que ya no cabia y se cortaba en seco,
+// perdiendo tambien lo que habia salido bien a la primera.
+function loQueQueda(arranque, tope) {
+  return Math.min(tope, MARGEN_DEL_SERVIDOR_MS - (Date.now() - arranque));
+}
 
 const MOLDE_DEL_PLAN = {
   type: 'object',
@@ -573,11 +641,17 @@ queTeFrena       Lo que se lo impide hoy. No lo que le pasa por fuera: lo que
                  se cree y da por cierto sin haberlo puesto en duda nunca, y
                  que hace que siga igual. Sale de lo que sabes de ella.
 
-elPlan           Todo lo que tiene que hacer y soltar para llegar ahí. Es lo
-                 más importante de las cinco y lo que ha venido a buscar.
-                 Conductas que se puedan ver ocurriendo, no ideas: qué deja de
-                 hacer y qué hace en su lugar. En una línea caben varias, y
-                 aquí no se ahorra.
+elPlan           UNA SOLA COSA que tiene que hacer en esta parcela. Una, no
+                 dos ni tres. Es lo más importante de las cinco y lo que ha
+                 venido a buscar, y es una porque nadie cambia siete cosas a la
+                 vez: si le pones tres por parcela acaba con veintiuna delante
+                 y no hace ninguna.
+                 Va con nombre de conducta, no de idea: qué deja de hacer y qué
+                 hace en su lugar, algo que se pueda ver ocurriendo. Si lo que
+                 escribes no se puede ver pasando, está mal y se cambia.
+                 Y ESA COSA ES DE ESTA PARCELA Y DE NINGUNA OTRA. Las siete son
+                 siete cosas distintas de verdad: no la misma conducta puesta
+                 en siete sitios con otras palabras.
 
 dondeTeCaes      Dónde se va a caer intentándolo: lo que va a aparecer para
                  frenarla, o el fallo que va a cometer porque parece que va
@@ -657,6 +731,53 @@ Nombre de pila: ${nombre}`;
   const faltan = AREAS.filter(a => !porArea.has(a.id) || !entera(porArea.get(a.id)));
   if (faltan.length) falla.push(`faltan estas partes enteras: ${faltan.map(a => a.del_p1).join(', ')}`);
 
+  // ── Y QUE NO SE REPITA NINGUNA ────────────────────────────
+  //
+  // Es lo que mata este producto: siete parcelas que le mandan hacer lo mismo
+  // con otras palabras. Lee siete cosas que hacer y en realidad son dos, y a
+  // la semana no ha hecho ninguna.
+  //
+  // Al encargo se le pide, y con una sola cosa por parcela ya es raro que
+  // pase, pero pedirlo no basta: aqui se comprueba, y si dos se parecen se
+  // vuelve a pedir el plan entero, que es lo unico que lo arregla -quitar una
+  // dejaria a esa parcela sin nada que hacer.
+  //
+  // Se comparan por las palabras que llevan dentro, cortadas a cinco letras
+  // para que la misma cosa escrita en otro tiempo verbal cuente como la misma,
+  // y quitando antes el armazon que llevan todas -cuando, cada, antes, hacer,
+  // cosa, vez-, porque si se deja, dos cosas distintas dichas con la misma
+  // forma salen parecidas y dos iguales dichas de otra manera no.
+  //
+  // Medido con pares escritos a mano: la misma cosa dicha de dos maneras da
+  // entre 0,50 y 0,80; dos cosas distintas, aunque compartan el dia y el
+  // verbo, no pasan de 0,27. Se corta en 0,40, en medio del hueco.
+  const ARMAZON = new Set(['cuand','cada','notes','antes','despu','para','como',
+    'mismo','misma','sobre','entre','hasta','desde','porqu','pero','tambi',
+    'toda','todo','solo','sola','veces','nada','algo','otra','otro','cosa',
+    'cosas','hace','hacer','haces','dice','dices','decir','esta','este']);
+
+  const palabrasDe = txt => new Set(
+    sinTildes(txt).replace(/[^a-z0-9ñ ]/g, ' ').split(/\s+/)
+      .filter(w => w.length >= 4).map(w => w.slice(0, 5))
+      .filter(w => !ARMAZON.has(w)));
+
+  const seParecen = (a, b) => {
+    if (!a.size || !b.size) return false;
+    let juntos = 0;
+    for (const w of a) if (b.has(w)) juntos++;
+    return juntos / (a.size + b.size - juntos) >= 0.40;
+  };
+
+  const repetidas = [];
+  for (let i = 0; i < partes.length; i++) {
+    for (let j = i + 1; j < partes.length; j++) {
+      if (seParecen(palabrasDe(partes[i].elPlan), palabrasDe(partes[j].elPlan))) {
+        repetidas.push(`${partes[i].area} y ${partes[j].area}`);
+      }
+    }
+  }
+  if (repetidas.length) falla.push(`estas partes mandan hacer lo mismo: ${repetidas.join('; ')}`);
+
   return { plan: { partes }, falla };
 }
 
@@ -672,7 +793,7 @@ async function decidirElPlan({ nombre, sexo, rasgos, respuestas }) {
 
   // Y SOLO SE PIDE OTRA VEZ SI CABE. Lo que quede del tiempo del servidor, y
   // nunca menos de lo que tarda en salir uno entero.
-  const queda = MARGEN_DEL_SERVIDOR_MS - (Date.now() - arranque);
+  const queda = loQueQueda(arranque, ESPERA_DEL_PLAN_MS);
   if (queda < ESPERA_MINIMA_PARA_REHACER_MS) {
     console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), pero ya no queda tiempo para rehacerlo`);
     return primero.plan;
@@ -681,8 +802,8 @@ async function decidirElPlan({ nombre, sexo, rasgos, respuestas }) {
   console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), se pide otra vez`);
   const segundo = await pedirElPlan({
     nombre, sexo, rasgos, respuestas,
-    espera: Math.min(ESPERA_DEL_PLAN_MS, queda),
-    recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, y cada una con sus cinco cosas escritas enteras.`,
+    espera: queda,
+    recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, cada una con sus cinco cosas escritas enteras, y en cada una UNA sola cosa que hacer, distinta de verdad de las de las otras seis.`,
   });
 
   // Y SE QUEDA EL MEJOR DE LOS DOS. Pedir otra vez no garantiza que salga
@@ -853,15 +974,28 @@ const NO_NOMBRES_LA_CARTA =
   'Ni un planeta, ni un signo, ni una casa, ni un aspecto, ni la carta, ni el mapa. ' +
   'Quien lo lee no ha visto nada de eso y no sabe de qué le hablas.';
 
-async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso = '' }) {
-  const primera = await pedir('');
+// "tope" es lo que se le da al primer intento, y va sin valor por defecto a
+// proposito: quien llame tiene que decirlo. Un defecto de cero apagaria el
+// reloj sin avisar y el reintento se saldria del tiempo del servidor.
+async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso = '', tope }) {
+  const arranque = Date.now();
+  const primera = await pedir('', tope);
   const laCarta = hablaDeAstrologia(texto(primera));
   const aMedias = cojo(primera);
   if (!laCarta && !aMedias) return primera;
 
+  // Y SOLO SE PIDE OTRA VEZ SI CABE. Si del tiempo del servidor no queda ni
+  // para la mitad de un intento, no se pide: se entrega lo que hay, que es
+  // mejor que quedarse sin nada por haberlo intentado.
+  const queda = loQueQueda(arranque, tope);
+  if (queda < tope / 2) {
+    console.warn(`[p2] ${que}: ${laCarta ? 'se ha colado una palabra de la carta' : 'ha venido a medias'}, pero ya no queda tiempo para pedirlo otra vez`);
+    return primera;
+  }
+
   console.warn(`[p2] ${que}: ${laCarta ? 'se ha colado una palabra de la carta' : 'ha venido a medias'}, se pide otra vez`);
   const elAviso = typeof aviso === 'function' ? aviso(primera) : aviso;
-  const segunda = await pedir((laCarta ? `\n\n${NO_NOMBRES_LA_CARTA}` : '') + (aMedias ? elAviso : ''));
+  const segunda = await pedir((laCarta ? `\n\n${NO_NOMBRES_LA_CARTA}` : '') + (aMedias ? elAviso : ''), queda);
 
   // Y SE ENTREGA LA MENOS MALA DE LAS DOS. Pedir otra vez no garantiza que
   // salga mejor: puede venir mas corta, o colarsele lo que a la primera no se
@@ -896,15 +1030,17 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 // CADA UNA VE SOLO SU PARTE. No hace falta que vea las demas: el paso que
 // piensa ya se encargo de que no se repitan.
 
-// EL TOPE CABE DOS VECES. Si se le cuela una palabra de la carta se vuelve a
-// pedir, asi que los dos intentos juntos tienen que caber en los 300 segundos
-// que aguanta esta peticion.
+// LO QUE SE LE DA A CADA INTENTO.
 //
-// Eran sesenta y cinco segundos, medidos cuando una parte eran cuatro casillas
-// y doscientas sesenta palabras. Ahora son seis casillas y trescientas, y con
-// sesenta y cinco se cortaba antes de terminar. Ciento veinte caben dos veces
-// de sobra y no cuestan nada mientras no se usen.
-const ESPERA_DE_ESCRIBIR_MS = 120000;
+// Escribir una parte son cinco casillas y trescientas y pico palabras, y es la
+// respuesta mas larga que se pide. Con 120 segundos se corto una de verdad, y
+// con 65 -medidos cuando eran cuatro casillas y doscientas sesenta- se cortaba
+// siempre.
+//
+// Ahora 170. Dos intentos de 170 no caben en los 300 segundos que aguanta esta
+// peticion, y por eso el segundo no pide otros 170: pide lo que sobre del
+// primero (loQueQueda), y si no sobra ni para medio intento no se pide.
+const ESPERA_DE_ESCRIBIR_MS = 170000;
 const TECHO_DE_ESCRIBIR = 12000;
 
 const MOLDE_DE_LA_PARTE = {
@@ -961,7 +1097,7 @@ A dónde va en esta parcela: cómo va a ser ahí y cómo es su vida cuando ya se
 Lo que se lo impide hoy. Se lo dices claro, sin suavizarlo y sin castigarle: lo que se cree y da por cierto, y lo que le pasa por seguir creyéndolo. Que lo vea entero, porque de ahí sale que quiera moverlo. Al menos ${PALABRAS_MINIMAS.queTeFrena} palabras.
 
 "elPlan"
-Es la más larga de las cinco y por la que ha pagado. Todo lo que tiene que hacer y soltar para llegar. De cada cosa: qué hace exactamente, cuándo lo hace -por lo que va a notar, nunca por una hora ni un día de la semana-, cómo se hace las primeras veces cuando todavía no le sale, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. Al menos ${PALABRAS_MINIMAS.elPlan} palabras, y aquí no se ahorra ni una.
+Es la más larga de las cinco y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cuándo lo hace -por lo que va a notar, nunca por una hora ni un día de la semana-, cómo se hace las primeras veces cuando todavía no le sale, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Al menos ${PALABRAS_MINIMAS.elPlan} palabras, y aquí no se ahorra ni una.
 
 "dondeTeCaes"
 Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarla o lo que va a hacer mal creyendo que va más deprisa. Y que eso llega siempre y es señal de que va, no de que se esté equivocando. Y qué hace justo ahí. Al menos ${PALABRAS_MINIMAS.dondeTeCaes} palabras.
@@ -1000,7 +1136,8 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
     aviso: p => cuentaComoEs(p.elPlan, 0) || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto]))
       ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta a dónde va, qué se lo impide hoy, qué hace, dónde se cae y cómo vuelve.'
       : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cinco se cuenta entero, y el plan va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
-    pedir: recordatorio => alModelo({
+    tope: ESPERA_DE_ESCRIBIR_MS,
+    pedir: (recordatorio, cuanto) => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
       piensa: 'medium',
@@ -1008,7 +1145,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
       system: encargo,
       mensaje: `Escribe las cinco partes de esta parcela, enteras.${recordatorio}`,
       molde: MOLDE_DE_LA_PARTE,
-      espera: AbortSignal.timeout(ESPERA_DE_ESCRIBIR_MS),
+      espera: AbortSignal.timeout(cuanto),
     }),
     texto: p => PUNTOS.map(punto => p[punto]).join(' '),
   });
@@ -1027,7 +1164,10 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
 // LEE LAS SIETE PARTES YA ESCRITAS, no lo decidido. Es un resumen de lo que
 // pone de verdad en el documento, asi que tiene que ver el documento. Por eso
 // va al final y no en paralelo con las demas.
-const ESPERA_DE_LA_HOJA_MS = 120000;
+//
+// El tiempo, el mismo que el de escribir una parte: sale mas corta, pero se
+// lee las siete enteras antes de empezar y eso tambien cuesta.
+const ESPERA_DE_LA_HOJA_MS = 170000;
 const TECHO_DE_LA_HOJA = 12000;
 
 const MOLDE_DE_LA_HOJA = {
@@ -1109,9 +1249,15 @@ ${REGLA_DEL_NOMBRE(false)}`;
     cojo: h => estaVacia(h.porDondeEmpiezas, 'por dónde empiezas')
             || estaVacia(h.siLoDejas, 'si lo dejas')
             || !hay.has(String(h.empiezaPor || '').trim())
-            || new Set((h.elOrden || []).map(o => o?.area).filter(x => hay.has(x))).size !== hay.size,
+            // Un paso con nombre pero sin nada escrito cuenta como que falta:
+            // si se deja pasar, en la hoja sale el titulo de esa parcela con un
+            // hueco debajo, que es peor que no tenerla.
+            || new Set((h.elOrden || [])
+                 .filter(o => String(o?.queHaces || '').trim())
+                 .map(o => o?.area).filter(x => hay.has(x))).size !== hay.size,
     aviso: `\n\nY OJO: la vez anterior algo vino vacío o faltó alguna parte del orden. El orden lleva las ${AREAS.length}, cada una con su nombre en clave copiado tal cual y con lo que tiene que hacer ahí.`,
-    pedir: recordatorio => alModelo({
+    tope: ESPERA_DE_LA_HOJA_MS,
+    pedir: (recordatorio, cuanto) => alModelo({
       que: 'escribir la hoja de ruta',
       modelo: 'claude-sonnet-5',
       piensa: 'medium',
@@ -1119,7 +1265,7 @@ ${REGLA_DEL_NOMBRE(false)}`;
       system: encargo,
       mensaje: `Escribe la hoja de ruta, siguiendo el esquema.${recordatorio}`,
       molde: MOLDE_DE_LA_HOJA,
-      espera: AbortSignal.timeout(ESPERA_DE_LA_HOJA_MS),
+      espera: AbortSignal.timeout(cuanto),
     }),
     texto: h => [h.porDondeEmpiezas, h.siLoDejas].concat((h.elOrden || []).map(o => o?.queHaces)).join(' '),
   });
@@ -1313,8 +1459,6 @@ const PAGINA = `<!DOCTYPE html>
   .bloque h3 { font-family:system-ui,sans-serif; font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--gold); margin-bottom:.45rem; }
   .bloque p { margin-bottom:.6rem; }
   .bloque p:last-child { margin-bottom:0; }
-  .mov { background:rgba(189,144,72,.07); border-radius:6px; padding:.9rem 1.1rem; margin-bottom:.7rem; }
-  .mov b { color:var(--teal); display:block; margin-bottom:.3rem; }
   .paso { margin-bottom:1rem; }
   .paso b { color:var(--teal); display:block; margin-bottom:.2rem; }
   .empieza { color:var(--teal); font-weight:600; margin-bottom:.5rem; }
@@ -1370,8 +1514,8 @@ const ir = document.getElementById('ir');
 const pdf = document.getElementById('pdf');
 // LAS TRES RESPUESTAS. Son lo unico que sabemos de su vida de hoy: el informe
 // del P1 dice como es, no que hace ni con quien. Viajan con la peticion del
-// plan, que es la que decide, y de momento el motor no las lee: eso es el
-// siguiente paso.
+// plan y entran enteras en el encargo de la que decide, que es de donde sale
+// que el plan sea suyo y no le valga a cualquiera.
 const preguntas = ['p1', 'p2', 'p3'].map(id => document.getElementById(id));
 const aviso = document.getElementById('aviso');
 const salida = document.getElementById('salida');

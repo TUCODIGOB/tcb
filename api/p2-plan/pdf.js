@@ -173,9 +173,8 @@ export default async function handler(req, res) {
     // ── LAS CAJAS ─────────────────────────────────────────────
     //
     // Un documento de veinte hojas de texto seguido no se lee: el ojo no
-    // encuentra donde parar. Las cosas que se leen sueltas -cada movimiento,
-    // cada paso de la hoja de ruta- van sobre un fondo beige que las separa,
-    // igual que en la pantalla.
+    // encuentra donde parar. Los pasos de la hoja de ruta, que se leen sueltos
+    // y se vuelven a buscar, van sobre un fondo beige que los separa.
     //
     // UNA CAJA NO SE PARTE NUNCA entre dos hojas: se mide antes, y si no cabe
     // entera se va a la siguiente. Media caja al pie es peor que un hueco.
