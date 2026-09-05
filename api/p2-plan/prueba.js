@@ -622,11 +622,17 @@ queTeFrena       Lo que se lo impide hoy. No lo que le pasa por fuera: lo que
                  se cree y da por cierto sin haberlo puesto en duda nunca, y
                  que hace que siga igual. Sale de lo que sabes de ella.
 
-elPlan           Todo lo que tiene que hacer y soltar para llegar ahí. Es lo
-                 más importante de las cinco y lo que ha venido a buscar.
-                 Conductas que se puedan ver ocurriendo, no ideas: qué deja de
-                 hacer y qué hace en su lugar. En una línea caben varias, y
-                 aquí no se ahorra.
+elPlan           UNA SOLA COSA que tiene que hacer en esta parcela. Una, no
+                 dos ni tres. Es lo más importante de las cinco y lo que ha
+                 venido a buscar, y es una porque nadie cambia siete cosas a la
+                 vez: si le pones tres por parcela acaba con veintiuna delante
+                 y no hace ninguna.
+                 Va con nombre de conducta, no de idea: qué deja de hacer y qué
+                 hace en su lugar, algo que se pueda ver ocurriendo. Si lo que
+                 escribes no se puede ver pasando, está mal y se cambia.
+                 Y ESA COSA ES DE ESTA PARCELA Y DE NINGUNA OTRA. Las siete son
+                 siete cosas distintas de verdad: no la misma conducta puesta
+                 en siete sitios con otras palabras.
 
 dondeTeCaes      Dónde se va a caer intentándolo: lo que va a aparecer para
                  frenarla, o el fallo que va a cometer porque parece que va
@@ -706,6 +712,53 @@ Nombre de pila: ${nombre}`;
   const faltan = AREAS.filter(a => !porArea.has(a.id) || !entera(porArea.get(a.id)));
   if (faltan.length) falla.push(`faltan estas partes enteras: ${faltan.map(a => a.del_p1).join(', ')}`);
 
+  // ── Y QUE NO SE REPITA NINGUNA ────────────────────────────
+  //
+  // Es lo que mata este producto: siete parcelas que le mandan hacer lo mismo
+  // con otras palabras. Lee siete cosas que hacer y en realidad son dos, y a
+  // la semana no ha hecho ninguna.
+  //
+  // Al encargo se le pide, y con una sola cosa por parcela ya es raro que
+  // pase, pero pedirlo no basta: aqui se comprueba, y si dos se parecen se
+  // vuelve a pedir el plan entero, que es lo unico que lo arregla -quitar una
+  // dejaria a esa parcela sin nada que hacer.
+  //
+  // Se comparan por las palabras que llevan dentro, cortadas a cinco letras
+  // para que la misma cosa escrita en otro tiempo verbal cuente como la misma,
+  // y quitando antes el armazon que llevan todas -cuando, cada, antes, hacer,
+  // cosa, vez-, porque si se deja, dos cosas distintas dichas con la misma
+  // forma salen parecidas y dos iguales dichas de otra manera no.
+  //
+  // Medido con pares escritos a mano: la misma cosa dicha de dos maneras da
+  // entre 0,50 y 0,80; dos cosas distintas, aunque compartan el dia y el
+  // verbo, no pasan de 0,27. Se corta en 0,40, en medio del hueco.
+  const ARMAZON = new Set(['cuand','cada','notes','antes','despu','para','como',
+    'mismo','misma','sobre','entre','hasta','desde','porqu','pero','tambi',
+    'toda','todo','solo','sola','veces','nada','algo','otra','otro','cosa',
+    'cosas','hace','hacer','haces','dice','dices','decir','esta','este']);
+
+  const comoSeParece = txt => new Set(
+    sinTildes(txt).replace(/[^a-z0-9ñ ]/g, ' ').split(/\s+/)
+      .filter(w => w.length >= 4).map(w => w.slice(0, 5))
+      .filter(w => !ARMAZON.has(w)));
+
+  const seParecen = (a, b) => {
+    if (!a.size || !b.size) return false;
+    let juntos = 0;
+    for (const w of a) if (b.has(w)) juntos++;
+    return juntos / (a.size + b.size - juntos) >= 0.40;
+  };
+
+  const repetidas = [];
+  for (let i = 0; i < partes.length; i++) {
+    for (let j = i + 1; j < partes.length; j++) {
+      if (seParecen(comoSeParece(partes[i].elPlan), comoSeParece(partes[j].elPlan))) {
+        repetidas.push(`${partes[i].area} y ${partes[j].area}`);
+      }
+    }
+  }
+  if (repetidas.length) falla.push(`estas partes mandan hacer lo mismo: ${repetidas.join('; ')}`);
+
   return { plan: { partes }, falla };
 }
 
@@ -731,7 +784,7 @@ async function decidirElPlan({ nombre, sexo, rasgos, respuestas }) {
   const segundo = await pedirElPlan({
     nombre, sexo, rasgos, respuestas,
     espera: Math.min(ESPERA_DEL_PLAN_MS, queda),
-    recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, y cada una con sus cinco cosas escritas enteras.`,
+    recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, cada una con sus cinco cosas escritas enteras, y en cada una UNA sola cosa que hacer, distinta de verdad de las de las otras seis.`,
   });
 
   // Y SE QUEDA EL MEJOR DE LOS DOS. Pedir otra vez no garantiza que salga
@@ -1037,7 +1090,7 @@ A dónde va en esta parcela: cómo va a ser ahí y cómo es su vida cuando ya se
 Lo que se lo impide hoy. Se lo dices claro, sin suavizarlo y sin castigarle: lo que se cree y da por cierto, y lo que le pasa por seguir creyéndolo. Que lo vea entero, porque de ahí sale que quiera moverlo. Al menos ${PALABRAS_MINIMAS.queTeFrena} palabras.
 
 "elPlan"
-Es la más larga de las cinco y por la que ha pagado. Todo lo que tiene que hacer y soltar para llegar. De cada cosa: qué hace exactamente, cuándo lo hace -por lo que va a notar, nunca por una hora ni un día de la semana-, cómo se hace las primeras veces cuando todavía no le sale, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. Al menos ${PALABRAS_MINIMAS.elPlan} palabras, y aquí no se ahorra ni una.
+Es la más larga de las cinco y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cuándo lo hace -por lo que va a notar, nunca por una hora ni un día de la semana-, cómo se hace las primeras veces cuando todavía no le sale, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Al menos ${PALABRAS_MINIMAS.elPlan} palabras, y aquí no se ahorra ni una.
 
 "dondeTeCaes"
 Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarla o lo que va a hacer mal creyendo que va más deprisa. Y que eso llega siempre y es señal de que va, no de que se esté equivocando. Y qué hace justo ahí. Al menos ${PALABRAS_MINIMAS.dondeTeCaes} palabras.
