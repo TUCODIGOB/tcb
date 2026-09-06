@@ -1648,19 +1648,48 @@ ir.addEventListener('click', async () => {
     return hueco;
   });
 
+  // SI UNA SE CAE, SE VUELVE A PEDIR. Y no es lo mismo que las redes de dentro:
+  // aquellas miran lo que ha escrito el modelo y le hacen escribirlo otra vez
+  // si viene mal. Esto es de fuera: la peticion entera que no llego -internet,
+  // el modelo saturado, un corte-. Ahi no hay nada que corregirle, solo hay que
+  // volver a pedirla, y cada parte es su propia peticion, asi que reintentar
+  // una no le quita tiempo a las otras.
+  //
+  // DOS VUELTAS Y NO MAS. Si algo esta caido de verdad, cuatro intentos no lo
+  // arreglan: solo hacen esperar el doble para acabar igual.
   const escritas = [];
-  await Promise.all(plan.partes.map(async (decidido, i) => {
-    try {
-      const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo, decidido });
-      escritas[i] = parte;
-      huecos[i].outerHTML = pintarParte(parte, i+1);
-    } catch (e) {
-      huecos[i].innerHTML = '<p class="cual">' + (i+1) + ' · ' + escapar(NOMBRES[decidido.area] || '') +
-        '</p><p class="error">' + escapar(e.message) + '</p>';
-    }
-  }));
+  const escribirUna = async (decidido, i) => {
+    const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo, decidido });
+    escritas[i] = parte;
+    huecos[i].outerHTML = pintarParte(parte, i+1);
+  };
 
-  // 3. Y al final, la hoja de ruta, que lee las siete ya escritas.
+  const pasada = async (cuales, segundaVuelta) => {
+    const caidas = [];
+    await Promise.all(cuales.map(async i => {
+      const decidido = plan.partes[i];
+      try {
+        await escribirUna(decidido, i);
+      } catch (err) {
+        caidas.push(i);
+        huecos[i].innerHTML = '<p class="cual">' + (i+1) + ' · ' + escapar(NOMBRES[decidido.area] || '') + '</p>' +
+          (segundaVuelta
+            ? '<p class="error">' + escapar(err.message) + '</p>'
+            : '<p class="aviso">Se ha caído, se vuelve a pedir…</p>');
+      }
+    }));
+    return caidas;
+  };
+
+  const caidas = await pasada(plan.partes.map((_, i) => i), false);
+  if (caidas.length) {
+    aviso.textContent = 'Se han caído ' + caidas.length + ', se piden otra vez…';
+    await pasada(caidas, true);
+  }
+
+  // 3. Y al final, la hoja de ruta, que lee las siete ya escritas. Tambien se
+  // vuelve a pedir si se cae: es la hoja que se queda a mano, y sin ella no hay
+  // PDF.
   const completas = escritas.filter(Boolean);
   let hoja = null;
   if (completas.length === plan.partes.length) {
@@ -1669,12 +1698,18 @@ ir.addEventListener('click', async () => {
     hueco.className = 'parte aparte';
     hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="aviso">Escribiéndose…</p>';
     salida.appendChild(hueco);
+    const pedirLaHoja = () => llamar({ accion:'hoja', nombre:quienEs.nombre, sexo:quienEs.sexo, partes:completas });
     try {
-      hoja = (await llamar({ accion:'hoja', nombre:quienEs.nombre, sexo:quienEs.sexo, partes:completas })).hoja;
-      hueco.outerHTML = pintarHoja(hoja);
+      hoja = (await pedirLaHoja()).hoja;
     } catch (e) {
-      hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="error">' + escapar(e.message) + '</p>';
+      hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="aviso">Se ha caído, se vuelve a pedir…</p>';
+      try {
+        hoja = (await pedirLaHoja()).hoja;
+      } catch (otra) {
+        hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="error">' + escapar(otra.message) + '</p>';
+      }
     }
+    if (hoja) hueco.outerHTML = pintarHoja(hoja);
   }
 
   // EL PDF SOLO SE OFRECE SI ESTA TODO. Con una parte caida saldria un
