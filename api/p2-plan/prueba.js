@@ -184,19 +184,19 @@ Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que
 // primera y esto empieza a parecer una plantilla.
 const AREAS = [
   { id: 'identidad',   del_p1: 'IDENTIDAD',   titulo: 'Quién eres cuando ocupas tu sitio',
-    deQueVa: 'quién es y cómo se planta delante de los demás' },
+    deQueVa: 'quién es y la imagen que da, no lo que hace cada día' },
   { id: 'patrones',    del_p1: 'PATRONES',    titulo: 'Tu día cuando dejas de repetirte',
-    deQueVa: 'lo que repite, su día a día, su manera de funcionar' },
+    deQueVa: 'su día a día, sus costumbres y lo que repite cada semana sin darse cuenta' },
   { id: 'miedos',      del_p1: 'MIEDOS',      titulo: 'Lo que haces cuando el miedo deja de mandar',
-    deQueVa: 'lo que le frena y lo que evita' },
+    deQueVa: 'lo que evita sin nombrarlo, de qué se aparta y a qué no se atreve' },
   { id: 'herida',      del_p1: 'HERIDA',      titulo: 'Cuando sueltas lo que no te toca cargar',
-    deQueVa: 'lo que le duele de antiguo, su casa y los suyos' },
+    deQueVa: 'su casa y los suyos, de dónde viene y lo que sigue doliéndole de ahí' },
   { id: 'amor',        del_p1: 'AMOR',        titulo: 'Querer sin el patrón de siempre',
-    deQueVa: 'la pareja, el deseo y el disfrute' },
+    deQueVa: 'la pareja, el romance, el deseo y lo que disfruta con alguien' },
   { id: 'relaciones',  del_p1: 'RELACIONES',  titulo: 'El sitio que ocupas entre los demás',
-    deQueVa: 'la gente, hablar, los grupos, los amigos' },
+    deQueVa: 'el trato con los demás fuera de la pareja y de la familia, los amigos y los grupos' },
   { id: 'dinero',      del_p1: 'DINERO',      titulo: 'Con el dinero y el trabajo, decides tú',
-    deQueVa: 'el dinero, el trabajo y lo que vale lo suyo' },
+    deQueVa: 'el dinero y el trabajo, lo que gana, lo que vale lo suyo y hacia dónde va' },
 ];
 
 // LOS CINCO NOMBRES QUE VE DENTRO DE CADA PARTE, escritos aqui por lo mismo
