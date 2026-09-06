@@ -1653,6 +1653,17 @@ const PAGINA = `<!DOCTYPE html>
   .bloque h3 { font-family:system-ui,sans-serif; font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--gold); margin-bottom:.45rem; }
   .bloque p { margin-bottom:.6rem; }
   .bloque p:last-child { margin-bottom:0; }
+  /* EL DESPLEGABLE DE LA PRIMERA LLAMADA. Es de la pagina de pruebas y solo
+     sirve para mirar lo que ha elegido; el dia que esto se lance se va con
+     la pagina. Se quita borrando este bloque y la funcion pintarLoDecidido. */
+  .decidido { border:1px dashed rgba(14,63,75,.35); border-radius:8px; padding:1rem 1.2rem; margin-top:1.4rem; background:#fff; }
+  .decidido summary { font-family:system-ui,sans-serif; font-size:.9rem; font-weight:600; color:var(--teal); cursor:pointer; }
+  .decidido table { width:100%; border-collapse:collapse; margin-top:.9rem; font-family:system-ui,sans-serif; font-size:.85rem; }
+  .decidido th { text-align:left; color:var(--gold); text-transform:uppercase; font-size:.68rem; letter-spacing:.1em; padding:.35rem .5rem; border-bottom:1px solid rgba(189,144,72,.3); }
+  .decidido td { padding:.5rem; border-bottom:1px solid rgba(14,63,75,.08); vertical-align:top; }
+  .decidido td.verbo { font-weight:600; color:var(--teal); }
+  .decidido tr.choca td { background:#fdeceb; }
+  .decidido .choque { font-family:system-ui,sans-serif; font-size:.85rem; color:var(--error); font-weight:600; margin-top:.7rem; }
   .paso { margin-bottom:1rem; }
   .paso b { color:var(--teal); display:block; margin-bottom:.2rem; }
   .empieza { color:var(--teal); font-weight:600; margin-bottom:.5rem; }
@@ -1763,6 +1774,10 @@ ir.addEventListener('click', async () => {
   //
   // Se pintan en su hueco, en el orden del documento, y no segun van llegando:
   // el sitio se reserva antes y cada una cae en el suyo.
+  // Lo decidido, arriba del todo y antes de escribir nada: asi se puede mirar
+  // mientras se escriben las siete.
+  salida.insertAdjacentHTML('beforeend', pintarLoDecidido(plan.partes));
+
   aviso.textContent = 'Escribiendo las ' + plan.partes.length + ' partes a la vez…';
   const huecos = plan.partes.map((decidido, i) => {
     const hueco = document.createElement('div');
@@ -1894,6 +1909,37 @@ function pintarHoja(h) {
     '<div class="bloque"><h3>El orden</h3>' + orden + '</div>' +
     '<div class="bloque"><h3>Si lo dejas del todo</h3>' + parrafos(h.siLoDejas) + '</div>' +
     '</div>';
+}
+
+// LO QUE HA DECIDIDO LA PRIMERA LLAMADA, PARA PODER MIRARLO.
+//
+// De la pagina de pruebas y de ningun sitio mas: la clienta nunca ve esto. Es
+// para ver de un vistazo de que desafio sale cada parcela y que movimiento le
+// pide, que es lo unico que hay que mirar para saber si esa llamada lo ha
+// hecho bien o esta repitiendo.
+//
+// Los verbos que se repiten salen marcados en rojo. No deberia pasar nunca
+// -el codigo rehace el plan si pasa- pero si algun dia pasa, aqui se ve.
+function pintarLoDecidido(partes) {
+  const raiz = v => String(v||'').toLowerCase().normalize('NFD').replace(/[^a-z]/g,'')
+    .replace(/(?:se|le|les|la|las|lo|los|me|te|nos)$/,'');
+  const cuantos = {};
+  for (const p of partes) { const r = raiz(p.movimiento); cuantos[r] = (cuantos[r]||0) + 1; }
+  const repetidos = Object.keys(cuantos).filter(r => r && cuantos[r] > 1);
+
+  const filas = partes.map((p, i) =>
+    '<tr class="' + (repetidos.includes(raiz(p.movimiento)) ? 'choca' : '') + '">' +
+      '<td>' + (i+1) + ' · ' + escapar(NOMBRES[p.area] || p.area) + '</td>' +
+      '<td>' + escapar(p.rasgo || '—') + '</td>' +
+      '<td class="verbo">' + escapar(p.movimiento || '—') + '</td>' +
+      '<td>' + escapar(p.queHaces || '') + '</td>' +
+    '</tr>').join('');
+
+  return '<details class="decidido" open><summary>Lo que ha decidido la primera llamada ' +
+    '(de qué desafío sale cada área y qué le pide hacer)</summary>' +
+    (repetidos.length ? '<p class="choque">Ojo: hay movimientos repetidos (' + escapar(repetidos.join(', ')) + ')</p>' : '') +
+    '<table><tr><th>Área</th><th>Desafío del que sale</th><th>Movimiento</th><th>Lo que le manda hacer</th></tr>' +
+    filas + '</table></details>';
 }
 
 // Cada parte con sus cinco puntos, cada uno con su nombre para saber de que
