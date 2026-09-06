@@ -972,16 +972,6 @@ function cuentaComoEs(texto, frasesQuePerdona = 3) {
   return MARCAS_DE_QUE_HACER.filter(re => re.test(resto)).length < MARCAS_MINIMAS;
 }
 
-// UNA CASILLA VACIA O CON SU PROPIO TITULO DENTRO NO VALE.
-//
-// En un plan de verdad salieron casillas en blanco y otras con el nombre del
-// bloque escrito como si fuera el texto -"Asi eres aqui" dentro de la casilla
-// que ya se titula asi-, y el documento parecia roto.
-//
-// Se comprueba lo que se puede comprobar sin opinar: que hay texto, que no es
-// una linea suelta y que no es el titulo repetido.
-const LARGO_MINIMO = 60;
-
 // Dos textos son el mismo aunque cambien las mayusculas, las tildes o la
 // puntuacion. Comparar dos cadenas a pelo no es criterio.
 const comoSeCompara = txt =>
@@ -1014,12 +1004,6 @@ const comoSeCompara = txt =>
 // como cortado reescribiria textos correctos, que es lo unico que esta red no
 // se puede permitir.
 const acabaColgado = txt => /[\p{L}\p{N},;:«¿¡([“‘]$/u.test(String(txt || '').trim());
-
-function estaVacia(texto, titulo) {
-  const limpio = String(texto || '').trim();
-  if (limpio.length < LARGO_MINIMO) return true;
-  return comoSeCompara(limpio) === comoSeCompara(titulo);
-}
 
 // SI SE LE CUELA, SE VUELVE A PEDIR. Una sola vez: aqui no se puede tirar el
 // trozo como en el P1 -eso dejaria un hueco en el documento-, asi que se pide
