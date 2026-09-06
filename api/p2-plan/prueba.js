@@ -1702,7 +1702,7 @@ const BLOQUES = ${JSON.stringify(BLOQUES)};
 // titulo con su numero.
 const NOMBRES = ${JSON.stringify(Object.fromEntries(AREAS.map(a => [a.id, a.del_p1])))};
 const PUNTOS = ${JSON.stringify(PUNTOS)};
-// Los dos que van sobre beige, aqui y en el PDF: son las ordenes.
+// El que va sobre beige, aqui y en el PDF: es la orden.
 const SOBRE_BEIGE = ['queHaces'];
 // Las que tiene que haber. Se cuenta contra esto y no contra las que hayan
 // llegado: si llegan seis, seis de seis no es estar completo.
