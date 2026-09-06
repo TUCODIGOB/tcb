@@ -1110,6 +1110,12 @@ const MOLDE_DE_LA_PARTE = {
 // a resumir la linea que le dan en vez de abrirla.
 const PALABRAS_MINIMAS = { tuPrueba: 120, queHaces: 220, cuando: 70, dondeTeCaes: 110, cuandoTeCaes: 90 };
 
+// Y "cuando" tambien tiene tope por arriba, que es el unico que lo lleva. Es
+// la senal, y es lo unico del documento que se mira de pasada: si se estira
+// deja de reconocerse en el momento, que es para lo unico que sirve. Al
+// escribir tiende a irse, porque al modelo se le pide siempre que cuente mas.
+const PALABRAS_MAXIMAS = { cuando: 170 };
+
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
 // Recibe las cinco lineas de SU parte y nada mas: ni los rasgos, ni lo que ella
@@ -1140,13 +1146,13 @@ CADA UNA DE LAS CINCO ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos de
 LAS CINCO, Y LO QUE VA EN CADA UNA:
 
 "tuPrueba"
-Qué le pone la vida delante en esta parcela y en quién se convierte el día que lo supere. Empiezas por lo que le pasa a ella, no por la idea. Se lo cuentas como lo que tiene delante y le toca aprender, nunca como algo suyo que está mal, y sin decirle en ningún momento que esto es una prueba ni un examen: eso se nota en cómo está dicho, no se anuncia. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Al menos ${PALABRAS_MINIMAS.tuPrueba} palabras.
+Qué le pone la vida delante en esta parcela y en quién se convierte el día que lo supere. Se entra por lo que le pasa a ella, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Al menos ${PALABRAS_MINIMAS.tuPrueba} palabras.
 
 "queHaces"
 Es la más larga de las cinco y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. Aquí no va el cuándo, que va aparte. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Al menos ${PALABRAS_MINIMAS.queHaces} palabras, y aquí no se ahorra ni una.
 
 "cuando"
-La señal por la que sabe que le toca. Corto y afilado: esto es lo que va a releer, y cuanto más largo, menos lo reconoce. Le dices qué va a notar por dentro o qué se va a ver haciendo justo antes de lo de siempre, con sus palabras, para que lo pille en el momento y no después. Nada de horas ni de días de la semana. Y le dices también que la primera vez lo va a pillar tarde, y que pillarlo tarde ya cuenta. Al menos ${PALABRAS_MINIMAS.cuando} palabras y no mucho más.
+La señal por la que sabe que le toca. Corto y afilado: esto es lo que va a releer, y cuanto más largo, menos lo reconoce. Le dices qué va a notar por dentro o qué se va a ver haciendo justo antes de lo de siempre, con sus palabras, para que lo pille en el momento y no después. Nada de horas ni de días de la semana. Y le dices también que la primera vez lo va a pillar tarde, y que pillarlo tarde ya cuenta. Entre ${PALABRAS_MINIMAS.cuando} y ${PALABRAS_MAXIMAS.cuando} palabras: pasarse de ahí lo estropea.
 
 "dondeTeCaes"
 Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarla o lo que va a hacer mal creyendo que va más deprisa. Y que eso llega siempre y es señal de que va, no de que se esté equivocando. Y qué hace justo ahí. Al menos ${PALABRAS_MINIMAS.dondeTeCaes} palabras.
@@ -1170,25 +1176,30 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
   // en blanco, y sin ella el punto mas largo sale como un muro de texto.
   const parrafosDe = t => String(t || '').split(/\n+/).filter(x => x.trim()).length;
   const cortos = p => PUNTOS.filter(punto => cuantas(p[punto]) < PALABRAS_MINIMAS[punto]);
+  const pasados = p => PUNTOS.filter(punto => PALABRAS_MAXIMAS[punto] && cuantas(p[punto]) > PALABRAS_MAXIMAS[punto]);
   const colgados = p => PUNTOS.filter(punto => acabaColgado(p[punto]));
 
   const salida = await sinNombrarLaCarta({
     que: `la parte de ${area.id}`,
-    // Se mira que los cinco esten contados enteros, que el mas largo venga en
-    // parrafos y que ninguno se ponga a contarle otra vez como es.
-    // Lo de contar marcas de que-hacer solo vale para el plan, que es el unico
-    // que explica como se hace algo. A donde va o que le frena se cuentan de
-    // otra manera y exigirselas alli haria reescribir textos buenos.
+    // Se mira que los cinco esten contados enteros, que el que manda hacer
+    // algo venga en parrafos y que ninguno se ponga a contarle otra vez como
+    // es.
+    // Lo de contar marcas de que-hacer solo vale para "que haces", que es el
+    // unico que explica como se hace algo. Su prueba o donde se cae se cuentan
+    // de otra manera y exigirselas alli haria reescribir textos buenos.
     cojo: p => cortos(p).length > 0
+            || pasados(p).length > 0
             || colgados(p).length > 0
             || parrafosDe(p.queHaces) < 2
             || cuentaComoEs(p.queHaces, 0)
             || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto])),
     aviso: p => cuentaComoEs(p.queHaces, 0) || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto]))
-      ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta a dónde va, qué se lo impide hoy, qué hace, dónde se cae y cómo vuelve.'
+      ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta qué tiene delante y adónde le lleva, qué hace, por qué señal lo sabe, dónde se cae y qué hace ese día.'
+      : pasados(p).length
+        ? `\n\nY OJO: la vez anterior "${pasados(p).map(x => BLOQUES[x]).join('", "')}" salió largo. Eso se lee de pasada, en un momento en que está a otra cosa: si no lo reconoce de un vistazo no le sirve de nada. Se dice la señal y se para.`
       : colgados(p).length
         ? `\n\nY OJO: la vez anterior algo se quedó a media frase (${colgados(p).map(x => BLOQUES[x]).join(', ')}). Se termina lo que se empieza: cada uno de los cinco acaba su última frase.`
-        : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cinco se cuenta entero, y el plan va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
+        : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cinco se cuenta entero, y lo que tiene que hacer va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
       que: `escribir ${area.id}`,
