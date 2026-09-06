@@ -44,7 +44,8 @@ const original = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
 const ENPRODUCCION = [
   ['el presupuesto de la peticion', 'const TOPE_DE_LA_PETICION = 285000'],
   ['el tope de cada area',          'const TOPE_DE_UN_AREA = 90000'],
-  ['el tope de escribir la lista', 'const TOPE_DE_LA_LISTA = 140000'],
+  ['el tope de sacar los rasgos',  'const TOPE_DE_SACAR = 100000'],
+  ['el tope de escribir',          'const TOPE_DE_ESCRIBIR = 110000'],
   ['el tope de elegir',            'const TOPE_DE_ELEGIR = 40000'],
 ];
 console.log('\n  api/chat.js — una llamada colgada ya no se lleva el informe por delante\n');
@@ -82,9 +83,11 @@ function aEscala(texto, presupuesto) {
   return texto
     .replace("import Stripe from 'stripe';", "import Stripe from './.stripe-falso.mjs';")
     .replace('const TOPE_DE_LA_PETICION = 285000', `const TOPE_DE_LA_PETICION = ${presupuesto}`)
-    .replace('const TOPE_DE_LA_LISTA = 140000', 'const TOPE_DE_LA_LISTA = 2500')
-    .replace('const TOPE_DE_ELEGIR = 40000', 'const TOPE_DE_ELEGIR = 2000')
+    .replace('const TOPE_DE_SACAR = 100000', 'const TOPE_DE_SACAR = 2000')
+    .replace('const TOPE_DE_ESCRIBIR = 110000', 'const TOPE_DE_ESCRIBIR = 2500')
+    .replace('const TOPE_DE_ELEGIR = 40000', 'const TOPE_DE_ELEGIR = 1500')
     .replace('const TOPE_DE_UN_AREA = 90000', 'const TOPE_DE_UN_AREA = 2500')
+    .replace('const LO_QUE_TARDA_OTRA_TIRADA = 180000', 'const LO_QUE_TARDA_OTRA_TIRADA = 8000')
     
 }
 
@@ -92,7 +95,7 @@ const stripeFalsoRuta = path.join(AQUI, '.stripe-falso.mjs');
 const rutaA = path.join(AQUI, '.chat-colgada.mjs');
 const rutaB = path.join(AQUI, '.chat-sin-tiempo.mjs');
 fs.writeFileSync(stripeFalsoRuta, STRIPE_FALSO);
-fs.writeFileSync(rutaA, aEscala(original, 12000));   // da de sobra: cabe el reintento
+fs.writeFileSync(rutaA, aEscala(original, 20000));   // da de sobra: cabe el reintento
 fs.writeFileSync(rutaB, aEscala(original, 5000));    // apurado: no cabe nada opcional
 
 process.env.STRIPE_SECRET_KEY = 'sk_test';
@@ -138,20 +141,28 @@ const POR_AREAS = [
   ['RELACIONES', 'Mercurio en Aries',          'casa 11 en Acuario'],
   ['DINERO',     'casa 2 en Aries',            'casa 10 en Acuario'],
 ];
-const laLista = (cual, l) => JSON.stringify({
+// Ahora los rasgos van en tres pasos: uno los saca, cuatro los escriben y otro
+// elige. Aqui se contesta a los tres, cada uno con lo suyo.
+const losSacados = JSON.stringify({
   rasgos: POR_AREAS.flatMap(([area, a, b], k) => [
-    { area, nombre: TITULOS[l][k * 2],     origen: a,
-      descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
-      causa: 'Sostienes el esfuerzo sin depender de que salga bien.' },
-    { area, nombre: TITULOS[l][k * 2 + 1], origen: b,
-      descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
-      causa: 'Sostienes el esfuerzo sin depender de que salga bien.' },
+    { lista: 'fortalezas', nombre: TITULOS.Fortaleza[k * 2],     origen: a },
+    { lista: 'fortalezas', nombre: TITULOS.Fortaleza[k * 2 + 1], origen: b },
+    { lista: 'desafios',   nombre: TITULOS.Desafio[k * 2],       origen: a },
+    { lista: 'desafios',   nombre: TITULOS.Desafio[k * 2 + 1],   origen: b },
   ]),
 });
-// El que elige devuelve numeros: aqui se queda con todos, y el techo por area
-// lo recorta el codigo despues.
+// El que escribe devuelve un texto por rasgo, con su nombre delante.
+const losTextos = cuerpo => JSON.stringify({
+  textos: (String(cuerpo.system || '').match(/^\d+\. (.+)$/gm) || [])
+    .map(l => l.replace(/^\d+\. /, ''))
+    .map(nombre => ({ nombre,
+      descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
+      causa: 'Sostienes el esfuerzo sin depender de que salga bien.' })),
+});
+// El que elige devuelve numero y area: aqui se queda con todos, repartidos por
+// las siete areas, y el techo lo recorta el codigo despues.
 const losElegidos = cuantos => JSON.stringify({
-  elegidos: Array.from({ length: cuantos }, (_, i) => i + 1),
+  elegidos: Array.from({ length: cuantos }, (_, i) => ({ numero: i + 1, area: POR_AREAS[i % 7][0] })),
 });
 const cuantosHay = cuerpo => (String(cuerpo.system || '').match(/^\d+\. \[/gm) || []).length;
 
@@ -164,14 +175,15 @@ globalThis.fetch = async (url, opciones) => {
   llamadas++;
   if (!opciones || !opciones.signal) sinSenal++;
 
-  let esElegir = false, esEscribir = false, esFortalezas = false, cuantos = 0;
+  let esElegir = false, esEscribir = false, esSacar = false, cuantos = 0, cuerpoVisto = {};
   try {
     const cuerpo = JSON.parse(opciones.body);
     const sistema = String(cuerpo.system || '');
     esElegir = sistema.includes('AQUÍ NO SE ESCRIBE NADA');
-    esEscribir = sistema.includes('LAS CASILLAS DE CADA RASGO');
+      esSacar = sistema.includes('AQUÍ NO SE ESCRIBE EL INFORME');
+    esEscribir = sistema.includes('AQUÍ NO SE ELIGE NADA');
     if (esElegir) cuantos = cuantosHay(cuerpo);
-      if (esEscribir) esFortalezas = sistema.includes('lo que se le da bien');
+      cuerpoVisto = cuerpo;
   } catch (e) {}
   const esLista = esElegir || esEscribir;
 
@@ -187,9 +199,14 @@ globalThis.fetch = async (url, opciones) => {
   }
 
   await espera(120);
-  // La de elegir razona, asi que su respuesta trae delante un bloque de
-  // pensamiento y detras el texto, como hace la API de verdad. Las demas
-  // contestan con un bloque solo.
+  // Las que razonan traen delante un bloque de pensamiento y detras el texto,
+  // como hace la API de verdad. Las demas contestan con un bloque solo.
+  if (esSacar) {
+    return { ok: true, status: 200, json: async () => ({ content: [
+      { type: 'thinking', thinking: '' },
+      { type: 'text', text: losSacados },
+    ] }) };
+  }
   if (esElegir) {
     return { ok: true, status: 200, json: async () => ({ content: [
       { type: 'thinking', thinking: '' },
@@ -198,7 +215,7 @@ globalThis.fetch = async (url, opciones) => {
   }
   if (esEscribir) {
     return { ok: true, status: 200, json: async () => ({ content: [
-      { type: 'text', text: laLista(esFortalezas ? 'fortalezas' : 'desafios', esFortalezas ? 'Fortaleza' : 'Desafio') },
+      { type: 'text', text: losTextos(cuerpoVisto) },
     ] }) };
   }
   return { ok: true, status: 200, json: async () => ({ content: [
@@ -239,10 +256,10 @@ try {
 
   comprobar('la peticion no se queda colgada', !a.colgado, `${(tardo / 1000).toFixed(1)}s`);
   comprobar('el informe sale igual', a.code === 200, 'HTTP ' + a.code);
-  // Las dos listas se piden juntas, asi que si una se cuelga se vuelven a pedir
-  // las dos: 2 colgadas + 2 buenas + la que elige + las 7 areas.
+  // Si una de las que escriben se cuelga, se vuelve a pedir la tirada entera:
+  // 1 + 4 colgada + 1 + 4 buenas + la que elige + las 7 areas.
   comprobar('la colgada se corta y se vuelve a pedir',
-    llamadas === 12, `${llamadas} llamadas (2 + 2 + 1 + 7)`);
+    llamadas === 18, `${llamadas} llamadas (1+4 + 1+4+1 + 7)`);
   comprobar('ninguna llamada al modelo va sin tope de tiempo', sinSenal === 0,
     `${sinSenal} sin tope`);
 
@@ -256,8 +273,8 @@ try {
   ]);
 
   comprobar('con el tiempo justo el informe tambien sale', b.code === 200 && !b.colgado, 'HTTP ' + b.code);
-  comprobar('no se pide ni una llamada de mas por ir justo de tiempo', llamadas === 10,
-    `${llamadas} llamadas (elegir + 2 de escribir + 7 areas)`);
+  comprobar('no se pide ni una llamada de mas por ir justo de tiempo', llamadas === 13,
+    `${llamadas} llamadas (sacar + 4 de escribir + elegir + 7 areas)`);
   comprobar('el informe llega entero al cliente, con sus siete areas',
     typeof b.body?.texto === 'string' && b.body.texto.split(SEPARADOR).length === 7,
     (b.body?.texto ? b.body.texto.split(SEPARADOR).length : 0) + ' areas');
