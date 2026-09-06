@@ -1116,8 +1116,11 @@ const MOLDE_DE_LA_PARTE = {
 // escrito en el encargo: que hace, como se hace cuando todavia no le sale y
 // que pasa cuando falla. Si eso esta y cabe, esta bien.
 //
-// "queHaces" se lleva casi la mitad de la hoja porque es la orden y es por lo
-// que ha pagado; las otras tres la enmarcan.
+// "queHaces" SE LLEVA MAS DE LA MITAD DE LA HOJA. Es la orden y es por lo que
+// ha pagado, y es el unico que tiene que explicar algo entero: que hace, como
+// se hace las primeras veces cuando todavia no le sale, y como lo sostiene
+// despues. Eso no cabe en noventa palabras, asi que se le da lo que hace falta
+// y se recorta en los otros tres, que solo enmarcan.
 //
 // DE DONDE SALEN LAS CIFRAS. De la hoja, medida: una parte empieza en su
 // propia pagina y le quedan 206 mm por debajo del titulo. Los cuatro
@@ -1125,11 +1128,11 @@ const MOLDE_DE_LA_PARTE = {
 // lo que sobra son unos dieciseis renglones. A trece palabras por renglon,
 // una hoja son unas ciento noventa y cinco palabras. Eso es lo que suman
 // estos cuatro topes, y por eso suman eso.
-const PALABRAS_MAXIMAS = { tuPrueba: 45, queHaces: 90, dondeTeCaes: 35, cuandoTeCaes: 25 };
+const PALABRAS_MAXIMAS = { tuPrueba: 38, queHaces: 115, dondeTeCaes: 28, cuandoTeCaes: 20 };
 
 // Y UN SUELO MUY BAJO, solo para que ninguna se despache en una linea. No es
 // para llenar: es para que no venga vacia de contenido pareciendo entera.
-const PALABRAS_MINIMAS = { tuPrueba: 25, queHaces: 50, dondeTeCaes: 20, cuandoTeCaes: 15 };
+const PALABRAS_MINIMAS = { tuPrueba: 22, queHaces: 75, dondeTeCaes: 16, cuandoTeCaes: 12 };
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
