@@ -69,8 +69,8 @@ const ENTRE_CAJAS = 5;
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
-  const { nombre, hoja, partes } = req.body || {};
-  if (!hoja || !Array.isArray(partes) || !partes.length) {
+  const { nombre, partes } = req.body || {};
+  if (!Array.isArray(partes) || !partes.length) {
     return res.status(400).json({ error: 'Falta el documento que hay que maquetar' });
   }
 
@@ -274,34 +274,6 @@ export default async function handler(req, res) {
         if (SOBRE_BEIGE.has(punto)) caja('', parte[punto]);
         else corrido(parte[punto]);
       }
-    }
-
-    // ── LA HOJA DE RUTA ───────────────────────────────────────
-    //
-    // La ultima hoja y la que se queda a mano: por donde empieza, las siete en
-    // orden con lo que hace en cada una, y que hacer si lo deja del todo.
-    abrirSeccion('Para tener a mano', 'Tu hoja de ruta');
-
-    if (t(hoja.porDondeEmpiezas)) {
-      subtitulo('Por dónde empiezas');
-      if (t(hoja.tituloDelPrimero)) {
-        escribir(t(hoja.tituloDelPrimero), { fuente: 'bold', tam: 13, color: VERDE });
-        y += 2;
-      }
-      corrido(hoja.porDondeEmpiezas);
-    }
-
-    const elOrden = Array.isArray(hoja.elOrden) ? hoja.elOrden : [];
-    if (elOrden.length) {
-      subtitulo('El orden');
-      // Cada una en su caja: se leen sueltas, una detras de otra, y asi se ve
-      // donde acaba una y empieza la siguiente.
-      elOrden.forEach((paso, i) => caja(`${i + 1}. ${t(paso?.titulo)}`, t(paso?.queHaces)));
-    }
-
-    if (t(hoja.siLoDejas)) {
-      subtitulo('Si lo dejas del todo');
-      corrido(hoja.siLoDejas);
     }
 
     numeroDePagina();
