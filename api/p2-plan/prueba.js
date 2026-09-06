@@ -654,10 +654,13 @@ De cada una de las siete sacas siete cosas: dos que no se escriben en el documen
 
 PRIMERO LAS DOS QUE NO SE ESCRIBEN, porque son las que hacen que lo demás valga:
 
-rasgo            EL RASGO DEL QUE SALE TODO LO DEMÁS DE ESTA PARCELA, copiado
-                 tal cual de su nombre, de la lista de abajo y de ESTA parcela.
-                 Uno solo.
-                 Y NO CUALQUIERA: el que más le pesa de los de esa parcela. El
+rasgo            LA PRUEBA DE ESTA PARCELA, y de aquí sale todo lo demás de
+                 ella. Es uno de los de "LE CUESTA" de ESTA parcela, copiado
+                 tal cual de su nombre. Uno solo, y de esa lista: lo que le
+                 cuesta es lo que tiene que aprender, y por eso es de ahí de
+                 donde sale lo que le mandas hacer. Lo que se le da bien no es
+                 la prueba: es con lo que va a poder hacerla.
+                 Y NO CUALQUIERA DE LOS QUE LE CUESTAN: el que más le pesa. El
                  que, si no se mueve, deja lo demás de ahí igual por mucho que
                  haga. Si dudas entre dos, coge el que le cueste más caro hoy,
                  no el que sea más fácil de arreglar.
@@ -827,9 +830,11 @@ Nombre de pila: ${nombre}`;
   // El rasgo es de donde sale todo lo demas de esa parte. Si viene uno que no
   // esta en su lista, es que se lo ha inventado o lo ha traido de otra
   // parcela, y entonces la orden no sale de ella.
-  const suyosDe = area => [
-    ...(rasgos?.fortalezas || []), ...(rasgos?.desafios || []),
-  ].filter(r => r?.area === area).map(r => comoSeCompara(String(r.nombre || '')));
+  // SOLO LOS QUE LE CUESTAN. La prueba de una parcela es lo que ahi le cuesta,
+  // no lo que se le da bien: si sale de una fortaleza, el P2 le esta mandando
+  // hacer mas de lo que ya hace bien, y eso no la mueve de sitio.
+  const suyosDe = area => (rasgos?.desafios || [])
+    .filter(r => r?.area === area).map(r => comoSeCompara(String(r.nombre || '')));
 
   // Se acepta si es el nombre del rasgo, o si uno contiene al otro: el modelo
   // a veces copia "Le cuesta pedir" como "pedir", y eso es el mismo rasgo. Lo
@@ -842,7 +847,7 @@ Nombre de pila: ${nombre}`;
     return !!dicho && !suyosDe(cual.del_p1).some(suyo => esElMismo(suyo, dicho));
   });
   if (deFuera.length) {
-    falla.push(`estas parcelas salen de un rasgo que no es suyo: ${deFuera.map(p => `${p.area} (${p.rasgo})`).join('; ')}`);
+    falla.push(`estas parcelas no salen de algo que le cueste en esa misma parcela: ${deFuera.map(p => `${p.area} (${p.rasgo})`).join('; ')}`);
   }
 
   const porRasgo = new Map();
