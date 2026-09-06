@@ -944,11 +944,9 @@ El estudio tiene siete áreas y la carta habla de las siete. Las recorres UNA PO
 
 No empieces por la lista de aspectos. Es lo más largo que tienes delante y arrastra: se llena la lista con lo que sale de ahí y hay áreas a las que no llegas nunca. Se empieza por el área y se busca lo suyo, que a veces es un aspecto y a veces no.
 
-De qué va cada área:
-
 ${LAS_SIETE_AREAS}
 
-Y esto es lo que hay de cada una en la carta:
+Esto es lo que hay de cada área:
 
 IDENTIDAD    el Sol, el Ascendente, la casa 1
 PATRONES     el Nodo Norte, las casas 6 y 9
