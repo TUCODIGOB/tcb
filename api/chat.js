@@ -1016,6 +1016,16 @@ La posición sirvió para encontrarlo; a partir de aquí no decide nada, porque 
 
 Ojo con las áreas que en la carta miran a más de una cosa: ahí es donde el rasgo se queda pegado a la posición y acaba con una etiqueta que no habla de lo que él cuenta.
 
+Y SI UN RASGO CABE EN DOS, ESTE ES EL ORDEN. Pasa a menudo: un miedo con el dinero es un miedo y es dinero. No caben las dos, así que va a la primera de esta lista que le valga, y solo a esa:
+
+1. AMOR, si es con la pareja.
+2. HERIDA, si es de dónde le viene el dolor.
+3. DINERO, si va de dinero o de trabajo.
+4. RELACIONES, si es con otra gente: familia, amigos o compañeros.
+5. MIEDOS, si es algo que evita.
+6. PATRONES, si es algo que repite.
+7. IDENTIDAD, lo que queda: quién es.
+
 Esto se hace rasgo por rasgo y sin saltarse ninguno: es el paso que más veces sale mal.
 
 DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas, área por área, cuántas fortalezas y cuántos desafíos han quedado. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale rescatar el que acabas de quitar ni escribir una variante suya.
