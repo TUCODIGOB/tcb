@@ -1220,17 +1220,26 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
 }
 
 
-// ── LA HOJA DE RUTA, AL FINAL ───────────────────────────────
+// ── LA HOJA DE RUTA ─────────────────────────────────────────
 //
-// Es lo ultimo que se escribe y lo unico que va a mirar despues: la hoja que
-// se queda a mano cuando ya ha cerrado el documento.
+// Es lo unico que va a mirar despues: la hoja que se queda a mano cuando ya ha
+// cerrado el documento.
 //
-// LEE LAS SIETE PARTES YA ESCRITAS, no lo decidido. Es un resumen de lo que
-// pone de verdad en el documento, asi que tiene que ver el documento. Por eso
-// va al final y no en paralelo con las demas.
+// LEE LO DECIDIDO, NO LAS SIETE PARTES ESCRITAS. Antes esperaba a que las
+// siete estuvieran escritas para resumirlas, y eso ponia minuto y medio de
+// espera al final de la cola, con todo lo demas ya terminado y la clienta
+// mirando. No hacia falta: lo que esta hoja resume es lo que tiene que hacer
+// en cada parcela, y eso es exactamente la linea que se decidio al principio.
+// Quien escribe cada parte no decide nada, solo la explica, asi que la linea
+// decidida y lo que pone la parte dicen lo mismo.
 //
-// El tiempo, el mismo que el de escribir una parte: sale mas corta, pero se
-// lee las siete enteras antes de empezar y eso tambien cuesta.
+// Y ademas sale mejor: para elegir por cual empieza hay que comparar las siete
+// entre si, y siete lineas se comparan mejor que siete textos largos.
+//
+// ASI QUE VA A LA VEZ QUE LAS SIETE, no detras. Es una peticion mas de las que
+// salen juntas, y el documento entero tarda lo que tarde la mas lenta.
+//
+// El tiempo, el mismo que el de escribir una parte.
 const ESPERA_DE_LA_HOJA_MS = 170000;
 const TECHO_DE_LA_HOJA = 12000;
 
@@ -1259,7 +1268,7 @@ const MOLDE_DE_LA_HOJA = {
 
 const tituloDe = id => (AREAS.find(a => a.id === id) || {}).titulo || id;
 
-async function escribirLaHojaDeRuta({ nombre, sexo, partes }) {
+async function escribirLaHojaDeRuta({ nombre, sexo, decididas }) {
   const encargo = `${EL_P2_NO_ES_EL_P1}
 
 ${REGLAS_COMUNES}
@@ -1267,11 +1276,11 @@ ${REGLAS_COMUNES}
 
 LO QUE TE TOCA AHORA
 
-El documento ya está escrito entero y lo tienes abajo, sus siete partes. Te toca la última hoja: la hoja de ruta.
+El plan de esta persona ya está decidido y lo tienes abajo, sus siete parcelas con lo que le toca hacer en cada una. Te toca la hoja de ruta, que es la última del documento.
 
 QUÉ ES ESTA HOJA. Es la que se queda a mano cuando ya ha cerrado el documento. Tiene que entenderse sola, sin volver a leer nada, y decirle dos cosas: por dónde empieza y qué va haciendo después. Si para usarla hay que volver atrás, no sirve.
 
-NO SE ESCRIBE NADA NUEVO. Todo lo que pongas sale de lo que ya está escrito abajo. Aquí no se decide nada ni se añade ninguna idea que no esté ya en el documento.
+NO SE DECIDE NADA NUEVO. Todo lo que pongas sale de lo que ya está decidido abajo. Ni una parcela más, ni una cosa que hacer que no esté ahí: lo que escribas y lo que ella va a leer en cada parte tienen que decir lo mismo.
 
 Esto es lo que devuelves:
 
@@ -1284,18 +1293,18 @@ Por qué empieza por esa: la que, si se mueve, arrastra a las demás. Normalment
 "elOrden"
 Las ${AREAS.length}, en el orden en que le conviene ir, empezando por esa misma. De cada una:
   area       el nombre en clave, copiado tal cual de la lista de abajo.
-  queHaces   lo que tiene que hacer ahí, resumido de lo que ya pone en su
-             parte. Dos o tres frases, en claro y con verbos, para que
-             leyendo solo esto sepa qué le toca. Nada de títulos ni de
-             frases que no digan qué hace.
+  queHaces   lo que tiene que hacer ahí, dicho en corto a partir de lo que
+             ya está decidido para esa parcela. Dos o tres frases, en claro y
+             con verbos, para que leyendo solo esto sepa qué le toca. Nada de
+             títulos ni de frases que no digan qué hace.
 Van las ${AREAS.length}, ninguna se queda fuera y ninguna se repite.
 
 "siLoDejas"
 Qué hace el día que lo deja del todo, no una parte: cómo retoma el plan entero. Por dónde vuelve a entrar y qué hace primero. Y que dejarlo entraba en el plan. Cuatro o cinco frases.
 
-LAS SIETE PARTES, CON SU NOMBRE EN CLAVE:
+LAS SIETE PARCELAS, CON SU NOMBRE EN CLAVE Y LO QUE SE HA DECIDIDO EN CADA UNA:
 
-${partes.map(p => `[${p.id}] ${tituloDe(p.id)}
+${decididas.map(p => `[${p.area}] ${tituloDe(p.area)}
 SU PRUEBA: ${p.tuPrueba}
 LO QUE HACE: ${p.queHaces}
 CUÁNDO: ${p.cuando}
@@ -1306,7 +1315,7 @@ Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}
 ${REGLA_DEL_NOMBRE(false)}`;
 
-  const hay = new Set(partes.map(p => p.id));
+  const hay = new Set(decididas.map(p => p.area));
 
   const salida = await sinNombrarLaCarta({
     que: 'la hoja de ruta',
@@ -1353,11 +1362,11 @@ ${REGLA_DEL_NOMBRE(false)}`;
     elOrden.push({ area, titulo: tituloDe(area), queHaces });
   }
   // Y si se dejo alguna, va al final: mejor sin su resumen que desaparecida.
-  for (const p of partes) {
-    if (puestas.has(p.id)) continue;
-    puestas.add(p.id);
-    elOrden.push({ area: p.id, titulo: tituloDe(p.id), queHaces: '' });
-    console.warn(`[p2] la hoja de ruta venia sin la parte de ${p.id}, se pone al final`);
+  for (const p of decididas) {
+    if (puestas.has(p.area)) continue;
+    puestas.add(p.area);
+    elOrden.push({ area: p.area, titulo: tituloDe(p.area), queHaces: '' });
+    console.warn(`[p2] la hoja de ruta venia sin la parte de ${p.area}, se pone al final`);
   }
 
   const empiezaPor = hay.has(String(salida.empiezaPor || '').trim())
@@ -1387,7 +1396,8 @@ ${REGLA_DEL_NOMBRE(false)}`;
 // LA PAGINA Y SUS PETICIONES
 // ════════════════════════════════════════════════════════════════
 //
-// Cada paso es una peticion suya: la lista, el plan, cada parte y la hoja.
+// Cada paso es una peticion suya: la lista, el plan, y luego las siete
+// partes y la hoja de ruta, que salen todas juntas.
 // Asi ninguna se acerca al tiempo maximo que aguanta el servidor, y el
 // documento se ve llegar a trozos en vez de esperar a una pantalla en blanco.
 
@@ -1467,17 +1477,18 @@ export default async function handler(req, res) {
     }
 
     if (accion === 'hoja') {
-      const { nombre, sexo, partes } = req.body || {};
-      // SIN LAS SIETE ESCRITAS NO HAY HOJA DE RUTA: es un resumen de lo que
-      // pone el documento, asi que hace falta el documento.
-      if (!Array.isArray(partes) || !partes.length
-          || partes.some(p => !AREAS.some(a => a.id === p?.id) || PUNTOS.some(punto => !String(p?.[punto] || '').trim()))) {
-        return res.status(400).json({ error: 'La hoja de ruta se escribe con las partes ya escritas, y no han llegado enteras' });
+      const { nombre, sexo, decididas } = req.body || {};
+      // SIN LAS SIETE DECIDIDAS NO HAY HOJA DE RUTA: es el resumen de lo que
+      // le toca hacer en cada parcela, y si llega una a medias, esa parcela
+      // sale en la hoja con el titulo y un hueco debajo.
+      if (!Array.isArray(decididas) || !decididas.length
+          || decididas.some(p => !AREAS.some(a => a.id === p?.area) || PUNTOS.some(punto => !String(p?.[punto] || '').trim()))) {
+        return res.status(400).json({ error: 'La hoja de ruta se escribe con el plan ya decidido, y no ha llegado entero' });
       }
       const hoja = await escribirLaHojaDeRuta({
         nombre: String(nombre || 'esta persona'),
         sexo: String(sexo || ''),
-        partes,
+        decididas,
       });
       return res.status(200).json({ hoja });
     }
@@ -1622,15 +1633,20 @@ ir.addEventListener('click', async () => {
     return;
   }
 
-  // 2. Las siete partes, TODAS A LA VEZ.
+  // 2. LAS SIETE PARTES Y LA HOJA DE RUTA, TODAS A LA VEZ.
   //
   // Cada una es su propia peticion, asi que lanzarlas juntas no acerca a
   // ninguna al tiempo maximo del servidor. De una en una esto tardaba lo que
   // tardan las siete sumadas; asi tarda lo que tarde la mas lenta.
   //
+  // La hoja de ruta entra aqui y no despues: lee lo que se decidio, que ya
+  // esta, y no las siete escritas. Antes esperaba a las siete y ponia su
+  // minuto y medio al final de la cola, con la clienta esperando y el
+  // documento ya entero en la pantalla.
+  //
   // Se pintan en su hueco, en el orden del documento, y no segun van llegando:
   // el sitio se reserva antes y cada una cae en el suyo.
-  aviso.textContent = 'Escribiendo las ' + plan.partes.length + ' partes a la vez…';
+  aviso.textContent = 'Escribiendo las ' + plan.partes.length + ' partes y la hoja de ruta, todo a la vez…';
   const huecos = plan.partes.map((decidido, i) => {
     const hueco = document.createElement('div');
     hueco.className = 'parte';
@@ -1640,34 +1656,38 @@ ir.addEventListener('click', async () => {
     return hueco;
   });
 
-  const escritas = [];
-  await Promise.all(plan.partes.map(async (decidido, i) => {
-    try {
-      const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo, decidido });
-      escritas[i] = parte;
-      huecos[i].outerHTML = pintarParte(parte, i+1);
-    } catch (e) {
-      huecos[i].innerHTML = '<p class="cual">' + (i+1) + ' · ' + escapar(NOMBRES[decidido.area] || '') +
-        '</p><p class="error">' + escapar(e.message) + '</p>';
-    }
-  }));
+  // Y su hueco al final, que es donde va la hoja de ruta en el documento
+  // aunque se escriba a la vez que las demas.
+  const huecoHoja = document.createElement('div');
+  huecoHoja.className = 'parte aparte';
+  huecoHoja.innerHTML = '<p class="cual">Para tener a mano</p><p class="aviso">Escribiéndose…</p>';
+  salida.appendChild(huecoHoja);
 
-  // 3. Y al final, la hoja de ruta, que lee las siete ya escritas.
-  const completas = escritas.filter(Boolean);
+  const escritas = [];
   let hoja = null;
-  if (completas.length === plan.partes.length) {
-    aviso.textContent = 'Escribiendo la hoja de ruta…';
-    const hueco = document.createElement('div');
-    hueco.className = 'parte aparte';
-    hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="aviso">Escribiéndose…</p>';
-    salida.appendChild(hueco);
-    try {
-      hoja = (await llamar({ accion:'hoja', nombre:quienEs.nombre, sexo:quienEs.sexo, partes:completas })).hoja;
-      hueco.outerHTML = pintarHoja(hoja);
-    } catch (e) {
-      hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="error">' + escapar(e.message) + '</p>';
-    }
-  }
+
+  await Promise.all([
+    ...plan.partes.map(async (decidido, i) => {
+      try {
+        const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo, decidido });
+        escritas[i] = parte;
+        huecos[i].outerHTML = pintarParte(parte, i+1);
+      } catch (e) {
+        huecos[i].innerHTML = '<p class="cual">' + (i+1) + ' · ' + escapar(NOMBRES[decidido.area] || '') +
+          '</p><p class="error">' + escapar(e.message) + '</p>';
+      }
+    }),
+    (async () => {
+      try {
+        hoja = (await llamar({ accion:'hoja', nombre:quienEs.nombre, sexo:quienEs.sexo, decididas:plan.partes })).hoja;
+        huecoHoja.outerHTML = pintarHoja(hoja);
+      } catch (e) {
+        huecoHoja.innerHTML = '<p class="cual">Para tener a mano</p><p class="error">' + escapar(e.message) + '</p>';
+      }
+    })(),
+  ]);
+
+  const completas = escritas.filter(Boolean);
 
   // EL PDF SOLO SE OFRECE SI ESTA TODO. Con una parte caida saldria un
   // documento con un agujero dentro, y eso no se le ensena a nadie.
