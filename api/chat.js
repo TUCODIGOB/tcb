@@ -270,7 +270,7 @@ ESCRIBE CADA FRASE YA BIEN A LA PRIMERA. No escribas el área y la arregles desp
   const AREAS = [
     {
       id: 1,
-      prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: ${DE_QUE_VA_CADA_AREA.IDENTIDAD}.
+      prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: ${DE_QUE_VA_CADA_AREA.IDENTIDAD}
 
 Esta área abre el estudio, así que empieza con una entrada de dos o tres frases que la sitúen antes de entrar en materia, como se abre un libro. Suave, sin prisa y sin adelantar lo que viene. Solo el área 1 lleva esa entrada.
 
@@ -298,7 +298,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     },
     {
       id: 2,
-      prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: ${DE_QUE_VA_CADA_AREA.PATRONES}.
+      prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: ${DE_QUE_VA_CADA_AREA.PATRONES}
 
 EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cuáles son sus patrones: los que de verdad le gobiernan la vida, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera.
@@ -324,7 +324,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     },
     {
       id: 3,
-      prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: ${DE_QUE_VA_CADA_AREA.MIEDOS}.
+      prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: ${DE_QUE_VA_CADA_AREA.MIEDOS}
 
 EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cuál es el miedo que gobierna su vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que nombraría si le preguntaras, y de qué tiene miedo en el fondo cuando tiene miedo de eso.
@@ -348,7 +348,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     },
     {
       id: 4,
-      prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: ${DE_QUE_VA_CADA_AREA.HERIDA}.
+      prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: ${DE_QUE_VA_CADA_AREA.HERIDA}
 
 EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cuál es la herida y qué la reabre hoy: qué le duele por dentro y qué le sigue faltando desde siempre, y las situaciones concretas de su vida de ahora que la vuelven a tocar.
@@ -372,7 +372,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     },
     {
       id: 5,
-      prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: ${DE_QUE_VA_CADA_AREA.AMOR}.
+      prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: ${DE_QUE_VA_CADA_AREA.AMOR}
 
 EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cómo es en el amor: cómo se comporta cuando quiere a alguien de verdad, cómo lo demuestra, cuánto se entrega y cuánto se guarda, y qué le pasa con el deseo y con la intimidad.
@@ -398,7 +398,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     },
     {
       id: 6,
-      prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: ${DE_QUE_VA_CADA_AREA.RELACIONES}.
+      prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: ${DE_QUE_VA_CADA_AREA.RELACIONES}
 
 EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
 Qué papel ocupa siempre sin decidirlo: el sitio que acaba ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darse cuenta de que lo ocupa.
@@ -422,7 +422,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     },
     {
       id: 7,
-      prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: ${DE_QUE_VA_CADA_AREA.DINERO}.
+      prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: ${DE_QUE_VA_CADA_AREA.DINERO}
 
 EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Qué significa el dinero para esa persona y qué le mueve a ganarlo: qué representa de verdad en su cabeza, más allá de los números, y qué es lo que la empuja a querer más o a conformarse.
@@ -622,17 +622,31 @@ const NOMBRES_DE_AREA = ['IDENTIDAD', 'PATRONES', 'MIEDOS', 'HERIDA', 'AMOR', 'R
 // estudio. Antes cada sitio lo decia a su manera y no todos lo decian, asi que
 // un mismo tema podia acabar en dos areas y la clienta lo leia dos veces.
 const DE_QUE_VA_CADA_AREA = {
-  IDENTIDAD:  'quién es, su carácter, su naturaleza, la imagen que proyecta y cómo la perciben los demás',
-  PATRONES:   'su día a día, su rutina, sus hábitos automáticos, lo que repite sin darse cuenta',
-  MIEDOS:     'lo que evita sin nombrarlo, sus bloqueos, a qué no se atreve',
-  HERIDA:     'de dónde viene su dolor, el origen, qué se rompió en su momento',
-  AMOR:       'pareja, romance, deseo, lo que disfruta con alguien en el plano romántico',
-  RELACIONES: 'familia, amigos, compañeros, todo vínculo que no sea pareja',
-  DINERO:     'dinero y trabajo, lo que gana, lo que cree que vale, su carrera, hacia dónde va profesionalmente',
+  IDENTIDAD:  'Quién es, su carácter, su naturaleza, la imagen que proyecta y cómo la perciben los demás.',
+  PATRONES:   'Su día a día, su rutina, sus hábitos automáticos, lo que repite sin darse cuenta.',
+  MIEDOS:     'Lo que evita sin nombrarlo, sus bloqueos, a qué no se atreve.',
+  HERIDA:     'De dónde viene su dolor, el origen, qué se rompió en su momento.',
+  AMOR:       'Pareja, romance, deseo, lo que disfruta con alguien en el plano romántico.',
+  RELACIONES: 'Familia, amigos, compañeros — todo vínculo que no sea pareja.',
+  DINERO:     'Dinero y trabajo, lo que gana, lo que cree que vale, su carrera, hacia dónde va profesionalmente.',
 };
 
 const LAS_SIETE_AREAS = NOMBRES_DE_AREA
   .map(a => `${a.padEnd(12)} ${DE_QUE_VA_CADA_AREA[a]}`).join('\n');
+
+// Y CUANDO UN RASGO CABE EN DOS, ESTE ES EL ORDEN EN QUE SE DECIDE.
+//
+// Las siete no son del mismo tipo: Amor, Relaciones y Dinero son sitios de su
+// vida, y Miedos y Patrones son maneras de funcionar que pueden pasar en
+// cualquiera de esos sitios. Por eso un miedo con el dinero cabe en dos de
+// verdad, y ninguna definicion lo resuelve: hace falta decir cual gana.
+//
+// Primero los sitios, despues las maneras, y al final Identidad, que recoge lo
+// que no es de ningun sitio concreto.
+const EL_ORDEN_DE_LAS_AREAS = ['AMOR', 'HERIDA', 'DINERO', 'RELACIONES', 'MIEDOS', 'PATRONES', 'IDENTIDAD'];
+
+const LAS_SIETE_POR_ORDEN = EL_ORDEN_DE_LAS_AREAS
+  .map((a, i) => `${i + 1}. ${a}: ${DE_QUE_VA_CADA_AREA[a]}`).join('\n');
 
 // CUANTOS RASGOS LLEVA CADA AREA, arriba y abajo.
 //
@@ -1018,13 +1032,7 @@ Ojo con las áreas que en la carta miran a más de una cosa: ahí es donde el ra
 
 Y SI UN RASGO CABE EN DOS, ESTE ES EL ORDEN. Pasa a menudo: un miedo con el dinero es un miedo y es dinero. No caben las dos, así que va a la primera de esta lista que le valga, y solo a esa:
 
-1. AMOR, si es con la pareja.
-2. HERIDA, si es de dónde le viene el dolor.
-3. DINERO, si va de dinero o de trabajo.
-4. RELACIONES, si es con otra gente: familia, amigos o compañeros.
-5. MIEDOS, si es algo que evita.
-6. PATRONES, si es algo que repite.
-7. IDENTIDAD, lo que queda: quién es.
+${LAS_SIETE_POR_ORDEN}
 
 Esto se hace rasgo por rasgo y sin saltarse ninguno: es el paso que más veces sale mal.
 
