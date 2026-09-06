@@ -599,7 +599,7 @@ Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene
 
 La lista de abajo viene tal cual, y trae cosas que sobran. Antes de decidir nada, la limpias:
 
-FUERA LOS REPETIDOS Y LOS QUE HABLAN DE LO MISMO. Es lo primero y lo más importante. Están escritos con palabras muy distintas y aun así dicen lo mismo por debajo: uno dice que le cuesta pedir ayuda y otro que aguanta sola hasta que revienta. Eso es una sola cosa. Léelos por lo que le pasa a ella, no por cómo están escritos, y si dos acaban en la misma conducta se quedan en uno.
+FUERA LOS REPETIDOS Y LOS QUE HABLAN DE LO MISMO. Es lo primero y lo más importante. Vienen escritos con palabras muy distintas y aun así dicen lo mismo por debajo, porque quien los escribió los sacó de sitios distintos sin compararlos entre sí. Así que no los leas por cómo están escritos, léelos por lo que le pasa a esta persona: si dos acaban en la misma conducta, son uno y se quedan en uno.
 
 FUERA LOS QUE NO DAN PARA UN CAMBIO. Si de uno no sale nada que ella pueda ponerse a hacer, no entra en el plan por mucho que sea cierto. Este documento es lo que hace, no lo que le pasa.
 
@@ -648,17 +648,17 @@ queHaces         UNA SOLA COSA que tiene que hacer. Una, no dos ni tres. Es lo
                  lo hace.
 
 dondeTeCaes      Dónde se va a caer intentándolo: lo que va a aparecer para
-                 frenarla, o el fallo que va a cometer porque parece que va
-                 más deprisa y la deja peor. El que le pega a ESTA persona con
+                 frenar a quien lee, o el fallo que va a cometer porque parece
+                 que así va más deprisa y le deja peor. El que le pega a ESTA persona con
                  ESTA orden, no uno que le valdría a cualquiera.
 
-cuandoTeCaes     Qué hace el día que lo deja. No es animarla: es el paso
-                 concreto para volver, y que dejarlo entraba en el plan.
+cuandoTeCaes     Qué hace el día que lo deja. No es animar a nadie: es el
+                 paso concreto para volver, y que dejarlo entraba en el plan.
 
 
 3. LO QUE NO SE PUEDE ESCRIBIR
 
-NO SE INVENTA NADA DE SU VIDA. Lo que sabes de ella es lo que hay abajo y nada más. No sabes si tiene pareja, trabajo, hijos, casa o familia: no los nombres, no los supongas y no los uses para montar nada. Lo que decidas tiene que servirle igual viva como viva.
+NO SE INVENTA NADA DE SU VIDA. Lo que sabes de ella es lo que hay abajo y nada más. No sabes si tiene pareja, trabajo, hijos, casa o familia: no los nombres, no los supongas y no los uses para montar nada. Lo que decidas tiene que servirle igual sea cual sea su vida.
 
 Y NO HACE FALTA SABERLO, porque lo que decides no va sobre su vida, va sobre su conducta, y esa la tienes entera abajo. No es "habla con quien sea": es qué hace cuando le pasa lo que le pasa siempre. Eso es suyo, y solo suyo, sin saber nada más.
 
@@ -1116,8 +1116,11 @@ const MOLDE_DE_LA_PARTE = {
 // escrito en el encargo: que hace, como se hace cuando todavia no le sale y
 // que pasa cuando falla. Si eso esta y cabe, esta bien.
 //
-// "queHaces" se lleva casi la mitad de la hoja porque es la orden y es por lo
-// que ha pagado; las otras tres la enmarcan.
+// "queHaces" SE LLEVA MAS DE LA MITAD DE LA HOJA. Es la orden y es por lo que
+// ha pagado, y es el unico que tiene que explicar algo entero: que hace, como
+// se hace las primeras veces cuando todavia no le sale, y como lo sostiene
+// despues. Eso no cabe en noventa palabras, asi que se le da lo que hace falta
+// y se recorta en los otros tres, que solo enmarcan.
 //
 // DE DONDE SALEN LAS CIFRAS. De la hoja, medida: una parte empieza en su
 // propia pagina y le quedan 206 mm por debajo del titulo. Los cuatro
@@ -1125,11 +1128,11 @@ const MOLDE_DE_LA_PARTE = {
 // lo que sobra son unos dieciseis renglones. A trece palabras por renglon,
 // una hoja son unas ciento noventa y cinco palabras. Eso es lo que suman
 // estos cuatro topes, y por eso suman eso.
-const PALABRAS_MAXIMAS = { tuPrueba: 45, queHaces: 90, dondeTeCaes: 35, cuandoTeCaes: 25 };
+const PALABRAS_MAXIMAS = { tuPrueba: 38, queHaces: 115, dondeTeCaes: 28, cuandoTeCaes: 20 };
 
 // Y UN SUELO MUY BAJO, solo para que ninguna se despache en una linea. No es
 // para llenar: es para que no venga vacia de contenido pareciendo entera.
-const PALABRAS_MINIMAS = { tuPrueba: 25, queHaces: 50, dondeTeCaes: 20, cuandoTeCaes: 15 };
+const PALABRAS_MINIMAS = { tuPrueba: 22, queHaces: 75, dondeTeCaes: 16, cuandoTeCaes: 12 };
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
@@ -1161,13 +1164,13 @@ CADA UNA DE LAS CUATRO ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos d
 LAS CUATRO, Y LO QUE VA EN CADA UNA:
 
 "tuPrueba"
-Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a ella, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Como mucho ${PALABRAS_MAXIMAS.tuPrueba} palabras. Si te sobran, mejor.
+Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Como mucho ${PALABRAS_MAXIMAS.tuPrueba} palabras. Si te sobran, mejor.
 
 "queHaces"
 Es la más larga de las cuatro y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Como mucho ${PALABRAS_MAXIMAS.queHaces} palabras, que es casi media hoja y de sobra si no das rodeos.
 
 "dondeTeCaes"
-Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarla o lo que va a hacer mal creyendo que va más deprisa. Y que eso llega siempre y es señal de que va, no de que se esté equivocando. Y qué hace justo ahí. Como mucho ${PALABRAS_MAXIMAS.dondeTeCaes} palabras.
+Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Y qué hace justo ahí. Como mucho ${PALABRAS_MAXIMAS.dondeTeCaes} palabras.
 
 "cuandoTeCaes"
 Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Como mucho ${PALABRAS_MAXIMAS.cuandoTeCaes} palabras.
