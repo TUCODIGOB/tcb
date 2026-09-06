@@ -1067,26 +1067,31 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 // Estas llamadas NO deciden nada: reciben lo que salio del paso anterior y lo
 // convierten en el texto que ella va a leer, con el tono de la marca.
 //
-// PERO SI PIENSAN, Y POCO. No para decidir, que eso ya esta hecho, sino para
-// releerse antes de entregar. La regla que mas se saltaban -leerla por dentro
-// y, si nadie la diria hablando, reescribirla- es justo la que no se puede
-// cumplir sin pararse a comprobarla.
+// Y NO PIENSAN. Aqui no hay nada que decidir ni que comparar: las cinco cosas
+// vienen decididas y lo unico que se hace es abrirlas hasta que se entiendan.
 //
-// El esfuerzo, bajo: aqui no hay nada que comparar ni que elegir, solo repasar
-// lo que se acaba de escribir. Y el techo sube, porque pensar sale del mismo
-// presupuesto que escribir y con el de antes la respuesta llegaria cortada.
+// Pensar sale del MISMO presupuesto que escribir, asi que encendido se gasta
+// en pensar lo que tenia que salir en el texto, y sobre todo se gasta EL
+// RELOJ, que lo tiene la clienta esperando delante. Estas siete son las que
+// mas escriben del documento, y son siete a la vez: es aqui donde se va el
+// tiempo, no en la que decide.
+//
+// Se probo con esfuerzo medio y lo unico que aportaba era releerse. Eso no
+// vale lo que cuesta: lo que hace que el texto salga bien es lo que se le
+// pide, y las redes de aqui abajo lo comprueban despues sin gastar reloj.
 //
 // CADA UNA VE SOLO SU PARTE. No hace falta que vea las demas: el paso que
 // piensa ya se encargo de que no se repitan.
 
 // LO QUE SE LE DA A CADA INTENTO.
 //
-// Escribir una parte son cinco casillas y trescientas y pico palabras, y es la
-// respuesta mas larga que se pide. Con 120 segundos se corto una de verdad, y
-// con 65 -medidos cuando eran cuatro casillas y doscientas sesenta- se cortaba
-// siempre.
+// Escribir una parte son cinco casillas y seiscientas y pico palabras, y es la
+// respuesta mas larga que se pide. Medido cuando ademas pensaba: con 65
+// segundos se cortaba siempre y con 120 se corto una de verdad. Sin pensar
+// tarda bastante menos, pero el tope se deja holgado igual: no cuesta nada
+// tenerlo de sobra y una tirada lenta no se puede quedar sin su parte.
 //
-// Ahora 170. Dos intentos de 170 no caben en los 300 segundos que aguanta esta
+// 170. Dos intentos de 170 no caben en los 300 segundos que aguanta esta
 // peticion, y por eso el segundo no pide otros 170: pide lo que sobre del
 // primero (loQueQueda), y si no sobra ni para medio intento no se pide.
 const ESPERA_DE_ESCRIBIR_MS = 170000;
@@ -1204,7 +1209,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
     pedir: (recordatorio, cuanto) => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
-      piensa: 'medium',
+      piensa: '',
       techo: TECHO_DE_ESCRIBIR,
       system: encargo,
       mensaje: `Escribe las cinco partes de esta parcela, enteras.${recordatorio}`,
@@ -1327,7 +1332,10 @@ ${REGLA_DEL_NOMBRE(false)}`;
     pedir: (recordatorio, cuanto) => alModelo({
       que: 'escribir la hoja de ruta',
       modelo: 'claude-sonnet-5',
-      piensa: 'medium',
+      // Lo unico que decide es por cual empieza, y para eso hay que comparar
+      // las siete. Pero es UNA eleccion, no siete: con el esfuerzo bajo llega,
+      // y va la ultima, con la clienta esperando ya solo por ella.
+      piensa: 'low',
       techo: TECHO_DE_LA_HOJA,
       system: encargo,
       mensaje: `Escribe la hoja de ruta, siguiendo el esquema.${recordatorio}`,
@@ -1610,7 +1618,7 @@ ir.addEventListener('click', async () => {
 
   // 1. La llamada que piensa y decide el documento entero.
   let plan;
-  aviso.textContent = 'Decidiendo su plan… (es la parte que piensa: un par de minutos)';
+  aviso.textContent = 'Decidiendo su plan… (es la única parte que piensa, y es la que más tarda)';
   try {
     const r = await llamar({ accion:'plan', compra });
     plan = r.plan;
