@@ -1052,7 +1052,7 @@ Nombre de pila: ${nombrePila}`;
 
   const salida = await alModelo({
     que: 'elegir los rasgos',
-    modelo: 'claude-opus-5',
+    modelo: 'claude-sonnet-5',
     // PENSANDO, y esta es la unica del informe que lo hace. Es todo el cambio:
     // sin esto no puede comparar, y sin comparar salen los repetidos y las
     // etiquetas cambiadas de sitio.
