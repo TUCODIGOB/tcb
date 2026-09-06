@@ -253,18 +253,18 @@ export default async function handler(req, res) {
     // Cada una en su hoja, con sus cinco puntos y el nombre de cada uno: sin
     // ellos quien lee no sabe de que le habla cada trozo, ni puede volver a
     // buscar uno el dia que le haga falta.
-    const PUNTOS = ['tuPrueba', 'queHaces', 'cuando', 'dondeTeCaes', 'cuandoTeCaes'];
+    const PUNTOS = ['tuPrueba', 'queHaces', 'dondeTeCaes', 'cuandoTeCaes'];
     const PORDEFECTO = {
-      tuPrueba: 'Tu prueba', queHaces: 'Qué haces', cuando: 'Cuándo',
+      tuPrueba: 'Tu prueba', queHaces: 'Qué haces',
       dondeTeCaes: 'Dónde te vas a caer', cuandoTeCaes: 'Cuando te caigas',
     };
 
-    // LOS DOS QUE VAN SOBRE BEIGE. Son las órdenes: lo que hace y por qué señal
-    // sabe que le toca. Es lo que va a volver a buscar cuando ya haya leído el
-    // documento entero, y lo que tiene que encontrar pasando páginas sin
-    // ponerse a leer. Los otros tres se leen una vez y van en texto corrido:
-    // si todo lleva fondo, el fondo deja de señalar nada.
-    const SOBRE_BEIGE = new Set(['queHaces', 'cuando']);
+    // EL QUE VA SOBRE BEIGE. Es la orden: lo que tiene que hacer. Es lo que va
+    // a volver a buscar cuando ya haya leído el documento entero, y lo que
+    // tiene que encontrar pasando páginas sin ponerse a leer. Los otros tres
+    // se leen una vez y van en texto corrido: si todo lleva fondo, el fondo
+    // deja de señalar nada.
+    const SOBRE_BEIGE = new Set(['queHaces']);
 
     for (const parte of partes) {
       abrirSeccion(parte?.etiqueta, t(parte?.titulo));

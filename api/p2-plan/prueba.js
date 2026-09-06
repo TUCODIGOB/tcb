@@ -16,15 +16,15 @@
 // ── COMO ESTA HECHO ─────────────────────────────────────────
 //
 //   UNA LLAMADA DECIDE, PENSANDO. Recibe los rasgos del P1 de las siete areas
-//   y decide en corto los cinco puntos de cada una. Siete cosas distintas,
+//   y decide en corto los cuatro puntos de cada una. Siete cosas distintas,
 //   ninguna idea repetida entre ellas. No escribe ni una linea del documento.
 //   Es la unica que va con Opus: de lo que decida aqui cuelga el documento
 //   entero, y es el unico sitio donde hay que comparar siete cosas a la vez
 //   para que no se parezcan.
 //
-//   SIETE ESCRIBEN, A LA VEZ. Cada una recibe solo las cinco lineas de su
-//   parte, y nada mas. No deciden: explican y amplian esas cinco lineas hasta
-//   que se entiendan a la primera.
+//   SIETE ESCRIBEN, A LA VEZ. Cada una recibe solo las cuatro lineas de su
+//   parte, y nada mas. No deciden: abren esas cuatro lineas hasta que se
+//   entiendan a la primera, y sin pasarse de una hoja.
 //
 //   Y UNA AL FINAL ESCRIBE LA HOJA DE RUTA, leyendo las siete partes ya
 //   escritas. Va la ultima porque es un resumen de lo que pone el documento,
@@ -37,13 +37,13 @@
 //
 // ── QUE LLEVA EL DOCUMENTO ──────────────────────────────────
 //
-//   LAS SIETE PARTES, todas iguales, cada una con cinco cosas:
+//   LAS SIETE PARTES, todas iguales, cada una con cuatro cosas y cada una en
+//   UNA HOJA, que es todo lo que ocupa una parcela:
 //     1. Tu prueba: que le pone la vida delante ahi, y en quien se convierte
 //        el dia que lo supere.
 //     2. Que haces: la unica cosa que tiene que hacer ahi, contada entera.
-//     3. Cuando: la senal por la que sabe que le toca.
-//     4. Donde te vas a caer: avisado antes de que le pase.
-//     5. Cuando te caigas: el paso para volver.
+//     3. Donde te vas a caer: avisado antes de que le pase.
+//     4. Cuando te caigas: el paso para volver.
 //
 //   LO QUE LE CUESTA ES SU PRUEBA, NO SU DEFECTO. Es de donde sale todo: el
 //   P1 le conto lo que le pesa, y el P2 le da la vuelta y lo convierte en lo
@@ -216,7 +216,7 @@ const AREAS = [
     deQueVa: 'el dinero, el trabajo y lo que vale lo suyo' },
 ];
 
-// LOS CINCO NOMBRES QUE VE DENTRO DE CADA PARTE, escritos aqui por lo mismo
+// LOS CUATRO NOMBRES QUE VE DENTRO DE CADA PARTE, escritos aqui por lo mismo
 // que los titulos.
 //
 // Antes todo iba en un bloque de texto sin nombre: dentro habia varias cosas y
@@ -225,17 +225,16 @@ const AREAS = [
 // documento de veinte hojas de texto seguido cansa la vista, y estos son los
 // sitios donde el ojo para y descansa.
 //
-// Los cinco llevan nombre, tambien el primero: si uno entra sin etiqueta, la
-// parte arranca con un texto suelto y el molde de las cinco no se ve.
+// Los cuatro llevan nombre, tambien el primero: si uno entra sin etiqueta, la
+// parte arranca con un texto suelto y el molde de las cuatro no se ve.
 //
 // VAN EN ESTE ORDEN, que es el de lo que le pasa: primero para que es esto y
-// adonde le lleva, luego lo unico que tiene que hacer, luego por que senal
-// sabe que le toca hacerlo, y al final las dos que le hacen falta el dia que
-// falle, que es el dia en que la gente deja los planes.
+// adonde le lleva, luego lo unico que tiene que hacer, y al final las dos que
+// le hacen falta el dia que falle, que es el dia en que la gente deja los
+// planes.
 const BLOQUES = {
   tuPrueba:     'Tu prueba',
   queHaces:     'Qué haces',
-  cuando:       'Cuándo',
   dondeTeCaes:  'Dónde te vas a caer',
   cuandoTeCaes: 'Cuando te caigas',
 };
@@ -542,7 +541,7 @@ function susRasgos(rasgos) {
 // releerse.
 //
 // Recibe sus rasgos de las siete partes de golpe y decide el documento entero
-// en corto: los cinco puntos de cada una de las siete. Ni el orden ni por cual
+// en corto: los cuatro puntos de cada una de las siete. Ni el orden ni por cual
 // empieza salen de aqui -eso lo saca la hoja de ruta al final, leyendo lo que
 // de verdad se ha escrito-, y no escribe ni una linea de lo que ella va a leer.
 //
@@ -603,7 +602,6 @@ const MOLDE_DEL_PLAN = {
           movimiento:   { type: 'string' },
           tuPrueba:     { type: 'string' },
           queHaces:     { type: 'string' },
-          cuando:       { type: 'string' },
           dondeTeCaes:  { type: 'string' },
           cuandoTeCaes: { type: 'string' },
         },
@@ -650,7 +648,7 @@ Y ojo, porque esto pasa de verdad: una persona tiene una manera de funcionar que
 
 3. QUÉ DECIDES DE CADA PARTE
 
-De cada una de las siete sacas siete cosas: dos que no se escriben en el documento y sirven para elegir bien, y las cinco que sí. Todas en una línea, y ninguna se queda vacía. La línea va escrita para que quien la lea después la entienda entera sin preguntar nada: no es un título, es la cosa dicha en corto.
+De cada una de las siete sacas seis cosas: dos que no se escriben en el documento y sirven para elegir bien, y las cuatro que sí. Todas en una línea, y ninguna se queda vacía. La línea va escrita para que quien la lea después la entienda entera sin preguntar nada: no es un título, es la cosa dicha en corto.
 
 PRIMERO LAS DOS QUE NO SE ESCRIBEN, porque son las que hacen que lo demás valga:
 
@@ -681,7 +679,7 @@ movimiento       QUÉ LE ESTÁS PIDIENDO HACER, EN UNA PALABRA. Un verbo en
                  entonces ella lee siete cosas y en realidad hace dos. Por eso
                  se nombra: para que lo veas tú antes de darlo por bueno.
 
-Y AHORA LAS CINCO QUE SÍ SE ESCRIBEN. Las cinco salen del rasgo que acabas de elegir, y ninguna se va por otro lado:
+Y AHORA LAS CUATRO QUE SÍ SE ESCRIBEN. Las cuatro salen del rasgo que acabas de elegir, y ninguna se va por otro lado:
 
 tuPrueba         Qué le pone la vida delante en esta parcela, sacado de lo que
                  ahí le cuesta, y en quién se convierte el día que lo supere.
@@ -689,7 +687,7 @@ tuPrueba         Qué le pone la vida delante en esta parcela, sacado de lo que
                  que hay que corregir. Y de esta parcela, no de su vida entera.
 
 queHaces         UNA SOLA COSA que tiene que hacer en esta parcela. Una, no dos
-                 ni tres. Es lo más importante de las cinco y por lo que ha
+                 ni tres. Es lo más importante de las cuatro y por lo que ha
                  pagado, y es una porque nadie cambia siete cosas a la vez: si
                  le pones tres por parcela acaba con veintiuna delante y no
                  hace ninguna.
@@ -704,12 +702,6 @@ queHaces         UNA SOLA COSA que tiene que hacer en esta parcela. Una, no dos
                  Y ESA COSA ES DE ESTA PARCELA Y DE NINGUNA OTRA. Las siete son
                  siete cosas distintas de verdad: no la misma conducta puesta
                  en siete sitios con otras palabras.
-
-cuando           Por qué señal sabe que le toca hacerlo. Es lo que convierte
-                 una buena idea en algo que de verdad hace, y por eso no vale
-                 una hora ni un día de la semana, que se los salta: es algo que
-                 va a notar por dentro o que va a verse haciendo, y que ocurre
-                 justo antes de lo de siempre. Sale de lo que ahí le cuesta.
 
 dondeTeCaes      Dónde se va a caer intentándolo: lo que va a aparecer para
                  frenarla, o el fallo que va a cometer porque parece que va
@@ -737,7 +729,7 @@ Y nada técnico: ni planetas, ni signos, ni casas. Quien lo lee no ve la carta.
 
 Con las siete delante:
 
-PRIMERO, QUE LAS SIETE ESTÉN Y ENTERAS. Las ${AREAS.length}, cada una con sus cinco cosas y ninguna resuelta de pasada.
+PRIMERO, QUE LAS SIETE ESTÉN Y ENTERAS. Las ${AREAS.length}, cada una con sus cuatro cosas y ninguna resuelta de pasada.
 
 DESPUÉS, LOS SIETE MOVIMIENTOS SEGUIDOS. Léelos en fila. Si dos son el mismo verbo, o dos verbos que significan lo mismo, esa parcela vuelve a su lista de rasgos y coge otro rasgo, y de ahí sale otra orden con otro movimiento. No se arregla cambiándole las palabras a la orden: se arregla cambiando lo que le pides hacer.
 
@@ -1177,7 +1169,7 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 // Estas llamadas NO deciden nada: reciben lo que salio del paso anterior y lo
 // convierten en el texto que ella va a leer, con el tono de la marca.
 //
-// Y NO PIENSAN. Aqui no hay nada que decidir ni que comparar: las cinco cosas
+// Y NO PIENSAN. Aqui no hay nada que decidir ni que comparar: las cuatro cosas
 // vienen decididas y lo unico que se hace es abrirlas hasta que se entiendan.
 //
 // Pensar sale del MISMO presupuesto que escribir, asi que encendido se gasta
@@ -1195,8 +1187,8 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 
 // LO QUE SE LE DA A CADA INTENTO.
 //
-// Escribir una parte son cinco casillas y seiscientas y pico palabras, y es la
-// respuesta mas larga que se pide. Medido cuando ademas pensaba: con 65
+// Escribir una parte son cuatro casillas y unas trescientas palabras -una
+// hoja-, y es la respuesta mas larga que se pide. Medido cuando ademas pensaba: con 65
 // segundos se cortaba siempre y con 120 se corto una de verdad. Sin pensar
 // tarda bastante menos, pero el tope se deja holgado igual: no cuesta nada
 // tenerlo de sobra y una tirada lenta no se puede quedar sin su parte.
@@ -1212,7 +1204,6 @@ const MOLDE_DE_LA_PARTE = {
   properties: {
     tuPrueba:     { type: 'string' },
     queHaces:     { type: 'string' },
-    cuando:       { type: 'string' },
     dondeTeCaes:  { type: 'string' },
     cuandoTeCaes: { type: 'string' },
   },
@@ -1220,21 +1211,41 @@ const MOLDE_DE_LA_PARTE = {
   additionalProperties: false,
 };
 
-// Lo minimo que ocupa cada punto para estar contado y no despachado. No es por
-// llenar: explicarle bien algo no cabe en tres frases, y el que escribe tiende
-// a resumir la linea que le dan en vez de abrirla.
-const PALABRAS_MINIMAS = { tuPrueba: 120, queHaces: 220, cuando: 70, dondeTeCaes: 110, cuandoTeCaes: 90 };
+// LO QUE PUEDE OCUPAR CADA PUNTO COMO MUCHO. Cada parcela cabe en una hoja, y
+// estas cuatro cifras son esa hoja repartida.
+//
+// SON TOPES, NO CUOTAS, Y ESA ES LA DIFERENCIA. Antes habia minimos y era lo
+// que estropeaba el documento: pedirle doscientas veinte palabras para UNA
+// orden es pedirle que rellene, porque no tiene doscientas veinte palabras que
+// decir, y entonces da vueltas, repite lo dicho con otras palabras y quien lee
+// se cansa antes de llegar a lo que importa.
+//
+// Un tope hace lo contrario: le obliga a quedarse con lo que de verdad hace
+// falta. Si lo dice en la mitad, mejor, y no se le pide nada mas.
+//
+// LO QUE MANDA NO ES LA CIFRA, es lo que tiene que haber dentro, y eso esta
+// escrito en el encargo: que hace, como se hace cuando todavia no le sale y
+// que pasa cuando falla. Si eso esta y cabe, esta bien.
+//
+// "queHaces" se lleva casi la mitad de la hoja porque es la orden y es por lo
+// que ha pagado; las otras tres la enmarcan.
+//
+// DE DONDE SALEN LAS CIFRAS. De la hoja, medida: una parcela empieza en su
+// propia pagina y le quedan 206 mm por debajo del titulo. Los cuatro
+// subtitulos se llevan 64, el aire entre parrafos y la caja beige otros 35, y
+// lo que sobra son unos dieciseis renglones. A trece palabras por renglon,
+// una hoja son unas ciento noventa y cinco palabras. Eso es lo que suman
+// estos cuatro topes, y por eso suman eso.
+const PALABRAS_MAXIMAS = { tuPrueba: 45, queHaces: 90, dondeTeCaes: 35, cuandoTeCaes: 25 };
 
-// Y "cuando" tambien tiene tope por arriba, que es el unico que lo lleva. Es
-// la senal, y es lo unico del documento que se mira de pasada: si se estira
-// deja de reconocerse en el momento, que es para lo unico que sirve. Al
-// escribir tiende a irse, porque al modelo se le pide siempre que cuente mas.
-const PALABRAS_MAXIMAS = { cuando: 170 };
+// Y UN SUELO MUY BAJO, solo para que ninguna se despache en una linea. No es
+// para llenar: es para que no venga vacia de contenido pareciendo entera.
+const PALABRAS_MINIMAS = { tuPrueba: 25, queHaces: 50, dondeTeCaes: 20, cuandoTeCaes: 15 };
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
-// Recibe las cinco lineas de SU parte y nada mas: ni los rasgos, ni lo que ella
-// conto, ni lo de las otras seis. Todo eso ya esta dentro de sus cinco lineas,
+// Recibe las cuatro lineas de SU parte y nada mas: ni los rasgos, ni lo que ella
+// conto, ni lo de las otras seis. Todo eso ya esta dentro de sus cuatro lineas,
 // que las decidio quien las tenia delante. Darselo otra vez no le da material
 // nuevo: le da sitio para irse por su cuenta y repetir lo de la parte de al
 // lado, que es lo que hay que evitar.
@@ -1250,30 +1261,27 @@ LO QUE TE TOCA AHORA
 
 Escribes UNA parte del documento, la de esta parcela de su vida: ${area.deQueVa}.
 
-TE DAN CINCO LÍNEAS YA DECIDIDAS Y ESCRIBES LAS CINCO, cada una por su lado. No eliges tú lo que va: eso ya está decidido con sus siete parcelas delante. Lo tuyo es que se entienda y que sirva.
+TE DAN CUATRO LÍNEAS YA DECIDIDAS Y ESCRIBES LAS CUATRO, cada una por su lado. No eliges tú lo que va: eso ya está decidido con sus siete parcelas delante. Lo tuyo es que se entienda y que sirva.
 
 NO DECIDES, EXPLICAS. Coges la línea que te dan y la abres: qué es exactamente, cómo se hace, por qué así y no de otra manera, y qué pasa cuando lo hace. Todo lo que escribas tiene que poder rastrearse a la línea que te han dado. Si te falta un dato, no te lo inventas: cuentas mejor lo que ya está.
 
 Y NO TE SALGAS DE TU PARCELA. Las otras seis las escribe otro y no las ves. Lo tuyo es esto y nada más.
 
-CADA UNA DE LAS CINCO ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos dentro y sin anunciar lo que viene. Los nombres los pone el programa. Y no se repiten entre ellas: lo que ya has dicho en una no vuelve en la siguiente.
+CADA UNA DE LAS CUATRO ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos dentro y sin anunciar lo que viene. Los nombres los pone el programa. Y no se repiten entre ellas: lo que ya has dicho en una no vuelve en la siguiente.
 
-LAS CINCO, Y LO QUE VA EN CADA UNA:
+LAS CUATRO, Y LO QUE VA EN CADA UNA:
 
 "tuPrueba"
-Qué le pone la vida delante en esta parcela y en quién se convierte el día que lo supere. Se entra por lo que le pasa a ella, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Al menos ${PALABRAS_MINIMAS.tuPrueba} palabras.
+Qué le pone la vida delante en esta parcela y en quién se convierte el día que lo supere. Se entra por lo que le pasa a ella, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Como mucho ${PALABRAS_MAXIMAS.tuPrueba} palabras. Si te sobran, mejor.
 
 "queHaces"
-Es la más larga de las cinco y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. Aquí no va el cuándo, que va aparte. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Al menos ${PALABRAS_MINIMAS.queHaces} palabras, y aquí no se ahorra ni una.
-
-"cuando"
-La señal por la que sabe que le toca. Corto y afilado: esto es lo que va a releer, y cuanto más largo, menos lo reconoce. Le dices qué va a notar por dentro o qué se va a ver haciendo justo antes de lo de siempre, con sus palabras, para que lo pille en el momento y no después. Nada de horas ni de días de la semana. Y le dices también que la primera vez lo va a pillar tarde, y que pillarlo tarde ya cuenta. Entre ${PALABRAS_MINIMAS.cuando} y ${PALABRAS_MAXIMAS.cuando} palabras: pasarse de ahí lo estropea.
+Es la más larga de las cuatro y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Como mucho ${PALABRAS_MAXIMAS.queHaces} palabras, que es casi media hoja y de sobra si no das rodeos.
 
 "dondeTeCaes"
-Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarla o lo que va a hacer mal creyendo que va más deprisa. Y que eso llega siempre y es señal de que va, no de que se esté equivocando. Y qué hace justo ahí. Al menos ${PALABRAS_MINIMAS.dondeTeCaes} palabras.
+Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarla o lo que va a hacer mal creyendo que va más deprisa. Y que eso llega siempre y es señal de que va, no de que se esté equivocando. Y qué hace justo ahí. Como mucho ${PALABRAS_MAXIMAS.dondeTeCaes} palabras.
 
 "cuandoTeCaes"
-Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Al menos ${PALABRAS_MINIMAS.cuandoTeCaes} palabras.
+Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Como mucho ${PALABRAS_MAXIMAS.cuandoTeCaes} palabras.
 
 LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que haces tú, y hace falta: sin esa línea todo sale pegado en un bloque y no hay quien lo lea en un móvil.
 
@@ -1296,7 +1304,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
 
   const salida = await sinNombrarLaCarta({
     que: `la parte de ${area.id}`,
-    // Se mira que los cinco esten contados enteros, que el que manda hacer
+    // Se mira que los cuatro esten contados enteros, que el que manda hacer
     // algo venga en parrafos y que ninguno se ponga a contarle otra vez como
     // es.
     // Lo de contar marcas de que-hacer solo vale para "que haces", que es el
@@ -1313,8 +1321,8 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
       : pasados(p).length
         ? `\n\nY OJO: la vez anterior "${pasados(p).map(x => BLOQUES[x]).join('", "')}" salió largo. Eso se lee de pasada, en un momento en que está a otra cosa: si no lo reconoce de un vistazo no le sirve de nada. Se dice la señal y se para.`
       : colgados(p).length
-        ? `\n\nY OJO: la vez anterior algo se quedó a media frase (${colgados(p).map(x => BLOQUES[x]).join(', ')}). Se termina lo que se empieza: cada uno de los cinco acaba su última frase.`
-        : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cinco se cuenta entero, y lo que tiene que hacer va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
+        ? `\n\nY OJO: la vez anterior algo se quedó a media frase (${colgados(p).map(x => BLOQUES[x]).join(', ')}). Se termina lo que se empieza: cada uno de los cuatro acaba su última frase.`
+        : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cuatro se cuenta entero, y lo que tiene que hacer va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
       que: `escribir ${area.id}`,
@@ -1322,7 +1330,7 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
       piensa: '',
       techo: TECHO_DE_ESCRIBIR,
       system: encargo,
-      mensaje: `Escribe las cinco partes de esta parcela, enteras.${recordatorio}`,
+      mensaje: `Escribe las cuatro partes de esta parcela, enteras.${recordatorio}`,
       molde: MOLDE_DE_LA_PARTE,
       espera: AbortSignal.timeout(cuanto),
     }),
@@ -1413,7 +1421,6 @@ LAS SIETE PARTES, CON SU NOMBRE EN CLAVE:
 ${partes.map(p => `[${p.id}] ${tituloDe(p.id)}
 SU PRUEBA: ${p.tuPrueba}
 LO QUE HACE: ${p.queHaces}
-CUÁNDO: ${p.cuando}
 DÓNDE SE CAE: ${p.dondeTeCaes}
 CUANDO SE CAE: ${p.cuandoTeCaes}`).join('\n\n')}
 
@@ -1696,7 +1703,7 @@ const BLOQUES = ${JSON.stringify(BLOQUES)};
 const NOMBRES = ${JSON.stringify(Object.fromEntries(AREAS.map(a => [a.id, a.del_p1])))};
 const PUNTOS = ${JSON.stringify(PUNTOS)};
 // Los dos que van sobre beige, aqui y en el PDF: son las ordenes.
-const SOBRE_BEIGE = ['queHaces', 'cuando'];
+const SOBRE_BEIGE = ['queHaces'];
 // Las que tiene que haber. Se cuenta contra esto y no contra las que hayan
 // llegado: si llegan seis, seis de seis no es estar completo.
 const AREAS_TOTAL = ${AREAS.length};
@@ -1858,7 +1865,7 @@ ir.addEventListener('click', async () => {
     elDocumento = {
       nombre: quienEs.nombre,
       hoja,
-      // La etiqueta pequena de cada parte y los nombres de sus cinco puntos van
+      // La etiqueta pequena de cada parte y los nombres de sus cuatro puntos van
       // desde aqui: el que maqueta no tiene que saberselos.
       partes: completas.map(p => ({ ...p, etiqueta: NOMBRES[p.id] || '', nombres: BLOQUES })),
     };
@@ -1942,7 +1949,7 @@ function pintarLoDecidido(partes) {
     filas + '</table></details>';
 }
 
-// Cada parte con sus cinco puntos, cada uno con su nombre para saber de que
+// Cada parte con sus cuatro puntos, cada uno con su nombre para saber de que
 // habla y para poder volver a buscarlo.
 function pintarParte(p, n) {
   const bloques = PUNTOS.map(punto => {
