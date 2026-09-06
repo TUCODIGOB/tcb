@@ -868,6 +868,11 @@ const TOPE_DE_ESCRIBIR = 110000;
 // ELEGIR lee los rasgos ya escritos y contesta numeros. Es la mas corta.
 const TOPE_DE_ELEGIR = 40000;
 
+// Y ESTO ES LO QUE TARDA UNA TIRADA ENTERA CON LAS SIETE AREAS DETRAS, medido a
+// ojo de lo que tardan de verdad, no de sus topes. Sirve para saber si cabe un
+// segundo intento cuando el primero falla.
+const LO_QUE_TARDA_OTRA_TIRADA = 180000;
+
 // LOS QUE SE SACAN DE SOBRA.
 //
 // El suelo y el techo de cada area estan en POR_AREA. Aqui se saca uno mas de
@@ -1458,10 +1463,13 @@ async function sacarLasListas(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
       ultimoError = err;
       const temporal = err.temporal !== false;
       if (!temporal || intento === tiradas) break;
-      // Otra tirada entera (las dos listas y el que elige) mas las siete areas
-      // detras. Sin contar las areas, un reintento a destiempo se come su sitio
-      // y la clienta se queda sin informe habiendo pagado.
-      if (!reloj.hayTiempoPara((TOPE_DE_SACAR + TOPE_DE_ESCRIBIR + TOPE_DE_ELEGIR + TOPE_DE_UN_AREA) / 1000)) {
+      // LO QUE HACE FALTA PARA OTRA TIRADA Y LAS SIETE AREAS DETRAS.
+      //
+      // No se suman los topes de cada paso: esos son cuando se corta una
+      // llamada colgada, y sumados dan mas de lo que dura la peticion entera,
+      // asi que el reintento no saltaria nunca. Esto es lo que tarda de verdad
+      // una tirada con las areas detras.
+      if (!reloj.hayTiempoPara(LO_QUE_TARDA_OTRA_TIRADA / 1000)) {
         console.warn('Listas: fallo y ya no cabe otra tirada con las siete areas detras');
         break;
       }

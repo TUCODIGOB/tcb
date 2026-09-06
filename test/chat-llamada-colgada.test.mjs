@@ -87,6 +87,7 @@ function aEscala(texto, presupuesto) {
     .replace('const TOPE_DE_ESCRIBIR = 110000', 'const TOPE_DE_ESCRIBIR = 2500')
     .replace('const TOPE_DE_ELEGIR = 40000', 'const TOPE_DE_ELEGIR = 1500')
     .replace('const TOPE_DE_UN_AREA = 90000', 'const TOPE_DE_UN_AREA = 2500')
+    .replace('const LO_QUE_TARDA_OTRA_TIRADA = 180000', 'const LO_QUE_TARDA_OTRA_TIRADA = 8000')
     
 }
 
