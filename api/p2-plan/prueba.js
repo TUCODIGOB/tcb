@@ -15,10 +15,12 @@
 //
 // ── COMO ESTA HECHO ─────────────────────────────────────────
 //
-//   UNA LLAMADA DECIDE, PENSANDO. Recibe los rasgos del P1 y lo que ella misma
-//   ha contado de su vida, y decide en corto los cinco puntos de cada una de
-//   las siete partes. Siete cosas distintas, ninguna idea repetida entre
-//   ellas. No escribe ni una linea del documento.
+//   UNA LLAMADA DECIDE, PENSANDO. Recibe los rasgos del P1 de las siete areas
+//   y decide en corto los cinco puntos de cada una. Siete cosas distintas,
+//   ninguna idea repetida entre ellas. No escribe ni una linea del documento.
+//   Es la unica que va con Opus: de lo que decida aqui cuelga el documento
+//   entero, y es el unico sitio donde hay que comparar siete cosas a la vez
+//   para que no se parezcan.
 //
 //   SIETE ESCRIBEN, A LA VEZ. Cada una recibe solo las cinco lineas de su
 //   parte, y nada mas. No deciden: explican y amplian esas cinco lineas hasta
@@ -36,11 +38,17 @@
 // ── QUE LLEVA EL DOCUMENTO ──────────────────────────────────
 //
 //   LAS SIETE PARTES, todas iguales, cada una con cinco cosas:
-//     1. A donde va en esa parcela.
-//     2. Que se lo impide hoy.
-//     3. El plan: la unica cosa que tiene que hacer ahi, contada entera.
-//     4. Donde se va a caer intentandolo.
-//     5. Como se levanta el dia que lo deja.
+//     1. Tu prueba: que le pone la vida delante ahi, y en quien se convierte
+//        el dia que lo supere.
+//     2. Que haces: la unica cosa que tiene que hacer ahi, contada entera.
+//     3. Cuando: la senal por la que sabe que le toca.
+//     4. Donde te vas a caer: avisado antes de que le pase.
+//     5. Cuando te caigas: el paso para volver.
+//
+//   LO QUE LE CUESTA ES SU PRUEBA, NO SU DEFECTO. Es de donde sale todo: el
+//   P1 le conto lo que le pesa, y el P2 le da la vuelta y lo convierte en lo
+//   que tiene que hacer. Si esto se pierde, el documento vuelve a ser un
+//   analisis y el producto no vale nada.
 //
 //   Y LA HOJA DE RUTA al final: por donde empieza y por que esa, las siete en
 //   orden con lo que hace en cada una, y que hacer si lo deja del todo. Es la
@@ -50,6 +58,11 @@
 //
 // Se abre /api/p2-plan/prueba en el navegador, sale la lista de los ultimos
 // informes guardados, se pincha uno y el plan va apareciendo.
+//
+// NO SE LE PREGUNTA NADA A LA CLIENTA. Todo el plan sale de sus rasgos del P1.
+// Se probo a preguntarle por su vida y se quito: el plan tiene que salir
+// entero del origen, que es lo que ha comprado, y lo que decide cada parte no
+// es donde vive sino que hace, y eso ya esta en sus rasgos.
 //
 // CADA PASO ES UNA PETICION SUYA. Asi ninguna se acerca al tiempo maximo que
 // aguanta el servidor, y se ve llegar el documento a trozos en vez de esperar
@@ -153,6 +166,10 @@ Esto no le explica a nadie cómo es. Eso ya lo tiene: se leyó entero un estudio
 
 Esto es la parte que le falta. Lo que tiene que hacer para llegar a ser quien quiere ser y tener la vida que quiere.
 
+Y SE ESCRIBE DESDE AQUÍ: lo que le cuesta no es un defecto suyo, es lo que le toca aprender. La vida se lo va a seguir poniendo delante hasta que lo aprenda, y el día que lo haga, eso mismo se convierte en lo mejor que tiene. Eso es lo que cambia todo: no viene a que le arreglen nada, viene a saber qué examen tiene delante y qué hace para aprobarlo.
+
+No se lo digas con esas palabras ni se lo expliques como una idea. Se nota en cómo está escrito todo lo demás: no le hablas de algo que hay que corregir, le hablas de algo que hay que superar.
+
 Así que aquí no se diagnostica. No le explicas de dónde le viene lo que hace, ni le buscas la causa en su casa o en su infancia, ni le pones nombre a lo que le pasa, porque todo eso está dicho ya, y repetírselo con otras palabras es quitarle el sitio a lo único que ha venido a buscar, que es qué hace a partir de mañana.
 
 De ahí salen las dos reglas que mandan sobre todas las demás:
@@ -211,15 +228,16 @@ const AREAS = [
 // Los cinco llevan nombre, tambien el primero: si uno entra sin etiqueta, la
 // parte arranca con un texto suelto y el molde de las cinco no se ve.
 //
-// VAN EN ESTE ORDEN, que es el de lo que le pasa: primero lo que hace, luego
-// lo que la va a parar, luego la manera de hacerlo que no sirve, y al final en
-// que va a ver que funciona.
+// VAN EN ESTE ORDEN, que es el de lo que le pasa: primero para que es esto y
+// adonde le lleva, luego lo unico que tiene que hacer, luego por que senal
+// sabe que le toca hacerlo, y al final las dos que le hacen falta el dia que
+// falle, que es el dia en que la gente deja los planes.
 const BLOQUES = {
-  adondeVas:      'Adónde vas',
-  queTeFrena:     'Qué te frena',
-  elPlan:         'El plan',
-  dondeTeCaes:    'Dónde te vas a caer',
-  comoTeLevantas: 'Cómo te levantas',
+  tuPrueba:     'Tu prueba',
+  queHaces:     'Qué haces',
+  cuando:       'Cuándo',
+  dondeTeCaes:  'Dónde te vas a caer',
+  cuandoTeCaes: 'Cuando te caigas',
 };
 
 // EL ORDEN EN QUE VAN, y con el que se recorren en todas partes: al decidir,
@@ -492,28 +510,17 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
   }
 }
 
-// Lo que se le manda del informe del P1 para que decida: sus rasgos con su
-// area y su porque. El texto de las siete areas NO va aqui a proposito: es
-// enorme, ya esta resumido en los rasgos, y el P2 no tiene que volver a
-// contarle nada de eso.
-// LO QUE ELLA MISMA HA CONTADO DE SU VIDA.
+// TODO LO QUE SE LE MANDA AL MODELO PARA QUE DECIDA, y no hay nada mas.
 //
-// Es lo unico que sabemos de su vida de hoy: el informe del P1 cuenta como es,
-// no en que se le va el dia ni con quien lo pasa. Sin esto, lo que se decida
-// vale igual para cualquiera, y eso es justo lo que no puede pasar.
+// Sus rasgos, por area: lo que se le da bien y lo que le cuesta, y de lo que le
+// cuesta tambien el porque, que es de donde sale la vuelta que hay que darle.
 //
-// SI DEJA UNA EN BLANCO, SE DICE QUE ESTA EN BLANCO. Poner el hueco y callarse
-// es lo que hace que el modelo se lo invente.
-function loQueHaContado(respuestas) {
-  const dijo = c => String(respuestas?.[c] || '').trim();
-  const linea = (titulo, texto) => `${titulo}\n${texto || '(no ha contestado a esto)'}`;
-  return ['LO QUE ELLA HA CONTADO DE SU VIDA:', '',
-    linea('CÓMO ES SU VIDA HOY:', dijo('hoy')), '',
-    linea('CÓMO LE GUSTARÍA QUE FUERA:', dijo('comoLeGustaria')), '',
-    linea('LO QUE LLEVA AÑOS INTENTANDO CAMBIAR Y NO CAMBIA:', dijo('loQueNoCambia')),
-  ].join('\n');
-}
-
+// EL TEXTO DE LAS SIETE AREAS DEL P1 NO VA AQUI, a proposito: es enorme, ya
+// esta resumido en estos rasgos, y el P2 no ha venido a contarle otra vez nada
+// de eso.
+//
+// Y SI UN AREA NO TIENE NADA, SE DICE QUE NO TIENE NADA. Dejar el hueco y
+// callarse es lo que hace que el modelo se invente algo para llenarlo.
 function susRasgos(rasgos) {
   const linea = (r, conPorque) =>
     `- ${r.nombre}: ${r.descripcion}` +
@@ -552,7 +559,11 @@ function susRasgos(rasgos) {
 // los 300 segundos que aguanta la peticion: el segundo no pide otros 200, pide
 // lo que sobre del primero, y si no sobra bastante no se pide.
 
-const ESPERA_DEL_PLAN_MS = 200000;
+// SUBIDO AL PASAR A OPUS. Piensa mas rato que el de antes, y esta es la
+// llamada de la que cuelga el documento entero: si se corta, no hay nada. Se
+// le da casi todo el tiempo del servidor, y lo que sobre decide si cabe
+// pedirlo otra vez.
+const ESPERA_DEL_PLAN_MS = 235000;
 const TECHO_DEL_PLAN = 16000;
 
 // LO QUE AGUANTA LA PETICION, MENOS UN MARGEN PARA CONTESTAR. El servidor corta
@@ -584,12 +595,12 @@ const MOLDE_DEL_PLAN = {
       items: {
         type: 'object',
         properties: {
-          area:           { type: 'string', enum: AREAS.map(a => a.id) },
-          adondeVas:      { type: 'string' },
-          queTeFrena:     { type: 'string' },
-          elPlan:         { type: 'string' },
-          dondeTeCaes:    { type: 'string' },
-          comoTeLevantas: { type: 'string' },
+          area:         { type: 'string', enum: AREAS.map(a => a.id) },
+          tuPrueba:     { type: 'string' },
+          queHaces:     { type: 'string' },
+          cuando:       { type: 'string' },
+          dondeTeCaes:  { type: 'string' },
+          cuandoTeCaes: { type: 'string' },
         },
         required: ['area', ...PUNTOS],
         additionalProperties: false,
@@ -600,10 +611,14 @@ const MOLDE_DEL_PLAN = {
   additionalProperties: false,
 };
 
-async function pedirElPlan({ nombre, sexo, rasgos, respuestas, recordatorio = '', espera = ESPERA_DEL_PLAN_MS }) {
-  const encargo = `Estás preparando el plan de una persona: lo que tiene que hacer para llegar a ser quien quiere ser y tener la vida que quiere.
+async function pedirElPlan({ nombre, sexo, rasgos, recordatorio = '', espera = ESPERA_DEL_PLAN_MS }) {
+  const encargo = `${EL_P2_NO_ES_EL_P1}
 
-Abajo tienes dos cosas: lo que ya se sabe de ella, sacado de su carta natal, y lo que ella misma ha contado de su vida de hoy y de la que quiere.
+Estás preparando el plan de una persona: las siete pruebas que tiene delante y lo que hace en cada una para superarlas.
+
+Abajo tienes lo que se sabe de ella: lo que se le da bien y lo que le cuesta, en cada una de las siete parcelas de su vida.
+
+LO QUE LE CUESTA ES SU PRUEBA, NO SU DEFECTO. Es lo único que hay que entender para hacer bien esto. De cada cosa que le cuesta sale una prueba que la vida le pone delante, y de esa prueba sale lo único que tiene que hacer para superarla. Ese es todo el trabajo: darle la vuelta a lo que le pesa y convertirlo en lo que hace.
 
 AQUÍ NO SE ESCRIBE EL DOCUMENTO. Aquí se DECIDE. Todo sale en corto, una línea cada cosa, y lo que se va a leer lo escribe otro después. Por eso puedes dedicarle el rato a lo que de verdad importa: decidir qué le va a mover la vida y qué no.
 
@@ -632,41 +647,48 @@ Y ojo, porque esto pasa de verdad: una persona tiene una manera de funcionar que
 
 De cada una de las siete sacas cinco cosas, en una línea cada una, y ninguna se queda vacía. La línea va escrita para que quien la lea después la entienda entera sin preguntar nada: no es un título, es la cosa dicha en corto.
 
-adondeVas        A dónde va en esa parcela: cómo quiere ser ahí y cómo es su
-                 vida cuando ya es así. Sale de lo que ella ha contado que
-                 quiere, no de lo que te parezca bien a ti. Y es de esa
-                 parcela, no de su vida entera.
+tuPrueba         Qué le pone la vida delante en esta parcela, sacado de lo que
+                 ahí le cuesta, y en quién se convierte el día que lo supere.
+                 Dicho como un examen que tiene delante, no como un fallo suyo
+                 que hay que corregir. Y de esta parcela, no de su vida entera.
 
-queTeFrena       Lo que se lo impide hoy. No lo que le pasa por fuera: lo que
-                 se cree y da por cierto sin haberlo puesto en duda nunca, y
-                 que hace que siga igual. Sale de lo que sabes de ella.
-
-elPlan           UNA SOLA COSA que tiene que hacer en esta parcela. Una, no
-                 dos ni tres. Es lo más importante de las cinco y lo que ha
-                 venido a buscar, y es una porque nadie cambia siete cosas a la
-                 vez: si le pones tres por parcela acaba con veintiuna delante
-                 y no hace ninguna.
-                 Va con nombre de conducta, no de idea: qué deja de hacer y qué
-                 hace en su lugar, algo que se pueda ver ocurriendo. Si lo que
-                 escribes no se puede ver pasando, está mal y se cambia.
+queHaces         UNA SOLA COSA que tiene que hacer en esta parcela. Una, no dos
+                 ni tres. Es lo más importante de las cinco y por lo que ha
+                 pagado, y es una porque nadie cambia siete cosas a la vez: si
+                 le pones tres por parcela acaba con veintiuna delante y no
+                 hace ninguna.
+                 Va con nombre de conducta: qué deja de hacer y qué hace en su
+                 lugar, algo que se pueda ver ocurriendo. Si lo que escribes no
+                 se puede ver pasando, está mal y se cambia.
+                 Y ES ALGO QUE YA PUEDE HACER con la vida que tenga, sin
+                 comprar nada, sin apuntarse a nada y sin que le haga falta
+                 nadie. Como no sabes en qué se le va el día, lo que decidas va
+                 sobre lo que ella hace, que eso sí lo sabes, y no sobre dónde
+                 lo hace.
                  Y ESA COSA ES DE ESTA PARCELA Y DE NINGUNA OTRA. Las siete son
                  siete cosas distintas de verdad: no la misma conducta puesta
                  en siete sitios con otras palabras.
+
+cuando           Por qué señal sabe que le toca hacerlo. Es lo que convierte
+                 una buena idea en algo que de verdad hace, y por eso no vale
+                 una hora ni un día de la semana, que se los salta: es algo que
+                 va a notar por dentro o que va a verse haciendo, y que ocurre
+                 justo antes de lo de siempre. Sale de lo que ahí le cuesta.
 
 dondeTeCaes      Dónde se va a caer intentándolo: lo que va a aparecer para
                  frenarla, o el fallo que va a cometer porque parece que va
                  más deprisa y la deja peor. El que le pega a ESTA persona en
                  ESTA parcela, no uno que le valdría a cualquiera.
 
-comoTeLevantas   Qué hace el día que lo deja. No es animarla: es el paso
+cuandoTeCaes     Qué hace el día que lo deja. No es animarla: es el paso
                  concreto para volver, y que dejarlo entraba en el plan.
 
 
 4. LO QUE NO SE PUEDE ESCRIBIR
 
-NO SE INVENTA NADA DE SU VIDA. Lo que sabes de ella es lo que hay abajo y nada más. Si no ha dicho que tenga pareja, trabajo, hijos, casa o familia, no los tiene: no los nombres, no los supongas y no los uses para montar nada.
+NO SE INVENTA NADA DE SU VIDA. Lo que sabes de ella es lo que hay abajo y nada más. No sabes si tiene pareja, trabajo, hijos, casa o familia: no los nombres, no los supongas y no los uses para montar nada. Lo que decidas tiene que servirle igual viva como viva.
 
-Y AL REVÉS: lo que sí ha contado, se usa. Si dice en qué se le va el día, ahí es donde pasa lo que decidas. Si dice quién le importa, con esa gente ocurre. Ese es todo el trabajo.
+Y NO HACE FALTA SABERLO, porque lo que decides no va sobre su vida, va sobre su conducta, y esa la tienes entera abajo. No es "habla con quien sea": es qué hace cuando le pasa lo que le pasa siempre. Eso es suyo, y solo suyo, sin saber nada más.
 
 Nada que le valga igual a cualquiera. Si lo que has escrito se le podría mandar a otra persona distinta, está mal y se cambia.
 
@@ -681,7 +703,7 @@ Con las siete delante:
 
 PRIMERO, QUE LAS SIETE ESTÉN Y ENTERAS. Las ${AREAS.length}, cada una con sus cinco cosas y ninguna resuelta de pasada.
 
-DESPUÉS, QUE NO SE REPITAN. Lee los siete "elPlan" seguidos: si dos le piden lo mismo con otras palabras, uno se cambia. Y lo mismo con los siete "adondeVas".
+DESPUÉS, QUE NO SE REPITAN. Lee los siete "queHaces" seguidos: si dos le piden lo mismo con otras palabras, uno se cambia. Y lo mismo con las siete "tuPrueba".
 
 Y POR ÚLTIMO, QUE TODO SALGA DE LO QUE TIENES ABAJO. Si señalas una línea y no puedes decir de dónde sale, se cambia.
 
@@ -692,14 +714,12 @@ LO QUE SE SABE DE ESA PERSONA, DE SU CARTA:
 
 ${susRasgos(rasgos)}
 
-${loQueHaContado(respuestas)}
-
 Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}`;
 
   const salida = await alModelo({
     que: 'decidir el plan',
-    modelo: 'claude-sonnet-5',
+    modelo: 'claude-opus-5',
     piensa: 'medium',
     techo: TECHO_DEL_PLAN,
     system: encargo,
@@ -771,7 +791,7 @@ Nombre de pila: ${nombre}`;
   const repetidas = [];
   for (let i = 0; i < partes.length; i++) {
     for (let j = i + 1; j < partes.length; j++) {
-      if (seParecen(palabrasDe(partes[i].elPlan), palabrasDe(partes[j].elPlan))) {
+      if (seParecen(palabrasDe(partes[i].queHaces), palabrasDe(partes[j].queHaces))) {
         repetidas.push(`${partes[i].area} y ${partes[j].area}`);
       }
     }
@@ -786,9 +806,9 @@ Nombre de pila: ${nombre}`;
 // Es la unica llamada que decide, y de ella cuelga el documento entero: si
 // vuelve con seis partes en vez de siete, la clienta se queda sin una parcela
 // de su vida y paga lo mismo.
-async function decidirElPlan({ nombre, sexo, rasgos, respuestas }) {
+async function decidirElPlan({ nombre, sexo, rasgos }) {
   const arranque = Date.now();
-  const primero = await pedirElPlan({ nombre, sexo, rasgos, respuestas });
+  const primero = await pedirElPlan({ nombre, sexo, rasgos });
   if (!primero.falla.length) return primero.plan;
 
   // Y SOLO SE PIDE OTRA VEZ SI CABE. Lo que quede del tiempo del servidor, y
@@ -801,7 +821,7 @@ async function decidirElPlan({ nombre, sexo, rasgos, respuestas }) {
 
   console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), se pide otra vez`);
   const segundo = await pedirElPlan({
-    nombre, sexo, rasgos, respuestas,
+    nombre, sexo, rasgos,
     espera: queda,
     recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, cada una con sus cinco cosas escritas enteras, y en cada una UNA sola cosa que hacer, distinta de verdad de las de las otras seis.`,
   });
@@ -1046,26 +1066,31 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 // Estas llamadas NO deciden nada: reciben lo que salio del paso anterior y lo
 // convierten en el texto que ella va a leer, con el tono de la marca.
 //
-// PERO SI PIENSAN, Y POCO. No para decidir, que eso ya esta hecho, sino para
-// releerse antes de entregar. La regla que mas se saltaban -leerla por dentro
-// y, si nadie la diria hablando, reescribirla- es justo la que no se puede
-// cumplir sin pararse a comprobarla.
+// Y NO PIENSAN. Aqui no hay nada que decidir ni que comparar: las cinco cosas
+// vienen decididas y lo unico que se hace es abrirlas hasta que se entiendan.
 //
-// El esfuerzo, bajo: aqui no hay nada que comparar ni que elegir, solo repasar
-// lo que se acaba de escribir. Y el techo sube, porque pensar sale del mismo
-// presupuesto que escribir y con el de antes la respuesta llegaria cortada.
+// Pensar sale del MISMO presupuesto que escribir, asi que encendido se gasta
+// en pensar lo que tenia que salir en el texto, y sobre todo se gasta EL
+// RELOJ, que lo tiene la clienta esperando delante. Estas siete son las que
+// mas escriben del documento, y son siete a la vez: es aqui donde se va el
+// tiempo, no en la que decide.
+//
+// Se probo con esfuerzo medio y lo unico que aportaba era releerse. Eso no
+// vale lo que cuesta: lo que hace que el texto salga bien es lo que se le
+// pide, y las redes de aqui abajo lo comprueban despues sin gastar reloj.
 //
 // CADA UNA VE SOLO SU PARTE. No hace falta que vea las demas: el paso que
 // piensa ya se encargo de que no se repitan.
 
 // LO QUE SE LE DA A CADA INTENTO.
 //
-// Escribir una parte son cinco casillas y trescientas y pico palabras, y es la
-// respuesta mas larga que se pide. Con 120 segundos se corto una de verdad, y
-// con 65 -medidos cuando eran cuatro casillas y doscientas sesenta- se cortaba
-// siempre.
+// Escribir una parte son cinco casillas y seiscientas y pico palabras, y es la
+// respuesta mas larga que se pide. Medido cuando ademas pensaba: con 65
+// segundos se cortaba siempre y con 120 se corto una de verdad. Sin pensar
+// tarda bastante menos, pero el tope se deja holgado igual: no cuesta nada
+// tenerlo de sobra y una tirada lenta no se puede quedar sin su parte.
 //
-// Ahora 170. Dos intentos de 170 no caben en los 300 segundos que aguanta esta
+// 170. Dos intentos de 170 no caben en los 300 segundos que aguanta esta
 // peticion, y por eso el segundo no pide otros 170: pide lo que sobre del
 // primero (loQueQueda), y si no sobra ni para medio intento no se pide.
 const ESPERA_DE_ESCRIBIR_MS = 170000;
@@ -1074,11 +1099,11 @@ const TECHO_DE_ESCRIBIR = 12000;
 const MOLDE_DE_LA_PARTE = {
   type: 'object',
   properties: {
-    adondeVas:      { type: 'string' },
-    queTeFrena:     { type: 'string' },
-    elPlan:         { type: 'string' },
-    dondeTeCaes:    { type: 'string' },
-    comoTeLevantas: { type: 'string' },
+    tuPrueba:     { type: 'string' },
+    queHaces:     { type: 'string' },
+    cuando:       { type: 'string' },
+    dondeTeCaes:  { type: 'string' },
+    cuandoTeCaes: { type: 'string' },
   },
   required: PUNTOS,
   additionalProperties: false,
@@ -1087,7 +1112,13 @@ const MOLDE_DE_LA_PARTE = {
 // Lo minimo que ocupa cada punto para estar contado y no despachado. No es por
 // llenar: explicarle bien algo no cabe en tres frases, y el que escribe tiende
 // a resumir la linea que le dan en vez de abrirla.
-const PALABRAS_MINIMAS = { adondeVas: 110, queTeFrena: 110, elPlan: 200, dondeTeCaes: 110, comoTeLevantas: 90 };
+const PALABRAS_MINIMAS = { tuPrueba: 120, queHaces: 220, cuando: 70, dondeTeCaes: 110, cuandoTeCaes: 90 };
+
+// Y "cuando" tambien tiene tope por arriba, que es el unico que lo lleva. Es
+// la senal, y es lo unico del documento que se mira de pasada: si se estira
+// deja de reconocerse en el momento, que es para lo unico que sirve. Al
+// escribir tiende a irse, porque al modelo se le pide siempre que cuente mas.
+const PALABRAS_MAXIMAS = { cuando: 170 };
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
@@ -1108,7 +1139,7 @@ LO QUE TE TOCA AHORA
 
 Escribes UNA parte del documento, la de esta parcela de su vida: ${area.deQueVa}.
 
-TE DAN CINCO LÍNEAS YA DECIDIDAS Y ESCRIBES LAS CINCO, cada una por su lado. No eliges tú lo que va: eso ya está decidido con toda su vida delante. Lo tuyo es que se entienda y que sirva.
+TE DAN CINCO LÍNEAS YA DECIDIDAS Y ESCRIBES LAS CINCO, cada una por su lado. No eliges tú lo que va: eso ya está decidido con sus siete parcelas delante. Lo tuyo es que se entienda y que sirva.
 
 NO DECIDES, EXPLICAS. Coges la línea que te dan y la abres: qué es exactamente, cómo se hace, por qué así y no de otra manera, y qué pasa cuando lo hace. Todo lo que escribas tiene que poder rastrearse a la línea que te han dado. Si te falta un dato, no te lo inventas: cuentas mejor lo que ya está.
 
@@ -1118,20 +1149,20 @@ CADA UNA DE LAS CINCO ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos de
 
 LAS CINCO, Y LO QUE VA EN CADA UNA:
 
-"adondeVas"
-A dónde va en esta parcela: cómo va a ser ahí y cómo es su vida cuando ya sea así. Se escribe en presente y en concreto, con lo que va a estar pasando en su vida cuando esté ahí, no con lo que va a sentir. Al menos ${PALABRAS_MINIMAS.adondeVas} palabras.
+"tuPrueba"
+Qué le pone la vida delante en esta parcela y en quién se convierte el día que lo supere. Se entra por lo que le pasa a ella, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Al menos ${PALABRAS_MINIMAS.tuPrueba} palabras.
 
-"queTeFrena"
-Lo que se lo impide hoy. Se lo dices claro, sin suavizarlo y sin castigarle: lo que se cree y da por cierto, y lo que le pasa por seguir creyéndolo. Que lo vea entero, porque de ahí sale que quiera moverlo. Al menos ${PALABRAS_MINIMAS.queTeFrena} palabras.
+"queHaces"
+Es la más larga de las cinco y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. Aquí no va el cuándo, que va aparte. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Al menos ${PALABRAS_MINIMAS.queHaces} palabras, y aquí no se ahorra ni una.
 
-"elPlan"
-Es la más larga de las cinco y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cuándo lo hace -por lo que va a notar, nunca por una hora ni un día de la semana-, cómo se hace las primeras veces cuando todavía no le sale, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Al menos ${PALABRAS_MINIMAS.elPlan} palabras, y aquí no se ahorra ni una.
+"cuando"
+La señal por la que sabe que le toca. Corto y afilado: esto es lo que va a releer, y cuanto más largo, menos lo reconoce. Le dices qué va a notar por dentro o qué se va a ver haciendo justo antes de lo de siempre, con sus palabras, para que lo pille en el momento y no después. Nada de horas ni de días de la semana. Y le dices también que la primera vez lo va a pillar tarde, y que pillarlo tarde ya cuenta. Entre ${PALABRAS_MINIMAS.cuando} y ${PALABRAS_MAXIMAS.cuando} palabras: pasarse de ahí lo estropea.
 
 "dondeTeCaes"
 Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarla o lo que va a hacer mal creyendo que va más deprisa. Y que eso llega siempre y es señal de que va, no de que se esté equivocando. Y qué hace justo ahí. Al menos ${PALABRAS_MINIMAS.dondeTeCaes} palabras.
 
-"comoTeLevantas"
-Qué hace el día que lo deja. El paso concreto para volver, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Al menos ${PALABRAS_MINIMAS.comoTeLevantas} palabras.
+"cuandoTeCaes"
+Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Al menos ${PALABRAS_MINIMAS.cuandoTeCaes} palabras.
 
 LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que haces tú, y hace falta: sin esa línea todo sale pegado en un bloque y no hay quien lo lea en un móvil.
 
@@ -1149,30 +1180,35 @@ ${REGLA_DEL_NOMBRE(NOMBRE_EN.has(area.id))}`;
   // en blanco, y sin ella el punto mas largo sale como un muro de texto.
   const parrafosDe = t => String(t || '').split(/\n+/).filter(x => x.trim()).length;
   const cortos = p => PUNTOS.filter(punto => cuantas(p[punto]) < PALABRAS_MINIMAS[punto]);
+  const pasados = p => PUNTOS.filter(punto => PALABRAS_MAXIMAS[punto] && cuantas(p[punto]) > PALABRAS_MAXIMAS[punto]);
   const colgados = p => PUNTOS.filter(punto => acabaColgado(p[punto]));
 
   const salida = await sinNombrarLaCarta({
     que: `la parte de ${area.id}`,
-    // Se mira que los cinco esten contados enteros, que el mas largo venga en
-    // parrafos y que ninguno se ponga a contarle otra vez como es.
-    // Lo de contar marcas de que-hacer solo vale para el plan, que es el unico
-    // que explica como se hace algo. A donde va o que le frena se cuentan de
-    // otra manera y exigirselas alli haria reescribir textos buenos.
+    // Se mira que los cinco esten contados enteros, que el que manda hacer
+    // algo venga en parrafos y que ninguno se ponga a contarle otra vez como
+    // es.
+    // Lo de contar marcas de que-hacer solo vale para "que haces", que es el
+    // unico que explica como se hace algo. Su prueba o donde se cae se cuentan
+    // de otra manera y exigirselas alli haria reescribir textos buenos.
     cojo: p => cortos(p).length > 0
+            || pasados(p).length > 0
             || colgados(p).length > 0
-            || parrafosDe(p.elPlan) < 2
-            || cuentaComoEs(p.elPlan, 0)
+            || parrafosDe(p.queHaces) < 2
+            || cuentaComoEs(p.queHaces, 0)
             || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto])),
-    aviso: p => cuentaComoEs(p.elPlan, 0) || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto]))
-      ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta a dónde va, qué se lo impide hoy, qué hace, dónde se cae y cómo vuelve.'
+    aviso: p => cuentaComoEs(p.queHaces, 0) || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto]))
+      ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta qué tiene delante y adónde le lleva, qué hace, por qué señal lo sabe, dónde se cae y qué hace ese día.'
+      : pasados(p).length
+        ? `\n\nY OJO: la vez anterior "${pasados(p).map(x => BLOQUES[x]).join('", "')}" salió largo. Eso se lee de pasada, en un momento en que está a otra cosa: si no lo reconoce de un vistazo no le sirve de nada. Se dice la señal y se para.`
       : colgados(p).length
         ? `\n\nY OJO: la vez anterior algo se quedó a media frase (${colgados(p).map(x => BLOQUES[x]).join(', ')}). Se termina lo que se empieza: cada uno de los cinco acaba su última frase.`
-        : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cinco se cuenta entero, y el plan va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
+        : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cinco se cuenta entero, y lo que tiene que hacer va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
       que: `escribir ${area.id}`,
       modelo: 'claude-sonnet-5',
-      piensa: 'medium',
+      piensa: '',
       techo: TECHO_DE_ESCRIBIR,
       system: encargo,
       mensaje: `Escribe las cinco partes de esta parcela, enteras.${recordatorio}`,
@@ -1264,11 +1300,11 @@ Qué hace el día que lo deja del todo, no una parte: cómo retoma el plan enter
 LAS SIETE PARTES, CON SU NOMBRE EN CLAVE:
 
 ${partes.map(p => `[${p.id}] ${tituloDe(p.id)}
-A DÓNDE VA: ${p.adondeVas}
-LO QUE LE FRENA: ${p.queTeFrena}
-EL PLAN: ${p.elPlan}
+SU PRUEBA: ${p.tuPrueba}
+LO QUE HACE: ${p.queHaces}
+CUÁNDO: ${p.cuando}
 DÓNDE SE CAE: ${p.dondeTeCaes}
-CÓMO SE LEVANTA: ${p.comoTeLevantas}`).join('\n\n')}
+CUANDO SE CAE: ${p.cuandoTeCaes}`).join('\n\n')}
 
 Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}
@@ -1295,7 +1331,10 @@ ${REGLA_DEL_NOMBRE(false)}`;
     pedir: (recordatorio, cuanto) => alModelo({
       que: 'escribir la hoja de ruta',
       modelo: 'claude-sonnet-5',
-      piensa: 'medium',
+      // Lo unico que decide es por cual empieza, y para eso hay que comparar
+      // las siete. Pero es UNA eleccion, no siete: con el esfuerzo bajo llega,
+      // y va la ultima, con la clienta esperando ya solo por ella.
+      piensa: 'low',
       techo: TECHO_DE_LA_HOJA,
       system: encargo,
       mensaje: `Escribe la hoja de ruta, siguiendo el esquema.${recordatorio}`,
@@ -1400,10 +1439,21 @@ export default async function handler(req, res) {
         nombre: informe?.cliente?.nombre || 'esta persona',
         sexo: informe?.cliente?.sexo || '',
         rasgos: informe.rasgos,
-        respuestas: req.body?.respuestas,
       });
-      if (!plan.partes.length) {
-        return res.status(422).json({ error: 'El plan ha venido vacío' });
+      // O ESTAN LAS SIETE, O NO SE ENTREGA.
+      //
+      // Antes bastaba con que no viniera vacio. Si el modelo se dejaba una
+      // parcela y el reintento tampoco la traia, el documento salia con seis y
+      // se ofrecia el PDF igual: quien lee no sabe que le falta una, y ha
+      // pagado por su vida entera.
+      //
+      // Asi que aqui se para y se avisa. Volver a darle es una pulsacion; un
+      // documento con una parcela de menos no se arregla despues.
+      const faltan = AREAS.filter(a => !plan.partes.some(p => p.area === a.id));
+      if (faltan.length) {
+        return res.status(422).json({
+          error: `El plan ha venido sin ${faltan.length === AREAS.length ? 'ninguna parte' : `estas partes: ${faltan.map(a => a.del_p1).join(', ')}`}. Vuelve a darle: no se entrega un plan al que le falta una parcela de su vida.`,
+        });
       }
       // El nombre y el sexo viajan con el plan: los pasos siguientes escriben
       // con ellos y asi no hay que volver a abrir el informe en cada uno.
@@ -1474,12 +1524,7 @@ const PAGINA = `<!DOCTYPE html>
   h1 { font-size:1.5rem; color:var(--teal); margin-bottom:.3rem; }
   .sub { color:#6b6b6b; font-size:.85rem; margin-bottom:2rem; font-family:system-ui,sans-serif; }
   select, button { font:inherit; font-family:system-ui,sans-serif; font-size:.95rem; }
-  select, textarea { width:100%; padding:.7rem; border:1px solid rgba(14,63,75,.3); border-radius:6px; background:#fff; }
-  select { margin-bottom:1.4rem; }
-  textarea { font:inherit; font-family:system-ui,sans-serif; font-size:.95rem; resize:vertical; }
-  .pregunta { margin-bottom:1.2rem; }
-  .pregunta label { display:block; font-family:system-ui,sans-serif; font-size:.95rem; font-weight:600; color:var(--teal); margin-bottom:.25rem; }
-  .pista { font-family:system-ui,sans-serif; font-size:.82rem; color:#6b6b6b; margin-bottom:.45rem; }
+  select { width:100%; padding:.7rem; border:1px solid rgba(14,63,75,.3); border-radius:6px; background:#fff; margin-bottom:1.4rem; }
   button { background:var(--gold); color:#fff; border:0; border-radius:6px; padding:.8rem 1.6rem; cursor:pointer; font-weight:600; letter-spacing:.03em; }
   button:disabled { opacity:.45; cursor:default; }
   #pdf { margin-left:.6rem; background:var(--teal); }
@@ -1491,6 +1536,9 @@ const PAGINA = `<!DOCTYPE html>
   .parte h2 { font-size:1.25rem; color:var(--teal); margin-bottom:.9rem; line-height:1.35; }
   .bloque { margin-bottom:1.3rem; }
   .bloque:last-child { margin-bottom:0; }
+  /* Las ordenes -lo que hace y por que senal- van sobre beige, igual que en el
+     PDF: son las que vuelve a buscar y tiene que encontrar sin leer. */
+  .bloque.beige > .caja-texto { background:#faf5ea; border-radius:6px; padding:.9rem 1.1rem; }
   .bloque h3 { font-family:system-ui,sans-serif; font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--gold); margin-bottom:.45rem; }
   .bloque p { margin-bottom:.6rem; }
   .bloque p:last-child { margin-bottom:0; }
@@ -1513,25 +1561,6 @@ const PAGINA = `<!DOCTYPE html>
 
   <select id="quien"><option>Cargando informes…</option></select>
 
-  <div class="pregunta">
-    <label for="p1">1. ¿Cómo es tu vida hoy?</label>
-    <p class="pista">El trabajo, la casa, la pareja, la familia, los amigos, lo que haces con tu tiempo libre. Una semana normal tuya.</p>
-    <textarea id="p1" rows="5"></textarea>
-  </div>
-
-  <div class="pregunta">
-    <label for="p2">2. ¿Cómo te gustaría que fuera tu vida?</label>
-    <p class="pista">El trabajo, la casa, la pareja, la familia, los amigos, tu tiempo. Tu día a día.</p>
-    <textarea id="p2" rows="5"></textarea>
-  </div>
-
-  <div class="pregunta">
-    <label for="p3">3. ¿Qué llevas años intentando cambiar y no cambia?</label>
-    <textarea id="p3" rows="3"></textarea>
-  </div>
-
-  <p class="pista">Cuanto más cuentes, más tuyo será el plan.</p>
-
   <button id="ir" disabled>Escribir su plan</button>
   <button id="pdf" hidden>Bajar el PDF</button>
 
@@ -1544,14 +1573,14 @@ const BLOQUES = ${JSON.stringify(BLOQUES)};
 // titulo con su numero.
 const NOMBRES = ${JSON.stringify(Object.fromEntries(AREAS.map(a => [a.id, a.del_p1])))};
 const PUNTOS = ${JSON.stringify(PUNTOS)};
+// Los dos que van sobre beige, aqui y en el PDF: son las ordenes.
+const SOBRE_BEIGE = ['queHaces', 'cuando'];
+// Las que tiene que haber. Se cuenta contra esto y no contra las que hayan
+// llegado: si llegan seis, seis de seis no es estar completo.
+const AREAS_TOTAL = ${AREAS.length};
 const quien = document.getElementById('quien');
 const ir = document.getElementById('ir');
 const pdf = document.getElementById('pdf');
-// LAS TRES RESPUESTAS. Son lo unico que sabemos de su vida de hoy: el informe
-// del P1 dice como es, no que hace ni con quien. Viajan con la peticion del
-// plan y entran enteras en el encargo de la que decide, que es de donde sale
-// que el plan sea suyo y no le valga a cualquiera.
-const preguntas = ['p1', 'p2', 'p3'].map(id => document.getElementById(id));
 const aviso = document.getElementById('aviso');
 const salida = document.getElementById('salida');
 
@@ -1568,13 +1597,6 @@ async function llamar(cuerpo) {
   const d = await r.json().catch(() => ({ error:'Respuesta ilegible' }));
   if (!r.ok) throw new Error(d.error || ('Error ' + r.status));
   return d;
-}
-
-// Lo que ha escrito, sin espacios de mas. Si deja una en blanco, va vacia: no
-// se le inventa nada por ella.
-function laVidaQueCuenta() {
-  const [hoy, comoLeGustaria, loQueNoCambia] = preguntas.map(c => String(c.value || '').trim());
-  return { hoy, comoLeGustaria, loQueNoCambia };
 }
 
 (async function cargarLista() {
@@ -1610,9 +1632,9 @@ ir.addEventListener('click', async () => {
 
   // 1. La llamada que piensa y decide el documento entero.
   let plan;
-  aviso.textContent = 'Decidiendo su plan… (es la parte que piensa: un par de minutos)';
+  aviso.textContent = 'Decidiendo su plan… (es la única parte que piensa, y es la que más tarda)';
   try {
-    const r = await llamar({ accion:'plan', compra, respuestas: laVidaQueCuenta() });
+    const r = await llamar({ accion:'plan', compra });
     plan = r.plan;
     if (r.quien) quienEs = r.quien;
   } catch (e) {
@@ -1640,38 +1662,73 @@ ir.addEventListener('click', async () => {
     return hueco;
   });
 
+  // SI UNA SE CAE, SE VUELVE A PEDIR. Y no es lo mismo que las redes de dentro:
+  // aquellas miran lo que ha escrito el modelo y le hacen escribirlo otra vez
+  // si viene mal. Esto es de fuera: la peticion entera que no llego -internet,
+  // el modelo saturado, un corte-. Ahi no hay nada que corregirle, solo hay que
+  // volver a pedirla, y cada parte es su propia peticion, asi que reintentar
+  // una no le quita tiempo a las otras.
+  //
+  // DOS VUELTAS Y NO MAS. Si algo esta caido de verdad, cuatro intentos no lo
+  // arreglan: solo hacen esperar el doble para acabar igual.
   const escritas = [];
-  await Promise.all(plan.partes.map(async (decidido, i) => {
-    try {
-      const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo, decidido });
-      escritas[i] = parte;
-      huecos[i].outerHTML = pintarParte(parte, i+1);
-    } catch (e) {
-      huecos[i].innerHTML = '<p class="cual">' + (i+1) + ' · ' + escapar(NOMBRES[decidido.area] || '') +
-        '</p><p class="error">' + escapar(e.message) + '</p>';
-    }
-  }));
+  const escribirUna = async (decidido, i) => {
+    const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo, decidido });
+    escritas[i] = parte;
+    huecos[i].outerHTML = pintarParte(parte, i+1);
+  };
 
-  // 3. Y al final, la hoja de ruta, que lee las siete ya escritas.
+  const pasada = async (cuales, segundaVuelta) => {
+    const caidas = [];
+    await Promise.all(cuales.map(async i => {
+      const decidido = plan.partes[i];
+      try {
+        await escribirUna(decidido, i);
+      } catch (err) {
+        caidas.push(i);
+        huecos[i].innerHTML = '<p class="cual">' + (i+1) + ' · ' + escapar(NOMBRES[decidido.area] || '') + '</p>' +
+          (segundaVuelta
+            ? '<p class="error">' + escapar(err.message) + '</p>'
+            : '<p class="aviso">Se ha caído, se vuelve a pedir…</p>');
+      }
+    }));
+    return caidas;
+  };
+
+  const caidas = await pasada(plan.partes.map((_, i) => i), false);
+  if (caidas.length) {
+    aviso.textContent = 'Se han caído ' + caidas.length + ', se piden otra vez…';
+    await pasada(caidas, true);
+  }
+
+  // 3. Y al final, la hoja de ruta, que lee las siete ya escritas. Tambien se
+  // vuelve a pedir si se cae: es la hoja que se queda a mano, y sin ella no hay
+  // PDF.
   const completas = escritas.filter(Boolean);
   let hoja = null;
-  if (completas.length === plan.partes.length) {
+  if (completas.length === AREAS_TOTAL) {
     aviso.textContent = 'Escribiendo la hoja de ruta…';
     const hueco = document.createElement('div');
     hueco.className = 'parte aparte';
     hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="aviso">Escribiéndose…</p>';
     salida.appendChild(hueco);
+    const pedirLaHoja = () => llamar({ accion:'hoja', nombre:quienEs.nombre, sexo:quienEs.sexo, partes:completas });
     try {
-      hoja = (await llamar({ accion:'hoja', nombre:quienEs.nombre, sexo:quienEs.sexo, partes:completas })).hoja;
-      hueco.outerHTML = pintarHoja(hoja);
+      hoja = (await pedirLaHoja()).hoja;
     } catch (e) {
-      hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="error">' + escapar(e.message) + '</p>';
+      hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="aviso">Se ha caído, se vuelve a pedir…</p>';
+      try {
+        hoja = (await pedirLaHoja()).hoja;
+      } catch (otra) {
+        hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="error">' + escapar(otra.message) + '</p>';
+      }
     }
+    if (hoja) hueco.outerHTML = pintarHoja(hoja);
   }
 
   // EL PDF SOLO SE OFRECE SI ESTA TODO. Con una parte caida saldria un
   // documento con un agujero dentro, y eso no se le ensena a nadie.
-  if (hoja && completas.length === plan.partes.length) {
+  if (hoja && completas.length === AREAS_TOTAL) {
     elDocumento = {
       nombre: quienEs.nombre,
       hoja,
@@ -1731,9 +1788,12 @@ function pintarHoja(h) {
 // Cada parte con sus cinco puntos, cada uno con su nombre para saber de que
 // habla y para poder volver a buscarlo.
 function pintarParte(p, n) {
-  const bloques = PUNTOS.map(punto =>
-    '<div class="bloque"><h3>' + escapar(BLOQUES[punto]) + '</h3>' + parrafos(p[punto]) + '</div>'
-  ).join('');
+  const bloques = PUNTOS.map(punto => {
+    const dentro = parrafos(p[punto]);
+    return SOBRE_BEIGE.includes(punto)
+      ? '<div class="bloque beige"><h3>' + escapar(BLOQUES[punto]) + '</h3><div class="caja-texto">' + dentro + '</div></div>'
+      : '<div class="bloque"><h3>' + escapar(BLOQUES[punto]) + '</h3>' + dentro + '</div>';
+  }).join('');
   return '<div class="parte"><p class="cual">' + n + ' · ' + escapar(NOMBRES[p.id] || '') + '</p>' +
     '<h2>' + escapar(p.titulo) + '</h2>' + bloques + '</div>';
 }
