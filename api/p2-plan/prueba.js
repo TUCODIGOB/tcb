@@ -510,18 +510,17 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
   }
 }
 
-// Lo que se le manda del informe del P1 para que decida: sus rasgos con su
-// area y su porque. El texto de las siete areas NO va aqui a proposito: es
-// enorme, ya esta resumido en los rasgos, y el P2 no tiene que volver a
-// contarle nada de eso.
-// LO QUE ELLA MISMA HA CONTADO DE SU VIDA.
+// TODO LO QUE SE LE MANDA AL MODELO PARA QUE DECIDA, y no hay nada mas.
 //
-// Es lo unico que sabemos de su vida de hoy: el informe del P1 cuenta como es,
-// no en que se le va el dia ni con quien lo pasa. Sin esto, lo que se decida
-// vale igual para cualquiera, y eso es justo lo que no puede pasar.
+// Sus rasgos, por area: lo que se le da bien y lo que le cuesta, y de lo que le
+// cuesta tambien el porque, que es de donde sale la vuelta que hay que darle.
 //
-// SI DEJA UNA EN BLANCO, SE DICE QUE ESTA EN BLANCO. Poner el hueco y callarse
-// es lo que hace que el modelo se lo invente.
+// EL TEXTO DE LAS SIETE AREAS DEL P1 NO VA AQUI, a proposito: es enorme, ya
+// esta resumido en estos rasgos, y el P2 no ha venido a contarle otra vez nada
+// de eso.
+//
+// Y SI UN AREA NO TIENE NADA, SE DICE QUE NO TIENE NADA. Dejar el hueco y
+// callarse es lo que hace que el modelo se invente algo para llenarlo.
 function susRasgos(rasgos) {
   const linea = (r, conPorque) =>
     `- ${r.nombre}: ${r.descripcion}` +
