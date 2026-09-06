@@ -1030,7 +1030,7 @@ La posición sirvió para encontrarlo; a partir de aquí no decide nada, porque 
 
 Ojo con las áreas que en la carta miran a más de una cosa: ahí es donde el rasgo se queda pegado a la posición y acaba con una etiqueta que no habla de lo que él cuenta.
 
-Y SI UN RASGO CABE EN DOS, ESTE ES EL ORDEN. Pasa a menudo: un miedo con el dinero es un miedo y es dinero. No caben las dos, así que va a la primera de esta lista que le valga, y solo a esa:
+Y SI UN RASGO CABE EN DOS, ESTE ES EL ORDEN. Va a la primera de esta lista que le valga, y solo a esa:
 
 ${LAS_SIETE_POR_ORDEN}
 
