@@ -596,13 +596,18 @@ const MOLDE_DEL_PLAN = {
         type: 'object',
         properties: {
           area:         { type: 'string', enum: AREAS.map(a => a.id) },
+          // DE QUE RASGO SALE Y QUE MOVIMIENTO ES. No se escriben en el
+          // documento: son para poder comprobar lo que ha elegido antes de
+          // gastar siete llamadas escribiendolo.
+          rasgo:        { type: 'string' },
+          movimiento:   { type: 'string' },
           tuPrueba:     { type: 'string' },
           queHaces:     { type: 'string' },
           cuando:       { type: 'string' },
           dondeTeCaes:  { type: 'string' },
           cuandoTeCaes: { type: 'string' },
         },
-        required: ['area', ...PUNTOS],
+        required: ['area', 'rasgo', 'movimiento', ...PUNTOS],
         additionalProperties: false,
       },
     },
@@ -645,7 +650,34 @@ Y ojo, porque esto pasa de verdad: una persona tiene una manera de funcionar que
 
 3. QUÉ DECIDES DE CADA PARTE
 
-De cada una de las siete sacas cinco cosas, en una línea cada una, y ninguna se queda vacía. La línea va escrita para que quien la lea después la entienda entera sin preguntar nada: no es un título, es la cosa dicha en corto.
+De cada una de las siete sacas siete cosas: dos que no se escriben en el documento y sirven para elegir bien, y las cinco que sí. Todas en una línea, y ninguna se queda vacía. La línea va escrita para que quien la lea después la entienda entera sin preguntar nada: no es un título, es la cosa dicha en corto.
+
+PRIMERO LAS DOS QUE NO SE ESCRIBEN, porque son las que hacen que lo demás valga:
+
+rasgo            EL RASGO DEL QUE SALE TODO LO DEMÁS DE ESTA PARCELA, copiado
+                 tal cual de su nombre, de la lista de abajo y de ESTA parcela.
+                 Uno solo.
+                 Y NO CUALQUIERA: el que más le pesa de los de esa parcela. El
+                 que, si no se mueve, deja lo demás de ahí igual por mucho que
+                 haga. Si dudas entre dos, coge el que le cueste más caro hoy,
+                 no el que sea más fácil de arreglar.
+                 UN RASGO NO SE USA DOS VECES. Si el mismo le asoma en dos
+                 parcelas, se queda en la que más manda y la otra coge el suyo.
+
+movimiento       QUÉ LE ESTÁS PIDIENDO HACER, EN UNA PALABRA. Un verbo en
+                 infinitivo y nada más: hablar, entregar, pedir, parar,
+                 empezar, cobrar, elegir, soltar, esperar, negarse, escribir,
+                 quedarse, cortar, mostrar, repartir...
+                 LOS SIETE MOVIMIENTOS SON SIETE VERBOS DISTINTOS, y no vale
+                 uno parecido con otra palabra: si en una parcela le pides
+                 hablar, en otra no le pides decir, ni contar, ni expresar.
+                 Esta palabra es la prueba de que las siete son distintas de
+                 verdad. Dos parcelas pueden escribir su orden con palabras
+                 muy diferentes y estar pidiéndole el mismo movimiento, y
+                 entonces ella lee siete cosas y en realidad hace dos. Por eso
+                 se nombra: para que lo veas tú antes de darlo por bueno.
+
+Y AHORA LAS CINCO QUE SÍ SE ESCRIBEN. Las cinco salen del rasgo que acabas de elegir, y ninguna se va por otro lado:
 
 tuPrueba         Qué le pone la vida delante en esta parcela, sacado de lo que
                  ahí le cuesta, y en quién se convierte el día que lo supere.
@@ -703,7 +735,9 @@ Con las siete delante:
 
 PRIMERO, QUE LAS SIETE ESTÉN Y ENTERAS. Las ${AREAS.length}, cada una con sus cinco cosas y ninguna resuelta de pasada.
 
-DESPUÉS, QUE NO SE REPITAN. Lee los siete "queHaces" seguidos: si dos le piden lo mismo con otras palabras, uno se cambia. Y lo mismo con las siete "tuPrueba".
+DESPUÉS, LOS SIETE MOVIMIENTOS SEGUIDOS. Léelos en fila. Si dos son el mismo verbo, o dos verbos que significan lo mismo, esa parcela vuelve a su lista de rasgos y coge otro rasgo, y de ahí sale otra orden con otro movimiento. No se arregla cambiándole las palabras a la orden: se arregla cambiando lo que le pides hacer.
+
+Y LOS SIETE "queHaces" SEGUIDOS. Si dos le piden lo mismo con otras palabras, uno se cambia. Y lo mismo con las siete "tuPrueba".
 
 Y POR ÚLTIMO, QUE TODO SALGA DE LO QUE TIENES ABAJO. Si señalas una línea y no puedes decir de dónde sale, se cambia.
 
@@ -734,7 +768,7 @@ Nombre de pila: ${nombre}`;
   for (const p of (Array.isArray(salida.partes) ? salida.partes : [])) {
     const id = String(p?.area || '').trim();
     if (!id || porArea.has(id)) continue;
-    const suyo = { area: id };
+    const suyo = { area: id, rasgo: String(p?.rasgo || '').trim(), movimiento: String(p?.movimiento || '').trim() };
     for (const punto of PUNTOS) suyo[punto] = String(p?.[punto] || '').trim();
     porArea.set(id, suyo);
   }
@@ -742,7 +776,7 @@ Nombre de pila: ${nombre}`;
   // UNA PARTE A MEDIAS NO SE ESCRIBE. Si viene con una casilla vacia, quien
   // escribe se encuentra un hueco y lo rellena por su cuenta, y entonces se
   // inventa algo de su vida que no sale de ningun sitio.
-  const entera = p => PUNTOS.every(punto => p[punto]);
+  const entera = p => p.rasgo && p.movimiento && PUNTOS.every(punto => p[punto]);
   const partes = AREAS.map(a => porArea.get(a.id)).filter(p => p && entera(p));
 
   // Y LO QUE HAYA SALIDO MAL, DICHO. Es lo que decide si se pide otra vez y lo
@@ -750,6 +784,77 @@ Nombre de pila: ${nombre}`;
   const falla = [];
   const faltan = AREAS.filter(a => !porArea.has(a.id) || !entera(porArea.get(a.id)));
   if (faltan.length) falla.push(`faltan estas partes enteras: ${faltan.map(a => a.del_p1).join(', ')}`);
+
+  // ── UN MOVIMIENTO DISTINTO EN CADA PARCELA ────────────────
+  //
+  // ES LO QUE MATA ESTE PRODUCTO Y LO QUE PASO DE VERDAD: siete ordenes
+  // escritas con palabras distintas que por debajo le piden lo mismo. En un
+  // plan de verdad, tres parcelas de siete le pedian hablar -di lo que
+  // quieres, di lo que te apetece, di la verdad-, y quien lo lee cree que
+  // tiene siete cosas cuando tiene cinco.
+  //
+  // Comparar las ordenes por sus palabras no lo caza: estan escritas de siete
+  // maneras y no se parecen en nada. Por eso ahora se le pide que nombre el
+  // movimiento de cada una en un verbo, y lo que se compara es el verbo.
+  //
+  // SE COMPARA EL VERBO ENTERO, quitandole antes el pronombre pegado detras.
+  // Asi hablar y hablarle cuentan como el mismo, que es lo que hay que cazar.
+  //
+  // Y NO SE COMPARAN POR EL PRINCIPIO, aunque parezca mas listo: cortando por
+  // las cinco primeras letras, entregar y entrenar salen iguales y se
+  // reharia un plan que estaba bien.
+  //
+  // Los sinonimos con otra raiz -decir por hablar- no los caza el codigo, y
+  // por eso se le piden aparte en el encargo. Esto tapa lo que si se puede
+  // comprobar sin equivocarse.
+  const raizDe = txt => sinTildes(txt).replace(/[^a-z]/g, '')
+    .replace(/(?:se|le|les|la|las|lo|los|me|te|nos)$/, '');
+  const porMovimiento = new Map();
+  for (const p of partes) {
+    const raiz = raizDe(p.movimiento);
+    if (!raiz) continue;
+    if (!porMovimiento.has(raiz)) porMovimiento.set(raiz, []);
+    porMovimiento.get(raiz).push(p.area);
+  }
+  const movimientosRepetidos = [...porMovimiento.values()].filter(d => d.length > 1);
+  if (movimientosRepetidos.length) {
+    falla.push(`estas parcelas le piden el mismo movimiento: ${movimientosRepetidos.map(d => d.join(' y ')).join('; ')}`);
+  }
+
+  // ── Y QUE EL RASGO SEA DE ESA PARCELA, Y NO SE REPITA ─────
+  //
+  // El rasgo es de donde sale todo lo demas de esa parte. Si viene uno que no
+  // esta en su lista, es que se lo ha inventado o lo ha traido de otra
+  // parcela, y entonces la orden no sale de ella.
+  const suyosDe = area => [
+    ...(rasgos?.fortalezas || []), ...(rasgos?.desafios || []),
+  ].filter(r => r?.area === area).map(r => comoSeCompara(String(r.nombre || '')));
+
+  // Se acepta si es el nombre del rasgo, o si uno contiene al otro: el modelo
+  // a veces copia "Le cuesta pedir" como "pedir", y eso es el mismo rasgo. Lo
+  // que hay que cazar es el que no esta en su lista, no una coma de mas.
+  const esElMismo = (suyo, dicho) => suyo === dicho || suyo.includes(dicho) || dicho.includes(suyo);
+  const deFuera = partes.filter(p => {
+    const cual = AREAS.find(a => a.id === p.area);
+    if (!cual) return false;
+    const dicho = comoSeCompara(p.rasgo);
+    return !!dicho && !suyosDe(cual.del_p1).some(suyo => esElMismo(suyo, dicho));
+  });
+  if (deFuera.length) {
+    falla.push(`estas parcelas salen de un rasgo que no es suyo: ${deFuera.map(p => `${p.area} (${p.rasgo})`).join('; ')}`);
+  }
+
+  const porRasgo = new Map();
+  for (const p of partes) {
+    const cual = comoSeCompara(p.rasgo);
+    if (!cual) continue;
+    if (!porRasgo.has(cual)) porRasgo.set(cual, []);
+    porRasgo.get(cual).push(p.area);
+  }
+  const rasgosRepetidos = [...porRasgo.values()].filter(d => d.length > 1);
+  if (rasgosRepetidos.length) {
+    falla.push(`estas parcelas salen del mismo rasgo: ${rasgosRepetidos.map(d => d.join(' y ')).join('; ')}`);
+  }
 
   // ── Y QUE NO SE REPITA NINGUNA ────────────────────────────
   //
@@ -823,7 +928,7 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
   const segundo = await pedirElPlan({
     nombre, sexo, rasgos,
     espera: queda,
-    recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, cada una con sus cinco cosas escritas enteras, y en cada una UNA sola cosa que hacer, distinta de verdad de las de las otras seis.`,
+    recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Las ${AREAS.length} partes van todas, ninguna se queda fuera, cada una con su rasgo de esa parcela y su movimiento en un verbo, y los ${AREAS.length} movimientos distintos de verdad. Si dos coinciden, esa parcela coge otro rasgo suyo y de ahí sale otra orden: no se arregla cambiándole las palabras.`,
   });
 
   // Y SE QUEDA EL MEJOR DE LOS DOS. Pedir otra vez no garantiza que salga
