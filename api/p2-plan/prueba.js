@@ -1441,8 +1441,20 @@ export default async function handler(req, res) {
         sexo: informe?.cliente?.sexo || '',
         rasgos: informe.rasgos,
       });
-      if (!plan.partes.length) {
-        return res.status(422).json({ error: 'El plan ha venido vacío' });
+      // O ESTAN LAS SIETE, O NO SE ENTREGA.
+      //
+      // Antes bastaba con que no viniera vacio. Si el modelo se dejaba una
+      // parcela y el reintento tampoco la traia, el documento salia con seis y
+      // se ofrecia el PDF igual: quien lee no sabe que le falta una, y ha
+      // pagado por su vida entera.
+      //
+      // Asi que aqui se para y se avisa. Volver a darle es una pulsacion; un
+      // documento con una parcela de menos no se arregla despues.
+      const faltan = AREAS.filter(a => !plan.partes.some(p => p.area === a.id));
+      if (faltan.length) {
+        return res.status(422).json({
+          error: `El plan ha venido sin ${faltan.length === AREAS.length ? 'ninguna parte' : `estas partes: ${faltan.map(a => a.del_p1).join(', ')}`}. Vuelve a darle: no se entrega un plan al que le falta una parcela de su vida.`,
+        });
       }
       // El nombre y el sexo viajan con el plan: los pasos siguientes escriben
       // con ellos y asi no hay que volver a abrir el informe en cada uno.
@@ -1564,6 +1576,9 @@ const NOMBRES = ${JSON.stringify(Object.fromEntries(AREAS.map(a => [a.id, a.del_
 const PUNTOS = ${JSON.stringify(PUNTOS)};
 // Los dos que van sobre beige, aqui y en el PDF: son las ordenes.
 const SOBRE_BEIGE = ['queHaces', 'cuando'];
+// Las que tiene que haber. Se cuenta contra esto y no contra las que hayan
+// llegado: si llegan seis, seis de seis no es estar completo.
+const AREAS_TOTAL = ${AREAS.length};
 const quien = document.getElementById('quien');
 const ir = document.getElementById('ir');
 const pdf = document.getElementById('pdf');
@@ -1692,7 +1707,7 @@ ir.addEventListener('click', async () => {
   // PDF.
   const completas = escritas.filter(Boolean);
   let hoja = null;
-  if (completas.length === plan.partes.length) {
+  if (completas.length === AREAS_TOTAL) {
     aviso.textContent = 'Escribiendo la hoja de ruta…';
     const hueco = document.createElement('div');
     hueco.className = 'parte aparte';
@@ -1714,7 +1729,7 @@ ir.addEventListener('click', async () => {
 
   // EL PDF SOLO SE OFRECE SI ESTA TODO. Con una parte caida saldria un
   // documento con un agujero dentro, y eso no se le ensena a nadie.
-  if (hoja && completas.length === plan.partes.length) {
+  if (hoja && completas.length === AREAS_TOTAL) {
     elDocumento = {
       nombre: quienEs.nombre,
       hoja,
