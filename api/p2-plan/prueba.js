@@ -1154,7 +1154,7 @@ TE DAN CUATRO LÍNEAS YA DECIDIDAS Y ESCRIBES LAS CUATRO, cada una por su lado. 
 
 NO DECIDES, EXPLICAS. Coges la línea que te dan y la abres: qué es exactamente, cómo se hace, por qué así y no de otra manera, y qué pasa cuando lo hace. Todo lo que escribas tiene que poder rastrearse a la línea que te han dado. Si te falta un dato, no te lo inventas: cuentas mejor lo que ya está.
 
-Y NO TE SALGAS DE TU PARCELA. Las otras seis las escribe otro y no las ves. Lo tuyo es esto y nada más.
+Y NO TE SALGAS DE LO TUYO. Las otras partes del documento las escribe otro y no las ves. Lo tuyo es esto y nada más.
 
 CADA UNA DE LAS CUATRO ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos dentro y sin anunciar lo que viene. Los nombres los pone el programa. Y no se repiten entre ellas: lo que ya has dicho en una no vuelve en la siguiente.
 
@@ -1206,9 +1206,9 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
             || cuentaComoEs(p.queHaces, 0)
             || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto])),
     aviso: p => cuentaComoEs(p.queHaces, 0) || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto]))
-      ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta qué tiene delante y adónde le lleva, qué hace, por qué señal lo sabe, dónde se cae y qué hace ese día.'
+      ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta qué tiene delante y adónde le lleva, qué hace, dónde se cae y qué hace ese día.'
       : pasados(p).length
-        ? `\n\nY OJO: la vez anterior "${pasados(p).map(x => BLOQUES[x]).join('", "')}" salió largo. Eso se lee de pasada, en un momento en que está a otra cosa: si no lo reconoce de un vistazo no le sirve de nada. Se dice la señal y se para.`
+        ? `\n\nY OJO: la vez anterior "${pasados(p).map(x => BLOQUES[x]).join('", "')}" salió pasado de largo. Cada parte de este documento cabe en una hoja, y quien lo lee no relee: lo que sobra no es que moleste, es que tapa lo que importa. Se dice lo que hay que decir y se para.`
       : colgados(p).length
         ? `\n\nY OJO: la vez anterior algo se quedó a media frase (${colgados(p).map(x => BLOQUES[x]).join(', ')}). Se termina lo que se empieza: cada uno de los cuatro acaba su última frase.`
         : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cuatro se cuenta entero, y lo que tiene que hacer va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,

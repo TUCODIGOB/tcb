@@ -3,7 +3,7 @@
 //
 // EL PDF DEL P2.
 //
-// Recibe el documento ya escrito -las siete partes y la hoja de ruta- y lo
+// Recibe el documento ya escrito -sus partes- y lo
 // monta en un PDF con la marca. No le pide nada al modelo, no lee el
 // informe del P1 y no cobra: solo maqueta lo que le llega.
 //
@@ -13,8 +13,8 @@
 // siempre. Lo unico que cambia es que aqui todas las paginas van sobre la base
 // lisa, porque el P2 no tiene una ilustracion por parte.
 //
-// CADA SECCION EMPIEZA EN HOJA NUEVA: cada una de las siete partes y la hoja
-// de ruta. Ninguna se pega a la anterior.
+// CADA SECCION EMPIEZA EN HOJA NUEVA: cada parte en la suya, y ninguna se pega
+// a la anterior.
 // ════════════════════════════════════════════════════════════════
 
 import { createRequire } from 'module';
@@ -173,8 +173,8 @@ export default async function handler(req, res) {
     // ── LAS CAJAS ─────────────────────────────────────────────
     //
     // Un documento de veinte hojas de texto seguido no se lee: el ojo no
-    // encuentra donde parar. Los pasos de la hoja de ruta, que se leen sueltos
-    // y se vuelven a buscar, van sobre un fondo beige que los separa.
+    // encuentra donde parar. Lo que se vuelve a buscar -la orden de cada
+    // parte- va sobre un fondo beige que lo separa.
     //
     // UNA CAJA NO SE PARTE NUNCA entre dos hojas: se mide antes, y si no cabe
     // entera se va a la siguiente. Media caja al pie es peor que un hueco.
@@ -250,7 +250,7 @@ export default async function handler(req, res) {
 
     // ── LAS SIETE PARTES ──────────────────────────────────────
     //
-    // Cada una en su hoja, con sus cinco puntos y el nombre de cada uno: sin
+    // Cada una en su hoja, con sus cuatro puntos y el nombre de cada uno: sin
     // ellos quien lee no sabe de que le habla cada trozo, ni puede volver a
     // buscar uno el dia que le haga falta.
     const PUNTOS = ['tuPrueba', 'queHaces', 'dondeTeCaes', 'cuandoTeCaes'];
