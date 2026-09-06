@@ -44,8 +44,8 @@ const original = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
 const ENPRODUCCION = [
   ['el presupuesto de la peticion', 'const TOPE_DE_LA_PETICION = 285000'],
   ['el tope de cada area',          'signal: reloj.senal(90000)'],
-  ['el tope de elegir',            'const TOPE_DE_ELEGIR = 100000'],
-  ['el tope de escribir',          'const TOPE_DE_ESCRIBIR = 110000'],
+  ['el tope de escribir la lista', 'const TOPE_DE_LA_LISTA = 140000'],
+  ['el tope de elegir',            'const TOPE_DE_ELEGIR = 40000'],
 ];
 console.log('\n  api/chat.js — una llamada colgada ya no se lleva el informe por delante\n');
 for (const [que, texto] of ENPRODUCCION) {
@@ -82,8 +82,8 @@ function aEscala(texto, presupuesto) {
   return texto
     .replace("import Stripe from 'stripe';", "import Stripe from './.stripe-falso.mjs';")
     .replace('const TOPE_DE_LA_PETICION = 285000', `const TOPE_DE_LA_PETICION = ${presupuesto}`)
-    .replace('const TOPE_DE_ELEGIR = 100000', 'const TOPE_DE_ELEGIR = 2000')
-    .replace('const TOPE_DE_ESCRIBIR = 110000', 'const TOPE_DE_ESCRIBIR = 2500')
+    .replace('const TOPE_DE_LA_LISTA = 140000', 'const TOPE_DE_LA_LISTA = 2500')
+    .replace('const TOPE_DE_ELEGIR = 40000', 'const TOPE_DE_ELEGIR = 2000')
     .replace('reloj.senal(90000)', 'reloj.senal(2500)')
     .replace('hayTiempoPara(180)', 'hayTiempoPara(5)');
 }
@@ -138,22 +138,22 @@ const POR_AREAS = [
   ['RELACIONES', 'Mercurio en Aries',          'casa 11 en Acuario'],
   ['DINERO',     'casa 2 en Aries',            'casa 10 en Acuario'],
 ];
-const elegidosDe = (cual, l) => POR_AREAS.flatMap(([area, a, b], k) => [
-  { lista: cual, area, nombre: TITULOS[l][k * 2],     origen: a },
-  { lista: cual, area, nombre: TITULOS[l][k * 2 + 1], origen: b },
-]);
-const LOS_ELEGIDOS = JSON.stringify({
-  rasgos: elegidosDe('fortalezas', 'Fortaleza').concat(elegidosDe('desafios', 'Desafio')),
+const laLista = (cual, l) => JSON.stringify({
+  rasgos: POR_AREAS.flatMap(([area, a, b], k) => [
+    { area, nombre: TITULOS[l][k * 2],     origen: a,
+      descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
+      causa: 'Sostienes el esfuerzo sin depender de que salga bien.' },
+    { area, nombre: TITULOS[l][k * 2 + 1], origen: b,
+      descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
+      causa: 'Sostienes el esfuerzo sin depender de que salga bien.' },
+  ]),
 });
-// El que escribe contesta un texto por rasgo, en el mismo orden en que se los dan.
-const losTextos = cuantos => JSON.stringify({
-  textos: Array.from({ length: cuantos }, () => ({
-    descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
-    causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
-  })),
+// El que elige devuelve numeros: aqui se queda con todos, y el techo por area
+// lo recorta el codigo despues.
+const losElegidos = cuantos => JSON.stringify({
+  elegidos: Array.from({ length: cuantos }, (_, i) => i + 1),
 });
-// Cuantos rasgos le han dado a esta peticion de escribir.
-const cuantosPide = cuerpo => String(cuerpo.messages?.[0]?.content || '').match(/de los (\d+) rasgos/)?.[1] | 0;
+const cuantosHay = cuerpo => (String(cuerpo.system || '').match(/^\d+\. \[/gm) || []).length;
 
 let llamadas = 0, sinSenal = 0, colgarLaPrimera = false, yaColgada = false;
 
@@ -164,20 +164,21 @@ globalThis.fetch = async (url, opciones) => {
   llamadas++;
   if (!opciones || !opciones.signal) sinSenal++;
 
-  let esElegir = false, esEscribir = false, cuantos = 0;
+  let esElegir = false, esEscribir = false, esFortalezas = false, cuantos = 0;
   try {
     const cuerpo = JSON.parse(opciones.body);
     const sistema = String(cuerpo.system || '');
-    esElegir = sistema.includes('AQUÍ NO SE ESCRIBE EL INFORME');
-    esEscribir = sistema.includes('AQUÍ NO SE ELIGE NADA');
-    if (esEscribir) cuantos = cuantosPide(cuerpo);
+    esElegir = sistema.includes('AQUÍ NO SE ESCRIBE NADA');
+    esEscribir = sistema.includes('LAS CASILLAS DE CADA RASGO');
+    if (esElegir) cuantos = cuantosHay(cuerpo);
+      if (esEscribir) esFortalezas = sistema.includes('lo que se le da bien');
   } catch (e) {}
   const esLista = esElegir || esEscribir;
 
   // LA LLAMADA QUE NO CONTESTA. Solo termina si la cortan: si el codigo no le
   // pone senal, esta promesa no se resuelve jamas y la prueba se cuelga, igual
   // que se colgo la funcion en produccion.
-  if (colgarLaPrimera && esElegir && !yaColgada) {
+  if (colgarLaPrimera && esEscribir && !yaColgada) {
     yaColgada = true;
     await new Promise((_, rechazar) => {
       if (!opciones.signal) return;
@@ -192,12 +193,12 @@ globalThis.fetch = async (url, opciones) => {
   if (esElegir) {
     return { ok: true, status: 200, json: async () => ({ content: [
       { type: 'thinking', thinking: '' },
-      { type: 'text', text: LOS_ELEGIDOS },
+      { type: 'text', text: losElegidos(cuantos) },
     ] }) };
   }
   if (esEscribir) {
     return { ok: true, status: 200, json: async () => ({ content: [
-      { type: 'text', text: losTextos(cuantos) },
+      { type: 'text', text: laLista(esFortalezas ? 'fortalezas' : 'desafios', esFortalezas ? 'Fortaleza' : 'Desafio') },
     ] }) };
   }
   return { ok: true, status: 200, json: async () => ({ content: [
@@ -238,8 +239,10 @@ try {
 
   comprobar('la peticion no se queda colgada', !a.colgado, `${(tardo / 1000).toFixed(1)}s`);
   comprobar('el informe sale igual', a.code === 200, 'HTTP ' + a.code);
-  comprobar('la colgada se corta y se vuelve a pedir esa sola',
-    llamadas === 11, `${llamadas} llamadas (10 + la que se corto)`);
+  // Las dos listas se piden juntas, asi que si una se cuelga se vuelven a pedir
+  // las dos: 2 colgadas + 2 buenas + la que elige + las 7 areas.
+  comprobar('la colgada se corta y se vuelve a pedir',
+    llamadas === 12, `${llamadas} llamadas (2 + 2 + 1 + 7)`);
   comprobar('ninguna llamada al modelo va sin tope de tiempo', sinSenal === 0,
     `${sinSenal} sin tope`);
 
