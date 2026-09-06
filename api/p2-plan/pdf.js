@@ -186,9 +186,11 @@ export default async function handler(req, res) {
         alto += doc.splitTextToSize(t(titulo), dentro).length * RENGLON + 1;
       }
       doc.setFont('Roboto', 'normal'); doc.setFontSize(CUERPO);
-      for (const parrafo of t(texto).split(/\n+/).map(x => x.trim()).filter(Boolean)) {
+      const trozos = t(texto).split(/\n+/).map(x => x.trim()).filter(Boolean);
+      trozos.forEach((parrafo, i) => {
         alto += doc.splitTextToSize(parrafo, dentro).length * RENGLON;
-      }
+        if (i < trozos.length - 1) alto += ENTRE_PARRAFOS;
+      });
       return alto;
     }
 
@@ -213,9 +215,11 @@ export default async function handler(req, res) {
         escribir(titulo, { fuente: 'bold', tam: 13, color: VERDE, ancho: dentro, x });
         y += 1;
       }
-      for (const parrafo of t(texto).split(/\n+/).map(p => p.trim()).filter(Boolean)) {
+      const parrafos = t(texto).split(/\n+/).map(p => p.trim()).filter(Boolean);
+      parrafos.forEach((parrafo, i) => {
         escribir(parrafo, { ancho: dentro, x });
-      }
+        if (i < parrafos.length - 1) y += ENTRE_PARRAFOS;
+      });
       if (cabeEnUnaHoja) y = antes + alto + ENTRE_CAJAS;
       else y += ENTRE_CAJAS;
     }
@@ -249,18 +253,26 @@ export default async function handler(req, res) {
     // Cada una en su hoja, con sus cinco puntos y el nombre de cada uno: sin
     // ellos quien lee no sabe de que le habla cada trozo, ni puede volver a
     // buscar uno el dia que le haga falta.
-    const PUNTOS = ['adondeVas', 'queTeFrena', 'elPlan', 'dondeTeCaes', 'comoTeLevantas'];
+    const PUNTOS = ['tuPrueba', 'queHaces', 'cuando', 'dondeTeCaes', 'cuandoTeCaes'];
     const PORDEFECTO = {
-      adondeVas: 'Adónde vas', queTeFrena: 'Qué te frena', elPlan: 'El plan',
-      dondeTeCaes: 'Dónde te vas a caer', comoTeLevantas: 'Cómo te levantas',
+      tuPrueba: 'Tu prueba', queHaces: 'Qué haces', cuando: 'Cuándo',
+      dondeTeCaes: 'Dónde te vas a caer', cuandoTeCaes: 'Cuando te caigas',
     };
+
+    // LOS DOS QUE VAN SOBRE BEIGE. Son las órdenes: lo que hace y por qué señal
+    // sabe que le toca. Es lo que va a volver a buscar cuando ya haya leído el
+    // documento entero, y lo que tiene que encontrar pasando páginas sin
+    // ponerse a leer. Los otros tres se leen una vez y van en texto corrido:
+    // si todo lleva fondo, el fondo deja de señalar nada.
+    const SOBRE_BEIGE = new Set(['queHaces', 'cuando']);
 
     for (const parte of partes) {
       abrirSeccion(parte?.etiqueta, t(parte?.titulo));
       for (const punto of PUNTOS) {
         if (!t(parte?.[punto])) continue;
         subtitulo(parte?.nombres?.[punto] || PORDEFECTO[punto]);
-        corrido(parte[punto]);
+        if (SOBRE_BEIGE.has(punto)) caja('', parte[punto]);
+        else corrido(parte[punto]);
       }
     }
 
