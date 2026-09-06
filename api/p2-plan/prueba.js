@@ -27,8 +27,6 @@
 //   lineas de su parte, y nada mas. No deciden: abren esas cuatro lineas hasta
 //   que se entiendan a la primera, y sin pasarse de una hoja.
 //
-//   Y UNA AL FINAL ESCRIBE LA HOJA DE RUTA, leyendo las partes ya escritas. Va la ultima porque es un resumen de lo que pone el documento,
-//   asi que tiene que ver el documento.
 //
 // Por que se decide todo de golpe: si cada parte se decidiera por su cuenta,
 // varias llegarian a la misma conclusion con otras palabras y la clienta
@@ -50,9 +48,6 @@
 //   que tiene que hacer. Si esto se pierde, el documento vuelve a ser un
 //   analisis y el producto no vale nada.
 //
-//   Y LA HOJA DE RUTA al final: por donde empieza y por que esa, todas en
-//   orden con lo que hace en cada una, y que hacer si lo deja del todo. Es la
-//   que se queda a mano: lo demas se lee una vez, esto se usa.
 //
 // ── COMO SE USA ─────────────────────────────────────────────
 //
@@ -510,9 +505,8 @@ const cuantosDesafios = rasgos => (rasgos?.desafios || [])
 // releerse.
 //
 // Recibe todo lo que le cuesta de golpe, lo limpia y decide el documento
-// entero en corto: los cuatro puntos de cada parte. Ni el orden ni por cual
-// empieza salen de aqui -eso lo saca la hoja de ruta al final, leyendo lo que
-// de verdad se ha escrito-, y no escribe ni una linea de lo que ella va a leer.
+// entero en corto: los cuatro puntos de cada parte. No escribe ni una linea de
+// lo que ella va a leer: eso lo hacen las que vienen despues.
 //
 // POR QUE DE GOLPE. Lo que hay que evitar es que dos partes le manden hacer lo
 // mismo con otras palabras, y eso solo se ve teniendolas todas delante a la
@@ -1254,179 +1248,11 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
 }
 
 
-// ── LA HOJA DE RUTA, AL FINAL ───────────────────────────────
-//
-// Es lo ultimo que se escribe y lo unico que va a mirar despues: la hoja que
-// se queda a mano cuando ya ha cerrado el documento.
-//
-// LEE LAS PARTES YA ESCRITAS, no lo decidido. Es un resumen de lo que pone de
-// verdad en el documento, asi que tiene que ver el documento. Por eso va al
-// final y no en paralelo con las demas.
-//
-// El tiempo, el mismo que el de escribir una parte: sale mas corta, pero se
-// las lee todas enteras antes de empezar y eso tambien cuesta.
-const ESPERA_DE_LA_HOJA_MS = 170000;
-const TECHO_DE_LA_HOJA = 12000;
-
-const MOLDE_DE_LA_HOJA = {
-  type: 'object',
-  properties: {
-    porDondeEmpiezas: { type: 'string' },
-    empiezaPor:       { type: 'integer' },
-    elOrden: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          cual:   { type: 'integer' },
-          queHaces: { type: 'string' },
-        },
-        required: ['area', 'queHaces'],
-        additionalProperties: false,
-      },
-    },
-    siLoDejas: { type: 'string' },
-  },
-  required: ['porDondeEmpiezas', 'empiezaPor', 'elOrden', 'siLoDejas'],
-  additionalProperties: false,
-};
-
-// El titulo de la parte numero N de las escritas. Las partes van numeradas
-// porque cada plan lleva unas distintas y no hay nombres fijos que usar.
-const tituloDe = (partes, n) => (partes[n - 1] || {}).titulo || '';
-
-async function escribirLaHojaDeRuta({ nombre, sexo, partes }) {
-  const encargo = `${EL_P2_NO_ES_EL_P1}
-
-${REGLAS_COMUNES}
-
-
-LO QUE TE TOCA AHORA
-
-El documento ya está escrito entero y lo tienes abajo, sus siete partes. Te toca la última hoja: la hoja de ruta.
-
-QUÉ ES ESTA HOJA. Es la que se queda a mano cuando ya ha cerrado el documento. Tiene que entenderse sola, sin volver a leer nada, y decirle dos cosas: por dónde empieza y qué va haciendo después. Si para usarla hay que volver atrás, no sirve.
-
-NO SE ESCRIBE NADA NUEVO. Todo lo que pongas sale de lo que ya está escrito abajo. Aquí no se decide nada ni se añade ninguna idea que no esté ya en el documento.
-
-Esto es lo que devuelves:
-
-"empiezaPor"
-El número de la parte por la que empieza, copiado tal cual de la lista de abajo. No es texto para leer: es para que el programa sepa cuál es.
-
-"porDondeEmpiezas"
-Por qué empieza por esa: la que, si se mueve, arrastra a las demás. Normalmente es la que está por debajo de varias, la que si sigue igual hace que lo demás vuelva. Lo dices mirando lo suyo, no en general, y con lo que va a ganar cuando la mueva. Cuatro o cinco frases.
-
-"elOrden"
-Todas, en el orden en que le conviene ir, empezando por esa misma. De cada una:
-  cual       el número de la parte, copiado tal cual de la lista de abajo.
-  queHaces   lo que tiene que hacer ahí, resumido de lo que ya pone en su
-             parte. Dos o tres frases, en claro y con verbos, para que
-             leyendo solo esto sepa qué le toca. Nada de títulos ni de
-             frases que no digan qué hace.
-Van todas, ninguna se queda fuera y ninguna se repite.
-
-"siLoDejas"
-Qué hace el día que lo deja del todo, no una parte: cómo retoma el plan entero. Por dónde vuelve a entrar y qué hace primero. Y que dejarlo entraba en el plan. Cuatro o cinco frases.
-
-LAS PARTES DEL DOCUMENTO, CON SU NÚMERO:
-
-${partes.map((p, i) => `[${i + 1}] ${p.titulo}
-SU PRUEBA: ${p.tuPrueba}
-LO QUE HACE: ${p.queHaces}
-DÓNDE SE CAE: ${p.dondeTeCaes}
-CUANDO SE CAE: ${p.cuandoTeCaes}`).join('\n\n')}
-
-Quien lo va a leer es ${comoSeLeHabla(sexo)}
-Nombre de pila: ${nombre}
-${REGLA_DEL_NOMBRE(false)}`;
-
-  const hay = new Set(partes.map((_, i) => i + 1));
-
-  const salida = await sinNombrarLaCarta({
-    que: 'la hoja de ruta',
-    cojo: h => estaVacia(h.porDondeEmpiezas, 'por dónde empiezas')
-            || estaVacia(h.siLoDejas, 'si lo dejas')
-            || acabaColgado(h.porDondeEmpiezas)
-            || acabaColgado(h.siLoDejas)
-            || (h.elOrden || []).some(o => acabaColgado(o?.queHaces))
-            || !hay.has(Number(h.empiezaPor))
-            // Un paso con numero pero sin nada escrito cuenta como que falta:
-            // si se deja pasar, en la hoja sale el titulo de esa parte con un
-            // hueco debajo, que es peor que no tenerla.
-            || new Set((h.elOrden || [])
-                 .filter(o => String(o?.queHaces || '').trim())
-                 .map(o => Number(o?.cual)).filter(x => hay.has(x))).size !== hay.size,
-    aviso: `\n\nY OJO: la vez anterior algo vino vacío, se quedó a media frase o faltó alguna parte del orden. El orden las lleva todas, cada una con su número copiado tal cual y con lo que tiene que hacer ahí.`,
-    tope: ESPERA_DE_LA_HOJA_MS,
-    pedir: (recordatorio, cuanto) => alModelo({
-      que: 'escribir la hoja de ruta',
-      modelo: 'claude-sonnet-5',
-      // Lo unico que decide es por cual empieza, y para eso hay que comparar
-      // todas. Pero es UNA eleccion, no una por parte: con el esfuerzo bajo
-      // llega, y va la ultima, con la clienta esperando ya solo por ella.
-      piensa: 'low',
-      techo: TECHO_DE_LA_HOJA,
-      system: encargo,
-      mensaje: `Escribe la hoja de ruta, siguiendo el esquema.${recordatorio}`,
-      molde: MOLDE_DE_LA_HOJA,
-      espera: AbortSignal.timeout(cuanto),
-    }),
-    texto: h => [h.porDondeEmpiezas, h.siLoDejas].concat((h.elOrden || []).map(o => o?.queHaces)).join(' '),
-  });
-
-  // CADA PASO VA A LA PARTE QUE NOMBRA, Y EL TITULO LO PONE EL CODIGO.
-  //
-  // Emparejarlos por su puesto en la lista es lo que en el P1 corrio las
-  // descripciones tres sitios en el informe de una clienta. Con el numero
-  // delante eso no puede pasar, y el titulo sale de la parte que ya se
-  // escribio, que es donde esta bien puesto.
-  const puestas = new Set();
-  const elOrden = [];
-  for (const paso of (Array.isArray(salida.elOrden) ? salida.elOrden : [])) {
-    const cual = Number(paso?.cual);
-    const queHaces = String(paso?.queHaces || '').trim();
-    if (!hay.has(cual) || puestas.has(cual) || !queHaces) continue;
-    puestas.add(cual);
-    elOrden.push({ cual, titulo: tituloDe(partes, cual), queHaces });
-  }
-  // Y si se dejo alguna, va al final: mejor sin su resumen que desaparecida.
-  partes.forEach((p, i) => {
-    const cual = i + 1;
-    if (puestas.has(cual)) return;
-    puestas.add(cual);
-    elOrden.push({ cual, titulo: p.titulo, queHaces: '' });
-    console.warn(`[p2] la hoja de ruta venia sin la parte ${cual}, se pone al final`);
-  });
-
-  const empiezaPor = hay.has(Number(salida.empiezaPor))
-    ? Number(salida.empiezaPor)
-    : (elOrden[0]?.cual || 1);
-
-  // Y LA PRIMERA DEL ORDEN ES POR LA QUE EMPIEZA. Se le pide asi, pero si
-  // vuelve con otra delante, la hoja diria "empiezas por esta" y debajo
-  // pondria otra la primera. Eso no se puede entregar, y aqui se ata.
-  const donde = elOrden.findIndex(o => o.cual === empiezaPor);
-  if (donde > 0) {
-    elOrden.unshift(elOrden.splice(donde, 1)[0]);
-    console.warn('[p2] el orden no empezaba por la parte por la que empieza, se ha puesto delante');
-  }
-
-  return {
-    empiezaPor,
-    tituloDelPrimero: tituloDe(partes, empiezaPor),
-    porDondeEmpiezas: String(salida.porDondeEmpiezas || '').trim(),
-    elOrden,
-    siLoDejas: String(salida.siLoDejas || '').trim(),
-  };
-}
-
-
 // ════════════════════════════════════════════════════════════════
 // LA PAGINA Y SUS PETICIONES
 // ════════════════════════════════════════════════════════════════
 //
-// Cada paso es una peticion suya: la lista, el plan, cada parte y la hoja.
+// Cada paso es una peticion suya: la lista, el plan y cada parte.
 // Asi ninguna se acerca al tiempo maximo que aguanta el servidor, y el
 // documento se ve llegar a trozos en vez de esperar a una pantalla en blanco.
 
@@ -1514,22 +1340,6 @@ export default async function handler(req, res) {
       return res.status(200).json({ parte: escrita });
     }
 
-    if (accion === 'hoja') {
-      const { nombre, sexo, partes } = req.body || {};
-      // SIN LAS PARTES ESCRITAS NO HAY HOJA DE RUTA: es un resumen de lo que
-      // pone el documento, asi que hace falta el documento.
-      if (!Array.isArray(partes) || partes.length < 3
-          || partes.some(p => !String(p?.titulo || '').trim() || PUNTOS.some(punto => !String(p?.[punto] || '').trim()))) {
-        return res.status(400).json({ error: 'La hoja de ruta se escribe con las partes ya escritas, y no han llegado enteras' });
-      }
-      const hoja = await escribirLaHojaDeRuta({
-        nombre: String(nombre || 'esta persona'),
-        sexo: String(sexo || ''),
-        partes,
-      });
-      return res.status(200).json({ hoja });
-    }
-
     return res.status(400).json({ error: 'Acción no válida' });
   } catch (err) {
     console.error('[p2-plan/prueba]', err);
@@ -1560,7 +1370,6 @@ const PAGINA = `<!DOCTYPE html>
   .aviso { font-family:system-ui,sans-serif; font-size:.9rem; color:#6b6b6b; margin:1.2rem 0; }
   .error { color:#c0392b; }
   .parte { background:#fff; border:1px solid rgba(189,144,72,.25); border-left:4px solid var(--gold); border-radius:8px; padding:1.6rem 1.8rem; margin-top:1.6rem; }
-  .aparte { border-left-color:var(--teal); }
   .cual { font-family:system-ui,sans-serif; font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); margin-bottom:.5rem; }
   .parte h2 { font-size:1.25rem; color:var(--teal); margin-bottom:.9rem; line-height:1.35; }
   .bloque { margin-bottom:1.3rem; }
@@ -1582,9 +1391,6 @@ const PAGINA = `<!DOCTYPE html>
   .decidido td.verbo { font-weight:600; color:var(--teal); }
   .decidido tr.choca td { background:#fdeceb; }
   .decidido .choque { font-family:system-ui,sans-serif; font-size:.85rem; color:var(--error); font-weight:600; margin-top:.7rem; }
-  .paso { margin-bottom:1rem; }
-  .paso b { color:var(--teal); display:block; margin-bottom:.2rem; }
-  .empieza { color:var(--teal); font-weight:600; margin-bottom:.5rem; }
   /* Al imprimir solo sale el texto. Sin esto, el aviso de la pantalla se
      colaba arriba del todo en el PDF. */
   @media print {
@@ -1735,37 +1541,13 @@ ir.addEventListener('click', async () => {
     await pasada(caidas, true);
   }
 
-  // 3. Y al final, la hoja de ruta, que lee las partes ya escritas. Tambien se
-  // vuelve a pedir si se cae: es la hoja que se queda a mano, y sin ella no hay
-  // PDF.
   const completas = escritas.filter(Boolean);
-  let hoja = null;
-  if (completas.length === total) {
-    aviso.textContent = 'Escribiendo la hoja de ruta…';
-    const hueco = document.createElement('div');
-    hueco.className = 'parte aparte';
-    hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="aviso">Escribiéndose…</p>';
-    salida.appendChild(hueco);
-    const pedirLaHoja = () => llamar({ accion:'hoja', nombre:quienEs.nombre, sexo:quienEs.sexo, partes:completas });
-    try {
-      hoja = (await pedirLaHoja()).hoja;
-    } catch (e) {
-      hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="aviso">Se ha caído, se vuelve a pedir…</p>';
-      try {
-        hoja = (await pedirLaHoja()).hoja;
-      } catch (otra) {
-        hueco.innerHTML = '<p class="cual">Para tener a mano</p><p class="error">' + escapar(otra.message) + '</p>';
-      }
-    }
-    if (hoja) hueco.outerHTML = pintarHoja(hoja);
-  }
 
   // EL PDF SOLO SE OFRECE SI ESTA TODO. Con una parte caida saldria un
   // documento con un agujero dentro, y eso no se le ensena a nadie.
-  if (hoja && completas.length === total) {
+  if (completas.length === total) {
     elDocumento = {
       nombre: quienEs.nombre,
-      hoja,
       // La etiqueta pequena de cada parte y los nombres de sus cuatro puntos van
       // desde aqui: el que maqueta no tiene que saberselos.
       partes: completas.map((p, i) => ({ ...p, etiqueta: (i+1) + ' de ' + total, nombres: BLOQUES })),
@@ -1802,54 +1584,6 @@ pdf.addEventListener('click', async () => {
   }
   pdf.disabled = false;
 });
-
-// LA HOJA DE RUTA, al final del todo: por donde empieza, las siete en orden
-// con lo que hace en cada una, y que hacer si lo deja.
-function pintarHoja(h) {
-  const orden = (h.elOrden||[]).map((o, i) =>
-    '<div class="paso"><b>' + (i+1) + '. ' + escapar(o.titulo) + '</b>' + parrafos(o.queHaces) + '</div>'
-  ).join('');
-  return '<div class="parte aparte"><p class="cual">Para tener a mano</p>' +
-    '<h2>Tu hoja de ruta</h2>' +
-    '<div class="bloque"><h3>Por dónde empiezas</h3>' +
-      '<p class="empieza">' + escapar(h.tituloDelPrimero || '') + '</p>' +
-      parrafos(h.porDondeEmpiezas) + '</div>' +
-    '<div class="bloque"><h3>El orden</h3>' + orden + '</div>' +
-    '<div class="bloque"><h3>Si lo dejas del todo</h3>' + parrafos(h.siLoDejas) + '</div>' +
-    '</div>';
-}
-
-// LO QUE HA DECIDIDO LA PRIMERA LLAMADA, PARA PODER MIRARLO.
-//
-// De la pagina de pruebas y de ningun sitio mas: la clienta nunca ve esto. Es
-// para ver de un vistazo de que desafio sale cada parcela y que movimiento le
-// pide, que es lo unico que hay que mirar para saber si esa llamada lo ha
-// hecho bien o esta repitiendo.
-//
-// Los verbos que se repiten salen marcados en rojo. No deberia pasar nunca
-// -el codigo rehace el plan si pasa- pero si algun dia pasa, aqui se ve.
-function pintarLoDecidido(partes) {
-  const raiz = v => String(v||'').toLowerCase().normalize('NFD').replace(/[^a-z]/g,'')
-    .replace(/(?:se|le|les|la|las|lo|los|me|te|nos)$/,'');
-  const cuantos = {};
-  for (const p of partes) { const r = raiz(p.movimiento); cuantos[r] = (cuantos[r]||0) + 1; }
-  const repetidos = Object.keys(cuantos).filter(r => r && cuantos[r] > 1);
-
-  const filas = partes.map((p, i) =>
-    '<tr class="' + (repetidos.includes(raiz(p.movimiento)) ? 'choca' : '') + '">' +
-      '<td>' + (i+1) + '</td>' +
-      '<td>' + escapar(p.titulo || '') + '</td>' +
-      '<td>' + escapar((p.deCuales||[]).join(', ')) + '</td>' +
-      '<td class="verbo">' + escapar(p.movimiento || '—') + '</td>' +
-      '<td>' + escapar(p.queHaces || '') + '</td>' +
-    '</tr>').join('');
-
-  return '<details class="decidido" open><summary>Lo que ha decidido la primera llamada — ' +
-    partes.length + ' partes (de qué desafíos sale cada una y qué le pide hacer)</summary>' +
-    (repetidos.length ? '<p class="choque">Ojo: hay movimientos repetidos (' + escapar(repetidos.join(', ')) + ')</p>' : '') +
-    '<table><tr><th>#</th><th>Título</th><th>Desafíos</th><th>Movimiento</th><th>Lo que le manda hacer</th></tr>' +
-    filas + '</table></details>';
-}
 
 // Cada parte con sus cuatro puntos, cada uno con su nombre para saber de que
 // habla y para poder volver a buscarlo.
