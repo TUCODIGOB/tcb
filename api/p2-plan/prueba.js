@@ -665,9 +665,10 @@ rasgo            EL RASGO DEL QUE SALE TODO LO DEMÁS DE ESTA PARCELA, copiado
                  parcelas, se queda en la que más manda y la otra coge el suyo.
 
 movimiento       QUÉ LE ESTÁS PIDIENDO HACER, EN UNA PALABRA. Un verbo en
-                 infinitivo y nada más: hablar, entregar, pedir, parar,
-                 empezar, cobrar, elegir, soltar, esperar, negarse, escribir,
-                 quedarse, cortar, mostrar, repartir...
+                 infinitivo y nada más, el que de verdad describa lo que le
+                 mandas hacer en esa parcela. No lo cojas de ninguna lista: lo
+                 sacas de la orden que acabas de decidir, y si no cabe en un
+                 verbo es que la orden no está clara todavía.
                  LOS SIETE MOVIMIENTOS SON SIETE VERBOS DISTINTOS, y no vale
                  uno parecido con otra palabra: si en una parcela le pides
                  hablar, en otra no le pides decir, ni contar, ni expresar.
