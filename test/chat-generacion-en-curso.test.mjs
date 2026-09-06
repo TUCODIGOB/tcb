@@ -101,20 +101,28 @@ const POR_AREAS = [
   ['RELACIONES', 'Mercurio en Aries',          'casa 11 en Acuario'],
   ['DINERO',     'casa 2 en Aries',            'casa 10 en Acuario'],
 ];
-const laLista = (cual, l) => JSON.stringify({
+// Ahora los rasgos van en tres pasos: uno los saca, cuatro los escriben y otro
+// elige. Aqui se contesta a los tres, cada uno con lo suyo.
+const losSacados = JSON.stringify({
   rasgos: POR_AREAS.flatMap(([area, a, b], k) => [
-    { area, nombre: TITULOS[l][k * 2],     origen: a,
-      descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
-      causa: 'Sostienes el esfuerzo sin depender de que salga bien.' },
-    { area, nombre: TITULOS[l][k * 2 + 1], origen: b,
-      descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
-      causa: 'Sostienes el esfuerzo sin depender de que salga bien.' },
+    { lista: 'fortalezas', nombre: TITULOS.Fortaleza[k * 2],     origen: a },
+    { lista: 'fortalezas', nombre: TITULOS.Fortaleza[k * 2 + 1], origen: b },
+    { lista: 'desafios',   nombre: TITULOS.Desafio[k * 2],       origen: a },
+    { lista: 'desafios',   nombre: TITULOS.Desafio[k * 2 + 1],   origen: b },
   ]),
 });
-// El que elige devuelve numeros: aqui se queda con todos, y el techo por area
-// lo recorta el codigo despues.
+// El que escribe devuelve un texto por rasgo, con su nombre delante.
+const losTextos = cuerpo => JSON.stringify({
+  textos: (String(cuerpo.system || '').match(/^\d+\. (.+)$/gm) || [])
+    .map(l => l.replace(/^\d+\. /, ''))
+    .map(nombre => ({ nombre,
+      descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
+      causa: 'Sostienes el esfuerzo sin depender de que salga bien.' })),
+});
+// El que elige devuelve numero y area: aqui se queda con todos, repartidos por
+// las siete areas, y el techo lo recorta el codigo despues.
 const losElegidos = cuantos => JSON.stringify({
-  elegidos: Array.from({ length: cuantos }, (_, i) => i + 1),
+  elegidos: Array.from({ length: cuantos }, (_, i) => ({ numero: i + 1, area: POR_AREAS[i % 7][0] })),
 });
 const cuantosHay = cuerpo => (String(cuerpo.system || '').match(/^\d+\. \[/gm) || []).length;
 
@@ -123,17 +131,25 @@ globalThis.fetch = async (url, opciones) => {
   if (u.includes('api.anthropic.com')) {
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
-    let esElegir = false, esEscribir = false, esFortalezas = false, cuantos = 0;
+    let esElegir = false, esEscribir = false, esSacar = false, cuantos = 0, cuerpoVisto = {};
     try {
       const cuerpo = JSON.parse(opciones.body);
       const sistema = String(cuerpo.system || '');
       esElegir = sistema.includes('AQUÍ NO SE ESCRIBE NADA');
-      esEscribir = sistema.includes('LAS CASILLAS DE CADA RASGO');
+      esSacar = sistema.includes('AQUÍ NO SE ESCRIBE EL INFORME');
+      esEscribir = sistema.includes('AQUÍ NO SE ELIGE NADA');
       if (esElegir) cuantos = cuantosHay(cuerpo);
-      if (esEscribir) esFortalezas = sistema.includes('lo que se le da bien');
+      cuerpoVisto = cuerpo;
+      cuerpoVisto = cuerpo;
     } catch (e) {}
-    // La de elegir razona: su respuesta trae delante un bloque de pensamiento y
-    // detras el texto, como la API de verdad.
+    // Las que razonan traen delante un bloque de pensamiento y detras el
+    // texto, como la API de verdad.
+    if (esSacar) {
+      return { ok: true, status: 200, json: async () => ({ content: [
+        { type: 'thinking', thinking: '' },
+        { type: 'text', text: losSacados },
+      ] }) };
+    }
     if (esElegir) {
       return { ok: true, status: 200, json: async () => ({ content: [
         { type: 'thinking', thinking: '' },
@@ -142,7 +158,7 @@ globalThis.fetch = async (url, opciones) => {
     }
     if (esEscribir) {
       return { ok: true, status: 200, json: async () => ({ content: [
-        { type: 'text', text: laLista(esFortalezas ? 'fortalezas' : 'desafios', esFortalezas ? 'Fortaleza' : 'Desafio') },
+        { type: 'text', text: losTextos(cuerpoVisto) },
       ] }) };
     }
     // api/chat.js descarta cualquier area de menos de 100 caracteres y la
@@ -228,11 +244,10 @@ try {
   // 3. La generacion legitima termina sin enterarse de nada.
   const legitima = await enCurso;
   comprobar('la generacion legitima termina bien', legitima.code === 200, 'HTTP ' + legitima.code);
-  // 10 = las dos listas de rasgos, que van en paralelo y antes que nada, mas la
-  // que le pone el area a cada uno, mas las 7 areas del informe. Lo que se
-  // vigila aqui no es el numero, sino que la segunda peticion no haya lanzado
-  // NINGUNA generacion mas.
-  comprobar('en total solo se generó una vez', llamadasAlModelo === 10, llamadasAlModelo + ' llamadas');
+  // 13 = la que saca los rasgos, las 4 que los escriben, la que elige, y las 7
+  // areas del informe. Lo que se vigila aqui no es el numero, sino que la
+  // segunda peticion no haya lanzado NINGUNA generacion mas.
+  comprobar('en total solo se generó una vez', llamadasAlModelo === 13, llamadasAlModelo + ' llamadas');
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);
