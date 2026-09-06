@@ -26,6 +26,9 @@ const SEPARADOR_AREAS = '\u001F';
 //
 // No añade ni una llamada: las quita cuando el tiempo aprieta.
 const TOPE_DE_LA_PETICION = 285000; // 15 segundos por debajo del corte de Vercel
+// Lo que aguanta un area antes de darla por colgada. Las siete van a la vez,
+// asi que esto es tambien lo que ocupan todas al final de la peticion.
+const TOPE_DE_UN_AREA = 90000;
 
 function crearReloj(margen = TOPE_DE_LA_PETICION) {
   const fin = Date.now() + margen;
@@ -483,7 +486,7 @@ ${cartaTexto}`;
       method: 'POST',
       // Un area tarda entre 20 y 40 segundos. Pasado el minuto y medio no esta
       // tardando: esta colgada, y vale mas cortarla y volver a pedirla.
-      signal: reloj.senal(90000),
+      signal: reloj.senal(TOPE_DE_UN_AREA),
       headers: {
         'Content-Type': 'application/json',
         'x-api-key': process.env.ANTHROPIC_API_KEY,
@@ -1260,7 +1263,10 @@ async function sacarLasListas(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
       ultimoError = err;
       const temporal = err.temporal !== false;
       if (!temporal || intento === tiradas) break;
-      if (!reloj.hayTiempoPara(180)) {
+      // Otra tirada entera (las dos listas y el que elige) mas las siete areas
+      // detras. Sin contar las areas, un reintento a destiempo se come su sitio
+      // y la clienta se queda sin informe habiendo pagado.
+      if (!reloj.hayTiempoPara((TOPE_DE_LA_LISTA + TOPE_DE_ELEGIR + TOPE_DE_UN_AREA) / 1000)) {
         console.warn('Listas: fallo y ya no cabe otra tirada con las siete areas detras');
         break;
       }

@@ -43,7 +43,7 @@ const original = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
 //    alguien los quita del codigo, esto salta antes de bajar nada.
 const ENPRODUCCION = [
   ['el presupuesto de la peticion', 'const TOPE_DE_LA_PETICION = 285000'],
-  ['el tope de cada area',          'signal: reloj.senal(90000)'],
+  ['el tope de cada area',          'const TOPE_DE_UN_AREA = 90000'],
   ['el tope de escribir la lista', 'const TOPE_DE_LA_LISTA = 140000'],
   ['el tope de elegir',            'const TOPE_DE_ELEGIR = 40000'],
 ];
@@ -84,8 +84,8 @@ function aEscala(texto, presupuesto) {
     .replace('const TOPE_DE_LA_PETICION = 285000', `const TOPE_DE_LA_PETICION = ${presupuesto}`)
     .replace('const TOPE_DE_LA_LISTA = 140000', 'const TOPE_DE_LA_LISTA = 2500')
     .replace('const TOPE_DE_ELEGIR = 40000', 'const TOPE_DE_ELEGIR = 2000')
-    .replace('reloj.senal(90000)', 'reloj.senal(2500)')
-    .replace('hayTiempoPara(180)', 'hayTiempoPara(5)');
+    .replace('const TOPE_DE_UN_AREA = 90000', 'const TOPE_DE_UN_AREA = 2500')
+    
 }
 
 const stripeFalsoRuta = path.join(AQUI, '.stripe-falso.mjs');
