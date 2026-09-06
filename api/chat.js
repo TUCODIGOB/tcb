@@ -628,7 +628,7 @@ const DE_QUE_VA_CADA_AREA = {
   HERIDA:     'De dónde viene su dolor, el origen, qué se rompió en su momento.',
   AMOR:       'Pareja, romance, deseo, lo que disfruta con alguien en el plano romántico.',
   RELACIONES: 'Familia, amigos, compañeros — todo vínculo que no sea pareja.',
-  DINERO:     'Dinero y trabajo, lo que gana, lo que cree que vale, su carrera, hacia dónde va profesionalmente.',
+  DINERO:     'Dinero y trabajo, lo que gana, lo que cree que vale, hacia dónde va profesionalmente.',
 };
 
 const LAS_SIETE_AREAS = NOMBRES_DE_AREA
