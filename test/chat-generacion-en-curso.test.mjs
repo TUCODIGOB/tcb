@@ -101,45 +101,48 @@ const POR_AREAS = [
   ['RELACIONES', 'Mercurio en Aries',          'casa 11 en Acuario'],
   ['DINERO',     'casa 2 en Aries',            'casa 10 en Acuario'],
 ];
-const elegidosDe = (cual, l) => POR_AREAS.flatMap(([area, a, b], k) => [
-  { lista: cual, area, nombre: TITULOS[l][k * 2],     origen: a },
-  { lista: cual, area, nombre: TITULOS[l][k * 2 + 1], origen: b },
-]);
-const LOS_ELEGIDOS = JSON.stringify({
-  rasgos: elegidosDe('fortalezas', 'Fortaleza').concat(elegidosDe('desafios', 'Desafio')),
+const laLista = (cual, l) => JSON.stringify({
+  rasgos: POR_AREAS.flatMap(([area, a, b], k) => [
+    { area, nombre: TITULOS[l][k * 2],     origen: a,
+      descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
+      causa: 'Sostienes el esfuerzo sin depender de que salga bien.' },
+    { area, nombre: TITULOS[l][k * 2 + 1], origen: b,
+      descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
+      causa: 'Sostienes el esfuerzo sin depender de que salga bien.' },
+  ]),
 });
-const losTextos = cuantos => JSON.stringify({
-  textos: Array.from({ length: cuantos }, () => ({
-    descripcion: 'Sigues de pie donde otros se bajan del todo, y quien te tiene cerca ya cuenta con eso.',
-    causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
-  })),
+// El que elige devuelve numeros: aqui se queda con todos, y el techo por area
+// lo recorta el codigo despues.
+const losElegidos = cuantos => JSON.stringify({
+  elegidos: Array.from({ length: cuantos }, (_, i) => i + 1),
 });
-const cuantosPide = cuerpo => String(cuerpo.messages?.[0]?.content || '').match(/de los (\d+) rasgos/)?.[1] | 0;
+const cuantosHay = cuerpo => (String(cuerpo.system || '').match(/^\d+\. \[/gm) || []).length;
 
 globalThis.fetch = async (url, opciones) => {
   const u = String(url);
   if (u.includes('api.anthropic.com')) {
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
-    let esElegir = false, esEscribir = false, cuantos = 0;
+    let esElegir = false, esEscribir = false, esFortalezas = false, cuantos = 0;
     try {
       const cuerpo = JSON.parse(opciones.body);
       const sistema = String(cuerpo.system || '');
-      esElegir = sistema.includes('AQUÍ NO SE ESCRIBE EL INFORME');
-      esEscribir = sistema.includes('AQUÍ NO SE ELIGE NADA');
-      if (esEscribir) cuantos = cuantosPide(cuerpo);
+      esElegir = sistema.includes('AQUÍ NO SE ESCRIBE NADA');
+      esEscribir = sistema.includes('LAS CASILLAS DE CADA RASGO');
+      if (esElegir) cuantos = cuantosHay(cuerpo);
+      if (esEscribir) esFortalezas = sistema.includes('lo que se le da bien');
     } catch (e) {}
     // La de elegir razona: su respuesta trae delante un bloque de pensamiento y
     // detras el texto, como la API de verdad.
     if (esElegir) {
       return { ok: true, status: 200, json: async () => ({ content: [
         { type: 'thinking', thinking: '' },
-        { type: 'text', text: LOS_ELEGIDOS },
+        { type: 'text', text: losElegidos(cuantos) },
       ] }) };
     }
     if (esEscribir) {
       return { ok: true, status: 200, json: async () => ({ content: [
-        { type: 'text', text: losTextos(cuantos) },
+        { type: 'text', text: laLista(esFortalezas ? 'fortalezas' : 'desafios', esFortalezas ? 'Fortaleza' : 'Desafio') },
       ] }) };
     }
     // api/chat.js descarta cualquier area de menos de 100 caracteres y la
