@@ -1029,11 +1029,6 @@ const TECHO_DE_ESCRIBIR = 12000;
 const MOLDE_DE_LA_PARTE = {
   type: 'object',
   properties: {
-    // EL TITULO LO PONE QUIEN ESCRIBE, y no quien decide. Es lo unico que la
-    // clienta lee en grande, en la primera pagina de cada parte, y quien decide
-    // no tiene las reglas de como se escribe -las tiene esta llamada-. Cuando
-    // lo ponia la otra salian titulos que nadie entiende.
-    titulo:       { type: 'string' },
     tuPrueba:     { type: 'string' },
     queHaces:     { type: 'string' },
     dondeTeCaes:  { type: 'string' },
@@ -1127,7 +1122,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
     }),
   });
 
-  const escrita = { titulo: String(salida.titulo || '').trim() };
+  const escrita = { titulo: parte.titulo };
   for (const punto of PUNTOS) escrita[punto] = String(salida[punto] || '').trim();
 
   // ── UNA PARTE ROTA NO SE ENTREGA, PERO ROTA ES ROTA ───────
@@ -1153,7 +1148,6 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
     if (!txt) roto.push(`"${BLOQUES[punto]}" viene vacio`);
     else if (esRelleno(txt)) roto.push(`"${BLOQUES[punto]}" trae texto de relleno en vez de contenido`);
   }
-  if (!escrita.titulo) roto.push('viene sin título');
   if (roto.length) throw new Error(`la parte "${parte.titulo}" ha salido rota: ${roto.join('; ')}`);
 
   return escrita;
