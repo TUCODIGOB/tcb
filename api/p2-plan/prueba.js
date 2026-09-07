@@ -604,13 +604,12 @@ const MOLDE_DEL_PLAN = {
           // aqui. Lo escribe el modelo porque cada plan lleva unas cosas
           // distintas y no se pueden dejar escritos de antemano.
           titulo:       { type: 'string' },
-          movimiento:   { type: 'string' },
           tuPrueba:     { type: 'string' },
           queHaces:     { type: 'string' },
           dondeTeCaes:  { type: 'string' },
           cuandoTeCaes: { type: 'string' },
         },
-        required: ['deCuales', 'titulo', 'movimiento', ...PUNTOS],
+        required: ['deCuales', 'titulo', ...PUNTOS],
         additionalProperties: false,
       },
     },
@@ -679,16 +678,6 @@ titulo           Cómo se llama esta parte del documento. Habla de lo que ella
                  va fuera. Tiene que entenderlo alguien de dieciocho años a la
                  primera y sin pensar.
 
-movimiento       QUÉ LE ESTÁS PIDIENDO HACER, EN UNA PALABRA. Un verbo en
-                 infinitivo y nada más, el que de verdad describa lo que le
-                 mandas hacer. No lo cojas de ninguna lista: lo sacas de la
-                 orden que acabas de decidir, y si no cabe en un verbo es que
-                 la orden no está clara todavía.
-                 LOS MOVIMIENTOS SON TODOS DISTINTOS, y no vale uno parecido
-                 con otra palabra: si en una parte le pides hablar, en otra no
-                 le pides decir, ni contar, ni expresar. Si dos coinciden es
-                 que esas dos partes eran la misma y no las juntaste.
-
 tuPrueba         Qué le pone la vida delante aquí y en quién se convierte el
                  día que lo supere. Dicho como un examen que tiene delante, no
                  como un fallo suyo que hay que corregir.
@@ -750,7 +739,19 @@ Nombre de pila: ${nombre}`;
   const salida = await alModelo({
     que: 'decidir el plan',
     modelo,
-    piensa: 'low',
+    // ESFUERZO MEDIO, Y ESTO SE APRENDIO MIRANDO EL P1.
+    //
+    // Aqui estaba en bajo, para que fuera rapido. Y con bajo no compara: en un
+    // plan de verdad, de dieciocho desafios saco trece partes y tres de ellas
+    // le mandaban lo mismo.
+    //
+    // El P1 hace exactamente esta misma comparacion -mirar una lista entera y
+    // decidir que se repite- con Opus a esfuerzo MEDIO, y es la unica llamada
+    // del informe que piensa. Ahi si sale bien, y lleva meses saliendo bien.
+    //
+    // Comparar todos contra todos es lo que cuesta pensar. Quitarle el esfuerzo
+    // era quitarle justo lo que hace falta para esto.
+    piensa: 'medium',
     techo: TECHO_DEL_PLAN,
     system: encargo,
     mensaje: `Decide su plan entero, siguiendo el esquema.${recordatorio}`,
@@ -764,13 +765,12 @@ Nombre de pila: ${nombre}`;
     const suyo = {
       deCuales: (Array.isArray(p?.deCuales) ? p.deCuales : []).map(Number).filter(Number.isInteger),
       titulo: String(p?.titulo || '').trim(),
-      movimiento: String(p?.movimiento || '').trim(),
     };
     for (const punto of PUNTOS) suyo[punto] = String(p?.[punto] || '').trim();
     // UNA PARTE A MEDIAS NO SE ESCRIBE. Si viene con una casilla vacia, quien
     // escribe se encuentra un hueco y lo rellena por su cuenta, y entonces se
     // inventa algo de su vida que no sale de ningun sitio.
-    if (!suyo.titulo || !suyo.movimiento || PUNTOS.some(punto => !suyo[punto])) continue;
+    if (!suyo.titulo || PUNTOS.some(punto => !suyo[punto])) continue;
     partes.push(suyo);
   }
 
@@ -832,7 +832,7 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
   //
   // Con Sonnet, siempre. Este intento no esta para pensar mejor que el
   // anterior: esta para arreglar algo concreto que se le dice escrito -dos
-  // movimientos iguales, una casilla vacia-, y eso es trabajo de seguir una
+  // una casilla vacia, dos titulos iguales-, y eso es trabajo de seguir una
   // instruccion, no de criterio. Sonnet lo hace en la cuarta parte del tiempo,
   // y a estas alturas el reloj ya va cargado.
   const queda = loQueQueda(arranque, ESPERA_DEL_SEGUNDO_PLAN_MS);
@@ -848,7 +848,7 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
       nombre, sexo, rasgos,
       modelo: EL_QUE_REMATA,
       espera: queda,
-      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Cada parte va con su título, su movimiento en un verbo y sus cuatro cosas escritas enteras. Y donde dos partes le mandaban hacer lo mismo, se JUNTAN en una sola con los dos números en "deCuales": no se reescribe una con otras palabras para que parezcan distintas, porque entonces sigue habiendo dos partes que le mandan lo mismo.`,
+      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Cada parte va con su título y sus cuatro cosas escritas enteras. Y donde dos partes le mandaban hacer lo mismo, se JUNTAN en una sola con los dos números en "deCuales": no se reescribe una con otras palabras para que parezcan distintas, porque entonces sigue habiendo dos partes que le mandan lo mismo.`,
     });
   } catch (err) {
     // El segundo intento es una mejora, no un requisito: si se cae, se entrega
@@ -1315,35 +1315,31 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
     texto: p => PUNTOS.map(punto => p[punto]).join(' '),
   });
 
-  const escrita = { titulo: parte.titulo, movimiento: parte.movimiento };
+  const escrita = { titulo: parte.titulo };
   for (const punto of PUNTOS) escrita[punto] = String(salida[punto] || '').trim();
 
-  // ── Y UNA PARTE ROTA NO SE ENTREGA ────────────────────────
+  // ── UNA PARTE ROTA NO SE ENTREGA, PERO ROTA ES ROTA ───────
   //
-  // Esto es lo que fallo en el primer plan de verdad: tres de las diez partes
-  // salieron con "Que haces" cortado a media frase y con la palabra
-  // "placeholder" escrita en las dos ultimas casillas, y se imprimieron asi en
-  // el PDF de una clienta.
+  // Esto existe porque tres partes de un plan real salieron con la palabra
+  // "placeholder" dentro y se imprimieron asi en el PDF de una clienta. Eso no
+  // puede pasar.
   //
-  // Las redes de arriba SI lo vieron. El problema es lo que se hace despues:
-  // se pide otra vez, y si la segunda tampoco mejora se entrega la primera. Eso
-  // esta bien para un texto que se ha pasado de largo o que ha venido de una
-  // pieza -es peor quedarse sin la parte que tenerla algo larga-, pero no para
-  // esto. Un texto cortado a media frase o una casilla que pone "placeholder"
-  // no es una parte imperfecta: es una parte que no esta.
+  // PERO SE PASO DE FRENO Y COSTO UN DOCUMENTO ENTERO. Estaba tirando tambien
+  // las que acababan sin punto o las que venian algo cortas, y eso no es una
+  // parte que falta: es una parte mejorable. Cada una de esas se volvia a pedir
+  // hasta tres veces, y en un plan de verdad se cayeron tres partes, se
+  // pidieron nueve veces mas, ninguna paso, y la clienta se quedo SIN PDF
+  // despues de cuatro minutos y un euro.
   //
-  // Asi que aqui se separan las dos cosas. Lo cosmetico se entrega. Lo roto se
-  // levanta como fallo, y entonces la pagina la vuelve a pedir entera y de
-  // cero, hasta tres veces. Y si a la tercera sigue rota, no se monta el PDF y
-  // se dice cual falta: preferimos no darle el documento a darselo con un
-  // agujero dentro.
+  // Quedarse sin documento es peor que tener una frase sin punto. Asi que ahora
+  // solo se tira lo que de verdad no es texto: una casilla vacia o con una
+  // palabra de relleno haciendo bulto. Todo lo demas se entrega, que para eso
+  // ya se ha pedido dos veces ahi arriba.
   const roto = [];
   for (const punto of PUNTOS) {
     const txt = escrita[punto];
     if (!txt) roto.push(`"${BLOQUES[punto]}" viene vacio`);
     else if (esRelleno(txt)) roto.push(`"${BLOQUES[punto]}" trae texto de relleno en vez de contenido`);
-    else if (acabaColgado(txt)) roto.push(`"${BLOQUES[punto]}" se queda a media frase`);
-    else if (cuantas(txt) < PALABRAS_MINIMAS[punto]) roto.push(`"${BLOQUES[punto]}" viene en ${cuantas(txt)} palabras`);
   }
   if (roto.length) throw new Error(`la parte "${parte.titulo}" ha salido rota: ${roto.join('; ')}`);
 
@@ -1660,9 +1656,10 @@ ir.addEventListener('click', async () => {
   // casi siempre entra a la segunda: lo que se cae aqui es la linea, no el
   // texto.
   //
-  // Tres y no mas: si a la tercera sigue sin volver, lo que hay caido no es
-  // esta parte, y seguir pidiendo solo hace esperar mas para acabar igual.
-  const INTENTOS = 3;
+  // DOS Y NO TRES. Cada vuelta cuesta hasta un minuto de espera y una llamada
+  // por parte caida. En el plan donde se cayeron tres, la tercera vuelta no
+  // arreglo ninguna: solo sumo un minuto y tres llamadas a la basura.
+  const INTENTOS = 2;
   let caidas = plan.partes.map((_, i) => i);
   for (let vuelta = 1; vuelta <= INTENTOS && caidas.length; vuelta++) {
     if (vuelta > 1) aviso.textContent = 'Se han caído ' + caidas.length + ', se piden otra vez…';
@@ -1728,7 +1725,6 @@ function pintarLoDecidido(partes) {
       '<td>' + (i + 1) + '</td>' +
       '<td>' + escapar(p.titulo || '') + '</td>' +
       '<td>' + escapar((p.deCuales || []).join(', ')) + (deCuantos > 1 ? ' <b>(juntados)</b>' : '') + '</td>' +
-      '<td class="verbo">' + escapar(p.movimiento || '') + '</td>' +
       '<td>' + escapar(p.queHaces || '') + '</td>' +
     '</tr>';
   }).join('');
@@ -1739,7 +1735,7 @@ function pintarLoDecidido(partes) {
   return '<details class="decidido" open><summary>Lo que ha decidido la primera llamada — ' +
     partes.length + ' partes' + (deCuantos ? ' de ' + deCuantos + ' desafíos' : '') +
     (juntados ? ', ' + juntados + ' juntando varios' : '') + '</summary>' +
-    '<table><tr><th>#</th><th>Título</th><th>Desafíos</th><th>Movimiento</th><th>Lo que le manda hacer</th></tr>' +
+    '<table><tr><th>#</th><th>Título</th><th>Desafíos</th><th>Lo que le manda hacer</th></tr>' +
     filas + '</table></details>';
 }
 
