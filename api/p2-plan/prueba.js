@@ -15,23 +15,27 @@
 //
 // ── COMO ESTA HECHO ─────────────────────────────────────────
 //
-//   UNA LLAMADA DECIDE, PENSANDO. Recibe todo lo que a esta persona le cuesta,
-//   sacado del P1, y hace dos cosas: limpia la lista -junta los que dicen lo
-//   mismo, tira los que no dan para un cambio- y de los que quedan decide en
-//   corto los cuatro puntos de cada uno. No escribe ni una linea del documento.
-//   Es la unica que piensa: de lo que decida aqui cuelga el documento entero,
-//   y es el unico sitio donde estan todos delante a la vez, que es lo unico
-//   que permite ver que dos dicen lo mismo.
+//   UNA LLAMADA LIMPIA LA LISTA, Y NO HACE NADA MAS. Recibe todo lo que a esta
+//   persona le cuesta, sacado del P1, y dice cuales se quedan: fuera las que
+//   dicen lo mismo, las que se contradicen y las que no dan para un cambio.
+//   Devuelve numeros, no texto. Es la que compara, y por eso es la que piensa.
+//
+//   OTRA DECIDE, con las que han quedado. De cada una saca en corto el titulo y
+//   los cuatro puntos. No compara nada -ya viene limpio- y no escribe ni una
+//   linea de lo que ella va a leer.
 //
 //   UNA POR PARTE ESCRIBEN, TODAS A LA VEZ. Cada una recibe solo las cuatro
 //   lineas de su parte, y nada mas. No deciden: abren esas cuatro lineas hasta
-//   que se entiendan a la primera, y sin pasarse de una hoja.
+//   que se entiendan a la primera.
 //
 //
-// Por que se decide todo de golpe: si cada parte se decidiera por su cuenta,
-// varias llegarian a la misma conclusion con otras palabras y la clienta
-// leeria siete cosas que en realidad son dos. Eso solo se ve teniendolas todas
-// delante a la vez.
+// POR QUE LIMPIAR VA APARTE. Estuvo junto con decidir, y no salia: mientras
+// comparaba dieciocho desafios entre si estaba tambien redactando el titulo y
+// las cuatro lineas de cada uno, sesenta y cinco lineas, y el trabajo de
+// redactar se comia al de comparar. En un plan de verdad, de dieciocho
+// desafios salieron trece partes -o sea que no limpio nada- y tres de ellas
+// mandaban hacer lo mismo. Se reescribio la instruccion tres veces y siguio
+// igual: no era la instruccion, era que la llamada tenia dos trabajos.
 //
 // ── QUE LLEVA EL DOCUMENTO ──────────────────────────────────
 //
@@ -635,42 +639,25 @@ ${susDesafios(rasgos)}`;
 }
 
 // ════════════════════════════════════════════════════════════════
-// PASO 2: DECIDIR EL PLAN ENTERO, PENSANDO
+// PASO 2: DECIDIR, CON LA LISTA YA LIMPIA
 // ════════════════════════════════════════════════════════════════
 //
-// Esta es la unica llamada que decide, y es todo el cambio. Tambien es la
-// unica que piensa a fondo: las que escriben piensan poco, y solo para
-// releerse.
+// De cada cosa que ha quedado saca el titulo y sus cuatro puntos, en corto. No
+// escribe ni una linea de lo que ella va a leer: eso lo hacen las que vienen
+// despues.
 //
-// Recibe todo lo que le cuesta de golpe, lo limpia y decide el documento
-// entero en corto: los cuatro puntos de cada parte. No escribe ni una linea de
-// lo que ella va a leer: eso lo hacen las que vienen despues.
+// AQUI NO SE COMPARA NADA, y por eso no hace falta que piense mucho. Lo que
+// hace es mirar un desafio y decidir que conducta le manda cambiar, uno por
+// uno. Eso es criterio, y el criterio lo pone el modelo -Opus-, no el rato que
+// piense. Va a esfuerzo BAJO.
 //
-// POR QUE DE GOLPE. Lo que hay que evitar es que dos partes le manden hacer lo
-// mismo con otras palabras, y eso solo se ve teniendolas todas delante a la
-// vez. Pedirlas de una en una y confiar en que no se repitan es lo que fallaba
-// antes.
+// Bajo y no apagado porque aqui se decide lo que ella tiene que hacer, que es
+// por lo que ha pagado, y en eso no se ahorra.
 //
-// OPUS DECIDE, Y CON EL ESFUERZO BAJO. Esta es la eleccion del producto y hay
-// historia detras, asi que queda escrita para no volver a darle vueltas.
+// SALE UNA PARTE POR CADA COSA DE LA LISTA. Ni junta ni quita: eso ya se hizo.
+// Si vuelve con menos partes de las que habia, es que se ha dejado alguna y se
+// pide otra vez.
 //
-// Opus se probo dos veces y las dos se corto, asi que se cambio a Sonnet. Pero
-// las dos veces iba a esfuerzo MEDIO -y con topes de 110 y 120 segundos-. El
-// esfuerzo es lo que manda en lo que tarda esta llamada, y a medio Opus no
-// baja de ahi. O sea que lo que se midio no fue "Opus no llega": fue "Opus a
-// medio no llega en 110 segundos".
-//
-// A BAJO no se habia probado nunca, y es donde esta el producto. Un modelo de
-// la generacion nueva con el esfuerzo bajo rinde por encima de la generacion
-// anterior a esfuerzo alto, y esta llamada es la que decide el documento
-// entero: es donde se nota la diferencia entre un plan bueno y uno correcto.
-// Es UNA llamada por cliente, asi que lo que cuesta de mas es calderilla.
-//
-// Y SI OPUS FALLA, TERMINA SONNET. Sea por lo que sea -que se pase de tiempo,
-// que se quede sin sitio, que el modelo conteste 500-, no se deja al cliente
-// sin plan: se vuelve a pedir con Sonnet y con el tiempo que quede. Un plan
-// algo menos fino se entrega; una pantalla en blanco no.
-
 // TODO EL DOCUMENTO TIENE QUE ESTAR EN DOS MINUTOS Y MEDIO. Esa es la regla, y
 // de ahi salen los numeros de aqui abajo, no al reves.
 //
@@ -685,9 +672,10 @@ ${susDesafios(rasgos)}`;
 //    60 s para escribir, y las partes van todas a la vez, asi que ese es el
 //        tope de UNA, no el de la suma.
 //
-// 150 + 90 + 60 = 300, que es el peor caso imaginable y solo se da si todo
-// sale mal dos veces seguidas. Lo normal es 110 + 40, que son dos minutos y
-// medio contando de sobra.
+// El peor caso de una peticion es 90 + 90 + 90 = 270, por debajo de los 285
+// que se dejan de margen, y solo se da si todo sale mal dos veces seguidas.
+// Lo normal son unos 40 segundos para limpiar, otros 40 para decidir y 40 mas
+// para escribir, que van todas a la vez: unos dos minutos en total.
 const ESPERA_DEL_PLAN_MS = 90000;
 
 // Y EL SEGUNDO INTENTO, MAS CORTO, porque va con Sonnet y Sonnet tarda 24.
