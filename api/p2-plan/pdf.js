@@ -260,10 +260,10 @@ export default async function handler(req, res) {
     // Cada una en su hoja, con sus cuatro puntos y el nombre de cada uno: sin
     // ellos quien lee no sabe de que le habla cada trozo, ni puede volver a
     // buscar uno el dia que le haga falta.
-    const PUNTOS = ['tuPrueba', 'queHaces', 'dondeTeCaes', 'cuandoTeCaes'];
+    const PUNTOS = ['tuPrueba', 'queHaces', 'dondeTeCaes'];
     const PORDEFECTO = {
       tuPrueba: 'Tu prueba', queHaces: 'Qué haces',
-      dondeTeCaes: 'Dónde te vas a caer', cuandoTeCaes: 'Cuando te caigas',
+      dondeTeCaes: 'Dónde te vas a caer y qué hacer cuando te caigas',
     };
 
     // EL QUE VA SOBRE BEIGE. Es la orden: lo que tiene que hacer. Es lo que va
