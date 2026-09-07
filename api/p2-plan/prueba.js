@@ -585,7 +585,7 @@ De cada una, mira QUÉ ESTÁ HACIENDO esa persona ahí. No de qué habla ni dón
 
 Y compara eso entre sí, todas con todas. Las que se repitan te están diciendo que ahí hay una sola cosa contada varias veces.
 
-Léelas así y no por cómo están escritas. Vienen redactadas por separado, así que dos idénticas por debajo pueden no compartir ni una palabra. Y da igual que a una le pase en un sitio de su vida y a otra en otro: el sitio no las hace distintas, la conducta sí.
+Léelas así y no por cómo están escritas. Vienen redactadas por separado, así que dos idénticas por debajo pueden no compartir ni una palabra.
 
 QUÉ SE QUITA
 
