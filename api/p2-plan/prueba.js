@@ -1085,6 +1085,25 @@ const comoSeCompara = txt =>
 // se puede permitir.
 const acabaColgado = txt => /[\p{L}\p{N},;:«¿¡([“‘]$/u.test(String(txt || '').trim());
 
+// ── Y QUE NINGUNA CASILLA TRAIGA UN HUECO EN VEZ DE TEXTO ───
+//
+// En el primer plan de verdad, tres casillas llegaron con la palabra
+// "placeholder" dentro y se imprimieron asi en el PDF. El modelo hace esto
+// cuando se queda sin hilo a mitad: cierra el molde rellenando lo que le falta
+// con una palabra cualquiera, y el molde queda valido, asi que nada se queja.
+//
+// Se busca solo lo que NADIE escribiria en un documento que se le entrega a
+// una persona. Nada de palabras corrientes: una sola de esas aqui dentro haria
+// tirar textos buenos.
+const MARCAS_DE_RELLENO = [
+  /^\s*(placeholder|lorem ipsum|texto de ejemplo|pendiente|por completar|por escribir|sin contenido|n\/?a|tbd|todo)\b/i,
+  /\bplaceholder\b/i,
+  /\blorem ipsum\b/i,
+  /^\s*[.\-–—_]+\s*$/,
+  /^\s*\[[^\]]*\]\s*$/,
+];
+const esRelleno = txt => MARCAS_DE_RELLENO.some(re => re.test(String(txt || '')));
+
 // SI SE LE CUELA, SE VUELVE A PEDIR. Una sola vez: aqui no se puede tirar el
 // trozo como en el P1 -eso dejaria un hueco en el documento-, asi que se pide
 // otra vez recordandoselo. Si a la segunda sigue colandose, se avisa en el
@@ -1200,42 +1219,34 @@ const MOLDE_DE_LA_PARTE = {
 // despues. Eso no cabe en noventa palabras, asi que se le da lo que hace falta
 // y se recorta en los otros tres, que solo enmarcan.
 //
-// DE DONDE SALEN LAS CIFRAS. De la hoja, medida: una parte empieza en su
-// propia pagina y le quedan 206 mm por debajo del titulo. Los cuatro
-// subtitulos se llevan 64, el aire entre parrafos y la caja beige otros 35, y
-// lo que sobra son unos dieciseis renglones. A trece palabras por renglon,
-// una hoja son unas doscientas palabras. Eso es lo que suman estos cuatro
-// topes, y por eso suman eso.
+// Y AQUI HAY DOS CIFRAS DISTINTAS, QUE NO ES LO MISMO:
 //
-// Y "queHaces" SUBE DE 115 A 135. La cifra vieja no daba: el encargo le pide
-// meter ahi CUATRO cosas -que hace, como las primeras veces, que hace en lugar
-// de lo de siempre, y como lo sostiene- y en dos parrafos. En 115 palabras eso
-// sale a veintinueve por cosa, que no llega ni para decirlas, asi que pasaba
-// una de dos: o se pasaba de largo y habia que reescribir la parte entera, o
-// cabia despachando alguna en media linea. Las dos son malas, y la primera
-// ademas cuesta un minuto de reloj cada vez.
+//   LO QUE SE LE PIDE. Va escrito en el encargo y es donde se le dice que
+//   apunte. Sale de lo que de verdad hace falta para que se entienda.
 //
-// Las otras tres bajan un poco para compensar, que es de donde sale el sitio:
-// solo enmarcan, y ninguna necesitaba lo que tenia.
-const PALABRAS_MAXIMAS = { tuPrueba: 35, queHaces: 135, dondeTeCaes: 25, cuandoTeCaes: 18 };
+//   CUANDO SE RECHAZA. Es bastante mas alta, y no se le dice. Es la linea a
+//   partir de la cual el texto ya no es "un poco largo" sino que se ha ido.
+//
+// POR QUE SEPARADAS, Y ESTO SE APRENDIO CARO. Antes habia una sola cifra: se
+// le pedian 135 palabras y se rechazaba a partir de 151. En el primer plan de
+// verdad, el modelo escribio entre 156 y 206 en las siete partes que salieron
+// enteras. O sea que se rechazaron TODAS, se pidieron todas dos veces -el
+// doble de dinero y el doble de reloj- y aun asi volvieron parecidas, porque
+// el modelo no cuenta palabras mientras escribe.
+//
+// Y peor: tres partes salieron cortadas a media frase, con "placeholder" en
+// las dos ultimas casillas, y se entregaron asi.
+//
+// Las cifras de abajo salen de ese documento, contadas una a una. Lo que se le
+// pide es la mediana de lo que escribe cuando lo hace bien; donde se rechaza
+// va por encima de lo mas largo que escribio, para que solo salte cuando de
+// verdad se ha ido.
+const PALABRAS_PEDIDAS = { tuPrueba: 60, queHaces: 180, dondeTeCaes: 25, cuandoTeCaes: 20 };
+const PALABRAS_MAXIMAS = { tuPrueba: 110, queHaces: 230, dondeTeCaes: 45, cuandoTeCaes: 35 };
 
-// Y UN SUELO MUY BAJO, solo para que ninguna se despache en una linea. No es
-// para llenar: es para que no venga vacia de contenido pareciendo entera.
-const PALABRAS_MINIMAS = { tuPrueba: 22, queHaces: 80, dondeTeCaes: 16, cuandoTeCaes: 12 };
-
-// PASARSE UN POCO NO ES MOTIVO PARA REESCRIBIR NADA.
-//
-// El tope es lo que se le pide, y se le pide en el encargo para que apunte
-// ahi. Pero reescribir una parte entera porque se ha ido cuatro palabras es
-// tirar un texto bueno y gastar hasta un minuto de reloj para que vuelva otro
-// igual: el modelo no cuenta palabras, asi que la segunda vez cae donde caiga.
-//
-// Asi que la red salta cuando se ha pasado DE VERDAD -un 12%, que en la
-// casilla larga son unas dieciseis palabras, medio renglon y medio-. Por
-// debajo de eso entra tal cual. Es lo que quita casi todas las reescrituras, y
-// es de donde sale el tiempo del documento.
-const MARGEN_DE_LARGO = 1.12;
-const topeReal = punto => Math.round(PALABRAS_MAXIMAS[punto] * MARGEN_DE_LARGO);
+// Y UN SUELO, para que ninguna venga vacia de contenido pareciendo entera. Es
+// tambien lo que caza un "placeholder": una casilla de una palabra no pasa.
+const PALABRAS_MINIMAS = { tuPrueba: 30, queHaces: 110, dondeTeCaes: 15, cuandoTeCaes: 12 };
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
@@ -1267,16 +1278,16 @@ CADA UNA DE LAS CUATRO ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos d
 LAS CUATRO, Y LO QUE VA EN CADA UNA:
 
 "tuPrueba"
-Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Como mucho ${PALABRAS_MAXIMAS.tuPrueba} palabras. Si te sobran, mejor.
+Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Como mucho ${PALABRAS_PEDIDAS.tuPrueba} palabras. Si te sobran, mejor.
 
 "queHaces"
-Es la más larga de las cuatro y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Como mucho ${PALABRAS_MAXIMAS.queHaces} palabras, que es casi media hoja y de sobra si no das rodeos.
+Es la más larga de las cuatro y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Unas ${PALABRAS_PEDIDAS.queHaces} palabras, que es de sobra si no das rodeos. Si te salen algunas mas porque hacia falta, mejor eso que dejarla a medias: lo que NO puede pasar es que la cortes por la mitad para que quepa.
 
 "dondeTeCaes"
-Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Y qué hace justo ahí. Como mucho ${PALABRAS_MAXIMAS.dondeTeCaes} palabras.
+Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Y qué hace justo ahí. Como mucho ${PALABRAS_PEDIDAS.dondeTeCaes} palabras.
 
 "cuandoTeCaes"
-Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Como mucho ${PALABRAS_MAXIMAS.cuandoTeCaes} palabras.
+Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Como mucho ${PALABRAS_PEDIDAS.cuandoTeCaes} palabras.
 
 LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que haces tú, y hace falta: sin esa línea todo sale pegado en un bloque y no hay quien lo lea en un móvil.
 
@@ -1296,7 +1307,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
   const cortos = p => PUNTOS.filter(punto => cuantas(p[punto]) < PALABRAS_MINIMAS[punto]);
   // Se mide contra el tope CON su margen: pasarse un poco entra, pasarse de
   // verdad se reescribe. Ver MARGEN_DE_LARGO.
-  const pasados = p => PUNTOS.filter(punto => PALABRAS_MAXIMAS[punto] && cuantas(p[punto]) > topeReal(punto));
+  const pasados = p => PUNTOS.filter(punto => PALABRAS_MAXIMAS[punto] && cuantas(p[punto]) > PALABRAS_MAXIMAS[punto]);
   const colgados = p => PUNTOS.filter(punto => acabaColgado(p[punto]));
 
   const salida = await sinNombrarLaCarta({
@@ -1310,6 +1321,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
     cojo: p => cortos(p).length > 0
             || pasados(p).length > 0
             || colgados(p).length > 0
+            || PUNTOS.some(punto => esRelleno(p[punto]))
             || parrafosDe(p.queHaces) < 2
             || cuentaComoEs(p.queHaces, 0)
             || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto])),
@@ -1317,8 +1329,10 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
       ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta qué tiene delante y adónde le lleva, qué hace, dónde se cae y qué hace ese día.'
       : pasados(p).length
         ? `\n\nY OJO: la vez anterior "${pasados(p).map(x => BLOQUES[x]).join('", "')}" salió pasado de largo. Cada parte de este documento cabe en una hoja, y quien lo lee no relee: lo que sobra no es que moleste, es que tapa lo que importa. Se dice lo que hay que decir y se para.`
+      : PUNTOS.some(punto => esRelleno(p[punto]))
+        ? `\n\nY OJO: la vez anterior dejaste una casilla con una palabra de relleno dentro (${PUNTOS.filter(punto => esRelleno(p[punto])).map(x => BLOQUES[x]).join(', ')}) en vez de escribirla. Esto lo lee una persona que ha pagado por ello: las cuatro se escriben, y si te has quedado sin hilo, se vuelve a empezar esa.`
       : colgados(p).length
-        ? `\n\nY OJO: la vez anterior algo se quedó a media frase (${colgados(p).map(x => BLOQUES[x]).join(', ')}). Se termina lo que se empieza: cada uno de los cuatro acaba su última frase.`
+        ? `\n\nY OJO: la vez anterior algo se quedó a media frase (${colgados(p).map(x => BLOQUES[x]).join(', ')}). Se termina lo que se empieza: cada uno de los cuatro acaba su última frase, con su punto.`
         : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cuatro se cuenta entero, y lo que tiene que hacer va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
@@ -1336,6 +1350,36 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
 
   const escrita = { titulo: parte.titulo, movimiento: parte.movimiento };
   for (const punto of PUNTOS) escrita[punto] = String(salida[punto] || '').trim();
+
+  // ── Y UNA PARTE ROTA NO SE ENTREGA ────────────────────────
+  //
+  // Esto es lo que fallo en el primer plan de verdad: tres de las diez partes
+  // salieron con "Que haces" cortado a media frase y con la palabra
+  // "placeholder" escrita en las dos ultimas casillas, y se imprimieron asi en
+  // el PDF de una clienta.
+  //
+  // Las redes de arriba SI lo vieron. El problema es lo que se hace despues:
+  // se pide otra vez, y si la segunda tampoco mejora se entrega la primera. Eso
+  // esta bien para un texto que se ha pasado de largo o que ha venido de una
+  // pieza -es peor quedarse sin la parte que tenerla algo larga-, pero no para
+  // esto. Un texto cortado a media frase o una casilla que pone "placeholder"
+  // no es una parte imperfecta: es una parte que no esta.
+  //
+  // Asi que aqui se separan las dos cosas. Lo cosmetico se entrega. Lo roto se
+  // levanta como fallo, y entonces la pagina la vuelve a pedir entera y de
+  // cero, hasta tres veces. Y si a la tercera sigue rota, no se monta el PDF y
+  // se dice cual falta: preferimos no darle el documento a darselo con un
+  // agujero dentro.
+  const roto = [];
+  for (const punto of PUNTOS) {
+    const txt = escrita[punto];
+    if (!txt) roto.push(`"${BLOQUES[punto]}" viene vacio`);
+    else if (esRelleno(txt)) roto.push(`"${BLOQUES[punto]}" trae texto de relleno en vez de contenido`);
+    else if (acabaColgado(txt)) roto.push(`"${BLOQUES[punto]}" se queda a media frase`);
+    else if (cuantas(txt) < PALABRAS_MINIMAS[punto]) roto.push(`"${BLOQUES[punto]}" viene en ${cuantas(txt)} palabras`);
+  }
+  if (roto.length) throw new Error(`la parte "${parte.titulo}" ha salido rota: ${roto.join('; ')}`);
+
   return escrita;
 }
 
