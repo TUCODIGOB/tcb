@@ -528,8 +528,11 @@ const cuantosDesafios = rasgos => (rasgos?.desafios || [])
 //
 // Se probo con Opus dos veces y las dos se paso del tope: con la lista de
 // desafios de una clienta real no termina por debajo de 110 segundos, y
-// entonces la peticion se corta y no hay plan. Con Sonnet, ese mismo informe
-// se decidio en 24 segundos.
+// entonces la peticion se corta y no hay plan.
+//
+// Con Sonnet y el esfuerzo BAJO, ese mismo informe se decidio en 24 segundos,
+// medidos en el registro del servidor. Es la unica pareja medida con datos de
+// verdad, y por eso es la que va: aqui no se pone nada a ojo.
 //
 // Que Opus elija mejor no sirve de nada si no llega a tiempo, y aqui el reloj
 // lo tiene la clienta esperando delante.
@@ -704,7 +707,7 @@ Nombre de pila: ${nombre}`;
   const salida = await alModelo({
     que: 'decidir el plan',
     modelo: 'claude-sonnet-5',
-    piensa: 'medium',
+    piensa: 'low',
     techo: TECHO_DEL_PLAN,
     system: encargo,
     mensaje: `Decide su plan entero, siguiendo el esquema.${recordatorio}`,
