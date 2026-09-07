@@ -557,9 +557,18 @@ const MOLDE_DE_LIMPIAR = {
 async function limpiarLaLista({ rasgos, espera = ESPERA_DE_LIMPIAR_MS, modelo = EL_QUE_DECIDE }) {
   const desafios = losDesafios(rasgos);
 
-  const encargo = `${EL_P2_NO_ES_EL_P1}
-
-Abajo tienes, numeradas, las cosas que le cuestan a una persona. Salen de su carta y están escritas por separado, sin que nadie las mirara juntas.
+  // Y AQUI NO VA NADA MAS QUE LA LISTA Y SU INSTRUCCION.
+  //
+  // Las otras dos llamadas empiezan con el bloque que explica que es este
+  // producto, y lo necesitan: una decide que le manda hacer y la otra le
+  // escribe. Esta no. Esta solo tiene que mirar una lista y decir cuales dicen
+  // lo mismo, y para eso no le hace falta saber que es el P2, ni como se le
+  // habla a la clienta, ni que lleva el documento.
+  //
+  // Estaba puesto, y eran mil setecientas letras: casi la mitad de lo que leia
+  // no le servia para su trabajo. Se copio al partir la llamada en dos, sin
+  // preguntarse si hacia falta.
+  const encargo = `Abajo tienes, numeradas, las cosas que le cuestan a una persona. Salen de su carta y están escritas por separado, sin que nadie las mirara juntas.
 
 TU ÚNICO TRABAJO ES DECIR CUÁLES SE QUEDAN. Aquí no se escribe nada del documento, no se decide qué tiene que hacer y no se le cuenta nada a nadie. Solo se limpia la lista. Por eso puedes dedicarle todo el rato a compararlas bien, que es lo único que hay que hacer aquí.
 
@@ -727,16 +736,21 @@ const MOLDE_DEL_PLAN = {
           // documento: sirve para mirar lo que ha elegido antes de gastar las
           // llamadas que escriben.
           deCuales:     { type: 'array', items: { type: 'integer' } },
-          // El titulo de esta parte del documento, y lo unico que se ve de
-          // aqui. Lo escribe el modelo porque cada plan lleva unas cosas
-          // distintas y no se pueden dejar escritos de antemano.
-          titulo:       { type: 'string' },
+          // DE QUE VA ESTA PARTE, en una linea y para dentro: la clienta no lo
+          // lee. Es lo que le dice a quien escribe de que esta hablando, para
+          // que el titulo que ponga hable de eso y no de otra cosa.
+          //
+          // Antes aqui iba el titulo ya escrito, y salia mal: esta llamada no
+          // tiene las reglas de como se escribe -las tiene la que escribe- asi
+          // que ponia titulos que nadie entiende, del estilo de una figura en
+          // vez de la cosa. Y era lo unico de aqui que se imprimia tal cual.
+          deQueVa:      { type: 'string' },
           tuPrueba:     { type: 'string' },
           queHaces:     { type: 'string' },
           dondeTeCaes:  { type: 'string' },
           cuandoTeCaes: { type: 'string' },
         },
-        required: ['deCuales', 'titulo', ...PUNTOS],
+        required: ['deCuales', 'deQueVa', ...PUNTOS],
         additionalProperties: false,
       },
     },
@@ -774,23 +788,11 @@ deCuales         El número de la lista de abajo del que sale esta parte. Uno
                  solo: aquí no se junta nada, ya viene juntado. Es para poder
                  mirar de dónde ha salido cada cosa.
 
-titulo           Cómo se llama esta parte del documento. Habla de lo que ella
-                 va a hacer o de en quién se convierte, nunca de lo que le
-                 pasa: es un título de plan, no de diagnóstico. Corto, y sin
-                 dos puntos ni subtítulos.
-                 Y NI DOS EMPIEZAN CON LA MISMA PALABRA: van seguidos en el
-                 mismo documento y se leen del tirón.
-                 SE ENTIENDE SOLO, LEÍDO DE PASO Y SIN NADA ALREDEDOR. Es lo
-                 único de aquí que ella va a leer tal cual, en grande y en la
-                 primera página de esa parte, así que si tiene que llegar
-                 abajo para saber de qué le hablas, el título está mal.
-                 Y SE DICE LA COSA, NO UNA FIGURA DE LA COSA. Ni metáforas,
-                 ni imágenes, ni frases que suenan bien sin decir nada: si el
-                 título no se puede hacer literalmente, está mal. Se nombra lo
-                 que ella hace, con las palabras de todos los días, y si una
-                 palabra la verías antes escrita que dicha en una conversación,
-                 va fuera. Tiene que entenderlo alguien de dieciocho años a la
-                 primera y sin pensar.
+deQueVa          De qué va esta parte, en una línea. Esto NO es el título y
+                 no lo lee nadie más que quien escribe la parte: es para que
+                 sepa de qué está hablando antes de ponerse. Di de qué va por
+                 lo que ella va a hacer o por en quién se convierte, nunca por
+                 lo que le pasa. El título ya lo pondrá quien escriba.
 
 tuPrueba         Qué le pone la vida delante aquí y en quién se convierte el
                  día que lo supere. Dicho como un examen que tiene delante, no
@@ -878,13 +880,13 @@ Nombre de pila: ${nombre}`;
       deCuales: (Array.isArray(p?.deCuales) ? p.deCuales : [])
         .map(Number).filter(Number.isInteger)
         .map(n => limpia.deCuales[n - 1]).filter(Boolean),
-      titulo: String(p?.titulo || '').trim(),
+      deQueVa: String(p?.deQueVa || '').trim(),
     };
     for (const punto of PUNTOS) suyo[punto] = String(p?.[punto] || '').trim();
     // UNA PARTE A MEDIAS NO SE ESCRIBE. Si viene con una casilla vacia, quien
     // escribe se encuentra un hueco y lo rellena por su cuenta, y entonces se
     // inventa algo de su vida que no sale de ningun sitio.
-    if (!suyo.titulo || PUNTOS.some(punto => !suyo[punto])) continue;
+    if (!suyo.deQueVa || PUNTOS.some(punto => !suyo[punto])) continue;
     partes.push(suyo);
   }
 
@@ -910,11 +912,11 @@ Nombre de pila: ${nombre}`;
   // nada que interpretar.
   const porTitulo = new Map();
   for (const p of partes) {
-    const cual = comoSeCompara(p.titulo);
+    const cual = comoSeCompara(p.deQueVa);
     if (!cual) continue;
     porTitulo.set(cual, (porTitulo.get(cual) || 0) + 1);
   }
-  if ([...porTitulo.values()].some(n => n > 1)) falla.push('hay dos partes con el mismo titulo');
+  if ([...porTitulo.values()].some(n => n > 1)) falla.push('hay dos partes que van de lo mismo');
 
   // Y QUE DOS PARTES NO MANDEN HACER LO MISMO no se comprueba aqui: eso es
   // cuestion de lo que significan, no de las letras que llevan, y de eso se
@@ -1286,6 +1288,11 @@ const TECHO_DE_ESCRIBIR = 12000;
 const MOLDE_DE_LA_PARTE = {
   type: 'object',
   properties: {
+    // EL TITULO LO PONE QUIEN ESCRIBE, y no quien decide. Es lo unico que la
+    // clienta lee en grande, en la primera pagina de cada parte, y quien decide
+    // no tiene las reglas de como se escribe -las tiene esta llamada-. Cuando
+    // lo ponia la otra salian titulos que nadie entiende.
+    titulo:       { type: 'string' },
     tuPrueba:     { type: 'string' },
     queHaces:     { type: 'string' },
     dondeTeCaes:  { type: 'string' },
@@ -1376,7 +1383,15 @@ ${REGLAS_COMUNES}
 
 LO QUE TE TOCA AHORA
 
-Escribes UNA parte del documento, la que va con este título: "${parte.titulo}".
+Escribes UNA parte del documento. Esta parte va de esto: ${parte.deQueVa}
+
+Y EL TÍTULO LO PONES TÚ, que es lo primero que se lee de esta parte y va en grande en su propia página.
+
+Habla de lo que ella va a hacer o de en quién se convierte, nunca de lo que le pasa: es un título de plan, no de diagnóstico. Corto, sin dos puntos y sin subtítulos.
+
+Se entiende solo, leído de paso y sin nada alrededor. Si para saber de qué va hay que bajar a leer el texto, está mal.
+
+Y se dice la cosa, no una figura de la cosa: ni metáforas ni imágenes. Si el título no se puede hacer literalmente, está mal. Con las palabras de todos los días, y que lo entienda alguien de dieciocho años a la primera.
 
 TE DAN CUATRO LÍNEAS YA DECIDIDAS Y ESCRIBES LAS CUATRO, cada una por su lado. No eliges tú lo que va: eso ya está decidido con todo su plan delante. Lo tuyo es que se entienda y que sirva.
 
@@ -1426,7 +1441,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
   const colgados = p => PUNTOS.filter(punto => acabaColgado(p[punto]));
 
   const salida = await sinNombrarLaCarta({
-    que: `la parte "${parte.titulo}"`,
+    que: `la parte "${parte.deQueVa}"`,
     // Se mira que los cuatro esten contados enteros, que el que manda hacer
     // algo venga en parrafos y que ninguno se ponga a contarle otra vez como
     // es.
@@ -1451,7 +1466,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
         : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cuatro se cuenta entero, y lo que tiene que hacer va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
-      que: `escribir "${parte.titulo}"`,
+      que: `escribir "${parte.deQueVa}"`,
       modelo: 'claude-sonnet-5',
       piensa: '',
       techo: TECHO_DE_ESCRIBIR,
@@ -1463,7 +1478,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
     texto: p => PUNTOS.map(punto => p[punto]).join(' '),
   });
 
-  const escrita = { titulo: parte.titulo };
+  const escrita = { titulo: String(salida.titulo || '').trim() };
   for (const punto of PUNTOS) escrita[punto] = String(salida[punto] || '').trim();
 
   // ── UNA PARTE ROTA NO SE ENTREGA, PERO ROTA ES ROTA ───────
@@ -1489,7 +1504,8 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
     if (!txt) roto.push(`"${BLOQUES[punto]}" viene vacio`);
     else if (esRelleno(txt)) roto.push(`"${BLOQUES[punto]}" trae texto de relleno en vez de contenido`);
   }
-  if (roto.length) throw new Error(`la parte "${parte.titulo}" ha salido rota: ${roto.join('; ')}`);
+  if (!escrita.titulo) roto.push('viene sin título');
+  if (roto.length) throw new Error(`la parte "${parte.deQueVa}" ha salido rota: ${roto.join('; ')}`);
 
   return escrita;
 }
@@ -1582,7 +1598,7 @@ export default async function handler(req, res) {
       // Lo que llega del navegador se comprueba antes de meterlo en el encargo:
       // si viniera a medias, el hueco lo rellenaria el modelo por su cuenta y
       // acabaria inventandose algo de su vida.
-      if (!String(parte?.titulo || '').trim() || PUNTOS.some(punto => !String(parte?.[punto] || '').trim())) {
+      if (!String(parte?.deQueVa || '').trim() || PUNTOS.some(punto => !String(parte?.[punto] || '').trim())) {
         return res.status(400).json({ error: 'Esa parte llega a medias y no se escribe' });
       }
       // Y sin nombre no se escribe: lo mismo que en el paso anterior, para que
@@ -1765,7 +1781,7 @@ ir.addEventListener('click', async () => {
   const huecos = plan.partes.map((suya, i) => {
     const hueco = document.createElement('div');
     hueco.className = 'parte';
-    hueco.innerHTML = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.titulo) +
+    hueco.innerHTML = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.deQueVa) +
       '</h2><p class="aviso">Escribiéndose…</p>';
     salida.appendChild(hueco);
     return hueco;
@@ -1783,7 +1799,7 @@ ir.addEventListener('click', async () => {
     const caidas = [];
     await Promise.all(cuales.map(async i => {
       const suya = plan.partes[i];
-      const cabecera = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.titulo) + '</h2>';
+      const cabecera = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.deQueVa) + '</h2>';
       try {
         const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo,
                                          parte: suya, puedeElNombre: conNombre.has(i) });
@@ -1878,7 +1894,7 @@ function pintarLoDecidido(partes, limpieza) {
     const deCuantos = (p.deCuales || []).length;
     return '<tr>' +
       '<td>' + (i + 1) + '</td>' +
-      '<td>' + escapar(p.titulo || '') + '</td>' +
+      '<td>' + escapar(p.deQueVa || '') + '</td>' +
       '<td>' + escapar((p.deCuales || []).join(', ')) + (deCuantos > 1 ? ' <b>(juntados)</b>' : '') + '</td>' +
       '<td>' + escapar(p.queHaces || '') + '</td>' +
     '</tr>';
@@ -1894,7 +1910,7 @@ function pintarLoDecidido(partes, limpieza) {
 
   return '<details class="decidido" open><summary>La limpieza — ' +
     entraron + ' entraron, quedan ' + partes.length + '</summary>' + quitadas +
-    '<table><tr><th>#</th><th>Título</th><th>Desafíos</th><th>Lo que le manda hacer</th></tr>' +
+    '<table><tr><th>#</th><th>De qué va</th><th>Desafíos</th><th>Lo que le manda hacer</th></tr>' +
     filas + '</table></details>';
 }
 
