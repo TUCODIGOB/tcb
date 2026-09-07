@@ -577,17 +577,15 @@ async function limpiarLaLista({ rasgos, espera = ESPERA_DE_LIMPIAR_MS, modelo = 
   // preguntarse si hacia falta.
   const encargo = `Abajo tienes, numeradas, las cosas que le cuestan a una persona. Salen de su carta y están escritas por separado, sin que nadie las mirara juntas.
 
-TU ÚNICO TRABAJO ES DECIR CUÁLES SE QUEDAN. Aquí no se escribe nada del documento, no se decide qué tiene que hacer y no se le cuenta nada a nadie. Solo se limpia la lista. Por eso puedes dedicarle todo el rato a compararlas bien, que es lo único que hay que hacer aquí.
-
 Cada una de las que dejes va a ser una parte del documento. Si dejas dos que dicen lo mismo, ella lee dos veces la misma cosa, cree que tiene el doble de trabajo del que tiene, y deja de fiarse.
 
 CÓMO SE COMPARAN
 
-De cada una, dite para ti en tres o cuatro palabras QUÉ ESTÁ HACIENDO ELLA ahí. No de qué habla ni dónde le pasa: qué hace. Eso no lo escribes en ningún sitio, es para ti.
+De cada una, dite para ti en tres o cuatro palabras QUÉ ESTÁ HACIENDO ELLA ahí. No de qué habla ni dónde le pasa: qué hace.
 
 Ahora mira esa lista de conductas y compáralas entre sí, todas con todas. Las que se repitan te están diciendo que ahí hay una sola cosa contada varias veces.
 
-Léelas así y no por cómo están escritas. Vienen redactadas por separado, así que dos idénticas por debajo pueden no compartir ni una palabra, y dos que suenan parecido pueden ser distintas. Y da igual que a una le pase en un sitio de su vida y a otra en otro: el sitio no las hace distintas, la conducta sí.
+Léelas así y no por cómo están escritas. Vienen redactadas por separado, así que dos idénticas por debajo pueden no compartir ni una palabra. Y da igual que a una le pase en un sitio de su vida y a otra en otro: el sitio no las hace distintas, la conducta sí.
 
 QUÉ SE QUITA
 
@@ -596,8 +594,6 @@ LAS QUE DICEN LO MISMO. De cada grupo se queda UNA, la que esté mejor contada, 
 LAS QUE SE CONTRADICEN. Si dos le piden cosas que no puede hacer a la vez, se queda la que más le pese y la otra se va.
 
 LAS QUE NO DAN PARA UN CAMBIO. Si de una no sale nada que ella pueda ponerse a hacer, se va, por muy cierta que sea. El documento es lo que hace, no lo que le pasa.
-
-Y NADA MÁS. Lo que no entre en esos tres casos se queda. No hay número que cumplir: ni quites una buena para que salgan menos, ni dejes una floja para que salgan más. Salen las que salgan.
 
 LO QUE DEVUELVES
 
@@ -776,8 +772,6 @@ async function pedirElPlan({ nombre, sexo, limpia, recordatorio = '',
 
 Estás preparando el plan de una persona: lo que tiene que cambiar para llegar a ser quien quiere ser, y qué hace para conseguirlo.
 
-Abajo tienes una lista: todo lo que a esta persona le cuesta, sacado de su carta. Cada uno con lo que le pasa y con el porqué detrás.
-
 LO QUE LE CUESTA ES SU PRUEBA, NO SU DEFECTO. Es lo único que hay que entender para hacer bien esto. Cada cosa que le cuesta es algo que la vida le va a seguir poniendo delante hasta que lo aprenda, y de ahí sale lo que tiene que hacer. Ese es todo el trabajo: darle la vuelta a lo que le pesa y convertirlo en lo que hace.
 
 AQUÍ NO SE ESCRIBE EL DOCUMENTO. Aquí se DECIDE. Todo sale en corto, una línea cada cosa, y lo que se va a leer lo escribe otro después. Por eso puedes dedicarle el rato a lo que de verdad importa: decidir qué le va a mover la vida y qué no.
@@ -847,10 +841,8 @@ LEE LOS "queHaces" SEGUIDOS. La lista viene limpia, así que no deberían pedirl
 
 Y QUE TODO SALGA DE LA LISTA. Si señalas una línea y no puedes decir de qué número de abajo sale, se cambia.
 
-Devuelve solo lo decidido. No expliques lo que has quitado.
+Devuelve solo lo decidido.
 
-
-TODO LO QUE A ESTA PERSONA LE CUESTA:
 
 ${limpia.lista}
 
