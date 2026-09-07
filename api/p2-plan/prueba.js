@@ -577,13 +577,13 @@ async function limpiarLaLista({ rasgos, espera = ESPERA_DE_LIMPIAR_MS, modelo = 
   // preguntarse si hacia falta.
   const encargo = `Abajo tienes, numeradas, las cosas que le cuestan a una persona. Salen de su carta y están escritas por separado, sin que nadie las mirara juntas.
 
-Cada una de las que dejes va a ser una parte del documento. Si dejas dos que dicen lo mismo, ella lee dos veces la misma cosa, cree que tiene el doble de trabajo del que tiene, y deja de fiarse.
+Cada una de las que dejes va a ser una parte del documento. Si dejas dos que dicen lo mismo, quien lo lee lee dos veces la misma cosa, cree que tiene el doble de trabajo del que tiene, y deja de fiarse.
 
 CÓMO SE COMPARAN
 
-De cada una, dite para ti en tres o cuatro palabras QUÉ ESTÁ HACIENDO ELLA ahí. No de qué habla ni dónde le pasa: qué hace.
+De cada una, mira QUÉ ESTÁ HACIENDO esa persona ahí. No de qué habla ni dónde le pasa: qué hace.
 
-Ahora mira esa lista de conductas y compáralas entre sí, todas con todas. Las que se repitan te están diciendo que ahí hay una sola cosa contada varias veces.
+Y compara eso entre sí, todas con todas. Las que se repitan te están diciendo que ahí hay una sola cosa contada varias veces.
 
 Léelas así y no por cómo están escritas. Vienen redactadas por separado, así que dos idénticas por debajo pueden no compartir ni una palabra. Y da igual que a una le pase en un sitio de su vida y a otra en otro: el sitio no las hace distintas, la conducta sí.
 
@@ -593,7 +593,7 @@ LAS QUE DICEN LO MISMO. De cada grupo se queda UNA, la que esté mejor contada, 
 
 LAS QUE SE CONTRADICEN. Si dos le piden cosas que no puede hacer a la vez, se queda la que más le pese y la otra se va.
 
-LAS QUE NO DAN PARA UN CAMBIO. Si de una no sale nada que ella pueda ponerse a hacer, se va, por muy cierta que sea. El documento es lo que hace, no lo que le pasa.
+LAS QUE NO DAN PARA UN CAMBIO. Si de una no sale nada que esa persona pueda ponerse a hacer, se va, por muy cierta que sea. El documento es lo que hace, no lo que le pasa.
 
 LO QUE DEVUELVES
 
@@ -776,7 +776,7 @@ LO QUE LE CUESTA ES SU PRUEBA, NO SU DEFECTO. Es lo único que hay que entender 
 
 AQUÍ NO SE ESCRIBE EL DOCUMENTO. Aquí se DECIDE. Todo sale en corto, una línea cada cosa, y lo que se va a leer lo escribe otro después. Por eso puedes dedicarle el rato a lo que de verdad importa: decidir qué le va a mover la vida y qué no.
 
-Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene: eso ya lo tiene, se lo leyó entero en otro documento. Lo suyo solo aparece para enganchar lo que tiene que hacer.
+Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene: eso ya lo tiene, se lo leyó entero en otro documento. Lo que le pasa solo aparece para enganchar lo que tiene que hacer.
 
 
 1. DE CADA UNO DE LOS QUE HAY ABAJO, ESTO
@@ -792,12 +792,12 @@ deCuales         El número de la lista de abajo del que sale esta parte. Uno
 deQueVa          De qué va esta parte, en una línea. Esto NO es el título y
                  no lo lee nadie más que quien escribe la parte: es para que
                  sepa de qué está hablando antes de ponerse. Di de qué va por
-                 lo que ella va a hacer o por en quién se convierte, nunca por
+                 lo que va a hacer quien lo lee o por en quién se convierte, nunca por
                  lo que le pasa. El título ya lo pondrá quien escriba.
 
 tuPrueba         Qué le pone la vida delante aquí y en quién se convierte el
                  día que lo supere. Dicho como un examen que tiene delante, no
-                 como un fallo suyo que hay que corregir.
+                 como un fallo propio que hay que corregir.
 
 queHaces         UNA SOLA COSA que tiene que hacer. Una, no dos ni tres. Es lo
                  más importante de las cuatro y por lo que ha pagado, y es una
@@ -808,7 +808,7 @@ queHaces         UNA SOLA COSA que tiene que hacer. Una, no dos ni tres. Es lo
                  Y ES ALGO QUE YA PUEDE HACER con la vida que tenga, sin
                  comprar nada, sin apuntarse a nada y sin que le haga falta
                  nadie. Como no sabes en qué se le va el día, lo que decidas va
-                 sobre lo que ella hace, que eso sí lo sabes, y no sobre dónde
+                 sobre lo que hace quien lo lee, que eso sí lo sabes, y no sobre dónde
                  lo hace.
 
 dondeTeCaes      Dónde se va a caer intentándolo: lo que va a aparecer para
@@ -822,9 +822,9 @@ cuandoTeCaes     Qué hace el día que lo deja. No es animar a nadie: es el
 
 2. LO QUE NO SE PUEDE ESCRIBIR
 
-NO SE INVENTA NADA DE SU VIDA. Lo que sabes de ella es lo que hay abajo y nada más. No sabes si tiene pareja, trabajo, hijos, casa o familia: no los nombres, no los supongas y no los uses para montar nada. Lo que decidas tiene que servirle igual sea cual sea su vida.
+NO SE INVENTA NADA DE SU VIDA. Lo que sabes de quien lo lee es lo que hay abajo y nada más. No sabes si tiene pareja, trabajo, hijos, casa o familia: no los nombres, no los supongas y no los uses para montar nada. Lo que decidas tiene que servirle igual sea cual sea su vida.
 
-Y NO HACE FALTA SABERLO, porque lo que decides no va sobre su vida, va sobre su conducta, y esa la tienes entera abajo. No es "habla con quien sea": es qué hace cuando le pasa lo que le pasa siempre. Eso es suyo, y solo suyo, sin saber nada más.
+Y NO HACE FALTA SABERLO, porque lo que decides no va sobre su vida, va sobre su conducta, y esa la tienes entera abajo. No es "habla con quien sea": es qué hace cuando le pasa lo que le pasa siempre. Eso es de quien lo lee, y solo de quien lo lee, sin saber nada más.
 
 Nada que le valga igual a cualquiera. Si lo que has escrito se le podría mandar a otra persona distinta, está mal y se cambia.
 
@@ -1392,7 +1392,7 @@ Escribes UNA parte del documento. Esta parte va de esto: ${parte.deQueVa}
 
 Y EL TÍTULO LO PONES TÚ, que es lo primero que se lee de esta parte y va en grande en su propia página.
 
-Habla de lo que ella va a hacer o de en quién se convierte, nunca de lo que le pasa: es un título de plan, no de diagnóstico. Corto, sin dos puntos y sin subtítulos.
+Habla de lo que va a hacer quien lo lee o de en quién se convierte, nunca de lo que le pasa: es un título de plan, no de diagnóstico. Corto, sin dos puntos y sin subtítulos.
 
 Se entiende solo, leído de paso y sin nada alrededor. Si para saber de qué va hay que bajar a leer el texto, está mal.
 
@@ -1409,7 +1409,7 @@ CADA UNA DE LAS CUATRO ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos d
 LAS CUATRO, Y LO QUE VA EN CADA UNA:
 
 "tuPrueba"
-Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas ${PALABRAS_PEDIDAS.tuPrueba} palabras para hacerte una idea del tamaño. Si lo dices en menos, mejor.
+Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo propio que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas ${PALABRAS_PEDIDAS.tuPrueba} palabras para hacerte una idea del tamaño. Si lo dices en menos, mejor.
 
 "queHaces"
 Es la más larga de las cuatro y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Unas ${PALABRAS_PEDIDAS.queHaces} palabras, que es de sobra si no das rodeos.
@@ -1420,7 +1420,7 @@ Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a apa
 "cuandoTeCaes"
 Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Unas ${PALABRAS_PEDIDAS.cuandoTeCaes} palabras.
 
-ANTES DE DARLO POR BUENO, LEE LAS CUATRO Y PREGÚNTATE ESTO DE CADA FRASE: ¿esto lo puede hacer o ver una persona? Si en una frase hay algo que solo pasa como imagen -que ella se apague, se borre, se rompa, se abra, se cierre, se llene o se vacíe- eso no es lo que le pasa, es una manera bonita de decirlo, y quien lo lee tiene que pararse a traducirlo. Se cambia por lo que hace o por lo que le ocurre de verdad. Es la frase más fácil de escribir y la que menos sirve.
+ANTES DE DARLO POR BUENO, LEE LAS CUATRO Y PREGÚNTATE ESTO DE CADA FRASE: ¿esto lo puede hacer o ver una persona? Si en una frase hay algo que solo pasa como imagen y no como algo que ocurre de verdad, eso no es lo que le pasa: es una manera bonita de decirlo, y quien lo lee tiene que pararse a traducirlo. Se cambia por lo que hace o por lo que le ocurre de verdad. Es la frase más fácil de escribir y la que menos sirve.
 
 LAS CIFRAS DE ARRIBA SON PARA QUE SEPAS EL TAMAÑO DE CADA COSA. Cuanto más corto, mejor: si lo dices en la mitad, has acertado. Lo único que no se hace nunca es cortar una frase por la mitad para que quepa. Si ves que no cabe, quitas algo entero y cierras: lo que no puede pasar es que quede a medias.
 
