@@ -610,12 +610,15 @@ ${susDesafios(rasgos)}`;
   return {
     sequedan,
     sequitan,
-    // Las descripciones de las que se quedan, ya listas para el paso siguiente.
+    // Los que se quedan, con su titulo, su descripcion y su porque, ya listos
+    // para el paso siguiente.
     lista: sequedan.map((n, i) => {
       const r = desafios[n - 1];
-      return `${i + 1}. ${String(r.descripcion).trim()}` +
+      return `${i + 1}. ${String(r.nombre || '').trim()}\n   ${String(r.descripcion).trim()}` +
         (r.causa ? `\n   PORQUE: ${String(r.causa).trim()}` : '');
     }).join('\n\n'),
+    // El titulo de cada uno, en el mismo orden que la lista de arriba.
+    titulos: sequedan.map(n => String(desafios[n - 1].nombre || '').trim()),
     // De que numero de la lista original sale cada una, para poder mirarlo.
     deCuales: sequedan,
   };
@@ -710,21 +713,12 @@ const MOLDE_DEL_PLAN = {
           // documento: sirve para mirar lo que ha elegido antes de gastar las
           // llamadas que escriben.
           deCuales:     { type: 'array', items: { type: 'integer' } },
-          // DE QUE VA ESTA PARTE, en una linea y para dentro: la clienta no lo
-          // lee. Es lo que le dice a quien escribe de que esta hablando, para
-          // que el titulo que ponga hable de eso y no de otra cosa.
-          //
-          // Antes aqui iba el titulo ya escrito, y salia mal: esta llamada no
-          // tiene las reglas de como se escribe -las tiene la que escribe- asi
-          // que ponia titulos que nadie entiende, del estilo de una figura en
-          // vez de la cosa. Y era lo unico de aqui que se imprimia tal cual.
-          deQueVa:      { type: 'string' },
           tuPrueba:     { type: 'string' },
           queHaces:     { type: 'string' },
           dondeTeCaes:  { type: 'string' },
           cuandoTeCaes: { type: 'string' },
         },
-        required: ['deCuales', 'deQueVa', ...PUNTOS],
+        required: ['deCuales', ...PUNTOS],
         additionalProperties: false,
       },
     },
@@ -754,17 +748,11 @@ Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene
 
 La lista ya viene limpia: alguien ha quitado antes las que decían lo mismo, las que se contradecían y las que no daban para nada que hacer. Así que no tienes que quitar ninguna ni juntarlas. Cada una de abajo es una parte del documento, y salen tantas partes como cosas hay en la lista.
 
-De cada uno sacas seis cosas, en una línea cada una, y ninguna se queda vacía. La línea va escrita para que quien la lea después la entienda entera sin preguntar nada: no es un título, es la cosa dicha en corto.
+De cada uno sacas cinco cosas, en una línea cada una, y ninguna se queda vacía. La línea va escrita para que quien la lea después la entienda entera sin preguntar nada: no es un título, es la cosa dicha en corto.
 
 deCuales         El número de la lista de abajo del que sale esta parte. Uno
                  solo: aquí no se junta nada, ya viene juntado. Es para poder
                  mirar de dónde ha salido cada cosa.
-
-deQueVa          De qué va esta parte, en una línea. Esto NO es el título y
-                 no lo lee nadie más que quien escribe la parte: es para que
-                 sepa de qué está hablando antes de ponerse. Di de qué va por
-                 lo que va a hacer quien lo lee o por en quién se convierte, nunca por
-                 lo que le pasa. El título ya lo pondrá quien escriba.
 
 tuPrueba         Qué le pone la vida delante aquí y en quién se convierte el
                  día que lo supere. Dicho como un examen que tiene delante, no
@@ -835,20 +823,22 @@ Nombre de pila: ${nombre}`;
   // Lo que ha decidido, limpio y en el orden en que lo ha puesto.
   const partes = [];
   for (const p of (Array.isArray(salida.partes) ? salida.partes : [])) {
+    // Los numeros que devuelve son los de la lista LIMPIA que se le paso.
+    const crudos = (Array.isArray(p?.deCuales) ? p.deCuales : [])
+      .map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= limpia.sequedan.length);
     const suyo = {
-      // Los numeros que devuelve son los de la lista LIMPIA que se le paso.
       // Se traducen a los de la lista original, que es lo que se mira en la
       // pagina para saber de que desafio de verdad sale cada parte.
-      deCuales: (Array.isArray(p?.deCuales) ? p.deCuales : [])
-        .map(Number).filter(Number.isInteger)
-        .map(n => limpia.deCuales[n - 1]).filter(Boolean),
-      deQueVa: String(p?.deQueVa || '').trim(),
+      deCuales: crudos.map(n => limpia.deCuales[n - 1]).filter(Boolean),
+      // EL TITULO ES EL DEL DESAFIO, y lo pone el programa: lo tiene tal cual
+      // lo escribio el P1, asi que no hace falta que nadie lo copie.
+      titulo: crudos.length ? limpia.titulos[crudos[0] - 1] : '',
     };
     for (const punto of PUNTOS) suyo[punto] = String(p?.[punto] || '').trim();
     // UNA PARTE A MEDIAS NO SE ESCRIBE. Si viene con una casilla vacia, quien
     // escribe se encuentra un hueco y lo rellena por su cuenta, y entonces se
     // inventa algo de su vida que no sale de ningun sitio.
-    if (!suyo.deQueVa || PUNTOS.some(punto => !suyo[punto])) continue;
+    if (!suyo.titulo || PUNTOS.some(punto => !suyo[punto])) continue;
     partes.push(suyo);
   }
 
@@ -874,7 +864,7 @@ Nombre de pila: ${nombre}`;
   // nada que interpretar.
   const porTitulo = new Map();
   for (const p of partes) {
-    const cual = comoSeCompara(p.deQueVa);
+    const cual = comoSeCompara(p.titulo);
     if (!cual) continue;
     porTitulo.set(cual, (porTitulo.get(cual) || 0) + 1);
   }
@@ -1109,7 +1099,7 @@ ${REGLAS_COMUNES}
 
 LO QUE TE TOCA AHORA
 
-Escribes UNA parte del documento. Esta parte va de esto: ${parte.deQueVa}
+Escribes UNA parte del documento. Esta parte va de esto: ${parte.titulo}
 
 Y EL TÍTULO LO PONES TÚ, que es lo primero que se lee de esta parte y va en grande en su propia página.
 
@@ -1157,14 +1147,14 @@ Nombre de pila: ${nombre}
 ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
 
   const salida = await otraVezSiVieneRota({
-    que: `la parte "${parte.deQueVa}"`,
+    que: `la parte "${parte.titulo}"`,
     // Lo unico que se mira: que ninguna de las cuatro venga con una palabra de
     // relleno en vez de texto.
     cojo: p => PUNTOS.some(punto => esRelleno(p[punto])),
     aviso: p => `\n\nY OJO: la vez anterior dejaste una casilla con una palabra de relleno dentro (${PUNTOS.filter(punto => esRelleno(p[punto])).map(x => BLOQUES[x]).join(', ')}) en vez de escribirla. Esto lo lee una persona que ha pagado por ello: las cuatro se escriben, y si te has quedado sin hilo, se vuelve a empezar esa.`,
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
-      que: `escribir "${parte.deQueVa}"`,
+      que: `escribir "${parte.titulo}"`,
       modelo: EL_QUE_REMATA,
       piensa: '',
       techo: TECHO_DE_ESCRIBIR,
@@ -1202,7 +1192,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
     else if (esRelleno(txt)) roto.push(`"${BLOQUES[punto]}" trae texto de relleno en vez de contenido`);
   }
   if (!escrita.titulo) roto.push('viene sin título');
-  if (roto.length) throw new Error(`la parte "${parte.deQueVa}" ha salido rota: ${roto.join('; ')}`);
+  if (roto.length) throw new Error(`la parte "${parte.titulo}" ha salido rota: ${roto.join('; ')}`);
 
   return escrita;
 }
@@ -1295,7 +1285,7 @@ export default async function handler(req, res) {
       // Lo que llega del navegador se comprueba antes de meterlo en el encargo:
       // si viniera a medias, el hueco lo rellenaria el modelo por su cuenta y
       // acabaria inventandose algo de su vida.
-      if (!String(parte?.deQueVa || '').trim() || PUNTOS.some(punto => !String(parte?.[punto] || '').trim())) {
+      if (!String(parte?.titulo || '').trim() || PUNTOS.some(punto => !String(parte?.[punto] || '').trim())) {
         return res.status(400).json({ error: 'Esa parte llega a medias y no se escribe' });
       }
       // Y sin nombre no se escribe: lo mismo que en el paso anterior, para que
@@ -1478,7 +1468,7 @@ ir.addEventListener('click', async () => {
   const huecos = plan.partes.map((suya, i) => {
     const hueco = document.createElement('div');
     hueco.className = 'parte';
-    hueco.innerHTML = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.deQueVa) +
+    hueco.innerHTML = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.titulo) +
       '</h2><p class="aviso">Escribiéndose…</p>';
     salida.appendChild(hueco);
     return hueco;
@@ -1496,7 +1486,7 @@ ir.addEventListener('click', async () => {
     const caidas = [];
     await Promise.all(cuales.map(async i => {
       const suya = plan.partes[i];
-      const cabecera = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.deQueVa) + '</h2>';
+      const cabecera = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.titulo) + '</h2>';
       try {
         const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo,
                                          parte: suya, puedeElNombre: conNombre.has(i) });
@@ -1589,7 +1579,7 @@ function pintarLoDecidido(partes, limpieza) {
   const filas = partes.map((p, i) => {
     return '<tr>' +
       '<td>' + (i + 1) + '</td>' +
-      '<td>' + escapar(p.deQueVa || '') + '</td>' +
+      '<td>' + escapar(p.titulo || '') + '</td>' +
       '<td>' + escapar((p.deCuales || []).join(', ')) + '</td>' +
       '<td>' + escapar(p.queHaces || '') + '</td>' +
     '</tr>';
@@ -1605,7 +1595,7 @@ function pintarLoDecidido(partes, limpieza) {
 
   return '<details class="decidido" open><summary>La limpieza — ' +
     entraron + ' entraron, quedan ' + partes.length + '</summary>' + quitadas +
-    '<table><tr><th>#</th><th>De qué va</th><th>Desafíos</th><th>Lo que le manda hacer</th></tr>' +
+    '<table><tr><th>#</th><th>Título</th><th>Desafíos</th><th>Lo que le manda hacer</th></tr>' +
     filas + '</table></details>';
 }
 
