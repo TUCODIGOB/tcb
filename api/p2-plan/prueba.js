@@ -1197,56 +1197,55 @@ const MOLDE_DE_LA_PARTE = {
   additionalProperties: false,
 };
 
-// LO QUE PUEDE OCUPAR CADA PUNTO COMO MUCHO. Cada parte cabe en una hoja, y
-// estas cuatro cifras son esa hoja repartida.
+// CUANTO OCUPA CADA PUNTO, Y POR QUE AQUI CASI NO SE CUENTAN PALABRAS.
 //
-// SON TOPES, NO CUOTAS, Y ESA ES LA DIFERENCIA. Antes habia minimos y era lo
-// que estropeaba el documento: pedirle doscientas veinte palabras para UNA
-// orden es pedirle que rellene, porque no tiene doscientas veinte palabras que
-// decir, y entonces da vueltas, repite lo dicho con otras palabras y quien lee
-// se cansa antes de llegar a lo que importa.
+// ESTO SE INTENTO DOS VECES CONTANDO Y LAS DOS SALIO MAL, asi que queda
+// escrito para no volver a intentarlo una tercera.
 //
-// Un tope hace lo contrario: le obliga a quedarse con lo que de verdad hace
-// falta. Si lo dice en la mitad, mejor, y no se le pide nada mas.
+// La idea era que cada parte cupiera en una hoja, y de ahi salia un tope de
+// palabras por casilla. Pero el tope se fijaba a ojo y el modelo escribia otra
+// cosa: se le pedian 135 palabras en "Que haces" y en el primer plan de verdad
+// escribio entre 156 y 206. Se subio el tope a lo que habia escrito ese
+// documento, y eso tampoco vale: era el documento de UNA clienta. La
+// siguiente trae otros desafios, y lo que hay que explicarle no ocupa lo
+// mismo. Cualquier cifra fija va a estar mal para alguien.
 //
-// LO QUE MANDA NO ES LA CIFRA, es lo que tiene que haber dentro, y eso esta
-// escrito en el encargo: que hace, como se hace cuando todavia no le sale y
-// que pasa cuando falla. Si eso esta y cabe, esta bien.
+// Y equivocarse ahi es caro por los dos lados. Si el tope se queda corto, se
+// reescribe una parte que estaba bien -un minuto de reloj y el doble de
+// dinero, cada vez- y encima el modelo, intentando obedecer, corta el texto a
+// media frase. Si el tope se pasa, no hace nada.
 //
-// "queHaces" SE LLEVA MAS DE LA MITAD DE LA HOJA. Es la orden y es por lo que
-// ha pagado, y es el unico que tiene que explicar algo entero: que hace, como
-// se hace las primeras veces cuando todavia no le sale, y como lo sostiene
-// despues. Eso no cabe en noventa palabras, asi que se le da lo que hace falta
-// y se recorta en los otros tres, que solo enmarcan.
+// ASI QUE NO SE CUENTAN PALABRAS PARA DECIDIR SI UN TEXTO VALE. Se mira lo que
+// miraria alguien releyendo esto antes de mandarselo a una persona:
 //
-// Y AQUI HAY DOS CIFRAS DISTINTAS, QUE NO ES LO MISMO:
+//   QUE ESTE TERMINADO. Que no se quede a media frase. -> acabaColgado
+//   QUE DIGA ALGO.      Que no venga vacia ni con una palabra de relleno
+//                       haciendo bulto.                -> esRelleno, y el suelo
+//   QUE NO LE REPITA    Que no vuelva a contarle como es y de donde le viene,
+//   EL OTRO DOCUMENTO.  que eso ya lo pago.            -> cuentaComoEs
+//   QUE SE LEA.         Que la orden venga en parrafos y no en un ladrillo.
 //
-//   LO QUE SE LE PIDE. Va escrito en el encargo y es donde se le dice que
-//   apunte. Sale de lo que de verdad hace falta para que se entienda.
+// Eso si vale para cualquier clienta, porque no depende de cuanto tenga que
+// decirle: depende de si lo dicho esta entero.
 //
-//   CUANDO SE RECHAZA. Es bastante mas alta, y no se le dice. Es la linea a
-//   partir de la cual el texto ya no es "un poco largo" sino que se ha ido.
-//
-// POR QUE SEPARADAS, Y ESTO SE APRENDIO CARO. Antes habia una sola cifra: se
-// le pedian 135 palabras y se rechazaba a partir de 151. En el primer plan de
-// verdad, el modelo escribio entre 156 y 206 en las siete partes que salieron
-// enteras. O sea que se rechazaron TODAS, se pidieron todas dos veces -el
-// doble de dinero y el doble de reloj- y aun asi volvieron parecidas, porque
-// el modelo no cuenta palabras mientras escribe.
-//
-// Y peor: tres partes salieron cortadas a media frase, con "placeholder" en
-// las dos ultimas casillas, y se entregaron asi.
-//
-// Las cifras de abajo salen de ese documento, contadas una a una. Lo que se le
-// pide es la mediana de lo que escribe cuando lo hace bien; donde se rechaza
-// va por encima de lo mas largo que escribio, para que solo salte cuando de
-// verdad se ha ido.
+// LO QUE SE LE PIDE, QUE NO ES LO MISMO QUE LO QUE SE RECHAZA. En el encargo si
+// va una cifra, porque sin ella el modelo no sabe si le estas pidiendo cuatro
+// lineas o cuatro hojas. Es una guia para que apunte, no una regla que se
+// comprueba despues. Sale de lo que escribio cuando lo hizo bien.
 const PALABRAS_PEDIDAS = { tuPrueba: 60, queHaces: 180, dondeTeCaes: 25, cuandoTeCaes: 20 };
-const PALABRAS_MAXIMAS = { tuPrueba: 110, queHaces: 230, dondeTeCaes: 45, cuandoTeCaes: 35 };
 
-// Y UN SUELO, para que ninguna venga vacia de contenido pareciendo entera. Es
-// tambien lo que caza un "placeholder": una casilla de una palabra no pasa.
-const PALABRAS_MINIMAS = { tuPrueba: 30, queHaces: 110, dondeTeCaes: 15, cuandoTeCaes: 12 };
+// Y UN SUELO, que es el unico limite que si se comprueba. No esta para que
+// llene: esta para cazar la casilla que viene vacia de contenido pareciendo
+// entera -"placeholder", una linea suelta, media idea-. Va deliberadamente muy
+// por debajo de lo que escribe: aqui no se rechaza nada por ser corto si de
+// verdad ha dicho lo que tenia que decir.
+const PALABRAS_MINIMAS = { tuPrueba: 25, queHaces: 90, dondeTeCaes: 12, cuandoTeCaes: 10 };
+
+// Y UNA LINEA DE DESBOCADO, MUY ARRIBA. No es un tope de estilo: es la senal de
+// que algo ha ido mal -se ha puesto a divagar, ha repetido la parte de al lado,
+// se ha dejado el freno-. Al triple de lo que se le pide no llega ningun texto
+// escrito con cabeza, asi que lo que pase de aqui no es "largo", es otra cosa.
+const SE_HA_DESBOCADO = punto => PALABRAS_PEDIDAS[punto] * 3;
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
@@ -1278,16 +1277,18 @@ CADA UNA DE LAS CUATRO ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos d
 LAS CUATRO, Y LO QUE VA EN CADA UNA:
 
 "tuPrueba"
-Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Como mucho ${PALABRAS_PEDIDAS.tuPrueba} palabras. Si te sobran, mejor.
+Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas ${PALABRAS_PEDIDAS.tuPrueba} palabras para hacerte una idea del tamaño. Si lo dices en menos, mejor.
 
 "queHaces"
-Es la más larga de las cuatro y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Unas ${PALABRAS_PEDIDAS.queHaces} palabras, que es de sobra si no das rodeos. Si te salen algunas mas porque hacia falta, mejor eso que dejarla a medias: lo que NO puede pasar es que la cortes por la mitad para que quepa.
+Es la más larga de las cuatro y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Unas ${PALABRAS_PEDIDAS.queHaces} palabras, que es de sobra si no das rodeos.
 
 "dondeTeCaes"
-Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Y qué hace justo ahí. Como mucho ${PALABRAS_PEDIDAS.dondeTeCaes} palabras.
+Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Y qué hace justo ahí. Unas ${PALABRAS_PEDIDAS.dondeTeCaes} palabras.
 
 "cuandoTeCaes"
-Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Como mucho ${PALABRAS_PEDIDAS.cuandoTeCaes} palabras.
+Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Unas ${PALABRAS_PEDIDAS.cuandoTeCaes} palabras.
+
+LAS CIFRAS DE ARRIBA SON UNA REFERENCIA, NO UN MURO. Están para que sepas el tamaño de cada cosa, no para que cuentes. Si algo pide veinte palabras más porque si no se queda sin explicar, las escribes. Y si lo dices en la mitad, mejor todavía. Lo que NUNCA se hace es cortar una frase por la mitad, o despachar una de las cuatro en una línea, para que quepa en la cifra: eso deja el documento roto, y roto no se puede entregar. Se termina lo que se empieza.
 
 LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que haces tú, y hace falta: sin esa línea todo sale pegado en un bloque y no hay quien lo lea en un móvil.
 
@@ -1307,7 +1308,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
   const cortos = p => PUNTOS.filter(punto => cuantas(p[punto]) < PALABRAS_MINIMAS[punto]);
   // Se mide contra el tope CON su margen: pasarse un poco entra, pasarse de
   // verdad se reescribe. Ver MARGEN_DE_LARGO.
-  const pasados = p => PUNTOS.filter(punto => PALABRAS_MAXIMAS[punto] && cuantas(p[punto]) > PALABRAS_MAXIMAS[punto]);
+  const pasados = p => PUNTOS.filter(punto => cuantas(p[punto]) > SE_HA_DESBOCADO(punto));
   const colgados = p => PUNTOS.filter(punto => acabaColgado(p[punto]));
 
   const salida = await sinNombrarLaCarta({
@@ -1328,7 +1329,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
     aviso: p => cuentaComoEs(p.queHaces, 0) || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto]))
       ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta qué tiene delante y adónde le lleva, qué hace, dónde se cae y qué hace ese día.'
       : pasados(p).length
-        ? `\n\nY OJO: la vez anterior "${pasados(p).map(x => BLOQUES[x]).join('", "')}" salió pasado de largo. Cada parte de este documento cabe en una hoja, y quien lo lee no relee: lo que sobra no es que moleste, es que tapa lo que importa. Se dice lo que hay que decir y se para.`
+        ? `\n\nY OJO: la vez anterior "${pasados(p).map(x => BLOQUES[x]).join('", "')}" se te fue larguísimo, al triple de lo que hacía falta. Eso no es explicar más, es dar vueltas: quien lo lee no relee, y lo que sobra tapa lo que importa. Di lo que hay que decir y para.`
       : PUNTOS.some(punto => esRelleno(p[punto]))
         ? `\n\nY OJO: la vez anterior dejaste una casilla con una palabra de relleno dentro (${PUNTOS.filter(punto => esRelleno(p[punto])).map(x => BLOQUES[x]).join(', ')}) en vez de escribirla. Esto lo lee una persona que ha pagado por ello: las cuatro se escriben, y si te has quedado sin hilo, se vuelve a empezar esa.`
       : colgados(p).length
