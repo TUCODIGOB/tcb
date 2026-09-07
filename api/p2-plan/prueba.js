@@ -15,23 +15,27 @@
 //
 // ── COMO ESTA HECHO ─────────────────────────────────────────
 //
-//   UNA LLAMADA DECIDE, PENSANDO. Recibe todo lo que a esta persona le cuesta,
-//   sacado del P1, y hace dos cosas: limpia la lista -junta los que dicen lo
-//   mismo, tira los que no dan para un cambio- y de los que quedan decide en
-//   corto los cuatro puntos de cada uno. No escribe ni una linea del documento.
-//   Es la unica que piensa: de lo que decida aqui cuelga el documento entero,
-//   y es el unico sitio donde estan todos delante a la vez, que es lo unico
-//   que permite ver que dos dicen lo mismo.
+//   UNA LLAMADA LIMPIA LA LISTA, Y NO HACE NADA MAS. Recibe todo lo que a esta
+//   persona le cuesta, sacado del P1, y dice cuales se quedan: fuera las que
+//   dicen lo mismo, las que se contradicen y las que no dan para un cambio.
+//   Devuelve numeros, no texto. Es la que compara, y por eso es la que piensa.
+//
+//   OTRA DECIDE, con las que han quedado. De cada una saca en corto el titulo y
+//   los cuatro puntos. No compara nada -ya viene limpio- y no escribe ni una
+//   linea de lo que ella va a leer.
 //
 //   UNA POR PARTE ESCRIBEN, TODAS A LA VEZ. Cada una recibe solo las cuatro
 //   lineas de su parte, y nada mas. No deciden: abren esas cuatro lineas hasta
-//   que se entiendan a la primera, y sin pasarse de una hoja.
+//   que se entiendan a la primera.
 //
 //
-// Por que se decide todo de golpe: si cada parte se decidiera por su cuenta,
-// varias llegarian a la misma conclusion con otras palabras y la clienta
-// leeria siete cosas que en realidad son dos. Eso solo se ve teniendolas todas
-// delante a la vez.
+// POR QUE LIMPIAR VA APARTE. Estuvo junto con decidir, y no salia: mientras
+// comparaba dieciocho desafios entre si estaba tambien redactando el titulo y
+// las cuatro lineas de cada uno, sesenta y cinco lineas, y el trabajo de
+// redactar se comia al de comparar. En un plan de verdad, de dieciocho
+// desafios salieron trece partes -o sea que no limpio nada- y tres de ellas
+// mandaban hacer lo mismo. Se reescribio la instruccion tres veces y siguio
+// igual: no era la instruccion, era que la llamada tenia dos trabajos.
 //
 // ── QUE LLEVA EL DOCUMENTO ──────────────────────────────────
 //
@@ -496,60 +500,192 @@ function susDesafios(rasgos) {
 const cuantosDesafios = rasgos => (rasgos?.desafios || [])
   .filter(r => r && String(r.descripcion || '').trim()).length;
 
-// ════════════════════════════════════════════════════════════════
-// PASO 1: DECIDIR EL PLAN ENTERO, PENSANDO
-// ════════════════════════════════════════════════════════════════
-//
-// Esta es la unica llamada que decide, y es todo el cambio. Tambien es la
-// unica que piensa a fondo: las que escriben piensan poco, y solo para
-// releerse.
-//
-// Recibe todo lo que le cuesta de golpe, lo limpia y decide el documento
-// entero en corto: los cuatro puntos de cada parte. No escribe ni una linea de
-// lo que ella va a leer: eso lo hacen las que vienen despues.
-//
-// POR QUE DE GOLPE. Lo que hay que evitar es que dos partes le manden hacer lo
-// mismo con otras palabras, y eso solo se ve teniendolas todas delante a la
-// vez. Pedirlas de una en una y confiar en que no se repitan es lo que fallaba
-// antes.
-//
-// OPUS DECIDE, Y CON EL ESFUERZO BAJO. Esta es la eleccion del producto y hay
-// historia detras, asi que queda escrita para no volver a darle vueltas.
-//
-// Opus se probo dos veces y las dos se corto, asi que se cambio a Sonnet. Pero
-// las dos veces iba a esfuerzo MEDIO -y con topes de 110 y 120 segundos-. El
-// esfuerzo es lo que manda en lo que tarda esta llamada, y a medio Opus no
-// baja de ahi. O sea que lo que se midio no fue "Opus no llega": fue "Opus a
-// medio no llega en 110 segundos".
-//
-// A BAJO no se habia probado nunca, y es donde esta el producto. Un modelo de
-// la generacion nueva con el esfuerzo bajo rinde por encima de la generacion
-// anterior a esfuerzo alto, y esta llamada es la que decide el documento
-// entero: es donde se nota la diferencia entre un plan bueno y uno correcto.
-// Es UNA llamada por cliente, asi que lo que cuesta de mas es calderilla.
-//
-// Y SI OPUS FALLA, TERMINA SONNET. Sea por lo que sea -que se pase de tiempo,
-// que se quede sin sitio, que el modelo conteste 500-, no se deja al cliente
-// sin plan: se vuelve a pedir con Sonnet y con el tiempo que quede. Un plan
-// algo menos fino se entrega; una pantalla en blanco no.
+// La lista tal y como se le manda, para poder recorrerla por su numero.
+const losDesafios = rasgos => (rasgos?.desafios || [])
+  .filter(r => r && String(r.descripcion || '').trim());
 
+// ════════════════════════════════════════════════════════════════
+// PASO 1: LIMPIAR LA LISTA, Y NADA MAS
+// ════════════════════════════════════════════════════════════════
+//
+// Esta llamada hace UNA cosa: leer las descripciones y decir cuales se quedan.
+//
+// POR QUE VA SOLA, Y ESTO SE APRENDIO CARO. Antes esto lo hacia la misma
+// llamada que decidia el contenido de cada parte. O sea que mientras comparaba
+// dieciocho desafios entre si, estaba tambien redactando el titulo y las cuatro
+// lineas de cada uno: unas sesenta y cinco lineas. Y las dos cosas a la vez no
+// salen. En un plan de verdad, de dieciocho desafios saco trece partes -no
+// limpio nada- y tres de ellas le mandaban lo mismo.
+//
+// No era la instruccion: se reescribio tres veces y siguio igual. Era que la
+// llamada tenia dos trabajos y el de redactar se comia al de comparar.
+//
+// AQUI SOLO DEVUELVE NUMEROS. Los desafios van numerados en la lista que se le
+// manda, asi que para decir "el 11 dice lo mismo que el 7" le basta con
+// escribir una cifra. Escribe cuatro lineas en total en vez de sesenta y cinco,
+// y por eso todo el esfuerzo se le va en lo unico que tiene que hacer.
+//
+// Y POR ESO PUEDE PENSAR. Comparar dieciocho con dieciocho son ciento cincuenta
+// y tres comparaciones: eso es pensar, y a esfuerzo bajo no se hace. Antes
+// estaba en bajo -lo puse yo, para que fuera rapido- y por eso no comparaba.
+// Ahora va en medio, que es lo que cuesta comparar, y aun asi termina rapido
+// porque no escribe nada.
+const ESPERA_DE_LIMPIAR_MS = 90000;
+const TECHO_DE_LIMPIAR = 16000;
+
+const MOLDE_DE_LIMPIAR = {
+  type: 'object',
+  properties: {
+    sequedan: { type: 'array', items: { type: 'integer' } },
+    sequitan: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          numero: { type: 'integer' },
+          porque: { type: 'string' },
+        },
+        required: ['numero', 'porque'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['sequedan', 'sequitan'],
+  additionalProperties: false,
+};
+
+async function limpiarLaLista({ rasgos, espera = ESPERA_DE_LIMPIAR_MS, modelo = EL_QUE_DECIDE }) {
+  const desafios = losDesafios(rasgos);
+
+  // Y AQUI NO VA NADA MAS QUE LA LISTA Y SU INSTRUCCION.
+  //
+  // Las otras dos llamadas empiezan con el bloque que explica que es este
+  // producto, y lo necesitan: una decide que le manda hacer y la otra le
+  // escribe. Esta no. Esta solo tiene que mirar una lista y decir cuales dicen
+  // lo mismo, y para eso no le hace falta saber que es el P2, ni como se le
+  // habla a la clienta, ni que lleva el documento.
+  //
+  // Estaba puesto, y eran mil setecientas letras: casi la mitad de lo que leia
+  // no le servia para su trabajo. Se copio al partir la llamada en dos, sin
+  // preguntarse si hacia falta.
+  const encargo = `Abajo tienes, numeradas, las cosas que le cuestan a una persona. Salen de su carta y están escritas por separado, sin que nadie las mirara juntas.
+
+TU ÚNICO TRABAJO ES DECIR CUÁLES SE QUEDAN. Aquí no se escribe nada del documento, no se decide qué tiene que hacer y no se le cuenta nada a nadie. Solo se limpia la lista. Por eso puedes dedicarle todo el rato a compararlas bien, que es lo único que hay que hacer aquí.
+
+Cada una de las que dejes va a ser una parte del documento. Si dejas dos que dicen lo mismo, ella lee dos veces la misma cosa, cree que tiene el doble de trabajo del que tiene, y deja de fiarse.
+
+CÓMO SE COMPARAN
+
+De cada una, dite para ti en tres o cuatro palabras QUÉ ESTÁ HACIENDO ELLA ahí. No de qué habla ni dónde le pasa: qué hace. Eso no lo escribes en ningún sitio, es para ti.
+
+Ahora mira esa lista de conductas y compáralas entre sí, todas con todas. Las que se repitan te están diciendo que ahí hay una sola cosa contada varias veces.
+
+Léelas así y no por cómo están escritas. Vienen redactadas por separado, así que dos idénticas por debajo pueden no compartir ni una palabra, y dos que suenan parecido pueden ser distintas. Y da igual que a una le pase en un sitio de su vida y a otra en otro: el sitio no las hace distintas, la conducta sí.
+
+QUÉ SE QUITA
+
+LAS QUE DICEN LO MISMO. De cada grupo se queda UNA, la que esté mejor contada, y las demás se van.
+
+LAS QUE SE CONTRADICEN. Si dos le piden cosas que no puede hacer a la vez, se queda la que más le pese y la otra se va.
+
+LAS QUE NO DAN PARA UN CAMBIO. Si de una no sale nada que ella pueda ponerse a hacer, se va, por muy cierta que sea. El documento es lo que hace, no lo que le pasa.
+
+Y NADA MÁS. Lo que no entre en esos tres casos se queda. No hay número que cumplir: ni quites una buena para que salgan menos, ni dejes una floja para que salgan más. Salen las que salgan.
+
+LO QUE DEVUELVES
+
+"sequedan": los números de las que se quedan, en el orden en que están abajo.
+"sequitan": las que quitas, cada una con su número y, en media línea, por qué. Si una se va por decir lo mismo que otra, di cuál.
+
+Cada número de la lista tiene que estar en una de las dos, y en una sola.
+
+LA LISTA:
+
+${susDesafios(rasgos)}`;
+
+  const salida = await alModelo({
+    que: 'limpiar la lista',
+    modelo,
+    piensa: 'medium',
+    techo: TECHO_DE_LIMPIAR,
+    system: encargo,
+    mensaje: 'Di cuáles se quedan y cuáles se quitan, siguiendo el esquema.',
+    molde: MOLDE_DE_LIMPIAR,
+    espera: AbortSignal.timeout(espera),
+  });
+
+  // Solo numeros que existan, sin repetir y en el orden de la lista.
+  const validos = new Set(desafios.map((_, i) => i + 1));
+  const sequedan = [...new Set((Array.isArray(salida.sequedan) ? salida.sequedan : [])
+    .map(Number).filter(n => validos.has(n)))].sort((a, b) => a - b);
+
+  const sequitan = (Array.isArray(salida.sequitan) ? salida.sequitan : [])
+    .map(x => ({ numero: Number(x?.numero), porque: String(x?.porque || '').trim() }))
+    .filter(x => validos.has(x.numero) && !sequedan.includes(x.numero));
+
+  // SI SE DEJA ALGUNO SIN CLASIFICAR, SE QUEDA. Un desafio que no esta ni en una
+  // lista ni en la otra es un descuido suyo, no una decision: tirarlo seria
+  // quitarle a la clienta algo que nadie ha decidido quitar.
+  const olvidados = [...validos].filter(n => !sequedan.includes(n) && !sequitan.some(x => x.numero === n));
+  if (olvidados.length) {
+    console.warn(`[p2] la limpieza no ha dicho nada de ${olvidados.join(', ')}: se quedan`);
+    sequedan.push(...olvidados);
+    sequedan.sort((a, b) => a - b);
+  }
+
+  return {
+    sequedan,
+    sequitan,
+    // Las descripciones de las que se quedan, ya listas para el paso siguiente.
+    lista: sequedan.map((n, i) => {
+      const r = desafios[n - 1];
+      return `${i + 1}. ${String(r.descripcion).trim()}` +
+        (r.causa ? `\n   PORQUE: ${String(r.causa).trim()}` : '');
+    }).join('\n\n'),
+    // De que numero de la lista original sale cada una, para poder mirarlo.
+    deCuales: sequedan,
+  };
+}
+
+// ════════════════════════════════════════════════════════════════
+// PASO 2: DECIDIR, CON LA LISTA YA LIMPIA
+// ════════════════════════════════════════════════════════════════
+//
+// De cada cosa que ha quedado saca el titulo y sus cuatro puntos, en corto. No
+// escribe ni una linea de lo que ella va a leer: eso lo hacen las que vienen
+// despues.
+//
+// AQUI NO SE COMPARA NADA, y por eso no hace falta que piense mucho. Lo que
+// hace es mirar un desafio y decidir que conducta le manda cambiar, uno por
+// uno. Eso es criterio, y el criterio lo pone el modelo -Opus-, no el rato que
+// piense. Va a esfuerzo BAJO.
+//
+// Bajo y no apagado porque aqui se decide lo que ella tiene que hacer, que es
+// por lo que ha pagado, y en eso no se ahorra.
+//
+// SALE UNA PARTE POR CADA COSA DE LA LISTA. Ni junta ni quita: eso ya se hizo.
+// Si vuelve con menos partes de las que habia, es que se ha dejado alguna y se
+// pide otra vez.
+//
 // TODO EL DOCUMENTO TIENE QUE ESTAR EN DOS MINUTOS Y MEDIO. Esa es la regla, y
 // de ahi salen los numeros de aqui abajo, no al reves.
 //
 // EL REPARTO, y esta vez cuadra con lo que hace el codigo:
-//   150 s como mucho para decidir con Opus. Las dos medidas que hay de Opus
-//        -las dos a esfuerzo medio- daban por encima de 110, asi que a bajo
-//        cabe con margen, y si aun asi se pasa, no muere: entra Sonnet.
+//    90 s para limpiar la lista, que es lo unico que compara. Piensa, pero
+//        escribe cuatro lineas, asi que termina rapido.
+//    90 s para decidir el plan con los que queden. Ya no compara nada, asi
+//        que no necesita el rato que necesitaba antes.
 //    90 s para el segundo intento, que va SIEMPRE con Sonnet. Ese intento no
 //        esta para pensar mejor: esta para arreglar algo concreto que se le
 //        dice, y Sonnet lo hace en 24 segundos medidos.
 //    60 s para escribir, y las partes van todas a la vez, asi que ese es el
 //        tope de UNA, no el de la suma.
 //
-// 150 + 90 + 60 = 300, que es el peor caso imaginable y solo se da si todo
-// sale mal dos veces seguidas. Lo normal es 110 + 40, que son dos minutos y
-// medio contando de sobra.
-const ESPERA_DEL_PLAN_MS = 150000;
+// El peor caso de una peticion es 90 + 90 + 90 = 270, por debajo de los 285
+// que se dejan de margen, y solo se da si todo sale mal dos veces seguidas.
+// Lo normal son unos 40 segundos para limpiar, otros 40 para decidir y 40 mas
+// para escribir, que van todas a la vez: unos dos minutos en total.
+const ESPERA_DEL_PLAN_MS = 90000;
 
 // Y EL SEGUNDO INTENTO, MAS CORTO, porque va con Sonnet y Sonnet tarda 24.
 const ESPERA_DEL_SEGUNDO_PLAN_MS = 90000;
@@ -600,17 +736,21 @@ const MOLDE_DEL_PLAN = {
           // documento: sirve para mirar lo que ha elegido antes de gastar las
           // llamadas que escriben.
           deCuales:     { type: 'array', items: { type: 'integer' } },
-          // El titulo de esta parte del documento, y lo unico que se ve de
-          // aqui. Lo escribe el modelo porque cada plan lleva unas cosas
-          // distintas y no se pueden dejar escritos de antemano.
-          titulo:       { type: 'string' },
-          movimiento:   { type: 'string' },
+          // DE QUE VA ESTA PARTE, en una linea y para dentro: la clienta no lo
+          // lee. Es lo que le dice a quien escribe de que esta hablando, para
+          // que el titulo que ponga hable de eso y no de otra cosa.
+          //
+          // Antes aqui iba el titulo ya escrito, y salia mal: esta llamada no
+          // tiene las reglas de como se escribe -las tiene la que escribe- asi
+          // que ponia titulos que nadie entiende, del estilo de una figura en
+          // vez de la cosa. Y era lo unico de aqui que se imprimia tal cual.
+          deQueVa:      { type: 'string' },
           tuPrueba:     { type: 'string' },
           queHaces:     { type: 'string' },
           dondeTeCaes:  { type: 'string' },
           cuandoTeCaes: { type: 'string' },
         },
-        required: ['deCuales', 'titulo', 'movimiento', ...PUNTOS],
+        required: ['deCuales', 'deQueVa', ...PUNTOS],
         additionalProperties: false,
       },
     },
@@ -623,7 +763,7 @@ const MOLDE_DEL_PLAN = {
 const EL_QUE_DECIDE = 'claude-opus-5';
 const EL_QUE_REMATA = 'claude-sonnet-5';
 
-async function pedirElPlan({ nombre, sexo, rasgos, recordatorio = '',
+async function pedirElPlan({ nombre, sexo, limpia, recordatorio = '',
                              espera = ESPERA_DEL_PLAN_MS, modelo = EL_QUE_DECIDE }) {
   const encargo = `${EL_P2_NO_ES_EL_P1}
 
@@ -638,56 +778,21 @@ AQUÍ NO SE ESCRIBE EL DOCUMENTO. Aquí se DECIDE. Todo sale en corto, una líne
 Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene: eso ya lo tiene, se lo leyó entero en otro documento. Lo suyo solo aparece para enganchar lo que tiene que hacer.
 
 
-1. LO PRIMERO: LIMPIAR LA LISTA
+1. DE CADA UNO DE LOS QUE HAY ABAJO, ESTO
 
-Abajo tienes las cosas que le cuestan a esta persona, cada una con su descripción. Vienen tal cual, sin que nadie las mirara juntas, así que trae de sobra. Antes de decidir nada, la limpias. Es el trabajo más importante de aquí: cada una de las que queden va a ser una parte del documento, y si dejas dos que dicen lo mismo, ella lee dos veces la misma cosa y deja de fiarse.
-
-Lees las descripciones -las descripciones, no otra cosa- y quitas:
-
-LOS QUE DICEN LO MISMO. No por cómo están escritos: por lo que le pasa a ella. Están redactados por separado, así que dos idénticos por dentro pueden no compartir ni una palabra, y dos que suenan parecido pueden ser distintos. Si dos acaban en la misma conducta suya, son uno: te quedas con el que esté mejor contado y el otro fuera. Da igual que a uno le pase en un sitio y al otro en otro; el sitio no los hace distintos.
-
-LOS QUE SE CONTRADICEN. Si dos le piden cosas que no puede hacer a la vez, no van los dos: se queda el que más le pese.
-
-LOS QUE NO DAN PARA UN CAMBIO. Si de uno no sale nada que ella pueda ponerse a hacer, fuera, por muy cierto que sea. Este documento es lo que hace, no lo que le pasa.
-
-Y con los que queden, haces el plan: uno cada uno.
-
-
-2. Y DE CADA UNO DE LOS QUE QUEDAN, ESTO
+La lista ya viene limpia: alguien ha quitado antes las que decían lo mismo, las que se contradecían y las que no daban para nada que hacer. Así que no tienes que quitar ninguna ni juntarlas. Cada una de abajo es una parte del documento, y salen tantas partes como cosas hay en la lista.
 
 De cada uno sacas seis cosas, en una línea cada una, y ninguna se queda vacía. La línea va escrita para que quien la lea después la entienda entera sin preguntar nada: no es un título, es la cosa dicha en corto.
 
-deCuales         Los números de la lista de abajo de los que sale esta parte.
-                 Uno, o varios si has juntado los que decían lo mismo. Es para
-                 poder mirar de dónde ha salido cada cosa.
+deCuales         El número de la lista de abajo del que sale esta parte. Uno
+                 solo: aquí no se junta nada, ya viene juntado. Es para poder
+                 mirar de dónde ha salido cada cosa.
 
-titulo           Cómo se llama esta parte del documento. Habla de lo que ella
-                 va a hacer o de en quién se convierte, nunca de lo que le
-                 pasa: es un título de plan, no de diagnóstico. Corto, y sin
-                 dos puntos ni subtítulos.
-                 Y NI DOS EMPIEZAN CON LA MISMA PALABRA: van seguidos en el
-                 mismo documento y se leen del tirón.
-                 SE ENTIENDE SOLO, LEÍDO DE PASO Y SIN NADA ALREDEDOR. Es lo
-                 único de aquí que ella va a leer tal cual, en grande y en la
-                 primera página de esa parte, así que si tiene que llegar
-                 abajo para saber de qué le hablas, el título está mal.
-                 Y SE DICE LA COSA, NO UNA FIGURA DE LA COSA. Ni metáforas,
-                 ni imágenes, ni frases que suenan bien sin decir nada: si el
-                 título no se puede hacer literalmente, está mal. Se nombra lo
-                 que ella hace, con las palabras de todos los días, y si una
-                 palabra la verías antes escrita que dicha en una conversación,
-                 va fuera. Tiene que entenderlo alguien de dieciocho años a la
-                 primera y sin pensar.
-
-movimiento       QUÉ LE ESTÁS PIDIENDO HACER, EN UNA PALABRA. Un verbo en
-                 infinitivo y nada más, el que de verdad describa lo que le
-                 mandas hacer. No lo cojas de ninguna lista: lo sacas de la
-                 orden que acabas de decidir, y si no cabe en un verbo es que
-                 la orden no está clara todavía.
-                 LOS MOVIMIENTOS SON TODOS DISTINTOS, y no vale uno parecido
-                 con otra palabra: si en una parte le pides hablar, en otra no
-                 le pides decir, ni contar, ni expresar. Si dos coinciden es
-                 que esas dos partes eran la misma y no las juntaste.
+deQueVa          De qué va esta parte, en una línea. Esto NO es el título y
+                 no lo lee nadie más que quien escribe la parte: es para que
+                 sepa de qué está hablando antes de ponerse. Di de qué va por
+                 lo que ella va a hacer o por en quién se convierte, nunca por
+                 lo que le pasa. El título ya lo pondrá quien escriba.
 
 tuPrueba         Qué le pone la vida delante aquí y en quién se convierte el
                  día que lo supere. Dicho como un examen que tiene delante, no
@@ -714,7 +819,7 @@ cuandoTeCaes     Qué hace el día que lo deja. No es animar a nadie: es el
                  paso concreto para volver, y que dejarlo entraba en el plan.
 
 
-3. LO QUE NO SE PUEDE ESCRIBIR
+2. LO QUE NO SE PUEDE ESCRIBIR
 
 NO SE INVENTA NADA DE SU VIDA. Lo que sabes de ella es lo que hay abajo y nada más. No sabes si tiene pareja, trabajo, hijos, casa o familia: no los nombres, no los supongas y no los uses para montar nada. Lo que decidas tiene que servirle igual sea cual sea su vida.
 
@@ -727,22 +832,20 @@ Y NADA DE EJERCICIOS DE TERAPIA. Ni buscar de dónde le viene algo, ni ponerle n
 Y nada técnico: ni planetas, ni signos, ni casas. Quien lo lee no ve la carta.
 
 
-4. EL REPASO, ANTES DE ENTREGAR
+3. EL REPASO, ANTES DE ENTREGAR
 
 Con todas delante:
 
-PRIMERO, LOS "queHaces" SEGUIDOS. Léelos en fila y no te preguntes si están escritos parecido: pregúntate si le mandan hacer la misma cosa. Dos órdenes que suenan distintas y acaban en la misma conducta son una sola parte, aunque cada una ocurra en un sitio de su vida. Se juntan, con sus dos números en "deCuales".
+LEE LOS "queHaces" SEGUIDOS. La lista viene limpia, así que no deberían pedirle lo mismo dos veces. Pero tú acabas de escribirlos, y ahí es donde se puede colar: dos órdenes que suenan distintas y acaban en la misma conducta. Si te pasa, cambia una de las dos para que mande de verdad lo que dice su desafío, que para eso está.
 
-DESPUÉS, LOS MOVIMIENTOS SEGUIDOS. Si dos son el mismo verbo, o dos verbos que significan lo mismo, esas dos también eran una. Esta comprobación es la fácil y la que menos caza: la de arriba es la que importa.
-
-Y POR ÚLTIMO, QUE TODO SALGA DE LA LISTA. Si señalas una línea y no puedes decir de qué número de abajo sale, se cambia.
+Y QUE TODO SALGA DE LA LISTA. Si señalas una línea y no puedes decir de qué número de abajo sale, se cambia.
 
 Devuelve solo lo decidido. No expliques lo que has quitado.
 
 
 TODO LO QUE A ESTA PERSONA LE CUESTA:
 
-${susDesafios(rasgos)}
+${limpia.lista}
 
 Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}`;
@@ -750,6 +853,15 @@ Nombre de pila: ${nombre}`;
   const salida = await alModelo({
     que: 'decidir el plan',
     modelo,
+    // ESFUERZO BAJO, y aqui si es lo correcto: la lista ya viene limpia, asi
+    // que no queda nada que comparar. Lo que hace es mirar un desafio y decidir
+    // la conducta que le manda cambiar, uno por uno. Eso es criterio, no
+    // comparacion, y el criterio lo pone el modelo -Opus-, no el rato que
+    // piense.
+    //
+    // Se le deja bajo y no apagado porque aqui se decide lo que ella tiene que
+    // hacer, que es por lo que ha pagado, y en eso no se ahorra. Cuesta unos
+    // segundos y escribe poco.
     piensa: 'low',
     techo: TECHO_DEL_PLAN,
     system: encargo,
@@ -762,15 +874,19 @@ Nombre de pila: ${nombre}`;
   const partes = [];
   for (const p of (Array.isArray(salida.partes) ? salida.partes : [])) {
     const suyo = {
-      deCuales: (Array.isArray(p?.deCuales) ? p.deCuales : []).map(Number).filter(Number.isInteger),
-      titulo: String(p?.titulo || '').trim(),
-      movimiento: String(p?.movimiento || '').trim(),
+      // Los numeros que devuelve son los de la lista LIMPIA que se le paso.
+      // Se traducen a los de la lista original, que es lo que se mira en la
+      // pagina para saber de que desafio de verdad sale cada parte.
+      deCuales: (Array.isArray(p?.deCuales) ? p.deCuales : [])
+        .map(Number).filter(Number.isInteger)
+        .map(n => limpia.deCuales[n - 1]).filter(Boolean),
+      deQueVa: String(p?.deQueVa || '').trim(),
     };
     for (const punto of PUNTOS) suyo[punto] = String(p?.[punto] || '').trim();
     // UNA PARTE A MEDIAS NO SE ESCRIBE. Si viene con una casilla vacia, quien
     // escribe se encuentra un hueco y lo rellena por su cuenta, y entonces se
     // inventa algo de su vida que no sale de ningun sitio.
-    if (!suyo.titulo || !suyo.movimiento || PUNTOS.some(punto => !suyo[punto])) continue;
+    if (!suyo.deQueVa || PUNTOS.some(punto => !suyo[punto])) continue;
     partes.push(suyo);
   }
 
@@ -783,17 +899,24 @@ Nombre de pila: ${nombre}`;
   // entregar, y eso solo puede ser que la llamada ha venido mal.
   if (partes.length < 3) falla.push(`solo han salido ${partes.length} partes, y con eso no hay documento`);
 
+  // Y TIENE QUE SALIR UNA POR CADA UNA DE LAS QUE QUEDARON. La lista ya venia
+  // limpia, asi que aqui no se quita nada: si faltan, es que se ha dejado
+  // alguna por el camino y hay que pedirlo otra vez.
+  if (partes.length < limpia.sequedan.length) {
+    falla.push(`quedaron ${limpia.sequedan.length} cosas que le cuestan y solo han salido ${partes.length} partes: no falta ninguna por escribir`);
+  }
+
   // ── QUE NINGUN TITULO SE REPITA ───────────────────────────
   //
   // Esto si lo puede mirar el codigo: dos titulos iguales son iguales y no hay
   // nada que interpretar.
   const porTitulo = new Map();
   for (const p of partes) {
-    const cual = comoSeCompara(p.titulo);
+    const cual = comoSeCompara(p.deQueVa);
     if (!cual) continue;
     porTitulo.set(cual, (porTitulo.get(cual) || 0) + 1);
   }
-  if ([...porTitulo.values()].some(n => n > 1)) falla.push('hay dos partes con el mismo titulo');
+  if ([...porTitulo.values()].some(n => n > 1)) falla.push('hay dos partes que van de lo mismo');
 
   // Y QUE DOS PARTES NO MANDEN HACER LO MISMO no se comprueba aqui: eso es
   // cuestion de lo que significan, no de las letras que llevan, y de eso se
@@ -810,58 +933,85 @@ Nombre de pila: ${nombre}`;
 async function decidirElPlan({ nombre, sexo, rasgos }) {
   const arranque = Date.now();
 
-  // ── 1. DECIDE OPUS ────────────────────────────────────────
+  // ── 1. SE LIMPIA LA LISTA ─────────────────────────────────
+  //
+  // Y si esto no se puede hacer, NO se sigue. Sin limpiar, lo que sale es un
+  // documento con la misma cosa contada tres veces, que es peor que no darlo.
+  let limpia;
+  try {
+    limpia = await limpiarLaLista({ rasgos });
+  } catch (err) {
+    // Igual que abajo: si el modelo bueno no puede, termina el otro. Sin esto,
+    // un fallo aqui deja a la clienta sin documento entero.
+    const queda = loQueQueda(arranque, ESPERA_DE_LIMPIAR_MS);
+    if (queda < ESPERA_MINIMA_PARA_REHACER_MS) throw err;
+    console.warn(`[p2] ${EL_QUE_DECIDE} no ha podido limpiar la lista (${err.message}), lo termina ${EL_QUE_REMATA}`);
+    limpia = await limpiarLaLista({ rasgos, espera: queda, modelo: EL_QUE_REMATA });
+  }
+  console.log(`[p2] de ${limpia.sequedan.length + limpia.sequitan.length} cosas que le cuestan se quedan ${limpia.sequedan.length}` +
+    (limpia.sequitan.length ? `; fuera: ${limpia.sequitan.map(x => `${x.numero} (${x.porque})`).join(', ')}` : ''));
+
+  if (limpia.sequedan.length < 3) {
+    // No es un fallo del servidor: es que ese informe no da para un plan. Se
+    // marca como tal para que la pagina lo diga con sus palabras y no como si
+    // se hubiera roto algo.
+    const e = new Error(`después de limpiar solo quedan ${limpia.sequedan.length} cosas que le cuesten, y con eso no hay documento`);
+    e.esDelInforme = true;
+    throw e;
+  }
+
+  // ── 2. Y CON LAS QUE QUEDAN SE DECIDE EL PLAN ─────────────
   //
   // Y si Opus no puede -se pasa de tiempo, se queda sin sitio, el modelo
   // contesta 500-, NO se cae la peticion: termina Sonnet con lo que quede.
-  // Esta llamada es la unica que decide, asi que quedarse sin ella es quedarse
-  // sin documento, y eso no puede pasar por elegir el modelo bueno.
+  // Quedarse sin esta llamada es quedarse sin documento, y eso no puede pasar
+  // por elegir el modelo bueno.
   let primero;
   try {
-    primero = await pedirElPlan({ nombre, sexo, rasgos, modelo: EL_QUE_DECIDE });
+    primero = await pedirElPlan({ nombre, sexo, limpia, modelo: EL_QUE_DECIDE });
   } catch (err) {
     const queda = loQueQueda(arranque, ESPERA_DEL_SEGUNDO_PLAN_MS);
     if (queda < ESPERA_MINIMA_PARA_REHACER_MS) throw err;
     console.warn(`[p2] ${EL_QUE_DECIDE} no ha podido decidir el plan (${err.message}), lo termina ${EL_QUE_REMATA}`);
-    primero = await pedirElPlan({ nombre, sexo, rasgos, modelo: EL_QUE_REMATA, espera: queda });
+    primero = await pedirElPlan({ nombre, sexo, limpia, modelo: EL_QUE_REMATA, espera: queda });
   }
 
-  if (!primero.falla.length) return primero.plan;
+  if (!primero.falla.length) return { ...primero.plan, limpieza: limpia };
 
-  // ── 2. Y SI HA VENIDO A MEDIAS, SE PIDE OTRA VEZ ──────────
+  // ── 3. Y SI HA VENIDO A MEDIAS, SE PIDE OTRA VEZ ──────────
   //
   // Con Sonnet, siempre. Este intento no esta para pensar mejor que el
-  // anterior: esta para arreglar algo concreto que se le dice escrito -dos
-  // movimientos iguales, una casilla vacia-, y eso es trabajo de seguir una
-  // instruccion, no de criterio. Sonnet lo hace en la cuarta parte del tiempo,
-  // y a estas alturas el reloj ya va cargado.
+  // anterior: esta para arreglar algo concreto que se le dice escrito -una
+  // casilla vacia, dos titulos iguales, una parte que falta-, y eso es trabajo
+  // de seguir una instruccion, no de criterio. Sonnet lo hace en la cuarta
+  // parte del tiempo, y a estas alturas el reloj ya va cargado.
   const queda = loQueQueda(arranque, ESPERA_DEL_SEGUNDO_PLAN_MS);
   if (queda < ESPERA_MINIMA_PARA_REHACER_MS) {
     console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), pero ya no queda tiempo para rehacerlo`);
-    return primero.plan;
+    return { ...primero.plan, limpieza: limpia };
   }
 
   console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), se pide otra vez`);
   let segundo;
   try {
     segundo = await pedirElPlan({
-      nombre, sexo, rasgos,
+      nombre, sexo, limpia,
       modelo: EL_QUE_REMATA,
       espera: queda,
-      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Cada parte va con su título, su movimiento en un verbo y sus cuatro cosas escritas enteras. Y donde dos partes le mandaban hacer lo mismo, se JUNTAN en una sola con los dos números en "deCuales": no se reescribe una con otras palabras para que parezcan distintas, porque entonces sigue habiendo dos partes que le mandan lo mismo.`,
+      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. La lista ya viene limpia: sale una parte por cada cosa de la lista, ninguna se queda fuera y ninguna se junta con otra. Y cada parte va con su título y sus cuatro cosas escritas enteras.`,
     });
   } catch (err) {
     // El segundo intento es una mejora, no un requisito: si se cae, se entrega
     // el primero, que estaba a medias pero estaba.
     console.warn(`[p2] el segundo intento del plan se ha caido (${err.message}), se entrega el primero`);
-    return primero.plan;
+    return { ...primero.plan, limpieza: limpia };
   }
 
   // Y SE QUEDA EL MEJOR DE LOS DOS. Pedir otra vez no garantiza que salga
   // mejor: el segundo puede venir peor que el primero.
-  if (segundo.falla.length < primero.falla.length) return segundo.plan;
+  if (segundo.falla.length < primero.falla.length) return { ...segundo.plan, limpieza: limpia };
   console.warn('[p2] el segundo plan no ha mejorado, se entrega el primero');
-  return primero.plan;
+  return { ...primero.plan, limpieza: limpia };
 }
 
 // ── LO QUE LA CLIENTA NO PUEDE LEER ─────────────────────────
@@ -1138,6 +1288,11 @@ const TECHO_DE_ESCRIBIR = 12000;
 const MOLDE_DE_LA_PARTE = {
   type: 'object',
   properties: {
+    // EL TITULO LO PONE QUIEN ESCRIBE, y no quien decide. Es lo unico que la
+    // clienta lee en grande, en la primera pagina de cada parte, y quien decide
+    // no tiene las reglas de como se escribe -las tiene esta llamada-. Cuando
+    // lo ponia la otra salian titulos que nadie entiende.
+    titulo:       { type: 'string' },
     tuPrueba:     { type: 'string' },
     queHaces:     { type: 'string' },
     dondeTeCaes:  { type: 'string' },
@@ -1228,7 +1383,15 @@ ${REGLAS_COMUNES}
 
 LO QUE TE TOCA AHORA
 
-Escribes UNA parte del documento, la que va con este título: "${parte.titulo}".
+Escribes UNA parte del documento. Esta parte va de esto: ${parte.deQueVa}
+
+Y EL TÍTULO LO PONES TÚ, que es lo primero que se lee de esta parte y va en grande en su propia página.
+
+Habla de lo que ella va a hacer o de en quién se convierte, nunca de lo que le pasa: es un título de plan, no de diagnóstico. Corto, sin dos puntos y sin subtítulos.
+
+Se entiende solo, leído de paso y sin nada alrededor. Si para saber de qué va hay que bajar a leer el texto, está mal.
+
+Y se dice la cosa, no una figura de la cosa: ni metáforas ni imágenes. Si el título no se puede hacer literalmente, está mal. Con las palabras de todos los días, y que lo entienda alguien de dieciocho años a la primera.
 
 TE DAN CUATRO LÍNEAS YA DECIDIDAS Y ESCRIBES LAS CUATRO, cada una por su lado. No eliges tú lo que va: eso ya está decidido con todo su plan delante. Lo tuyo es que se entienda y que sirva.
 
@@ -1278,7 +1441,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
   const colgados = p => PUNTOS.filter(punto => acabaColgado(p[punto]));
 
   const salida = await sinNombrarLaCarta({
-    que: `la parte "${parte.titulo}"`,
+    que: `la parte "${parte.deQueVa}"`,
     // Se mira que los cuatro esten contados enteros, que el que manda hacer
     // algo venga en parrafos y que ninguno se ponga a contarle otra vez como
     // es.
@@ -1303,7 +1466,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
         : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cuatro se cuenta entero, y lo que tiene que hacer va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
-      que: `escribir "${parte.titulo}"`,
+      que: `escribir "${parte.deQueVa}"`,
       modelo: 'claude-sonnet-5',
       piensa: '',
       techo: TECHO_DE_ESCRIBIR,
@@ -1315,37 +1478,34 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
     texto: p => PUNTOS.map(punto => p[punto]).join(' '),
   });
 
-  const escrita = { titulo: parte.titulo, movimiento: parte.movimiento };
+  const escrita = { titulo: String(salida.titulo || '').trim() };
   for (const punto of PUNTOS) escrita[punto] = String(salida[punto] || '').trim();
 
-  // ── Y UNA PARTE ROTA NO SE ENTREGA ────────────────────────
+  // ── UNA PARTE ROTA NO SE ENTREGA, PERO ROTA ES ROTA ───────
   //
-  // Esto es lo que fallo en el primer plan de verdad: tres de las diez partes
-  // salieron con "Que haces" cortado a media frase y con la palabra
-  // "placeholder" escrita en las dos ultimas casillas, y se imprimieron asi en
-  // el PDF de una clienta.
+  // Esto existe porque tres partes de un plan real salieron con la palabra
+  // "placeholder" dentro y se imprimieron asi en el PDF de una clienta. Eso no
+  // puede pasar.
   //
-  // Las redes de arriba SI lo vieron. El problema es lo que se hace despues:
-  // se pide otra vez, y si la segunda tampoco mejora se entrega la primera. Eso
-  // esta bien para un texto que se ha pasado de largo o que ha venido de una
-  // pieza -es peor quedarse sin la parte que tenerla algo larga-, pero no para
-  // esto. Un texto cortado a media frase o una casilla que pone "placeholder"
-  // no es una parte imperfecta: es una parte que no esta.
+  // PERO SE PASO DE FRENO Y COSTO UN DOCUMENTO ENTERO. Estaba tirando tambien
+  // las que acababan sin punto o las que venian algo cortas, y eso no es una
+  // parte que falta: es una parte mejorable. Cada una de esas se volvia a pedir
+  // hasta tres veces, y en un plan de verdad se cayeron tres partes, se
+  // pidieron nueve veces mas, ninguna paso, y la clienta se quedo SIN PDF
+  // despues de cuatro minutos y un euro.
   //
-  // Asi que aqui se separan las dos cosas. Lo cosmetico se entrega. Lo roto se
-  // levanta como fallo, y entonces la pagina la vuelve a pedir entera y de
-  // cero, hasta tres veces. Y si a la tercera sigue rota, no se monta el PDF y
-  // se dice cual falta: preferimos no darle el documento a darselo con un
-  // agujero dentro.
+  // Quedarse sin documento es peor que tener una frase sin punto. Asi que ahora
+  // solo se tira lo que de verdad no es texto: una casilla vacia o con una
+  // palabra de relleno haciendo bulto. Todo lo demas se entrega, que para eso
+  // ya se ha pedido dos veces ahi arriba.
   const roto = [];
   for (const punto of PUNTOS) {
     const txt = escrita[punto];
     if (!txt) roto.push(`"${BLOQUES[punto]}" viene vacio`);
     else if (esRelleno(txt)) roto.push(`"${BLOQUES[punto]}" trae texto de relleno en vez de contenido`);
-    else if (acabaColgado(txt)) roto.push(`"${BLOQUES[punto]}" se queda a media frase`);
-    else if (cuantas(txt) < PALABRAS_MINIMAS[punto]) roto.push(`"${BLOQUES[punto]}" viene en ${cuantas(txt)} palabras`);
   }
-  if (roto.length) throw new Error(`la parte "${parte.titulo}" ha salido rota: ${roto.join('; ')}`);
+  if (!escrita.titulo) roto.push('viene sin título');
+  if (roto.length) throw new Error(`la parte "${parte.deQueVa}" ha salido rota: ${roto.join('; ')}`);
 
   return escrita;
 }
@@ -1438,7 +1598,7 @@ export default async function handler(req, res) {
       // Lo que llega del navegador se comprueba antes de meterlo en el encargo:
       // si viniera a medias, el hueco lo rellenaria el modelo por su cuenta y
       // acabaria inventandose algo de su vida.
-      if (!String(parte?.titulo || '').trim() || PUNTOS.some(punto => !String(parte?.[punto] || '').trim())) {
+      if (!String(parte?.deQueVa || '').trim() || PUNTOS.some(punto => !String(parte?.[punto] || '').trim())) {
         return res.status(400).json({ error: 'Esa parte llega a medias y no se escribe' });
       }
       // Y sin nombre no se escribe: lo mismo que en el paso anterior, para que
@@ -1458,7 +1618,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Acción no válida' });
   } catch (err) {
     console.error('[p2-plan/prueba]', err);
-    return res.status(500).json({ error: err.message });
+    // Un informe que no da para un plan no es un servidor roto: se dice como
+    // lo que es, para no hacer buscar un fallo donde no lo hay.
+    return res.status(err.esDelInforme ? 422 : 500).json({ error: err.message });
   }
 }
 // La pagina. Los colores y las letras son los de la marca, para leerlo como se
@@ -1500,6 +1662,7 @@ const PAGINA = `<!DOCTYPE html>
      la pagina. Se quita borrando este bloque y la funcion pintarLoDecidido. */
   .decidido { border:1px dashed rgba(14,63,75,.35); border-radius:8px; padding:1rem 1.2rem; margin-top:1.4rem; background:#fff; }
   .decidido summary { font-family:system-ui,sans-serif; font-size:.9rem; font-weight:600; color:var(--teal); cursor:pointer; }
+  .decidido .quitadas { font-family:system-ui,sans-serif; font-size:.85rem; margin:.6rem 0; line-height:1.5; }
   .decidido table { width:100%; border-collapse:collapse; margin-top:.9rem; font-family:system-ui,sans-serif; font-size:.85rem; }
   .decidido th { text-align:left; color:var(--gold); text-transform:uppercase; font-size:.68rem; letter-spacing:.1em; padding:.35rem .5rem; border-bottom:1px solid rgba(189,144,72,.3); }
   .decidido td { padding:.5rem; border-bottom:1px solid rgba(14,63,75,.08); vertical-align:top; }
@@ -1611,14 +1774,14 @@ ir.addEventListener('click', async () => {
   // el sitio se reserva antes y cada una cae en el suyo.
   // Lo decidido, arriba del todo y antes de escribir nada: asi se puede mirar
   // mientras se escriben las siete.
-  salida.insertAdjacentHTML('beforeend', pintarLoDecidido(plan.partes));
+  salida.insertAdjacentHTML('beforeend', pintarLoDecidido(plan.partes, plan.limpieza));
 
   const total = plan.partes.length;
   aviso.textContent = 'Escribiendo las ' + total + ' partes a la vez…';
   const huecos = plan.partes.map((suya, i) => {
     const hueco = document.createElement('div');
     hueco.className = 'parte';
-    hueco.innerHTML = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.titulo) +
+    hueco.innerHTML = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.deQueVa) +
       '</h2><p class="aviso">Escribiéndose…</p>';
     salida.appendChild(hueco);
     return hueco;
@@ -1636,7 +1799,7 @@ ir.addEventListener('click', async () => {
     const caidas = [];
     await Promise.all(cuales.map(async i => {
       const suya = plan.partes[i];
-      const cabecera = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.titulo) + '</h2>';
+      const cabecera = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.deQueVa) + '</h2>';
       try {
         const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo,
                                          parte: suya, puedeElNombre: conNombre.has(i) });
@@ -1660,8 +1823,13 @@ ir.addEventListener('click', async () => {
   // casi siempre entra a la segunda: lo que se cae aqui es la linea, no el
   // texto.
   //
-  // Tres y no mas: si a la tercera sigue sin volver, lo que hay caido no es
-  // esta parte, y seguir pidiendo solo hace esperar mas para acabar igual.
+  // TRES. Se bajo a dos para ahorrar tiempo y fue un error: en un plan de
+  // verdad se cayeron tres partes, se acabaron las vueltas y la clienta se
+  // quedo SIN PDF despues de cuatro minutos.
+  //
+  // Y una vuelta de mas no cuesta lo que parece: solo se vuelven a pedir las
+  // que se han caido, no todas, y las demas ya han terminado. Si no se cae
+  // ninguna -que es lo normal- estas vueltas no existen y no cuestan nada.
   const INTENTOS = 3;
   let caidas = plan.partes.map((_, i) => i);
   for (let vuelta = 1; vuelta <= INTENTOS && caidas.length; vuelta++) {
@@ -1719,27 +1887,30 @@ pdf.addEventListener('click', async () => {
 // para ver de un vistazo cuantas partes han salido, de que desafios sale cada
 // una y que le pide hacer, que es lo unico que hay que mirar para saber si esa
 // llamada lo ha hecho bien o esta repitiendo.
-function pintarLoDecidido(partes) {
+function pintarLoDecidido(partes, limpieza) {
   // De donde sale cada parte. Una con dos o mas numeros es una que ha juntado
   // dos desafios que decian lo mismo, que es lo que tiene que pasar.
   const filas = partes.map((p, i) => {
     const deCuantos = (p.deCuales || []).length;
     return '<tr>' +
       '<td>' + (i + 1) + '</td>' +
-      '<td>' + escapar(p.titulo || '') + '</td>' +
+      '<td>' + escapar(p.deQueVa || '') + '</td>' +
       '<td>' + escapar((p.deCuales || []).join(', ')) + (deCuantos > 1 ? ' <b>(juntados)</b>' : '') + '</td>' +
-      '<td class="verbo">' + escapar(p.movimiento || '') + '</td>' +
       '<td>' + escapar(p.queHaces || '') + '</td>' +
     '</tr>';
   }).join('');
 
-  const juntados = partes.filter(p => (p.deCuales || []).length > 1).length;
-  const deCuantos = new Set(partes.flatMap(p => p.deCuales || [])).size;
+  const fuera = (limpieza && limpieza.sequitan) || [];
+  const entraron = partes.length + fuera.length;
 
-  return '<details class="decidido" open><summary>Lo que ha decidido la primera llamada — ' +
-    partes.length + ' partes' + (deCuantos ? ' de ' + deCuantos + ' desafíos' : '') +
-    (juntados ? ', ' + juntados + ' juntando varios' : '') + '</summary>' +
-    '<table><tr><th>#</th><th>Título</th><th>Desafíos</th><th>Movimiento</th><th>Lo que le manda hacer</th></tr>' +
+  const quitadas = fuera.length
+    ? '<p class="quitadas"><b>Se han quitado ' + fuera.length + ':</b> ' +
+      fuera.map(x => '#' + escapar(x.numero) + ' — ' + escapar(x.porque)).join(' · ') + '</p>'
+    : '<p class="quitadas">No se ha quitado ninguna.</p>';
+
+  return '<details class="decidido" open><summary>La limpieza — ' +
+    entraron + ' entraron, quedan ' + partes.length + '</summary>' + quitadas +
+    '<table><tr><th>#</th><th>De qué va</th><th>Desafíos</th><th>Lo que le manda hacer</th></tr>' +
     filas + '</table></details>';
 }
 
