@@ -902,12 +902,6 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
   if (!primero.falla.length) return { ...primero.plan, limpieza: limpia };
 
   // ── 3. Y SI HA VENIDO A MEDIAS, SE PIDE OTRA VEZ ──────────
-  //
-  // Con Sonnet, siempre. Este intento no esta para pensar mejor que el
-  // anterior: esta para arreglar algo concreto que se le dice escrito -una
-  // casilla vacia, dos titulos iguales, una parte que falta-, y eso es trabajo
-  // de seguir una instruccion, no de criterio. Sonnet lo hace en la cuarta
-  // parte del tiempo, y a estas alturas el reloj ya va cargado.
   const queda = loQueQueda(arranque, ESPERA_DEL_SEGUNDO_PLAN_MS);
   if (queda < ESPERA_MINIMA_PARA_REHACER_MS) {
     console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), pero ya no queda tiempo para rehacerlo`);
@@ -921,7 +915,6 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
       nombre, sexo, limpia,
       modelo: EL_QUE_REMATA,
       espera: queda,
-      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. La lista ya viene limpia: sale una parte por cada cosa de la lista, ninguna se queda fuera y ninguna se junta con otra. Y cada parte va con sus tres cosas escritas enteras.`,
     });
   } catch (err) {
     // El segundo intento es una mejora, no un requisito: si se cae, se entrega
