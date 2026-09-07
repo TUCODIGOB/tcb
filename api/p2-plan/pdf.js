@@ -257,7 +257,7 @@ export default async function handler(req, res) {
 
     // ── LAS PARTES ────────────────────────────────────────────
     //
-    // Cada una en su hoja, con sus cuatro puntos y el nombre de cada uno: sin
+    // Cada una en su hoja, con sus puntos y el nombre de cada uno: sin
     // ellos quien lee no sabe de que le habla cada trozo, ni puede volver a
     // buscar uno el dia que le haga falta.
     const PUNTOS = ['tuPrueba', 'queHaces', 'dondeTeCaes'];
