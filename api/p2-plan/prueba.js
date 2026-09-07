@@ -921,7 +921,6 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
       nombre, sexo, limpia,
       modelo: EL_QUE_REMATA,
       espera: queda,
-      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. La lista ya viene limpia: sale una parte por cada cosa de la lista, ninguna se queda fuera y ninguna se junta con otra. Y cada parte va con sus tres cosas escritas enteras.`,
     });
   } catch (err) {
     // El segundo intento es una mejora, no un requisito: si se cae, se entrega
