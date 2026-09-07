@@ -593,6 +593,11 @@ ${susDesafios(rasgos)}`;
       numero: n,
       descripcion: String(desafios[n - 1].descripcion || '').trim(),
     })),
+    // Y los que se quedan, con su descripcion, para lo mismo.
+    quedados: sequedan.map(n => ({
+      numero: n,
+      descripcion: String(desafios[n - 1].descripcion || '').trim(),
+    })),
     // De que numero de la lista original sale cada una, para poder mirarlo.
     deCuales: sequedan,
   };
@@ -1488,12 +1493,15 @@ pdf.addEventListener('click', async () => {
 // una y que le pide hacer, que es lo unico que hay que mirar para saber si esa
 // llamada lo ha hecho bien o esta repitiendo.
 function pintarLoDecidido(partes, limpieza) {
+  // La descripcion de cada desafio que se quedo, por su numero.
+  const suDescripcion = new Map(((limpieza && limpieza.quedados) || []).map(x => [x.numero, x.descripcion]));
   // De que desafio de la lista sale cada parte.
-  const filas = partes.map((p, i) => {
+  const filas = partes.map(p => {
+    const cual = (p.deCuales || [])[0];
     return '<tr>' +
-      '<td>' + (i + 1) + '</td>' +
-      '<td>' + escapar(p.titulo || '') + '</td>' +
       '<td>' + escapar((p.deCuales || []).join(', ')) + '</td>' +
+      '<td>' + escapar(suDescripcion.get(cual) || '') + '</td>' +
+      '<td>' + escapar(p.titulo || '') + '</td>' +
       '<td>' + escapar(p.queHaces || '') + '</td>' +
     '</tr>';
   }).join('');
@@ -1508,7 +1516,7 @@ function pintarLoDecidido(partes, limpieza) {
 
   return '<details class="decidido" open><summary>La limpieza — ' +
     entraron + ' entraron, quedan ' + partes.length + '</summary>' + quitadas +
-    '<table><tr><th>#</th><th>Título</th><th>Desafíos</th><th>Lo que le manda hacer</th></tr>' +
+    '<table><tr><th>Desafío</th><th>Descripción</th><th>Título</th><th>Lo que le manda hacer</th></tr>' +
     filas + '</table></details>';
 }
 
