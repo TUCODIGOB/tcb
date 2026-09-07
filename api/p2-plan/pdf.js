@@ -28,9 +28,16 @@ const BASE_URL = 'https://origennatal.com';
 // guarda nunca, para que no se repita en todos los PDFs siguientes.
 const GUARDADOS = new Map();
 
+// Y CON RELOJ. Sin el, una descarga que se queda colgada se lleva por delante
+// los 60 segundos de la peticion entera y el navegador recibe un error de red
+// sin mensaje. Con el, se da por fallada esa pieza a los 15 segundos, se
+// apunta en "fallos" y el PDF sale igual: sin esa fuente o sin ese fondo, pero
+// sale.
+const ESPERA_DE_UNA_PIEZA_MS = 15000;
+
 async function enBase64(ruta) {
   if (GUARDADOS.has(ruta)) return GUARDADOS.get(ruta);
-  const r = await fetch(`${BASE_URL}${ruta}`);
+  const r = await fetch(`${BASE_URL}${ruta}`, { signal: AbortSignal.timeout(ESPERA_DE_UNA_PIEZA_MS) });
   if (!r.ok) throw new Error(`HTTP ${r.status}`);
   const bytes = new Uint8Array(await r.arrayBuffer());
   let binario = '';

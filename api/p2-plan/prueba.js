@@ -513,35 +513,54 @@ const cuantosDesafios = rasgos => (rasgos?.desafios || [])
 // vez. Pedirlas de una en una y confiar en que no se repitan es lo que fallaba
 // antes.
 //
-// EL ESFUERZO, MEDIO. Es el que termina a tiempo. Con alto se pasa del tope y
-// la clienta se queda mirando una pantalla en blanco; se probo en el P1 y
-// costo un informe entero.
+// OPUS DECIDE, Y CON EL ESFUERZO BAJO. Esta es la eleccion del producto y hay
+// historia detras, asi que queda escrita para no volver a darle vueltas.
 //
-// Y SI VIENE A MEDIAS SE PIDE OTRA VEZ, pero dos intentos de esto no caben en
-// los 300 segundos que aguanta la peticion: el segundo no pide otros 200, pide
-// lo que sobre del primero, y si no sobra bastante no se pide.
+// Opus se probo dos veces y las dos se corto, asi que se cambio a Sonnet. Pero
+// las dos veces iba a esfuerzo MEDIO -y con topes de 110 y 120 segundos-. El
+// esfuerzo es lo que manda en lo que tarda esta llamada, y a medio Opus no
+// baja de ahi. O sea que lo que se midio no fue "Opus no llega": fue "Opus a
+// medio no llega en 110 segundos".
+//
+// A BAJO no se habia probado nunca, y es donde esta el producto. Un modelo de
+// la generacion nueva con el esfuerzo bajo rinde por encima de la generacion
+// anterior a esfuerzo alto, y esta llamada es la que decide el documento
+// entero: es donde se nota la diferencia entre un plan bueno y uno correcto.
+// Es UNA llamada por cliente, asi que lo que cuesta de mas es calderilla.
+//
+// Y SI OPUS FALLA, TERMINA SONNET. Sea por lo que sea -que se pase de tiempo,
+// que se quede sin sitio, que el modelo conteste 500-, no se deja al cliente
+// sin plan: se vuelve a pedir con Sonnet y con el tiempo que quede. Un plan
+// algo menos fino se entrega; una pantalla en blanco no.
 
 // TODO EL DOCUMENTO TIENE QUE ESTAR EN DOS MINUTOS Y MEDIO. Esa es la regla, y
 // de ahi salen los numeros de aqui abajo, no al reves.
 //
-// SONNET, Y MEDIDO CON UN INFORME DE VERDAD.
+// EL REPARTO, y esta vez cuadra con lo que hace el codigo:
+//   150 s como mucho para decidir con Opus. Las dos medidas que hay de Opus
+//        -las dos a esfuerzo medio- daban por encima de 110, asi que a bajo
+//        cabe con margen, y si aun asi se pasa, no muere: entra Sonnet.
+//    90 s para el segundo intento, que va SIEMPRE con Sonnet. Ese intento no
+//        esta para pensar mejor: esta para arreglar algo concreto que se le
+//        dice, y Sonnet lo hace en 24 segundos medidos.
+//    60 s para escribir, y las partes van todas a la vez, asi que ese es el
+//        tope de UNA, no el de la suma.
 //
-// Se probo con Opus dos veces y las dos se paso del tope: con la lista de
-// desafios de una clienta real no termina por debajo de 110 segundos, y
-// entonces la peticion se corta y no hay plan.
-//
-// Con Sonnet y el esfuerzo BAJO, ese mismo informe se decidio en 24 segundos,
-// medidos en el registro del servidor. Es la unica pareja medida con datos de
-// verdad, y por eso es la que va: aqui no se pone nada a ojo.
-//
-// Que Opus elija mejor no sirve de nada si no llega a tiempo, y aqui el reloj
-// lo tiene la clienta esperando delante.
-//
-// EL REPARTO DE LOS DOS MINUTOS Y MEDIO: 90 segundos para decidir -que con 24
-// medidos sobra de largo-, 50 para pedirlo otra vez si viene mal, y 60 para
-// escribir, que van todas a la vez.
-const ESPERA_DEL_PLAN_MS = 90000;
-const TECHO_DEL_PLAN = 16000;
+// 150 + 90 + 60 = 300, que es el peor caso imaginable y solo se da si todo
+// sale mal dos veces seguidas. Lo normal es 110 + 40, que son dos minutos y
+// medio contando de sobra.
+const ESPERA_DEL_PLAN_MS = 150000;
+
+// Y EL SEGUNDO INTENTO, MAS CORTO, porque va con Sonnet y Sonnet tarda 24.
+const ESPERA_DEL_SEGUNDO_PLAN_MS = 90000;
+
+// SITIO DE SOBRA PARA LA RESPUESTA. Cuando el modelo piensa, lo que piensa sale
+// del MISMO techo que lo que escribe, asi que un techo justo no se queda corto
+// de texto: se queda corto de sitio para pensar, y entonces la respuesta llega
+// cortada a media llave y no hay plan. Con 16000 iba justo para Opus. La
+// respuesta de verdad no llega a 4000, asi que esto no gasta de mas: solo
+// quita el techo de en medio.
+const TECHO_DEL_PLAN = 32000;
 
 // LO QUE AGUANTA LA PETICION, MENOS UN MARGEN PARA CONTESTAR. El servidor corta
 // a los 300 segundos, y si corta el, la clienta ve una pagina rota en vez de un
@@ -551,7 +570,11 @@ const MARGEN_DEL_SERVIDOR_MS = 285000;
 // Y POR DEBAJO DE ESTO NO SE VUELVE A PEDIR. Un segundo intento sin tiempo por
 // delante no termina: gasta dinero, se corta igual y encima se lleva por
 // delante el plan que ya habia, que estaba a medias pero estaba.
-const ESPERA_MINIMA_PARA_REHACER_MS = 50000;
+//
+// 40 segundos, que es lo que tarda Sonnet en decidir uno entero con holgura
+// sobre los 24 medidos. El segundo intento va siempre con Sonnet, asi que el
+// suelo se mide con Sonnet y no con Opus.
+const ESPERA_MINIMA_PARA_REHACER_MS = 40000;
 
 // LO QUE LE QUEDA A ESTA PETICION.
 //
@@ -596,7 +619,12 @@ const MOLDE_DEL_PLAN = {
   additionalProperties: false,
 };
 
-async function pedirElPlan({ nombre, sexo, rasgos, recordatorio = '', espera = ESPERA_DEL_PLAN_MS }) {
+// El que decide, y el que termina si el primero no puede.
+const EL_QUE_DECIDE = 'claude-opus-5';
+const EL_QUE_REMATA = 'claude-sonnet-5';
+
+async function pedirElPlan({ nombre, sexo, rasgos, recordatorio = '',
+                             espera = ESPERA_DEL_PLAN_MS, modelo = EL_QUE_DECIDE }) {
   const encargo = `${EL_P2_NO_ES_EL_P1}
 
 Estás preparando el plan de una persona: lo que tiene que cambiar para llegar a ser quien quiere ser, y qué hace para conseguirlo.
@@ -706,7 +734,7 @@ Nombre de pila: ${nombre}`;
 
   const salida = await alModelo({
     que: 'decidir el plan',
-    modelo: 'claude-sonnet-5',
+    modelo,
     piensa: 'low',
     techo: TECHO_DEL_PLAN,
     system: encargo,
@@ -831,23 +859,53 @@ Nombre de pila: ${nombre}`;
 // lo mismo.
 async function decidirElPlan({ nombre, sexo, rasgos }) {
   const arranque = Date.now();
-  const primero = await pedirElPlan({ nombre, sexo, rasgos });
+
+  // ── 1. DECIDE OPUS ────────────────────────────────────────
+  //
+  // Y si Opus no puede -se pasa de tiempo, se queda sin sitio, el modelo
+  // contesta 500-, NO se cae la peticion: termina Sonnet con lo que quede.
+  // Esta llamada es la unica que decide, asi que quedarse sin ella es quedarse
+  // sin documento, y eso no puede pasar por elegir el modelo bueno.
+  let primero;
+  try {
+    primero = await pedirElPlan({ nombre, sexo, rasgos, modelo: EL_QUE_DECIDE });
+  } catch (err) {
+    const queda = loQueQueda(arranque, ESPERA_DEL_SEGUNDO_PLAN_MS);
+    if (queda < ESPERA_MINIMA_PARA_REHACER_MS) throw err;
+    console.warn(`[p2] ${EL_QUE_DECIDE} no ha podido decidir el plan (${err.message}), lo termina ${EL_QUE_REMATA}`);
+    primero = await pedirElPlan({ nombre, sexo, rasgos, modelo: EL_QUE_REMATA, espera: queda });
+  }
+
   if (!primero.falla.length) return primero.plan;
 
-  // Y SOLO SE PIDE OTRA VEZ SI CABE. Lo que quede del tiempo del servidor, y
-  // nunca menos de lo que tarda en salir uno entero.
-  const queda = loQueQueda(arranque, ESPERA_DEL_PLAN_MS);
+  // ── 2. Y SI HA VENIDO A MEDIAS, SE PIDE OTRA VEZ ──────────
+  //
+  // Con Sonnet, siempre. Este intento no esta para pensar mejor que el
+  // anterior: esta para arreglar algo concreto que se le dice escrito -dos
+  // movimientos iguales, una casilla vacia-, y eso es trabajo de seguir una
+  // instruccion, no de criterio. Sonnet lo hace en la cuarta parte del tiempo,
+  // y a estas alturas el reloj ya va cargado.
+  const queda = loQueQueda(arranque, ESPERA_DEL_SEGUNDO_PLAN_MS);
   if (queda < ESPERA_MINIMA_PARA_REHACER_MS) {
     console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), pero ya no queda tiempo para rehacerlo`);
     return primero.plan;
   }
 
   console.warn(`[p2] el plan ha venido a medias (${primero.falla.join('; ')}), se pide otra vez`);
-  const segundo = await pedirElPlan({
-    nombre, sexo, rasgos,
-    espera: queda,
-    recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Cada parte va con su título, su movimiento en un verbo y sus cuatro cosas escritas enteras, y los movimientos son todos distintos: si dos coinciden es que esas dos eran la misma y hay que juntarlas en una, no reescribirla con otras palabras.`,
-  });
+  let segundo;
+  try {
+    segundo = await pedirElPlan({
+      nombre, sexo, rasgos,
+      modelo: EL_QUE_REMATA,
+      espera: queda,
+      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Cada parte va con su título, su movimiento en un verbo y sus cuatro cosas escritas enteras, y los movimientos son todos distintos: si dos coinciden es que esas dos eran la misma y hay que juntarlas en una, no reescribirla con otras palabras.`,
+    });
+  } catch (err) {
+    // El segundo intento es una mejora, no un requisito: si se cae, se entrega
+    // el primero, que estaba a medias pero estaba.
+    console.warn(`[p2] el segundo intento del plan se ha caido (${err.message}), se entrega el primero`);
+    return primero.plan;
+  }
 
   // Y SE QUEDA EL MEJOR DE LOS DOS. Pedir otra vez no garantiza que salga
   // mejor: el segundo puede venir peor que el primero.
@@ -983,7 +1041,14 @@ function cuentaComoEs(texto, frasesQuePerdona = 3) {
   if (PALABRAS_DE_DIAGNOSTICO.some(re => re.test(resto))) return true;
   // Y contar marcas solo tiene sentido en un texto largo. Una casilla de dos
   // frases no puede llevar tres, y exigirselas la haria reescribir siempre.
-  if (resto.trim().split(/\s+/).length < 120) return false;
+  //
+  // EL SUELO VA POR DEBAJO DEL TOPE DE "queHaces", Y ESO ES TODO EL ASUNTO.
+  // Estaba en 120 palabras cuando el tope de esa casilla era 115: o sea que
+  // para llegar a contarse las marcas habia que haberse pasado ya de largo, y
+  // entonces salta antes la red del tope. Esta parte del codigo no se ejecuto
+  // NUNCA. Con 95 si entra: la casilla no baja de 80 y no pasa de 135, asi que
+  // casi todo lo que escribe se mira de verdad.
+  if (resto.trim().split(/\s+/).length < 95) return false;
   return MARCAS_DE_QUE_HACER.filter(re => re.test(resto)).length < MARCAS_MINIMAS;
 }
 
@@ -1139,13 +1204,38 @@ const MOLDE_DE_LA_PARTE = {
 // propia pagina y le quedan 206 mm por debajo del titulo. Los cuatro
 // subtitulos se llevan 64, el aire entre parrafos y la caja beige otros 35, y
 // lo que sobra son unos dieciseis renglones. A trece palabras por renglon,
-// una hoja son unas ciento noventa y cinco palabras. Eso es lo que suman
-// estos cuatro topes, y por eso suman eso.
-const PALABRAS_MAXIMAS = { tuPrueba: 38, queHaces: 115, dondeTeCaes: 28, cuandoTeCaes: 20 };
+// una hoja son unas doscientas palabras. Eso es lo que suman estos cuatro
+// topes, y por eso suman eso.
+//
+// Y "queHaces" SUBE DE 115 A 135. La cifra vieja no daba: el encargo le pide
+// meter ahi CUATRO cosas -que hace, como las primeras veces, que hace en lugar
+// de lo de siempre, y como lo sostiene- y en dos parrafos. En 115 palabras eso
+// sale a veintinueve por cosa, que no llega ni para decirlas, asi que pasaba
+// una de dos: o se pasaba de largo y habia que reescribir la parte entera, o
+// cabia despachando alguna en media linea. Las dos son malas, y la primera
+// ademas cuesta un minuto de reloj cada vez.
+//
+// Las otras tres bajan un poco para compensar, que es de donde sale el sitio:
+// solo enmarcan, y ninguna necesitaba lo que tenia.
+const PALABRAS_MAXIMAS = { tuPrueba: 35, queHaces: 135, dondeTeCaes: 25, cuandoTeCaes: 18 };
 
 // Y UN SUELO MUY BAJO, solo para que ninguna se despache en una linea. No es
 // para llenar: es para que no venga vacia de contenido pareciendo entera.
-const PALABRAS_MINIMAS = { tuPrueba: 22, queHaces: 75, dondeTeCaes: 16, cuandoTeCaes: 12 };
+const PALABRAS_MINIMAS = { tuPrueba: 22, queHaces: 80, dondeTeCaes: 16, cuandoTeCaes: 12 };
+
+// PASARSE UN POCO NO ES MOTIVO PARA REESCRIBIR NADA.
+//
+// El tope es lo que se le pide, y se le pide en el encargo para que apunte
+// ahi. Pero reescribir una parte entera porque se ha ido cuatro palabras es
+// tirar un texto bueno y gastar hasta un minuto de reloj para que vuelva otro
+// igual: el modelo no cuenta palabras, asi que la segunda vez cae donde caiga.
+//
+// Asi que la red salta cuando se ha pasado DE VERDAD -un 12%, que en la
+// casilla larga son unas dieciseis palabras, medio renglon y medio-. Por
+// debajo de eso entra tal cual. Es lo que quita casi todas las reescrituras, y
+// es de donde sale el tiempo del documento.
+const MARGEN_DE_LARGO = 1.12;
+const topeReal = punto => Math.round(PALABRAS_MAXIMAS[punto] * MARGEN_DE_LARGO);
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
@@ -1204,7 +1294,9 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
   // en blanco, y sin ella el punto mas largo sale como un muro de texto.
   const parrafosDe = t => String(t || '').split(/\n+/).filter(x => x.trim()).length;
   const cortos = p => PUNTOS.filter(punto => cuantas(p[punto]) < PALABRAS_MINIMAS[punto]);
-  const pasados = p => PUNTOS.filter(punto => PALABRAS_MAXIMAS[punto] && cuantas(p[punto]) > PALABRAS_MAXIMAS[punto]);
+  // Se mide contra el tope CON su margen: pasarse un poco entra, pasarse de
+  // verdad se reescribe. Ver MARGEN_DE_LARGO.
+  const pasados = p => PUNTOS.filter(punto => PALABRAS_MAXIMAS[punto] && cuantas(p[punto]) > topeReal(punto));
   const colgados = p => PUNTOS.filter(punto => acabaColgado(p[punto]));
 
   const salida = await sinNombrarLaCarta({
@@ -1285,9 +1377,6 @@ export default async function handler(req, res) {
     if (accion === 'plan') {
       const { compra } = req.body || {};
       const informe = await leer(compra);
-      // SIN SUS RASGOS NO HAY PLAN. Es lo unico que se le manda al modelo, asi
-      // que con la lista vacia se lo inventaria todo. Los informes de antes de
-      // que se guardaran los rasgos entran por aqui.
       // SIN LO QUE LE CUESTA NO HAY PLAN. Es lo unico que se le manda al
       // modelo, asi que con la lista vacia se lo inventaria todo. Los informes
       // de antes de que se guardaran los rasgos entran por aqui.
@@ -1299,8 +1388,21 @@ export default async function handler(req, res) {
             : 'Ese informe se guardó sin los rasgos, y sin ellos no hay plan',
         });
       }
+
+      // Y SIN SU NOMBRE TAMPOCO. Antes, si el informe venia sin nombre, se
+      // seguia adelante poniendo "esta persona": el modelo escribia con eso y
+      // acababa impreso en la portada del documento y dentro del texto. Un
+      // documento que se entrega a alguien no lleva un relleno donde va su
+      // nombre. Si falta, se para aqui y se dice.
+      const nombre = String(informe?.cliente?.nombre || '').trim();
+      if (!nombre) {
+        return res.status(422).json({
+          error: 'Ese informe se guardó sin el nombre del cliente, y el plan va dirigido a él: no se hace a medias',
+        });
+      }
+
       const plan = await decidirElPlan({
-        nombre: informe?.cliente?.nombre || 'esta persona',
+        nombre,
         sexo: informe?.cliente?.sexo || '',
         rasgos: informe.rasgos,
       });
@@ -1316,10 +1418,7 @@ export default async function handler(req, res) {
       // con ellos y asi no hay que volver a abrir el informe en cada uno.
       return res.status(200).json({
         plan,
-        quien: {
-          nombre: informe?.cliente?.nombre || 'esta persona',
-          sexo: informe?.cliente?.sexo || '',
-        },
+        quien: { nombre, sexo: informe?.cliente?.sexo || '' },
       });
     }
 
@@ -1331,9 +1430,14 @@ export default async function handler(req, res) {
       if (!String(parte?.titulo || '').trim() || PUNTOS.some(punto => !String(parte?.[punto] || '').trim())) {
         return res.status(400).json({ error: 'Esa parte llega a medias y no se escribe' });
       }
+      // Y sin nombre no se escribe: lo mismo que en el paso anterior, para que
+      // no entre por aqui un relleno que acabaria impreso en el documento.
+      if (!String(nombre || '').trim()) {
+        return res.status(400).json({ error: 'Esa parte llega sin el nombre del cliente y no se escribe' });
+      }
       const escrita = await escribirLaParte({
         parte,
-        nombre: String(nombre || 'esta persona'),
+        nombre: String(nombre).trim(),
         sexo: String(sexo || ''),
         puedeElNombre: !!puedeElNombre,
       });
@@ -1468,7 +1572,7 @@ ir.addEventListener('click', async () => {
   salida.innerHTML = '';
   aviso.className = 'aviso';
   const compra = quien.value;
-  let quienEs = { nombre:'esta persona', sexo:'' };
+  let quienEs = null;
 
   // 1. La llamada que piensa y decide el documento entero.
   let plan;
@@ -1476,7 +1580,11 @@ ir.addEventListener('click', async () => {
   try {
     const r = await llamar({ accion:'plan', compra });
     plan = r.plan;
-    if (r.quien) quienEs = r.quien;
+    quienEs = r.quien;
+    // El servidor no deja pasar un informe sin nombre, asi que esto no
+    // deberia saltar nunca. Pero si saltara, es mejor pararse aqui que
+    // escribir siete partes dirigidas a "undefined".
+    if (!quienEs || !quienEs.nombre) throw new Error('El informe ha venido sin el nombre del cliente');
   } catch (e) {
     aviso.className = 'aviso error';
     aviso.textContent = 'No se ha podido decidir el plan: ' + e.message;
