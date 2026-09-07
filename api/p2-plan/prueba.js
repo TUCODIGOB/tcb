@@ -521,16 +521,24 @@ const cuantosDesafios = rasgos => (rasgos?.desafios || [])
 // los 300 segundos que aguanta la peticion: el segundo no pide otros 200, pide
 // lo que sobre del primero, y si no sobra bastante no se pide.
 
-// SE PROBO CON OPUS Y SE QUITO. Pensaba mucho mas rato: en una tirada de
-// verdad paso de los tres minutos, y con el reintento detras se fue a mas de
-// cinco con la clienta mirando la pantalla. Sonnet con el esfuerzo medio es lo
-// que esta medido en esta casa y lo que termina.
+// TODO EL DOCUMENTO TIENE QUE ESTAR EN DOS MINUTOS Y MEDIO. Esa es la regla, y
+// de ahi salen los numeros de aqui abajo, no al reves.
 //
-// EL TOPE, AJUSTADO A ESO. Antes eran 235 segundos, que era el sitio que
-// necesitaba Opus. Con esto sobra de largo, y ademas deja tiempo de verdad
-// para pedirlo otra vez si viene mal, en vez de comerselo todo el primer
-// intento.
-const ESPERA_DEL_PLAN_MS = 120000;
+// SE PROBO CON OPUS Y SE QUITO. Pensaba mucho mas rato: en una tirada de
+// verdad paso de los tres minutos el solo, y con el reintento detras se fue a
+// mas de cinco con la clienta mirando la pantalla.
+//
+// Y EL ESFUERZO BAJA A BAJO. Lo que se le pide aqui no es un problema abierto:
+// es leer una lista corta, juntar los que dicen lo mismo y decidir cuatro
+// lineas de cada uno. Eso esta muy acotado, y lo unico que de verdad hay que
+// vigilar -que no manden hacer lo mismo- lo comprueba el codigo despues y lo
+// hace rehacer si pasa. Pensar mas rato aqui se paga en reloj y no compra casi
+// nada.
+//
+// EL REPARTO DE LOS DOS MINUTOS Y MEDIO: 70 segundos para decidir, 50 para
+// pedirlo otra vez si viene mal, y 60 para escribir, que van en paralelo. En
+// el caso normal -sin reintento- son unos 70 segundos en total.
+const ESPERA_DEL_PLAN_MS = 70000;
 const TECHO_DEL_PLAN = 16000;
 
 // LO QUE AGUANTA LA PETICION, MENOS UN MARGEN PARA CONTESTAR. El servidor corta
@@ -538,10 +546,10 @@ const TECHO_DEL_PLAN = 16000;
 // aviso. Aqui se corta antes y con un mensaje.
 const MARGEN_DEL_SERVIDOR_MS = 285000;
 
-// Y POR DEBAJO DE ESTO NO SE VUELVE A PEDIR. Un segundo intento con medio
-// minuto por delante no termina: gasta dinero, se corta igual y encima se lleva
-// por delante el plan que ya habia, que estaba a medias pero estaba.
-const ESPERA_MINIMA_PARA_REHACER_MS = 90000;
+// Y POR DEBAJO DE ESTO NO SE VUELVE A PEDIR. Un segundo intento sin tiempo por
+// delante no termina: gasta dinero, se corta igual y encima se lleva por
+// delante el plan que ya habia, que estaba a medias pero estaba.
+const ESPERA_MINIMA_PARA_REHACER_MS = 50000;
 
 // LO QUE LE QUEDA A ESTA PETICION.
 //
@@ -697,7 +705,7 @@ Nombre de pila: ${nombre}`;
   const salida = await alModelo({
     que: 'decidir el plan',
     modelo: 'claude-sonnet-5',
-    piensa: 'medium',
+    piensa: 'low',
     techo: TECHO_DEL_PLAN,
     system: encargo,
     mensaje: `Decide su plan entero, siguiendo el esquema.${recordatorio}`,
@@ -1081,16 +1089,14 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 
 // LO QUE SE LE DA A CADA INTENTO.
 //
-// Escribir una parte son cuatro casillas y unas trescientas palabras -una
-// hoja-, y es la respuesta mas larga que se pide. Medido cuando ademas pensaba: con 65
-// segundos se cortaba siempre y con 120 se corto una de verdad. Sin pensar
-// tarda bastante menos, pero el tope se deja holgado igual: no cuesta nada
-// tenerlo de sobra y una tirada lenta no se puede quedar sin su parte.
+// Escribir una parte son cuatro casillas y unas doscientas palabras -una hoja-.
+// No piensa, asi que solo tarda lo que tarda en escribirlas.
 //
-// 170. Dos intentos de 170 no caben en los 300 segundos que aguanta esta
-// peticion, y por eso el segundo no pide otros 170: pide lo que sobre del
-// primero (loQueQueda), y si no sobra ni para medio intento no se pide.
-const ESPERA_DE_ESCRIBIR_MS = 170000;
+// 60 SEGUNDOS, que es el sitio que le queda dentro de los dos minutos y medio
+// que tiene que durar todo. Las partes van todas a la vez, asi que este tope
+// es el de una, no el de la suma. Si una se pasa, se pide otra vez con lo que
+// sobre, y si no sobra ni para medio intento no se pide.
+const ESPERA_DE_ESCRIBIR_MS = 60000;
 const TECHO_DE_ESCRIBIR = 12000;
 
 const MOLDE_DE_LA_PARTE = {
