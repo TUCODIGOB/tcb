@@ -149,35 +149,6 @@ Esto no es un detalle. Lo lee alguien que ha pagado, y un texto al que le faltan
 
 Español, año, día, más, está, aquí, así, también, después, sensación, cariño, vínculo: todas llevan lo que llevan. Ni una palabra sin su acento, y ni una eñe escrita como una ene.`;
 
-// ── LO QUE SEPARA EL P2 DEL P1 ──────────────────────────────
-//
-// Es la regla que decide si este producto vale algo. El P1 ya le conto quien
-// es; si el P2 se lo vuelve a contar en positivo, ella lo lee y piensa que le
-// han dado dos veces lo mismo. Y tendria razon.
-//
-// Por eso se parte en dos: el PORQUE sale de su informe, y el QUE HACER no
-// esta ahi y lo pone el P2. Eso es lo unico que este producto anade, y es a lo
-// que ha venido.
-
-const EL_P2_NO_ES_EL_P1 = `QUÉ ES ESTO
-
-Esto no le explica a nadie cómo es. Eso ya lo tiene: se leyó entero un estudio suyo que le contaba quién es y de dónde le viene.
-
-Esto es la parte que le falta. Lo que tiene que hacer para llegar a ser quien quiere ser y tener la vida que quiere.
-
-Y SE ESCRIBE DESDE AQUÍ: lo que le cuesta no es un defecto suyo, es lo que le toca aprender. La vida se lo va a seguir poniendo delante hasta que lo aprenda, y el día que lo haga, eso mismo se convierte en lo mejor que tiene. Eso es lo que cambia todo: no viene a que le arreglen nada, viene a saber qué examen tiene delante y qué hace para aprobarlo.
-
-No se lo digas con esas palabras ni se lo expliques como una idea. Se nota en cómo está escrito todo lo demás: no le hablas de algo que hay que corregir, le hablas de algo que hay que superar.
-
-Así que aquí no se diagnostica. No le explicas de dónde le viene lo que hace, ni le buscas la causa en su casa o en su infancia, ni le pones nombre a lo que le pasa, porque todo eso está dicho ya, y repetírselo con otras palabras es quitarle el sitio a lo único que ha venido a buscar, que es qué hace a partir de mañana.
-
-De ahí salen las dos reglas que mandan sobre todas las demás:
-
-1. DE LO SUYO SOLO APARECE LO QUE TE DAN ESCRITO ABAJO, y ni una cosa más. Nada del porqué: de dónde le viene, quién se lo hizo, cómo se llama lo que le pasa. Todo eso se lo contaron ya, y aquí ocupa el sitio de lo que ha venido a buscar. Si no puedes señalar de dónde sale lo que escribes, no lo escribes.
-
-2. LO TUYO ES EL CÓMO. No solo qué hace: sobre todo cómo, que es lo que nadie le explica y lo que no está en su estudio. Es a lo que ha venido.
-
-Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que hace hoy y de lo que va a hacer con ello.`;
 
 // LOS CUATRO NOMBRES QUE VE DENTRO DE CADA PARTE, escritos aqui por lo mismo
 // que los titulos.
@@ -1029,6 +1000,7 @@ const TECHO_DE_ESCRIBIR = 12000;
 const MOLDE_DE_LA_PARTE = {
   type: 'object',
   properties: {
+    titulo:       { type: 'string' },
     tuPrueba:     { type: 'string' },
     queHaces:     { type: 'string' },
     dondeTeCaes:  { type: 'string' },
@@ -1036,11 +1008,6 @@ const MOLDE_DE_LA_PARTE = {
   required: PUNTOS,
   additionalProperties: false,
 };
-
-// CUANTO OCUPA CADA PUNTO. Es la cifra que va en el encargo, para que el
-// modelo sepa el tamano de cada cosa. No se comprueba despues: aqui no se
-// cuentan palabras para decidir si un texto vale.
-const PALABRAS_PEDIDAS = { tuPrueba: 60, queHaces: 180, dondeTeCaes: 45 };
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
@@ -1052,24 +1019,24 @@ const PALABRAS_PEDIDAS = { tuPrueba: 60, queHaces: 180, dondeTeCaes: 45 };
 //
 // Su trabajo es explicar y ampliar hasta que se entienda a la primera.
 async function escribirLaParte({ parte, nombre, sexo, puedeElNombre }) {
-  const encargo = `${EL_P2_NO_ES_EL_P1}
+  const encargo = `${REGLAS_COMUNES}
 
-${REGLAS_COMUNES}
 
+AQUÍ NO SE DIAGNOSTICA
+
+No le expliques como es o porque, ni de dónde le viene lo que hace, ni le busques la causa, ni le pongas nombre a lo que le pasa. Eso ya lo tiene.
+
+Ahora lo que necesitamos es: que haria su mejor version, lo que tiene que cambiar y qué hace para conseguirlo con exito, siendo humana la persona.
+
+Lo que le cuesta no es su defecto, es su prueba: de ahí sale lo que tiene que hacer.
 
 LO QUE TE TOCA AHORA
 
-Escribes UNA parte del documento. Esta parte va de esto: ${parte.titulo}
+EL TÍTULO DE ESTA PARTE ES: ${parte.titulo}
 
-Y EL TÍTULO LO PONES TÚ, que es lo primero que se lee de esta parte y va en grande en su propia página.
+Va tal cual, sin cambiarlo ni una palabra. Lo devuelves en la casilla "titulo".
 
-Habla de lo que va a hacer quien lo lee o de en quién se convierte, nunca de lo que le pasa: es un título de plan, no de diagnóstico. Corto, sin dos puntos y sin subtítulos.
-
-Se entiende solo, leído de paso y sin nada alrededor. Si para saber de qué va hay que bajar a leer el texto, está mal.
-
-Y se dice la cosa, no una figura de la cosa: ni metáforas ni imágenes. Si el título no se puede hacer literalmente, está mal. Con las palabras de todos los días, y que lo entienda alguien de dieciocho años a la primera.
-
-TE DAN TRES LÍNEAS YA DECIDIDAS Y ESCRIBES LAS TRES, cada una por su lado. No eliges tú lo que va: eso ya está decidido con todo su plan delante. Lo tuyo es que se entienda y que sirva.
+TE DAN TRES LÍNEAS YA DECIDIDAS Y ESCRIBES LAS TRES, cada una por su lado. No eliges tú lo que va: eso ya está decidido con todo su plan delante. Lo tuyo es que el humano lo entienda a la primera al leer y de manera facil, y que le sirva al humano, que le aporte valor
 
 NO DECIDES, EXPLICAS. Coges la línea que te dan y la abres: qué es exactamente, cómo se hace, por qué así y no de otra manera, y qué pasa cuando lo hace. Todo lo que escribas tiene que poder rastrearse a la línea que te han dado. Si te falta un dato, no te lo inventas: cuentas mejor lo que ya está.
 
@@ -1080,20 +1047,36 @@ CADA UNA DE LAS TRES ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos den
 LAS TRES, Y LO QUE VA EN CADA UNA:
 
 "tuPrueba"
-Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo propio que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas ${PALABRAS_PEDIDAS.tuPrueba} palabras para hacerte una idea del tamaño. Si lo dices en menos, mejor.
+
+Cuál es la prueba que le pone delante la vida aquí, qué debe cambiar y en quién se convierte cuando lo transforma y lo logra. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo propio que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas 60 palabras para hacerte una idea del tamaño. Si lo dices en menos, mejor.
 
 "queHaces"
-Es la más larga de las tres y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Unas ${PALABRAS_PEDIDAS.queHaces} palabras, que es de sobra si no das rodeos.
+
+Una sola cosa que tiene que hacer para cambiar ese desafío y transformarlo en positivo. Debe ser algo que realmente le funcione a un humano. Nada de autoayuda barata: esto debe saber hacerlo y funcionarle bien.
+
+Cabe explicarla entera: qué hace exactamente, cómo se hace. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Unas 120 palabras, que es de sobra si no das rodeos.
 
 "dondeTeCaes"
-Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Y qué hace el día que lo deja: el paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Todo seguido, en el mismo texto. Unas ${PALABRAS_PEDIDAS.dondeTeCaes} palabras.
 
-ANTES DE DARLO POR BUENO, LEE LAS TRES Y PREGÚNTATE ESTO DE CADA FRASE: ¿esto lo puede hacer o ver una persona? Si en una frase hay algo que solo pasa como imagen y no como algo que ocurre de verdad, eso no es lo que le pasa: es una manera bonita de decirlo, y quien lo lee tiene que pararse a traducirlo. Se cambia por lo que hace o por lo que le ocurre de verdad. Es la frase más fácil de escribir y la que menos sirve.
+El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien. lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando.
 
-LAS CIFRAS DE ARRIBA SON PARA QUE SEPAS EL TAMAÑO DE CADA COSA. Cuanto más corto, mejor: si lo dices en la mitad, has acertado. Lo único que no se hace nunca es cortar una frase por la mitad para que quepa. Si ves que no cabe, quitas algo entero y cierras: lo que no puede pasar es que quede a medias.
+Y tambien debes decir qué debe hacer cuando eso pase (el autosaboteo) para volver al camino correcto, solo el paso concreto.
+
+Unas 60 palabras para hacerte una idea del tamaño. Si lo dices en menos, mejor.
+
+LAS CIFRAS DE ARRIBA SON UNA GUIA, no un límite. Cuanto más corto, mejor, pero nunca cortes una frase por la mitad para que quepa: si no cabe, quitas algo entero y cierras.
 
 LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que haces tú, y hace falta: sin esa línea todo sale pegado en un bloque y no hay quien lo lea en un móvil.
 
+LO QUE NO SE PUEDE ESCRIBIR
+
+No te inventes nada de su vida. No sabes si tiene pareja, trabajo, hijos, casa o familia.
+
+Nada que le valga igual a cualquier persona: este producto es de élite.
+
+Nada técnico: ni planetas, ni signos, ni casas, ni nada relacionado con astrología.
+
+Sin palabras técnicas ni metáforas.
 
 LO QUE SE HA DECIDIDO PARA ESTA PARTE:
 
