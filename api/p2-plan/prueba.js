@@ -531,7 +531,14 @@ const losDesafios = rasgos => (rasgos?.desafios || [])
 // Ahora va en medio, que es lo que cuesta comparar, y aun asi termina rapido
 // porque no escribe nada.
 const ESPERA_DE_LIMPIAR_MS = 90000;
-const TECHO_DE_LIMPIAR = 16000;
+// EL TECHO, HOLGADO, Y NO POR LO QUE ESCRIBE. Lo que escribe son unos cuantos
+// numeros. Pero PENSAR sale del MISMO sitio, y esta es la llamada que mas
+// piensa de las tres -comparar dieciocho con dieciocho-. Si se lo come, la
+// respuesta llega cortada y hay que pedirlo todo otra vez.
+//
+// Es un techo, no un objetivo: solo se paga lo que sale. Tenia la mitad que la
+// llamada de al lado, y es justo al reves de lo que hace falta.
+const TECHO_DE_LIMPIAR = 32000;
 
 const MOLDE_DE_LIMPIAR = {
   type: 'object',
@@ -1282,7 +1289,13 @@ async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso 
 // que tiene que durar todo. Las partes van todas a la vez, asi que este tope
 // es el de una, no el de la suma. Si una se pasa, se pide otra vez con lo que
 // sobre, y si no sobra ni para medio intento no se pide.
-const ESPERA_DE_ESCRIBIR_MS = 60000;
+// 90 SEGUNDOS, los mismos que las otras dos. Tenia 60, que era apretar por
+// apretar: si una parte tarda 61 se corta y hay que pedirla entera otra vez, y
+// eso cuesta mas tiempo y mas dinero que haberla dejado terminar.
+//
+// Las partes van todas a la vez, asi que este tope es el de UNA, no el de la
+// suma. Y solo se gasta si de verdad tarda: lo normal es la mitad.
+const ESPERA_DE_ESCRIBIR_MS = 90000;
 const TECHO_DE_ESCRIBIR = 12000;
 
 const MOLDE_DE_LA_PARTE = {
