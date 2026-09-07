@@ -640,23 +640,17 @@ Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene
 
 1. LO PRIMERO: LIMPIAR LA LISTA
 
-La lista de abajo viene tal cual y trae cosas que sobran. No decides nada hasta haberla limpiado, y esto es lo más importante que haces aquí. Si dos partes del documento acaban mandándole lo mismo, ella cree que tiene diez cosas que hacer cuando tiene seis, se dispersa, y el plan no le sirve de nada.
+Abajo tienes las cosas que le cuestan a esta persona, cada una con su descripción. Vienen tal cual, sin que nadie las mirara juntas, así que trae de sobra. Antes de decidir nada, la limpias. Es el trabajo más importante de aquí: cada una de las que queden va a ser una parte del documento, y si dejas dos que dicen lo mismo, ella lee dos veces la misma cosa y deja de fiarse.
 
-CÓMO SE COMPARAN, QUE ES DONDE ESTÁ EL TRABAJO
+Lees las descripciones -las descripciones, no otra cosa- y quitas:
 
-No los compares por cómo están escritos. Vienen de sitios distintos y escritos por separado, sin que nadie los mirara juntos, así que dos que dicen exactamente lo mismo pueden no compartir ni una palabra.
+LOS QUE DICEN LO MISMO. No por cómo están escritos: por lo que le pasa a ella. Están redactados por separado, así que dos idénticos por dentro pueden no compartir ni una palabra, y dos que suenan parecido pueden ser distintos. Si dos acaban en la misma conducta suya, son uno: te quedas con el que esté mejor contado y el otro fuera. Da igual que a uno le pase en un sitio y al otro en otro; el sitio no los hace distintos.
 
-Se comparan por LO QUE ELLA TENDRÍA QUE HACER DISTINTO. De cada uno de la lista, dite en una línea qué hace ella de otra manera el día que eso esté resuelto. Esa línea es la que comparas con las demás, y es lo único que comparas.
+LOS QUE SE CONTRADICEN. Si dos le piden cosas que no puede hacer a la vez, no van los dos: se queda el que más le pese.
 
-Y SI DOS LÍNEAS DESCRIBEN LA MISMA CONDUCTA, ESOS DOS SON UNO. Aunque cada uno le ocurra en un sitio distinto de su vida, y aunque estén contados con palabras que no se parecen en nada. El sitio donde le pasa no los hace distintos. La conducta sí.
+LOS QUE NO DAN PARA UN CAMBIO. Si de uno no sale nada que ella pueda ponerse a hacer, fuera, por muy cierto que sea. Este documento es lo que hace, no lo que le pasa.
 
-ESTO PASA SIEMPRE Y PASA MUCHO, así que búscalo a propósito en vez de esperar a verlo. Lo que más se repite en estas listas es una sola conducta contada desde cuatro situaciones distintas: los cuatro parecen cosas separadas y los cuatro se arreglan con el mismo movimiento. Si al terminar te quedan dos partes donde ella tiene que hacer lo mismo en dos escenarios, no eran dos.
-
-FUERA LOS QUE NO DAN PARA UN CAMBIO. Si de uno no sale nada que ella pueda ponerse a hacer, no entra en el plan por mucho que sea cierto. Este documento es lo que hace, no lo que le pasa.
-
-Y FUERA LOS QUE SE CONTRADICEN ENTRE SÍ. Si dos le piden cosas que no puede hacer a la vez, no van los dos: se queda el que más le pese y el otro se cae.
-
-LO QUE QUEDA DESPUÉS DE ESO, QUEDA. No hay número que cumplir: ni tires uno bueno para que quepa una cifra, ni dejes uno flojo para llenar. Pero que quede claro, porque es donde se falla: juntar dos que eran uno NO es tirar nada. Es darle una cosa en vez de darle la misma dos veces.
+Y con los que queden, haces el plan: uno cada uno.
 
 
 2. Y DE CADA UNO DE LOS QUE QUEDAN, ESTO
@@ -801,138 +795,11 @@ Nombre de pila: ${nombre}`;
   }
   if ([...porTitulo.values()].some(n => n > 1)) falla.push('hay dos partes con el mismo titulo');
 
-  // ── Y QUE DOS PARTES NO MANDEN HACER LO MISMO ─────────────
-  //
-  // ESO NO SE MIRA AQUI, Y AQUI ES DONDE ESTABA EL ERROR.
-  //
-  // Antes se miraba de dos maneras, las dos contando letras: se comparaba el
-  // verbo del "movimiento" de cada parte, y se comparaban las palabras que
-  // llevaba dentro cada orden.
-  //
-  // Las dos fallaron en el primer plan de verdad, y fallaron juntas. De las
-  // diez partes, CUATRO le mandaban lo mismo -decir en voz alta lo que se
-  // calla- contado desde cuatro situaciones distintas. Ninguna de las dos
-  // comprobaciones dijo nada: el modelo habia puesto cuatro verbos distintos, y
-  // las cuatro ordenes estaban escritas sin compartir apenas palabras.
-  //
-  // Y no es que estuvieran mal ajustadas. Es que no se puede: si dos ordenes
-  // mandan lo mismo o no, es una cuestion de significado, y el significado no
-  // esta en las letras. Contando letras solo se cazan los calcos, que son
-  // justo los que no hacen dano porque se ven a simple vista.
-  //
-  // Lo unico que sabe leer dos frases y decir si mandan lo mismo es el modelo.
-  // Asi que se le pregunta: revisarRepetidos, aqui abajo.
+  // Y QUE DOS PARTES NO MANDEN HACER LO MISMO no se comprueba aqui: eso es
+  // cuestion de lo que significan, no de las letras que llevan, y de eso se
+  // encarga el encargo de arriba, que es donde hay que hacerlo bien.
 
   return { plan: { partes }, falla };
-}
-
-// ── QUE DOS PARTES NO MANDEN HACER LO MISMO ─────────────────
-//
-// Es lo que mata este producto. Si dos partes le piden la misma conducta con
-// otras palabras, ella cree que tiene diez cosas que hacer cuando tiene seis,
-// se dispersa, y el plan no le sirve. Paso de verdad: cuatro de diez.
-//
-// POR QUE ESTO ES UNA LLAMADA Y NO UN TROZO DE CODIGO. Porque decidir si dos
-// ordenes mandan lo mismo es entender lo que dicen, y eso no se saca contando
-// letras. "Di lo que te callas en las reuniones" y "cuando te pregunten como
-// estas, no digas bien" no comparten ni una palabra y son la misma cosa.
-//
-// ES CORTA Y BARATA: solo ve las ordenes, sin el resto del documento, no
-// escribe nada y contesta con numeros. Sonnet, sin pensar, unos segundos.
-//
-// Y NUNCA BLOQUEA. Si esta revision falla -se pasa de tiempo, el modelo
-// contesta mal-, el plan sigue su camino. Es una segunda opinion, no una
-// puerta: quedarse sin plan por no poder revisarlo seria peor que el problema.
-const ESPERA_DEL_REPASO_MS = 30000;
-
-const MOLDE_DEL_REPASO = {
-  type: 'object',
-  properties: {
-    repetidas: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          cuales: { type: 'array', items: { type: 'integer' } },
-          queMandanIgual: { type: 'string' },
-        },
-        required: ['cuales', 'queMandanIgual'],
-        additionalProperties: false,
-      },
-    },
-  },
-  required: ['repetidas'],
-  additionalProperties: false,
-};
-
-async function revisarRepetidos(partes, espera) {
-  if (partes.length < 2) return [];
-
-  const lista = partes.map((p, i) => `${i + 1}. ${p.queHaces}`).join('\n\n');
-
-  const encargo = `Abajo hay una lista de órdenes. Cada una es lo único que una persona tiene que hacer en una parte de su plan.
-
-Tu trabajo es UNO: decir qué órdenes le mandan hacer lo mismo.
-
-NO LAS COMPARES POR CÓMO ESTÁN ESCRITAS. Están escritas por separado, así que dos que mandan exactamente lo mismo pueden no compartir ni una palabra, y dos que se parecen mucho al leerlas pueden mandar cosas distintas.
-
-Compáralas por LA CONDUCTA que le piden. Pregúntate de cada una: ¿qué hace ella distinto a partir de mañana? Si de dos sale la misma respuesta, esas dos mandan lo mismo.
-
-Y EL SITIO NO LAS HACE DISTINTAS. Si dos ocurren en sitios distintos de su vida pero la conducta es la misma, son la misma. Ese es el caso que hay que cazar y el que más se escapa.
-
-TAMPOCO LAS HACE DISTINTAS EL MOMENTO. Que una diga cuándo se hace y otra no, o que cada una lo sitúe en un momento distinto, no las convierte en dos si lo que hace es lo mismo.
-
-PERO NO JUNTES LO QUE NO ES. Dos órdenes que se parecen pero acaban en conductas distintas son dos. Si dudas, no las juntes: decir que se repiten cuando no se repiten hace que se tire una parte buena.
-
-Devuelve los grupos que manden lo mismo, cada uno con los números de esa lista y con una línea diciendo qué es lo que mandan igual. Si no hay ninguno, devuelve la lista vacía.
-
-LAS ÓRDENES:
-
-${lista}`;
-
-  const salida = await alModelo({
-    que: 'repasar si dos partes mandan lo mismo',
-    modelo: EL_QUE_REMATA,
-    piensa: '',
-    techo: 2000,
-    system: encargo,
-    mensaje: 'Di qué órdenes mandan hacer lo mismo, siguiendo el esquema.',
-    molde: MOLDE_DEL_REPASO,
-    espera: AbortSignal.timeout(espera),
-  });
-
-  // Solo los grupos de dos o mas, y con numeros que existan de verdad.
-  return (Array.isArray(salida.repetidas) ? salida.repetidas : [])
-    .map(g => ({
-      cuales: [...new Set((Array.isArray(g?.cuales) ? g.cuales : [])
-        .map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= partes.length))],
-      queMandanIgual: String(g?.queMandanIgual || '').trim(),
-    }))
-    .filter(g => g.cuales.length > 1);
-}
-
-// Pasa el repaso y apunta lo que encuentre en el "falla" del plan, que es lo
-// que hace que se pida otra vez y lo que se le recuerda al pedirlo.
-//
-// NUNCA LANZA. Si el repaso no sale, se dice en el registro y el plan sigue.
-async function anadirLosRepetidos(resultado, espera) {
-  if (espera < 5000) return;
-  let grupos;
-  try {
-    grupos = await revisarRepetidos(resultado.plan.partes, espera);
-  } catch (err) {
-    console.warn(`[p2] no se ha podido repasar si dos partes mandan lo mismo (${err.message}), el plan sigue`);
-    return;
-  }
-  if (!grupos.length) return;
-  resultado.repetidos = grupos;
-
-  const dicho = grupos.map(g => {
-    const titulos = g.cuales.map(n => `"${resultado.plan.partes[n - 1].titulo}"`).join(' y ');
-    return g.queMandanIgual ? `${titulos} (las dos le mandan ${g.queMandanIgual})` : titulos;
-  }).join('; ');
-  console.warn(`[p2] hay partes que mandan lo mismo: ${dicho}`);
-  resultado.falla.push(`estas partes le mandan hacer lo mismo y habia que juntarlas en una: ${dicho}`);
 }
 
 // ── Y SI EL PLAN VIENE A MEDIAS, SE PIDE OTRA VEZ ───────────
@@ -959,19 +826,9 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
     primero = await pedirElPlan({ nombre, sexo, rasgos, modelo: EL_QUE_REMATA, espera: queda });
   }
 
-  // ── 2. Y OTRA LECTURA MIRA SI DOS MANDAN LO MISMO ─────────
-  //
-  // Quien decide acaba de tener doce desafios delante y ha juntado lo que ha
-  // visto. Esto es una segunda lectura, con las ordenes ya escritas y sin nada
-  // mas: es cuando dos que mandaban lo mismo se ven de verdad.
-  //
-  // No bloquea nunca. Si no se puede repasar, el plan sigue: es una segunda
-  // opinion, no una puerta.
-  await anadirLosRepetidos(primero, loQueQueda(arranque, ESPERA_DEL_REPASO_MS));
-
   if (!primero.falla.length) return primero.plan;
 
-  // ── 3. Y SI HA VENIDO A MEDIAS, SE PIDE OTRA VEZ ──────────
+  // ── 2. Y SI HA VENIDO A MEDIAS, SE PIDE OTRA VEZ ──────────
   //
   // Con Sonnet, siempre. Este intento no esta para pensar mejor que el
   // anterior: esta para arreglar algo concreto que se le dice escrito -dos
@@ -1000,70 +857,11 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
     return primero.plan;
   }
 
-  // Y AL SEGUNDO SE LE PASA EL MISMO REPASO, porque si no se compara un plan
-  // repasado con uno sin repasar y el sin repasar siempre parece mejor.
-  await anadirLosRepetidos(segundo, loQueQueda(arranque, ESPERA_DEL_REPASO_MS));
-
   // Y SE QUEDA EL MEJOR DE LOS DOS. Pedir otra vez no garantiza que salga
   // mejor: el segundo puede venir peor que el primero.
-  const mejor = segundo.falla.length < primero.falla.length ? segundo : primero;
-  if (mejor === primero) console.warn('[p2] el segundo plan no ha mejorado, se entrega el primero');
-
-  // ── 4. Y AQUI NO SE NEGOCIA: SI SIGUEN REPETIDAS, SE JUNTAN ─
-  //
-  // Hasta aqui todo era pedirselo al modelo, y pedir no es garantizar. Si
-  // despues de dos intentos y dos repasos AUN quedan dos partes mandando lo
-  // mismo, no se entrega asi: las junta el codigo, que para eso el repaso ya ha
-  // dicho exactamente cuales son.
-  //
-  // Es lo unico que convierte esto en una garantia. El documento no puede salir
-  // con dos partes que le mandan la misma cosa: ella creeria que tiene diez
-  // cosas que hacer cuando tiene seis.
-  return { partes: juntarLasRepetidas(mejor) };
-}
-
-// Deja UNA parte por cada grupo que mandaba lo mismo.
-//
-// SE QUEDA LA PRIMERA DEL GRUPO, que es la que quien decide puso antes y por
-// tanto la que mas peso le dio. Y se queda con los desafios de todas: lo que se
-// tira es la parte repetida, no el desafio del que salia, que asi sigue
-// contado en la que queda.
-//
-// No hace red: solo se llama al final, cuando ya se ha intentado por las
-// buenas dos veces.
-function juntarLasRepetidas(resultado) {
-  const grupos = resultado.repetidos || [];
-  const partes = resultado.plan.partes;
-  if (!grupos.length) return partes;
-
-  const sobra = new Set();
-  for (const g of grupos) {
-    const orden = [...g.cuales].sort((a, b) => a - b);
-    const sequeda = partes[orden[0] - 1];
-    if (!sequeda) continue;
-    for (const n of orden.slice(1)) {
-      const otra = partes[n - 1];
-      if (!otra || sobra.has(n)) continue;
-      // El desafio del que salia la que se cae se apunta en la que queda.
-      sequeda.deCuales = [...new Set([...(sequeda.deCuales || []), ...(otra.deCuales || [])])]
-        .sort((a, b) => a - b);
-      sobra.add(n);
-    }
-  }
-  if (!sobra.size) return partes;
-
-  const quedan = partes.filter((_, i) => !sobra.has(i + 1));
-
-  // Y NUNCA SE DEJA EL DOCUMENTO SIN DOCUMENTO. Si juntar dejara menos de tres
-  // partes, es que el repaso ha juntado de mas: se entrega lo que habia, que
-  // repetir algo es malo pero quedarse sin plan es peor.
-  if (quedan.length < 3) {
-    console.warn(`[p2] juntar las repetidas dejaria solo ${quedan.length} partes, se entrega el plan entero`);
-    return partes;
-  }
-
-  console.warn(`[p2] seguian repetidas despues de dos intentos: se juntan y el plan pasa de ${partes.length} a ${quedan.length} partes`);
-  return quedan;
+  if (segundo.falla.length < primero.falla.length) return segundo.plan;
+  console.warn('[p2] el segundo plan no ha mejorado, se entrega el primero');
+  return primero.plan;
 }
 
 // ── LO QUE LA CLIENTA NO PUEDE LEER ─────────────────────────
@@ -1393,11 +1191,25 @@ const PALABRAS_PEDIDAS = { tuPrueba: 60, queHaces: 180, dondeTeCaes: 25, cuandoT
 // verdad ha dicho lo que tenia que decir.
 const PALABRAS_MINIMAS = { tuPrueba: 25, queHaces: 90, dondeTeCaes: 12, cuandoTeCaes: 10 };
 
-// Y UNA LINEA DE DESBOCADO, MUY ARRIBA. No es un tope de estilo: es la senal de
-// que algo ha ido mal -se ha puesto a divagar, ha repetido la parte de al lado,
-// se ha dejado el freno-. Al triple de lo que se le pide no llega ningun texto
-// escrito con cabeza, asi que lo que pase de aqui no es "largo", es otra cosa.
-const SE_HA_DESBOCADO = punto => PALABRAS_PEDIDAS[punto] * 3;
+// Y UNA LINEA DE LARGO DE VERDAD, medida con los dos planes que han salido.
+//
+// Al quitar el tope de golpe el documento se doblo: de 19 paginas a 37. "Que
+// haces" paso de 156-206 palabras a 192-334, y "Tu prueba" de 38-99 a 100-172.
+// El documento no mejora por ser mas largo: quien lo lee no relee, y a las
+// treinta y siete paginas ya no lee.
+//
+// Asi que vuelve a haber una linea, y estas cifras salen de los dos documentos,
+// contadas: por encima de lo mas largo que escribio el que salio bien -para que
+// no reescriba nada que estaba bien- y por debajo de lo que escribio el que se
+// doblo. Ni pegadas a lo que se le pide ni sin techo.
+//
+//                se le pide   el bueno llego a   se rechaza a partir de
+//   tuPrueba          60             99                   115
+//   queHaces         180            206                   240
+//   dondeTeCaes       25             35                    45
+//   cuandoTeCaes      20             23                    32
+const SE_HA_DESBOCADO_EN = { tuPrueba: 115, queHaces: 240, dondeTeCaes: 45, cuandoTeCaes: 32 };
+const SE_HA_DESBOCADO = punto => SE_HA_DESBOCADO_EN[punto];
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
