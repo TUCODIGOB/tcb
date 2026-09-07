@@ -640,13 +640,23 @@ Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene
 
 1. LO PRIMERO: LIMPIAR LA LISTA
 
-La lista de abajo viene tal cual, y trae cosas que sobran. Antes de decidir nada, la limpias:
+La lista de abajo viene tal cual y trae cosas que sobran. No decides nada hasta haberla limpiado, y esto es lo más importante que haces aquí. Si dos partes del documento acaban mandándole lo mismo, ella cree que tiene diez cosas que hacer cuando tiene seis, se dispersa, y el plan no le sirve de nada.
 
-FUERA LOS REPETIDOS Y LOS QUE HABLAN DE LO MISMO. Es lo primero y lo más importante. Vienen escritos con palabras muy distintas y aun así dicen lo mismo por debajo, porque quien los escribió los sacó de sitios distintos sin compararlos entre sí. Así que no los leas por cómo están escritos, léelos por lo que le pasa a esta persona: si dos acaban en la misma conducta, son uno y se quedan en uno.
+CÓMO SE COMPARAN, QUE ES DONDE ESTÁ EL TRABAJO
+
+No los compares por cómo están escritos. Vienen de sitios distintos y escritos por separado, sin que nadie los mirara juntos, así que dos que dicen exactamente lo mismo pueden no compartir ni una palabra.
+
+Se comparan por LO QUE ELLA TENDRÍA QUE HACER DISTINTO. De cada uno de la lista, dite en una línea qué hace ella de otra manera el día que eso esté resuelto. Esa línea es la que comparas con las demás, y es lo único que comparas.
+
+Y SI DOS LÍNEAS DESCRIBEN LA MISMA CONDUCTA, ESOS DOS SON UNO. Aunque cada uno hable de un sitio distinto de su vida, aunque uno venga del trabajo y otro de su pareja, aunque estén contados con palabras que no se parecen en nada. El sitio donde le pasa no los hace distintos. La conducta sí.
+
+ESTO PASA SIEMPRE Y PASA MUCHO, así que búscalo a propósito en vez de esperar a verlo. Lo que más se repite en estas listas es una sola conducta contada desde cuatro situaciones distintas: los cuatro parecen cosas separadas y los cuatro se arreglan con el mismo movimiento. Si al terminar te quedan dos partes donde ella tiene que hacer lo mismo en dos escenarios, no eran dos.
 
 FUERA LOS QUE NO DAN PARA UN CAMBIO. Si de uno no sale nada que ella pueda ponerse a hacer, no entra en el plan por mucho que sea cierto. Este documento es lo que hace, no lo que le pasa.
 
-Y TODO LO DEMÁS SE QUEDA. No hay número: no tires nada bueno para que quepa una cifra, y no dejes nada flojo para llenar. Salen los que salgan.
+Y FUERA LOS QUE SE CONTRADICEN ENTRE SÍ. Si dos le piden cosas que no puede hacer a la vez, no van los dos: se queda el que más le pese y el otro se cae.
+
+LO QUE QUEDA DESPUÉS DE ESO, QUEDA. No hay número que cumplir: ni tires uno bueno para que quepa una cifra, ni dejes uno flojo para llenar. Pero que quede claro, porque es donde se falla: juntar dos que eran uno NO es tirar nada. Es darle una cosa en vez de darle la misma dos veces.
 
 
 2. Y DE CADA UNO DE LOS QUE QUEDAN, ESTO
@@ -716,9 +726,9 @@ Y nada técnico: ni planetas, ni signos, ni casas. Quien lo lee no ve la carta.
 
 Con todas delante:
 
-PRIMERO, LOS MOVIMIENTOS SEGUIDOS. Léelos en fila. Si dos son el mismo verbo, o dos verbos que significan lo mismo, esas dos partes eran una: se juntan en una sola, con sus dos números en "deCuales".
+PRIMERO, LOS "queHaces" SEGUIDOS. Léelos en fila y no te preguntes si están escritos parecido: pregúntate si le mandan hacer la misma cosa. Dos órdenes que suenan distintas y acaban en la misma conducta son una sola parte, aunque cada una ocurra en un sitio de su vida. Se juntan, con sus dos números en "deCuales".
 
-DESPUÉS, LOS "queHaces" SEGUIDOS. Si dos le piden lo mismo con otras palabras, se juntan igual.
+DESPUÉS, LOS MOVIMIENTOS SEGUIDOS. Si dos son el mismo verbo, o dos verbos que significan lo mismo, esas dos también eran una. Esta comprobación es la fácil y la que menos caza: la de arriba es la que importa.
 
 Y POR ÚLTIMO, QUE TODO SALGA DE LA LISTA. Si señalas una línea y no puedes decir de qué número de abajo sale, se cambia.
 
