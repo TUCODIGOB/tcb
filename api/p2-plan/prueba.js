@@ -1288,7 +1288,7 @@ Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a apa
 "cuandoTeCaes"
 Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Unas ${PALABRAS_PEDIDAS.cuandoTeCaes} palabras.
 
-LAS CIFRAS DE ARRIBA SON UNA REFERENCIA, NO UN MURO. Están para que sepas el tamaño de cada cosa, no para que cuentes. Si algo pide veinte palabras más porque si no se queda sin explicar, las escribes. Y si lo dices en la mitad, mejor todavía. Lo que NUNCA se hace es cortar una frase por la mitad, o despachar una de las cuatro en una línea, para que quepa en la cifra: eso deja el documento roto, y roto no se puede entregar. Se termina lo que se empieza.
+LAS CIFRAS DE ARRIBA SON PARA QUE SEPAS EL TAMAÑO DE CADA COSA. Cuanto más corto, mejor: si lo dices en la mitad, has acertado. Lo único que no se hace nunca es cortar una frase por la mitad para que quepa. Si ves que no cabe, quitas algo entero y cierras: lo que no puede pasar es que quede a medias.
 
 LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que haces tú, y hace falta: sin esa línea todo sale pegado en un bloque y no hay quien lo lea en un móvil.
 
