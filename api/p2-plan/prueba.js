@@ -588,6 +588,11 @@ ${susDesafios(rasgos)}`;
     }).join('\n\n'),
     // El titulo de cada uno, en el mismo orden que la lista de arriba.
     titulos: sequedan.map(n => String(desafios[n - 1].nombre || '').trim()),
+    // Los que se quitan, con su descripcion, para poder mirarlos en la pagina.
+    quitados: sequitan.map(n => ({
+      numero: n,
+      descripcion: String(desafios[n - 1].descripcion || '').trim(),
+    })),
     // De que numero de la lista original sale cada una, para poder mirarlo.
     deCuales: sequedan,
   };
@@ -1493,12 +1498,12 @@ function pintarLoDecidido(partes, limpieza) {
     '</tr>';
   }).join('');
 
-  const fuera = (limpieza && limpieza.sequitan) || [];
+  const fuera = (limpieza && limpieza.quitados) || [];
   const entraron = partes.length + fuera.length;
 
   const quitadas = fuera.length
     ? '<p class="quitadas"><b>Se han quitado ' + fuera.length + ':</b> ' +
-      fuera.map(x => '#' + escapar(x)).join(' · ') + '</p>'
+      fuera.map(x => '#' + escapar(x.numero) + ' — ' + escapar(x.descripcion)).join(' · ') + '</p>'
     : '<p class="quitadas">No se ha quitado ninguna.</p>';
 
   return '<details class="decidido" open><summary>La limpieza — ' +
