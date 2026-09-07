@@ -16,8 +16,8 @@
 // ── COMO ESTA HECHO ─────────────────────────────────────────
 //
 //   UNA LLAMADA LIMPIA LA LISTA, Y NO HACE NADA MAS. Recibe todo lo que a esta
-//   persona le cuesta, sacado del P1, y dice cuales se quedan: fuera las que
-//   dicen lo mismo, las que se contradicen y las que no dan para un cambio.
+//   persona le cuesta, sacado del P1, y dice cuales se quedan: fuera los que
+//   dicen practicamente lo mismo y los que se contradicen entre si.
 //   Devuelve numeros, no texto. Es la que compara, y por eso es la que piensa.
 //
 //   OTRA DECIDE, con las que han quedado. De cada una saca en corto el titulo y
@@ -486,13 +486,10 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
 // suelen llevar titulos muy distintos -es lo que hace el P1 al escribirlos-,
 // asi que comparar por el titulo no junta nada. Por la descripcion si.
 //
-// EL PORQUE VA DETRAS de cada uno: es lo que le hizo instalarse y lo que hay
-// que darle la vuelta.
 function susDesafios(rasgos) {
   return (rasgos?.desafios || [])
     .filter(r => r && String(r.descripcion || '').trim())
-    .map((r, i) => `${i + 1}. ${String(r.descripcion).trim()}` +
-      (r.causa ? `\n   PORQUE: ${String(r.causa).trim()}` : ''))
+    .map((r, i) => `${i + 1}. ${String(r.descripcion).trim()}`)
     .join('\n\n');
 }
 
@@ -544,18 +541,7 @@ const MOLDE_DE_LIMPIAR = {
   type: 'object',
   properties: {
     sequedan: { type: 'array', items: { type: 'integer' } },
-    sequitan: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          numero: { type: 'integer' },
-          porque: { type: 'string' },
-        },
-        required: ['numero', 'porque'],
-        additionalProperties: false,
-      },
-    },
+    sequitan: { type: 'array', items: { type: 'integer' } },
   },
   required: ['sequedan', 'sequitan'],
   additionalProperties: false,
@@ -575,32 +561,18 @@ async function limpiarLaLista({ rasgos, espera = ESPERA_DE_LIMPIAR_MS, modelo = 
   // Estaba puesto, y eran mil setecientas letras: casi la mitad de lo que leia
   // no le servia para su trabajo. Se copio al partir la llamada en dos, sin
   // preguntarse si hacia falta.
-  const encargo = `Abajo tienes, numeradas, las cosas que le cuestan a una persona. Salen de su carta y están escritas por separado, sin que nadie las mirara juntas.
-
-Cada una de las que dejes va a ser una parte del documento. Si dejas dos que dicen lo mismo, quien lo lee lee dos veces la misma cosa, cree que tiene el doble de trabajo del que tiene, y deja de fiarse.
-
-CÓMO SE COMPARAN
-
-De cada una, mira QUÉ ESTÁ HACIENDO esa persona ahí. No de qué habla ni dónde le pasa: qué hace.
-
-Y compara eso entre sí, todas con todas. Las que se repitan te están diciendo que ahí hay una sola cosa contada varias veces.
-
-Léelas así y no por cómo están escritas. Vienen redactadas por separado, así que dos idénticas por debajo pueden no compartir ni una palabra.
+  const encargo = `Abajo tienes los desafíos interiores de una persona. Cada uno está escrito por separado y está enumerado.
 
 QUÉ SE QUITA
 
-LAS QUE DICEN LO MISMO. De cada grupo se queda UNA, la que esté mejor contada, y las demás se van.
-
-LAS QUE SE CONTRADICEN. Si dos le piden cosas que no puede hacer a la vez, se queda la que más le pese y la otra se va.
-
-LAS QUE NO DAN PARA UN CAMBIO. Si de una no sale nada que esa persona pueda ponerse a hacer, se va, por muy cierta que sea. El documento es lo que hace, no lo que le pasa.
+Revisa la descripción de todos los desafíos. Elimina los que dicen prácticamente lo mismo sobre la persona, los que sean la misma idea, dejando solo 1 de ellos, el que mas pese. Y Elimina los que se contradigan entre sí, dejando solo uno de ellos, el que mas pese.
 
 LO QUE DEVUELVES
 
-"sequedan": los números de las que se quedan, en el orden en que están abajo.
-"sequitan": las que quitas, cada una con su número y, en media línea, por qué. Si una se va por decir lo mismo que otra, di cuál.
+"sequedan": los números de los que se quedan, en el orden de abajo.
+"sequitan": los números de los que quitas.
 
-Cada número de la lista tiene que estar en una de las dos, y en una sola.
+Cada número tiene que quedar en una sola, nunca en las 2.
 
 LA LISTA:
 
@@ -622,14 +594,13 @@ ${susDesafios(rasgos)}`;
   const sequedan = [...new Set((Array.isArray(salida.sequedan) ? salida.sequedan : [])
     .map(Number).filter(n => validos.has(n)))].sort((a, b) => a - b);
 
-  const sequitan = (Array.isArray(salida.sequitan) ? salida.sequitan : [])
-    .map(x => ({ numero: Number(x?.numero), porque: String(x?.porque || '').trim() }))
-    .filter(x => validos.has(x.numero) && !sequedan.includes(x.numero));
+  const sequitan = [...new Set((Array.isArray(salida.sequitan) ? salida.sequitan : [])
+    .map(Number).filter(n => validos.has(n) && !sequedan.includes(n)))].sort((a, b) => a - b);
 
   // SI SE DEJA ALGUNO SIN CLASIFICAR, SE QUEDA. Un desafio que no esta ni en una
   // lista ni en la otra es un descuido suyo, no una decision: tirarlo seria
   // quitarle a la clienta algo que nadie ha decidido quitar.
-  const olvidados = [...validos].filter(n => !sequedan.includes(n) && !sequitan.some(x => x.numero === n));
+  const olvidados = [...validos].filter(n => !sequedan.includes(n) && !sequitan.includes(n));
   if (olvidados.length) {
     console.warn(`[p2] la limpieza no ha dicho nada de ${olvidados.join(', ')}: se quedan`);
     sequedan.push(...olvidados);
@@ -940,7 +911,7 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
     limpia = await limpiarLaLista({ rasgos, espera: queda, modelo: EL_QUE_REMATA });
   }
   console.log(`[p2] de ${limpia.sequedan.length + limpia.sequitan.length} cosas que le cuestan se quedan ${limpia.sequedan.length}` +
-    (limpia.sequitan.length ? `; fuera: ${limpia.sequitan.map(x => `${x.numero} (${x.porque})`).join(', ')}` : ''));
+    (limpia.sequitan.length ? `; fuera: ${limpia.sequitan.join(', ')}` : ''));
 
   if (limpia.sequedan.length < 3) {
     // No es un fallo del servidor: es que ese informe no da para un plan. Se
@@ -1629,7 +1600,7 @@ function pintarLoDecidido(partes, limpieza) {
 
   const quitadas = fuera.length
     ? '<p class="quitadas"><b>Se han quitado ' + fuera.length + ':</b> ' +
-      fuera.map(x => '#' + escapar(x.numero) + ' — ' + escapar(x.porque)).join(' · ') + '</p>'
+      fuera.map(x => '#' + escapar(x)).join(' · ') + '</p>'
     : '<p class="quitadas">No se ha quitado ninguna.</p>';
 
   return '<details class="decidido" open><summary>La limpieza — ' +
