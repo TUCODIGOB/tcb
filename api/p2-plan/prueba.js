@@ -597,8 +597,6 @@ LAS QUE SE CONTRADICEN. Si dos le piden cosas que no puede hacer a la vez, se qu
 
 LAS QUE NO DAN PARA UN CAMBIO. Si de una no sale nada que ella pueda ponerse a hacer, se va, por muy cierta que sea. El documento es lo que hace, no lo que le pasa.
 
-Y NADA MÁS. Lo que no entre en esos tres casos se queda. No hay número que cumplir: ni quites una buena para que salgan menos, ni dejes una floja para que salgan más. Salen las que salgan.
-
 LO QUE DEVUELVES
 
 "sequedan": los números de las que se quedan, en el orden en que están abajo.
