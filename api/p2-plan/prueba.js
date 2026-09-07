@@ -524,21 +524,18 @@ const cuantosDesafios = rasgos => (rasgos?.desafios || [])
 // TODO EL DOCUMENTO TIENE QUE ESTAR EN DOS MINUTOS Y MEDIO. Esa es la regla, y
 // de ahi salen los numeros de aqui abajo, no al reves.
 //
-// SE PROBO CON OPUS Y SE QUITO. Pensaba mucho mas rato: en una tirada de
-// verdad paso de los tres minutos el solo, y con el reintento detras se fue a
-// mas de cinco con la clienta mirando la pantalla.
+// VA CON OPUS, y es la unica del P2 que lo lleva. Es la que decide, y de lo
+// que decida aqui cuelga el documento entero: cual es la prueba de cada parte
+// y que le manda hacer. Elegir bien eso es todo el producto.
 //
-// Y EL ESFUERZO BAJA A BAJO. Lo que se le pide aqui no es un problema abierto:
-// es leer una lista corta, juntar los que dicen lo mismo y decidir cuatro
-// lineas de cada uno. Eso esta muy acotado, y lo unico que de verdad hay que
-// vigilar -que no manden hacer lo mismo- lo comprueba el codigo despues y lo
-// hace rehacer si pasa. Pensar mas rato aqui se paga en reloj y no compra casi
-// nada.
+// SE QUITO UNA VEZ Y ESTABA MAL QUITARLO. Parecia que tardaba cuatro minutos,
+// pero lo que se veia era la pagina colgada: el plan llegaba bien y el
+// navegador reventaba justo despues, asi que el aviso se quedaba en
+// "decidiendo su plan" para siempre. De Opus no se llego a medir nada.
 //
-// EL REPARTO DE LOS DOS MINUTOS Y MEDIO: 70 segundos para decidir, 50 para
-// pedirlo otra vez si viene mal, y 60 para escribir, que van en paralelo. En
-// el caso normal -sin reintento- son unos 70 segundos en total.
-const ESPERA_DEL_PLAN_MS = 70000;
+// EL REPARTO DE LOS DOS MINUTOS Y MEDIO: 110 segundos para decidir, 50 para
+// pedirlo otra vez si viene mal, y 60 para escribir, que van todas a la vez.
+const ESPERA_DEL_PLAN_MS = 110000;
 const TECHO_DEL_PLAN = 16000;
 
 // LO QUE AGUANTA LA PETICION, MENOS UN MARGEN PARA CONTESTAR. El servidor corta
@@ -704,8 +701,8 @@ Nombre de pila: ${nombre}`;
 
   const salida = await alModelo({
     que: 'decidir el plan',
-    modelo: 'claude-sonnet-5',
-    piensa: 'low',
+    modelo: 'claude-opus-5',
+    piensa: 'medium',
     techo: TECHO_DEL_PLAN,
     system: encargo,
     mensaje: `Decide su plan entero, siguiendo el esquema.${recordatorio}`,
