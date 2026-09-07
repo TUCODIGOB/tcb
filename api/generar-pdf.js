@@ -2,7 +2,7 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const { jsPDF } = require('jspdf');
 import Stripe from 'stripe';
-import { compraValida, esDelProducto, estado, liberar, completar } from '../lib/reserva.js';
+import { compraValida, esDelProducto, estado, liberar, completar, marcarEmailEnviado } from '../lib/reserva.js';
 import { guardarInforme } from '../lib/guardar-informe.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -995,6 +995,48 @@ export default async function handler(req, res) {
       console.error('Error marcando informe_completado:', err.message);
     }
 
+    // ── Entregar el informe por correo DESDE AQUI ─────────────────────────────
+    //
+    // Antes el correo lo disparaba el navegador: la pagina esperaba esta
+    // respuesta y solo entonces llamaba a /api/save-pdf. Eso ataba la entrega a
+    // que el cliente siguiera con la pestana abierta durante los ~3 minutos que
+    // tarda el informe. Un movil que se bloquea, un cambio de app o un corte de
+    // cobertura y el correo no se enviaba nunca: el cliente pagaba y no recibia
+    // nada, y en Brevo no quedaba ni rastro porque nadie llego a pedirselo.
+    //
+    // El PDF ya esta hecho aqui, asi que se manda aqui. A partir de ahora la
+    // entrega no depende del navegador del cliente.
+    //
+    // /api/save-pdf sigue existiendo y la pagina sigue llamandolo: es la red de
+    // seguridad para el caso de que este envio falle. Si este ha salido bien,
+    // save-pdf ve email_enviado='si' y no manda nada (su guarda ya existia), asi
+    // que el cliente nunca recibe el informe dos veces.
+    try {
+      await entregarInformePorEmail({
+        stripe,
+        sessionId: session_id,
+        email: sessionEmail,
+        pdfBase64,
+        cliente: { nombre, sexo, fechaNice, hora, lugar, edad },
+      });
+      console.log(`[generar-pdf] Email de entrega enviado a ${sessionEmail}`);
+    } catch (err) {
+      // No se corta la respuesta: el navegador recibe el PDF igual y llamara a
+      // save-pdf, que reintentara el envio. Pero se avisa, porque si ademas el
+      // navegador ya no esta, este aviso es lo unico que queda.
+      console.error('[generar-pdf] Fallo enviando el email de entrega:', err.message);
+      try {
+        await enviarAvisoEntregaFallida({
+          nombre,
+          email: sessionEmail,
+          sessionId: session_id,
+          motivo: err.message,
+        });
+      } catch (avisoErr) {
+        console.error('Tampoco se pudo avisar del fallo de entrega:', avisoErr.message);
+      }
+    }
+
     // Guardar lo que se le ha entregado, para que el siguiente producto pueda
     // apoyarse en ESTE informe y no en una tirada nueva.
     //
@@ -1113,5 +1155,164 @@ async function enviarAvisoFalloPDF({ nombre, email, sessionId, fallos }) {
       'api-key': BREVO_API_KEY,
     },
     body: JSON.stringify(body),
+  });
+}
+
+// ═════════════════════════════════════════════════════════════════
+// ENTREGA DEL INFORME POR CORREO
+//
+// Es el mismo envio que hacia /api/save-pdf (misma plantilla de Brevo, mismo
+// adjunto, mismo nombre de fichero, misma actualizacion del contacto), pero
+// lanzado desde el servidor en cuanto el PDF existe, sin esperar a que el
+// navegador del cliente lo pida.
+//
+// save-pdf se queda intacto como red de seguridad. Por eso esto se repite aqui
+// en vez de compartirse: asi este arreglo no puede romper el camino que ya
+// funciona.
+// ═════════════════════════════════════════════════════════════════
+async function entregarInformePorEmail({ stripe, sessionId, email, pdfBase64, cliente = {} }) {
+  if (!email) throw new Error('La compra no tiene email al que enviar el informe');
+
+  const nombreCliente = (cliente.nombre || 'Cliente').toString();
+
+  // doc.output('datauristring') devuelve "data:application/pdf;...;base64,XXXX".
+  // Brevo quiere solo el base64, sin la cabecera y sin espacios ni saltos.
+  let base64Limpio = String(pdfBase64);
+  const coma = base64Limpio.indexOf(',');
+  if (base64Limpio.startsWith('data:') && coma > -1) {
+    base64Limpio = base64Limpio.substring(coma + 1);
+  }
+  base64Limpio = base64Limpio.replace(/[\r\n\t\s]/g, '');
+  if (!base64Limpio) throw new Error('El PDF llego vacio al envio');
+
+  // Mismo nombre de fichero que usaba save-pdf: solo caracteres seguros.
+  const nombreArchivo = `TuDisenoDeOrigen_${nombreCliente.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+
+  await enviarEmailEntrega({
+    email,
+    nombre: nombreCliente,
+    pdfContent: base64Limpio,
+    nombreArchivo,
+  });
+
+  // El correo salio: se marca para que save-pdf no mande una segunda copia.
+  //
+  // Se marca DESPUES de enviar, nunca antes: si se marcara antes y el envio
+  // fallara, save-pdf veria "ya enviado" y no reintentaria, que es justo el
+  // fallo que este cambio viene a cerrar. El riesgo al reves (que el envio
+  // salga y la marca falle) es un correo duplicado, molesto pero inofensivo.
+  try {
+    await marcarEmailEnviado(stripe, sessionId);
+  } catch (err) {
+    console.error('[generar-pdf] Error marcando email_enviado:', err.message);
+  }
+
+  // Y dejar el contacto de Brevo como lo dejaba save-pdf. Si esto no se hiciera
+  // aqui, al no llegar save-pdf a ejecutarse los clientes se quedarian sin
+  // marcar como "entregado".
+  try {
+    await actualizarContactoBrevo(email, cliente);
+  } catch (err) {
+    console.error('[generar-pdf] Error actualizando el contacto de Brevo:', err.message);
+  }
+}
+
+// El email al cliente con el PDF adjunto (plantilla 28 de Brevo).
+async function enviarEmailEntrega({ email, nombre, pdfContent, nombreArchivo }) {
+  const BREVO_API_KEY = process.env.BREVO_API_KEY;
+  if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
+
+  const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': BREVO_API_KEY,
+    },
+    body: JSON.stringify({
+      sender: { email: 'hola@origennatal.com', name: 'ORIGEN NATAL' },
+      to: [{ email, name: nombre }],
+      templateId: 28,
+      params: { NOMBRE: nombre },
+      attachment: [{ name: nombreArchivo, content: pdfContent }],
+    }),
+  });
+
+  if (!resp.ok) {
+    const errText = await resp.text();
+    throw new Error(`Brevo email ${resp.status}: ${errText}`);
+  }
+}
+
+// Deja el contacto marcado como entregado, con sus datos de nacimiento.
+async function actualizarContactoBrevo(email, { nombre, sexo, fechaNice, hora, lugar, edad } = {}) {
+  const BREVO_API_KEY = process.env.BREVO_API_KEY;
+  if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
+
+  const attributes = {
+    ESTADO_INFORME: 'entregado',
+    NOMBRE: nombre || '',
+    SEXO: sexo || '',
+    HORA_NAC: hora || '',
+    LUGAR_NAC: lugar || '',
+  };
+
+  if (edad) attributes.EDAD = parseInt(edad);
+
+  if (fechaNice) {
+    const meses = { 'enero':'01','febrero':'02','marzo':'03','abril':'04','mayo':'05','junio':'06','julio':'07','agosto':'08','septiembre':'09','octubre':'10','noviembre':'11','diciembre':'12' };
+    const partes = String(fechaNice).match(/(\d+) de (\w+) de (\d+)/);
+    if (partes) {
+      attributes.FECHA_NAC = `${partes[3]}-${meses[partes[2]]}-${partes[1].padStart(2,'0')}`;
+    }
+  }
+
+  const resp = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+    method: 'PUT',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': BREVO_API_KEY,
+    },
+    body: JSON.stringify({ attributes }),
+  });
+
+  if (!resp.ok && resp.status !== 204) {
+    const errText = await resp.text();
+    throw new Error(`Brevo ${resp.status}: ${errText}`);
+  }
+}
+
+// Aviso a la tienda cuando el envio desde el servidor no ha salido. El cliente
+// tiene su PDF en pantalla, pero puede quedarse sin el correo si su navegador
+// tampoco llega a llamar a save-pdf.
+async function enviarAvisoEntregaFallida({ nombre, email, sessionId, motivo }) {
+  const BREVO_API_KEY = process.env.BREVO_API_KEY;
+  if (!BREVO_API_KEY) return;
+
+  const mensaje = [
+    `Cliente: ${email || '(sin email en la compra)'}`,
+    `Nombre: ${nombre || '(sin nombre)'}`,
+    `Session: ${sessionId}`,
+    `Error: ${motivo}`,
+    '',
+    'El informe SI se genero y esta guardado. El navegador del cliente puede',
+    'reintentar el envio por su cuenta; si no llega, hay que mandarlo a mano.',
+  ].join('\n');
+
+  await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': BREVO_API_KEY,
+    },
+    body: JSON.stringify({
+      sender: { email: 'hola@origennatal.com', name: 'ORIGEN NATAL — Alertas' },
+      // El mismo buzon al que ya llegan los otros avisos de este fichero.
+      to: [{ email: 'hola.origennatal@gmail.com', name: 'Origen Natal' }],
+      subject: 'INFORME SIN ENTREGAR — EL CORREO NO SALIO',
+      htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
+    }),
   });
 }
