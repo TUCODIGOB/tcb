@@ -1,3 +1,21 @@
+// ════════════════════════════════════════════════════════════════
+// api/p2-plan/pdf.js
+//
+// EL PDF DEL P2.
+//
+// Recibe el documento ya escrito -sus partes- y lo
+// monta en un PDF con la marca. No le pide nada al modelo, no lee el
+// informe del P1 y no cobra: solo maqueta lo que le llega.
+//
+// LAS MEDIDAS SON LAS DEL P1, a proposito. Los dos documentos se leen seguidos
+// y tienen que verse del mismo sitio: mismo margen, mismo cuerpo de letra,
+// mismo renglon, mismo aire entre parrafos y el numero de pagina donde
+// siempre. Lo unico que cambia es que aqui todas las paginas van sobre la base
+// lisa, porque el P2 no tiene una ilustracion por parte.
+//
+// CADA SECCION EMPIEZA EN HOJA NUEVA: cada parte en la suya, y ninguna se pega
+// a la anterior.
+// ════════════════════════════════════════════════════════════════
 
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
@@ -5,8 +23,16 @@ const { jsPDF } = require('jspdf');
 
 const BASE_URL = 'https://origennatal.com';
 
+// Las fuentes y la base son iguales para todos, asi que se guardan la primera
+// vez y se reaprovechan mientras el contenedor siga vivo. Un fallo no se
+// guarda nunca, para que no se repita en todos los PDFs siguientes.
 const GUARDADOS = new Map();
 
+// Y CON RELOJ. Sin el, una descarga que se queda colgada se lleva por delante
+// los 60 segundos de la peticion entera y el navegador recibe un error de red
+// sin mensaje. Con el, se da por fallada esa pieza a los 15 segundos, se
+// apunta en "fallos" y el PDF sale igual: sin esa fuente o sin ese fondo, pero
+// sale.
 const ESPERA_DE_UNA_PIEZA_MS = 15000;
 
 async function enBase64(ruta) {
@@ -21,22 +47,27 @@ async function enBase64(ruta) {
   return b64;
 }
 
-const W = 210, H = 297;
-const X = 18;
-const ANCHO = 175;
-const CUERPO = 12;
-const RENGLON = 7;
-const ENTRE_PARRAFOS = 7;
-const ARRIBA = 60;
-const AIRE_SOBRE_NUMERO = 5;
+// ── LAS MEDIDAS, LAS MISMAS QUE EL P1 ───────────────────────
+const W = 210, H = 297;          // A4 en milimetros
+const X = 18;                    // margen izquierdo
+const ANCHO = 175;               // lo que ocupa un renglon
+const CUERPO = 12;               // cuerpo del texto corrido
+const RENGLON = 7;               // lo que baja de un renglon al siguiente
+const ENTRE_PARRAFOS = 7;        // el aire que queda entre un parrafo y el otro
+const ARRIBA = 60;               // donde arranca el texto al pasar de pagina
+const AIRE_SOBRE_NUMERO = 5;     // lo que se deja libre encima del numero
 const HASTA = H - 16 - AIRE_SOBRE_NUMERO;
 
 const VERDE = [14, 63, 75];
 const DORADO = [207, 177, 128];
 const TINTA = [40, 40, 40];
 
+// EL BEIGE DE LAS CAJAS. Es el dorado de la marca muy rebajado, el mismo tono
+// que tienen en la pantalla. Lo justo para que el ojo vea donde acaba una cosa
+// y empieza otra, sin que parezca una tabla.
 const BEIGE = [250, 245, 234];
 
+// Lo que respira una caja por dentro y lo que la separa de la de abajo.
 const CAJA_LADOS = 6;
 const CAJA_ARRIBA = 6;
 const CAJA_ABAJO = 5;
@@ -68,14 +99,20 @@ export default async function handler(req, res) {
     ]);
 
     const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
+    // Si una fuente no carga, jsPDF pinta con la suya en vez de reventar: el
+    // documento sale menos bonito, pero sale.
     if (normal)  { doc.addFileToVFS('Roboto-Regular.ttf', normal); doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal'); }
     if (negrita) { doc.addFileToVFS('Roboto-Bold.ttf', negrita);   doc.addFont('Roboto-Bold.ttf', 'Roboto', 'bold'); }
 
+    // Y si la base no carga, las paginas salen en blanco en vez de romperse.
     const _addImage = doc.addImage.bind(doc);
     doc.addImage = (img, ...resto) => (img ? _addImage(img, ...resto) : doc);
 
     const t = v => String(v == null ? '' : v).trim();
 
+    // ── LAS PIEZAS DE DIBUJO ──────────────────────────────────
+    // La portada no lleva numero, asi que se empieza a contar en cero y la
+    // primera pagina numerada es la del principio.
     let pagina = 0, y = ARRIBA;
 
     function numeroDePagina() {
@@ -86,6 +123,7 @@ export default async function handler(req, res) {
       doc.text(String(pagina), W - 16, H - 16, { align: 'right' });
     }
 
+    // Hoja nueva, con su base puesta y el numero de la anterior ya escrito.
     function hojaNueva() {
       numeroDePagina();
       pagina++;
@@ -94,6 +132,9 @@ export default async function handler(req, res) {
       y = ARRIBA;
     }
 
+    // Antes de escribir se mira si cabe; si no cabe, se pasa de hoja. "loQueViene"
+    // es lo que ocupa lo que se va a escribir, para que un titulo no se quede
+    // solo al pie de la pagina con su texto en la siguiente.
     function cabe(loQueViene) {
       if (y + loQueViene > HASTA) hojaNueva();
     }
@@ -114,6 +155,7 @@ export default async function handler(req, res) {
       }
     }
 
+    // Un texto corrido, con sus parrafos separados como en el P1.
     function corrido(texto) {
       const trozos = t(texto).split(/\n+/).map(p => p.trim()).filter(Boolean);
       for (let i = 0; i < trozos.length; i++) {
@@ -122,6 +164,9 @@ export default async function handler(req, res) {
       }
     }
 
+    // LA CABECERA DE CADA SECCION, Y SIEMPRE EN HOJA NUEVA. Arriba la etiqueta
+    // pequena en dorado, que dice de que parcela se habla, y debajo el titulo
+    // en el verde de la marca.
     function abrirSeccion(etiqueta, titulo) {
       hojaNueva();
       y = 42;
@@ -132,6 +177,14 @@ export default async function handler(req, res) {
       y += 10;
     }
 
+    // ── LAS CAJAS ─────────────────────────────────────────────
+    //
+    // Un documento de veinte hojas de texto seguido no se lee: el ojo no
+    // encuentra donde parar. Lo que se vuelve a buscar -la orden de cada
+    // parte- va sobre un fondo beige que lo separa.
+    //
+    // UNA CAJA NO SE PARTE NUNCA entre dos hojas: se mide antes, y si no cabe
+    // entera se va a la siguiente. Media caja al pie es peor que un hueco.
     function alturaDeCaja(titulo, texto) {
       let alto = CAJA_ARRIBA + CAJA_ABAJO;
       const dentro = ANCHO - CAJA_LADOS * 2;
@@ -153,6 +206,9 @@ export default async function handler(req, res) {
       const cabeEnUnaHoja = alto <= HASTA - ARRIBA;
       if (y + alto > HASTA && cabeEnUnaHoja) hojaNueva();
 
+      // Si fuera tan larga que no cabe ni en una hoja vacia, se pinta el texto
+      // sin fondo: el fondo se quedaria en la hoja de antes y el texto seguiria
+      // en la siguiente, que es peor que no tener caja.
       if (cabeEnUnaHoja) {
         doc.setFillColor(BEIGE[0], BEIGE[1], BEIGE[2]);
         doc.roundedRect(X, y - RENGLON + 1.5, ANCHO, alto, 2.5, 2.5, 'F');
@@ -175,13 +231,18 @@ export default async function handler(req, res) {
       else y += ENTRE_CAJAS;
     }
 
+    // El subtitulo de dentro de una parte, igual que los del P1: dorado, en
+    // mayusculas, con aire por arriba y pegado a lo que presenta.
     function subtitulo(texto) {
       y += 6;
+      // Y NO SE QUEDA SOLO AL PIE: si no caben el y cuatro renglones de lo que
+      // presenta, se va entero a la hoja siguiente y se lleva su contenido.
       cabe(RENGLON * 5);
       escribir(String(texto).toUpperCase(), { fuente: 'bold', tam: 13, color: DORADO, alto: 7 });
       y += 3;
     }
 
+    // ── LA PORTADA ────────────────────────────────────────────
     doc.addImage(base, 'JPEG', 0, 0, W, H);
     doc.setFont('Roboto', 'bold');
     doc.setFontSize(26);
@@ -194,12 +255,22 @@ export default async function handler(req, res) {
       doc.text(t(nombre).toUpperCase(), W / 2, 145, { align: 'center' });
     }
 
+    // ── LAS PARTES ────────────────────────────────────────────
+    //
+    // Cada una en su hoja, con sus puntos y el nombre de cada uno: sin
+    // ellos quien lee no sabe de que le habla cada trozo, ni puede volver a
+    // buscar uno el dia que le haga falta.
     const PUNTOS = ['tuPrueba', 'queHaces', 'dondeTeCaes'];
     const PORDEFECTO = {
       tuPrueba: 'Tu prueba', queHaces: 'Qué haces',
       dondeTeCaes: 'Dónde te vas a caer y qué hacer cuando te caigas',
     };
 
+    // EL QUE VA SOBRE BEIGE. Es la orden: lo que tiene que hacer. Es lo que va
+    // a volver a buscar cuando ya haya leído el documento entero, y lo que
+    // tiene que encontrar pasando páginas sin ponerse a leer. Los otros tres
+    // se leen una vez y van en texto corrido: si todo lleva fondo, el fondo
+    // deja de señalar nada.
     const SOBRE_BEIGE = new Set(['queHaces']);
 
     for (const parte of partes) {
@@ -216,6 +287,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       pdfBase64: doc.output('datauristring'),
+      // Si algo no cargo, el PDF sale igual y aqui se dice cual, para poder
+      // mirarlo en vez de descubrirlo en el documento del cliente.
       fallos: fallos.length ? fallos : undefined,
     });
   } catch (err) {
