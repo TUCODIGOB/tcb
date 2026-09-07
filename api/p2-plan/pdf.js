@@ -255,7 +255,7 @@ export default async function handler(req, res) {
       doc.text(t(nombre).toUpperCase(), W / 2, 145, { align: 'center' });
     }
 
-    // ── LAS SIETE PARTES ──────────────────────────────────────
+    // ── LAS PARTES ────────────────────────────────────────────
     //
     // Cada una en su hoja, con sus cuatro puntos y el nombre de cada uno: sin
     // ellos quien lee no sabe de que le habla cada trozo, ni puede volver a

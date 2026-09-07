@@ -1481,7 +1481,7 @@ ir.addEventListener('click', async () => {
     quienEs = r.quien;
     // El servidor no deja pasar un informe sin nombre, asi que esto no
     // deberia saltar nunca. Pero si saltara, es mejor pararse aqui que
-    // escribir siete partes dirigidas a "undefined".
+    // escribir las partes dirigidas a "undefined".
     if (!quienEs || !quienEs.nombre) throw new Error('El informe ha venido sin el nombre del cliente');
   } catch (e) {
     aviso.className = 'aviso error';
