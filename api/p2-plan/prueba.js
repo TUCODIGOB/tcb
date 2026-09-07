@@ -782,9 +782,9 @@ La lista ya viene limpia: alguien ha quitado antes las que decían lo mismo, las
 
 De cada uno sacas seis cosas, en una línea cada una, y ninguna se queda vacía. La línea va escrita para que quien la lea después la entienda entera sin preguntar nada: no es un título, es la cosa dicha en corto.
 
-deCuales         Los números de la lista de abajo de los que sale esta parte.
-                 Uno, o varios si has juntado los que decían lo mismo. Es para
-                 poder mirar de dónde ha salido cada cosa.
+deCuales         El número de la lista de abajo del que sale esta parte. Uno
+                 solo: aquí no se junta nada, ya viene juntado. Es para poder
+                 mirar de dónde ha salido cada cosa.
 
 titulo           Cómo se llama esta parte del documento. Habla de lo que ella
                  va a hacer o de en quién se convierte, nunca de lo que le
@@ -962,7 +962,12 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
     (limpia.sequitan.length ? `; fuera: ${limpia.sequitan.map(x => `${x.numero} (${x.porque})`).join(', ')}` : ''));
 
   if (limpia.sequedan.length < 3) {
-    throw new Error(`después de limpiar solo quedan ${limpia.sequedan.length} cosas que le cuesten, y con eso no hay documento`);
+    // No es un fallo del servidor: es que ese informe no da para un plan. Se
+    // marca como tal para que la pagina lo diga con sus palabras y no como si
+    // se hubiera roto algo.
+    const e = new Error(`después de limpiar solo quedan ${limpia.sequedan.length} cosas que le cuesten, y con eso no hay documento`);
+    e.esDelInforme = true;
+    throw e;
   }
 
   // ── 2. Y CON LAS QUE QUEDAN SE DECIDE EL PLAN ─────────────
@@ -1609,7 +1614,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Acción no válida' });
   } catch (err) {
     console.error('[p2-plan/prueba]', err);
-    return res.status(500).json({ error: err.message });
+    // Un informe que no da para un plan no es un servidor roto: se dice como
+    // lo que es, para no hacer buscar un fallo donde no lo hay.
+    return res.status(err.esDelInforme ? 422 : 500).json({ error: err.message });
   }
 }
 // La pagina. Los colores y las letras son los de la marca, para leerlo como se
