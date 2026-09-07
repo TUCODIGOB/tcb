@@ -961,39 +961,16 @@ async function otraVezSiVieneRota({ que, pedir, cojo = () => false, aviso = '', 
 // ════════════════════════════════════════════════════════════════
 //
 // Estas llamadas NO deciden nada: reciben lo que salio del paso anterior y lo
-// convierten en el texto que ella va a leer, con el tono de la marca.
+// convierten en el texto que va a leer quien lo compro.
 //
-// Y NO PIENSAN. Aqui no hay nada que decidir ni que comparar: las cuatro cosas
+// Y NO PIENSAN. Aqui no hay nada que decidir ni que comparar: las tres cosas
 // vienen decididas y lo unico que se hace es abrirlas hasta que se entiendan.
-//
-// Pensar sale del MISMO presupuesto que escribir, asi que encendido se gasta
-// en pensar lo que tenia que salir en el texto, y sobre todo se gasta EL
-// RELOJ, que lo tiene la clienta esperando delante. Estas son las que mas
-// escriben del documento, y van todas a la vez: es aqui donde se va el
-// tiempo, no en la que decide.
-//
-// Se probo con esfuerzo medio y lo unico que aportaba era releerse. Eso no
-// vale lo que cuesta: lo que hace que el texto salga bien es lo que se le
-// pide, y las redes de aqui abajo lo comprueban despues sin gastar reloj.
 //
 // CADA UNA VE SOLO SU PARTE. No hace falta que vea las demas: el paso que
 // piensa ya se encargo de que no se repitan.
 
-// LO QUE SE LE DA A CADA INTENTO.
-//
-// Escribir una parte son cuatro casillas y unas doscientas palabras -una hoja-.
-// No piensa, asi que solo tarda lo que tarda en escribirlas.
-//
-// 60 SEGUNDOS, que es el sitio que le queda dentro de los dos minutos y medio
-// que tiene que durar todo. Las partes van todas a la vez, asi que este tope
-// es el de una, no el de la suma. Si una se pasa, se pide otra vez con lo que
-// sobre, y si no sobra ni para medio intento no se pide.
-// 90 SEGUNDOS, los mismos que las otras dos. Tenia 60, que era apretar por
-// apretar: si una parte tarda 61 se corta y hay que pedirla entera otra vez, y
-// eso cuesta mas tiempo y mas dinero que haberla dejado terminar.
-//
-// Las partes van todas a la vez, asi que este tope es el de UNA, no el de la
-// suma. Y solo se gasta si de verdad tarda: lo normal es la mitad.
+// 90 SEGUNDOS PARA CADA INTENTO. Las partes van todas a la vez, asi que este
+// tope es el de UNA, no el de la suma. Y solo se gasta si de verdad tarda.
 const ESPERA_DE_ESCRIBIR_MS = 90000;
 const TECHO_DE_ESCRIBIR = 12000;
 
@@ -1011,12 +988,7 @@ const MOLDE_DE_LA_PARTE = {
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
-// Recibe las cuatro lineas de SU parte y nada mas: ni los rasgos, ni lo que ella
-// conto, ni lo de las otras seis. Todo eso ya esta dentro de sus cuatro lineas,
-// que las decidio quien las tenia delante. Darselo otra vez no le da material
-// nuevo: le da sitio para irse por su cuenta y repetir lo de la parte de al
-// lado, que es lo que hay que evitar.
-//
+// Recibe el titulo de su desafio y las tres lineas de SU parte, y nada mas.
 // Su trabajo es explicar y ampliar hasta que se entienda a la primera.
 async function escribirLaParte({ parte, nombre, sexo, puedeElNombre }) {
   const encargo = `${REGLAS_COMUNES}
