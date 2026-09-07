@@ -524,18 +524,20 @@ const cuantosDesafios = rasgos => (rasgos?.desafios || [])
 // TODO EL DOCUMENTO TIENE QUE ESTAR EN DOS MINUTOS Y MEDIO. Esa es la regla, y
 // de ahi salen los numeros de aqui abajo, no al reves.
 //
-// VA CON OPUS, y es la unica del P2 que lo lleva. Es la que decide, y de lo
-// que decida aqui cuelga el documento entero: cual es la prueba de cada parte
-// y que le manda hacer. Elegir bien eso es todo el producto.
+// SONNET, Y MEDIDO CON UN INFORME DE VERDAD.
 //
-// SE QUITO UNA VEZ Y ESTABA MAL QUITARLO. Parecia que tardaba cuatro minutos,
-// pero lo que se veia era la pagina colgada: el plan llegaba bien y el
-// navegador reventaba justo despues, asi que el aviso se quedaba en
-// "decidiendo su plan" para siempre. De Opus no se llego a medir nada.
+// Se probo con Opus dos veces y las dos se paso del tope: con la lista de
+// desafios de una clienta real no termina por debajo de 110 segundos, y
+// entonces la peticion se corta y no hay plan. Con Sonnet, ese mismo informe
+// se decidio en 24 segundos.
 //
-// EL REPARTO DE LOS DOS MINUTOS Y MEDIO: 110 segundos para decidir, 50 para
-// pedirlo otra vez si viene mal, y 60 para escribir, que van todas a la vez.
-const ESPERA_DEL_PLAN_MS = 110000;
+// Que Opus elija mejor no sirve de nada si no llega a tiempo, y aqui el reloj
+// lo tiene la clienta esperando delante.
+//
+// EL REPARTO DE LOS DOS MINUTOS Y MEDIO: 90 segundos para decidir -que con 24
+// medidos sobra de largo-, 50 para pedirlo otra vez si viene mal, y 60 para
+// escribir, que van todas a la vez.
+const ESPERA_DEL_PLAN_MS = 90000;
 const TECHO_DEL_PLAN = 16000;
 
 // LO QUE AGUANTA LA PETICION, MENOS UN MARGEN PARA CONTESTAR. El servidor corta
@@ -701,7 +703,7 @@ Nombre de pila: ${nombre}`;
 
   const salida = await alModelo({
     que: 'decidir el plan',
-    modelo: 'claude-opus-5',
+    modelo: 'claude-sonnet-5',
     piensa: 'medium',
     techo: TECHO_DEL_PLAN,
     system: encargo,
