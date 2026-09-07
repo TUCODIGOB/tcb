@@ -198,8 +198,7 @@ Se escribe hacia delante, no hacia atrás: no de lo que le pasó, sino de lo que
 const BLOQUES = {
   tuPrueba:     'Tu prueba',
   queHaces:     'Qué haces',
-  dondeTeCaes:  'Dónde te vas a caer',
-  cuandoTeCaes: 'Cuando te caigas',
+  dondeTeCaes:  'Dónde te vas a caer y qué hacer cuando te caigas',
 };
 
 // EL ORDEN EN QUE VAN, y con el que se recorren en todas partes: al decidir,
@@ -716,7 +715,6 @@ const MOLDE_DEL_PLAN = {
           tuPrueba:     { type: 'string' },
           queHaces:     { type: 'string' },
           dondeTeCaes:  { type: 'string' },
-          cuandoTeCaes: { type: 'string' },
         },
         required: ['deCuales', ...PUNTOS],
         additionalProperties: false,
@@ -733,64 +731,37 @@ const EL_QUE_REMATA = 'claude-sonnet-5';
 
 async function pedirElPlan({ nombre, sexo, limpia, recordatorio = '',
                              espera = ESPERA_DEL_PLAN_MS, modelo = EL_QUE_DECIDE }) {
-  const encargo = `${EL_P2_NO_ES_EL_P1}
+  const encargo = `AQUÍ NO SE DIAGNOSTICA
 
-Estás preparando el plan de una persona: lo que tiene que cambiar para llegar a ser quien quiere ser, y qué hace para conseguirlo.
+No le expliques como es o porque, ni de dónde le viene lo que hace, ni le busques la causa, ni le pongas nombre a lo que le pasa. Eso ya lo tiene.
 
-LO QUE LE CUESTA ES SU PRUEBA, NO SU DEFECTO. Es lo único que hay que entender para hacer bien esto. Cada cosa que le cuesta es algo que la vida le va a seguir poniendo delante hasta que lo aprenda, y de ahí sale lo que tiene que hacer. Ese es todo el trabajo: darle la vuelta a lo que le pesa y convertirlo en lo que hace.
+Ahora lo que necesitamos es: que haría su mejor versión, lo que tiene que cambiar y qué hace para conseguirlo con éxito, siendo humana la persona.
 
-AQUÍ NO SE ESCRIBE EL DOCUMENTO. Aquí se DECIDE. Todo sale en corto, una línea cada cosa, y lo que se va a leer lo escribe otro después. Por eso puedes dedicarle el rato a lo que de verdad importa: decidir qué le va a mover la vida y qué no.
+Lo que le cuesta no es su defecto, es su prueba: de ahí sale lo que tiene que hacer.
 
-Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene: eso ya lo tiene, se lo leyó entero en otro documento. Lo que le pasa solo aparece para enganchar lo que tiene que hacer.
+Aquí no se escribe el documento, aquí se decide. Todo en corto, una línea cada cosa.
 
+DE CADA UNO DE LOS QUE HAY ABAJO, ESTO
 
-1. DE CADA UNO DE LOS QUE HAY ABAJO, ESTO
+Sale una parte por cada uno de la lista. De cada uno sacas cuatro cosas, una línea cada una, y ninguna se queda vacía.
 
-La lista ya viene limpia: alguien ha quitado antes las que decían lo mismo, las que se contradecían y las que no daban para nada que hacer. Así que no tienes que quitar ninguna ni juntarlas. Cada una de abajo es una parte del documento, y salen tantas partes como cosas hay en la lista.
+deCuales — El número de la lista del que sale esta parte.
 
-De cada uno sacas cinco cosas, en una línea cada una, y ninguna se queda vacía. La línea va escrita para que quien la lea después la entienda entera sin preguntar nada: no es un título, es la cosa dicha en corto.
+tuPrueba — Cuál es la prueba que le pone delante la vida aquí, qué debe cambiar y en quién se convierte cuando lo transforma y lo logra.
 
-deCuales         El número de la lista de abajo del que sale esta parte. Uno
-                 solo: aquí no se junta nada, ya viene juntado. Es para poder
-                 mirar de dónde ha salido cada cosa.
+queHaces — Una sola cosa que tiene que hacer para cambiar ese desafío y transformarlo en positivo. Debe ser algo que realmente le funcione a un humano. Nada de autoayuda barata: esto debe saber hacerlo y funcionarle bien.
 
-tuPrueba         Qué le pone la vida delante aquí y en quién se convierte el
-                 día que lo supere. Dicho como un examen que tiene delante, no
-                 como un fallo propio que hay que corregir.
+dondeTeCaes — El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien. Y qué debe hacer cuando eso pase para volver al camino, solo el paso concreto.
 
-queHaces         UNA SOLA COSA que tiene que hacer. Una, no dos ni tres. Es lo
-                 más importante de las cuatro y por lo que ha pagado, y es una
-                 porque nadie cambia cinco cosas a la vez.
-                 Va con nombre de conducta: qué deja de hacer y qué hace en su
-                 lugar, algo que se pueda ver ocurriendo. Si lo que escribes no
-                 se puede ver pasando, está mal y se cambia.
-                 Y ES ALGO QUE YA PUEDE HACER con la vida que tenga, sin
-                 comprar nada, sin apuntarse a nada y sin que le haga falta
-                 nadie. Como no sabes en qué se le va el día, lo que decidas va
-                 sobre lo que hace quien lo lee, que eso sí lo sabes, y no sobre dónde
-                 lo hace.
+LO QUE NO SE PUEDE ESCRIBIR
 
-dondeTeCaes      Dónde se va a caer intentándolo: lo que va a aparecer para
-                 frenar a quien lee, o el fallo que va a cometer porque parece
-                 que así va más deprisa y le deja peor. El que le pega a ESTA persona con
-                 ESTA orden, no uno que le valdría a cualquiera.
+No te inventes nada de su vida. No sabes si tiene pareja, trabajo, hijos, casa o familia.
 
-cuandoTeCaes     Qué hace el día que lo deja. No es animar a nadie: es el
-                 paso concreto para volver, y que dejarlo entraba en el plan.
+Nada que le valga igual a cualquier persona: este producto es de élite.
 
+Nada técnico: ni planetas, ni signos, ni casas, ni nada relacionado con astrología.
 
-2. LO QUE NO SE PUEDE ESCRIBIR
-
-NO SE INVENTA NADA DE SU VIDA. Lo que sabes de quien lo lee es lo que hay abajo y nada más. No sabes si tiene pareja, trabajo, hijos, casa o familia: no los nombres, no los supongas y no los uses para montar nada. Lo que decidas tiene que servirle igual sea cual sea su vida.
-
-Y NO HACE FALTA SABERLO, porque lo que decides no va sobre su vida, va sobre su conducta, y esa la tienes entera abajo. Eso es de quien lo lee, y solo de quien lo lee, sin saber nada más.
-
-Nada que le valga igual a cualquiera. Si lo que has escrito se le podría mandar a otra persona distinta, está mal y se cambia.
-
-Y NADA DE EJERCICIOS DE TERAPIA. Ni buscar de dónde le viene algo, ni ponerle nombre a quién se lo hizo, ni rituales, ni papeles que se rompen, ni nada que se parezca a una consulta. Lo que hace es algo que ya haría en su vida corriente, hecho distinto.
-
-Y nada técnico: ni planetas, ni signos, ni casas. Quien lo lee no ve la carta.
-
+Sin palabras técnicas ni metáforas.
 
 Devuelve solo lo decidido.
 
@@ -950,7 +921,7 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
       nombre, sexo, limpia,
       modelo: EL_QUE_REMATA,
       espera: queda,
-      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. La lista ya viene limpia: sale una parte por cada cosa de la lista, ninguna se queda fuera y ninguna se junta con otra. Y cada parte va con su línea de de qué va y sus cuatro cosas escritas enteras.`,
+      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. La lista ya viene limpia: sale una parte por cada cosa de la lista, ninguna se queda fuera y ninguna se junta con otra. Y cada parte va con sus tres cosas escritas enteras.`,
     });
   } catch (err) {
     // El segundo intento es una mejora, no un requisito: si se cae, se entrega
@@ -1071,7 +1042,6 @@ const MOLDE_DE_LA_PARTE = {
     tuPrueba:     { type: 'string' },
     queHaces:     { type: 'string' },
     dondeTeCaes:  { type: 'string' },
-    cuandoTeCaes: { type: 'string' },
   },
   required: PUNTOS,
   additionalProperties: false,
@@ -1080,7 +1050,7 @@ const MOLDE_DE_LA_PARTE = {
 // CUANTO OCUPA CADA PUNTO. Es la cifra que va en el encargo, para que el
 // modelo sepa el tamano de cada cosa. No se comprueba despues: aqui no se
 // cuentan palabras para decidir si un texto vale.
-const PALABRAS_PEDIDAS = { tuPrueba: 60, queHaces: 180, dondeTeCaes: 25, cuandoTeCaes: 20 };
+const PALABRAS_PEDIDAS = { tuPrueba: 60, queHaces: 180, dondeTeCaes: 45 };
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
@@ -1109,29 +1079,26 @@ Se entiende solo, leído de paso y sin nada alrededor. Si para saber de qué va 
 
 Y se dice la cosa, no una figura de la cosa: ni metáforas ni imágenes. Si el título no se puede hacer literalmente, está mal. Con las palabras de todos los días, y que lo entienda alguien de dieciocho años a la primera.
 
-TE DAN CUATRO LÍNEAS YA DECIDIDAS Y ESCRIBES LAS CUATRO, cada una por su lado. No eliges tú lo que va: eso ya está decidido con todo su plan delante. Lo tuyo es que se entienda y que sirva.
+TE DAN TRES LÍNEAS YA DECIDIDAS Y ESCRIBES LAS TRES, cada una por su lado. No eliges tú lo que va: eso ya está decidido con todo su plan delante. Lo tuyo es que se entienda y que sirva.
 
 NO DECIDES, EXPLICAS. Coges la línea que te dan y la abres: qué es exactamente, cómo se hace, por qué así y no de otra manera, y qué pasa cuando lo hace. Todo lo que escribas tiene que poder rastrearse a la línea que te han dado. Si te falta un dato, no te lo inventas: cuentas mejor lo que ya está.
 
 Y NO TE SALGAS DE LO TUYO. Las otras partes del documento las escribe otro y no las ves. Lo tuyo es esto y nada más.
 
-CADA UNA DE LAS CUATRO ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos dentro y sin anunciar lo que viene. Los nombres los pone el programa. Y no se repiten entre ellas: lo que ya has dicho en una no vuelve en la siguiente.
+CADA UNA DE LAS TRES ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos dentro y sin anunciar lo que viene. Los nombres los pone el programa. Y no se repiten entre ellas: lo que ya has dicho en una no vuelve en la siguiente.
 
-LAS CUATRO, Y LO QUE VA EN CADA UNA:
+LAS TRES, Y LO QUE VA EN CADA UNA:
 
 "tuPrueba"
 Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo propio que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas ${PALABRAS_PEDIDAS.tuPrueba} palabras para hacerte una idea del tamaño. Si lo dices en menos, mejor.
 
 "queHaces"
-Es la más larga de las cuatro y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Unas ${PALABRAS_PEDIDAS.queHaces} palabras, que es de sobra si no das rodeos.
+Es la más larga de las tres y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Unas ${PALABRAS_PEDIDAS.queHaces} palabras, que es de sobra si no das rodeos.
 
 "dondeTeCaes"
-Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Y qué hace justo ahí. Unas ${PALABRAS_PEDIDAS.dondeTeCaes} palabras.
+Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Y qué hace el día que lo deja: el paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Todo seguido, en el mismo texto. Unas ${PALABRAS_PEDIDAS.dondeTeCaes} palabras.
 
-"cuandoTeCaes"
-Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Unas ${PALABRAS_PEDIDAS.cuandoTeCaes} palabras.
-
-ANTES DE DARLO POR BUENO, LEE LAS CUATRO Y PREGÚNTATE ESTO DE CADA FRASE: ¿esto lo puede hacer o ver una persona? Si en una frase hay algo que solo pasa como imagen y no como algo que ocurre de verdad, eso no es lo que le pasa: es una manera bonita de decirlo, y quien lo lee tiene que pararse a traducirlo. Se cambia por lo que hace o por lo que le ocurre de verdad. Es la frase más fácil de escribir y la que menos sirve.
+ANTES DE DARLO POR BUENO, LEE LAS TRES Y PREGÚNTATE ESTO DE CADA FRASE: ¿esto lo puede hacer o ver una persona? Si en una frase hay algo que solo pasa como imagen y no como algo que ocurre de verdad, eso no es lo que le pasa: es una manera bonita de decirlo, y quien lo lee tiene que pararse a traducirlo. Se cambia por lo que hace o por lo que le ocurre de verdad. Es la frase más fácil de escribir y la que menos sirve.
 
 LAS CIFRAS DE ARRIBA SON PARA QUE SEPAS EL TAMAÑO DE CADA COSA. Cuanto más corto, mejor: si lo dices en la mitad, has acertado. Lo único que no se hace nunca es cortar una frase por la mitad para que quepa. Si ves que no cabe, quitas algo entero y cierras: lo que no puede pasar es que quede a medias.
 
@@ -1148,10 +1115,10 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
 
   const salida = await otraVezSiVieneRota({
     que: `la parte "${parte.titulo}"`,
-    // Lo unico que se mira: que ninguna de las cuatro venga con una palabra de
+    // Lo unico que se mira: que ninguna de las tres venga con una palabra de
     // relleno en vez de texto.
     cojo: p => PUNTOS.some(punto => esRelleno(p[punto])),
-    aviso: p => `\n\nY OJO: la vez anterior dejaste una casilla con una palabra de relleno dentro (${PUNTOS.filter(punto => esRelleno(p[punto])).map(x => BLOQUES[x]).join(', ')}) en vez de escribirla. Esto lo lee una persona que ha pagado por ello: las cuatro se escriben, y si te has quedado sin hilo, se vuelve a empezar esa.`,
+    aviso: p => `\n\nY OJO: la vez anterior dejaste una casilla con una palabra de relleno dentro (${PUNTOS.filter(punto => esRelleno(p[punto])).map(x => BLOQUES[x]).join(', ')}) en vez de escribirla. Esto lo lee una persona que ha pagado por ello: las tres se escriben, y si te has quedado sin hilo, se vuelve a empezar esa.`,
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
       que: `escribir "${parte.titulo}"`,
@@ -1159,7 +1126,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
       piensa: '',
       techo: TECHO_DE_ESCRIBIR,
       system: encargo,
-      mensaje: `Escribe las cuatro partes de esta, enteras.${recordatorio}`,
+      mensaje: `Escribe las tres partes de esta, enteras.${recordatorio}`,
       molde: MOLDE_DE_LA_PARTE,
       espera: AbortSignal.timeout(cuanto),
     }),
@@ -1531,7 +1498,7 @@ ir.addEventListener('click', async () => {
   if (completas.length === total) {
     elDocumento = {
       nombre: quienEs.nombre,
-      // La etiqueta pequena de cada parte y los nombres de sus cuatro puntos van
+      // La etiqueta pequena de cada parte y los nombres de sus puntos van
       // desde aqui: el que maqueta no tiene que saberselos.
       partes: completas.map((p, i) => ({ ...p, etiqueta: (i+1) + ' de ' + total, nombres: BLOQUES })),
     };
