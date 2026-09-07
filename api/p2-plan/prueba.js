@@ -648,7 +648,7 @@ No los compares por cómo están escritos. Vienen de sitios distintos y escritos
 
 Se comparan por LO QUE ELLA TENDRÍA QUE HACER DISTINTO. De cada uno de la lista, dite en una línea qué hace ella de otra manera el día que eso esté resuelto. Esa línea es la que comparas con las demás, y es lo único que comparas.
 
-Y SI DOS LÍNEAS DESCRIBEN LA MISMA CONDUCTA, ESOS DOS SON UNO. Aunque cada uno hable de un sitio distinto de su vida, aunque uno venga del trabajo y otro de su pareja, aunque estén contados con palabras que no se parecen en nada. El sitio donde le pasa no los hace distintos. La conducta sí.
+Y SI DOS LÍNEAS DESCRIBEN LA MISMA CONDUCTA, ESOS DOS SON UNO. Aunque cada uno le ocurra en un sitio distinto de su vida, y aunque estén contados con palabras que no se parecen en nada. El sitio donde le pasa no los hace distintos. La conducta sí.
 
 ESTO PASA SIEMPRE Y PASA MUCHO, así que búscalo a propósito en vez de esperar a verlo. Lo que más se repite en estas listas es una sola conducta contada desde cuatro situaciones distintas: los cuatro parecen cosas separadas y los cuatro se arreglan con el mismo movimiento. Si al terminar te quedan dos partes donde ella tiene que hacer lo mismo en dos escenarios, no eran dos.
 
@@ -867,9 +867,9 @@ NO LAS COMPARES POR CÓMO ESTÁN ESCRITAS. Están escritas por separado, así qu
 
 Compáralas por LA CONDUCTA que le piden. Pregúntate de cada una: ¿qué hace ella distinto a partir de mañana? Si de dos sale la misma respuesta, esas dos mandan lo mismo.
 
-Y EL SITIO NO LAS HACE DISTINTAS. Si una ocurre en el trabajo y otra con su pareja, pero la conducta es la misma, son la misma. Ese es el caso que hay que cazar y el que más se escapa.
+Y EL SITIO NO LAS HACE DISTINTAS. Si dos ocurren en sitios distintos de su vida pero la conducta es la misma, son la misma. Ese es el caso que hay que cazar y el que más se escapa.
 
-TAMPOCO LAS HACE DISTINTAS EL MOMENTO. "Cada mañana" y "cada vez que pase X" no son dos cosas si lo que hace es lo mismo.
+TAMPOCO LAS HACE DISTINTAS EL MOMENTO. Que una diga cuándo se hace y otra no, o que cada una lo sitúe en un momento distinto, no las convierte en dos si lo que hace es lo mismo.
 
 PERO NO JUNTES LO QUE NO ES. Dos órdenes que se parecen pero acaban en conductas distintas son dos. Si dudas, no las juntes: decir que se repiten cuando no se repiten hace que se tire una parte buena.
 
