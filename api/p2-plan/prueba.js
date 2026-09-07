@@ -16,8 +16,8 @@
 // ── COMO ESTA HECHO ─────────────────────────────────────────
 //
 //   UNA LLAMADA LIMPIA LA LISTA, Y NO HACE NADA MAS. Recibe todo lo que a esta
-//   persona le cuesta, sacado del P1, y dice cuales se quedan: fuera las que
-//   dicen lo mismo, las que se contradicen y las que no dan para un cambio.
+//   persona le cuesta, sacado del P1, y dice cuales se quedan: fuera los que
+//   dicen practicamente lo mismo y los que se contradicen entre si.
 //   Devuelve numeros, no texto. Es la que compara, y por eso es la que piensa.
 //
 //   OTRA DECIDE, con las que han quedado. De cada una saca en corto el titulo y
