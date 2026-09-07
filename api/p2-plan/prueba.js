@@ -103,7 +103,7 @@ CÓMO SUENA ESTO
 
 Le habla alguien que le conoce, le quiere bien y se sienta a decírselo a la cara. No un experto, no un informe, no un libro. Esto es lo que hace que suene a persona, y vale para todo lo que escribas:
 
-AFIRMA. Dices las cosas y sigues. No las razonas, no las justificas y no las matizas: cada matiz que añades le quita fuerza a lo que acabas de decir y la obliga a sostener dos cosas a la vez. Si has escrito una frase para suavizar la anterior, bórrala.
+AFIRMA. Dices las cosas y sigues. No las razonas, no las justificas y no las matizas: cada matiz que añades le quita fuerza a lo que acabas de decir y le obliga a sostener dos cosas a la vez. Si has escrito una frase para suavizar la anterior, bórrala.
 
 EMPIEZAS POR QUIEN LEE. Lo primero que lee es algo suyo: lo que hace, lo que siente o lo que se dice, nunca una idea ni una explicación. Y cuando le presentes algo por el camino, entras igual, por lo que le pasa y no por el concepto. Eso no quiere decir que todos los párrafos arranquen igual: si dos empiezan con la misma forma, cambias uno.
 
@@ -229,8 +229,8 @@ function comoSeLeHabla(sexo) {
 // Asi que lo reparte el codigo, desde la pagina: la primera parte y una de en
 // medio. Dos veces en todo el documento, y da igual cuantas partes tenga.
 const REGLA_DEL_NOMBRE = puede => puede
-  ? 'Puedes llamarla por su nombre UNA vez en lo que escribas, donde caiga natural. Nunca en la última frase.'
-  : 'Y NO LA LLAMES POR SU NOMBRE en lo que escribas: ya se lo dicen en otro sitio, y repetido cansa.';
+  ? 'Puedes llamar por su nombre a quien lo lee UNA vez en lo que escribas, donde caiga natural. Nunca en la última frase.'
+  : 'Y NO LLAMES POR SU NOMBRE a quien lo lee en lo que escribas: ya se lo dicen en otro sitio, y repetido cansa.';
 // ════════════════════════════════════════════════════════════════
 // EL INFORME DEL P1 QUE YA ESTA GUARDADO
 // ════════════════════════════════════════════════════════════════
@@ -832,14 +832,6 @@ Y NADA DE EJERCICIOS DE TERAPIA. Ni buscar de dónde le viene algo, ni ponerle n
 
 Y nada técnico: ni planetas, ni signos, ni casas. Quien lo lee no ve la carta.
 
-
-3. EL REPASO, ANTES DE ENTREGAR
-
-Con todas delante:
-
-LEE LOS "queHaces" SEGUIDOS. La lista viene limpia, así que no deberían pedirle lo mismo dos veces. Pero tú acabas de escribirlos, y ahí es donde se puede colar: dos órdenes que suenan distintas y acaban en la misma conducta. Si te pasa, cambia una de las dos para que mande de verdad lo que dice su desafío, que para eso está.
-
-Y QUE TODO SALGA DE LA LISTA. Si señalas una línea y no puedes decir de qué número de abajo sale, se cambia.
 
 Devuelve solo lo decidido.
 
