@@ -1535,10 +1535,21 @@ ir.addEventListener('click', async () => {
     return caidas;
   };
 
-  const caidas = await pasada(plan.partes.map((_, i) => i), false);
-  if (caidas.length) {
-    aviso.textContent = 'Se han caído ' + caidas.length + ', se piden otra vez…';
-    await pasada(caidas, true);
+  // Y SE INSISTE HASTA TRES VECES CON LA QUE SE CAIGA.
+  //
+  // Una parte que no vuelve deja el documento con un agujero, y entonces no se
+  // puede entregar. Como cada parte es su propia peticion y es corta, insistir
+  // con la que ha fallado no le quita tiempo a las demas -ya han terminado- y
+  // casi siempre entra a la segunda: lo que se cae aqui es la linea, no el
+  // texto.
+  //
+  // Tres y no mas: si a la tercera sigue sin volver, lo que hay caido no es
+  // esta parte, y seguir pidiendo solo hace esperar mas para acabar igual.
+  const INTENTOS = 3;
+  let caidas = plan.partes.map((_, i) => i);
+  for (let vuelta = 1; vuelta <= INTENTOS && caidas.length; vuelta++) {
+    if (vuelta > 1) aviso.textContent = 'Se han caído ' + caidas.length + ', se piden otra vez…';
+    caidas = await pasada(caidas, vuelta === INTENTOS);
   }
 
   const completas = escritas.filter(Boolean);
