@@ -669,10 +669,21 @@ deCuales         Los números de la lista de abajo de los que sale esta parte.
 
 titulo           Cómo se llama esta parte del documento. Habla de lo que ella
                  va a hacer o de en quién se convierte, nunca de lo que le
-                 pasa: es un título de plan, no de diagnóstico. Corto, en su
-                 idioma de todos los días, y sin dos puntos ni subtítulos.
+                 pasa: es un título de plan, no de diagnóstico. Corto, y sin
+                 dos puntos ni subtítulos.
                  Y NI DOS EMPIEZAN CON LA MISMA PALABRA: van seguidos en el
                  mismo documento y se leen del tirón.
+                 SE ENTIENDE SOLO, LEÍDO DE PASO Y SIN NADA ALREDEDOR. Es lo
+                 único de aquí que ella va a leer tal cual, en grande y en la
+                 primera página de esa parte, así que si tiene que llegar
+                 abajo para saber de qué le hablas, el título está mal.
+                 Y SE DICE LA COSA, NO UNA FIGURA DE LA COSA. Ni metáforas,
+                 ni imágenes, ni frases que suenan bien sin decir nada: si el
+                 título no se puede hacer literalmente, está mal. Se nombra lo
+                 que ella hace, con las palabras de todos los días, y si una
+                 palabra la verías antes escrita que dicha en una conversación,
+                 va fuera. Tiene que entenderlo alguien de dieciocho años a la
+                 primera y sin pensar.
 
 movimiento       QUÉ LE ESTÁS PIDIENDO HACER, EN UNA PALABRA. Un verbo en
                  infinitivo y nada más, el que de verdad describa lo que le
@@ -1428,6 +1439,8 @@ Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a apa
 
 "cuandoTeCaes"
 Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Unas ${PALABRAS_PEDIDAS.cuandoTeCaes} palabras.
+
+ANTES DE DARLO POR BUENO, LEE LAS CUATRO Y PREGÚNTATE ESTO DE CADA FRASE: ¿esto lo puede hacer o ver una persona? Si en una frase hay algo que solo pasa como imagen -que ella se apague, se borre, se rompa, se abra, se cierre, se llene o se vacíe- eso no es lo que le pasa, es una manera bonita de decirlo, y quien lo lee tiene que pararse a traducirlo. Se cambia por lo que hace o por lo que le ocurre de verdad. Es la frase más fácil de escribir y la que menos sirve.
 
 LAS CIFRAS DE ARRIBA SON PARA QUE SEPAS EL TAMAÑO DE CADA COSA. Cuanto más corto, mejor: si lo dices en la mitad, has acertado. Lo único que no se hace nunca es cortar una frase por la mitad para que quepa. Si ves que no cabe, quitas algo entero y cierras: lo que no puede pasar es que quede a medias.
 
