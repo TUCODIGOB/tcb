@@ -1807,10 +1807,14 @@ ir.addEventListener('click', async () => {
   // casi siempre entra a la segunda: lo que se cae aqui es la linea, no el
   // texto.
   //
-  // DOS Y NO TRES. Cada vuelta cuesta hasta un minuto de espera y una llamada
-  // por parte caida. En el plan donde se cayeron tres, la tercera vuelta no
-  // arreglo ninguna: solo sumo un minuto y tres llamadas a la basura.
-  const INTENTOS = 2;
+  // TRES. Se bajo a dos para ahorrar tiempo y fue un error: en un plan de
+  // verdad se cayeron tres partes, se acabaron las vueltas y la clienta se
+  // quedo SIN PDF despues de cuatro minutos.
+  //
+  // Y una vuelta de mas no cuesta lo que parece: solo se vuelven a pedir las
+  // que se han caido, no todas, y las demas ya han terminado. Si no se cae
+  // ninguna -que es lo normal- estas vueltas no existen y no cuestan nada.
+  const INTENTOS = 3;
   let caidas = plan.partes.map((_, i) => i);
   for (let vuelta = 1; vuelta <= INTENTOS && caidas.length; vuelta++) {
     if (vuelta > 1) aviso.textContent = 'Se han caído ' + caidas.length + ', se piden otra vez…';
