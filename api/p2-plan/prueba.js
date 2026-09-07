@@ -824,7 +824,7 @@ cuandoTeCaes     Qué hace el día que lo deja. No es animar a nadie: es el
 
 NO SE INVENTA NADA DE SU VIDA. Lo que sabes de quien lo lee es lo que hay abajo y nada más. No sabes si tiene pareja, trabajo, hijos, casa o familia: no los nombres, no los supongas y no los uses para montar nada. Lo que decidas tiene que servirle igual sea cual sea su vida.
 
-Y NO HACE FALTA SABERLO, porque lo que decides no va sobre su vida, va sobre su conducta, y esa la tienes entera abajo. No es "habla con quien sea": es qué hace cuando le pasa lo que le pasa siempre. Eso es de quien lo lee, y solo de quien lo lee, sin saber nada más.
+Y NO HACE FALTA SABERLO, porque lo que decides no va sobre su vida, va sobre su conducta, y esa la tienes entera abajo. Eso es de quien lo lee, y solo de quien lo lee, sin saber nada más.
 
 Nada que le valga igual a cualquiera. Si lo que has escrito se le podría mandar a otra persona distinta, está mal y se cambia.
 
@@ -989,7 +989,7 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
       nombre, sexo, limpia,
       modelo: EL_QUE_REMATA,
       espera: queda,
-      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. La lista ya viene limpia: sale una parte por cada cosa de la lista, ninguna se queda fuera y ninguna se junta con otra. Y cada parte va con su título y sus cuatro cosas escritas enteras.`,
+      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. La lista ya viene limpia: sale una parte por cada cosa de la lista, ninguna se queda fuera y ninguna se junta con otra. Y cada parte va con su línea de de qué va y sus cuatro cosas escritas enteras.`,
     });
   } catch (err) {
     // El segundo intento es una mejora, no un requisito: si se cae, se entrega
@@ -1194,7 +1194,7 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
       que: `escribir "${parte.deQueVa}"`,
-      modelo: 'claude-sonnet-5',
+      modelo: EL_QUE_REMATA,
       piensa: '',
       techo: TECHO_DE_ESCRIBIR,
       system: encargo,
@@ -1474,7 +1474,7 @@ ir.addEventListener('click', async () => {
 
   // 1. La llamada que piensa y decide el documento entero.
   let plan;
-  aviso.textContent = 'Decidiendo su plan… (es la única parte que piensa, y es la que más tarda)';
+  aviso.textContent = 'Limpiando la lista y decidiendo su plan…';
   try {
     const r = await llamar({ accion:'plan', compra });
     plan = r.plan;
@@ -1490,16 +1490,16 @@ ir.addEventListener('click', async () => {
     return;
   }
 
-  // 2. Las siete partes, TODAS A LA VEZ.
+  // 2. Las partes, TODAS A LA VEZ.
   //
   // Cada una es su propia peticion, asi que lanzarlas juntas no acerca a
   // ninguna al tiempo maximo del servidor. De una en una esto tardaba lo que
-  // tardan las siete sumadas; asi tarda lo que tarde la mas lenta.
+  // tardan todas sumadas; asi tarda lo que tarde la mas lenta.
   //
   // Se pintan en su hueco, en el orden del documento, y no segun van llegando:
   // el sitio se reserva antes y cada una cae en el suyo.
   // Lo decidido, arriba del todo y antes de escribir nada: asi se puede mirar
-  // mientras se escriben las siete.
+  // mientras se escriben.
   salida.insertAdjacentHTML('beforeend', pintarLoDecidido(plan.partes, plan.limpieza));
 
   const total = plan.partes.length;
@@ -1614,14 +1614,12 @@ pdf.addEventListener('click', async () => {
 // una y que le pide hacer, que es lo unico que hay que mirar para saber si esa
 // llamada lo ha hecho bien o esta repitiendo.
 function pintarLoDecidido(partes, limpieza) {
-  // De donde sale cada parte. Una con dos o mas numeros es una que ha juntado
-  // dos desafios que decian lo mismo, que es lo que tiene que pasar.
+  // De que desafio de la lista sale cada parte.
   const filas = partes.map((p, i) => {
-    const deCuantos = (p.deCuales || []).length;
     return '<tr>' +
       '<td>' + (i + 1) + '</td>' +
       '<td>' + escapar(p.deQueVa || '') + '</td>' +
-      '<td>' + escapar((p.deCuales || []).join(', ')) + (deCuantos > 1 ? ' <b>(juntados)</b>' : '') + '</td>' +
+      '<td>' + escapar((p.deCuales || []).join(', ')) + '</td>' +
       '<td>' + escapar(p.queHaces || '') + '</td>' +
     '</tr>';
   }).join('');
