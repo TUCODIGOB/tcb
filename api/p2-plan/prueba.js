@@ -103,7 +103,7 @@ CÓMO SUENA ESTO
 
 Le habla alguien que le conoce, le quiere bien y se sienta a decírselo a la cara. No un experto, no un informe, no un libro. Esto es lo que hace que suene a persona, y vale para todo lo que escribas:
 
-AFIRMA. Dices las cosas y sigues. No las razonas, no las justificas y no las matizas: cada matiz que añades le quita fuerza a lo que acabas de decir y la obliga a sostener dos cosas a la vez. Si has escrito una frase para suavizar la anterior, bórrala.
+AFIRMA. Dices las cosas y sigues. No las razonas, no las justificas y no las matizas: cada matiz que añades le quita fuerza a lo que acabas de decir y le obliga a sostener dos cosas a la vez. Si has escrito una frase para suavizar la anterior, bórrala.
 
 EMPIEZAS POR QUIEN LEE. Lo primero que lee es algo suyo: lo que hace, lo que siente o lo que se dice, nunca una idea ni una explicación. Y cuando le presentes algo por el camino, entras igual, por lo que le pasa y no por el concepto. Eso no quiere decir que todos los párrafos arranquen igual: si dos empiezan con la misma forma, cambias uno.
 
@@ -123,7 +123,7 @@ Y CON ESTO SE ENTIENDE A LA PRIMERA:
 
 - LÉELA POR DENTRO ANTES DE DARLA POR BUENA. Si nadie diría esa frase hablando, está mal y se reescribe. No fuerces la gramática para que suene elaborado, y no cojas un verbo raro cuando el normal dice lo mismo.
 - SE DICE LA COSA, NO UNA FIGURA DE LA COSA. Nada de metáforas, ni de comparaciones inventadas, ni de partes suyas que se mueven o chocan como si tuvieran vida propia. Se dice lo que hace la persona, con palabras que se puedan agarrar.
-- SI TAPAS TODO LO DEMÁS Y ESA FRASE SOLA NO DICE NADA CONCRETO DE ELLA, está mal escrita. Contar cómo se siente algo no es contar qué es.
+- SI TAPAS TODO LO DEMÁS Y ESA FRASE SOLA NO DICE NADA CONCRETO DE QUIEN LO LEE, está mal escrita. Contar cómo se siente algo no es contar qué es.
 - LAS PALABRAS SON LAS DE TODOS LOS DÍAS. Si una palabra la verías antes en un informe que dicha en una conversación, va fuera. Lo tiene que entender alguien de dieciocho años sin releer.
 - SE ESCRIBE CON COMAS Y SEGUIDO, como habla alguien. Donde una persona hablando uniría dos trozos con una coma, va la coma y no un punto. Pero una frase lleva UNA idea: si al leerla en voz alta te falta el aire o tienes que volver atrás, lleva dos dentro y se parte.
 - NO SE CONVIERTE EN COSA LO QUE HACE. Nada de coger su conducta, volverla un sustantivo y colgársela con un posesivo delante: se dice con un verbo, qué hace.
@@ -229,8 +229,8 @@ function comoSeLeHabla(sexo) {
 // Asi que lo reparte el codigo, desde la pagina: la primera parte y una de en
 // medio. Dos veces en todo el documento, y da igual cuantas partes tenga.
 const REGLA_DEL_NOMBRE = puede => puede
-  ? 'Puedes llamarla por su nombre UNA vez en lo que escribas, donde caiga natural. Nunca en la última frase.'
-  : 'Y NO LA LLAMES POR SU NOMBRE en lo que escribas: ya se lo dicen en otro sitio, y repetido cansa.';
+  ? 'Puedes llamar por su nombre a quien lo lee UNA vez en lo que escribas, donde caiga natural. Nunca en la última frase.'
+  : 'Y NO LLAMES POR SU NOMBRE a quien lo lee en lo que escribas: ya se lo dicen en otro sitio, y repetido cansa.';
 // ════════════════════════════════════════════════════════════════
 // EL INFORME DEL P1 QUE YA ESTA GUARDADO
 // ════════════════════════════════════════════════════════════════
@@ -577,15 +577,15 @@ async function limpiarLaLista({ rasgos, espera = ESPERA_DE_LIMPIAR_MS, modelo = 
   // preguntarse si hacia falta.
   const encargo = `Abajo tienes, numeradas, las cosas que le cuestan a una persona. Salen de su carta y están escritas por separado, sin que nadie las mirara juntas.
 
-Cada una de las que dejes va a ser una parte del documento. Si dejas dos que dicen lo mismo, ella lee dos veces la misma cosa, cree que tiene el doble de trabajo del que tiene, y deja de fiarse.
+Cada una de las que dejes va a ser una parte del documento. Si dejas dos que dicen lo mismo, quien lo lee lee dos veces la misma cosa, cree que tiene el doble de trabajo del que tiene, y deja de fiarse.
 
 CÓMO SE COMPARAN
 
-De cada una, dite para ti en tres o cuatro palabras QUÉ ESTÁ HACIENDO ELLA ahí. No de qué habla ni dónde le pasa: qué hace.
+De cada una, mira QUÉ ESTÁ HACIENDO esa persona ahí. No de qué habla ni dónde le pasa: qué hace.
 
-Ahora mira esa lista de conductas y compáralas entre sí, todas con todas. Las que se repitan te están diciendo que ahí hay una sola cosa contada varias veces.
+Y compara eso entre sí, todas con todas. Las que se repitan te están diciendo que ahí hay una sola cosa contada varias veces.
 
-Léelas así y no por cómo están escritas. Vienen redactadas por separado, así que dos idénticas por debajo pueden no compartir ni una palabra. Y da igual que a una le pase en un sitio de su vida y a otra en otro: el sitio no las hace distintas, la conducta sí.
+Léelas así y no por cómo están escritas. Vienen redactadas por separado, así que dos idénticas por debajo pueden no compartir ni una palabra.
 
 QUÉ SE QUITA
 
@@ -593,7 +593,7 @@ LAS QUE DICEN LO MISMO. De cada grupo se queda UNA, la que esté mejor contada, 
 
 LAS QUE SE CONTRADICEN. Si dos le piden cosas que no puede hacer a la vez, se queda la que más le pese y la otra se va.
 
-LAS QUE NO DAN PARA UN CAMBIO. Si de una no sale nada que ella pueda ponerse a hacer, se va, por muy cierta que sea. El documento es lo que hace, no lo que le pasa.
+LAS QUE NO DAN PARA UN CAMBIO. Si de una no sale nada que esa persona pueda ponerse a hacer, se va, por muy cierta que sea. El documento es lo que hace, no lo que le pasa.
 
 LO QUE DEVUELVES
 
@@ -776,7 +776,7 @@ LO QUE LE CUESTA ES SU PRUEBA, NO SU DEFECTO. Es lo único que hay que entender 
 
 AQUÍ NO SE ESCRIBE EL DOCUMENTO. Aquí se DECIDE. Todo sale en corto, una línea cada cosa, y lo que se va a leer lo escribe otro después. Por eso puedes dedicarle el rato a lo que de verdad importa: decidir qué le va a mover la vida y qué no.
 
-Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene: eso ya lo tiene, se lo leyó entero en otro documento. Lo suyo solo aparece para enganchar lo que tiene que hacer.
+Y AQUÍ NO SE DIAGNOSTICA. No le vuelvas a contar cómo es ni de dónde le viene: eso ya lo tiene, se lo leyó entero en otro documento. Lo que le pasa solo aparece para enganchar lo que tiene que hacer.
 
 
 1. DE CADA UNO DE LOS QUE HAY ABAJO, ESTO
@@ -792,12 +792,12 @@ deCuales         El número de la lista de abajo del que sale esta parte. Uno
 deQueVa          De qué va esta parte, en una línea. Esto NO es el título y
                  no lo lee nadie más que quien escribe la parte: es para que
                  sepa de qué está hablando antes de ponerse. Di de qué va por
-                 lo que ella va a hacer o por en quién se convierte, nunca por
+                 lo que va a hacer quien lo lee o por en quién se convierte, nunca por
                  lo que le pasa. El título ya lo pondrá quien escriba.
 
 tuPrueba         Qué le pone la vida delante aquí y en quién se convierte el
                  día que lo supere. Dicho como un examen que tiene delante, no
-                 como un fallo suyo que hay que corregir.
+                 como un fallo propio que hay que corregir.
 
 queHaces         UNA SOLA COSA que tiene que hacer. Una, no dos ni tres. Es lo
                  más importante de las cuatro y por lo que ha pagado, y es una
@@ -808,7 +808,7 @@ queHaces         UNA SOLA COSA que tiene que hacer. Una, no dos ni tres. Es lo
                  Y ES ALGO QUE YA PUEDE HACER con la vida que tenga, sin
                  comprar nada, sin apuntarse a nada y sin que le haga falta
                  nadie. Como no sabes en qué se le va el día, lo que decidas va
-                 sobre lo que ella hace, que eso sí lo sabes, y no sobre dónde
+                 sobre lo que hace quien lo lee, que eso sí lo sabes, y no sobre dónde
                  lo hace.
 
 dondeTeCaes      Dónde se va a caer intentándolo: lo que va a aparecer para
@@ -822,9 +822,9 @@ cuandoTeCaes     Qué hace el día que lo deja. No es animar a nadie: es el
 
 2. LO QUE NO SE PUEDE ESCRIBIR
 
-NO SE INVENTA NADA DE SU VIDA. Lo que sabes de ella es lo que hay abajo y nada más. No sabes si tiene pareja, trabajo, hijos, casa o familia: no los nombres, no los supongas y no los uses para montar nada. Lo que decidas tiene que servirle igual sea cual sea su vida.
+NO SE INVENTA NADA DE SU VIDA. Lo que sabes de quien lo lee es lo que hay abajo y nada más. No sabes si tiene pareja, trabajo, hijos, casa o familia: no los nombres, no los supongas y no los uses para montar nada. Lo que decidas tiene que servirle igual sea cual sea su vida.
 
-Y NO HACE FALTA SABERLO, porque lo que decides no va sobre su vida, va sobre su conducta, y esa la tienes entera abajo. No es "habla con quien sea": es qué hace cuando le pasa lo que le pasa siempre. Eso es suyo, y solo suyo, sin saber nada más.
+Y NO HACE FALTA SABERLO, porque lo que decides no va sobre su vida, va sobre su conducta, y esa la tienes entera abajo. No es "habla con quien sea": es qué hace cuando le pasa lo que le pasa siempre. Eso es de quien lo lee, y solo de quien lo lee, sin saber nada más.
 
 Nada que le valga igual a cualquiera. Si lo que has escrito se le podría mandar a otra persona distinta, está mal y se cambia.
 
@@ -832,14 +832,6 @@ Y NADA DE EJERCICIOS DE TERAPIA. Ni buscar de dónde le viene algo, ni ponerle n
 
 Y nada técnico: ni planetas, ni signos, ni casas. Quien lo lee no ve la carta.
 
-
-3. EL REPASO, ANTES DE ENTREGAR
-
-Con todas delante:
-
-LEE LOS "queHaces" SEGUIDOS. La lista viene limpia, así que no deberían pedirle lo mismo dos veces. Pero tú acabas de escribirlos, y ahí es donde se puede colar: dos órdenes que suenan distintas y acaban en la misma conducta. Si te pasa, cambia una de las dos para que mande de verdad lo que dice su desafío, que para eso está.
-
-Y QUE TODO SALGA DE LA LISTA. Si señalas una línea y no puedes decir de qué número de abajo sale, se cambia.
 
 Devuelve solo lo decidido.
 
@@ -1013,176 +1005,14 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
   return { ...primero.plan, limpieza: limpia };
 }
 
-// ── LO QUE LA CLIENTA NO PUEDE LEER ─────────────────────────
-//
-// El encargo prohibe nombrar la carta y aun asi se cuela: en el P1 pasaba, y
-// aqui pasaria igual. Pedirlo no basta, asi que se comprueba.
-//
-// Solo se buscan las palabras que en castellano no significan otra cosa.
-// "Casa", "signo" o "aspecto" sueltas son palabras corrientes y no cuentan.
-//
-// Es la misma lista que el P1, copiada a proposito: este fichero no depende de
-// ningun otro, y el dia que se borre la carpeta no se lleva nada por delante.
-const PALABRAS_DE_ASTROLOGIA = [
-  /\b(mercurio|jupiter|saturno|urano|neptuno|pluton|quiron|ascendente)\b/,
-  /\bnodo (norte|sur)\b/,
-  /\b(aries|tauro|geminis|virgo|escorpio|sagitario|capricornio|acuario|piscis)\b/,
-  // Cancer, Leo y Libra son enfermedad y dos verbos, asi que sueltas no cuentan:
-  // se buscan como se nombra un signo, detras de "en".
-  /\ben (cancer|leo|libra)\b/,
-  /\b(tu|su|la|mi) carta\b/,
-  /\b(carta|mapa) (natal|astral)\b/,
-  /\bretrograd[oa]\b/,
-  /\bcasa \d{1,2}\b/,
-  /\b(conjuncion|oposicion|cuadratura|trigono|sextil) (a|con|al)?\s*(el|la)?\s*(mercurio|jupiter|saturno|urano|neptuno|pluton|quiron|sol|luna|venus|marte)\b/,
-  // "aspecto" y "signo" solas son palabras corrientes, asi que se buscan solo
-  // pegadas a lo que las convierte en tecnicas.
-  /\bsin (ningun )?aspecto/,
-  /\baspectos? (que (conect|sostien|un|enlac)|entre)/,
-  /\b(tu|su) (sol|luna|venus|marte|mercurio|jupiter|saturno|signo)\b/,
-  /\b(los|tus|sus) planetas\b/,
-  /\b(zodiaco|horoscopo|astrolog|efemerides)\b/,
-  // Y TAMPOCO SE NOMBRA EL OTRO DOCUMENTO. Las reglas lo prohiben, pero aqui
-  // el encargo le cuenta que ya se leyo un estudio suyo, asi que la tentacion
-  // de escribir "en tu estudio te contaron" la tiene delante. Quien lee no
-  // sabe que es eso ni tiene que saberlo.
-  /\b(tu|su) (informe|estudio)\b/,
-  /\b(el|ese|aquel) (informe|estudio) (que|suyo|anterior|tuyo)\b/,
-  /\b(primer|otro) (informe|estudio|documento)\b/,
-];
-
 function sinTildes(txt) {
   return String(txt || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-}
-
-function hablaDeAstrologia(texto) {
-  const limpio = sinTildes(texto);
-  return PALABRAS_DE_ASTROLOGIA.some(re => re.test(limpio));
-}
-
-// ── LA PRUEBA DE LAS TRES PRIMERAS FRASES, HECHA POR EL CODIGO ──
-//
-// El encargo dice que de lo suyo se cuentan dos o tres frases y que de ahi
-// hasta el final todo es como se hace. Pedirlo no basta: en el P1 se pidieron
-// cosas asi durante semanas y se colaban igual.
-//
-// Asi que se tapa el arranque -las tres primeras frases, que son las que
-// tienen permiso- y se mira lo que queda. Si ahi sigue explicandole de donde
-// le viene lo que hace, quien se lo hizo o como se llama lo que le pasa, eso
-// es el diagnostico que ya pago en el P1, y se pide otra vez.
-//
-// La lista es corta y de palabras que solo aparecen explicando el origen. Una
-// palabra normal aqui dentro haria reescribir textos buenos, que es peor que
-// dejar pasar uno malo.
-const PALABRAS_DE_DIAGNOSTICO = [
-  /\bde (pequen|nin|cri)[ao]\b/,
-  /\bdesde (pequen|nin|cri)[ao]\b/,
-  /\btu infancia\b/,
-  /\baprendiste (a|que)\b/,
-  /\b(te )?viene de (tu|ahi|lo|esa|ese)\b/,
-  /\b(tus padres|tu madre|tu padre|tu familia)\b/,
-  /\btu (patron|herida|programacion)\b/,
-  /\bpor eso eres\b/,
-  /\besa es la razon\b/,
-  /\blo que te pasa es\b/,
-];
-
-// Y EL DIAGNOSTICO TAMBIEN SE ESCRIBE SIN NINGUNA DE ESAS PALABRAS.
-//
-// "Te cuesta pedir. Sostienes lo que no te toca. Eres la que aguanta." Ahi no
-// hay ni infancia ni padres ni patron, y sigue siendo contarle como es, que es
-// lo que ya pago en el P1.
-//
-// Asi que ademas de mirar lo que no puede haber, se mira lo que TIENE que
-// haber. Un texto que de verdad le explica como se hace algo no puede
-// escribirse sin decir cuando lo hace, que pasa si no le sale, que hace en vez
-// de lo de antes o las primeras veces. Esas marcas caen solas y muchas; una
-// descripcion de como es no lleva casi ninguna.
-//
-// El liston esta bajo a proposito: tres marcas distintas en todo lo que queda
-// despues del arranque. Un texto bueno pasa de sobra; uno que solo la describe
-// no llega.
-const MARCAS_DE_QUE_HACER = [
-  /\bcuando\b/, /\ben vez de\b/, /\ben lugar de\b/, /\bantes de\b/,
-  /\bdespues de\b/, /\bhasta que\b/, /\bmientras\b/, /\bcada vez que\b/,
-  /\bvas a\b/, /\bte va a\b/, /\ba partir de\b/, /\bde ahora en adelante\b/,
-  /\bsi te\b/, /\bsi lo\b/, /\bsi se te\b/, /\bel dia que\b/,
-  /\blo que haces es\b/, /\bla primera vez\b/, /\blas primeras veces\b/,
-  /\bya no\b/, /\bnada de\b/, /\bsin\b/,
-];
-
-const MARCAS_MINIMAS = 3;
-
-// LO QUE ELLA SE DICE POR DENTRO NO CUENTA COMO DIAGNOSTICO.
-//
-// Las reglas piden que se le pongan sus frases entrecomilladas, y dentro de
-// una de esas cabe perfectamente "lo que me pasa es que estoy cansada" o "por
-// eso soy asi". Eso no es el documento explicandole de donde le viene: es ella
-// diciendoselo, que es justo lo que hay que escribir. Asi que lo que va entre
-// comillas se quita antes de mirar.
-// Las comillas se escriben de muchas maneras y hay que cogerlas todas: las
-// angulares, las tipograficas de abrir y de cerrar, y las rectas.
-const sinLoEntrecomillado = txt =>
-  String(txt || '').replace(/[\u00ab\u201c\u2018"']([^\u00ab\u00bb\u201c\u201d\u2018\u2019"']{0,300})[\u00bb\u201d\u2019"']/g, ' ');
-
-// Solo las palabras que explican de donde le viene algo. Es lo que vale para
-// los cuatro puntos que no son el plan: ahi no se cuenta como se hace nada, asi
-// que pedirles marcas de que-hacer seria reescribirlos siempre.
-function soloPalabrasDeDiagnostico(texto) {
-  const limpio = sinTildes(sinLoEntrecomillado(texto));
-  return PALABRAS_DE_DIAGNOSTICO.some(re => re.test(limpio));
-}
-
-function cuentaComoEs(texto, frasesQuePerdona = 3) {
-  const frases = sinLoEntrecomillado(texto).split(/(?<=[.!?])\s+/);
-  const resto = sinTildes(frases.slice(frasesQuePerdona).join(' '));
-  if (!resto.trim()) return false;
-  if (PALABRAS_DE_DIAGNOSTICO.some(re => re.test(resto))) return true;
-  // Y contar marcas solo tiene sentido en un texto largo. Una casilla de dos
-  // frases no puede llevar tres, y exigirselas la haria reescribir siempre.
-  //
-  // EL SUELO VA POR DEBAJO DEL TOPE DE "queHaces", Y ESO ES TODO EL ASUNTO.
-  // Estaba en 120 palabras cuando el tope de esa casilla era 115: o sea que
-  // para llegar a contarse las marcas habia que haberse pasado ya de largo, y
-  // entonces salta antes la red del tope. Esta parte del codigo no se ejecuto
-  // NUNCA. Con 95 si entra: la casilla no baja de 80 y no pasa de 135, asi que
-  // casi todo lo que escribe se mira de verdad.
-  if (resto.trim().split(/\s+/).length < 95) return false;
-  return MARCAS_DE_QUE_HACER.filter(re => re.test(resto)).length < MARCAS_MINIMAS;
 }
 
 // Dos textos son el mismo aunque cambien las mayusculas, las tildes o la
 // puntuacion. Comparar dos cadenas a pelo no es criterio.
 const comoSeCompara = txt =>
   sinTildes(txt).replace(/[^a-z0-9ñ ]/g, ' ').replace(/\s+/g, ' ').trim();
-
-// ── Y QUE NINGUNO SE QUEDE A MEDIA FRASE ────────────────────
-//
-// En un plan de verdad una parte llego terminada en "y entonces lo que haces
-// es". Paso todas las comprobaciones: tenia palabras de sobra, venia en
-// parrafos y no le contaba como es. Ninguna miraba como acababa.
-//
-// Un corte grande ya lo caza la cuenta de palabras, porque el texto se queda
-// corto. Esto tapa el hueco de en medio: el que es lo bastante largo para
-// pasar y aun asi acaba colgado.
-//
-// NO SE MIRA QUE ACABE EN PUNTO, SE MIRA QUE NO ACABE COLGADO. Pidiendo el
-// punto habria que acertar la lista entera de finales buenos, y uno raro pero
-// legitimo -unas comillas de las que se le piden, unos puntos suspensivos, un
-// parentesis- se reescribiria sin motivo. Asi que se mira al reves: solo lo
-// que no puede cerrar una frase nunca.
-//
-// Y ahi entran dos cosas. Lo que se queda a medias -una letra, un numero, una
-// coma, un punto y coma, dos puntos-, que es como acaba un texto cortado. Y lo
-// que se acaba de abrir -unas comillas, un parentesis, un signo de abrir
-// interrogacion o exclamacion-, que ademas del corte delata que lo que venia
-// detras no llego.
-//
-// LOS GUIONES NO ENTRAN, aunque parezcan de lo mismo. Un inciso se cierra con
-// su guion y puede caer justo al final -asi-, y eso es un final bueno. Contarlo
-// como cortado reescribiria textos correctos, que es lo unico que esta red no
-// se puede permitir.
-const acabaColgado = txt => /[\p{L}\p{N},;:«¿¡([“‘]$/u.test(String(txt || '').trim());
 
 // ── Y QUE NINGUNA CASILLA TRAIGA UN HUECO EN VEZ DE TEXTO ───
 //
@@ -1203,48 +1033,27 @@ const MARCAS_DE_RELLENO = [
 ];
 const esRelleno = txt => MARCAS_DE_RELLENO.some(re => re.test(String(txt || '')));
 
-// SI SE LE CUELA, SE VUELVE A PEDIR. Una sola vez: aqui no se puede tirar el
-// trozo como en el P1 -eso dejaria un hueco en el documento-, asi que se pide
-// otra vez recordandoselo. Si a la segunda sigue colandose, se avisa en el
-// registro y se entrega, que es mejor que dejar la parte en blanco.
-const NO_NOMBRES_LA_CARTA =
-  'Y esto por encima de todo: en lo que escribas no puede aparecer ni una palabra de astrología. ' +
-  'Ni un planeta, ni un signo, ni una casa, ni un aspecto, ni la carta, ni el mapa. ' +
-  'Quien lo lee no ha visto nada de eso y no sabe de qué le hablas.';
-
 // "tope" es lo que se le da al primer intento, y va sin valor por defecto a
 // proposito: quien llame tiene que decirlo. Un defecto de cero apagaria el
 // reloj sin avisar y el reintento se saldria del tiempo del servidor.
-async function sinNombrarLaCarta({ que, pedir, texto, cojo = () => false, aviso = '', tope }) {
+async function otraVezSiVieneRota({ que, pedir, cojo = () => false, aviso = '', tope }) {
   const arranque = Date.now();
   const primera = await pedir('', tope);
-  const laCarta = hablaDeAstrologia(texto(primera));
-  const aMedias = cojo(primera);
-  if (!laCarta && !aMedias) return primera;
+  if (!cojo(primera)) return primera;
 
   // Y SOLO SE PIDE OTRA VEZ SI CABE. Si del tiempo del servidor no queda ni
   // para la mitad de un intento, no se pide: se entrega lo que hay, que es
   // mejor que quedarse sin nada por haberlo intentado.
   const queda = loQueQueda(arranque, tope);
   if (queda < tope / 2) {
-    console.warn(`[p2] ${que}: ${laCarta ? 'se ha colado una palabra de la carta' : 'ha venido a medias'}, pero ya no queda tiempo para pedirlo otra vez`);
+    console.warn(`[p2] ${que}: ha venido a medias, pero ya no queda tiempo para pedirlo otra vez`);
     return primera;
   }
 
-  console.warn(`[p2] ${que}: ${laCarta ? 'se ha colado una palabra de la carta' : 'ha venido a medias'}, se pide otra vez`);
+  console.warn(`[p2] ${que}: ha venido a medias, se pide otra vez`);
   const elAviso = typeof aviso === 'function' ? aviso(primera) : aviso;
-  const segunda = await pedir((laCarta ? `\n\n${NO_NOMBRES_LA_CARTA}` : '') + (aMedias ? elAviso : ''), queda);
-
-  // Y SE ENTREGA LA MENOS MALA DE LAS DOS. Pedir otra vez no garantiza que
-  // salga mejor: puede venir mas corta, o colarsele lo que a la primera no se
-  // le colo. Quedarse con la segunda a ciegas seria cambiar un fallo por otro.
-  const fallos = r => (hablaDeAstrologia(texto(r)) ? 1 : 0) + (cojo(r) ? 1 : 0);
-  const deLaSegunda = fallos(segunda);
-  if (!deLaSegunda) return segunda;
-  if (deLaSegunda < (laCarta ? 1 : 0) + (aMedias ? 1 : 0)) {
-    console.warn(`[p2] ${que}: sigue mal a la segunda, se entrega igual`);
-    return segunda;
-  }
+  const segunda = await pedir(elAviso, queda);
+  if (!cojo(segunda)) return segunda;
   console.warn(`[p2] ${que}: la segunda no ha mejorado, se entrega la primera`);
   return primera;
 }
@@ -1307,69 +1116,10 @@ const MOLDE_DE_LA_PARTE = {
   additionalProperties: false,
 };
 
-// CUANTO OCUPA CADA PUNTO, Y POR QUE AQUI CASI NO SE CUENTAN PALABRAS.
-//
-// ESTO SE INTENTO DOS VECES CONTANDO Y LAS DOS SALIO MAL, asi que queda
-// escrito para no volver a intentarlo una tercera.
-//
-// La idea era que cada parte cupiera en una hoja, y de ahi salia un tope de
-// palabras por casilla. Pero el tope se fijaba a ojo y el modelo escribia otra
-// cosa: se le pedian 135 palabras en "Que haces" y en el primer plan de verdad
-// escribio entre 156 y 206. Se subio el tope a lo que habia escrito ese
-// documento, y eso tampoco vale: era el documento de UNA clienta. La
-// siguiente trae otros desafios, y lo que hay que explicarle no ocupa lo
-// mismo. Cualquier cifra fija va a estar mal para alguien.
-//
-// Y equivocarse ahi es caro por los dos lados. Si el tope se queda corto, se
-// reescribe una parte que estaba bien -un minuto de reloj y el doble de
-// dinero, cada vez- y encima el modelo, intentando obedecer, corta el texto a
-// media frase. Si el tope se pasa, no hace nada.
-//
-// ASI QUE NO SE CUENTAN PALABRAS PARA DECIDIR SI UN TEXTO VALE. Se mira lo que
-// miraria alguien releyendo esto antes de mandarselo a una persona:
-//
-//   QUE ESTE TERMINADO. Que no se quede a media frase. -> acabaColgado
-//   QUE DIGA ALGO.      Que no venga vacia ni con una palabra de relleno
-//                       haciendo bulto.                -> esRelleno, y el suelo
-//   QUE NO LE REPITA    Que no vuelva a contarle como es y de donde le viene,
-//   EL OTRO DOCUMENTO.  que eso ya lo pago.            -> cuentaComoEs
-//   QUE SE LEA.         Que la orden venga en parrafos y no en un ladrillo.
-//
-// Eso si vale para cualquier clienta, porque no depende de cuanto tenga que
-// decirle: depende de si lo dicho esta entero.
-//
-// LO QUE SE LE PIDE, QUE NO ES LO MISMO QUE LO QUE SE RECHAZA. En el encargo si
-// va una cifra, porque sin ella el modelo no sabe si le estas pidiendo cuatro
-// lineas o cuatro hojas. Es una guia para que apunte, no una regla que se
-// comprueba despues. Sale de lo que escribio cuando lo hizo bien.
+// CUANTO OCUPA CADA PUNTO. Es la cifra que va en el encargo, para que el
+// modelo sepa el tamano de cada cosa. No se comprueba despues: aqui no se
+// cuentan palabras para decidir si un texto vale.
 const PALABRAS_PEDIDAS = { tuPrueba: 60, queHaces: 180, dondeTeCaes: 25, cuandoTeCaes: 20 };
-
-// Y UN SUELO, que es el unico limite que si se comprueba. No esta para que
-// llene: esta para cazar la casilla que viene vacia de contenido pareciendo
-// entera -"placeholder", una linea suelta, media idea-. Va deliberadamente muy
-// por debajo de lo que escribe: aqui no se rechaza nada por ser corto si de
-// verdad ha dicho lo que tenia que decir.
-const PALABRAS_MINIMAS = { tuPrueba: 25, queHaces: 90, dondeTeCaes: 12, cuandoTeCaes: 10 };
-
-// Y UNA LINEA DE LARGO DE VERDAD, medida con los dos planes que han salido.
-//
-// Al quitar el tope de golpe el documento se doblo: de 19 paginas a 37. "Que
-// haces" paso de 156-206 palabras a 192-334, y "Tu prueba" de 38-99 a 100-172.
-// El documento no mejora por ser mas largo: quien lo lee no relee, y a las
-// treinta y siete paginas ya no lee.
-//
-// Asi que vuelve a haber una linea, y estas cifras salen de los dos documentos,
-// contadas: por encima de lo mas largo que escribio el que salio bien -para que
-// no reescriba nada que estaba bien- y por debajo de lo que escribio el que se
-// doblo. Ni pegadas a lo que se le pide ni sin techo.
-//
-//                se le pide   el bueno llego a   se rechaza a partir de
-//   tuPrueba          60             99                   115
-//   queHaces         180            206                   240
-//   dondeTeCaes       25             35                    45
-//   cuandoTeCaes      20             23                    32
-const SE_HA_DESBOCADO_EN = { tuPrueba: 115, queHaces: 240, dondeTeCaes: 45, cuandoTeCaes: 32 };
-const SE_HA_DESBOCADO = punto => SE_HA_DESBOCADO_EN[punto];
 
 // QUIEN ESCRIBE NO DECIDE NADA.
 //
@@ -1392,7 +1142,7 @@ Escribes UNA parte del documento. Esta parte va de esto: ${parte.deQueVa}
 
 Y EL TÍTULO LO PONES TÚ, que es lo primero que se lee de esta parte y va en grande en su propia página.
 
-Habla de lo que ella va a hacer o de en quién se convierte, nunca de lo que le pasa: es un título de plan, no de diagnóstico. Corto, sin dos puntos y sin subtítulos.
+Habla de lo que va a hacer quien lo lee o de en quién se convierte, nunca de lo que le pasa: es un título de plan, no de diagnóstico. Corto, sin dos puntos y sin subtítulos.
 
 Se entiende solo, leído de paso y sin nada alrededor. Si para saber de qué va hay que bajar a leer el texto, está mal.
 
@@ -1409,7 +1159,7 @@ CADA UNA DE LAS CUATRO ES SU PROPIO TEXTO, seguido, en párrafos, sin títulos d
 LAS CUATRO, Y LO QUE VA EN CADA UNA:
 
 "tuPrueba"
-Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo suyo que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas ${PALABRAS_PEDIDAS.tuPrueba} palabras para hacerte una idea del tamaño. Si lo dices en menos, mejor.
+Qué le pone la vida delante aquí y en quién se convierte el día que lo supere. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo propio que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas ${PALABRAS_PEDIDAS.tuPrueba} palabras para hacerte una idea del tamaño. Si lo dices en menos, mejor.
 
 "queHaces"
 Es la más larga de las cuatro y por la que ha pagado. Te dan UNA sola cosa que hacer, y como es una, cabe explicarla entera: qué hace exactamente, cómo se hace las primeras veces cuando todavía no le sale, qué dice o qué hace en su lugar cuando le salga lo de siempre, y cómo lo sostiene cuando deje de ser nuevo. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Unas ${PALABRAS_PEDIDAS.queHaces} palabras, que es de sobra si no das rodeos.
@@ -1420,7 +1170,7 @@ Dónde se va a caer intentándolo, avisado antes de que le pase: lo que va a apa
 "cuandoTeCaes"
 Qué hace el día que lo deja. El paso concreto para volver -y que sea más pequeño que el del principio, porque el día que se ha caído no puede con el del principio-, y que dejarlo entraba en el plan y no significa que no sirva. Nada de animar. Unas ${PALABRAS_PEDIDAS.cuandoTeCaes} palabras.
 
-ANTES DE DARLO POR BUENO, LEE LAS CUATRO Y PREGÚNTATE ESTO DE CADA FRASE: ¿esto lo puede hacer o ver una persona? Si en una frase hay algo que solo pasa como imagen -que ella se apague, se borre, se rompa, se abra, se cierre, se llene o se vacíe- eso no es lo que le pasa, es una manera bonita de decirlo, y quien lo lee tiene que pararse a traducirlo. Se cambia por lo que hace o por lo que le ocurre de verdad. Es la frase más fácil de escribir y la que menos sirve.
+ANTES DE DARLO POR BUENO, LEE LAS CUATRO Y PREGÚNTATE ESTO DE CADA FRASE: ¿esto lo puede hacer o ver una persona? Si en una frase hay algo que solo pasa como imagen y no como algo que ocurre de verdad, eso no es lo que le pasa: es una manera bonita de decirlo, y quien lo lee tiene que pararse a traducirlo. Se cambia por lo que hace o por lo que le ocurre de verdad. Es la frase más fácil de escribir y la que menos sirve.
 
 LAS CIFRAS DE ARRIBA SON PARA QUE SEPAS EL TAMAÑO DE CADA COSA. Cuanto más corto, mejor: si lo dices en la mitad, has acertado. Lo único que no se hace nunca es cortar una frase por la mitad para que quepa. Si ves que no cabe, quitas algo entero y cierras: lo que no puede pasar es que quede a medias.
 
@@ -1435,40 +1185,12 @@ Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}
 ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
 
-  const cuantas = t => String(t || '').trim().split(/\s+/).filter(Boolean).length;
-  // En cuantos parrafos viene. La separacion la marca el modelo con una linea
-  // en blanco, y sin ella el punto mas largo sale como un muro de texto.
-  const parrafosDe = t => String(t || '').split(/\n+/).filter(x => x.trim()).length;
-  const cortos = p => PUNTOS.filter(punto => cuantas(p[punto]) < PALABRAS_MINIMAS[punto]);
-  // Se mide contra el tope CON su margen: pasarse un poco entra, pasarse de
-  // verdad se reescribe. Ver MARGEN_DE_LARGO.
-  const pasados = p => PUNTOS.filter(punto => cuantas(p[punto]) > SE_HA_DESBOCADO(punto));
-  const colgados = p => PUNTOS.filter(punto => acabaColgado(p[punto]));
-
-  const salida = await sinNombrarLaCarta({
+  const salida = await otraVezSiVieneRota({
     que: `la parte "${parte.deQueVa}"`,
-    // Se mira que los cuatro esten contados enteros, que el que manda hacer
-    // algo venga en parrafos y que ninguno se ponga a contarle otra vez como
-    // es.
-    // Lo de contar marcas de que-hacer solo vale para "que haces", que es el
-    // unico que explica como se hace algo. Su prueba o donde se cae se cuentan
-    // de otra manera y exigirselas alli haria reescribir textos buenos.
-    cojo: p => cortos(p).length > 0
-            || pasados(p).length > 0
-            || colgados(p).length > 0
-            || PUNTOS.some(punto => esRelleno(p[punto]))
-            || parrafosDe(p.queHaces) < 2
-            || cuentaComoEs(p.queHaces, 0)
-            || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto])),
-    aviso: p => cuentaComoEs(p.queHaces, 0) || PUNTOS.some(punto => soloPalabrasDeDiagnostico(p[punto]))
-      ? '\n\nY OJO: la vez anterior te pusiste a contarle cómo es y de dónde le viene. Eso ya se lo contaron entero y aquí no va. Se cuenta qué tiene delante y adónde le lleva, qué hace, dónde se cae y qué hace ese día.'
-      : pasados(p).length
-        ? `\n\nY OJO: la vez anterior "${pasados(p).map(x => BLOQUES[x]).join('", "')}" se te fue larguísimo, al triple de lo que hacía falta. Eso no es explicar más, es dar vueltas: quien lo lee no relee, y lo que sobra tapa lo que importa. Di lo que hay que decir y para.`
-      : PUNTOS.some(punto => esRelleno(p[punto]))
-        ? `\n\nY OJO: la vez anterior dejaste una casilla con una palabra de relleno dentro (${PUNTOS.filter(punto => esRelleno(p[punto])).map(x => BLOQUES[x]).join(', ')}) en vez de escribirla. Esto lo lee una persona que ha pagado por ello: las cuatro se escriben, y si te has quedado sin hilo, se vuelve a empezar esa.`
-      : colgados(p).length
-        ? `\n\nY OJO: la vez anterior algo se quedó a media frase (${colgados(p).map(x => BLOQUES[x]).join(', ')}). Se termina lo que se empieza: cada uno de los cuatro acaba su última frase, con su punto.`
-        : `\n\nY OJO: la vez anterior algo salió corto o vino de una pieza${cortos(p).length ? ` (${cortos(p).map(x => BLOQUES[x]).join(', ')})` : ''}. Cada uno de los cuatro se cuenta entero, y lo que tiene que hacer va repartido en párrafos separados por una línea en blanco. Lo que falta no es adorno: es explicar mejor lo que ya está decidido.`,
+    // Lo unico que se mira: que ninguna de las cuatro venga con una palabra de
+    // relleno en vez de texto.
+    cojo: p => PUNTOS.some(punto => esRelleno(p[punto])),
+    aviso: p => `\n\nY OJO: la vez anterior dejaste una casilla con una palabra de relleno dentro (${PUNTOS.filter(punto => esRelleno(p[punto])).map(x => BLOQUES[x]).join(', ')}) en vez de escribirla. Esto lo lee una persona que ha pagado por ello: las cuatro se escriben, y si te has quedado sin hilo, se vuelve a empezar esa.`,
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
       que: `escribir "${parte.deQueVa}"`,
@@ -1480,7 +1202,6 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
       molde: MOLDE_DE_LA_PARTE,
       espera: AbortSignal.timeout(cuanto),
     }),
-    texto: p => PUNTOS.map(punto => p[punto]).join(' '),
   });
 
   const escrita = { titulo: String(salida.titulo || '').trim() };
