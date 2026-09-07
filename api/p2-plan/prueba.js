@@ -1583,6 +1583,35 @@ pdf.addEventListener('click', async () => {
   pdf.disabled = false;
 });
 
+// LO QUE HA DECIDIDO LA PRIMERA LLAMADA, PARA PODER MIRARLO.
+//
+// De la pagina de pruebas y de ningun sitio mas: la clienta nunca ve esto. Es
+// para ver de un vistazo cuantas partes han salido, de que desafios sale cada
+// una y que le pide hacer, que es lo unico que hay que mirar para saber si esa
+// llamada lo ha hecho bien o esta repitiendo.
+function pintarLoDecidido(partes) {
+  const raiz = v => String(v || '').toLowerCase().normalize('NFD').replace(/[^a-z]/g, '')
+    .replace(/(?:se|le|les|la|las|lo|los|me|te|nos)$/, '');
+  const cuantos = {};
+  for (const p of partes) { const r = raiz(p.movimiento); cuantos[r] = (cuantos[r] || 0) + 1; }
+  const repetidos = Object.keys(cuantos).filter(r => r && cuantos[r] > 1);
+
+  const filas = partes.map((p, i) =>
+    '<tr class="' + (repetidos.includes(raiz(p.movimiento)) ? 'choca' : '') + '">' +
+      '<td>' + (i + 1) + '</td>' +
+      '<td>' + escapar(p.titulo || '') + '</td>' +
+      '<td>' + escapar((p.deCuales || []).join(', ')) + '</td>' +
+      '<td class="verbo">' + escapar(p.movimiento || '') + '</td>' +
+      '<td>' + escapar(p.queHaces || '') + '</td>' +
+    '</tr>').join('');
+
+  return '<details class="decidido" open><summary>Lo que ha decidido la primera llamada — ' +
+    partes.length + ' partes</summary>' +
+    (repetidos.length ? '<p class="choque">Ojo: hay movimientos repetidos (' + escapar(repetidos.join(', ')) + ')</p>' : '') +
+    '<table><tr><th>#</th><th>Título</th><th>Desafíos</th><th>Movimiento</th><th>Lo que le manda hacer</th></tr>' +
+    filas + '</table></details>';
+}
+
 // Cada parte con sus cuatro puntos, cada uno con su nombre para saber de que
 // habla y para poder volver a buscarlo.
 function pintarParte(p, n, total) {
