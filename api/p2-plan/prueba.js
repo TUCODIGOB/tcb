@@ -543,6 +543,30 @@ const TECHO_DE_LIMPIAR = 32000;
 const MOLDE_DE_LIMPIAR = {
   type: 'object',
   properties: {
+    // LO PRIMERO, Y ES LO QUE HACE QUE ESTO FUNCIONE: una linea por cada cosa
+    // de la lista, diciendo que hace ella ahi.
+    //
+    // Antes esto se le pedia "para ti, sin escribirlo en ningun sitio", y por
+    // eso no lo hacia de verdad: decidia de memoria, cazaba lo evidente y
+    // entregaba. En un plan real de veinte desafios quito cinco y dejo cuatro
+    // que mandaban lo mismo -y en uno de los que quito escribio "misma conducta
+    // que la 1", o sea que vio el patron una vez y no lo aplico al resto.
+    //
+    // Escribiendolas tiene que pasar por las veinte, una a una, y despues
+    // compara veinte lineas cortas en vez de veinte descripciones largas. Es
+    // ahi donde los repetidos se ven.
+    conductas: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          numero: { type: 'integer' },
+          queHace: { type: 'string' },
+        },
+        required: ['numero', 'queHace'],
+        additionalProperties: false,
+      },
+    },
     sequedan: { type: 'array', items: { type: 'integer' } },
     sequitan: {
       type: 'array',
@@ -557,7 +581,7 @@ const MOLDE_DE_LIMPIAR = {
       },
     },
   },
-  required: ['sequedan', 'sequitan'],
+  required: ['conductas', 'sequedan', 'sequitan'],
   additionalProperties: false,
 };
 
@@ -581,11 +605,13 @@ TU ÚNICO TRABAJO ES DECIR CUÁLES SE QUEDAN. Aquí no se escribe nada del docum
 
 Cada una de las que dejes va a ser una parte del documento. Si dejas dos que dicen lo mismo, ella lee dos veces la misma cosa, cree que tiene el doble de trabajo del que tiene, y deja de fiarse.
 
-CÓMO SE COMPARAN
+CÓMO SE COMPARAN, Y ESTO VA EN DOS PASOS
 
-De cada una, dite para ti en tres o cuatro palabras QUÉ ESTÁ HACIENDO ELLA ahí. No de qué habla ni dónde le pasa: qué hace. Eso no lo escribes en ningún sitio, es para ti.
+PRIMERO, ESCRIBE LA CONDUCTA DE CADA UNA. Recorre la lista entera, de la primera a la última, sin saltarte ninguna, y de cada una escribe en una frase QUÉ ESTÁ HACIENDO ELLA ahí. No de qué habla ni dónde le pasa: qué hace. Una frase corta y en sus palabras, la que dirías tú al contarlo.
 
-Ahora mira esa lista de conductas y compáralas entre sí, todas con todas. Las que se repitan te están diciendo que ahí hay una sola cosa contada varias veces.
+Esto no es un trámite ni un adorno: es cómo se hace este trabajo. Comparar descripciones largas leyéndolas de corrido no sale, se escapan la mitad. Comparar frases cortas puestas en fila, sí.
+
+DESPUÉS, MIRA ESAS FRASES Y COMPÁRALAS ENTRE SÍ, todas con todas. Las que se repitan te están diciendo que ahí hay una sola cosa contada varias veces.
 
 Léelas así y no por cómo están escritas. Vienen redactadas por separado, así que dos idénticas por debajo pueden no compartir ni una palabra, y dos que suenan parecido pueden ser distintas. Y da igual que a una le pase en un sitio de su vida y a otra en otro: el sitio no las hace distintas, la conducta sí.
 
@@ -601,6 +627,7 @@ Y NADA MÁS. Lo que no entre en esos tres casos se queda. No hay número que cum
 
 LO QUE DEVUELVES
 
+"conductas": una por cada número de la lista, sin saltarte ninguna, con lo que hace ella en esa.
 "sequedan": los números de las que se quedan, en el orden en que están abajo.
 "sequitan": las que quitas, cada una con su número y, en media línea, por qué. Si una se va por decir lo mismo que otra, di cuál.
 
@@ -623,6 +650,12 @@ ${susDesafios(rasgos)}`;
 
   // Solo numeros que existan, sin repetir y en el orden de la lista.
   const validos = new Set(desafios.map((_, i) => i + 1));
+
+  // Lo que ha escrito de cada una. No se usa para decidir nada -eso ya lo ha
+  // decidido el- pero se guarda para poder mirar en que se ha basado.
+  const conductas = (Array.isArray(salida.conductas) ? salida.conductas : [])
+    .map(x => ({ numero: Number(x?.numero), queHace: String(x?.queHace || '').trim() }))
+    .filter(x => validos.has(x.numero) && x.queHace);
   const sequedan = [...new Set((Array.isArray(salida.sequedan) ? salida.sequedan : [])
     .map(Number).filter(n => validos.has(n)))].sort((a, b) => a - b);
 
@@ -641,6 +674,7 @@ ${susDesafios(rasgos)}`;
   }
 
   return {
+    conductas,
     sequedan,
     sequitan,
     // Las descripciones de las que se quedan, ya listas para el paso siguiente.
