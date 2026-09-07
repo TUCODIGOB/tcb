@@ -486,13 +486,10 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
 // suelen llevar titulos muy distintos -es lo que hace el P1 al escribirlos-,
 // asi que comparar por el titulo no junta nada. Por la descripcion si.
 //
-// EL PORQUE VA DETRAS de cada uno: es lo que le hizo instalarse y lo que hay
-// que darle la vuelta.
 function susDesafios(rasgos) {
   return (rasgos?.desafios || [])
     .filter(r => r && String(r.descripcion || '').trim())
-    .map((r, i) => `${i + 1}. ${String(r.descripcion).trim()}` +
-      (r.causa ? `\n   PORQUE: ${String(r.causa).trim()}` : ''))
+    .map((r, i) => `${i + 1}. ${String(r.descripcion).trim()}`)
     .join('\n\n');
 }
 
