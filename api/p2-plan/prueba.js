@@ -914,6 +914,7 @@ async function anadirLosRepetidos(resultado, espera) {
     return;
   }
   if (!grupos.length) return;
+  resultado.repetidos = grupos;
 
   const dicho = grupos.map(g => {
     const titulos = g.cuales.map(n => `"${resultado.plan.partes[n - 1].titulo}"`).join(' y ');
@@ -994,9 +995,64 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
 
   // Y SE QUEDA EL MEJOR DE LOS DOS. Pedir otra vez no garantiza que salga
   // mejor: el segundo puede venir peor que el primero.
-  if (segundo.falla.length < primero.falla.length) return segundo.plan;
-  console.warn('[p2] el segundo plan no ha mejorado, se entrega el primero');
-  return primero.plan;
+  const mejor = segundo.falla.length < primero.falla.length ? segundo : primero;
+  if (mejor === primero) console.warn('[p2] el segundo plan no ha mejorado, se entrega el primero');
+
+  // ── 4. Y AQUI NO SE NEGOCIA: SI SIGUEN REPETIDAS, SE JUNTAN ─
+  //
+  // Hasta aqui todo era pedirselo al modelo, y pedir no es garantizar. Si
+  // despues de dos intentos y dos repasos AUN quedan dos partes mandando lo
+  // mismo, no se entrega asi: las junta el codigo, que para eso el repaso ya ha
+  // dicho exactamente cuales son.
+  //
+  // Es lo unico que convierte esto en una garantia. El documento no puede salir
+  // con dos partes que le mandan la misma cosa: ella creeria que tiene diez
+  // cosas que hacer cuando tiene seis.
+  return { partes: juntarLasRepetidas(mejor) };
+}
+
+// Deja UNA parte por cada grupo que mandaba lo mismo.
+//
+// SE QUEDA LA PRIMERA DEL GRUPO, que es la que quien decide puso antes y por
+// tanto la que mas peso le dio. Y se queda con los desafios de todas: lo que se
+// tira es la parte repetida, no el desafio del que salia, que asi sigue
+// contado en la que queda.
+//
+// No hace red: solo se llama al final, cuando ya se ha intentado por las
+// buenas dos veces.
+function juntarLasRepetidas(resultado) {
+  const grupos = resultado.repetidos || [];
+  const partes = resultado.plan.partes;
+  if (!grupos.length) return partes;
+
+  const sobra = new Set();
+  for (const g of grupos) {
+    const orden = [...g.cuales].sort((a, b) => a - b);
+    const sequeda = partes[orden[0] - 1];
+    if (!sequeda) continue;
+    for (const n of orden.slice(1)) {
+      const otra = partes[n - 1];
+      if (!otra || sobra.has(n)) continue;
+      // El desafio del que salia la que se cae se apunta en la que queda.
+      sequeda.deCuales = [...new Set([...(sequeda.deCuales || []), ...(otra.deCuales || [])])]
+        .sort((a, b) => a - b);
+      sobra.add(n);
+    }
+  }
+  if (!sobra.size) return partes;
+
+  const quedan = partes.filter((_, i) => !sobra.has(i + 1));
+
+  // Y NUNCA SE DEJA EL DOCUMENTO SIN DOCUMENTO. Si juntar dejara menos de tres
+  // partes, es que el repaso ha juntado de mas: se entrega lo que habia, que
+  // repetir algo es malo pero quedarse sin plan es peor.
+  if (quedan.length < 3) {
+    console.warn(`[p2] juntar las repetidas dejaria solo ${quedan.length} partes, se entrega el plan entero`);
+    return partes;
+  }
+
+  console.warn(`[p2] seguian repetidas despues de dos intentos: se juntan y el plan pasa de ${partes.length} a ${quedan.length} partes`);
+  return quedan;
 }
 
 // ── LO QUE LA CLIENTA NO PUEDE LEER ─────────────────────────
