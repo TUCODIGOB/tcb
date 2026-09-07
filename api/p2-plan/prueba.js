@@ -19,9 +19,9 @@
 //   sacado del P1, y hace dos cosas: limpia la lista -junta los que dicen lo
 //   mismo, tira los que no dan para un cambio- y de los que quedan decide en
 //   corto los cuatro puntos de cada uno. No escribe ni una linea del documento.
-//   Es la unica que va con Opus: de lo que decida aqui cuelga el documento
-//   entero, y es el unico sitio donde estan todos delante a la vez, que es lo
-//   unico que permite ver que dos dicen lo mismo.
+//   Es la unica que piensa: de lo que decida aqui cuelga el documento entero,
+//   y es el unico sitio donde estan todos delante a la vez, que es lo unico
+//   que permite ver que dos dicen lo mismo.
 //
 //   UNA POR PARTE ESCRIBEN, TODAS A LA VEZ. Cada una recibe solo las cuatro
 //   lineas de su parte, y nada mas. No deciden: abren esas cuatro lineas hasta
@@ -521,11 +521,16 @@ const cuantosDesafios = rasgos => (rasgos?.desafios || [])
 // los 300 segundos que aguanta la peticion: el segundo no pide otros 200, pide
 // lo que sobre del primero, y si no sobra bastante no se pide.
 
-// SUBIDO AL PASAR A OPUS. Piensa mas rato que el de antes, y esta es la
-// llamada de la que cuelga el documento entero: si se corta, no hay nada. Se
-// le da casi todo el tiempo del servidor, y lo que sobre decide si cabe
-// pedirlo otra vez.
-const ESPERA_DEL_PLAN_MS = 235000;
+// SE PROBO CON OPUS Y SE QUITO. Pensaba mucho mas rato: en una tirada de
+// verdad paso de los tres minutos, y con el reintento detras se fue a mas de
+// cinco con la clienta mirando la pantalla. Sonnet con el esfuerzo medio es lo
+// que esta medido en esta casa y lo que termina.
+//
+// EL TOPE, AJUSTADO A ESO. Antes eran 235 segundos, que era el sitio que
+// necesitaba Opus. Con esto sobra de largo, y ademas deja tiempo de verdad
+// para pedirlo otra vez si viene mal, en vez de comerselo todo el primer
+// intento.
+const ESPERA_DEL_PLAN_MS = 120000;
 const TECHO_DEL_PLAN = 16000;
 
 // LO QUE AGUANTA LA PETICION, MENOS UN MARGEN PARA CONTESTAR. El servidor corta
@@ -691,7 +696,7 @@ Nombre de pila: ${nombre}`;
 
   const salida = await alModelo({
     que: 'decidir el plan',
-    modelo: 'claude-opus-5',
+    modelo: 'claude-sonnet-5',
     piensa: 'medium',
     techo: TECHO_DEL_PLAN,
     system: encargo,
