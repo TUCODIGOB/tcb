@@ -564,14 +564,16 @@ async function limpiarLaLista({ rasgos, espera = ESPERA_DE_LIMPIAR_MS, modelo = 
 
 QUÉ SE QUITA
 
-Revisa la descripción de todos los desafíos. Elimina los que dicen prácticamente lo mismo sobre la persona, los que sean la misma idea, dejando solo 1 de ellos, el que mas pese. Y Elimina los que se contradigan entre sí, dejando solo uno de ellos, el que mas pese.
+Revisa la descripción de todos los desafíos. Elimina los que dicen prácticamente lo mismo sobre la persona, los que sean la misma idea, dejando solo 1 de ellos, el que más pese. Y elimina los que se contradigan entre sí, dejando solo uno de ellos, el que más pese.
+
+Pesa más el que sea más concreto y central para la persona, no el más genérico.
 
 LO QUE DEVUELVES
 
 "sequedan": los números de los que se quedan, en el orden de abajo.
 "sequitan": los números de los que quitas.
 
-Cada número tiene que quedar en una sola, nunca en las 2.
+Cada número tiene que quedar en una sola, nunca en las 2. Todos los números de la lista tienen que aparecer en "sequedan" o en "sequitan", ninguno se queda fuera y ninguno se repite en las dos.
 
 LA LISTA:
 
