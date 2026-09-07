@@ -778,39 +778,10 @@ Nombre de pila: ${nombre}`;
   // entregar, y eso solo puede ser que la llamada ha venido mal.
   if (partes.length < 3) falla.push(`solo han salido ${partes.length} partes, y con eso no hay documento`);
 
-  // ── UN MOVIMIENTO DISTINTO EN CADA PARTE ──────────────────
+  // ── QUE NINGUN TITULO SE REPITA ───────────────────────────
   //
-  // ES LO QUE MATA ESTE PRODUCTO Y LO QUE PASO DE VERDAD: ordenes escritas con
-  // palabras distintas que por debajo le piden lo mismo. En un plan de verdad,
-  // tres partes de siete le pedian hablar -di lo que quieres, di lo que te
-  // apetece, di la verdad-, y quien lo lee cree que tiene siete cosas cuando
-  // tiene cinco.
-  //
-  // Comparar las ordenes por sus palabras no lo caza: estan escritas de siete
-  // maneras y no se parecen en nada. Por eso se le pide que nombre el
-  // movimiento de cada una en un verbo, y lo que se compara es el verbo.
-  //
-  // SE COMPARA EL VERBO ENTERO, quitandole antes el pronombre pegado detras.
-  // Asi hablar y hablarle cuentan como el mismo, que es lo que hay que cazar.
-  //
-  // Y NO SE COMPARAN POR EL PRINCIPIO, aunque parezca mas listo: cortando por
-  // las cinco primeras letras, entregar y entrenar salen iguales y se reharia
-  // un plan que estaba bien.
-  const raizDe = txt => sinTildes(txt).replace(/[^a-z]/g, '')
-    .replace(/(?:se|le|les|la|las|lo|los|me|te|nos)$/, '');
-  const porMovimiento = new Map();
-  for (const p of partes) {
-    const raiz = raizDe(p.movimiento);
-    if (!raiz) continue;
-    if (!porMovimiento.has(raiz)) porMovimiento.set(raiz, []);
-    porMovimiento.get(raiz).push(p.movimiento);
-  }
-  const movimientosRepetidos = [...porMovimiento.values()].filter(d => d.length > 1);
-  if (movimientosRepetidos.length) {
-    falla.push(`estas partes le piden el mismo movimiento y habia que juntarlas: ${movimientosRepetidos.map(d => d.join(' y ')).join('; ')}`);
-  }
-
-  // ── Y QUE NINGUN TITULO SE REPITA ─────────────────────────
+  // Esto si lo puede mirar el codigo: dos titulos iguales son iguales y no hay
+  // nada que interpretar.
   const porTitulo = new Map();
   for (const p of partes) {
     const cual = comoSeCompara(p.titulo);
@@ -819,47 +790,137 @@ Nombre de pila: ${nombre}`;
   }
   if ([...porTitulo.values()].some(n => n > 1)) falla.push('hay dos partes con el mismo titulo');
 
-  // ── Y QUE NO SE REPITA NINGUNA ORDEN ──────────────────────
+  // ── Y QUE DOS PARTES NO MANDEN HACER LO MISMO ─────────────
   //
-  // El movimiento lo caza casi todo, pero dos verbos distintos pueden acabar
-  // en la misma orden. Se comparan por las palabras que llevan dentro,
-  // cortadas a cinco letras para que la misma cosa escrita en otro tiempo
-  // verbal cuente como la misma, y quitando antes el armazon que llevan todas
-  // -cuando, cada, antes, hacer, cosa, vez-, porque si se deja, dos cosas
-  // distintas dichas con la misma forma salen parecidas y dos iguales dichas
-  // de otra manera no.
+  // ESO NO SE MIRA AQUI, Y AQUI ES DONDE ESTABA EL ERROR.
   //
-  // Medido con pares escritos a mano: la misma cosa dicha de dos maneras da
-  // entre 0,50 y 0,80; dos cosas distintas, aunque compartan el dia y el
-  // verbo, no pasan de 0,27. Se corta en 0,40, en medio del hueco.
-  const ARMAZON = new Set(['cuand','cada','notes','antes','despu','para','como',
-    'mismo','misma','sobre','entre','hasta','desde','porqu','pero','tambi',
-    'toda','todo','solo','sola','veces','nada','algo','otra','otro','cosa',
-    'cosas','hace','hacer','haces','dice','dices','decir','esta','este']);
-
-  const palabrasDe = txt => new Set(
-    sinTildes(txt).replace(/[^a-z0-9ñ ]/g, ' ').split(/\s+/)
-      .filter(w => w.length >= 4).map(w => w.slice(0, 5))
-      .filter(w => !ARMAZON.has(w)));
-
-  const seParecen = (a, b) => {
-    if (!a.size || !b.size) return false;
-    let juntos = 0;
-    for (const w of a) if (b.has(w)) juntos++;
-    return juntos / (a.size + b.size - juntos) >= 0.40;
-  };
-
-  const repetidas = [];
-  for (let i = 0; i < partes.length; i++) {
-    for (let j = i + 1; j < partes.length; j++) {
-      if (seParecen(palabrasDe(partes[i].queHaces), palabrasDe(partes[j].queHaces))) {
-        repetidas.push(`"${partes[i].titulo}" y "${partes[j].titulo}"`);
-      }
-    }
-  }
-  if (repetidas.length) falla.push(`estas partes mandan hacer lo mismo: ${repetidas.join('; ')}`);
+  // Antes se miraba de dos maneras, las dos contando letras: se comparaba el
+  // verbo del "movimiento" de cada parte, y se comparaban las palabras que
+  // llevaba dentro cada orden.
+  //
+  // Las dos fallaron en el primer plan de verdad, y fallaron juntas. De las
+  // diez partes, CUATRO le mandaban lo mismo -decir en voz alta lo que se
+  // calla- contado desde cuatro situaciones distintas. Ninguna de las dos
+  // comprobaciones dijo nada: el modelo habia puesto cuatro verbos distintos, y
+  // las cuatro ordenes estaban escritas sin compartir apenas palabras.
+  //
+  // Y no es que estuvieran mal ajustadas. Es que no se puede: si dos ordenes
+  // mandan lo mismo o no, es una cuestion de significado, y el significado no
+  // esta en las letras. Contando letras solo se cazan los calcos, que son
+  // justo los que no hacen dano porque se ven a simple vista.
+  //
+  // Lo unico que sabe leer dos frases y decir si mandan lo mismo es el modelo.
+  // Asi que se le pregunta: revisarRepetidos, aqui abajo.
 
   return { plan: { partes }, falla };
+}
+
+// ── QUE DOS PARTES NO MANDEN HACER LO MISMO ─────────────────
+//
+// Es lo que mata este producto. Si dos partes le piden la misma conducta con
+// otras palabras, ella cree que tiene diez cosas que hacer cuando tiene seis,
+// se dispersa, y el plan no le sirve. Paso de verdad: cuatro de diez.
+//
+// POR QUE ESTO ES UNA LLAMADA Y NO UN TROZO DE CODIGO. Porque decidir si dos
+// ordenes mandan lo mismo es entender lo que dicen, y eso no se saca contando
+// letras. "Di lo que te callas en las reuniones" y "cuando te pregunten como
+// estas, no digas bien" no comparten ni una palabra y son la misma cosa.
+//
+// ES CORTA Y BARATA: solo ve las ordenes, sin el resto del documento, no
+// escribe nada y contesta con numeros. Sonnet, sin pensar, unos segundos.
+//
+// Y NUNCA BLOQUEA. Si esta revision falla -se pasa de tiempo, el modelo
+// contesta mal-, el plan sigue su camino. Es una segunda opinion, no una
+// puerta: quedarse sin plan por no poder revisarlo seria peor que el problema.
+const ESPERA_DEL_REPASO_MS = 30000;
+
+const MOLDE_DEL_REPASO = {
+  type: 'object',
+  properties: {
+    repetidas: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          cuales: { type: 'array', items: { type: 'integer' } },
+          queMandanIgual: { type: 'string' },
+        },
+        required: ['cuales', 'queMandanIgual'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['repetidas'],
+  additionalProperties: false,
+};
+
+async function revisarRepetidos(partes, espera) {
+  if (partes.length < 2) return [];
+
+  const lista = partes.map((p, i) => `${i + 1}. ${p.queHaces}`).join('\n\n');
+
+  const encargo = `Abajo hay una lista de órdenes. Cada una es lo único que una persona tiene que hacer en una parte de su plan.
+
+Tu trabajo es UNO: decir qué órdenes le mandan hacer lo mismo.
+
+NO LAS COMPARES POR CÓMO ESTÁN ESCRITAS. Están escritas por separado, así que dos que mandan exactamente lo mismo pueden no compartir ni una palabra, y dos que se parecen mucho al leerlas pueden mandar cosas distintas.
+
+Compáralas por LA CONDUCTA que le piden. Pregúntate de cada una: ¿qué hace ella distinto a partir de mañana? Si de dos sale la misma respuesta, esas dos mandan lo mismo.
+
+Y EL SITIO NO LAS HACE DISTINTAS. Si una ocurre en el trabajo y otra con su pareja, pero la conducta es la misma, son la misma. Ese es el caso que hay que cazar y el que más se escapa.
+
+TAMPOCO LAS HACE DISTINTAS EL MOMENTO. "Cada mañana" y "cada vez que pase X" no son dos cosas si lo que hace es lo mismo.
+
+PERO NO JUNTES LO QUE NO ES. Dos órdenes que se parecen pero acaban en conductas distintas son dos. Si dudas, no las juntes: decir que se repiten cuando no se repiten hace que se tire una parte buena.
+
+Devuelve los grupos que manden lo mismo, cada uno con los números de esa lista y con una línea diciendo qué es lo que mandan igual. Si no hay ninguno, devuelve la lista vacía.
+
+LAS ÓRDENES:
+
+${lista}`;
+
+  const salida = await alModelo({
+    que: 'repasar si dos partes mandan lo mismo',
+    modelo: EL_QUE_REMATA,
+    piensa: '',
+    techo: 2000,
+    system: encargo,
+    mensaje: 'Di qué órdenes mandan hacer lo mismo, siguiendo el esquema.',
+    molde: MOLDE_DEL_REPASO,
+    espera: AbortSignal.timeout(espera),
+  });
+
+  // Solo los grupos de dos o mas, y con numeros que existan de verdad.
+  return (Array.isArray(salida.repetidas) ? salida.repetidas : [])
+    .map(g => ({
+      cuales: [...new Set((Array.isArray(g?.cuales) ? g.cuales : [])
+        .map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= partes.length))],
+      queMandanIgual: String(g?.queMandanIgual || '').trim(),
+    }))
+    .filter(g => g.cuales.length > 1);
+}
+
+// Pasa el repaso y apunta lo que encuentre en el "falla" del plan, que es lo
+// que hace que se pida otra vez y lo que se le recuerda al pedirlo.
+//
+// NUNCA LANZA. Si el repaso no sale, se dice en el registro y el plan sigue.
+async function anadirLosRepetidos(resultado, espera) {
+  if (espera < 5000) return;
+  let grupos;
+  try {
+    grupos = await revisarRepetidos(resultado.plan.partes, espera);
+  } catch (err) {
+    console.warn(`[p2] no se ha podido repasar si dos partes mandan lo mismo (${err.message}), el plan sigue`);
+    return;
+  }
+  if (!grupos.length) return;
+
+  const dicho = grupos.map(g => {
+    const titulos = g.cuales.map(n => `"${resultado.plan.partes[n - 1].titulo}"`).join(' y ');
+    return g.queMandanIgual ? `${titulos} (las dos le mandan ${g.queMandanIgual})` : titulos;
+  }).join('; ');
+  console.warn(`[p2] hay partes que mandan lo mismo: ${dicho}`);
+  resultado.falla.push(`estas partes le mandan hacer lo mismo y habia que juntarlas en una: ${dicho}`);
 }
 
 // ── Y SI EL PLAN VIENE A MEDIAS, SE PIDE OTRA VEZ ───────────
@@ -886,9 +947,19 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
     primero = await pedirElPlan({ nombre, sexo, rasgos, modelo: EL_QUE_REMATA, espera: queda });
   }
 
+  // ── 2. Y OTRA LECTURA MIRA SI DOS MANDAN LO MISMO ─────────
+  //
+  // Quien decide acaba de tener doce desafios delante y ha juntado lo que ha
+  // visto. Esto es una segunda lectura, con las ordenes ya escritas y sin nada
+  // mas: es cuando dos que mandaban lo mismo se ven de verdad.
+  //
+  // No bloquea nunca. Si no se puede repasar, el plan sigue: es una segunda
+  // opinion, no una puerta.
+  await anadirLosRepetidos(primero, loQueQueda(arranque, ESPERA_DEL_REPASO_MS));
+
   if (!primero.falla.length) return primero.plan;
 
-  // ── 2. Y SI HA VENIDO A MEDIAS, SE PIDE OTRA VEZ ──────────
+  // ── 3. Y SI HA VENIDO A MEDIAS, SE PIDE OTRA VEZ ──────────
   //
   // Con Sonnet, siempre. Este intento no esta para pensar mejor que el
   // anterior: esta para arreglar algo concreto que se le dice escrito -dos
@@ -908,7 +979,7 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
       nombre, sexo, rasgos,
       modelo: EL_QUE_REMATA,
       espera: queda,
-      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Cada parte va con su título, su movimiento en un verbo y sus cuatro cosas escritas enteras, y los movimientos son todos distintos: si dos coinciden es que esas dos eran la misma y hay que juntarlas en una, no reescribirla con otras palabras.`,
+      recordatorio: `\n\nY OJO CON ESTO, que la vez anterior salió mal: ${primero.falla.join('; ')}. Cada parte va con su título, su movimiento en un verbo y sus cuatro cosas escritas enteras. Y donde dos partes le mandaban hacer lo mismo, se JUNTAN en una sola con los dos números en "deCuales": no se reescribe una con otras palabras para que parezcan distintas, porque entonces sigue habiendo dos partes que le mandan lo mismo.`,
     });
   } catch (err) {
     // El segundo intento es una mejora, no un requisito: si se cae, se entrega
@@ -916,6 +987,10 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
     console.warn(`[p2] el segundo intento del plan se ha caido (${err.message}), se entrega el primero`);
     return primero.plan;
   }
+
+  // Y AL SEGUNDO SE LE PASA EL MISMO REPASO, porque si no se compara un plan
+  // repasado con uno sin repasar y el sin repasar siempre parece mejor.
+  await anadirLosRepetidos(segundo, loQueQueda(arranque, ESPERA_DEL_REPASO_MS));
 
   // Y SE QUEDA EL MEJOR DE LOS DOS. Pedir otra vez no garantiza que salga
   // mejor: el segundo puede venir peor que el primero.
@@ -1548,8 +1623,6 @@ const PAGINA = `<!DOCTYPE html>
   .decidido th { text-align:left; color:var(--gold); text-transform:uppercase; font-size:.68rem; letter-spacing:.1em; padding:.35rem .5rem; border-bottom:1px solid rgba(189,144,72,.3); }
   .decidido td { padding:.5rem; border-bottom:1px solid rgba(14,63,75,.08); vertical-align:top; }
   .decidido td.verbo { font-weight:600; color:var(--teal); }
-  .decidido tr.choca td { background:#fdeceb; }
-  .decidido .choque { font-family:system-ui,sans-serif; font-size:.85rem; color:var(--error); font-weight:600; margin-top:.7rem; }
   /* Al imprimir solo sale el texto. Sin esto, el aviso de la pantalla se
      colaba arriba del todo en el PDF. */
   @media print {
@@ -1766,24 +1839,25 @@ pdf.addEventListener('click', async () => {
 // una y que le pide hacer, que es lo unico que hay que mirar para saber si esa
 // llamada lo ha hecho bien o esta repitiendo.
 function pintarLoDecidido(partes) {
-  const raiz = v => String(v || '').toLowerCase().normalize('NFD').replace(/[^a-z]/g, '')
-    .replace(/(?:se|le|les|la|las|lo|los|me|te|nos)$/, '');
-  const cuantos = {};
-  for (const p of partes) { const r = raiz(p.movimiento); cuantos[r] = (cuantos[r] || 0) + 1; }
-  const repetidos = Object.keys(cuantos).filter(r => r && cuantos[r] > 1);
-
-  const filas = partes.map((p, i) =>
-    '<tr class="' + (repetidos.includes(raiz(p.movimiento)) ? 'choca' : '') + '">' +
+  // De donde sale cada parte. Una con dos o mas numeros es una que ha juntado
+  // dos desafios que decian lo mismo, que es lo que tiene que pasar.
+  const filas = partes.map((p, i) => {
+    const deCuantos = (p.deCuales || []).length;
+    return '<tr>' +
       '<td>' + (i + 1) + '</td>' +
       '<td>' + escapar(p.titulo || '') + '</td>' +
-      '<td>' + escapar((p.deCuales || []).join(', ')) + '</td>' +
+      '<td>' + escapar((p.deCuales || []).join(', ')) + (deCuantos > 1 ? ' <b>(juntados)</b>' : '') + '</td>' +
       '<td class="verbo">' + escapar(p.movimiento || '') + '</td>' +
       '<td>' + escapar(p.queHaces || '') + '</td>' +
-    '</tr>').join('');
+    '</tr>';
+  }).join('');
+
+  const juntados = partes.filter(p => (p.deCuales || []).length > 1).length;
+  const deCuantos = new Set(partes.flatMap(p => p.deCuales || [])).size;
 
   return '<details class="decidido" open><summary>Lo que ha decidido la primera llamada — ' +
-    partes.length + ' partes</summary>' +
-    (repetidos.length ? '<p class="choque">Ojo: hay movimientos repetidos (' + escapar(repetidos.join(', ')) + ')</p>' : '') +
+    partes.length + ' partes' + (deCuantos ? ' de ' + deCuantos + ' desafíos' : '') +
+    (juntados ? ', ' + juntados + ' juntando varios' : '') + '</summary>' +
     '<table><tr><th>#</th><th>Título</th><th>Desafíos</th><th>Movimiento</th><th>Lo que le manda hacer</th></tr>' +
     filas + '</table></details>';
 }
