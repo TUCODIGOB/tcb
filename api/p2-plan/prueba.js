@@ -728,16 +728,7 @@ Nombre de pila: ${nombre}`;
   const salida = await alModelo({
     que: 'decidir el plan',
     modelo,
-    // ESFUERZO BAJO, y aqui si es lo correcto: la lista ya viene limpia, asi
-    // que no queda nada que comparar. Lo que hace es mirar un desafio y decidir
-    // la conducta que le manda cambiar, uno por uno. Eso es criterio, no
-    // comparacion, y el criterio lo pone el modelo -Opus-, no el rato que
-    // piense.
-    //
-    // Se le deja bajo y no apagado porque aqui se decide lo que ella tiene que
-    // hacer, que es por lo que ha pagado, y en eso no se ahorra. Cuesta unos
-    // segundos y escribe poco.
-    piensa: 'low',
+    piensa: 'medium',
     techo: TECHO_DEL_PLAN,
     system: encargo,
     mensaje: `Decide su plan entero, siguiendo el esquema.${recordatorio}`,
