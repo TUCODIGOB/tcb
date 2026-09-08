@@ -703,9 +703,9 @@ deCuales — El número de la lista del que sale esta parte.
 
 tuPrueba — Cuál es la prueba que le pone delante la vida aquí, qué debe cambiar y en quién se convierte cuando lo transforma y lo logra.
 
-queHaces — Una sola cosa que tiene que hacer para cambiar ese desafío y transformarlo en positivo. Debe ser algo que realmente le funcione a un humano. Nada de autoayuda barata: esto debe saber hacerlo y funcionarle bien.
+queHaces — Qué debe hacer cuando eso pase para poder cambiarlo, solo el paso concreto.
 
-dondeTeCaes — El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien. Y qué debe hacer cuando eso pase para volver al camino, solo el paso concreto.
+dondeTeCaes — El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien.
 
 LO QUE NO SE PUEDE ESCRIBIR
 
