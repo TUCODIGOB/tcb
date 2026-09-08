@@ -833,7 +833,7 @@ Nombre de pila: ${nombre}`;
 // Es la unica llamada que decide, y de ella cuelga el documento entero: si
 // vuelve con dos partes, no hay documento que entregar y la clienta ha pagado
 // lo mismo.
-async function decidirElPlan({ nombre, sexo, rasgos }) {
+async function soloLimpiar({ rasgos }) {
   const arranque = Date.now();
 
   // ── 1. SE LIMPIA LA LISTA ─────────────────────────────────
@@ -862,6 +862,12 @@ async function decidirElPlan({ nombre, sexo, rasgos }) {
     e.esDelInforme = true;
     throw e;
   }
+
+  return limpia;
+}
+
+async function decidirElPlan({ nombre, sexo, limpia }) {
+  const arranque = Date.now();
 
   // ── 2. Y CON LAS QUE QUEDAN SE DECIDE EL PLAN ─────────────
   //
@@ -1150,7 +1156,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ informes: conNombre });
     }
 
-    if (accion === 'plan') {
+    if (accion === 'limpiar') {
       const { compra } = req.body || {};
       const informe = await leer(compra);
       // SIN LO QUE LE CUESTA NO HAY PLAN. Es lo unico que se le manda al
@@ -1177,10 +1183,25 @@ export default async function handler(req, res) {
         });
       }
 
+      const limpia = await soloLimpiar({ rasgos: informe.rasgos });
+      // El nombre y el sexo viajan con la limpieza: los pasos siguientes
+      // escriben con ellos y asi no hay que volver a abrir el informe.
+      return res.status(200).json({
+        limpia,
+        quien: { nombre, sexo: informe?.cliente?.sexo || '' },
+      });
+    }
+
+    if (accion === 'decidir') {
+      const { nombre, sexo, limpia } = req.body || {};
+      if (!String(nombre || '').trim() || !limpia || !Array.isArray(limpia.sequedan) || !limpia.lista) {
+        return res.status(400).json({ error: 'Falta la lista limpia y no se puede decidir el plan' });
+      }
+
       const plan = await decidirElPlan({
-        nombre,
-        sexo: informe?.cliente?.sexo || '',
-        rasgos: informe.rasgos,
+        nombre: String(nombre).trim(),
+        sexo: String(sexo || ''),
+        limpia,
       });
       // SIN PARTES NO HAY PLAN. No se le pone numero a lo que tiene que salir
       // -eso es lo que traia el relleno- pero si vuelve con dos o con ninguna,
@@ -1190,12 +1211,7 @@ export default async function handler(req, res) {
           error: `El plan ha venido con ${plan.partes.length} partes, y con eso no hay documento. Vuelve a darle.`,
         });
       }
-      // El nombre y el sexo viajan con el plan: los pasos siguientes escriben
-      // con ellos y asi no hay que volver a abrir el informe en cada uno.
-      return res.status(200).json({
-        plan,
-        quien: { nombre, sexo: informe?.cliente?.sexo || '' },
-      });
+      return res.status(200).json({ plan });
     }
 
     if (accion === 'parte') {
@@ -1351,17 +1367,25 @@ ir.addEventListener('click', async () => {
   const compra = quien.value;
   let quienEs = null;
 
-  // 1. La llamada que piensa y decide el documento entero.
+  // 1. La que limpia la lista, y despues la que decide el documento entero.
   let plan;
-  aviso.textContent = 'Limpiando la lista y decidiendo su plan…';
+  let marca = Date.now();
+  const cuanto = () => {
+    const va = Math.round((Date.now() - marca) / 1000) + 's';
+    marca = Date.now();
+    return va;
+  };
+  aviso.textContent = 'Limpiando la lista…';
   try {
-    const r = await llamar({ accion:'plan', compra });
-    plan = r.plan;
-    quienEs = r.quien;
+    const uno = await llamar({ accion:'limpiar', compra });
+    quienEs = uno.quien;
     // El servidor no deja pasar un informe sin nombre, asi que esto no
     // deberia saltar nunca. Pero si saltara, es mejor pararse aqui que
     // escribir las partes dirigidas a "undefined".
     if (!quienEs || !quienEs.nombre) throw new Error('El informe ha venido sin el nombre del cliente');
+    aviso.textContent = 'Limpiada en ' + cuanto() + '. Decidiendo su plan…';
+    const dos = await llamar({ accion:'decidir', nombre:quienEs.nombre, sexo:quienEs.sexo, limpia: uno.limpia });
+    plan = dos.plan;
   } catch (e) {
     aviso.className = 'aviso error';
     aviso.textContent = 'No se ha podido decidir el plan: ' + e.message;
@@ -1382,7 +1406,7 @@ ir.addEventListener('click', async () => {
   salida.insertAdjacentHTML('beforeend', pintarLoDecidido(plan.partes, plan.limpieza));
 
   const total = plan.partes.length;
-  aviso.textContent = 'Escribiendo las ' + total + ' partes a la vez…';
+  aviso.textContent = 'Plan decidido en ' + cuanto() + '. Escribiendo las ' + total + ' partes a la vez…';
   const huecos = plan.partes.map((suya, i) => {
     const hueco = document.createElement('div');
     hueco.className = 'parte';
