@@ -1369,8 +1369,12 @@ ir.addEventListener('click', async () => {
 
   // 1. La que limpia la lista, y despues la que decide el documento entero.
   let plan;
-  const reloj = Date.now();
-  const cuanto = () => Math.round((Date.now() - reloj) / 1000) + 's';
+  let marca = Date.now();
+  const cuanto = () => {
+    const va = Math.round((Date.now() - marca) / 1000) + 's';
+    marca = Date.now();
+    return va;
+  };
   aviso.textContent = 'Limpiando la lista…';
   try {
     const uno = await llamar({ accion:'limpiar', compra });
