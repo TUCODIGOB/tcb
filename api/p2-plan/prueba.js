@@ -703,7 +703,7 @@ deCuales — El número de la lista del que sale esta parte.
 
 tuPrueba — Cuál es la prueba que le pone delante la vida aquí, qué debe cambiar y en quién se convierte cuando lo transforma y lo logra.
 
-queHaces — Qué debe hacer cuando eso pase para poder cambiarlo, solo el paso concreto.
+queHaces — Qué debe hacer cuando eso pase para poder cambiarlo, solo el paso concreto. Si la acción lleva plazo, puede ser de horas, días o semanas, pero nunca más de un mes.
 
 dondeTeCaes — El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien.
 
