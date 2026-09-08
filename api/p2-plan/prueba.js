@@ -944,6 +944,12 @@ const MARCAS_DE_RELLENO = [
 ];
 const esRelleno = txt => MARCAS_DE_RELLENO.some(re => re.test(String(txt || '')));
 
+// Y QUE NINGUN TEXTO ACABE A MEDIA FRASE. Se mira al reves de pedir el punto:
+// solo lo que no puede cerrar una frase nunca -una letra, un numero, una coma,
+// dos puntos, o algo que se acaba de abrir-. Los guiones no entran: un inciso
+// puede cerrarse con su guion al final y eso es un final bueno.
+const acabaColgado = txt => /[\p{L}\p{N},;:«¿¡([“‘]$/u.test(String(txt || '').trim());
+
 // "tope" es lo que se le da al primer intento, y va sin valor por defecto a
 // proposito: quien llame tiene que decirlo. Un defecto de cero apagaria el
 // reloj sin avisar y el reintento se saldria del tiempo del servidor.
@@ -1073,10 +1079,12 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
 
   const salida = await otraVezSiVieneRota({
     que: `la parte "${parte.titulo}"`,
-    // Lo unico que se mira: que ninguna de las tres venga con una palabra de
-    // relleno en vez de texto.
-    cojo: p => PUNTOS.some(punto => esRelleno(p[punto])),
-    aviso: p => `\n\nY OJO: la vez anterior dejaste una casilla con una palabra de relleno dentro (${PUNTOS.filter(punto => esRelleno(p[punto])).map(x => BLOQUES[x]).join(', ')}) en vez de escribirla. Esto lo lee una persona que ha pagado por ello: las tres se escriben, y si te has quedado sin hilo, se vuelve a empezar esa.`,
+    // Lo que se mira: que ninguna de las tres venga con una palabra de relleno
+    // en vez de texto, y que ninguna se quede a media frase.
+    cojo: p => PUNTOS.some(punto => esRelleno(p[punto]) || acabaColgado(p[punto])),
+    aviso: p => !PUNTOS.some(punto => esRelleno(p[punto])) && PUNTOS.some(punto => acabaColgado(p[punto]))
+      ? `\n\nY OJO: la vez anterior algo se quedó a media frase (${PUNTOS.filter(punto => acabaColgado(p[punto])).map(x => BLOQUES[x]).join(', ')}). Se termina lo que se empieza: cada uno de los tres acaba su última frase, con su punto.`
+      : `\n\nY OJO: la vez anterior dejaste una casilla con una palabra de relleno dentro (${PUNTOS.filter(punto => esRelleno(p[punto])).map(x => BLOQUES[x]).join(', ')}) en vez de escribirla. Esto lo lee una persona que ha pagado por ello: las tres se escriben, y si te has quedado sin hilo, se vuelve a empezar esa.`,
     tope: ESPERA_DE_ESCRIBIR_MS,
     pedir: (recordatorio, cuanto) => alModelo({
       que: `escribir "${parte.titulo}"`,
