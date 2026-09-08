@@ -263,7 +263,7 @@ export default async function handler(req, res) {
     const PUNTOS = ['tuPrueba', 'queHaces', 'dondeTeCaes'];
     const PORDEFECTO = {
       tuPrueba: 'Tu prueba', queHaces: 'Qué haces',
-      dondeTeCaes: 'Dónde te vas a caer y qué hacer cuando te caigas',
+      dondeTeCaes: 'Dónde te vas a caer',
     };
 
     // EL QUE VA SOBRE BEIGE. Es la orden: lo que tiene que hacer. Es lo que va

@@ -166,7 +166,7 @@ Español, año, día, más, está, aquí, así, también, después, sensación, 
 const BLOQUES = {
   tuPrueba:     'Tu prueba',
   queHaces:     'Qué haces',
-  dondeTeCaes:  'Dónde te vas a caer y qué hacer cuando te caigas',
+  dondeTeCaes:  'Dónde te vas a caer',
 };
 
 // EL ORDEN EN QUE VAN, y con el que se recorren en todas partes: al decidir,
