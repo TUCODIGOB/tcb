@@ -1077,7 +1077,7 @@ Cabe explicarla entera: qué hace exactamente, cómo se hace. Tan claro que lo p
 
 El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien. lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Unas 60 palabras para hacerte una idea del tamaño.
 
-LAS CIFRAS DE ARRIBA SON UNA GUIA, no un límite. Cuanto más corto, mejor, pero nunca cortes una frase por la mitad para que quepa: si no cabe, quitas algo entero y cierras.
+LAS CIFRAS DE ARRIBA SON UNA GUIA, no un límite. Cuanto más corto, mejor, pero debe estar bien explicado, debe entenderse bien. Y nunca cortes una frase por la mitad para que quepa: si no cabe, quitas algo entero y cierras.
 
 LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que haces tú, y hace falta: sin esa línea todo sale pegado en un bloque y no hay quien lo lea en un móvil.
 
