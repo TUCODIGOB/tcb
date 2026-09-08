@@ -453,9 +453,8 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
 // suelen llevar titulos muy distintos -es lo que hace el P1 al escribirlos-,
 // asi que comparar por el titulo no junta nada. Por la descripcion si.
 //
-function susDesafios(rasgos) {
-  return (rasgos?.desafios || [])
-    .filter(r => r && String(r.descripcion || '').trim())
+function susDesafios(desafios) {
+  return desafios
     .map((r, i) => `${i + 1}. ${String(r.descripcion).trim()}`)
     .join('\n\n');
 }
@@ -514,8 +513,7 @@ const MOLDE_DE_LIMPIAR = {
   additionalProperties: false,
 };
 
-async function limpiarLaLista({ rasgos, espera = ESPERA_DE_LIMPIAR_MS, modelo = EL_QUE_DECIDE }) {
-  const desafios = losDesafios(rasgos);
+async function limpiarLaLista({ desafios, piensa, espera = ESPERA_DE_LIMPIAR_MS, modelo = EL_QUE_DECIDE }) {
 
   // Y AQUI NO VA NADA MAS QUE LA LISTA Y SU INSTRUCCION.
   //
@@ -545,12 +543,12 @@ Cada número tiene que quedar en una sola, nunca en las 2. Todos los números de
 
 LA LISTA:
 
-${susDesafios(rasgos)}`;
+${susDesafios(desafios)}`;
 
   const salida = await alModelo({
     que: 'limpiar la lista',
     modelo,
-    piensa: 'medium',
+    piensa,
     techo: TECHO_DE_LIMPIAR,
     system: encargo,
     mensaje: 'Di cuáles se quedan y cuáles se quitan, siguiendo el esquema.',
@@ -576,31 +574,7 @@ ${susDesafios(rasgos)}`;
     sequedan.sort((a, b) => a - b);
   }
 
-  return {
-    sequedan,
-    sequitan,
-    // Los que se quedan, con su titulo, su descripcion y su porque, ya listos
-    // para el paso siguiente.
-    lista: sequedan.map((n, i) => {
-      const r = desafios[n - 1];
-      return `${i + 1}. ${String(r.nombre || '').trim()}\n   ${String(r.descripcion).trim()}` +
-        (r.causa ? `\n   PORQUE: ${String(r.causa).trim()}` : '');
-    }).join('\n\n'),
-    // El titulo de cada uno, en el mismo orden que la lista de arriba.
-    titulos: sequedan.map(n => String(desafios[n - 1].nombre || '').trim()),
-    // Los que se quitan, con su descripcion, para poder mirarlos en la pagina.
-    quitados: sequitan.map(n => ({
-      numero: n,
-      descripcion: String(desafios[n - 1].descripcion || '').trim(),
-    })),
-    // Y los que se quedan, con su descripcion, para lo mismo.
-    quedados: sequedan.map(n => ({
-      numero: n,
-      descripcion: String(desafios[n - 1].descripcion || '').trim(),
-    })),
-    // De que numero de la lista original sale cada una, para poder mirarlo.
-    deCuales: sequedan,
-  };
+  return { sequedan, sequitan };
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -835,35 +809,92 @@ Nombre de pila: ${nombre}`;
 // lo mismo.
 async function soloLimpiar({ rasgos }) {
   const arranque = Date.now();
+  const desafios = losDesafios(rasgos);
 
   // ── 1. SE LIMPIA LA LISTA ─────────────────────────────────
   //
   // Y si esto no se puede hacer, NO se sigue. Sin limpiar, lo que sale es un
   // documento con la misma cosa contada tres veces, que es peor que no darlo.
-  let limpia;
+  let primera;
   try {
-    limpia = await limpiarLaLista({ rasgos });
+    primera = await limpiarLaLista({ desafios, piensa: 'high' });
   } catch (err) {
     // Igual que abajo: si el modelo bueno no puede, termina el otro. Sin esto,
     // un fallo aqui deja a la clienta sin documento entero.
     const queda = loQueQueda(arranque, ESPERA_DE_LIMPIAR_MS);
     if (queda < ESPERA_MINIMA_PARA_REHACER_MS) throw err;
     console.warn(`[p2] ${EL_QUE_DECIDE} no ha podido limpiar la lista (${err.message}), lo termina ${EL_QUE_REMATA}`);
-    limpia = await limpiarLaLista({ rasgos, espera: queda, modelo: EL_QUE_REMATA });
+    primera = await limpiarLaLista({ desafios, piensa: 'high', espera: queda, modelo: EL_QUE_REMATA });
   }
-  console.log(`[p2] de ${limpia.sequedan.length + limpia.sequitan.length} cosas que le cuestan se quedan ${limpia.sequedan.length}` +
-    (limpia.sequitan.length ? `; fuera: ${limpia.sequitan.join(', ')}` : ''));
+  console.log(`[p2] de ${desafios.length} cosas que le cuestan se quedan ${primera.sequedan.length}` +
+    (primera.sequitan.length ? `; fuera: ${primera.sequitan.join(', ')}` : ''));
 
-  if (limpia.sequedan.length < 3) {
+  // ── 2. Y SE REPASA LO QUE HA QUEDADO ──────────────────────
+  //
+  // Con los que quedaron, otra vez lo mismo: si sigue habiendo dos que dicen
+  // lo mismo o que se contradicen, se quita uno. Si no hay nada que quitar, no
+  // quita nada.
+  let sequedan = primera.sequedan;
+  const sequitan = [...primera.sequitan];
+  if (sequedan.length >= 3) {
+    const queda = loQueQueda(arranque, ESPERA_DE_LIMPIAR_MS);
+    if (queda >= ESPERA_MINIMA_PARA_REHACER_MS) {
+      try {
+        const repaso = await limpiarLaLista({
+          desafios: sequedan.map(n => desafios[n - 1]),
+          piensa: 'medium',
+          espera: queda,
+        });
+        // Los numeros del repaso son los de la lista que se le paso, no los de
+        // la lista original: se traducen.
+        const quitaAhora = repaso.sequitan.map(n => sequedan[n - 1]).filter(Boolean);
+        sequedan = repaso.sequedan.map(n => sequedan[n - 1]).filter(Boolean);
+        sequitan.push(...quitaAhora);
+        sequitan.sort((a, b) => a - b);
+        console.log(`[p2] el repaso deja ${sequedan.length}` +
+          (quitaAhora.length ? `; fuera tambien: ${quitaAhora.join(', ')}` : '; no ha quitado ninguna'));
+      } catch (err) {
+        // El repaso es una mejora, no un requisito: si se cae, se sigue con lo
+        // que dejo la primera.
+        console.warn(`[p2] el repaso de la limpieza se ha caido (${err.message}), se sigue con la primera`);
+      }
+    }
+  }
+
+  if (sequedan.length < 3) {
     // No es un fallo del servidor: es que ese informe no da para un plan. Se
     // marca como tal para que la pagina lo diga con sus palabras y no como si
     // se hubiera roto algo.
-    const e = new Error(`después de limpiar solo quedan ${limpia.sequedan.length} cosas que le cuesten, y con eso no hay documento`);
+    const e = new Error(`después de limpiar solo quedan ${sequedan.length} cosas que le cuesten, y con eso no hay documento`);
     e.esDelInforme = true;
     throw e;
   }
 
-  return limpia;
+  return {
+    sequedan,
+    sequitan,
+    // Los que se quedan, con su titulo, su descripcion y su porque, ya listos
+    // para el paso siguiente.
+    lista: sequedan.map((n, i) => {
+      const r = desafios[n - 1];
+      return `${i + 1}. ${String(r.nombre || '').trim()}\n   ${String(r.descripcion).trim()}` +
+        (r.causa ? `\n   PORQUE: ${String(r.causa).trim()}` : '');
+    }).join('\n\n'),
+    // El titulo de cada uno, en el mismo orden que la lista de arriba.
+    titulos: sequedan.map(n => String(desafios[n - 1].nombre || '').trim()),
+    // Los que se quitan, con su descripcion, para poder mirarlos en la pagina.
+    quitados: sequitan.map(n => ({
+      numero: n,
+      descripcion: String(desafios[n - 1].descripcion || '').trim(),
+    })),
+    // Y los que se quedan, con su descripcion, para lo mismo.
+    quedados: sequedan.map(n => ({
+      numero: n,
+      descripcion: String(desafios[n - 1].descripcion || '').trim(),
+    })),
+    // De que numero de la lista original sale cada una, para poder mirarlo.
+    deCuales: sequedan,
+  };
 }
 
 async function decidirElPlan({ nombre, sexo, limpia }) {
