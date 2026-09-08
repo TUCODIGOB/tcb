@@ -1065,7 +1065,7 @@ Cuál es la prueba que le pone delante la vida aquí, qué debe cambiar y en qui
 
 Se abre siempre con una frase que le explique de qué se trata: la situación concreta que le pasa a quien lee, para que al leerla se reconozca enseguida, nunca por la idea. Y se cuenta como lo que tiene delante y le toca aprender, no como algo propio que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro. Que sea una prueba se nota en cómo está contado.
 
-Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas 120 palabras para hacerte una idea del tamaño.
+Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas 100 palabras para hacerte una idea del tamaño.
 
 "queHaces"
 
