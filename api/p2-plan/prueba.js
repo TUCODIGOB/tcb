@@ -1061,17 +1061,21 @@ LAS TRES, Y LO QUE VA EN CADA UNA:
 
 "tuPrueba"
 
-Cuál es la prueba que le pone delante la vida aquí, qué debe cambiar y en quién se convierte cuando lo transforma y lo logra. Se entra por lo que le pasa a quien lee, nunca por la idea, y se cuenta como lo que tiene delante y le toca aprender, no como algo propio que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro y encima ya lo pone en el título. Que sea una prueba se nota en cómo está contado. Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas 60 palabras para hacerte una idea del tamaño. Si lo dices en menos, mejor.
+Cuál es la prueba que le pone delante la vida aquí, qué debe cambiar y en quién se convierte cuando lo transforma y lo logra.
+
+Se abre siempre con una frase que le explique de qué se trata: la situación concreta que le pasa a quien lee, para que al leerla se reconozca enseguida, nunca por la idea. Y se cuenta como lo que tiene delante y le toca aprender, no como algo propio que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro. Que sea una prueba se nota en cómo está contado.
+
+Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas 120 palabras para hacerte una idea del tamaño.
 
 "queHaces"
 
 Qué debe hacer cuando eso pase para poder cambiarlo, solo el paso concreto.
 
-Cabe explicarla entera: qué hace exactamente, cómo se hace. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Unas 60 palabras, que es de sobra si no das rodeos.
+Cabe explicarla entera: qué hace exactamente, cómo se hace. Tan claro que lo pueda hacer mañana sin preguntarle a nadie. No le añadas otras cosas que hacer: la que te dan y nada más, contada hasta el final. Unas 60 palabras para hacerte una idea del tamaño.
 
 "dondeTeCaes"
 
-El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien. lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Unas 60 palabras para hacerte una idea del tamaño. Si lo dices en menos, mejor.
+El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien. lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Unas 60 palabras para hacerte una idea del tamaño.
 
 LAS CIFRAS DE ARRIBA SON UNA GUIA, no un límite. Cuanto más corto, mejor, pero nunca cortes una frase por la mitad para que quepa: si no cabe, quitas algo entero y cierras.
 
