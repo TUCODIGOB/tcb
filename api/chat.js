@@ -632,11 +632,6 @@ const POR_AREA = {
 // ═════════════════════════════════════════════════════════════════
 // A QUE AREA DEL ESTUDIO PERTENECE CADA RASGO
 //
-// No lo decide el modelo: lo calcula el codigo a partir de la posicion de la
-// carta de la que sale el rasgo, que es lo que el modelo escribe en la casilla
-// "origen". Asi el area siempre es la misma para la misma posicion, y no
-// depende de que acierte al elegir.
-//
 // El reparto es el estandar en astrologia: cada casa es una parcela de la vida
 // y cada planeta una funcion, y cada una cae en el area del estudio que habla
 // de eso mismo.
