@@ -425,20 +425,17 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     },
     {
       id: 5,
-      prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo vive las relaciones de pareja.
-
+      prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo vive los ligues y las relaciones de pareja. 
 EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cómo es en el amor: cómo se comporta cuando quiere a alguien de verdad, cómo lo demuestra, cuánto se entrega y cuánto se guarda, y qué le pasa con el deseo y con la intimidad.
-Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que no se está dando. Esto NO es lo mismo que lo que a ella le engancha, que va en el punto siguiente: aquí se cuenta a quién atrae ella, aunque no lo busque, y los dos puntos se cuentan enteros.
-Qué necesita de la otra persona para sentirse querida y qué le enamora: lo que le hace falta para bajar la guardia, y lo que la engancha de alguien, que no siempre es lo mismo.
+Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que no se está dando. Esto NO es lo mismo que lo que le engancha, que va en el punto siguiente: aquí se cuenta a quién atrae, aunque no lo busque, y los dos puntos se cuentan enteros.
+Qué necesita de la otra persona para sentirse querido o querida, y qué le enamora: lo que le hace falta para bajar la guardia, y lo que le engancha de alguien, que no siempre es lo mismo.
 Dónde falla siempre y por qué: el punto exacto en el que la relación se tuerce, el momento que se repite en una historia tras otra, y qué hace ahí sin darse cuenta.
 Dónde falla se cuenta aquí como lo que pasa, con hechos y momentos concretos; la idea que da por cierta y que hace que se tuerza ahí va más adelante, en su sitio, y no se cuenta dos veces.
-
 LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [A], [C], [B], [D], [E]
-
 CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el [C] entra por la parcela concreta de su vida donde se le nota. La [B] entra por una conversación, y por lo que no llegó a decir en ella. Las [D] entran por la distancia entre lo que da y lo que pide.
-
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
@@ -446,7 +443,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
-6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras.
 `
     },
     {
