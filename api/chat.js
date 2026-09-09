@@ -384,17 +384,14 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     {
       id: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que gobierna su vida sin que lo nombre.
-
 EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
 Cuál es el miedo que gobierna su vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que nombraría si le preguntaras, y de qué tiene miedo en el fondo cuando tiene miedo de eso.
 Qué se lo dispara y cómo reacciona cuando aparece: las situaciones concretas que lo encienden, y lo que hace en ese momento sin decidirlo, si se paraliza, si controla más, si se adelanta, si desaparece.
 Qué está evitando por él y qué le ha costado ya: lo que lleva años sin hacer por ese miedo, y el precio que ha pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijo a tiempo.
-
 LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [C], [B], [A], [D], [E]
-
 CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: el [C] abre el área nombrando el miedo por su nombre, a la cara y sin rodeo. La [B] entra por un objeto o un gesto concreto suyo. Las [D] entran por lo que evita hacer, y de ahí sale la idea.
-
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
@@ -402,7 +399,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
-6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras.
 `
     },
     {
