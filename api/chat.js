@@ -557,7 +557,9 @@ Edad: ${edad} años`;
         // segundos, gastaba los 3.500 tokens en pensar y devolvia el texto vacio.
         thinking: { type: 'disabled' },
         max_tokens: 3500,
-        system: SYSTEM_PROMPT,
+        // EL TONO VA DELANTE, IGUAL QUE EN EL PASO 1. Es el mismo bloque y el
+        // mismo sitio: primero como se escribe, y detras el encargo del area.
+        system: `${TONO}\n\n\n${SYSTEM_PROMPT}`,
         messages: [{
           role: 'user',
           content: `${contextoPersona}\n\n${area.prompt}${rasgosDelArea(area, rasgos)}`,
