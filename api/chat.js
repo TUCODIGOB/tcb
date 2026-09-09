@@ -831,36 +831,31 @@ function areaPorLaPosicion(origen) {
 }
 
 // ═════════════════════════════════════════════════════════════════
-// LOS RASGOS, EN DOS PASOS: PRIMERO SE ELIGEN, DESPUES SE ESCRIBEN
+// LOS RASGOS, EN DOS PASOS: PRIMERO SE BUSCAN, DESPUES SE LIMPIAN
 //
 // POR QUE ASI, Y NO DE UNA TIRADA.
 //
 // El fondo del problema, despues de un mes: al modelo se le pedia COMPARAR
-// -"lee las listas juntas y quita lo que diga lo mismo"- con el razonamiento
-// apagado. Comparar treinta cosas entre si y decidir cual sobra no se puede
-// hacer sin pensar, por bien escrita que este la orden. Ningun retoque del
-// encargo lo arreglo nunca, y no iba a arreglarlo.
-//
-// Pero pensarlo Y escribirlo en la misma llamada tampoco cabe. Se probo y se
-// corto una compra de verdad a los dos minutos y medio: aqui no se escribe una
-// lista corta, son treinta y tantos rasgos con su descripcion de tres renglones
-// y su causa, varios miles de palabras. Pensar y escribir salen del mismo
-// reloj, y el reloj lo tiene la clienta esperando delante.
+// -"lee las listas juntas y quita lo que diga lo mismo"- en la misma llamada en
+// la que tenia que buscar los rasgos y escribirlos. Y comparar treinta cosas
+// entre si y decidir cual sobra es pensar: no se hace de paso, mientras se
+// redacta. Ningun retoque del encargo lo arreglo nunca, y no iba a arreglarlo.
 //
 // Asi que son dos pasos, y ninguno hace el trabajo del otro:
 //
-//   ELEGIR    piensa. Recorre la carta, saca todos los rasgos que haya, los
-//             compara, quita los que dicen lo mismo, comprueba el suelo de cada
-//             area y les pone su etiqueta. Devuelve UNA LINEA por rasgo: de que
-//             lista es, de que area, como se llama y de donde sale. Poco texto,
-//             asi que lo que tarda es lo que piensa.
+//   BUSCAR    dos llamadas a la vez, una por lista. Cada una recorre la carta y
+//             saca sus rasgos ya escritos: titulo, descripcion, causa, area y
+//             de donde sale. No compara nada con la otra lista, porque no la ve.
+//             Sacan de mas a proposito, para que la limpieza tenga margen.
 //
-//   ESCRIBIR  no piensa, y no elige nada. Recibe esos rasgos ya decididos y les
-//             escribe la descripcion y la causa. Las dos listas van en paralelo
-//             porque a estas alturas ya no hay nada que comparar: lo que se
-//             podia pisar se quito antes.
+//   LIMPIAR   una llamada, con las dos listas juntas dentro, y un repaso detras.
+//             Aqui es donde se compara, y es lo unico que hace: no escribe ni
+//             una palabra, devuelve numeros. Por eso puede pensar alto.
 //
-// Es la misma idea que se probo antes de una tirada, partida donde tocaba.
+// LO QUE SE ESCRIBE, SE ESCRIBE UNA SOLA VEZ. La descripcion sale del paso de
+// buscar y ya no se toca: la limpieza no la puede cambiar porque no la devuelve.
+// Se tira texto que luego no se usa -el de los rasgos que se quitan-, y sale mas
+// barato que volver a leerse la carta entera para redactar lo que sobrevivio.
 // ═════════════════════════════════════════════════════════════════
 
 // Elegir piensa y escribe poco: con el esfuerzo medio ronda el minuto. Este es
