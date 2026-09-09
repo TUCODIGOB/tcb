@@ -1353,25 +1353,7 @@ async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj, esfuerzo) {
 const ESFUERZO_POR_INTENTO = ['medium', 'low'];
 
 async function sacarLasListas(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
-  let ultimoError;
-  const tiradas = Math.min(INTENTOS, ESFUERZO_POR_INTENTO.length);
-  for (let intento = 1; intento <= tiradas; intento++) {
-    const esfuerzo = ESFUERZO_POR_INTENTO[intento - 1];
-    try {
-      return await pedirLasListas(nombrePila, sexo, cartaTexto, reloj, esfuerzo);
-    } catch (err) {
-      ultimoError = err;
-      const temporal = err.temporal !== false;
-      if (!temporal || intento === tiradas) break;
-      if (!reloj.hayTiempoPara(180)) {
-        console.warn('Listas: fallo y ya no cabe otra tirada con las siete areas detras');
-        break;
-      }
-      console.warn(`Listas: la tirada con esfuerzo ${esfuerzo} fallo (${err.message.slice(0, 80)}), se repite pensando menos`);
-      await new Promise(r => setTimeout(r, 1000));
-    }
-  }
-  throw ultimoError;
+  return await pedirLasListas(nombrePila, sexo, cartaTexto, reloj);
 }
 
 // LO QUE LA CLIENTA NO PUEDE LEER.
