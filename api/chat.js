@@ -316,29 +316,39 @@ ESCRIBE CADA FRASE YA BIEN A LA PRIMERA. No escribas el área y la arregles desp
   const AREAS = [
     {
       id: 1,
-      prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí misma.
+      prompt: `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí mismo o a sí misma.
 
-Esta área abre el estudio, así que empieza con una entrada de dos o tres frases que la sitúen antes de entrar en materia, como se abre un libro. Suave, sin prisa y sin adelantar lo que viene. Solo el área 1 lleva esa entrada.
+Esta área abre el estudio, así que empieza con una entrada de dos o tres frases que le sitúen antes de entrar en materia, como se abre un libro. Suave, sin prisa y sin adelantar lo que viene. Solo el área 1 lleva esa entrada.
 
 EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+
 Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué le ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que hace por fuera. Es lo que le pone nombre a su manera de funcionar y lo que se lleva puesto al terminar de leer.
+
 Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que no pondría primero si le preguntaras. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
+
 Los puntos ciegos que no ve: lo que hace y no registra como un problema, o que registra al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
+
 Qué muestra, qué oculta y qué contradicciones tiene: la distancia entre la persona que enseña y la que guarda, y las cosas suyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a esa persona y no a un perfil que le valdría a cualquiera.
+
 Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante.
 
 LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [A], [B], [C], [D], [E]
 
-CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: la [B] entra sin avisar, pegada a la frase anterior y arrancando por el momento concreto. El [C] entra contestando algo que ella ya se ha preguntado alguna vez. Las [D] entran por la frase que ella se dice por dentro, dicha con sus palabras.
-
-No pongas título ni encabezado. Solo el texto del área. Entre 1.100 y 1.300 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: la [B] entra sin avisar, pegada a la frase anterior y arrancando por el momento concreto. El [C] entra contestando algo que ya se ha preguntado alguna vez. Las [D] entran por la frase que se dice por dentro, dicha con sus palabras.
+No pongas título ni encabezado. Solo el texto del área. Entre 1.000 y 1.100 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
+
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
+
 2. LA [B], con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
+
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
+
 5. Su nombre de pila, dos veces como mínimo y separadas.
+
 6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
 `
     },
