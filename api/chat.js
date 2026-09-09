@@ -194,7 +194,7 @@ LE HABLAS A ELLA, NUNCA DE ELLA. Todo el estudio va dirigido a la persona que lo
 ESTILO DE ESCRITURA:
 - EL TONO ES EL DE ALGUIEN QUE LA QUIERE BIEN Y SE LO DICE CLARO. Cercano y cálido, pero sin rodeos: le nombra a la cara lo que le pasa, sin suavizarlo y sin castigarla. Nunca suena a experto explicando, ni a informe, ni a libro. La fuerza está en lo que le dice, no en cómo lo adorna
 - Sin listas, sin viñetas, sin símbolos, todo en párrafos corridos
-- No uses nombres de planetas ni casas astrológicas. Pero SÍ tienes que apoyarte en ellos: la casa de cada planeta dice en qué parcela concreta de la vida se nota (trabajo, pareja, dinero, familia, cuerpo, amigos, casa, estudios), y los aspectos dicen qué partes de la persona chocan entre sí y cuáles se apoyan. Traduce eso a situaciones reales de su vida, sin nombrarlo nunca. Un texto escrito solo con el signo de cada planeta le vale igual a una de cada doce personas, y se nota al leerlo
+- No uses nombres de planetas ni casas astrológicas. Traduce lo que le pasa a situaciones reales de su vida, sin nombrarlo nunca
 - No empieces dos párrafos con la misma estructura. Varía los arranques
 - NO SE CONVIERTE EN COSA LO QUE ELLA HACE. Nada de coger su conducta, volverla un sustantivo y colgársela con un posesivo o con un artículo delante. En cuanto lo que hace se nombra como si fuera un objeto que tiene, quien lee tiene que volver atrás para entenderlo. Se dice con un verbo: qué hace
 - SE LE PONE SU VOZ: lo que se dice a sí misma por dentro cuando le pasa eso, dicho con las palabras que usaría ella y no con las de quien la observa. Eso es lo que hace que se reconozca. Sale de lo que ya se ha contado, no de suponerle nada
@@ -494,6 +494,17 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     },
   ];
 
+  // LA CARTA NATAL YA NO VIENE AQUI.
+  //
+  // Antes se le mandaba entera a cada una de las siete, y hacia falta: los
+  // rasgos llegaban con el titulo pelado y con eso no se escribe un area, asi
+  // que cada una acababa sacando lo suyo de la carta por su cuenta.
+  //
+  // Ahora los rasgos llegan escritos -titulo, descripcion y el porque de cada
+  // desafio-, que es justo lo que el area necesita y lo que su encargo le manda
+  // usar: el material del area entera son sus rasgos. La carta ya se ha leido
+  // antes, al buscarlos, y volver a ponerla delante solo le da a cada area la
+  // ocasion de irse por su cuenta a otro sitio.
   const contextoPersona = `Persona:
 Nombre completo: ${nombre}
 Nombre de pila: ${nombrePila}
@@ -501,9 +512,7 @@ Sexo: ${sexo}
 Fecha de nacimiento: ${fechaNice}
 Hora: ${hora}
 Lugar: ${lugar}
-Edad: ${edad} años
-
-${cartaTexto}`;
+Edad: ${edad} años`;
 
   // Las 7 areas se piden a la vez, asi que un fallo puntual en una sola tumbaba
   // el informe entero y gastaba un intento del cliente. Ahora cada area se
