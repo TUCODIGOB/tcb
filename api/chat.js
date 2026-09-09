@@ -866,7 +866,7 @@ function areaPorLaPosicion(origen) {
 // Elegir piensa y escribe poco: con el esfuerzo medio ronda el minuto. Este es
 // el tope con el que salio un informe entero, y se deja aqui a proposito: si
 // se estira, la segunda tirada -la de abajo, pensando menos- ya no cabe detras.
-const TOPE_DE_ELEGIR = 100000;
+const TOPE_DE_ELEGIR = 120000;
 // Escribir no piensa, pero suelta varios miles de palabras.
 const TOPE_DE_ESCRIBIR = 110000;
 
@@ -1046,10 +1046,6 @@ Nombre de pila: ${nombrePila}`;
   const salida = await alModelo({
     que: `elegir los rasgos (${cual})`,
     modelo: 'claude-opus-5',
-    // PENSANDO, y esta es la unica del informe que lo hace. Es todo el cambio:
-    // sin esto no puede comparar, y sin comparar salen los repetidos y las
-    // etiquetas cambiadas de sitio.
-    //
     // EL ESFUERZO, MEDIO, Y MEDIDO.
     //
     // Con este esfuerzo la llamada termina: la tirada que salio entera y con el
