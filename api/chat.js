@@ -355,19 +355,22 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     {
       id: 2,
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué repite una y otra vez sin darse cuenta.
-
 EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
-Cuáles son sus patrones: los que de verdad le gobiernan la vida, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera.
+
+
+Cuáles son sus patrones: los que de verdad le gobiernan la vida y el día a día, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera. 
+
+
 Qué los enciende: la situación exacta que los dispara, la que hace saltar el automatismo antes de que se dé cuenta. Es lo que hace que se reconozca al leerlo.
 Dónde acaba siempre: el mismo punto de llegada al que vuelve una vez tras otra, por caminos distintos y con gente distinta. Es donde ve que el patrón existe de verdad.
-Qué gana con ellos: de qué la protegen, qué le evitan, qué se ahorra cada vez que los repite. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
+Qué gana con ellos: de qué le protegen, qué le evitan, qué se ahorra cada vez que los repite. Mientras no vea eso, va a seguir creyendo que es cuestión de fuerza de voluntad.
 Lo que gana con el patrón va aquí; la creencia que lo sostiene va más adelante, en su sitio, y no se cuenta dos veces.
-
 LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [A], [D], [B], [C], [E]
-
 CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: las [D] entran por lo que hace cuando se la cree, y la idea se nombra al final, no al principio. La [B] entra dentro de un párrafo ya empezado, sin punto y aparte delante. El [C] entra por las dos partes suyas que chocan, nombradas las dos.
-
 No pongas título ni encabezado. Solo el texto del área. Entre 850 y 900 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
+
+
 
 EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
 1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
@@ -375,7 +378,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
 3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son TRES O CUATRO. Ninguno abre el área.
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
-6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras.
 `
     },
     {
