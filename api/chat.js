@@ -878,12 +878,13 @@ const ESQUEMA_DE_ELEGIR = {
       items: {
         type: 'object',
         properties: {
-          lista:  { type: 'string', enum: ['fortalezas', 'desafios'] },
-          area:   { type: 'string', enum: NOMBRES_DE_AREA },
-          nombre: { type: 'string' },
-          origen: { type: 'string' },
+          area:        { type: 'string', enum: NOMBRES_DE_AREA },
+          titulo:      { type: 'string' },
+          descripcion: { type: 'string' },
+          causa:       { type: 'string' },
+          origen:      { type: 'string' },
         },
-        required: ['lista', 'area', 'nombre', 'origen'],
+        required: ['area', 'titulo', 'descripcion', 'causa', 'origen'],
         additionalProperties: false,
       },
     },
@@ -933,8 +934,11 @@ function comoSeLeHabla(sexo) {
 }
 
 // ── PASO 1: ELEGIR ──────────────────────────────────────────
-async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'medium') {
-  const encargo = `Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
+async function pedirLosRasgos(cual, nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'medium') {
+  const encargo = `${TONO}
+
+
+Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
 
 AQUÍ NO SE ESCRIBE EL INFORME. Aquí se ELIGE. De cada rasgo sale solo su nombre y de qué posición de la carta lo has sacado; lo que se le cuenta a la persona lo escribe otro después. Por eso puedes dedicarle el rato a lo que de verdad importa: decidir cuáles entran y cuáles no.
 
@@ -1053,7 +1057,7 @@ Persona: ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombrePila}`;
 
   const salida = await alModelo({
-    que: 'elegir los rasgos',
+    que: `elegir los rasgos (${cual})`,
     modelo: 'claude-opus-5',
     // PENSANDO, y esta es la unica del informe que lo hace. Es todo el cambio:
     // sin esto no puede comparar, y sin comparar salen los repetidos y las
@@ -1087,18 +1091,36 @@ Nombre de pila: ${nombrePila}`;
 
   const rasgos = [];
   for (const r of (Array.isArray(salida.rasgos) ? salida.rasgos : [])) {
-    const nombre = String(r?.nombre ?? '').trim();
+    const nombre = String(r?.titulo ?? '').trim();
     const origen = String(r?.origen ?? '').trim();
     if (!nombre) continue;
     rasgos.push({
       nombre, origen,
+      descripcion: String(r?.descripcion ?? '').trim(),
+      causa: String(r?.causa ?? '').trim(),
       // El area la dice el modelo, que es el unico que ha leido el rasgo. Si no
       // la dice, o dice una que no existe, la saca el codigo de la posicion.
       area: areaDelRasgo(origen, String(r?.area ?? '').trim()),
-      lista: String(r?.lista ?? '').trim() === 'desafios' ? 'desafios' : 'fortalezas',
+      // La lista no la dice el modelo: cada llamada saca una, y el codigo sabe cual.
+      lista: cual,
     });
   }
   return rasgos;
+}
+
+// CADA LISTA SE PIDE POR SU CUENTA, Y SI FALLA SE REPITE SOLA.
+//
+// La segunda tirada va con el esfuerzo bajo, que es la mitad de rato: los
+// rasgos salen algo menos afinados, y eso es mucho mejor que dejar sin informe
+// a alguien que ha pagado. Se repite solo la que fallo, no las dos.
+async function unaListaDeRasgos(cual, nombrePila, sexo, cartaTexto, reloj) {
+  try {
+    return await pedirLosRasgos(cual, nombrePila, sexo, cartaTexto, reloj, 'medium');
+  } catch (err) {
+    if (err.temporal === false || !reloj.hayTiempoPara(180)) throw err;
+    console.warn(`${cual}: la tirada con esfuerzo medio fallo (${err.message.slice(0, 80)}), se repite pensando menos`);
+    return await pedirLosRasgos(cual, nombrePila, sexo, cartaTexto, reloj, 'low');
+  }
 }
 
 // ── PASO 2: ESCRIBIR ────────────────────────────────────────
@@ -1314,11 +1336,14 @@ async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, es
 // Los dos pasos, encadenados: se elige una vez y se escriben las dos listas a
 // la vez.
 async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj, esfuerzo) {
-  const elegidos = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo);
+  const [elegidasF, elegidosD] = await Promise.all([
+    unaListaDeRasgos('fortalezas', nombrePila, sexo, cartaTexto, reloj),
+    unaListaDeRasgos('desafios',   nombrePila, sexo, cartaTexto, reloj),
+  ]);
 
   const [fortalezas, desafios] = await Promise.all([
-    escribirLosRasgos('fortalezas', elegidos.filter(r => r.lista === 'fortalezas'), nombrePila, sexo, cartaTexto, reloj),
-    escribirLosRasgos('desafios',   elegidos.filter(r => r.lista === 'desafios'),   nombrePila, sexo, cartaTexto, reloj),
+    escribirLosRasgos('fortalezas', elegidasF, nombrePila, sexo, cartaTexto, reloj),
+    escribirLosRasgos('desafios',   elegidosD, nombrePila, sexo, cartaTexto, reloj),
   ]);
   return { fortalezas, desafios };
 }
