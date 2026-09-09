@@ -483,7 +483,7 @@ Edad: ${edad} años`;
     const f = suyos(rasgos.fortalezas).map(r => linea(r, false));
     const d = suyos(rasgos.desafios).map(r => linea(r, true));
     if (f.length === 0 && d.length === 0) return '';
-    return `\n\nRASGOS QUE SE LE HAN SACADO DE SU CARTA PARA ESTA AREA:\n\nFORTALEZAS\n${f.join('\n') || '(ninguna)'}\n\nDESAFIOS\n${d.join('\n') || '(ninguno)'}`;
+    return `\n\nRASGOS QUE SE LE HAN SACADO PARA ESTA AREA:\n\nFORTALEZAS\n${f.join('\n') || '(ninguna)'}\n\nDESAFIOS\n${d.join('\n') || '(ninguno)'}`;
   }
 
   async function pedirArea(area, rasgos) {
