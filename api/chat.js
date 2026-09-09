@@ -1316,85 +1316,9 @@ function hablaDeAstrologia(rasgo) {
   return PALABRAS_DE_ASTROLOGIA.some(re => re.test(texto));
 }
 
-// DOS RASGOS CON EL MISMO TITULO SON EL MISMO RASGO DICHO DOS VECES.
-//
-// El mismo titulo puede salir dos veces, en dos areas distintas y contando lo
-// mismo. El paso que quita los que se pisan no lo caza, y es lo primero que ve
-// quien lo lee.
-//
-// Esto no es criterio, es comparar dos cadenas, asi que lo hace el codigo y no
-// se le pregunta a nadie. Se compara en minusculas, sin tildes y sin
-// puntuacion, y solo cuando el titulo es EL MISMO: dos titulos parecidos pueden
-// ser dos rasgos distintos, y quitar uno bueno es peor que dejar uno repetido.
-// Se queda el primero, que es el del area que va antes en el informe.
-function comoSeCompara(titulo) {
-  return sinTildes(titulo).replace(/[^a-z0-9ñ ]/g, ' ').replace(/\s+/g, ' ').trim();
-}
-
-// Las palabras que no dicen nada. Sin ellas, dos titulos que solo se
-// diferencian en un "que" o un "en" se ven por lo que son: el mismo.
-const PALABRAS_SIN_PESO = new Set([
-  'a', 'al', 'ante', 'como', 'con', 'cuando', 'de', 'del', 'desde', 'donde',
-  'el', 'ella', 'en', 'entre', 'es', 'esa', 'ese', 'esta', 'este', 'hasta',
-  'la', 'las', 'lo', 'los', 'mas', 'me', 'mi', 'mis', 'muy', 'ni', 'no', 'o',
-  'para', 'pero', 'por', 'que', 'se', 'si', 'sin', 'sobre', 'solo', 'su',
-  'sus', 'tan', 'te', 'ti', 'tu', 'tus', 'un', 'una', 'uno', 'y', 'ya',
-]);
-
-function palabrasConPeso(titulo) {
-  return new Set(comoSeCompara(titulo).split(' ').filter(p => p && !PALABRAS_SIN_PESO.has(p)));
-}
-
-// DOS TITULOS QUE SON EL MISMO RASGO.
-//
-// Antes solo se veian los identicos letra por letra. En el informe 116 salieron
-// "te cuesta pedir lo que NECESITAS en pareja" y "te cuesta pedir lo que
-// QUIERES en pareja": el mismo rasgo con una palabra cambiada, y paso. En el
-// 112 paso lo mismo con "aguantas la PRESION mejor que la mayoria" y "aguantas
-// la INCERTIDUMBRE mejor que la mayoria".
-//
-// Son el mismo cuando tienen las mismas palabras con peso salvo una. Se exige
-// que sean las MISMAS CUANTAS a proposito, para no confundir dos rasgos
-// distintos que empiezan igual: "te cuesta soltar el control cuando algo no
-// depende de ti" y "te cuesta soltar el control sobre tus finanzas
-// compartidas" comparten tres palabras, no son el mismo rasgo, y con esta
-// cuenta no se tocan.
-function esElMismoTitulo(a, b) {
-  if (a.size !== b.size || a.size < 3) return false;
-  let comunes = 0;
-  for (const p of a) if (b.has(p)) comunes++;
-  return comunes >= a.size - 1;
-}
-
-function sinTituloRepetido(fortalezas, desafios) {
-  const vistos = [];
-  // EL REPETIDO SE QUITA SIEMPRE.
-  //
-  // Antes se dejaba si al quitarlo el area bajaba del minimo, porque llenarla
-  // otra vez costaba una llamada mas y medio minuto de espera. Esa llamada ya
-  // no existe: el suelo se lo comprueba el modelo dentro, pensando.
-  //
-  // Asi que lo unico que se decide aqui es que ve la clienta, y prefiere un
-  // area con un rasgo menos que dos titulos iguales seguidos en la misma
-  // pagina. Aqui ya no llega casi ninguno; esto es la ultima red.
-  const cribar = lista => lista.filter(r => {
-    const t = comoSeCompara(r && r.nombre);
-    if (!t) return true;
-    const palabras = palabrasConPeso(r.nombre);
-    if (vistos.some(v => v.texto === t || esElMismoTitulo(v.palabras, palabras))) {
-      console.warn(`Se quita un rasgo con el titulo repetido: ${r.nombre}`);
-      return false;
-    }
-    vistos.push({ texto: t, palabras });
-    return true;
-  });
-  // Las fortalezas primero, que es el orden en que van en el informe.
-  return [cribar(fortalezas), cribar(desafios)];
-}
-
 // LOS RASGOS, DE PRINCIPIO A FIN.
 //
-// Una llamada -la que piensa- y tres redes de codigo detras. Las redes no
+// Una llamada -la que piensa- y dos redes de codigo detras. Las redes no
 // opinan: cuentan y comparan cadenas. Estan porque el modelo se despista, no
 // porque decidan nada.
 async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
@@ -1415,11 +1339,7 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   fortalezas = limpios(fortalezas);
   desafios = limpios(desafios);
 
-  // 3. RED: dos rasgos con el mismo titulo son el mismo rasgo dicho dos veces.
-  //    Comparar dos cadenas no se le pregunta a nadie.
-  [fortalezas, desafios] = sinTituloRepetido(fortalezas, desafios);
-
-  // 4. RED: el techo por area. Si sobran, se quedan los primeros, que es el
+  // 3. RED: el techo por area. Si sobran, se quedan los primeros, que es el
   //    orden en que el encargo le pide escribirlos: primero los que mas pesan.
   const conSuTecho = (lista, cual) => {
     const tope = POR_AREA[cual].max;
@@ -1436,7 +1356,7 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   fortalezas = conSuTecho(fortalezas, 'fortalezas');
   desafios = conSuTecho(desafios, 'desafios');
 
-  // 5. Y si aun asi alguna area se ha quedado corta, se deja aviso. Ya no se
+  // 4. Y si aun asi alguna area se ha quedado corta, se deja aviso. Ya no se
   //    pide relleno: eso era una llamada mas que ademas se saltaba cuando el
   //    reloj apretaba. Ahora el suelo se lo comprueba el modelo pensando, que
   //    es cuando de verdad puede volver a la carta a buscar otro.
@@ -1445,7 +1365,7 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
     if (cortas.length) console.warn(`${cual}: por debajo del minimo en ${cortas.join(', ')}`);
   }
 
-  // 6. Ordenados por area, que es como los pinta el PDF. El rasgo cuya posicion
+  // 5. Ordenados por area, que es como los pinta el PDF. El rasgo cuya posicion
   //    no se reconoce se queda sin area y va al final, que es donde menos se
   //    nota que no lleva etiqueta.
   const sitio = r => (NOMBRES_DE_AREA.indexOf(r.area) + 1) || NOMBRES_DE_AREA.length + 1;
