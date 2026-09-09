@@ -870,6 +870,13 @@ const TOPE_DE_ELEGIR = 100000;
 // Escribir no piensa, pero suelta varios miles de palabras.
 const TOPE_DE_ESCRIBIR = 110000;
 
+// CUANTOS SACA CADA LISTA EN EL PASO DE BUSCAR, por area. Se saca de mas a
+// proposito: la limpieza de despues quita lo repetido, y sin margen no puede.
+const CUANTOS_AL_BUSCAR = {
+  fortalezas: '2 fortalezas',
+  desafios: '3 desafíos',
+};
+
 const ESQUEMA_DE_ELEGIR = {
   type: 'object',
   properties: {
@@ -935,41 +942,28 @@ function comoSeLeHabla(sexo) {
 
 // ── PASO 1: ELEGIR ──────────────────────────────────────────
 async function pedirLosRasgos(cual, nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'medium') {
+  const cuantos = CUANTOS_AL_BUSCAR[cual];
   const encargo = `${TONO}
 
 
 Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
-
-AQUÍ NO SE ESCRIBE EL INFORME. Aquí se ELIGE. De cada rasgo sale solo su nombre y de qué posición de la carta lo has sacado; lo que se le cuenta a la persona lo escribe otro después. Por eso puedes dedicarle el rato a lo que de verdad importa: decidir cuáles entran y cuáles no.
-
+AQUÍ SE BUSCAN Y SE ESCRIBEN. De cada rasgo sale solo su título, su descripción, la causa, el área a la que pertenece y de qué posición de la carta lo has sacado. Lo que importa es encontrar los que de verdad están en esta carta, y los que más pesan. Quitar los que se repiten se hace después, y no es cosa tuya. 
+QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. No que suene bien ni que esté bien escrito. Entre dos que dicen casi lo mismo, se queda el que más le cuesta o más le da, y el otro se va.
 TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posición concreta de esta carta, no se escribe.
 
-
-1. LAS DOS LISTAS, Y LAS DOS DE UNA VEZ
-
+1. LO QUE BUSCAS
 FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.
 DESAFÍOS: lo que le cuesta, lo que le pesa, dónde tropieza.
-
-Las dos se deciden a la vez y con las dos delante. Eso es lo importante: un rasgo puesto en una lista puede estar ya dicho, del revés, en la otra. Lo que se le da bien y lo que le cuesta son muchas veces la misma conducta suya mirada por sus dos caras, y eso solo se ve teniendo las dos listas delante a la vez.
-
+Esta vez te toca sacar solo los de una de las dos listas: ${cual}. La otra la saca otro y tú no la ves.
 
 2. CUÁNTOS
-
-Al final, de cada área salen ${POR_AREA.fortalezas.min} o ${POR_AREA.fortalezas.max} fortalezas y ${POR_AREA.desafios.min} o ${POR_AREA.desafios.max} desafíos. Ninguna área se entrega vacía ni por debajo de eso, y ninguna pasa de ahí.
-
-Pero eso es el final, no el principio. Primero sacas de la carta TODO lo que haya de verdad en cada área, sin contar y sin quedarte corta. Después, en el repaso del punto 6, comparas, quitas lo que se repite y te quedas con los que pesan hasta ese número.
-
-Hacerlo al revés -sacar justo los que caben y limpiar después- deja áreas por debajo del suelo, porque al quitar un repetido ya no hay de dónde sacar el que falta.
-
-QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. No que suene bien ni que esté bien escrito. Entre dos que dicen casi lo mismo, se queda el que más le cuesta o más le da, y el otro se va.
+De cada área sacas ${cuantos}. Ninguna área se entrega vacía ni por debajo de eso, y ninguna pasa de ahí.
 
 
 3. DE DONDE LOS SACAS
 
 Recorre la carta ENTERA, no solo lo que más salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona.
-
-El estudio tiene siete áreas y la carta habla de las siete. Las recorres UNA POR UNA y en el orden en que están escritas abajo: te paras en un área, miras lo que hay de ella en ESTA carta, sacas sus rasgos -los que se le dan bien y los que le cuestan- y solo entonces pasas a la siguiente. Ninguna se queda sin los suyos, y de ninguna te saltas la mitad.
-
+El estudio tiene siete áreas y la carta habla de las siete. Las recorres UNA POR UNA y en el orden en que están escritas abajo: te paras en un área, miras lo que hay de ella en ESTA carta, sacas sus rasgos y solo entonces pasas a la siguiente. Ninguna se queda sin los suyos, y de ninguna te saltas la mitad.
 No empieces por la lista de aspectos. Es lo más largo que tienes delante y arrastra: se llena la lista con lo que sale de ahí y hay áreas a las que no llegas nunca. Se empieza por el área y se busca lo suyo, que a veces es un aspecto y a veces no.
 
 Esto es lo que hay de cada área:
@@ -988,49 +982,45 @@ Y EL SIGNO Y LA CASA TIENEN QUE CAMBIAR LO QUE ESCRIBES, no solo lo que pones en
 LA PRUEBA: si le cambiaras el signo o la casa a esa posición y el rasgo que has escrito siguiera valiendo igual, es que no lo has escrito de ESTA carta y hay que escribirlo otra vez.
 
 Marte, Urano y Júpiter no llevan área propia: lo que salga de ellos es del área de la casa en la que están.
-Al escribirlo, ponle el área de la que lo sacaste; en el repaso del punto 6 se la cambias si al leerlo ves que habla de otra.
+Al escribirlo, ponle el área de la que habla el rasgo, no la de la posición de la que salió. 
 
+4. LAS CASILLAS DE CADA RASGO
+Todos van en una sola lista, seguidos, y cada uno lleva sus cinco casillas llenas:
 
-4. LAS CASILLAS QUE SE ELIGEN AQUÍ
-
-Todos van en una sola lista, seguidos, y cada uno dice de cuál de las dos listas es y de qué área:
-
-lista        "fortalezas" o "desafios", tal cual.
 area         una de las siete, escrita como están escritas arriba.
 
-nombre       Se le habla de tu, igual que en todo lo demás: es lo que hace
+titulo       Se le habla de tu, igual que en todo lo demás: es lo que hace
              o lo que le pasa, dicho a la persona. No el nombre de eso.
-             Un nombre que arranca con un sustantivo y le cuelga adjetivos
+             Un título que arranca con un sustantivo y le cuelga adjetivos
              detrás no le habla a nadie, es una etiqueta de manual, y está mal
              aunque describa bien el rasgo.
              De cuatro a siete palabras, con sus artículos y sus preposiciones,
              como se habla. Empieza en mayúscula, y sin punto al final.
+
+descripcion  TRES RENGLONES, ni dos ni cuatro. Son unos doscientos sesenta
+            caracteres contando los espacios. No se cuentan frases: dos frases
+            pueden ocupar cinco renglones.
+            Cuenta cuatro cosas: qué hace, qué le pasa, cómo se le nota y en
+            qué parte de su vida se le nota.
+            TRES ES LA MEDIDA, NO EL TECHO. Con dos se queda a medias: se
+            enuncia el rasgo y no da tiempo a que se entienda, y quien lo lee
+            pasa al siguiente sin haberse reconocido en ninguno.
+
+causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
+             lo que quiere saber. Dos o tres frases.
+             ABRE NOMBRANDO LA CAUSA, no describiendo otra vez lo que le
+             pasa. La primera frase ya dice qué hay debajo que lo produce.
+             NO REPITE EL RASGO CON OTRAS PALABRAS. Lo que hace y cómo se le
+             nota ya está arriba, en la descripcion. Aquí se dice qué hay
+             DETRÁS que lo produce, el mecanismo del que sale.
+
 origen       De donde sale el rasgo en la carta, en técnico y en corto: el
              cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
              forman. Nada más: ni explicación ni frase.
              Es obligatoria. Y no repartas todos los rasgos sobre las mismas
              dos o tres posiciones: la carta tiene de sobra.
 
-Un rasgo es su nombre y su posición. Si empiezas uno y no sabes de dónde lo sacas, se quita entero.
-
-
-6. EL REPASO, ANTES DE ENTREGAR
-
-Esto no es un consejo: es la mitad del trabajo, y va con las dos listas escritas delante.
-
-PRIMERO, PONLE NOMBRE A LA CONDUCTA DE CADA UNO. Uno por uno, y para ti, sin escribirlo en la respuesta: en tres o cuatro palabras, qué está haciendo esa persona en ese rasgo. No de qué habla ni dónde le pasa: qué HACE.
-
-Y ahora mira esa lista de conductas. Las que se repitan te están diciendo que ahí hay un solo rasgo escrito varias veces, aunque cada uno lo cuente en una parcela distinta de su vida y con otras palabras. De cada grupo se queda UNO, el que más pese, y los demás se van. Sin este paso los repetidos no se ven: leídos de uno en uno, todos parecen distintos.
-
-DESPUÉS, LOS QUE NACEN DE LO MISMO. Lees los rasgos de las dos listas, todos, y los comparas de dos en dos.
-
-Y no compares cómo están escritos: compara la conducta que hay debajo. Dos rasgos son el mismo cuando la persona está haciendo lo mismo en los dos, aunque uno hable del trabajo y otro de su casa, aunque estén en áreas distintas y aunque uno esté en fortalezas y el otro en desafíos. La prueba es esta: si al corregir uno el otro se corrige solo, son el mismo. De cada pareja se queda UNO, el que más pese, y el otro se va.
-
-Y así es como se cuela lo repetido: una sola conducta suya se reparte en tres o cuatro rasgos, cada uno contándola en una parcela distinta de su vida. Con nombres distintos parecen cuatro. Son uno. Eso es lo que hay que cazar, y para verlo hay que mirar qué está haciendo ella, no qué palabras se han usado.
-
-Y UNA MISMA CONDUCTA NO SALE EN LAS DOS LISTAS. Esto se comprueba con la misma lista de conductas de antes: si una aparece en fortalezas y también en desafíos, no son dos rasgos, es uno con sus dos caras.
-
-Y ahí no vale quedarse con las dos. En el informe van en páginas distintas y nada le dice que están hablando de lo mismo, así que lo que lee es que una cosa se le da bien y esa misma cosa le cuesta. Eso la saca del texto. Se queda la cara que más peso tenga hoy en su vida, y la otra se va.
+Un rasgo es su título y su posición. Si empiezas uno y no sabes de dónde lo sacas, se quita entero.
 
 DESPUÉS, EL ÁREA DE CADA UNO, Y AQUÍ NO MANDA LA POSICIÓN.
 
@@ -1042,17 +1032,14 @@ Ojo con las áreas que en la carta miran a más de una cosa: ahí es donde el ra
 
 Esto se hace rasgo por rasgo y sin saltarse ninguno: es el paso que más veces sale mal.
 
-DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas, área por área, cuántas fortalezas y cuántos desafíos han quedado. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale rescatar el que acabas de quitar ni escribir una variante suya.
-
+DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas, área por área, cuántos has sacado. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale escribir una variante de uno que ya tienes. 
 DESPUÉS, EL TECHO. Si un área pasa de su máximo, se quedan los que más pesan y los demás se van.
 
-Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ningún rasgo nombre la carta ni nada técnico en el nombre, la descripción o la causa, y que a ninguno le falte una casilla.
-
-Devuelve solo la lista ya repasada. No expliques lo que has quitado.
-
+Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ningún rasgo nombre la carta ni nada técnico ni de astrología en el título, la descripción o la causa, y que a ninguno le falte una casilla.
+NI DOS TÍTULOS NI DOS DESCRIPCIONES QUE EMPIECEN IGUAL. Antes de entregar, lee en columna los títulos de toda la lista, y luego las descripciones: los que arranquen con la misma palabra se escriben otra vez arrancando de otra manera. 
+Devuelve solo la lista.
 Carta natal:
 ${cartaTexto}
-
 Persona: ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombrePila}`;
 
