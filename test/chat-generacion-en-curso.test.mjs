@@ -56,15 +56,10 @@ let llamadasAlModelo = 0;
 // que el modelo de mentira tiene que saber contestar a las dos cosas. Si a la
 // peticion de las listas se le devuelve texto de area, no es JSON valido, las
 // listas no salen y no se llega a escribir ni un area.
-// Las siete cajas van con lo suficiente para cumplir el minimo de las dos
-// listas (dos por area, que es el de los desafios). Si vinieran cortas, el
-// codigo pediria las que faltan y esta prueba contaria llamadas de mas.
-// CADA RASGO CON SU PROPIO TITULO, como en una lista de verdad. Si dos titulos
-// dicen lo mismo, el filtro de repetidos quita uno, el area se queda bajo el
-// minimo y el codigo pide relleno: llamadas de mas que no son las que se miden
-// aqui.
+// Cada rasgo con su propio titulo, todos distintos entre si, como en una lista
+// de verdad.
 const TITULOS = {
-  Fortaleza: [
+  fortalezas: [
     'Aguantas cuando todo aprieta', 'Miras de frente lo incomodo',
     'Decides rapido y sin ruido', 'Cuidas los detalles pequenos',
     'Sostienes a quien se cae', 'Aprendes de cada golpe',
@@ -73,7 +68,7 @@ const TITULOS = {
     'Repartes tu tiempo con cabeza', 'Levantas el animo de tu gente',
     'Ahorras pensando en manana', 'Negocias sin perder la forma',
   ],
-  Desafio: [
+  desafios: [
     'Te callas lo que te duele', 'Aplazas las conversaciones dificiles',
     'Cargas con lo que no te toca', 'Dudas de lo que ya sabes',
     'Buscas aprobacion antes de moverte', 'Te exiges mas de la cuenta',
@@ -81,65 +76,75 @@ const TITULOS = {
     'Controlas hasta lo que no depende de ti', 'Postergas los cierres',
     'Te comparas con quien no deberias', 'Gastas energia en agradar',
     'Temes quedarte sin nada', 'Confundes ayudar con salvar',
+    'Te adelantas a lo que quiere el otro', 'Alargas lo que ya no te sirve',
+    'Empiezas mil cosas y no cierras ninguna', 'Te disculpas sin motivo',
+    'Rebajas tu precio antes de que te lo pidan', 'Evitas mirar los numeros',
+    'Te cierras cuando algo te duele',
   ],
 };
 
-const rasgoDe = (origen, i, lista) => ({
-  nombre: TITULOS[lista][i], descripcion: 'Sigues de pie donde otros se bajan.',
-  causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen,
-});
-// Las posiciones son inventadas para la prueba, de nadie: solo tienen que
-// caer en el area de su caja para que el codigo las acepte.
-// Ahora los rasgos van en dos pasos: uno elige y otro escribe. Aqui se contesta
-// a los dos, cada uno con lo suyo.
+// Las posiciones son inventadas para la prueba, de nadie: solo tienen que caer
+// en el area de su caja para que el codigo las acepte. Van tres por area, que
+// es lo que pide la lista mas larga.
 const POR_AREAS = [
-  ['IDENTIDAD',  'Sol en Aries casa 1',        'Ascendente en Aries'],
-  ['PATRONES',   'Nodo Norte en Acuario',      'casa 9 en Aries'],
-  ['MIEDOS',     'Saturno en Acuario casa 12', 'Neptuno en Acuario'],
-  ['HERIDA',     'Luna en Aries casa 4',       'Quiron en Acuario'],
-  ['AMOR',       'Venus en Acuario',           'casa 5 en Aries'],
-  ['RELACIONES', 'Mercurio en Aries',          'casa 11 en Acuario'],
-  ['DINERO',     'casa 2 en Aries',            'casa 10 en Acuario'],
+  ['IDENTIDAD',  ['Sol en Aries casa 1', 'Ascendente en Aries', 'casa 1 en Aries']],
+  ['PATRONES',   ['Nodo Norte en Acuario', 'casa 9 en Aries', 'casa 6 en Aries']],
+  ['MIEDOS',     ['Saturno en Acuario casa 12', 'Neptuno en Acuario', 'casa 12 en Acuario']],
+  ['HERIDA',     ['Luna en Aries casa 4', 'Quiron en Acuario', 'casa 4 en Aries']],
+  ['AMOR',       ['Venus en Acuario', 'casa 5 en Aries', 'casa 7 en Aries']],
+  ['RELACIONES', ['Mercurio en Aries', 'casa 11 en Acuario', 'casa 3 en Aries']],
+  ['DINERO',     ['casa 2 en Aries', 'casa 10 en Acuario', 'casa 8 en Aries']],
 ];
-const elegidosDe = (cual, l) => POR_AREAS.flatMap(([area, a, b], k) => [
-  { lista: cual, area, nombre: TITULOS[l][k * 2],     origen: a },
-  { lista: cual, area, nombre: TITULOS[l][k * 2 + 1], origen: b },
-]);
-const LOS_ELEGIDOS = JSON.stringify({
-  rasgos: elegidosDe('fortalezas', 'Fortaleza').concat(elegidosDe('desafios', 'Desafio')),
+
+// PASO 1, BUSCAR: cada llamada saca SU lista, con las cinco casillas llenas.
+// Dos fortalezas por area y tres desafios, que es lo que pide el encargo.
+const losRasgos = cual => JSON.stringify({
+  rasgos: POR_AREAS.flatMap(([area, posiciones], k) => {
+    const cuantos = cual === 'fortalezas' ? 2 : 3;
+    return posiciones.slice(0, cuantos).map((origen, i) => ({
+      area,
+      titulo: TITULOS[cual][k * cuantos + i],
+      descripcion: 'Sigues de pie donde otros se bajan del todo, y quien te tiene cerca ya cuenta con eso.',
+      causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
+      origen,
+    }));
+  }),
 });
-const losTextos = cuantos => JSON.stringify({
-  textos: Array.from({ length: cuantos }, () => ({
-    descripcion: 'Sigues de pie donde otros se bajan del todo, y quien te tiene cerca ya cuenta con eso.',
-    causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
-  })),
-});
-const cuantosPide = cuerpo => String(cuerpo.messages?.[0]?.content || '').match(/de los (\d+) rasgos/)?.[1] | 0;
+
+// PASO 2, LIMPIAR: contesta solo con numeros. Se queda con todos a proposito,
+// para que lo que se cuenta aqui sean las llamadas y no lo que quite.
+const laLimpieza = sistema => {
+  const cuantos = (sistema.match(/^\d+\. /gm) || []).length;
+  return JSON.stringify({
+    sequedan: Array.from({ length: cuantos }, (_, i) => i + 1), sequitan: [],
+  });
+};
 
 globalThis.fetch = async (url, opciones) => {
   const u = String(url);
   if (u.includes('api.anthropic.com')) {
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
-    let esElegir = false, esEscribir = false, cuantos = 0;
+    let esBuscar = false, esLimpiar = false, cual = 'desafios', sistema = '';
     try {
       const cuerpo = JSON.parse(opciones.body);
-      const sistema = String(cuerpo.system || '');
-      esElegir = sistema.includes('AQUÍ NO SE ESCRIBE EL INFORME');
-      esEscribir = sistema.includes('AQUÍ NO SE ELIGE NADA');
-      if (esEscribir) cuantos = cuantosPide(cuerpo);
+      sistema = String(cuerpo.system || '');
+      esBuscar = sistema.includes('AQUÍ SE BUSCAN Y SE ESCRIBEN');
+      esLimpiar = sistema.includes('Abajo tienes las fortalezas y los desafíos');
+      if (sistema.includes('las dos listas: fortalezas')) cual = 'fortalezas';
     } catch (e) {}
-    // La de elegir razona: su respuesta trae delante un bloque de pensamiento y
-    // detras el texto, como la API de verdad.
-    if (esElegir) {
+    // Buscar y limpiar razonan: su respuesta trae delante un bloque de
+    // pensamiento y detras el texto, como la API de verdad.
+    if (esBuscar) {
       return { ok: true, status: 200, json: async () => ({ content: [
         { type: 'thinking', thinking: '' },
-        { type: 'text', text: LOS_ELEGIDOS },
+        { type: 'text', text: losRasgos(cual) },
       ] }) };
     }
-    if (esEscribir) {
+    if (esLimpiar) {
       return { ok: true, status: 200, json: async () => ({ content: [
-        { type: 'text', text: losTextos(cuantos) },
+        { type: 'thinking', thinking: '' },
+        { type: 'text', text: laLimpieza(sistema) },
       ] }) };
     }
     // api/chat.js descarta cualquier area de menos de 100 caracteres y la
@@ -229,7 +234,7 @@ try {
   // que le pone el area a cada uno, mas las 7 areas del informe. Lo que se
   // vigila aqui no es el numero, sino que la segunda peticion no haya lanzado
   // NINGUNA generacion mas.
-  comprobar('en total solo se generó una vez', llamadasAlModelo === 10, llamadasAlModelo + ' llamadas');
+  comprobar('en total solo se generó una vez', llamadasAlModelo === 11, llamadasAlModelo + ' llamadas');
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);
