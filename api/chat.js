@@ -271,7 +271,7 @@ PROHIBICIONES ABSOLUTAS:
 
 Esta área abre el estudio, así que empieza con una entrada de dos o tres frases que le sitúen antes de entrar en materia, como se abre un libro. Suave, sin prisa y sin adelantar lo que viene. Solo el área 1 lleva esa entrada.
 
-EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de sus rasgos y ninguna afirmada de pasada:
 
 Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué le ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que hace por fuera. Es lo que le pone nombre a su manera de funcionar y lo que se lleva puesto al terminar de leer.
 
@@ -306,7 +306,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     {
       id: 2,
       prompt: `Genera ÚNICAMENTE el ÁREA 2 — PATRONES para esta persona: qué repite una y otra vez sin darse cuenta.
-EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de sus rasgos y ninguna afirmada de pasada:
 
 
 Cuáles son sus patrones: los que de verdad le gobiernan la vida y el día a día, contados de forma concreta y reconocible, no uno genérico que le valdría a cualquiera. 
@@ -335,7 +335,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     {
       id: 3,
       prompt: `Genera ÚNICAMENTE el ÁREA 3 — MIEDOS para esta persona: el miedo que gobierna su vida sin que lo nombre.
-EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de sus rasgos y ninguna afirmada de pasada:
 Cuál es el miedo que gobierna su vida y qué inseguridad hay debajo: el que manda de verdad por debajo de los que nombraría si le preguntaras, y de qué tiene miedo en el fondo cuando tiene miedo de eso.
 Qué se lo dispara y cómo reacciona cuando aparece: las situaciones concretas que lo encienden, y lo que hace en ese momento sin decidirlo, si se paraliza, si controla más, si se adelanta, si desaparece.
 Qué está evitando por él y qué le ha costado ya: lo que lleva años sin hacer por ese miedo, y el precio que ha pagado sin llevar la cuenta, en oportunidades, en años, en cosas que no dijo a tiempo.
@@ -356,7 +356,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     {
       id: 4,
       prompt: `Genera ÚNICAMENTE el ÁREA 4 — HERIDA para esta persona: qué le sigue doliendo hoy y cómo le afecta.
-EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de sus rasgos y ninguna afirmada de pasada:
 Cuál es la herida y qué la reabre hoy: qué le duele por dentro y qué le sigue faltando desde siempre, y las situaciones concretas de su vida de ahora que la vuelven a tocar.
 Cómo se protege cuando se reabre, y qué se está perdiendo por protegerse así: lo que hace en ese momento para que no le vuelva a doler, y lo que esa misma protección le está dejando fuera.
 Qué necesita de verdad en ese momento: ponerle nombre a lo que lleva años sintiendo sin saber decirlo, y qué acaba haciendo con esa necesidad.
@@ -377,7 +377,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     {
       id: 5,
       prompt: `Genera ÚNICAMENTE el ÁREA 5 — AMOR para esta persona: cómo vive los ligues y las relaciones de pareja. 
-EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de sus rasgos y ninguna afirmada de pasada:
 Cómo es en el amor: cómo se comporta cuando quiere a alguien de verdad, cómo lo demuestra, cuánto se entrega y cuánto se guarda, y qué le pasa con el deseo y con la intimidad.
 Qué tipo de persona atrae y por qué: quién se le acerca una y otra vez, qué tienen en común esas personas, y qué le da alguien así que no se está dando. Esto NO es lo mismo que lo que le engancha, que va en el punto siguiente: aquí se cuenta a quién atrae, aunque no lo busque, y los dos puntos se cuentan enteros.
 Qué necesita de la otra persona para sentirse querido o querida, y qué le enamora: lo que le hace falta para bajar la guardia, y lo que le engancha de alguien, que no siempre es lo mismo.
@@ -400,7 +400,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     {
       id: 6,
       prompt: `Genera ÚNICAMENTE el ÁREA 6 — RELACIONES para esta persona: cómo se vincula con los demás fuera de la pareja.
-EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de sus rasgos y ninguna afirmada de pasada. Aquí no se habla de pareja ni de amor, que es el área 5: aquí van los amigos, la familia, los compañeros de trabajo y los grupos.
 Qué papel ocupa siempre sin decidirlo: el sitio que acaba ocupando con los demás una y otra vez, sin haberlo elegido y casi sin darse cuenta de que lo ocupa.
 Qué pasa con lo que da y lo que recibe: si la balanza le sale igualada o no, cuánto sostiene y cuánto le sostienen, y qué hace cuando esa cuenta no le cuadra.
 En qué dinámicas acaba metiéndose una y otra vez: el tipo de relación que se le repite con gente distinta, y qué se repite por dentro cada vez que vuelve a pasar.
@@ -421,7 +421,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     {
       id: 7,
       prompt: `Genera ÚNICAMENTE el ÁREA 7 — DINERO para esta persona: cómo se relaciona con el dinero.
-EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de su carta y ninguna afirmada de pasada:
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE tres cosas, cada una sacada de sus rasgos y ninguna afirmada de pasada:
 Qué significa el dinero para esa persona y qué le mueve a ganarlo: qué representa de verdad en su cabeza, más allá de los números, y qué es lo que le empuja a querer más o a conformarse.
 Qué hace con él cuando lo tiene: cómo lo gasta, cómo toma las decisiones de dinero, y cómo lleva el riesgo cuando hay algo en juego.
 
@@ -483,7 +483,7 @@ Edad: ${edad} años`;
     const f = suyos(rasgos.fortalezas).map(r => linea(r, false));
     const d = suyos(rasgos.desafios).map(r => linea(r, true));
     if (f.length === 0 && d.length === 0) return '';
-    return `\n\nRASGOS QUE SE LE HAN SACADO DE SU CARTA PARA ESTA AREA:\n\nFORTALEZAS\n${f.join('\n') || '(ninguna)'}\n\nDESAFIOS\n${d.join('\n') || '(ninguno)'}`;
+    return `\n\nRASGOS QUE SE LE HAN SACADO PARA ESTA AREA:\n\nFORTALEZAS\n${f.join('\n') || '(ninguna)'}\n\nDESAFIOS\n${d.join('\n') || '(ninguno)'}`;
   }
 
   async function pedirArea(area, rasgos) {
