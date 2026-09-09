@@ -1322,7 +1322,7 @@ async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, es
 
 // Los dos pasos, encadenados: se elige una vez y se escriben las dos listas a
 // la vez.
-async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj, esfuerzo) {
+async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
   const [elegidasF, elegidosD] = await Promise.all([
     unaListaDeRasgos('fortalezas', nombrePila, sexo, cartaTexto, reloj),
     unaListaDeRasgos('desafios',   nombrePila, sexo, cartaTexto, reloj),
@@ -1335,24 +1335,7 @@ async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj, esfuerzo) {
   return { fortalezas, desafios };
 }
 
-// SE REINTENTA, PERO SOLO SI CABE.
-//
-// Ahora el informe entero cuelga de esta llamada: si no sale, no hay rasgos. Y
-// como tarda mas que las de antes, un reintento a destiempo se come el sitio de
-// las siete areas y deja a la clienta sin informe habiendo pagado. Asi que se
-// reintenta mientras quepan el segundo intento y las areas detras.
-// LA SEGUNDA TIRADA PIENSA MENOS, PERO LLEGA.
-//
-// Si la primera se pasa de tiempo, repetirla igual no arregla nada: va a tardar
-// lo mismo y ademas ya no cabe. Asi que la segunda va con el esfuerzo bajo, que
-// es la mitad de rato. Los rasgos salen algo menos afinados, y eso es mucho
-// mejor que dejar sin informe a alguien que ha pagado.
-//
-// Se le pide antes de empezar que quepan los dos pasos y las siete areas
-// detras: reintentar sin sitio es hacerla esperar para nada.
-const ESFUERZO_POR_INTENTO = ['medium', 'low'];
-
-async function sacarLasListas(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
+async function sacarLasListas(nombrePila, sexo, cartaTexto, reloj) {
   return await pedirLasListas(nombrePila, sexo, cartaTexto, reloj);
 }
 
@@ -1478,7 +1461,7 @@ function sinTituloRepetido(fortalezas, desafios) {
 async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   // 1. Las dos listas, ya comparadas entre si, etiquetadas y con su suelo y su
   //    techo por area. Todo lo que antes eran cinco llamadas.
-  let { fortalezas, desafios } = await sacarLasListas(nombrePila, sexo, cartaTexto, INTENTOS, reloj);
+  let { fortalezas, desafios } = await sacarLasListas(nombrePila, sexo, cartaTexto, reloj);
 
   // 2. RED: fuera el que le nombra la carta a la clienta. El encargo lo prohibe
   //    y aun asi se cuela alguno; esto no es criterio, son palabras que se
