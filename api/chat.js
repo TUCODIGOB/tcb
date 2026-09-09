@@ -88,7 +88,16 @@ function crearReloj(margen = TOPE_DE_LA_PETICION) {
     hayTiempoPara: segundos => (fin - Date.now()) > segundos * 1000,
     cuaderno,
     // Se llama al terminar una llamada, con el momento en que empezo.
-    apunta: (que, arranque) => cuaderno.tiempos.push({ que, segundos: Math.round((Date.now() - arranque) / 100) / 10 }),
+    //
+    // Y ADEMAS SE ESCRIBE EN EL REGISTRO. El cuaderno viaja al navegador dentro
+    // de la respuesta buena, asi que si la peticion se cae por el camino esos
+    // tiempos no los ve nadie, que es justo cuando hacen falta. Escrito aqui
+    // queda en Vercel pase lo que pase.
+    apunta: (que, arranque) => {
+      const segundos = Math.round((Date.now() - arranque) / 100) / 10;
+      cuaderno.tiempos.push({ que, segundos });
+      console.log(`[tiempo] ${que}: ${segundos} s`);
+    },
   };
 }
 
