@@ -324,6 +324,9 @@
         <div class="check-icon">✓</div>
         <h2>Tu informe <em>está listo</em></h2>
         <p id="readyNombre" style="font-family: var(--font-display); font-size: 1.2rem; color: var(--gold-deep); font-style: italic; margin-bottom: 1.5rem; text-transform: uppercase;"></p>
+        <!-- EL CUADERNO. Es para mirar como ha ido, no forma parte del informe.
+             Si no llega, este hueco se queda vacio y no se ve nada. -->
+        <div id="cuaderno"></div>
         <button class="btn-download" id="btnPDF" onclick="descargarPDF()">⬇ Descargar mi PDF</button>
 <p style="margin-top: 1rem; font-size: .9rem; color: #666; text-align: center;">
   Cuando descargues tu informe, te llegará un email.<br>
@@ -765,6 +768,10 @@ ${listaAspectos || '- sin aspectos dentro de orbe'}`;
   // tiene sus cuatro casillas y el PDF las coloca una por una.
   // Si no vienen (porque fallaron), el informe sale igual pero sin las listas.
   _G.rasgos = data.rasgos || null;
+
+  // El cuaderno: los tiempos de cada llamada y lo que ha quitado la limpieza.
+  // Es para revisar, no para el informe: si falla, no pasa nada.
+  try { pintarCuaderno(data.cuaderno); } catch (e) { console.warn('el cuaderno no se ha podido pintar:', e); }
 fetch('/api/generar-pdf', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -872,6 +879,85 @@ async function geocode(ciudad, provincia, pais) {
   // otro signo, sin que ni el ni nosotros nos enterasemos. Es preferible parar
   // y que reintente, igual que con la zona horaria.
   throw new Error('LUGAR_NACIMIENTO');
+}
+
+// ═════════════════════════════════════════════════════════════
+// EL CUADERNO — SOLO PARA REVISAR, NO ES PARTE DEL INFORME
+//
+// Pinta, encima del boton de descarga: lo que ha tardado cada llamada, cuantos
+// rasgos ha sacado el paso 1 por area y por lista, y que ha quitado la limpieza
+// y que ha quitado el repaso.
+//
+// Todo va dentro de un try en quien lo llama: si el cuaderno no llega o viene
+// roto, no se pinta y el informe sigue su camino igual.
+// ═════════════════════════════════════════════════════════════
+function pintarCuaderno(c) {
+  const hueco = document.getElementById('cuaderno');
+  if (!hueco || !c || !Array.isArray(c.entraron)) return;
+
+  const esc = t => String(t == null ? '' : t)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+  // ── Los tiempos ──
+  const tiempos = Array.isArray(c.tiempos) ? c.tiempos : [];
+  const total = tiempos.reduce((a, t) => a + (Number(t.segundos) || 0), 0);
+  const filasT = tiempos.map(t =>
+    '<tr><td>' + esc(t.que) + '</td><td style="text-align:right">' + esc(t.segundos) + ' s</td></tr>').join('');
+
+  // ── Lo que saco el paso 1, por area y por lista ──
+  const areas = [];
+  for (const r of c.entraron) if (!areas.includes(r.area)) areas.push(r.area);
+  const cuenta = (area, lista) => c.entraron.filter(r => r.area === area && r.lista === lista).length;
+  const filasA = areas.map(a =>
+    '<tr><td>' + esc(a) + '</td><td style="text-align:right">' + cuenta(a, 'fortalezas') +
+    '</td><td style="text-align:right">' + cuenta(a, 'desafios') + '</td></tr>').join('');
+
+  // ── La limpieza ──
+  const fuera1 = Array.isArray(c.quitaLimpieza) ? c.quitaLimpieza : [];
+  const fuera2 = Array.isArray(c.quitaRepaso) ? c.quitaRepaso : [];
+  const fuera = fuera1.concat(fuera2);
+  const porNumero = new Map(c.entraron.map(r => [r.n, r]));
+  const comoLinea = n => {
+    const r = porNumero.get(n);
+    if (!r) return '#' + esc(n);
+    return '#' + esc(r.n) + ' ' + esc(r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO') +
+           ' ' + esc(r.area) + ' — ' + esc(r.titulo) + ' — ' + esc(r.descripcion);
+  };
+  const linea = (titulo, lista) => lista.length
+    ? '<p style="margin:.6rem 0"><b>' + titulo + ' ' + lista.length + ':</b><br>' +
+      lista.map(comoLinea).join('<br>') + '</p>'
+    : '<p style="margin:.6rem 0"><b>' + titulo + ' ninguno.</b></p>';
+
+  // ── Los que se quedan ──
+  const quedan = c.entraron.filter(r => !fuera.includes(r.n));
+  const filasQ = quedan.map(r =>
+    '<tr><td>' + esc(r.n) + '</td><td>' + esc(r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO') +
+    '</td><td>' + esc(r.area) + '</td><td>' + esc(r.titulo) + '</td><td>' + esc(r.descripcion) + '</td></tr>').join('');
+
+  hueco.innerHTML =
+    '<details style="text-align:left;font-size:.8rem;line-height:1.45;background:#faf8f4;border:1px solid #e3ddd2;' +
+    'border-radius:8px;padding:.8rem 1rem;margin-bottom:1.5rem;color:#3a3a3a">' +
+    '<summary style="cursor:pointer;font-weight:600">Cómo ha ido — ' + total.toFixed(1) + ' s en total, ' +
+    c.entraron.length + ' rasgos entraron, quedan ' + quedan.length + '</summary>' +
+
+    '<p style="margin:.9rem 0 .3rem"><b>Lo que ha tardado cada llamada</b></p>' +
+    '<table style="width:100%;border-collapse:collapse">' + filasT +
+    '<tr><td><b>TOTAL</b></td><td style="text-align:right"><b>' + total.toFixed(1) + ' s</b></td></tr></table>' +
+
+    '<p style="margin:.9rem 0 .3rem"><b>Lo que sacó el paso 1, por área</b></p>' +
+    '<table style="width:100%;border-collapse:collapse">' +
+    '<tr><th style="text-align:left">Área</th><th style="text-align:right">Fortalezas</th><th style="text-align:right">Desafíos</th></tr>' +
+    filasA + '</table>' +
+
+    '<p style="margin:.9rem 0 .3rem"><b>La limpieza</b></p>' +
+    linea('Quitó la limpieza', fuera1) + linea('Quitó el repaso', fuera2) +
+
+    '<p style="margin:.9rem 0 .3rem"><b>Con los que se ha quedado (' + quedan.length + ')</b></p>' +
+    '<table style="width:100%;border-collapse:collapse">' +
+    '<tr><th style="text-align:left">Nº</th><th style="text-align:left">Lista</th><th style="text-align:left">Área</th>' +
+    '<th style="text-align:left">Título</th><th style="text-align:left">Descripción</th></tr>' +
+    filasQ + '</table>' +
+    '</details>';
 }
 
 function descargarPDF() {

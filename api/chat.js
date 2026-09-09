@@ -75,12 +75,20 @@ const TOPE_DE_LA_PETICION = 285000; // 15 segundos por debajo del corte de Verce
 
 function crearReloj(margen = TOPE_DE_LA_PETICION) {
   const fin = Date.now() + margen;
+  // EL CUADERNO. Solo sirve para poder mirar despues que ha hecho cada llamada,
+  // cuanto ha tardado y que ha quitado la limpieza. No decide NADA: si esto no
+  // estuviera, el informe saldria exactamente igual. Va colgado del reloj
+  // porque el reloj es lo unico que ya llega a todas las llamadas.
+  const cuaderno = { tiempos: [], entraron: [], quitaLimpieza: [], quitaRepaso: [] };
   return {
     quedan: () => fin - Date.now(),
     // El tope de una llamada: el suyo, o lo que quede si queda menos.
     senal: tope => AbortSignal.timeout(Math.max(1000, Math.min(tope, fin - Date.now()))),
     // Un paso opcional solo se pide si caben sus segundos y los que vienen detras.
     hayTiempoPara: segundos => (fin - Date.now()) > segundos * 1000,
+    cuaderno,
+    // Se llama al terminar una llamada, con el momento en que empezo.
+    apunta: (que, arranque) => cuaderno.tiempos.push({ que, segundos: Math.round((Date.now() - arranque) / 100) / 10 }),
   };
 }
 
@@ -487,6 +495,7 @@ Edad: ${edad} años`;
   }
 
   async function pedirArea(area, rasgos) {
+    const arranque = Date.now();
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       // Un area tarda entre 20 y 40 segundos. Pasado el minuto y medio no esta
@@ -534,6 +543,7 @@ Edad: ${edad} años`;
       throw err;
     }
 
+    reloj.apunta(`area ${area.id}`, arranque);
     return texto.trim();
   }
 
@@ -592,7 +602,8 @@ Edad: ${edad} años`;
 
     // El token viaja al navegador y de ahi a generar-pdf y save-pdf: es lo
     // que demuestra que quien pide el PDF es quien tiene la reserva.
-    return res.status(200).json({ texto: textoCompleto, token: reserva.token, rasgos });
+    // El cuaderno va detras de todo lo demas: es para mirar, no para el informe.
+    return res.status(200).json({ texto: textoCompleto, token: reserva.token, rasgos, cuaderno: reloj.cuaderno });
 
   } catch (err) {
     console.error('Error generando áreas:', err.message);
@@ -989,6 +1000,7 @@ ${cartaTexto}
 Persona: ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombrePila}`;
 
+  const arranque = Date.now();
   const salida = await alModelo({
     que: `elegir los rasgos (${cual})`,
     modelo: 'claude-opus-5',
@@ -1017,6 +1029,7 @@ Nombre de pila: ${nombrePila}`;
     molde: ESQUEMA_DE_ELEGIR,
     espera: reloj.senal(TOPE_DE_ELEGIR),
   });
+  reloj.apunta(`buscar ${cual} (${esfuerzo})`, arranque);
 
   const rasgos = [];
   for (const r of (Array.isArray(salida.rasgos) ? salida.rasgos : [])) {
@@ -1099,6 +1112,7 @@ LA LISTA:
 
 ${laListaNumerada(rasgos)}`;
 
+  const arranque = Date.now();
   const salida = await alModelo({
     que: `limpiar los rasgos (${piensa})`,
     modelo: 'claude-opus-5',
@@ -1117,6 +1131,7 @@ ${laListaNumerada(rasgos)}`;
     molde: ESQUEMA_DE_LIMPIAR,
     espera: reloj.senal(TOPE_DE_LIMPIAR),
   });
+  reloj.apunta(`limpiar (${piensa})`, arranque);
 
   // Solo numeros que existan, sin repetir y en el orden de la lista.
   const validos = new Set(rasgos.map((_, i) => i + 1));
@@ -1204,6 +1219,11 @@ async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
   // para comparar. Al final se recupera todo por el numero.
   const todos = [...elegidasF, ...elegidosD];
 
+  // Se apuntan tal como se los va a ver la limpieza, con el mismo numero.
+  reloj.cuaderno.entraron = todos.map((r, i) => ({
+    n: i + 1, lista: r.lista, area: r.area, titulo: r.nombre, descripcion: r.descripcion,
+  }));
+
   const enteros = await limpiarYRepasar(todos, reloj);
 
   return {
@@ -1226,7 +1246,9 @@ async function limpiarYRepasar(todos, reloj) {
 
   let sequedan;
   try {
-    ({ sequedan } = await limpiarLosRasgos(todos, 'high', reloj));
+    const primera = await limpiarLosRasgos(todos, 'high', reloj);
+    sequedan = primera.sequedan;
+    reloj.cuaderno.quitaLimpieza = primera.sequitan;
     console.log(`de ${todos.length} rasgos se quedan ${sequedan.length}`);
   } catch (err) {
     console.warn(`la limpieza se ha caido (${err.message}), se sigue con los ${todos.length} rasgos`);
@@ -1241,6 +1263,7 @@ async function limpiarYRepasar(todos, reloj) {
       // Los numeros del repaso son los de la lista que se le paso, no los de la
       // lista original: se traducen.
       const quedanAhora = repaso.sequedan.map(n => sequedan[n - 1]).filter(Boolean);
+      reloj.cuaderno.quitaRepaso = repaso.sequitan.map(n => sequedan[n - 1]).filter(Boolean);
       console.log(`el repaso deja ${quedanAhora.length} de ${sequedan.length}`);
       sequedan = quedanAhora;
     } catch (err) {
