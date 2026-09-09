@@ -567,9 +567,9 @@ Edad: ${edad} años`;
     // Y con el mismo trato que las areas: cada lista se reintenta hasta 3 veces
     // por su cuenta cuando el fallo es temporal (saturacion, error del
     // servidor, corte de red). Tienen que salir siempre, igual que las areas.
-    // Lo que hay en cada casa va SOLO aqui, a las listas de rasgos. El informe
-    // de las siete areas recibe el mismo texto de siempre, sin una letra de
-    // mas: lo suyo se arma arriba con cartaTexto a secas.
+    // Lo que hay en cada casa va SOLO aqui, a las listas de rasgos. Las siete
+    // areas ya no reciben nada de la carta: escriben con los rasgos que salen
+    // de aqui.
     const cartaConLasCasas = casasTexto ? `${cartaTexto}\n\n${casasTexto}` : cartaTexto;
     const rasgos = await sacarRasgos(nombrePila, sexo, cartaConLasCasas, INTENTOS_POR_AREA, reloj);
 
