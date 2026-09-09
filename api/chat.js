@@ -494,6 +494,17 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
     },
   ];
 
+  // LA CARTA NATAL YA NO VIENE AQUI.
+  //
+  // Antes se le mandaba entera a cada una de las siete, y hacia falta: los
+  // rasgos llegaban con el titulo pelado y con eso no se escribe un area, asi
+  // que cada una acababa sacando lo suyo de la carta por su cuenta.
+  //
+  // Ahora los rasgos llegan escritos -titulo, descripcion y el porque de cada
+  // desafio-, que es justo lo que el area necesita y lo que su encargo le manda
+  // usar: el material del area entera son sus rasgos. La carta ya se ha leido
+  // antes, al buscarlos, y volver a ponerla delante solo le da a cada area la
+  // ocasion de irse por su cuenta a otro sitio.
   const contextoPersona = `Persona:
 Nombre completo: ${nombre}
 Nombre de pila: ${nombrePila}
@@ -501,9 +512,7 @@ Sexo: ${sexo}
 Fecha de nacimiento: ${fechaNice}
 Hora: ${hora}
 Lugar: ${lugar}
-Edad: ${edad} años
-
-${cartaTexto}`;
+Edad: ${edad} años`;
 
   // Las 7 areas se piden a la vez, asi que un fallo puntual en una sola tumbaba
   // el informe entero y gastaba un intento del cliente. Ahora cada area se
