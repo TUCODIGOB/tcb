@@ -44,8 +44,8 @@ const original = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
 const ENPRODUCCION = [
   ['el presupuesto de la peticion', 'const TOPE_DE_LA_PETICION = 285000'],
   ['el tope de cada area',          'signal: reloj.senal(90000)'],
-  ['el tope de elegir',            'const TOPE_DE_ELEGIR = 100000'],
-  ['el tope de escribir',          'const TOPE_DE_ESCRIBIR = 110000'],
+  ['el tope de buscar',            'const TOPE_DE_ELEGIR = 120000'],
+  ['el tope de limpiar',           'const TOPE_DE_LIMPIAR = 90000'],
 ];
 console.log('\n  api/chat.js — una llamada colgada ya no se lleva el informe por delante\n');
 for (const [que, texto] of ENPRODUCCION) {
@@ -82,10 +82,11 @@ function aEscala(texto, presupuesto) {
   return texto
     .replace("import Stripe from 'stripe';", "import Stripe from './.stripe-falso.mjs';")
     .replace('const TOPE_DE_LA_PETICION = 285000', `const TOPE_DE_LA_PETICION = ${presupuesto}`)
-    .replace('const TOPE_DE_ELEGIR = 100000', 'const TOPE_DE_ELEGIR = 2000')
-    .replace('const TOPE_DE_ESCRIBIR = 110000', 'const TOPE_DE_ESCRIBIR = 2500')
+    .replace('const TOPE_DE_ELEGIR = 120000', 'const TOPE_DE_ELEGIR = 2000')
+    .replace('const TOPE_DE_LIMPIAR = 90000', 'const TOPE_DE_LIMPIAR = 2000')
     .replace('reloj.senal(90000)', 'reloj.senal(2500)')
-    .replace('hayTiempoPara(180)', 'hayTiempoPara(5)');
+    .replace('hayTiempoPara(180)', 'hayTiempoPara(5)')
+    .replace('hayTiempoPara(120)', 'hayTiempoPara(3)');
 }
 
 const stripeFalsoRuta = path.join(AQUI, '.stripe-falso.mjs');
@@ -93,17 +94,17 @@ const rutaA = path.join(AQUI, '.chat-colgada.mjs');
 const rutaB = path.join(AQUI, '.chat-sin-tiempo.mjs');
 fs.writeFileSync(stripeFalsoRuta, STRIPE_FALSO);
 fs.writeFileSync(rutaA, aEscala(original, 12000));   // da de sobra: cabe el reintento
-fs.writeFileSync(rutaB, aEscala(original, 5000));    // apurado: no cabe nada opcional
+fs.writeFileSync(rutaB, aEscala(original, 2500));    // apurado: no cabe nada opcional
 
 process.env.STRIPE_SECRET_KEY = 'sk_test';
 process.env.ANTHROPIC_API_KEY = 'sk-ant-test';
 process.env.BREVO_API_KEY = '';
 
 // ── 3. El modelo de mentira.
-// Cada rasgo con su titulo, distintos entre si: dos titulos que dicen lo mismo
-// los quita el filtro de repetidos y el area se quedaria coja.
+// Cada rasgo con su titulo, todos distintos entre si, como en una lista de
+// verdad.
 const TITULOS = {
-  Fortaleza: [
+  fortalezas: [
     'Aguantas cuando todo aprieta', 'Miras de frente lo incomodo',
     'Decides rapido y sin ruido', 'Cuidas los detalles pequenos',
     'Sostienes a quien se cae', 'Aprendes de cada golpe',
@@ -112,7 +113,7 @@ const TITULOS = {
     'Repartes tu tiempo con cabeza', 'Levantas el animo de tu gente',
     'Ahorras pensando en manana', 'Negocias sin perder la forma',
   ],
-  Desafio: [
+  desafios: [
     'Te callas lo que te duele', 'Aplazas las conversaciones dificiles',
     'Cargas con lo que no te toca', 'Dudas de lo que ya sabes',
     'Buscas aprobacion antes de moverte', 'Te exiges mas de la cuenta',
@@ -120,40 +121,49 @@ const TITULOS = {
     'Controlas hasta lo que no depende de ti', 'Postergas los cierres',
     'Te comparas con quien no deberias', 'Gastas energia en agradar',
     'Temes quedarte sin nada', 'Confundes ayudar con salvar',
+    'Te adelantas a lo que quiere el otro', 'Alargas lo que ya no te sirve',
+    'Empiezas mil cosas y no cierras ninguna', 'Te disculpas sin motivo',
+    'Rebajas tu precio antes de que te lo pidan', 'Evitas mirar los numeros',
+    'Te cierras cuando algo te duele',
   ],
 };
-const rasgoDe = (origen, i, lista) => ({
-  nombre: TITULOS[lista][i], descripcion: 'Sigues de pie donde otros se bajan.',
-  causa: 'Sostienes el esfuerzo sin depender de que salga bien.', origen,
-});
-// Ahora los rasgos van en dos pasos: uno elige -nombre, area y de donde sale- y
-// otro escribe la descripcion y la causa de cada uno. Aqui se contesta a los
-// dos, cada uno con lo suyo.
+
+// Las posiciones son inventadas para la prueba, de nadie: solo tienen que caer
+// en el area de su caja para que el codigo las acepte. Van tres por area, que
+// es lo que pide la lista mas larga.
 const POR_AREAS = [
-  ['IDENTIDAD',  'Sol en Aries casa 1',        'Ascendente en Aries'],
-  ['PATRONES',   'Nodo Norte en Acuario',      'casa 9 en Aries'],
-  ['MIEDOS',     'Saturno en Acuario casa 12', 'Neptuno en Acuario'],
-  ['HERIDA',     'Luna en Aries casa 4',       'Quiron en Acuario'],
-  ['AMOR',       'Venus en Acuario',           'casa 5 en Aries'],
-  ['RELACIONES', 'Mercurio en Aries',          'casa 11 en Acuario'],
-  ['DINERO',     'casa 2 en Aries',            'casa 10 en Acuario'],
+  ['IDENTIDAD',  ['Sol en Aries casa 1', 'Ascendente en Aries', 'casa 1 en Aries']],
+  ['PATRONES',   ['Nodo Norte en Acuario', 'casa 9 en Aries', 'casa 6 en Aries']],
+  ['MIEDOS',     ['Saturno en Acuario casa 12', 'Neptuno en Acuario', 'casa 12 en Acuario']],
+  ['HERIDA',     ['Luna en Aries casa 4', 'Quiron en Acuario', 'casa 4 en Aries']],
+  ['AMOR',       ['Venus en Acuario', 'casa 5 en Aries', 'casa 7 en Aries']],
+  ['RELACIONES', ['Mercurio en Aries', 'casa 11 en Acuario', 'casa 3 en Aries']],
+  ['DINERO',     ['casa 2 en Aries', 'casa 10 en Acuario', 'casa 8 en Aries']],
 ];
-const elegidosDe = (cual, l) => POR_AREAS.flatMap(([area, a, b], k) => [
-  { lista: cual, area, nombre: TITULOS[l][k * 2],     origen: a },
-  { lista: cual, area, nombre: TITULOS[l][k * 2 + 1], origen: b },
-]);
-const LOS_ELEGIDOS = JSON.stringify({
-  rasgos: elegidosDe('fortalezas', 'Fortaleza').concat(elegidosDe('desafios', 'Desafio')),
+
+// PASO 1, BUSCAR: cada llamada saca SU lista, con las cinco casillas llenas.
+// Dos fortalezas por area y tres desafios, que es lo que pide el encargo.
+const losRasgos = cual => JSON.stringify({
+  rasgos: POR_AREAS.flatMap(([area, posiciones], k) => {
+    const cuantos = cual === 'fortalezas' ? 2 : 3;
+    return posiciones.slice(0, cuantos).map((origen, i) => ({
+      area,
+      titulo: TITULOS[cual][k * cuantos + i],
+      descripcion: 'Sigues de pie donde otros se bajan del todo, y quien te tiene cerca ya cuenta con eso.',
+      causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
+      origen,
+    }));
+  }),
 });
-// El que escribe contesta un texto por rasgo, en el mismo orden en que se los dan.
-const losTextos = cuantos => JSON.stringify({
-  textos: Array.from({ length: cuantos }, () => ({
-    descripcion: 'Sigues de pie donde otros se bajan del todo, y la gente que tienes cerca ya cuenta con eso sin decirlo.',
-    causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
-  })),
-});
-// Cuantos rasgos le han dado a esta peticion de escribir.
-const cuantosPide = cuerpo => String(cuerpo.messages?.[0]?.content || '').match(/de los (\d+) rasgos/)?.[1] | 0;
+
+// PASO 2, LIMPIAR: contesta solo con numeros. Se queda con todos a proposito,
+// para que lo que se cuenta aqui sean las llamadas y no lo que quite.
+const laLimpieza = sistema => {
+  const cuantos = (sistema.match(/^\d+\. /gm) || []).length;
+  return JSON.stringify({
+    sequedan: Array.from({ length: cuantos }, (_, i) => i + 1), sequitan: [],
+  });
+};
 
 let llamadas = 0, sinSenal = 0, colgarLaPrimera = false, yaColgada = false;
 
@@ -164,20 +174,19 @@ globalThis.fetch = async (url, opciones) => {
   llamadas++;
   if (!opciones || !opciones.signal) sinSenal++;
 
-  let esElegir = false, esEscribir = false, cuantos = 0;
+  let esBuscar = false, esLimpiar = false, cual = 'desafios', sistema = '';
   try {
     const cuerpo = JSON.parse(opciones.body);
-    const sistema = String(cuerpo.system || '');
-    esElegir = sistema.includes('AQUÍ NO SE ESCRIBE EL INFORME');
-    esEscribir = sistema.includes('AQUÍ NO SE ELIGE NADA');
-    if (esEscribir) cuantos = cuantosPide(cuerpo);
+    sistema = String(cuerpo.system || '');
+    esBuscar = sistema.includes('AQUÍ SE BUSCAN Y SE ESCRIBEN');
+    esLimpiar = sistema.includes('Abajo tienes las fortalezas y los desafíos');
+    if (sistema.includes('las dos listas: fortalezas')) cual = 'fortalezas';
   } catch (e) {}
-  const esLista = esElegir || esEscribir;
 
   // LA LLAMADA QUE NO CONTESTA. Solo termina si la cortan: si el codigo no le
   // pone senal, esta promesa no se resuelve jamas y la prueba se cuelga, igual
   // que se colgo la funcion en produccion.
-  if (colgarLaPrimera && esElegir && !yaColgada) {
+  if (colgarLaPrimera && esBuscar && !yaColgada) {
     yaColgada = true;
     await new Promise((_, rechazar) => {
       if (!opciones.signal) return;
@@ -186,18 +195,19 @@ globalThis.fetch = async (url, opciones) => {
   }
 
   await espera(120);
-  // La de elegir razona, asi que su respuesta trae delante un bloque de
-  // pensamiento y detras el texto, como hace la API de verdad. Las demas
-  // contestan con un bloque solo.
-  if (esElegir) {
+  // Buscar y limpiar razonan, asi que su respuesta trae delante un bloque de
+  // pensamiento y detras el texto, como hace la API de verdad. Las areas no
+  // razonan y contestan con un bloque solo.
+  if (esBuscar) {
     return { ok: true, status: 200, json: async () => ({ content: [
       { type: 'thinking', thinking: '' },
-      { type: 'text', text: LOS_ELEGIDOS },
+      { type: 'text', text: losRasgos(cual) },
     ] }) };
   }
-  if (esEscribir) {
+  if (esLimpiar) {
     return { ok: true, status: 200, json: async () => ({ content: [
-      { type: 'text', text: losTextos(cuantos) },
+      { type: 'thinking', thinking: '' },
+      { type: 'text', text: laLimpieza(sistema) },
     ] }) };
   }
   return { ok: true, status: 200, json: async () => ({ content: [
@@ -239,7 +249,7 @@ try {
   comprobar('la peticion no se queda colgada', !a.colgado, `${(tardo / 1000).toFixed(1)}s`);
   comprobar('el informe sale igual', a.code === 200, 'HTTP ' + a.code);
   comprobar('la colgada se corta y se vuelve a pedir esa sola',
-    llamadas === 11, `${llamadas} llamadas (10 + la que se corto)`);
+    llamadas === 12, `${llamadas} llamadas (11 + la que se corto)`);
   comprobar('ninguna llamada al modelo va sin tope de tiempo', sinSenal === 0,
     `${sinSenal} sin tope`);
 
@@ -254,7 +264,7 @@ try {
 
   comprobar('con el tiempo justo el informe tambien sale', b.code === 200 && !b.colgado, 'HTTP ' + b.code);
   comprobar('no se pide ni una llamada de mas por ir justo de tiempo', llamadas === 10,
-    `${llamadas} llamadas (elegir + 2 de escribir + 7 areas)`);
+    `${llamadas} llamadas (2 de buscar + limpiar + 7 areas, sin el repaso)`);
   comprobar('el informe llega entero al cliente, con sus siete areas',
     typeof b.body?.texto === 'string' && b.body.texto.split(SEPARADOR).length === 7,
     (b.body?.texto ? b.body.texto.split(SEPARADOR).length : 0) + ' areas');
