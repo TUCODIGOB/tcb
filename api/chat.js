@@ -1491,7 +1491,7 @@ const PALABRAS_DE_ASTROLOGIA = [
 ];
 
 function hablaDeAstrologia(rasgo) {
-  const texto = sinTildes(rasgo.conducta);
+  const texto = sinTildes(`${rasgo.nombre} ${rasgo.descripcion} ${rasgo.causa}`);
   return PALABRAS_DE_ASTROLOGIA.some(re => re.test(texto));
 }
 
