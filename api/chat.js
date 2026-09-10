@@ -569,9 +569,16 @@ Edad: ${edad} años`;
     // NI RELLENO NI FRASE CORTADA. Un area con una palabra de relleno dentro, o
     // que se corta a media frase, se imprime tal cual en el PDF. Se vuelve a
     // pedir, que para eso lleva tres intentos.
+    //
+    // PERO SE ENTREGA IGUAL SI LO UNICO QUE LE PASA ES QUE ACABA SIN PUNTO. En
+    // el P2 esta misma red se paso de freno y una clienta se quedo SIN PDF
+    // despues de cuatro minutos y un euro. Quedarse sin informe es peor que una
+    // frase sin punto, asi que en el ultimo intento eso se entrega. El relleno
+    // no: eso no se entrega nunca.
     if (esRelleno(texto) || acabaColgado(texto)) {
       const err = new Error(`Área ${area.id} ${esRelleno(texto) ? 'trae texto de relleno' : 'se corta a media frase'}`);
       err.temporal = true;
+      if (!esRelleno(texto)) err.seEntregaIgual = texto.trim();
       throw err;
     }
 
@@ -580,6 +587,7 @@ Edad: ${edad} años`;
   }
 
   async function generarArea(area, rasgos) {
+    const arranque = Date.now();
     let ultimoError;
     for (let intento = 1; intento <= INTENTOS_POR_AREA; intento++) {
       try {
@@ -588,6 +596,13 @@ Edad: ${edad} años`;
         ultimoError = err;
         // Un corte de red llega sin marca; se trata como temporal.
         const temporal = err.temporal !== false;
+        // Y en el ultimo intento, si lo unico que le pasa es que acaba sin
+        // punto, vale ese texto: es preferible a dejarla sin informe.
+        if (intento === INTENTOS_POR_AREA && err.seEntregaIgual) {
+          console.warn(`Área ${area.id} sigue acabando a media frase, se entrega igual`);
+          reloj.apunta(`area ${area.id}`, arranque);
+          return err.seEntregaIgual;
+        }
         if (!temporal || intento === INTENTOS_POR_AREA) break;
         console.warn(`Área ${area.id}: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
         await new Promise(r => setTimeout(r, 1500 * intento));
