@@ -566,6 +566,15 @@ Edad: ${edad} años`;
       throw err;
     }
 
+    // NI RELLENO NI FRASE CORTADA. Un area con una palabra de relleno dentro, o
+    // que se corta a media frase, se imprime tal cual en el PDF. Se vuelve a
+    // pedir, que para eso lleva tres intentos.
+    if (esRelleno(texto) || acabaColgado(texto)) {
+      const err = new Error(`Área ${area.id} ${esRelleno(texto) ? 'trae texto de relleno' : 'se corta a media frase'}`);
+      err.temporal = true;
+      throw err;
+    }
+
     reloj.apunta(`area ${area.id}`, arranque);
     return texto.trim();
   }
@@ -1423,16 +1432,39 @@ Nombre de pila: ${nombrePila}`;
   return salida;
 }
 
+// UN RASGO MAL ESCRITO NO ES UN RASGO. Con una palabra de relleno dentro, o con
+// una casilla cortada a media frase, eso se imprime tal cual en el PDF.
+// El titulo se mira solo por el relleno: por encargo va sin punto al final, asi
+// que ahi lo de la frase cortada no se puede mirar y no significaria nada.
+const vieneMal = e =>
+  ['titulo', 'descripcion', 'causa'].some(c => esRelleno(e?.[c])) ||
+  ['descripcion', 'causa'].some(c => acabaColgado(e?.[c]));
+
 // Y SI FALLA, SE REPITE. Cada mitad por su cuenta: si se cae una, la otra sigue
-// su camino y solo se vuelve a pedir la que falto.
+// su camino y solo se vuelve a pedir la que falto. Falla es tanto que la llamada
+// se caiga como que vuelva con rasgos sin escribir de verdad.
 async function unaMitadEscrita(rasgos, nombrePila, sexo, reloj) {
+  let salida;
   try {
-    return await pedirLoEscrito(rasgos, nombrePila, sexo, reloj);
+    salida = await pedirLoEscrito(rasgos, nombrePila, sexo, reloj);
   } catch (err) {
     if (err.temporal === false || !reloj.hayTiempoPara(100)) throw err;
     console.warn(`una mitad de los rasgos no se ha escrito (${err.message.slice(0, 80)}), se repite`);
     return await pedirLoEscrito(rasgos, nombrePila, sexo, reloj);
   }
+
+  const malos = (Array.isArray(salida?.rasgos) ? salida.rasgos : []).filter(vieneMal);
+  if (malos.length && reloj.hayTiempoPara(100)) {
+    console.warn(`${malos.length} rasgos han vuelto sin escribir de verdad, se repite esa mitad`);
+    try {
+      return await pedirLoEscrito(rasgos, nombrePila, sexo, reloj);
+    } catch (err) {
+      // Si la segunda tirada se cae, vale la primera: los que vinieron mal se
+      // quedan fuera mas abajo, pero los buenos se salvan.
+      console.warn(`la segunda tirada tampoco ha salido (${err.message.slice(0, 80)}), se sigue con la primera`);
+    }
+  }
+  return salida;
 }
 
 // PARTIR, PEDIR LAS DOS A LA VEZ Y VOLVER A JUNTAR.
@@ -1456,6 +1488,10 @@ async function escribirLosRasgos(todos, nombrePila, sexo, reloj) {
     for (const e of (Array.isArray(salidas[k]?.rasgos) ? salidas[k].rasgos : [])) {
       const rasgo = mitad[Number(e?.n) - 1];
       if (!rasgo) continue;
+      // Ni con el segundo intento: ese rasgo no se pega, se queda sin escribir y
+      // lo tira la comprobacion de abajo. Antes de que salga con relleno en el
+      // PDF, que no salga.
+      if (vieneMal(e)) continue;
       rasgo.nombre      = String(e?.titulo ?? '').trim();
       rasgo.descripcion = String(e?.descripcion ?? '').trim();
       rasgo.causa       = String(e?.causa ?? '').trim();
@@ -1470,6 +1506,32 @@ async function escribirLosRasgos(todos, nombrePila, sexo, reloj) {
   }
   return escritos;
 }
+
+// LO QUE NO ES TEXTO, AUNQUE LO PAREZCA.
+//
+// El modelo hace esto cuando se queda sin hilo a mitad de una lista larga:
+// cierra el molde rellenando lo que le falta con una palabra cualquiera, el
+// molde queda valido y nada se queja. Paso en el P2 con tres casillas, y el 10
+// de septiembre paso aqui: ocho rasgos salieron con la palabra "placeholder"
+// en el titulo y en la descripcion, y se imprimieron asi.
+//
+// Se busca solo lo que NADIE escribiria en un documento que se le entrega a
+// una persona. Nada de palabras corrientes: una sola de esas aqui dentro haria
+// tirar textos buenos.
+const MARCAS_DE_RELLENO = [
+  /^\s*(placeholder|lorem ipsum|texto de ejemplo|pendiente|por completar|por escribir|sin contenido|n\/?a|tbd|todo)\b/i,
+  /\bplaceholder\b/i,
+  /\blorem ipsum\b/i,
+  /^\s*[.\-\u2013\u2014_]+\s*$/,
+  /^\s*\[[^\]]*\]\s*$/,
+];
+const esRelleno = txt => MARCAS_DE_RELLENO.some(re => re.test(String(txt || '')));
+
+// Y LO QUE SE QUEDA A MEDIA FRASE. Se mira al reves de pedir el punto: solo lo
+// que no puede cerrar una frase nunca -una letra, un numero, una coma, dos
+// puntos, o algo que se acaba de abrir-. Los guiones no entran: un inciso puede
+// cerrarse con su guion al final y eso es un final bueno.
+const acabaColgado = txt => /[\p{L}\p{N},;:\u00ab\u00bf\u00a1([\u201c\u2018]$/u.test(String(txt || '').trim());
 
 // LO QUE LA CLIENTA NO PUEDE LEER.
 //
