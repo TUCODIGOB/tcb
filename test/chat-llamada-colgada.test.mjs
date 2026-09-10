@@ -158,6 +158,20 @@ const losRasgos = () => JSON.stringify({
     })),
 });
 
+// PASO 3, ESCRIBIR: le llega media lista numerada y devuelve, por cada numero,
+// el titulo, la descripcion y la causa.
+const loEscrito = sistema => {
+  const cuantos = (sistema.match(/^\d+\. /gm) || []).length;
+  return JSON.stringify({
+    rasgos: Array.from({ length: cuantos }, (_, i) => ({
+      n: i + 1,
+      titulo: `Titulo del rasgo numero ${i + 1}`,
+      descripcion: 'Sigues de pie donde otros se bajan del todo, y quien te tiene cerca ya cuenta con eso.',
+      causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
+    })),
+  });
+};
+
 // PASO 2, LIMPIAR: contesta solo con numeros. Se queda con todos a proposito,
 // para que lo que se cuenta aqui sean las llamadas y no lo que quite.
 const laLimpieza = sistema => {
@@ -176,12 +190,13 @@ globalThis.fetch = async (url, opciones) => {
   llamadas++;
   if (!opciones || !opciones.signal) sinSenal++;
 
-  let esBuscar = false, esLimpiar = false, sistema = '';
+  let esBuscar = false, esLimpiar = false, esEscribir = false, sistema = '';
   try {
     const cuerpo = JSON.parse(opciones.body);
     sistema = String(cuerpo.system || '');
     esBuscar = sistema.includes('AQUÍ SOLO SE BUSCAN, NO SE ESCRIBEN');
     esLimpiar = sistema.includes('Abajo tienes las fortalezas y los desafíos');
+    esEscribir = sistema.includes('AQUÍ NO SE ELIGE NADA');
   } catch (e) {}
 
   // LA LLAMADA QUE NO CONTESTA. Solo termina si la cortan: si el codigo no le
@@ -209,6 +224,12 @@ globalThis.fetch = async (url, opciones) => {
     return { ok: true, status: 200, json: async () => ({ content: [
       { type: 'thinking', thinking: '' },
       { type: 'text', text: laLimpieza(sistema) },
+    ] }) };
+  }
+  if (esEscribir) {
+    return { ok: true, status: 200, json: async () => ({ content: [
+      { type: 'thinking', thinking: '' },
+      { type: 'text', text: loEscrito(sistema) },
     ] }) };
   }
   return { ok: true, status: 200, json: async () => ({ content: [
@@ -250,7 +271,7 @@ try {
   comprobar('la peticion no se queda colgada', !a.colgado, `${(tardo / 1000).toFixed(1)}s`);
   comprobar('el informe sale igual', a.code === 200, 'HTTP ' + a.code);
   comprobar('la colgada se corta y se vuelve a pedir esa sola',
-    llamadas === 11, `${llamadas} llamadas (10 + la que se corto)`);
+    llamadas === 13, `${llamadas} llamadas (12 + la que se corto)`);
   comprobar('ninguna llamada al modelo va sin tope de tiempo', sinSenal === 0,
     `${sinSenal} sin tope`);
 
@@ -264,8 +285,8 @@ try {
   ]);
 
   comprobar('con el tiempo justo el informe tambien sale', b.code === 200 && !b.colgado, 'HTTP ' + b.code);
-  comprobar('no se pide ni una llamada de mas por ir justo de tiempo', llamadas === 9,
-    `${llamadas} llamadas (buscar + limpiar + 7 areas, sin el repaso)`);
+  comprobar('no se pide ni una llamada de mas por ir justo de tiempo', llamadas === 11,
+    `${llamadas} llamadas (buscar + limpiar + 2 de escribir + 7 areas, sin el repaso)`);
   comprobar('el informe llega entero al cliente, con sus siete areas',
     typeof b.body?.texto === 'string' && b.body.texto.split(SEPARADOR).length === 7,
     (b.body?.texto ? b.body.texto.split(SEPARADOR).length : 0) + ' areas');

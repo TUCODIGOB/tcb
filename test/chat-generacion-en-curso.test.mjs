@@ -113,6 +113,20 @@ const losRasgos = () => JSON.stringify({
     })),
 });
 
+// PASO 3, ESCRIBIR: le llega media lista numerada y devuelve, por cada numero,
+// el titulo, la descripcion y la causa.
+const loEscrito = sistema => {
+  const cuantos = (sistema.match(/^\d+\. /gm) || []).length;
+  return JSON.stringify({
+    rasgos: Array.from({ length: cuantos }, (_, i) => ({
+      n: i + 1,
+      titulo: `Titulo del rasgo numero ${i + 1}`,
+      descripcion: 'Sigues de pie donde otros se bajan del todo, y quien te tiene cerca ya cuenta con eso.',
+      causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
+    })),
+  });
+};
+
 // PASO 2, LIMPIAR: contesta solo con numeros. Se queda con todos a proposito,
 // para que lo que se cuenta aqui sean las llamadas y no lo que quite.
 const laLimpieza = sistema => {
@@ -127,12 +141,13 @@ globalThis.fetch = async (url, opciones) => {
   if (u.includes('api.anthropic.com')) {
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
-    let esBuscar = false, esLimpiar = false, sistema = '';
+    let esBuscar = false, esLimpiar = false, esEscribir = false, sistema = '';
     try {
       const cuerpo = JSON.parse(opciones.body);
       sistema = String(cuerpo.system || '');
       esBuscar = sistema.includes('AQUÍ SOLO SE BUSCAN, NO SE ESCRIBEN');
       esLimpiar = sistema.includes('Abajo tienes las fortalezas y los desafíos');
+      esEscribir = sistema.includes('AQUÍ NO SE ELIGE NADA');
       } catch (e) {}
     // Buscar y limpiar razonan: su respuesta trae delante un bloque de
     // pensamiento y detras el texto, como la API de verdad.
@@ -146,6 +161,12 @@ globalThis.fetch = async (url, opciones) => {
       return { ok: true, status: 200, json: async () => ({ content: [
         { type: 'thinking', thinking: '' },
         { type: 'text', text: laLimpieza(sistema) },
+      ] }) };
+    }
+    if (esEscribir) {
+      return { ok: true, status: 200, json: async () => ({ content: [
+        { type: 'thinking', thinking: '' },
+        { type: 'text', text: loEscrito(sistema) },
       ] }) };
     }
     // api/chat.js descarta cualquier area de menos de 100 caracteres y la
@@ -235,7 +256,7 @@ try {
   // que le pone el area a cada uno, mas las 7 areas del informe. Lo que se
   // vigila aqui no es el numero, sino que la segunda peticion no haya lanzado
   // NINGUNA generacion mas.
-  comprobar('en total solo se generó una vez', llamadasAlModelo === 10, llamadasAlModelo + ' llamadas');
+  comprobar('en total solo se generó una vez', llamadasAlModelo === 12, llamadasAlModelo + ' llamadas');
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);
