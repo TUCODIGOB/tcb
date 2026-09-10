@@ -1289,6 +1289,90 @@ async function sacarLasListas(nombrePila, sexo, cartaTexto, reloj) {
   return await pedirLasListas(nombrePila, sexo, cartaTexto, reloj);
 }
 
+// ── PASO 3: ESCRIBIR LOS RASGOS ─────────────────────────────
+//
+// Los rasgos ya estan elegidos y limpios, pero todavia no estan escritos: de
+// cada uno solo hay su conducta y la posicion de la carta de la que sale. Aqui
+// se les pone el titulo, la descripcion y la causa, que es lo que la clienta lee.
+//
+// EN DOS LLAMADAS Y A LA VEZ. Escribir treinta y tantos rasgos seguidos es lo
+// que tumbo al paso 1: la escritura no se acelera, solo se reparte. Media lista
+// cada una, las dos al mismo tiempo, y tarda la mitad.
+//
+// Y CADA UNA CON LA SUYA Y NADA MAS. No necesita ver la otra mitad: los rasgos
+// vienen ya comparados entre si del paso 2, asi que no puede repetir ni
+// contradecir nada.
+const TOPE_DE_ESCRIBIR = 90000;
+
+const ESQUEMA_DE_ESCRIBIR = {
+  type: 'object',
+  properties: {
+    rasgos: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          // EL NUMERO ES LO QUE LOS ATA. El modelo no devuelve el rasgo entero,
+          // solo lo que ha escrito de el, asi que el codigo lo tiene que poder
+          // volver a juntar con su conducta, su area y su lista.
+          n:           { type: 'integer' },
+          titulo:      { type: 'string' },
+          descripcion: { type: 'string' },
+          causa:       { type: 'string' },
+        },
+        required: ['n', 'titulo', 'descripcion', 'causa'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['rasgos'],
+  additionalProperties: false,
+};
+
+async function pedirLoEscrito(rasgos, nombrePila, sexo, reloj, esfuerzo = 'low') {
+  const encargo = `${TONO}
+
+
+`;
+
+  const arranque = Date.now();
+  const salida = await alModelo({
+    que: 'escribir los rasgos',
+    // SONNET, Y NO OPUS. Aqui no se decide nada: los rasgos ya estan elegidos y
+    // comparados. Es escribir, que es lo que las areas llevan haciendo con
+    // Sonnet desde el principio.
+    modelo: 'claude-sonnet-5',
+    // Y RAZONANDO BAJO. Convertir una posicion de la carta en algo que la
+    // clienta reconoce de su vida es trabajo de astrologa, no de copista: sin
+    // pensar nada sale generico. Bajo cuesta unos segundos y es lo que separa
+    // una descripcion suya de una que valdria para cualquiera.
+    razona: esfuerzo,
+    // EL TECHO. Cada llamada escribe media lista, unas mil cien palabras. Ocho
+    // mil es cinco veces eso: es un techo por si se pasa, no un objetivo, y
+    // solo se paga lo que sale.
+    techo: 8000,
+    system: encargo,
+    mensaje: 'Escribe estos rasgos, siguiendo el esquema.',
+    molde: ESQUEMA_DE_ESCRIBIR,
+    espera: reloj.senal(TOPE_DE_ESCRIBIR),
+  });
+  reloj.apunta(`escribir los rasgos (${rasgos.length})`, arranque);
+
+  return salida;
+}
+
+// Y SI FALLA, SE REPITE. Cada mitad por su cuenta: si se cae una, la otra sigue
+// su camino y solo se vuelve a pedir la que falto.
+async function unaMitadEscrita(rasgos, nombrePila, sexo, reloj) {
+  try {
+    return await pedirLoEscrito(rasgos, nombrePila, sexo, reloj);
+  } catch (err) {
+    if (err.temporal === false || !reloj.hayTiempoPara(100)) throw err;
+    console.warn(`una mitad de los rasgos no se ha escrito (${err.message.slice(0, 80)}), se repite`);
+    return await pedirLoEscrito(rasgos, nombrePila, sexo, reloj);
+  }
+}
+
 // LO QUE LA CLIENTA NO PUEDE LEER.
 //
 // El encargo prohibe las palabras de astrologia en el nombre, la descripcion y
