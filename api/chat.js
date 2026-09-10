@@ -917,7 +917,7 @@ async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'm
 
 
 Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
-AQUÍ SE BUSCAN Y SE ESCRIBEN: De cada rasgo sale si es una fortaleza o un desafío, su título, su descripción, la causa, el área a la que pertenece y de qué posición de la carta lo has sacado. Lo que importa es encontrar los que de verdad están en esta carta, y los que más pesan. 
+AQUÍ SE BUSCAN Y SE ESCRIBEN: De cada rasgo sale si es una fortaleza o un desafío, su título, su descripción, la causa, la conducta, el área a la que pertenece y de qué posición de la carta lo has sacado. Lo que importa es encontrar los que de verdad están en esta carta, y los que más pesan. 
 QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. No que suene bien ni que esté bien escrito. Entre dos que dicen casi lo mismo, se queda el que más le cuesta o más le da, y el otro se va.
 TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posición concreta de esta carta, no se escribe.
 
@@ -956,8 +956,15 @@ Al escribirlo, ponle el área de la que habla el rasgo, no la de la posición de
 
 
 4. LAS CASILLAS DE CADA RASGO
-Todos van en una sola lista, seguidos, y cada uno lleva sus seis casillas llenas: 
+Todos van en una sola lista, seguidos, y cada uno lleva sus siete casillas llenas: 
 lista         si ese rasgo es una fortaleza o un desafío. 
+
+conducta    Qué está HACIENDO esa persona en ese rasgo, de tres a seis
+palabras. No de qué habla ni dónde le pasa: qué HACE.
+No es para ella, es para comparar: dos rasgos con la misma
+conducta son el mismo rasgo, aunque estén escritos distinto.
+Se escribe con las mismas palabras siempre que la conducta sea la misma. Si buscas variar, dejan de verse los repetidos. 
+
 area         una de las siete, escrita como están escritas arriba.
 
 titulo       Se le habla de tu, igual que en todo lo demás: es lo que hace
@@ -997,7 +1004,7 @@ Un rasgo es su título y su posición. Si empiezas uno y no sabes de dónde lo s
 
 Esto no es un repaso del final. Se hace rasgo a rasgo, ANTES de escribir cada uno.
 
-PONLE NOMBRE A LA CONDUCTA. Antes de escribir un rasgo, dite a ti misma, de tres a seis palabras y sin escribirlo en la respuesta, qué está HACIENDO esa persona en ese rasgo. No de qué habla ni dónde le pasa: qué HACE.
+PONLE NOMBRE A LA CONDUCTA. Antes de escribir un rasgo, nombra su conducta, que es la casilla de arriba: qué está HACIENDO esa persona en ese rasgo, de tres a seis palabras. 
 
 Y ANTES DE ESCRIBIRLO, MÍRALO CONTRA LOS QUE YA LLEVAS. Comparas conductas, no palabras. Da igual que uno hable de su trabajo y otro de su casa, que estén en áreas distintas, o que uno sea una fortaleza y el otro un desafío.
 
