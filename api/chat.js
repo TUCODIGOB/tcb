@@ -1329,6 +1329,15 @@ const ESQUEMA_DE_ESCRIBIR = {
   additionalProperties: false,
 };
 
+// LO QUE SE LE DA DE CADA RASGO, Y NADA MAS. Van numerados del uno en adelante
+// dentro de su mitad, igual que en la limpieza: el codigo los vuelve a juntar
+// por ese numero, asi que no necesita saber cual era en la lista entera.
+function losRasgosSinEscribir(rasgos) {
+  return rasgos
+    .map((r, i) => `${i + 1}. ${r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO'} — ${r.area} — ${r.conducta} — ${r.origen}`)
+    .join('\n');
+}
+
 async function pedirLoEscrito(rasgos, nombrePila, sexo, reloj, esfuerzo = 'low') {
   const encargo = `${TONO}
 
@@ -1365,7 +1374,14 @@ causa Por que le pasa ESE rasgo en concreto y de donde le viene, que es
  nota ya está arriba, en la descripcion. Aquí se dice qué hay
  DETRÁS que lo produce, el mecanismo del que sale.
 NI DOS TÍTULOS NI DOS DESCRIPCIONES QUE EMPIECEN IGUAL. Antes de entregar, lee en columna los títulos de toda la lista, y luego las descripciones: los que arranquen con la misma palabra se escriben otra vez arrancando de otra manera.
-Devuelve solo la lista, con todos los rasgos que te han dado y ninguno más.`;
+Devuelve solo la lista, con todos los rasgos que te han dado y ninguno más.
+
+LOS RASGOS:
+
+${losRasgosSinEscribir(rasgos)}
+
+Persona: ${comoSeLeHabla(sexo)}
+Nombre de pila: ${nombrePila}`;
 
   const arranque = Date.now();
   const salida = await alModelo({
