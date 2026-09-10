@@ -234,11 +234,18 @@ En cada área le llamas por su nombre DOS veces como mínimo, y separadas: una e
 El nombre que usas es el de pila, el que tienes en "Nombre de pila". Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación. Si al mirar el nombre entero ves claro que el de pila es compuesto, puedes usar las dos palabras. Ante la duda, la primera palabra sola.
 
 [B] REAL OBLIGATORIA:
+
 Tienes que incluir una escena concreta, específica y visual que el lector reconozca de inmediato como propia. No vale una situación genérica ni tonta. Debe ser una escena tan concreta que el lector se reconozca en ella al momento y sin dudarlo.
+
 Las escenas BUENAS son específicas (gesto concreto, diálogo interno, objeto real), visuales, y tocan una inseguridad real. Las escenas MALAS son abstractas, obvias o vacías: cuentan un estado de ánimo en general en vez de un momento concreto con su gesto, su objeto y su sitio.
+
 La escena ocupa uno o dos párrafos completos dentro del área, integrada de forma natural, sin avisar de que es un ejemplo.
-LA [B] SOLO PUEDE PASAR DE NOCHE EN EL ÁREA 1. En las otras seis ocurre a otra hora del día. Es lo único que cambia: el gesto concreto, el objeto y lo que le pasa por dentro siguen siendo los mismos y con el mismo detalle. 
-Y ES UNA SITUACIÓN DE SU VIDA DE AHORA, de las que se le repiten, no un hecho concreto de su pasado contado como si hubiera ocurrido de verdad. Nunca se le atribuye una relación, un trabajo, una mudanza ni ningún episodio que no esté en sus rasgos: eso sería inventárselo, por muy bien que encaje.
+
+PROHIBIDO situar el momento de la escena con un comodín: nada de "cualquiera", "normal", "como otro". El momento va dicho en concreto. 
+
+LA [B] SOLO PUEDE PASAR DE NOCHE EN EL ÁREA 1. En las otras seis ocurre a otra hora del día. Es lo único que cambia: el gesto concreto, el objeto y lo que le pasa por dentro siguen siendo los mismos y con el mismo detalle.
+
+Y ES UNA SITUACIÓN DE SU VIDA DE AHORA, de las que se le repiten, no un hecho concreto de su pasado contado como si hubiera ocurrido de verdad. Nunca se le atribuye una relación, un trabajo, una mudanza ni ningún episodio que no esté en sus rasgos: eso sería inventárselo, por muy bien que encaje. 
 ESTRUCTURA INTERNA (sin títulos ni numeración visible, todo fluido):
 Lo de abajo es una lista de lo que tienes que tocar, no un índice de apartados. Los códigos entre corchetes son etiquetas mías para poder referirme a cada cosa: NUNCA se escriben, NUNCA se anuncian, NUNCA empiezas un párrafo con ellos y NUNCA abres uno con una frase que presente lo que viene ni que anuncie de dónde viene.
 El área se lee como una sola conversación seguida, no como cinco trozos pegados. Se pasa de una cosa a la siguiente por dentro del texto, tirando del hilo de lo que acabas de contar, y el lector no debe poder señalar dónde acaba una parte y empieza otra.
