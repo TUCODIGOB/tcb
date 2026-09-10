@@ -815,24 +815,32 @@ function areaPorLaPosicion(origen) {
 // ═════════════════════════════════════════════════════════════════
 // LOS RASGOS, EN DOS PASOS: PRIMERO SE BUSCAN, DESPUES SE LIMPIAN
 //
-// POR QUE ASI, Y NO DE UNA TIRADA.
+// POR QUE UNA SOLA LLAMADA BUSCA LAS DOS LISTAS.
 //
-// El fondo del problema, despues de un mes: al modelo se le pedia COMPARAR
-// -"lee las listas juntas y quita lo que diga lo mismo"- en la misma llamada en
-// la que tenia que buscar los rasgos y escribirlos. Y comparar treinta cosas
-// entre si y decidir cual sobra es pensar: no se hace de paso, mientras se
-// redacta. Ningun retoque del encargo lo arreglo nunca, y no iba a arreglarlo.
+// Fueron dos a la vez, una por lista, y en el encargo ponia: "la otra la saca
+// otro y tu no la ves". Cada una leia la misma carta buscando cosas distintas
+// -una lo bueno, la otra lo que duele- y ninguna sabia lo que escribia la otra.
+//
+// La misma posicion salia entonces con sus dos caras: "entras y se nota" en una
+// lista y "te quitas peso para no molestar" en la otra. Las dos son lecturas
+// validas de ese Sol. Juntas, en el mismo informe, no cuadran, y quien lo lee
+// ve que una cosa se le da bien y esa misma cosa le cuesta.
+//
+// Con una sola cabeza eso no puede pasar: mira esa posicion, decide que cara
+// pesa mas en esta persona y escribe una. Y como lleva las dos listas delante
+// mientras escribe, compara cada rasgo con los que ya lleva ANTES de ponerlo,
+// que es lo que le pide el punto 5 de su encargo.
 //
 // Asi que son dos pasos, y ninguno hace el trabajo del otro:
 //
-//   BUSCAR    dos llamadas a la vez, una por lista. Cada una recorre la carta y
-//             saca sus rasgos ya escritos: titulo, descripcion, causa, area y
-//             de donde sale. No compara nada con la otra lista, porque no la ve.
-//             Sacan de mas a proposito, para que la limpieza tenga margen.
+//   BUSCAR    una llamada. Recorre la carta y saca los rasgos de las dos listas
+//             ya escritos: si es fortaleza o desafio, titulo, descripcion,
+//             causa, area y de donde sale. Saca de mas a proposito, para que la
+//             limpieza tenga margen.
 //
 //   LIMPIAR   una llamada, con las dos listas juntas dentro, y un repaso detras.
-//             Aqui es donde se compara, y es lo unico que hace: no escribe ni
-//             una palabra, devuelve numeros. Por eso puede pensar alto.
+//             Es la red de lo que se le haya colado a la de arriba: no escribe
+//             ni una palabra, devuelve numeros. Por eso puede pensar alto.
 //
 // LO QUE SE ESCRIBE, SE ESCRIBE UNA SOLA VEZ. La descripcion sale del paso de
 // buscar y ya no se toca: la limpieza no la puede cambiar porque no la devuelve.
