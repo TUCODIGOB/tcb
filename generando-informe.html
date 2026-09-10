@@ -915,7 +915,6 @@ function pintarCuaderno(c) {
   // ── La limpieza ──
   const fuera1 = Array.isArray(c.quitaLimpieza) ? c.quitaLimpieza : [];
   const fuera2 = Array.isArray(c.quitaRepaso) ? c.quitaRepaso : [];
-  const fuera = fuera1.concat(fuera2);
   const porNumero = new Map(c.entraron.map(r => [r.n, r]));
   const comoLinea = n => {
     const r = porNumero.get(n);
