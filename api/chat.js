@@ -920,7 +920,7 @@ function comoSeLeHabla(sexo) {
 // ── PASO 1: ELEGIR ──────────────────────────────────────────
 async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'medium') {
   const encargo = `Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
-AQUÍ SE BUSCAN Y SE ESCRIBEN: De cada rasgo sale si es una fortaleza o un desafío, su título, su descripción, la causa, la conducta, el área a la que pertenece y de qué posición de la carta lo has sacado. Lo que importa es encontrar los que de verdad están en esta carta, y los que más pesan. 
+AQUÍ SOLO SE BUSCAN, NO SE ESCRIBEN: De cada rasgo sale si es una fortaleza o un desafío, su conducta, el área a la que pertenece y de qué posición de la carta lo has sacado. Ni título, ni descripción, ni causa: eso lo escribe otro después.  
 QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. No que suene bien ni que esté bien escrito. Entre dos que dicen casi lo mismo, se queda el que más le cuesta o más le da, y el otro se va.
 TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posición concreta de esta carta, no se escribe.
 
@@ -959,7 +959,7 @@ Al escribirlo, ponle el área de la que habla el rasgo, no la de la posición de
 
 
 4. LAS CASILLAS DE CADA RASGO
-Todos van en una sola lista, seguidos, y cada uno lleva sus siete casillas llenas: 
+Todos van en una sola lista, seguidos, y cada uno lleva sus cuatro casillas llenas: 
 lista         si ese rasgo es una fortaleza o un desafío. 
 
 conducta    Qué está HACIENDO esa persona en ese rasgo, de tres a seis
@@ -970,38 +970,13 @@ Se escribe con las mismas palabras siempre que la conducta sea la misma. Si busc
 
 area         una de las siete, escrita como están escritas arriba.
 
-titulo       Se le habla de tu, igual que en todo lo demás: es lo que hace
-             o lo que le pasa, dicho a la persona. No el nombre de eso.
-             Un título que arranca con un sustantivo y le cuelga adjetivos
-             detrás no le habla a nadie, es una etiqueta de manual, y está mal
-             aunque describa bien el rasgo.
-             De cuatro a siete palabras, con sus artículos y sus preposiciones,
-             como se habla. Empieza en mayúscula, y sin punto al final.
-
-descripcion  TRES RENGLONES, ni dos ni cuatro. Son unos doscientos sesenta
-            caracteres contando los espacios. No se cuentan frases: dos frases
-            pueden ocupar cinco renglones.
-            Cuenta cuatro cosas: qué hace, qué le pasa, cómo se le nota y en
-            qué parte de su vida se le nota.
-            TRES ES LA MEDIDA, NO EL TECHO. Con dos se queda a medias: se
-            enuncia el rasgo y no da tiempo a que se entienda, y quien lo lee
-            pasa al siguiente sin haberse reconocido en ninguno.
-
-causa        Por que le pasa ESE rasgo en concreto y de donde le viene, que es
-             lo que quiere saber. Dos o tres frases.
-             ABRE NOMBRANDO LA CAUSA, no describiendo otra vez lo que le
-             pasa. La primera frase ya dice qué hay debajo que lo produce.
-             NO REPITE EL RASGO CON OTRAS PALABRAS. Lo que hace y cómo se le
-             nota ya está arriba, en la descripcion. Aquí se dice qué hay
-             DETRÁS que lo produce, el mecanismo del que sale.
-
 origen       De donde sale el rasgo en la carta, en técnico y en corto: el
              cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
              forman. Nada más: ni explicación ni frase.
              Es obligatoria. Y no repartas todos los rasgos sobre las mismas
              dos o tres posiciones: la carta tiene de sobra.
 
-Un rasgo es su título y su posición. Si empiezas uno y no sabes de dónde lo sacas, se quita entero.
+Un rasgo es su conducta y su posición. Si empiezas uno y no sabes de dónde lo sacas, se quita entero. 
 
 5. NO SE REPITE NI SE CONTRADICE, Y ESO SE COMPRUEBA MIENTRAS ESCRIBES
 
@@ -1033,8 +1008,7 @@ DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas, área por área, cuántas fortalezas 
 
 DESPUÉS, EL TECHO. Si un área pasa de su máximo, se quedan los que más pesan y los demás se van.
 
-Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ningún rasgo nombre la carta ni nada técnico ni de astrología en el título, la descripción o la causa, y que a ninguno le falte una casilla.
-NI DOS TÍTULOS NI DOS DESCRIPCIONES QUE EMPIECEN IGUAL. Antes de entregar, lee en columna los títulos de toda la lista, y luego las descripciones: los que arranquen con la misma palabra se escriben otra vez arrancando de otra manera. 
+Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ninguna conducta nombre la carta ni nada técnico ni de astrología, y que a ningún rasgo le falte una casilla. 
 Devuelve solo la lista.
 Carta natal:
 ${cartaTexto}
