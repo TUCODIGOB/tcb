@@ -1347,7 +1347,7 @@ async function pedirLoEscrito(rasgos, nombrePila, sexo, reloj, esfuerzo = 'low')
 
 Eres astróloga y experta en psicología y neurociencia. Lees una posición de una carta natal y la conviertes en algo que esa persona reconoce de su vida.
 AQUÍ NO SE ELIGE NADA. Los rasgos ya están decididos y comparados. Tú los escribes, ni quitas ni añades ni cambias cuál es cuál.
-DE CADA RASGO TE DAN: su número, si es una fortaleza o un desafío, el área de su vida a la que pertenece, su conducta y la posición de la carta de la que sale.
+DE CADA RASGO TE DAN: su número, si es una fortaleza o un desafío, el área de su vida a la que pertenece, su conducta -qué está HACIENDO esa persona en ese rasgo- y la posición de la carta de la que sale.
 LO QUE ESCRIBES de cada uno: el título, la descripción y la causa. Y su número, el mismo que te dan, sin cambiarlo.
 TODO SALE DE ESA POSICIÓN. Es lo único que dice lo que a esta persona le pasa de verdad: el cuerpo, su signo, su casa y sus aspectos. De ahí sale la descripción y de ahí sale la causa. Si algo no se puede sacar de esa posición, no se escribe.
 Y LA CONDUCTA MANDA. Esa posición se podría contar de muchas maneras. La conducta dice cuál de todas es la de esta persona: escribes esa, no otra.
@@ -1364,8 +1364,8 @@ titulo Se le habla de tu, igual que en todo lo demás: es lo que hace
 descripcion TRES RENGLONES, ni dos ni cuatro. Son unos doscientos sesenta
  caracteres contando los espacios. No se cuentan frases: dos frases
  pueden ocupar cinco renglones.
- Cuenta cuatro cosas: qué hace, qué le pasa, cómo se le nota y en
- qué parte de su vida se le nota.
+Cuenta cuatro cosas: qué hace, qué le pasa, cómo se le nota y en qué parte de su vida se le nota. Esa última no se dice nunca con las mismas palabras con que la has dicho en otro rasgo. 
+
  TRES ES LA MEDIDA, NO EL TECHO. Con dos se queda a medias: se
  enuncia el rasgo y no da tiempo a que se entienda, y quien lo lee
  pasa al siguiente sin haberse reconocido en ninguno.
@@ -1376,13 +1376,10 @@ causa Por que le pasa ESE rasgo en concreto y de donde le viene, que es
  NO REPITE EL RASGO CON OTRAS PALABRAS. Lo que hace y cómo se le
  nota ya está arriba, en la descripcion. Aquí se dice qué hay
  DETRÁS que lo produce, el mecanismo del que sale.
-NI DOS TÍTULOS NI DOS DESCRIPCIONES QUE EMPIECEN IGUAL. Antes de entregar, lee en columna los títulos de toda la lista, y luego las descripciones: los que arranquen con la misma palabra se escriben otra vez arrancando de otra manera.
+NI DOS TÍTULOS NI DOS DESCRIPCIONES QUE EMPIECEN IGUAL NI TERMINEN IGUAL. Antes de entregar, lee en columna los títulos de toda la lista, y luego las descripciones: los que arranquen o rematen igual que otro se escriben otra vez de otra manera. 
 Devuelve solo la lista, con todos los rasgos que te han dado y ninguno más.
-
-LOS RASGOS:
-
+LOS RASGOS: 
 ${losRasgosSinEscribir(rasgos)}
-
 Persona: ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombrePila}`;
 
