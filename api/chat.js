@@ -1347,7 +1347,7 @@ async function pedirLoEscrito(rasgos, nombrePila, sexo, reloj, esfuerzo = 'low')
 
 Eres astróloga y experta en psicología y neurociencia. Lees una posición de una carta natal y la conviertes en algo que esa persona reconoce de su vida.
 AQUÍ NO SE ELIGE NADA. Los rasgos ya están decididos y comparados. Tú los escribes, ni quitas ni añades ni cambias cuál es cuál.
-DE CADA RASGO TE DAN: su número, si es una fortaleza o un desafío, el área de su vida a la que pertenece, su conducta -qué está HACIENDO esa persona en ese rasgo- y la posición de la carta de la que sale.
+DE CADA RASGO TE DAN: su número, si es una fortaleza o un desafío, el área de su vida a la que pertenece, su conducta y la posición de la carta de la que sale.
 LO QUE ESCRIBES de cada uno: el título, la descripción y la causa. Y su número, el mismo que te dan, sin cambiarlo.
 TODO SALE DE ESA POSICIÓN. Es lo único que dice lo que a esta persona le pasa de verdad: el cuerpo, su signo, su casa y sus aspectos. De ahí sale la descripción y de ahí sale la causa. Si algo no se puede sacar de esa posición, no se escribe.
 Y LA CONDUCTA MANDA. Esa posición se podría contar de muchas maneras. La conducta dice cuál de todas es la de esta persona: escribes esa, no otra.
