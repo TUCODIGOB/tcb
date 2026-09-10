@@ -181,7 +181,7 @@ globalThis.fetch = async (url, opciones) => {
 // ── Copia de api/chat.js con el import de Stripe cambiado. Se deja en
 //    test/ para que su "../lib/reserva.js" siga resolviendo bien, y se
 //    borra al terminar. El resto del fichero es el de produccion, tal cual.
-const stripeFalsoRuta = path.join(AQUI, '.stripe-falso.mjs');
+const stripeFalsoRuta = path.join(AQUI, '.stripe-falso-en-curso.mjs');
 const chatRuta = path.join(AQUI, '.chat-bajo-prueba.mjs');
 const original = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
 const MARCA = "import Stripe from 'stripe';";
@@ -190,7 +190,7 @@ if (!original.includes(MARCA)) {
   process.exit(1);
 }
 fs.writeFileSync(stripeFalsoRuta, STRIPE_FALSO);
-fs.writeFileSync(chatRuta, original.replace(MARCA, "import Stripe from './.stripe-falso.mjs';"));
+fs.writeFileSync(chatRuta, original.replace(MARCA, "import Stripe from './.stripe-falso-en-curso.mjs';"));
 
 process.env.STRIPE_SECRET_KEY = 'sk_test';
 process.env.ANTHROPIC_API_KEY = 'sk-ant-test';

@@ -46,6 +46,7 @@ const ENPRODUCCION = [
   ['el tope de cada area',          'signal: reloj.senal(90000)'],
   ['el tope de buscar',            'const TOPE_DE_ELEGIR = 200000'],
   ['el tope de limpiar',           'const TOPE_DE_LIMPIAR = 90000'],
+  ['el tope de escribir',          'const TOPE_DE_ESCRIBIR = 90000'],
 ];
 console.log('\n  api/chat.js — una llamada colgada ya no se lleva el informe por delante\n');
 for (const [que, texto] of ENPRODUCCION) {
@@ -80,16 +81,18 @@ export default function Stripe() {
 // el numero: que la colgada se corte y que lo opcional se caiga sin tiempo.
 function aEscala(texto, presupuesto) {
   return texto
-    .replace("import Stripe from 'stripe';", "import Stripe from './.stripe-falso.mjs';")
+    .replace("import Stripe from 'stripe';", "import Stripe from './.stripe-falso-colgada.mjs';")
     .replace('const TOPE_DE_LA_PETICION = 285000', `const TOPE_DE_LA_PETICION = ${presupuesto}`)
     .replace('const TOPE_DE_ELEGIR = 200000', 'const TOPE_DE_ELEGIR = 2000')
     .replace('const TOPE_DE_LIMPIAR = 90000', 'const TOPE_DE_LIMPIAR = 2000')
     .replace('reloj.senal(90000)', 'reloj.senal(2500)')
     .replace('hayTiempoPara(180)', 'hayTiempoPara(5)')
-    .replace('hayTiempoPara(120)', 'hayTiempoPara(3)');
+    .replace('const TOPE_DE_ESCRIBIR = 90000', 'const TOPE_DE_ESCRIBIR = 2000')
+    .replace('hayTiempoPara(120)', 'hayTiempoPara(3)')
+    .replace('hayTiempoPara(100)', 'hayTiempoPara(3)');
 }
 
-const stripeFalsoRuta = path.join(AQUI, '.stripe-falso.mjs');
+const stripeFalsoRuta = path.join(AQUI, '.stripe-falso-colgada.mjs');
 const rutaA = path.join(AQUI, '.chat-colgada.mjs');
 const rutaB = path.join(AQUI, '.chat-sin-tiempo.mjs');
 fs.writeFileSync(stripeFalsoRuta, STRIPE_FALSO);
@@ -181,7 +184,7 @@ const laLimpieza = sistema => {
   });
 };
 
-let llamadas = 0, sinSenal = 0, colgarLaPrimera = false, yaColgada = false;
+let llamadas = 0, sinSenal = 0, colgarLaPrimera = false, yaColgada = false, yaColgadaEscribir = false;
 
 globalThis.fetch = async (url, opciones) => {
   const u = String(url);
@@ -202,8 +205,8 @@ globalThis.fetch = async (url, opciones) => {
   // LA LLAMADA QUE NO CONTESTA. Solo termina si la cortan: si el codigo no le
   // pone senal, esta promesa no se resuelve jamas y la prueba se cuelga, igual
   // que se colgo la funcion en produccion.
-  if (colgarLaPrimera && esBuscar && !yaColgada) {
-    yaColgada = true;
+  if (colgarLaPrimera && ((esBuscar && !yaColgada) || (esEscribir && !yaColgadaEscribir))) {
+    if (esBuscar) yaColgada = true; else yaColgadaEscribir = true;
     await new Promise((_, rechazar) => {
       if (!opciones.signal) return;
       opciones.signal.addEventListener('abort', () => rechazar(opciones.signal.reason), { once: true });
@@ -271,7 +274,7 @@ try {
   comprobar('la peticion no se queda colgada', !a.colgado, `${(tardo / 1000).toFixed(1)}s`);
   comprobar('el informe sale igual', a.code === 200, 'HTTP ' + a.code);
   comprobar('la colgada se corta y se vuelve a pedir esa sola',
-    llamadas === 13, `${llamadas} llamadas (12 + la que se corto)`);
+    llamadas === 14, `${llamadas} llamadas (12 + las dos que se cortaron)`);
   comprobar('ninguna llamada al modelo va sin tope de tiempo', sinSenal === 0,
     `${sinSenal} sin tope`);
 
