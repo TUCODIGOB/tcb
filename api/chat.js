@@ -1421,6 +1421,42 @@ async function unaMitadEscrita(rasgos, nombrePila, sexo, reloj) {
   }
 }
 
+// PARTIR, PEDIR LAS DOS A LA VEZ Y VOLVER A JUNTAR.
+//
+// La lista se parte por la mitad y cada mitad se va con su llamada. Lo que
+// vuelve son numeros con su texto, y esos numeros son los de su mitad -del uno
+// en adelante-, asi que cada uno se pega al rasgo que ocupaba ese sitio.
+//
+// Y SIN RED, igual que las listas: si una mitad no se escribe ni al segundo
+// intento, no sale el informe. Media lista sin escribir no es el producto.
+async function escribirLosRasgos(todos, nombrePila, sexo, reloj) {
+  if (todos.length === 0) return todos;
+
+  const corte = Math.ceil(todos.length / 2);
+  const mitades = [todos.slice(0, corte), todos.slice(corte)].filter(m => m.length);
+  const salidas = await Promise.all(
+    mitades.map(m => unaMitadEscrita(m, nombrePila, sexo, reloj))
+  );
+
+  mitades.forEach((mitad, k) => {
+    for (const e of (Array.isArray(salidas[k]?.rasgos) ? salidas[k].rasgos : [])) {
+      const rasgo = mitad[Number(e?.n) - 1];
+      if (!rasgo) continue;
+      rasgo.nombre      = String(e?.titulo ?? '').trim();
+      rasgo.descripcion = String(e?.descripcion ?? '').trim();
+      rasgo.causa       = String(e?.causa ?? '').trim();
+    }
+  });
+
+  // EL QUE SE HAYA QUEDADO SIN ESCRIBIR, FUERA. Un rasgo sin titulo no se puede
+  // pintar en el PDF ni contarle nada a nadie: es un hueco, no un rasgo.
+  const escritos = todos.filter(r => r.nombre);
+  if (escritos.length < todos.length) {
+    console.warn(`${todos.length - escritos.length} rasgos se han quedado sin escribir, se quitan`);
+  }
+  return escritos;
+}
+
 // LO QUE LA CLIENTA NO PUEDE LEER.
 //
 // El encargo prohibe las palabras de astrologia en el nombre, la descripcion y
@@ -1468,6 +1504,14 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   // 1. Las dos listas, ya comparadas entre si, etiquetadas y con su suelo y su
   //    techo por area. Todo lo que antes eran cinco llamadas.
   let { fortalezas, desafios } = await sacarLasListas(nombrePila, sexo, cartaTexto, reloj);
+
+  // 1b. Y AHORA SE ESCRIBEN. Hasta aqui cada rasgo era su conducta y la posicion
+  //     de la carta de la que sale; aqui se le pone el titulo, la descripcion y
+  //     la causa, que es lo que la clienta lee. Las dos listas van juntas para
+  //     que las dos mitades salgan parejas.
+  const escritos = await escribirLosRasgos([...fortalezas, ...desafios], nombrePila, sexo, reloj);
+  fortalezas = escritos.filter(r => r.lista === 'fortalezas');
+  desafios   = escritos.filter(r => r.lista === 'desafios');
 
   // 2. RED: fuera el que le nombra la carta a la clienta. El encargo lo prohibe
   //    y aun asi se cuela alguno; esto no es criterio, son palabras que se
