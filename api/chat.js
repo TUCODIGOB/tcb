@@ -1269,7 +1269,7 @@ async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
 
   // Se apuntan tal como se los va a ver la limpieza, con el mismo numero.
   reloj.cuaderno.entraron = todos.map((r, i) => ({
-    n: i + 1, lista: r.lista, area: r.area, titulo: r.nombre, descripcion: r.descripcion,
+    n: i + 1, lista: r.lista, area: r.area, titulo: r.nombre, conducta: r.conducta, descripcion: r.descripcion,
   }));
 
   const enteros = await limpiarYRepasar(todos, reloj);

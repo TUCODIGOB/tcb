@@ -921,7 +921,7 @@ function pintarCuaderno(c) {
     const r = porNumero.get(n);
     if (!r) return '#' + esc(n);
     return '#' + esc(r.n) + ' ' + esc(r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO') +
-           ' ' + esc(r.area) + ' — ' + esc(r.titulo) + ' — ' + esc(r.descripcion);
+           ' ' + esc(r.area) + ' — ' + esc(r.conducta) + ' — ' + esc(r.titulo) + ' — ' + esc(r.descripcion);
   };
   const linea = (titulo, lista) => lista.length
     ? '<p style="margin:.6rem 0"><b>' + titulo + ' ' + lista.length + ':</b><br>' +
@@ -932,7 +932,7 @@ function pintarCuaderno(c) {
   const quedan = c.entraron.filter(r => !fuera.includes(r.n));
   const filasQ = quedan.map(r =>
     '<tr><td>' + esc(r.n) + '</td><td>' + esc(r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO') +
-    '</td><td>' + esc(r.area) + '</td><td>' + esc(r.titulo) + '</td><td>' + esc(r.descripcion) + '</td></tr>').join('');
+    '</td><td>' + esc(r.area) + '</td><td>' + esc(r.conducta) + '</td><td>' + esc(r.titulo) + '</td><td>' + esc(r.descripcion) + '</td></tr>').join('');
 
   hueco.innerHTML =
     '<details style="text-align:left;font-size:.8rem;line-height:1.45;background:#faf8f4;border:1px solid #e3ddd2;' +
@@ -955,7 +955,7 @@ function pintarCuaderno(c) {
     '<p style="margin:.9rem 0 .3rem"><b>Con los que se ha quedado (' + quedan.length + ')</b></p>' +
     '<table style="width:100%;border-collapse:collapse">' +
     '<tr><th style="text-align:left">Nº</th><th style="text-align:left">Lista</th><th style="text-align:left">Área</th>' +
-    '<th style="text-align:left">Título</th><th style="text-align:left">Descripción</th></tr>' +
+    '<th style="text-align:left">Conducta</th><th style="text-align:left">Título</th><th style="text-align:left">Descripción</th></tr>' +
     filasQ + '</table>' +
     '</details>';
 }
