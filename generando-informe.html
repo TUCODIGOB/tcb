@@ -885,8 +885,8 @@ async function geocode(ciudad, provincia, pais) {
 // EL CUADERNO — SOLO PARA REVISAR, NO ES PARTE DEL INFORME
 //
 // Pinta, encima del boton de descarga: lo que ha tardado cada llamada, cuantos
-// rasgos ha sacado el paso 1 por area y por lista, y que ha quitado la limpieza
-// y que ha quitado el repaso.
+// rasgos ha sacado el paso 1 por area y por lista, que ha quitado la limpieza,
+// que ha quitado el repaso y cuales han vuelto porque su area se quedaba corta.
 //
 // Todo va dentro de un try en quien lo llama: si el cuaderno no llega o viene
 // roto, no se pinta y el informe sigue su camino igual.
@@ -915,6 +915,10 @@ function pintarCuaderno(c) {
   // ── La limpieza ──
   const fuera1 = Array.isArray(c.quitaLimpieza) ? c.quitaLimpieza : [];
   const fuera2 = Array.isArray(c.quitaRepaso) ? c.quitaRepaso : [];
+  // Los que la limpieza quito y el codigo devolvio despues, porque sin ellos su
+  // area se quedaba por debajo del minimo. Salen arriba como quitados y en el
+  // informe se leen igual: esta lista es la que lo explica.
+  const vuelven = Array.isArray(c.devueltos) ? c.devueltos : [];
   const porNumero = new Map(c.entraron.map(r => [r.n, r]));
   const comoLinea = n => {
     const r = porNumero.get(n);
@@ -950,6 +954,7 @@ function pintarCuaderno(c) {
 
     '<p style="margin:.9rem 0 .3rem"><b>La limpieza</b></p>' +
     linea('Quitó la limpieza', fuera1) + linea('Quitó el repaso', fuera2) +
+    linea('Volvieron por el mínimo de su área', vuelven) +
 
     '<p style="margin:.9rem 0 .3rem"><b>Con los que se ha quedado (' + quedan.length + ')</b></p>' +
     '<table style="width:100%;border-collapse:collapse">' +

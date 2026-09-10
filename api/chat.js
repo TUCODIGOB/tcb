@@ -79,7 +79,7 @@ function crearReloj(margen = TOPE_DE_LA_PETICION) {
   // cuanto ha tardado y que ha quitado la limpieza. No decide NADA: si esto no
   // estuviera, el informe saldria exactamente igual. Va colgado del reloj
   // porque el reloj es lo unico que ya llega a todas las llamadas.
-  const cuaderno = { tiempos: [], entraron: [], quitaLimpieza: [], quitaRepaso: [], escritos: [] };
+  const cuaderno = { tiempos: [], entraron: [], quitaLimpieza: [], quitaRepaso: [], devueltos: [], escritos: [] };
   return {
     quedan: () => fin - Date.now(),
     // El tope de una llamada: el suyo, o lo que quede si queda menos.
@@ -1344,7 +1344,7 @@ async function limpiarYRepasar(todos, reloj) {
     }
   }
 
-  return conElSueloDeCadaArea(sequedan.map(n => todos[n - 1]).filter(Boolean), todos);
+  return conElSueloDeCadaArea(sequedan.map(n => todos[n - 1]).filter(Boolean), todos, reloj);
 }
 
 // EL SUELO DE CADA AREA, DESPUES DE LIMPIAR.
@@ -1364,7 +1364,7 @@ async function limpiarYRepasar(todos, reloj) {
 //
 // No se le pide nada al modelo ni se gasta un segundo mas: son rasgos que ya
 // estaban sacados de la carta.
-function conElSueloDeCadaArea(sequedan, todos) {
+function conElSueloDeCadaArea(sequedan, todos, reloj) {
   const dentro = new Set(sequedan);
   const devueltos = [];
 
@@ -1385,6 +1385,11 @@ function conElSueloDeCadaArea(sequedan, todos) {
       console.warn(`la limpieza dejo ${cual} de ${area} en ${hay} de ${POR_AREA[cual].min}, se devuelven ${devueltos.length - antes}`);
     }
   }
+
+  // Se apuntan con el mismo numero que llevan en el cuaderno, que es el sitio
+  // que ocupan en la lista que saco el paso 1: asi el desplegable puede decir
+  // cual de los que aparecen como quitados ha acabado volviendo.
+  reloj.cuaderno.devueltos = devueltos.map(r => todos.indexOf(r) + 1);
 
   // Los devueltos van detras, sin tocar el orden de los que ya estaban: mas
   // adelante los rasgos se ordenan por area de todas formas.
