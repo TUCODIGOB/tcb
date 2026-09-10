@@ -1344,6 +1344,9 @@ async function sacarLasListas(nombrePila, sexo, cartaTexto, reloj) {
 // vienen ya comparados entre si del paso 2, asi que no puede repetir ni
 // contradecir nada.
 const TOPE_DE_ESCRIBIR = 90000;
+// Tres tiradas por mitad, las mismas que tiene cada area. Cada una tarda unos
+// cuarenta segundos, asi que las tres caben de sobra en el presupuesto.
+const INTENTOS_DE_ESCRIBIR = 3;
 
 const ESQUEMA_DE_ESCRIBIR = {
   type: 'object',
@@ -1455,9 +1458,26 @@ const vieneMal = e =>
   ['titulo', 'descripcion', 'causa'].some(c => esRelleno(e?.[c])) ||
   ['descripcion', 'causa'].some(c => acabaColgado(e?.[c]));
 
+// LOS QUE DE VERDAD VUELVEN ESCRITOS. Un numero que no es de esta mitad no
+// cuenta, y uno mal escrito tampoco: los dos acaban fuera del informe igual.
+const losQueValen = (salida, cuantos) => {
+  const vistos = new Set();
+  for (const e of (Array.isArray(salida?.rasgos) ? salida.rasgos : [])) {
+    const n = Number(e?.n);
+    if (!Number.isInteger(n) || n < 1 || n > cuantos) continue;
+    if (vieneMal(e)) continue;
+    vistos.add(n);
+  }
+  return vistos.size;
+};
+
 // Y SI FALLA, SE REPITE. Cada mitad por su cuenta: si se cae una, la otra sigue
-// su camino y solo se vuelve a pedir la que falto. Falla es tanto que la llamada
-// se caiga como que vuelva con rasgos sin escribir de verdad.
+// su camino y solo se vuelve a pedir la que falto.
+//
+// FALLA TAMBIEN SI NO VUELVEN TODOS. El 10 de septiembre se le pidieron diez
+// rasgos y volvieron tres: los otros siete se cayeron del informe sin que nadie
+// se enterara, y cuatro areas se quedaron sin un solo desafio. Si se piden diez
+// tienen que volver diez escritos, y si no, se vuelve a pedir esa mitad.
 async function unaMitadEscrita(rasgos, nombrePila, sexo, reloj) {
   let salida;
   try {
@@ -1468,16 +1488,23 @@ async function unaMitadEscrita(rasgos, nombrePila, sexo, reloj) {
     return await pedirLoEscrito(rasgos, nombrePila, sexo, reloj);
   }
 
-  const malos = (Array.isArray(salida?.rasgos) ? salida.rasgos : []).filter(vieneMal);
-  if (malos.length && reloj.hayTiempoPara(100)) {
-    console.warn(`${malos.length} rasgos han vuelto sin escribir de verdad, se repite esa mitad`);
+  let valen = losQueValen(salida, rasgos.length);
+  for (let intento = 2; valen < rasgos.length && intento <= INTENTOS_DE_ESCRIBIR; intento++) {
+    if (!reloj.hayTiempoPara(100)) break;
+    console.warn(`se pidieron ${rasgos.length} rasgos y han vuelto escritos ${valen}, se repite esa mitad`);
+    let otra;
     try {
-      return await pedirLoEscrito(rasgos, nombrePila, sexo, reloj);
+      otra = await pedirLoEscrito(rasgos, nombrePila, sexo, reloj);
     } catch (err) {
-      // Si la segunda tirada se cae, vale la primera: los que vinieron mal se
-      // quedan fuera mas abajo, pero los buenos se salvan.
-      console.warn(`la segunda tirada tampoco ha salido (${err.message.slice(0, 80)}), se sigue con la primera`);
+      // Si una tirada se cae, vale la mejor que haya salido hasta ahora: los que
+      // vinieron mal se quedan fuera mas abajo, pero los buenos se salvan.
+      console.warn(`esa tirada tampoco ha salido (${err.message.slice(0, 80)}), se sigue con la mejor`);
+      break;
     }
+    // SE QUEDA LA MEJOR DE LAS DOS, nunca la ultima por ser la ultima: si la
+    // segunda sale peor que la primera, se pierde lo que ya estaba bien.
+    const valenOtra = losQueValen(otra, rasgos.length);
+    if (valenOtra > valen) { salida = otra; valen = valenOtra; }
   }
   return salida;
 }
