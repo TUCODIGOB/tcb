@@ -840,10 +840,10 @@ function areaPorLaPosicion(origen) {
 // barato que volver a leerse la carta entera para redactar lo que sobrevivio.
 // ═════════════════════════════════════════════════════════════════
 
-// Elegir piensa y escribe poco: con el esfuerzo medio ronda el minuto. Este es
-// el tope con el que salio un informe entero, y se deja aqui a proposito: si
-// se estira, la segunda tirada -la de abajo, pensando menos- ya no cabe detras.
-const TOPE_DE_ELEGIR = 120000;
+// UNA SOLA LLAMADA SACA LAS DOS LISTAS, asi que escribe los treinta y cinco
+// rasgos de una tirada. Dos llamadas a la vez tardaban noventa segundos entre
+// las dos; una sola, escribiendo lo mismo, ronda los dos minutos y medio.
+const TOPE_DE_ELEGIR = 200000;
 // Limpiar solo piensa: lo que devuelve son numeros. Es el mismo tope que lleva
 // esta misma llamada en el P2, donde ronda los cuarenta segundos.
 const TOPE_DE_LIMPIAR = 90000;
@@ -863,13 +863,17 @@ const ESQUEMA_DE_ELEGIR = {
       items: {
         type: 'object',
         properties: {
+          // LA LISTA LA DICE EL MODELO. Antes la ponia el codigo, porque cada
+          // llamada sacaba una. Ahora sale una sola con las dos dentro, asi que
+          // de cada rasgo tiene que decir cual de las dos cosas es.
+          lista:       { type: 'string', enum: ['fortalezas', 'desafios'] },
           area:        { type: 'string', enum: NOMBRES_DE_AREA },
           titulo:      { type: 'string' },
           descripcion: { type: 'string' },
           causa:       { type: 'string' },
           origen:      { type: 'string' },
         },
-        required: ['area', 'titulo', 'descripcion', 'causa', 'origen'],
+        required: ['lista', 'area', 'titulo', 'descripcion', 'causa', 'origen'],
         additionalProperties: false,
       },
     },
@@ -907,8 +911,11 @@ function comoSeLeHabla(sexo) {
 }
 
 // ── PASO 1: ELEGIR ──────────────────────────────────────────
-async function pedirLosRasgos(cual, nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'medium') {
-  const cuantos = CUANTOS_AL_BUSCAR[cual];
+async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'medium') {
+  // El encargo se cambia despues, en su turno. Hasta entonces sigue tal cual
+  // esta escrito, y estas dos lineas son lo que necesita para no romperse.
+  const cual = 'fortalezas y desafios';
+  const cuantos = `${CUANTOS_AL_BUSCAR.fortalezas} y ${CUANTOS_AL_BUSCAR.desafios}`;
   const encargo = `${TONO}
 
 
@@ -1011,7 +1018,7 @@ Nombre de pila: ${nombrePila}`;
 
   const arranque = Date.now();
   const salida = await alModelo({
-    que: `elegir los rasgos (${cual})`,
+    que: 'elegir los rasgos',
     modelo: 'claude-opus-5',
     // EL ESFUERZO, MEDIO, Y MEDIDO.
     //
@@ -1027,18 +1034,18 @@ Nombre de pila: ${nombrePila}`;
     // SI ALGUN DIA HAY QUE SUBIRLO, no se sube y ya: hay que quitarle trabajo a
     // la peticion antes, porque el reloj es el mismo.
     razona: esfuerzo,
-    // EL TECHO, HOLGADO, Y NO POR LO QUE ESCRIBE. Lo que escribe son treinta y
-    // tantas lineas, dos mil tokens a lo sumo. Pero pensar sale del MISMO
-    // presupuesto, y con el esfuerzo en alto piensa mucho: si se lo come, la
-    // respuesta llega cortada, el JSON no se puede leer y hay que pedirlo todo
-    // otra vez. Es un techo, no un objetivo: solo se paga lo que sale.
-    techo: 24000,
+    // EL TECHO, HOLGADO. Ahora escribe las dos listas de una vez, asi que suelta
+    // el doble de texto que antes cada llamada. Y pensar sale del MISMO
+    // presupuesto: si se lo come, la respuesta llega cortada, el JSON no se
+    // puede leer y hay que pedirlo todo otra vez. Es un techo, no un objetivo:
+    // solo se paga lo que sale.
+    techo: 32000,
     system: encargo,
     mensaje: 'Elige los rasgos de esta carta, siguiendo el esquema.',
     molde: ESQUEMA_DE_ELEGIR,
     espera: reloj.senal(TOPE_DE_ELEGIR),
   });
-  reloj.apunta(`buscar ${cual} (${esfuerzo})`, arranque);
+  reloj.apunta(`buscar los rasgos (${esfuerzo})`, arranque);
 
   const rasgos = [];
   for (const r of (Array.isArray(salida.rasgos) ? salida.rasgos : [])) {
@@ -1052,25 +1059,28 @@ Nombre de pila: ${nombrePila}`;
       // El area la dice el modelo, que es el unico que ha leido el rasgo. Si no
       // la dice, o dice una que no existe, la saca el codigo de la posicion.
       area: areaDelRasgo(origen, String(r?.area ?? '').trim()),
-      // La lista no la dice el modelo: cada llamada saca una, y el codigo sabe cual.
-      lista: cual,
+      // LA LISTA LA DICE EL MODELO, que es el unico que sabe si ese rasgo es de
+      // lo que se le da bien o de lo que le cuesta. Si contestara cualquier otra
+      // cosa, el rasgo se caeria del informe sin que nadie se entere, asi que lo
+      // que no sea "fortalezas" cuenta como desafio, que es la lista con mas sitio.
+      lista: String(r?.lista ?? '').trim() === 'fortalezas' ? 'fortalezas' : 'desafios',
     });
   }
   return rasgos;
 }
 
-// CADA LISTA SE PIDE POR SU CUENTA, Y SI FALLA SE REPITE SOLA.
+// Y SI FALLA, SE REPITE PENSANDO MENOS.
 //
 // La segunda tirada va con el esfuerzo bajo, que es la mitad de rato: los
 // rasgos salen algo menos afinados, y eso es mucho mejor que dejar sin informe
-// a alguien que ha pagado. Se repite solo la que fallo, no las dos.
-async function unaListaDeRasgos(cual, nombrePila, sexo, cartaTexto, reloj) {
+// a alguien que ha pagado.
+async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj) {
   try {
-    return await pedirLosRasgos(cual, nombrePila, sexo, cartaTexto, reloj, 'medium');
+    return await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'medium');
   } catch (err) {
     if (err.temporal === false || !reloj.hayTiempoPara(180)) throw err;
-    console.warn(`${cual}: la tirada con esfuerzo medio fallo (${err.message.slice(0, 80)}), se repite pensando menos`);
-    return await pedirLosRasgos(cual, nombrePila, sexo, cartaTexto, reloj, 'low');
+    console.warn(`la tirada con esfuerzo medio fallo (${err.message.slice(0, 80)}), se repite pensando menos`);
+    return await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'low');
   }
 }
 
@@ -1214,19 +1224,15 @@ async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, es
   }
 }
 
-// Los dos pasos, encadenados: se buscan las dos listas a la vez y despues se
+// Los dos pasos, encadenados: una llamada saca las dos listas y despues se
 // limpian juntas.
 async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
-  const [elegidasF, elegidosD] = await Promise.all([
-    unaListaDeRasgos('fortalezas', nombrePila, sexo, cartaTexto, reloj),
-    unaListaDeRasgos('desafios',   nombrePila, sexo, cartaTexto, reloj),
-  ]);
-
-  // LAS DOS LISTAS EN UNA SOLA, NUMERADA. El codigo se queda con todo lo que
-  // trae cada rasgo -titulo, causa, origen-: a la limpieza solo le ensena el
-  // numero, la lista, el area y la descripcion, que es lo unico que hace falta
-  // para comparar. Al final se recupera todo por el numero.
-  const todos = [...elegidasF, ...elegidosD];
+  // UNA SOLA LLAMADA, Y LAS DOS LISTAS DENTRO. Antes eran dos a la vez, una por
+  // lista, y ninguna veia lo que sacaba la otra: la misma posicion de la carta
+  // salia leida en bueno por una y en malo por la otra, y la clienta se
+  // encontraba las dos cosas en su informe. Con una sola cabeza eso no puede
+  // pasar: mira esa posicion, decide que cara pesa y escribe una.
+  const todos = await unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj);
 
   // Se apuntan tal como se los va a ver la limpieza, con el mismo numero.
   reloj.cuaderno.entraron = todos.map((r, i) => ({
