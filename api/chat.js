@@ -1519,7 +1519,7 @@ async function escribirLosRasgos(todos, nombrePila, sexo, reloj) {
 // una persona. Nada de palabras corrientes: una sola de esas aqui dentro haria
 // tirar textos buenos.
 const MARCAS_DE_RELLENO = [
-  /^\s*(placeholder|lorem ipsum|texto de ejemplo|pendiente|por completar|por escribir|sin contenido|n\/?a|tbd|todo)\b/i,
+  /^\s*(placeholder|lorem ipsum|texto de ejemplo|por completar|por escribir|sin contenido|n\/?a|tbd)\b/i,
   /\bplaceholder\b/i,
   /\blorem ipsum\b/i,
   /^\s*[.\-\u2013\u2014_]+\s*$/,
