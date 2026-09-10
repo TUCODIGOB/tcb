@@ -1143,11 +1143,11 @@ async function limpiarLosRasgos(rasgos, piensa, reloj) {
   // Y AQUI NO VA NADA MAS QUE LA LISTA Y SU INSTRUCCION. Ni el tono, ni como se
   // le habla a la clienta, ni que es este producto: esta llamada solo mira una
   // lista y dice cuales dicen lo mismo, y para eso nada de eso le sirve.
-  const encargo = `Abajo tienes las fortalezas y los desafíos interiores de una persona. Cada uno está escrito por separado, enumerado, dice si es una fortaleza o un desafío, su descripción y a qué área de su vida pertenece.
+  const encargo = `Abajo tienes las fortalezas y los desafíos interiores de una persona. Cada uno está escrito por separado, enumerado, dice si es una fortaleza o un desafío, su conducta y a qué área de su vida pertenece.
 QUÉ SE QUITA
-Revisa la descripción de todos, las fortalezas y los desafíos a la vez. Elimina los que dicen prácticamente lo mismo sobre la persona, los que sean la misma idea, dejando solo 1 de ellos, el que más pese. Y elimina los que se contradigan entre sí, dejando solo uno de ellos, el que más pese.
+Revisa la conducta de todos, las fortalezas y los desafíos a la vez. Elimina los que dicen prácticamente lo mismo sobre la persona, los que sean la misma idea, dejando solo 1 de ellos, el que más pese. Y elimina los que se contradigan entre sí, dejando solo uno de ellos, el que más pese.
 Se comparan todos con todos, aunque sean de áreas distintas y aunque uno sea una fortaleza y el otro un desafío. La misma conducta contada como algo que se le da bien y como algo que le cuesta es un solo rasgo con sus dos caras: se queda la cara que más pese y la otra se va.
-Pesa más el que sea más concreto y central para la persona, no el más genérico.
+Pesa más la conducta más concreta y central para la persona, no la más genérica. 
 
 
 LO QUE NO SE PUEDE QUEDAR CORTO
