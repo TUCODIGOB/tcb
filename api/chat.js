@@ -1129,13 +1129,13 @@ async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj) {
 
 // LO QUE SE LE ENSENA PARA COMPARAR, Y NADA MAS.
 //
-// El numero, si es fortaleza o desafio, el area y la descripcion. El titulo, la
-// causa y la posicion de la carta no van: para decidir si dos rasgos dicen lo
-// mismo no hacen falta, y todo lo que se le manda de mas es sitio que le quita
-// a lo que si tiene que leer.
+// El numero, si es fortaleza o desafio, el area y la conducta. El titulo, la
+// descripcion, la causa y la posicion de la carta no van: para decidir si dos
+// rasgos dicen lo mismo no hacen falta, y todo lo que se le manda de mas es
+// sitio que le quita a lo que si tiene que leer.
 function laListaNumerada(rasgos) {
   return rasgos
-    .map((r, i) => `${i + 1}. ${r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO'} — ${r.area} — ${r.descripcion}`)
+    .map((r, i) => `${i + 1}. ${r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO'} — ${r.area} — ${r.conducta}`)
     .join('\n');
 }
 
