@@ -697,6 +697,11 @@ const POR_AREA = {
   desafios: { min: 2, max: 3 },
 };
 
+// LOS QUE TIENE QUE DEVOLVER EL PASO 1: cinco por area, treinta y cinco. No es
+// un objetivo, es lo que su encargo le pide, y si vuelve con menos el informe
+// arranca ya corto.
+const CUANTOS_RASGOS = NOMBRES_DE_AREA.length * (POR_AREA.fortalezas.max + POR_AREA.desafios.max);
+
 // ═════════════════════════════════════════════════════════════════
 // A QUE AREA DEL ESTUDIO PERTENECE CADA RASGO
 //
@@ -1111,13 +1116,29 @@ Nombre de pila: ${nombrePila}`;
 // rasgos salen algo menos afinados, y eso es mucho mejor que dejar sin informe
 // a alguien que ha pagado.
 async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj) {
+  let rasgos;
   try {
-    return await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'medium');
+    rasgos = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'medium');
   } catch (err) {
     if (err.temporal === false || !reloj.hayTiempoPara(180)) throw err;
     console.warn(`la tirada con esfuerzo medio fallo (${err.message.slice(0, 80)}), se repite pensando menos`);
     return await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'low');
   }
+
+  // Y SI VUELVE CORTA, SE PIDE OTRA VEZ ENTERA. No se le puede pedir solo los
+  // que faltan: los compara entre ellos mientras los escribe, y sin ver los que
+  // ya hay los repetiria. Se queda la mejor de las dos, nunca la ultima por ser
+  // la ultima.
+  if (rasgos.length < CUANTOS_RASGOS && reloj.hayTiempoPara(180)) {
+    console.warn(`el paso 1 ha devuelto ${rasgos.length} rasgos de ${CUANTOS_RASGOS}, se pide otra vez`);
+    try {
+      const otra = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'medium');
+      if (otra.length > rasgos.length) rasgos = otra;
+    } catch (err) {
+      console.warn(`la segunda tirada no ha salido (${err.message.slice(0, 80)}), se sigue con la primera`);
+    }
+  }
+  return rasgos;
 }
 
 // ── PASO 2: LIMPIAR ─────────────────────────────────────────
