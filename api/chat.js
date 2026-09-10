@@ -919,10 +919,7 @@ function comoSeLeHabla(sexo) {
 
 // ── PASO 1: ELEGIR ──────────────────────────────────────────
 async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'medium') {
-  const encargo = `${TONO}
-
-
-Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
+  const encargo = `Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
 AQUÍ SE BUSCAN Y SE ESCRIBEN: De cada rasgo sale si es una fortaleza o un desafío, su título, su descripción, la causa, la conducta, el área a la que pertenece y de qué posición de la carta lo has sacado. Lo que importa es encontrar los que de verdad están en esta carta, y los que más pesan. 
 QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. No que suene bien ni que esté bien escrito. Entre dos que dicen casi lo mismo, se queda el que más le cuesta o más le da, y el otro se va.
 TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posición concreta de esta carta, no se escribe.
