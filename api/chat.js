@@ -1402,7 +1402,7 @@ titulo Se le habla de tu, igual que en todo lo demás: es lo que hace
 descripcion TRES RENGLONES, ni dos ni cuatro. Son unos doscientos sesenta
  caracteres contando los espacios. No se cuentan frases: dos frases
  pueden ocupar cinco renglones.
-Cuenta cuatro cosas: qué hace, qué le pasa, cómo se le nota y en qué parte de su vida se le nota. Esa última no se dice nunca con las mismas palabras con que la has dicho en otro rasgo. 
+Cuenta tres cosas: qué hace, qué le pasa y cómo se le nota.
 
  TRES ES LA MEDIDA, NO EL TECHO. Con dos se queda a medias: se
  enuncia el rasgo y no da tiempo a que se entienda, y quien lo lee
