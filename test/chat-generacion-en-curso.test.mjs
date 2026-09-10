@@ -98,17 +98,21 @@ const POR_AREAS = [
 
 // PASO 1, BUSCAR: cada llamada saca SU lista, con las cinco casillas llenas.
 // Dos fortalezas por area y tres desafios, que es lo que pide el encargo.
-const losRasgos = cual => JSON.stringify({
-  rasgos: POR_AREAS.flatMap(([area, posiciones], k) => {
-    const cuantos = cual === 'fortalezas' ? 2 : 3;
-    return posiciones.slice(0, cuantos).map((origen, i) => ({
-      area,
-      titulo: TITULOS[cual][k * cuantos + i],
-      descripcion: 'Sigues de pie donde otros se bajan del todo, y quien te tiene cerca ya cuenta con eso.',
-      causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
-      origen,
-    }));
-  }),
+// UNA SOLA RESPUESTA CON LAS DOS LISTAS DENTRO, y cada rasgo diciendo cual de
+// las dos cosas es, que es como contesta ahora el paso 1.
+const losRasgos = () => JSON.stringify({
+  rasgos: POR_AREAS.flatMap(([area, posiciones], k) =>
+    ['fortalezas', 'desafios'].flatMap(cual => {
+      const cuantos = cual === 'fortalezas' ? 2 : 3;
+      return posiciones.slice(0, cuantos).map((origen, i) => ({
+        lista: cual,
+        area,
+        titulo: TITULOS[cual][k * cuantos + i],
+        descripcion: 'Sigues de pie donde otros se bajan del todo, y quien te tiene cerca ya cuenta con eso.',
+        causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
+        origen,
+      }));
+    })),
 });
 
 // PASO 2, LIMPIAR: contesta solo con numeros. Se queda con todos a proposito,
@@ -125,20 +129,19 @@ globalThis.fetch = async (url, opciones) => {
   if (u.includes('api.anthropic.com')) {
     llamadasAlModelo++;
     await espera(800);                       // deja una ventana real de tiempo
-    let esBuscar = false, esLimpiar = false, cual = 'desafios', sistema = '';
+    let esBuscar = false, esLimpiar = false, sistema = '';
     try {
       const cuerpo = JSON.parse(opciones.body);
       sistema = String(cuerpo.system || '');
       esBuscar = sistema.includes('AQUÍ SE BUSCAN Y SE ESCRIBEN');
       esLimpiar = sistema.includes('Abajo tienes las fortalezas y los desafíos');
-      if (sistema.includes('las dos listas: fortalezas')) cual = 'fortalezas';
-    } catch (e) {}
+      } catch (e) {}
     // Buscar y limpiar razonan: su respuesta trae delante un bloque de
     // pensamiento y detras el texto, como la API de verdad.
     if (esBuscar) {
       return { ok: true, status: 200, json: async () => ({ content: [
         { type: 'thinking', thinking: '' },
-        { type: 'text', text: losRasgos(cual) },
+        { type: 'text', text: losRasgos() },
       ] }) };
     }
     if (esLimpiar) {
@@ -234,7 +237,7 @@ try {
   // que le pone el area a cada uno, mas las 7 areas del informe. Lo que se
   // vigila aqui no es el numero, sino que la segunda peticion no haya lanzado
   // NINGUNA generacion mas.
-  comprobar('en total solo se generó una vez', llamadasAlModelo === 11, llamadasAlModelo + ' llamadas');
+  comprobar('en total solo se generó una vez', llamadasAlModelo === 10, llamadasAlModelo + ' llamadas');
 
 } catch (err) {
   console.error('\n  ✘ la prueba reventó:', err.message);
