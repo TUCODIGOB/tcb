@@ -101,9 +101,9 @@ process.env.ANTHROPIC_API_KEY = 'sk-ant-test';
 process.env.BREVO_API_KEY = '';
 
 // ── 3. El modelo de mentira.
-// Cada rasgo con su titulo, todos distintos entre si, como en una lista de
+// Cada rasgo con su conducta, todas distintas entre si, como en una lista de
 // verdad.
-const TITULOS = {
+const CONDUCTAS = {
   fortalezas: [
     'Aguantas cuando todo aprieta', 'Miras de frente lo incomodo',
     'Decides rapido y sin ruido', 'Cuidas los detalles pequenos',
@@ -152,9 +152,7 @@ const losRasgos = () => JSON.stringify({
       return posiciones.slice(0, cuantos).map((origen, i) => ({
         lista: cual,
         area,
-        titulo: TITULOS[cual][k * cuantos + i],
-        descripcion: 'Sigues de pie donde otros se bajan del todo, y quien te tiene cerca ya cuenta con eso.',
-        causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
+        conducta: CONDUCTAS[cual][k * cuantos + i],
         origen,
       }));
     })),
@@ -182,7 +180,7 @@ globalThis.fetch = async (url, opciones) => {
   try {
     const cuerpo = JSON.parse(opciones.body);
     sistema = String(cuerpo.system || '');
-    esBuscar = sistema.includes('AQUÍ SE BUSCAN Y SE ESCRIBEN');
+    esBuscar = sistema.includes('AQUÍ SOLO SE BUSCAN, NO SE ESCRIBEN');
     esLimpiar = sistema.includes('Abajo tienes las fortalezas y los desafíos');
   } catch (e) {}
 

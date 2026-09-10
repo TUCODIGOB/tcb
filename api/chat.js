@@ -871,16 +871,12 @@ const ESQUEMA_DE_ELEGIR = {
           // LA CONDUCTA: tres o seis palabras que dicen que HACE la persona en
           // ese rasgo. No la lee la clienta ni sale en el informe: es con lo que
           // compara la limpieza. Dos rasgos con la misma conducta son el mismo
-          // rasgo, aunque esten escritos con palabras distintas, y eso en la
-          // descripcion no se ve de un vistazo.
+          // rasgo, aunque esten escritos con palabras distintas.
           conducta:    { type: 'string' },
           area:        { type: 'string', enum: NOMBRES_DE_AREA },
-          titulo:      { type: 'string' },
-          descripcion: { type: 'string' },
-          causa:       { type: 'string' },
           origen:      { type: 'string' },
         },
-        required: ['lista', 'conducta', 'area', 'titulo', 'descripcion', 'causa', 'origen'],
+        required: ['lista', 'conducta', 'area', 'origen'],
         additionalProperties: false,
       },
     },
@@ -1048,13 +1044,13 @@ Nombre de pila: ${nombrePila}`;
 
   const rasgos = [];
   for (const r of (Array.isArray(salida.rasgos) ? salida.rasgos : [])) {
-    const nombre = String(r?.titulo ?? '').trim();
+    const conducta = String(r?.conducta ?? '').trim();
     const origen = String(r?.origen ?? '').trim();
-    if (!nombre) continue;
+    // SIN CONDUCTA NO HAY RASGO. Es lo unico que lo identifica y lo unico que
+    // la limpieza compara: uno que llegue sin ella se le colaria entero.
+    if (!conducta) continue;
     rasgos.push({
-      nombre, origen,
-      descripcion: String(r?.descripcion ?? '').trim(),
-      causa: String(r?.causa ?? '').trim(),
+      conducta, origen,
       // El area la dice el modelo, que es el unico que ha leido el rasgo. Si no
       // la dice, o dice una que no existe, la saca el codigo de la posicion.
       area: areaDelRasgo(origen, String(r?.area ?? '').trim()),
@@ -1063,11 +1059,6 @@ Nombre de pila: ${nombrePila}`;
       // cosa, el rasgo se caeria del informe sin que nadie se entere, asi que lo
       // que no sea "fortalezas" cuenta como desafio, que es la lista con mas sitio.
       lista: String(r?.lista ?? '').trim() === 'fortalezas' ? 'fortalezas' : 'desafios',
-      // Y SI NO LA DICE, VALE SU TITULO. Con la conducta vacia la limpieza no
-      // tendria nada que comparar de ese rasgo y se le colaria entero. El titulo
-      // compara peor -esta escrito a proposito para que no se repita- pero es
-      // mucho mejor que nada.
-      conducta: String(r?.conducta ?? '').trim() || nombre,
     });
   }
   return rasgos;
@@ -1331,7 +1322,7 @@ const PALABRAS_DE_ASTROLOGIA = [
 ];
 
 function hablaDeAstrologia(rasgo) {
-  const texto = sinTildes(`${rasgo.nombre} ${rasgo.descripcion} ${rasgo.causa}`);
+  const texto = sinTildes(rasgo.conducta);
   return PALABRAS_DE_ASTROLOGIA.some(re => re.test(texto));
 }
 

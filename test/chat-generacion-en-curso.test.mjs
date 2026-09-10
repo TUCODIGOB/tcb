@@ -56,9 +56,9 @@ let llamadasAlModelo = 0;
 // que el modelo de mentira tiene que saber contestar a las dos cosas. Si a la
 // peticion de las listas se le devuelve texto de area, no es JSON valido, las
 // listas no salen y no se llega a escribir ni un area.
-// Cada rasgo con su propio titulo, todos distintos entre si, como en una lista
+// Cada rasgo con su propia conducta, todas distintas entre si, como en una lista
 // de verdad.
-const TITULOS = {
+const CONDUCTAS = {
   fortalezas: [
     'Aguantas cuando todo aprieta', 'Miras de frente lo incomodo',
     'Decides rapido y sin ruido', 'Cuidas los detalles pequenos',
@@ -107,9 +107,7 @@ const losRasgos = () => JSON.stringify({
       return posiciones.slice(0, cuantos).map((origen, i) => ({
         lista: cual,
         area,
-        titulo: TITULOS[cual][k * cuantos + i],
-        descripcion: 'Sigues de pie donde otros se bajan del todo, y quien te tiene cerca ya cuenta con eso.',
-        causa: 'Sostienes el esfuerzo sin depender de que salga bien.',
+        conducta: CONDUCTAS[cual][k * cuantos + i],
         origen,
       }));
     })),
@@ -133,7 +131,7 @@ globalThis.fetch = async (url, opciones) => {
     try {
       const cuerpo = JSON.parse(opciones.body);
       sistema = String(cuerpo.system || '');
-      esBuscar = sistema.includes('AQUÍ SE BUSCAN Y SE ESCRIBEN');
+      esBuscar = sistema.includes('AQUÍ SOLO SE BUSCAN, NO SE ESCRIBEN');
       esLimpiar = sistema.includes('Abajo tienes las fortalezas y los desafíos');
       } catch (e) {}
     // Buscar y limpiar razonan: su respuesta trae delante un bloque de
