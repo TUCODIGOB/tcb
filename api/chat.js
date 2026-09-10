@@ -848,13 +848,6 @@ const TOPE_DE_ELEGIR = 200000;
 // esta misma llamada en el P2, donde ronda los cuarenta segundos.
 const TOPE_DE_LIMPIAR = 90000;
 
-// CUANTOS SACA CADA LISTA EN EL PASO DE BUSCAR, por area. Se saca de mas a
-// proposito: la limpieza de despues quita lo repetido, y sin margen no puede.
-const CUANTOS_AL_BUSCAR = {
-  fortalezas: '2 fortalezas',
-  desafios: '3 desafíos',
-};
-
 const ESQUEMA_DE_ELEGIR = {
   type: 'object',
   properties: {
@@ -912,25 +905,21 @@ function comoSeLeHabla(sexo) {
 
 // ── PASO 1: ELEGIR ──────────────────────────────────────────
 async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'medium') {
-  // El encargo se cambia despues, en su turno. Hasta entonces sigue tal cual
-  // esta escrito, y estas dos lineas son lo que necesita para no romperse.
-  const cual = 'fortalezas y desafios';
-  const cuantos = `${CUANTOS_AL_BUSCAR.fortalezas} y ${CUANTOS_AL_BUSCAR.desafios}`;
   const encargo = `${TONO}
 
 
 Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
-AQUÍ SE BUSCAN Y SE ESCRIBEN. De cada rasgo sale solo su título, su descripción, la causa, el área a la que pertenece y de qué posición de la carta lo has sacado. Lo que importa es encontrar los que de verdad están en esta carta, y los que más pesan. Quitar los que se repiten se hace después, y no es cosa tuya. 
+AQUÍ SE BUSCAN Y SE ESCRIBEN: De cada rasgo sale si es una fortaleza o un desafío, su título, su descripción, la causa, el área a la que pertenece y de qué posición de la carta lo has sacado. Lo que importa es encontrar los que de verdad están en esta carta, y los que más pesan. 
 QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. No que suene bien ni que esté bien escrito. Entre dos que dicen casi lo mismo, se queda el que más le cuesta o más le da, y el otro se va.
 TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posición concreta de esta carta, no se escribe.
 
 1. LO QUE BUSCAS
 FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.
 DESAFÍOS: lo que le cuesta, lo que le pesa, dónde tropieza.
-Esta vez te toca sacar solo los de una de las dos listas: ${cual}. La otra la saca otro y tú no la ves.
+Sacas las fortalezas y los desafíos a la vez, todos seguidos, y cada rasgo dice cuál de las dos cosas es. 
 
 2. CUÁNTOS
-De cada área sacas ${cuantos}. Ninguna área se entrega vacía ni por debajo de eso, y ninguna pasa de ahí.
+De cada área sacas 2 fortalezas y 3 desafíos. Ninguna área se entrega vacía ni por debajo de eso, y ninguna pasa de ahí. 
 
 
 3. DE DONDE LOS SACAS
@@ -957,9 +946,10 @@ LA PRUEBA: si le cambiaras el signo o la casa a esa posición y el rasgo que has
 Marte, Urano y Júpiter no llevan área propia: lo que salga de ellos es del área de la casa en la que están.
 Al escribirlo, ponle el área de la que habla el rasgo, no la de la posición de la que salió. 
 
-4. LAS CASILLAS DE CADA RASGO
-Todos van en una sola lista, seguidos, y cada uno lleva sus cinco casillas llenas:
 
+4. LAS CASILLAS DE CADA RASGO
+Todos van en una sola lista, seguidos, y cada uno lleva sus seis casillas llenas: 
+lista         si ese rasgo es una fortaleza o un desafío. 
 area         una de las siete, escrita como están escritas arriba.
 
 titulo       Se le habla de tu, igual que en todo lo demás: es lo que hace
@@ -995,7 +985,23 @@ origen       De donde sale el rasgo en la carta, en técnico y en corto: el
 
 Un rasgo es su título y su posición. Si empiezas uno y no sabes de dónde lo sacas, se quita entero.
 
-DESPUÉS, EL ÁREA DE CADA UNO, Y AQUÍ NO MANDA LA POSICIÓN.
+5. NO SE REPITE NI SE CONTRADICE, Y ESO SE COMPRUEBA MIENTRAS ESCRIBES
+
+Esto no es un repaso del final. Se hace rasgo a rasgo, ANTES de escribir cada uno.
+
+PONLE NOMBRE A LA CONDUCTA. Antes de escribir un rasgo, dite a ti misma, de tres a seis palabras y sin escribirlo en la respuesta, qué está HACIENDO esa persona en ese rasgo. No de qué habla ni dónde le pasa: qué HACE.
+
+Y ANTES DE ESCRIBIRLO, MÍRALO CONTRA LOS QUE YA LLEVAS. Comparas conductas, no palabras. Da igual que uno hable de su trabajo y otro de su casa, que estén en áreas distintas, o que uno sea una fortaleza y el otro un desafío.
+
+LA PRUEBA: si al corregir uno el otro se corrige solo, son el mismo rasgo.
+
+SI YA ESTÁ, NO LO ESCRIBES. Vuelves a la carta, a la parte que le toca a esa área, y sacas otro distinto de verdad. No vale una variante del que acabas de descartar.
+
+Y UNA MISMA CONDUCTA NO SALE EN LAS DOS LISTAS. Si lo que ibas a escribir como desafío es la misma conducta que ya has escrito como fortaleza, no son dos rasgos: es uno con sus dos caras. Se queda la que más pese hoy en su vida, y la otra no se escribe.
+
+LLEVA LA CUENTA. Ten presentes las conductas que ya has nombrado, desde la primera hasta la última. Los repetidos se cuelan al final de la lista, cuando ya has escrito muchos y dejas de mirar atrás.
+
+6. EL ÁREA DE CADA UNO, Y AQUÍ NO MANDA LA POSICIÓN. 
 
 Tapa de dónde lo sacaste. Lee solo el rasgo y pregúntate de qué habla, con la lista de las siete delante. Ahí es donde va, aunque la posición diga otra cosa.
 
@@ -1005,7 +1011,8 @@ Ojo con las áreas que en la carta miran a más de una cosa: ahí es donde el ra
 
 Esto se hace rasgo por rasgo y sin saltarse ninguno: es el paso que más veces sale mal.
 
-DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas, área por área, cuántos has sacado. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale escribir una variante de uno que ya tienes. 
+DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas, área por área, cuántas fortalezas y cuántos desafíos has sacado. Si alguna se ha quedado por debajo de su mínimo, vuelves a la carta, a la parte que le toca a esa área, y sacas otro rasgo distinto de verdad. No vale escribir una variante de uno que ya tienes. 
+
 DESPUÉS, EL TECHO. Si un área pasa de su máximo, se quedan los que más pesan y los demás se van.
 
 Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ningún rasgo nombre la carta ni nada técnico ni de astrología en el título, la descripción o la causa, y que a ninguno le falte una casilla.
