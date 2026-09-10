@@ -921,17 +921,17 @@ function pintarCuaderno(c) {
     const r = porNumero.get(n);
     if (!r) return '#' + esc(n);
     return '#' + esc(r.n) + ' ' + esc(r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO') +
-           ' ' + esc(r.area) + ' — ' + esc(r.conducta) + ' — ' + esc(r.titulo) + ' — ' + esc(r.descripcion);
+           ' ' + esc(r.area) + ' — ' + esc(r.conducta) + ' — ' + esc(r.origen);
   };
   const linea = (titulo, lista) => lista.length
     ? '<p style="margin:.6rem 0"><b>' + titulo + ' ' + lista.length + ':</b><br>' +
       lista.map(comoLinea).join('<br>') + '</p>'
     : '<p style="margin:.6rem 0"><b>' + titulo + ' ninguno.</b></p>';
 
-  // ── Los que se quedan ──
-  const quedan = c.entraron.filter(r => !fuera.includes(r.n));
-  const filasQ = quedan.map(r =>
-    '<tr><td>' + esc(r.n) + '</td><td>' + esc(r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO') +
+  // ── Los que se quedan, ya escritos ──
+  const quedan = Array.isArray(c.escritos) ? c.escritos : [];
+  const filasQ = quedan.map((r, i) =>
+    '<tr><td>' + (i + 1) + '</td><td>' + esc(r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO') +
     '</td><td>' + esc(r.area) + '</td><td>' + esc(r.conducta) + '</td><td>' + esc(r.titulo) + '</td><td>' + esc(r.descripcion) + '</td></tr>').join('');
 
   hueco.innerHTML =

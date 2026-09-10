@@ -79,7 +79,7 @@ function crearReloj(margen = TOPE_DE_LA_PETICION) {
   // cuanto ha tardado y que ha quitado la limpieza. No decide NADA: si esto no
   // estuviera, el informe saldria exactamente igual. Va colgado del reloj
   // porque el reloj es lo unico que ya llega a todas las llamadas.
-  const cuaderno = { tiempos: [], entraron: [], quitaLimpieza: [], quitaRepaso: [] };
+  const cuaderno = { tiempos: [], entraron: [], quitaLimpieza: [], quitaRepaso: [], escritos: [] };
   return {
     quedan: () => fin - Date.now(),
     // El tope de una llamada: el suyo, o lo que quede si queda menos.
@@ -1230,9 +1230,10 @@ async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
   // pasar: mira esa posicion, decide que cara pesa y escribe una.
   const todos = await unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj);
 
-  // Se apuntan tal como se los va a ver la limpieza, con el mismo numero.
+  // Se apuntan tal como se los va a ver la limpieza, con el mismo numero. Aqui
+  // todavia no hay titulo ni descripcion: eso se escribe despues, en el paso 3.
   reloj.cuaderno.entraron = todos.map((r, i) => ({
-    n: i + 1, lista: r.lista, area: r.area, titulo: r.nombre, conducta: r.conducta, descripcion: r.descripcion,
+    n: i + 1, lista: r.lista, area: r.area, conducta: r.conducta, origen: r.origen,
   }));
 
   const enteros = await limpiarYRepasar(todos, reloj);
@@ -1559,6 +1560,13 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
   const porArea = (a, b) => sitio(a) - sitio(b);
   fortalezas = fortalezas.slice().sort(porArea);
   desafios = desafios.slice().sort(porArea);
+
+  // Y se apunta lo que de verdad se lleva la clienta, ya escrito y ya pasado por
+  // las redes: es lo ultimo que ve el cuaderno y lo mismo que sale en el PDF.
+  reloj.cuaderno.escritos = [...fortalezas, ...desafios].map(r => ({
+    lista: r.lista, area: r.area, conducta: r.conducta,
+    titulo: r.nombre, descripcion: r.descripcion,
+  }));
 
   // UNA SOLA LISTA PARA LAS DOS COSAS. Antes habia dos: la entera para el PDF y
   // otra recortada para las areas, porque la entera traia hasta cuarenta rasgos
