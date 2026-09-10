@@ -868,13 +868,19 @@ const ESQUEMA_DE_ELEGIR = {
           // llamada sacaba una. Ahora sale una sola con las dos dentro, asi que
           // de cada rasgo tiene que decir cual de las dos cosas es.
           lista:       { type: 'string', enum: ['fortalezas', 'desafios'] },
+          // LA CONDUCTA: tres o seis palabras que dicen que HACE la persona en
+          // ese rasgo. No la lee la clienta ni sale en el informe: es con lo que
+          // compara la limpieza. Dos rasgos con la misma conducta son el mismo
+          // rasgo, aunque esten escritos con palabras distintas, y eso en la
+          // descripcion no se ve de un vistazo.
+          conducta:    { type: 'string' },
           area:        { type: 'string', enum: NOMBRES_DE_AREA },
           titulo:      { type: 'string' },
           descripcion: { type: 'string' },
           causa:       { type: 'string' },
           origen:      { type: 'string' },
         },
-        required: ['lista', 'area', 'titulo', 'descripcion', 'causa', 'origen'],
+        required: ['lista', 'conducta', 'area', 'titulo', 'descripcion', 'causa', 'origen'],
         additionalProperties: false,
       },
     },
@@ -1086,6 +1092,11 @@ Nombre de pila: ${nombrePila}`;
       // cosa, el rasgo se caeria del informe sin que nadie se entere, asi que lo
       // que no sea "fortalezas" cuenta como desafio, que es la lista con mas sitio.
       lista: String(r?.lista ?? '').trim() === 'fortalezas' ? 'fortalezas' : 'desafios',
+      // Y SI NO LA DICE, VALE SU TITULO. Con la conducta vacia la limpieza no
+      // tendria nada que comparar de ese rasgo y se le colaria entero. El titulo
+      // compara peor -esta escrito a proposito para que no se repita- pero es
+      // mucho mejor que nada.
+      conducta: String(r?.conducta ?? '').trim() || nombre,
     });
   }
   return rasgos;
