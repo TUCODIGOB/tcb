@@ -967,8 +967,9 @@ Se escribe con las mismas palabras siempre que la conducta sea la misma. Si busc
 area         una de las siete, escrita como están escritas arriba.
 
 origen       De donde sale el rasgo en la carta, en técnico y en corto: el
-             cuerpo con su signo y su casa, o los dos cuerpos y el aspecto que
-             forman. Nada más: ni explicación ni frase.
+             cuerpo con su signo y su casa, o los dos cuerpos con su signo y su
+             casa cada uno y el aspecto que forman. Nada más: ni explicación ni
+             frase.
              Es obligatoria. Y no repartas todos los rasgos sobre las mismas
              dos o tres posiciones: la carta tiene de sobra.
 
