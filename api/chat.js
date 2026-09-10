@@ -1344,7 +1344,51 @@ async function limpiarYRepasar(todos, reloj) {
     }
   }
 
-  return sequedan.map(n => todos[n - 1]).filter(Boolean);
+  return conElSueloDeCadaArea(sequedan.map(n => todos[n - 1]).filter(Boolean), todos);
+}
+
+// EL SUELO DE CADA AREA, DESPUES DE LIMPIAR.
+//
+// A la limpieza se le dice en el encargo que no deje ningun area por debajo de
+// su minimo, pero decide ella sola y nadie lo comprobaba: si se pasaba
+// quitando, un area llegaba al informe con menos rasgos de los que lleva, o sin
+// ninguno, y mas adelante ya no habia arreglo porque los rasgos que faltaban se
+// habian tirado.
+//
+// Asi que se cuenta lo que ha quedado, area por area y lista por lista, y a la
+// que se haya quedado corta se le devuelven los que la limpieza le habia
+// quitado de ahi, empezando por los primeros, que es el orden en que vinieron:
+// los que mas pesan. Se devuelven solo los justos para llegar al minimo, asi
+// que lo repetido que quito la limpieza sigue fuera salvo que sin ello el area
+// no llegue.
+//
+// No se le pide nada al modelo ni se gasta un segundo mas: son rasgos que ya
+// estaban sacados de la carta.
+function conElSueloDeCadaArea(sequedan, todos) {
+  const dentro = new Set(sequedan);
+  const devueltos = [];
+
+  for (const area of NOMBRES_DE_AREA) {
+    for (const cual of ['fortalezas', 'desafios']) {
+      const hay = sequedan.filter(r => r.area === area && r.lista === cual).length;
+      let faltan = POR_AREA[cual].min - hay;
+      if (faltan <= 0) continue;
+
+      const antes = devueltos.length;
+      for (const r of todos) {
+        if (faltan === 0) break;
+        if (dentro.has(r) || r.area !== area || r.lista !== cual) continue;
+        dentro.add(r);
+        devueltos.push(r);
+        faltan--;
+      }
+      console.warn(`la limpieza dejo ${cual} de ${area} en ${hay} de ${POR_AREA[cual].min}, se devuelven ${devueltos.length - antes}`);
+    }
+  }
+
+  // Los devueltos van detras, sin tocar el orden de los que ya estaban: mas
+  // adelante los rasgos se ordenan por area de todas formas.
+  return devueltos.length ? [...sequedan, ...devueltos] : sequedan;
 }
 
 async function sacarLasListas(nombrePila, sexo, cartaTexto, reloj) {
