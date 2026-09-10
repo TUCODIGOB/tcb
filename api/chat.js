@@ -318,6 +318,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
 5. Su nombre de pila, dos veces como mínimo y separadas.
 
 6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+7. TODO EL ÁREA ESCRITA DE TÚ, de la primera palabra a la última. En ningún momento hablas de ella en tercera persona ni la nombras como sujeto de una frase. Su nombre, si lo usas, es solo para llamarla directamente a ella, nunca seguido de un verbo que hable de lo que hace o siente.
 `
     },
     {
@@ -347,6 +348,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
 6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras.
+7. TODO EL ÁREA ESCRITA DE TÚ, de la primera palabra a la última. En ningún momento hablas de ella en tercera persona ni la nombras como sujeto de una frase. Su nombre, si lo usas, es solo para llamarla directamente a ella, nunca seguido de un verbo que hable de lo que hace o siente.
 `
     },
     {
@@ -368,6 +370,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
 6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras.
+7. TODO EL ÁREA ESCRITA DE TÚ, de la primera palabra a la última. En ningún momento hablas de ella en tercera persona ni la nombras como sujeto de una frase. Su nombre, si lo usas, es solo para llamarla directamente a ella, nunca seguido de un verbo que hable de lo que hace o siente.
 `
     },
     {
@@ -389,6 +392,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
 6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras.
+7. TODO EL ÁREA ESCRITA DE TÚ, de la primera palabra a la última. En ningún momento hablas de ella en tercera persona ni la nombras como sujeto de una frase. Su nombre, si lo usas, es solo para llamarla directamente a ella, nunca seguido de un verbo que hable de lo que hace o siente.
 `
     },
     {
@@ -412,6 +416,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
 6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras.
+7. TODO EL ÁREA ESCRITA DE TÚ, de la primera palabra a la última. En ningún momento hablas de ella en tercera persona ni la nombras como sujeto de una frase. Su nombre, si lo usas, es solo para llamarla directamente a ella, nunca seguido de un verbo que hable de lo que hace o siente.
 `
     },
     {
@@ -433,6 +438,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
 6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras.
+7. TODO EL ÁREA ESCRITA DE TÚ, de la primera palabra a la última. En ningún momento hablas de ella en tercera persona ni la nombras como sujeto de una frase. Su nombre, si lo usas, es solo para llamarla directamente a ella, nunca seguido de un verbo que hable de lo que hace o siente.
 `
     },
     {
@@ -458,6 +464,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SEIS COSAS. Son obliga
 4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
 5. Su nombre de pila, dos veces como mínimo y separadas.
 6. Los cinco bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras.
+7. TODO EL ÁREA ESCRITA DE TÚ, de la primera palabra a la última. En ningún momento hablas de ella en tercera persona ni la nombras como sujeto de una frase. Su nombre, si lo usas, es solo para llamarla directamente a ella, nunca seguido de un verbo que hable de lo que hace o siente.
 `
     },
   ];
