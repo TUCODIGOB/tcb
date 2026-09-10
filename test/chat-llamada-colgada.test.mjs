@@ -44,7 +44,7 @@ const original = fs.readFileSync(path.join(RAIZ, 'api', 'chat.js'), 'utf8');
 const ENPRODUCCION = [
   ['el presupuesto de la peticion', 'const TOPE_DE_LA_PETICION = 285000'],
   ['el tope de cada area',          'signal: reloj.senal(90000)'],
-  ['el tope de buscar',            'const TOPE_DE_ELEGIR = 200000'],
+  ['el tope de buscar',            'const TOPE_DE_ELEGIR = 100000'],
   ['el tope de limpiar',           'const TOPE_DE_LIMPIAR = 90000'],
   ['el tope de escribir',          'const TOPE_DE_ESCRIBIR = 90000'],
 ];
@@ -83,7 +83,7 @@ function aEscala(texto, presupuesto) {
   return texto
     .replace("import Stripe from 'stripe';", "import Stripe from './.stripe-falso-colgada.mjs';")
     .replace('const TOPE_DE_LA_PETICION = 285000', `const TOPE_DE_LA_PETICION = ${presupuesto}`)
-    .replace('const TOPE_DE_ELEGIR = 200000', 'const TOPE_DE_ELEGIR = 2000')
+    .replace('const TOPE_DE_ELEGIR = 100000', 'const TOPE_DE_ELEGIR = 2000')
     .replace('const TOPE_DE_LIMPIAR = 90000', 'const TOPE_DE_LIMPIAR = 2000')
     .replace('reloj.senal(90000)', 'reloj.senal(2500)')
     .replace('hayTiempoPara(180)', 'hayTiempoPara(5)')

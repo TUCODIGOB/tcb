@@ -848,10 +848,12 @@ function areaPorLaPosicion(origen) {
 // barato que volver a leerse la carta entera para redactar lo que sobrevivio.
 // ═════════════════════════════════════════════════════════════════
 
-// UNA SOLA LLAMADA SACA LAS DOS LISTAS, asi que escribe los treinta y cinco
-// rasgos de una tirada. Dos llamadas a la vez tardaban noventa segundos entre
-// las dos; una sola, escribiendo lo mismo, ronda los dos minutos y medio.
-const TOPE_DE_ELEGIR = 200000;
+// ESTA LLAMADA YA NO ESCRIBE, SOLO ELIGE: en un informe de verdad tarda unos
+// sesenta segundos. Cien es margen de sobra, y sobre todo es lo que hay que
+// dejarle para que quepa su segunda tirada: si se colgara y se comiera mas, ya
+// no quedarian los tres minutos que esa segunda tirada necesita y el informe se
+// caeria entero, que es justo lo que paso el 10 de septiembre.
+const TOPE_DE_ELEGIR = 100000;
 // Limpiar solo piensa: lo que devuelve son numeros. Es el mismo tope que lleva
 // esta misma llamada en el P2, donde ronda los cuarenta segundos.
 const TOPE_DE_LIMPIAR = 90000;
