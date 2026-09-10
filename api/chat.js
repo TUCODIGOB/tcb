@@ -960,8 +960,8 @@ Al escribirlo, ponle el área de la que habla el rasgo, no la de la posición de
 Todos van en una sola lista, seguidos, y cada uno lleva sus cuatro casillas llenas: 
 lista         si ese rasgo es una fortaleza o un desafío. 
 
-conducta    Qué está HACIENDO esa persona en ese rasgo, de tres a seis
-palabras. No de qué habla ni dónde le pasa: qué HACE.
+conducta    El rasgo en corto, de cuatro a siete palabras: lo que hace esa
+persona o lo que le pasa por dentro. No de qué habla ni dónde le pasa.
 No es para ella, es para comparar: dos rasgos con la misma
 conducta son el mismo rasgo, aunque estén escritos distinto.
 Se escribe con las mismas palabras siempre que la conducta sea la misma. Si buscas variar, dejan de verse los repetidos. 
@@ -981,7 +981,7 @@ Un rasgo es su conducta y su posición. Si empiezas uno y no sabes de dónde lo 
 
 Esto no es un repaso del final. Se hace rasgo a rasgo, ANTES de escribir cada uno.
 
-PONLE NOMBRE A LA CONDUCTA. Antes de escribir un rasgo, nombra su conducta, que es la casilla de arriba: qué está HACIENDO esa persona en ese rasgo, de tres a seis palabras. 
+PONLE NOMBRE A LA CONDUCTA. Antes de escribir un rasgo, nombra su conducta, que es la casilla de arriba: lo que hace esa persona o lo que le pasa por dentro, de cuatro a siete palabras. 
 
 Y ANTES DE ESCRIBIRLO, MÍRALO CONTRA LOS QUE YA LLEVAS. Comparas conductas, no palabras. Da igual que uno hable de su trabajo y otro de su casa, que estén en áreas distintas, o que uno sea una fortaleza y el otro un desafío.
 
