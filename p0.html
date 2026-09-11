@@ -2286,8 +2286,13 @@ display: block;
         // a medio pagar: si esta pagina escribiera ahi, se lo pisaria.
         localStorage.setItem('tcb_p0', JSON.stringify(datos));
 
-        // Aqui ira el alta en Brevo, en la lista 14. De momento no sale.
+        // Y SE APUNTA EN BREVO, EN SU LISTA, CON TODO LO QUE HA ESCRITO.
+        // keepalive: true (no fetch normal) porque la página cambia justo
+        // después y la petición tiene que sobrevivir a la navegación.
         const leadPayload = {
+          // Ya le ha dado al boton con todo relleno: esta es la buena, y es la
+          // que deja la marca de que se ha llevado el regalo.
+          completo: true,
           nombre: datos.nombre,
           email: datos.email,
           telefono: datos.telefonoCompleto,
@@ -2299,7 +2304,7 @@ display: block;
           pais: datos.pais,
           edad: datos.edadCalculada,
         };
-        sinApuntarTodavia('/api/captar-lead', {
+        fetch('/api/p0-lead-magnet-p1/captar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(leadPayload),
@@ -2368,14 +2373,9 @@ display: block;
       document.getElementById('politicaField').classList.remove('error');
     });
 
-    // TODAVIA NO SE APUNTA A NADIE EN BREVO.
-    //
-    // La pagina del P1 manda sus leads a su lista de carrito abandonado. Esta
-    // pagina tiene la suya, la 14, y se conecta en el paso siguiente: hasta
-    // entonces esto se traga la llamada y no sale de aqui.
-    function sinApuntarTodavia() { return Promise.resolve(); }
-
-    // Captación silenciosa del lead en Brevo al salir del campo email
+    // Captación silenciosa del lead en Brevo al salir del campo email.
+    // Va a la lista del regalo, no a la del carrito abandonado del P1: cada
+    // producto tiene la suya.
     let ultimoLeadCaptado = '';
     function construirDatosLead() {
       const emailInput = document.getElementById('email');
@@ -2395,7 +2395,7 @@ display: block;
     function capturarLead() {
       const datos = construirDatosLead();
       if (!datos) return;
-      sinApuntarTodavia('/api/captar-lead', {
+      fetch('/api/p0-lead-magnet-p1/captar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(datos),
@@ -2405,7 +2405,7 @@ display: block;
     function capturarLeadAlCerrar() {
       const datos = construirDatosLead();
       if (!datos) return;
-      sinApuntarTodavia('/api/captar-lead', {
+      fetch('/api/p0-lead-magnet-p1/captar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(datos),
