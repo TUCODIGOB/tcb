@@ -1572,26 +1572,35 @@ display: block;
     <div class="container">
       <div class="form-card" style="max-width:720px;margin:0 auto;">
 
-        <!-- LO QUE SE VE CUANDO ES LA PRIMERA VEZ -->
+        <!-- LO QUE SE VE CUANDO YA LO SACO OTRA VEZ. Va delante del resultado. -->
+        <div id="yaLoTenia" hidden>
+          <h1 class="form-title">Ya diste el primer paso.</h1>
+          <p style="text-align:center;">Estos datos ya están registrados, aquí tienes el resultado.</p>
+        </div>
+
+        <!-- SU RESULTADO. Se ve las dos veces: la primera y cuando vuelve. -->
         <div id="suRegalo" hidden>
           <!-- EL REGALO VA AQUI. Todavia no esta escrito: cuando se decida que
                se le cuenta, este hueco se rellena con lo que salga de su carta. -->
           <p id="textoDelRegalo" style="white-space:pre-line;"></p>
         </div>
 
-        <!-- LO QUE SE VE CUANDO YA LO SACO OTRA VEZ -->
-        <div id="yaLoTenia" hidden>
-          <h1 class="form-title">Ya diste el primer paso.</h1>
-          <p style="text-align:center;">Estos datos ya están registrados.</p>
-        </div>
-
         <p id="elCierre" style="text-align:center;" hidden>
           Ahora falta lo importante: entender por fin por qué eres como eres y por qué te pasa lo que te pasa.
         </p>
 
+        <p id="elPrecio" style="text-align:center;" hidden>
+          <span style="text-decoration:line-through;opacity:.6;">67€</span>
+          <strong style="font-size:1.35em;margin-left:.4em;">47€</strong>
+        </p>
+
         <div class="form-step-nav form-step-nav-final" id="elBoton" hidden>
-          <a href="/tu-diseno-de-origen" class="btn-pay" style="text-decoration:none;text-align:center;">Quiero saber por qué me pasa</a>
+          <a href="/tu-diseno-de-origen" class="btn-pay" style="text-decoration:none;text-align:center;" id="textoDelBoton">Quiero saber por qué me pasa</a>
         </div>
+
+        <p id="laEntrega" style="text-align:center;" hidden>
+          Lo recibes en minutos, sin cita, sin espera.
+        </p>
 
       </div>
     </div>
@@ -1636,15 +1645,21 @@ display: block;
 
     var primeraVez = !suyo.yaLoTenia;
 
-    document.getElementById('suRegalo').hidden  = !primeraVez;
+    // Su resultado se ve siempre. Lo que cambia es lo que va alrededor.
+    document.getElementById('suRegalo').hidden  = false;
     document.getElementById('yaLoTenia').hidden = primeraVez;
     document.getElementById('elCierre').hidden  = false;
     document.getElementById('elBoton').hidden   = false;
 
-    // EL TEXTO DEL REGALO TODAVIA NO EXISTE. Cuando se monte, se escribira aqui.
-    if (primeraVez) {
-      document.getElementById('textoDelRegalo').textContent = suyo.regalo || '';
+    // El precio y la entrega, solo cuando vuelve.
+    document.getElementById('elPrecio').hidden  = primeraVez;
+    document.getElementById('laEntrega').hidden = primeraVez;
+    if (!primeraVez) {
+      document.getElementById('textoDelBoton').textContent = 'Quiero mi Diseño de Origen';
     }
+
+    // EL TEXTO DEL REGALO TODAVIA NO EXISTE. Cuando se monte, se escribira aqui.
+    document.getElementById('textoDelRegalo').textContent = suyo.regalo || '';
   })();
   </script>
 
