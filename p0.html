@@ -1,0 +1,2520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+<title>P0 — Origen Natal</title>
+<meta name="description" content="Página provisional del regalo. Origen Natal" />
+<meta name="robots" content="noindex, nofollow" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://origennatal.com/p0" />
+<meta property="og:title" content="P0 — Origen Natal" />
+<meta property="og:description" content="Página provisional del regalo. Origen Natal" />
+<meta property="og:image" content="https://origennatal.com/images/logo-google-origen-natal-carta.webp" />
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://origennatal.com/images/logo-google-origen-natal-carta.webp" />
+<link rel="canonical" href="https://origennatal.com/p0" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/webp" href="images/favicon-origen-natal-oscuro.webp" />
+  <link rel="shortcut icon" href="images/favicon-origen-natal-oscuro.webp" />
+
+  <!-- Fonts -->
+  <style>
+@font-face {
+  font-display: swap;
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  src: url('fonts-web/playfair-display-v40-latin_latin-ext-700.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts-web/open-sans-v44-latin_latin-ext-regular.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('fonts-web/open-sans-v44-latin_latin-ext-600.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  src: url('fonts-web/playfair-display-v40-latin-500.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Italianno';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts-web/italianno-v18-latin-regular.woff2') format('woff2');
+}
+</style>
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xf6ygmm5pw");
+</script>
+
+  <style>
+    /* ─── TOKENS ─── */
+    :root {
+      --teal-deep:   #0e3f4b;
+      --gold-deep:   #bd9048;
+      --gold-light:  #cfb180;
+      --cream:       #fffbef;
+      --white:       #ffffff;
+      --ink:         #0c0c0c;
+      --error:       #c0392b;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Open Sans', sans-serif;
+      --r-sm: 6px;
+      --r-md: 12px;
+      --r-lg: 24px;
+    }
+
+    /* ─── RESET ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+
+    .container { width: min(760px, 92vw); margin-inline: auto; }
+
+    /* ─── NAV ─── */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,251,239,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid transparent;
+      transition: border-bottom-color .25s ease;
+    }
+    /* Dos umbrales de scroll: a 20px aparece el borde (is-scrolled) y a
+       50px se oculta además el logo (scrolled). Un solo listener los pone. */
+    .nav.is-scrolled {
+      border-bottom-color: rgba(189,144,72,.2);
+    }
+    .nav.scrolled .nav-logo { visibility: hidden; }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-block: 6px;
+    }
+    .nav-logo img {
+      height: 34px;
+      width: auto;
+    }
+    .nav-cta {
+      background: var(--gold-deep);
+      color: var(--white);
+      font-size: .82rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .55rem 1.2rem;
+      border-radius: var(--r-sm);
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--gold-light); }
+
+    /* ─── HERO ─── */
+    .hero {
+      text-align: center;
+      padding-block: 3rem 0.5rem;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      font-weight: 700;
+      color: var(--teal-deep);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .form-title { font-size: 2.5rem; color: var(--teal-deep); }
+    .break-mobile-form { display: none; }
+    .hero p {
+      font-size: 1rem;
+      color: #3a3a3a;
+      max-width: 560px;
+      margin-inline: auto;
+    }
+
+    /* ─── FORM CARD ─── */
+    .form-wrap {
+      padding-bottom: 4rem;
+      padding-top: 2rem;
+    }
+    .form-card {
+      background: var(--white);
+      border: 1px solid rgba(189,144,72,.2);
+      border-radius: var(--r-md);
+      padding: 2.2rem 2rem;
+      box-shadow: 0 8px 32px rgba(14,63,75,.08);
+    }
+    .form-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      color: var(--teal-deep);
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: .4rem;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;      
+    }
+    .field label {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--teal-deep);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: .1rem;
+    }
+.date-selects {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr 1fr;
+      gap: 0.5rem;
+    }
+    .date-selects-2col { grid-template-columns: 1fr 1fr; }
+    .date-selects select {
+      width: 100%;
+      padding: 0.9rem 0.6rem;
+      border: 1.5px solid rgba(189,144,72,.4);
+      border-radius: var(--r-sm);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      background: var(--white);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .date-selects select:focus {
+      outline: none;
+      border-color: var(--gold-deep);
+    }
+    .field input,
+    .field select {
+      width: 100%;
+      padding: .75rem 1rem;
+      border: 1.5px solid rgba(14,63,75,.15);
+      border-radius: var(--r-sm);
+      font-family: var(--font-body);
+      font-size: .95rem;
+      color: var(--ink);
+      background: var(--cream);
+      outline: none;
+      transition: border-color .2s;
+    }
+    .field input:focus,
+    .field select:focus {
+      border-color: var(--gold-deep);
+    }
+    .field input.error,
+    .field select.error {
+      border-color: var(--error);
+      background: #fff5f4;
+    }
+    .field-error {
+      display: none;
+      color: var(--error);
+      font-size: .8rem;
+      margin-top: .3rem;
+    }
+    .field-error.show { display: block; }
+
+    /* Tooltip (?) */
+    .help-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--gold-deep);
+      color: var(--white);
+      font-size: .7rem;
+      font-weight: 700;
+      cursor: help;
+      position: relative;
+      text-transform: none;
+      font-family: var(--font-body);
+    }
+    .help-icon .tooltip {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--teal-deep);
+      color: var(--cream);
+      padding: .8rem 1rem;
+      border-radius: var(--r-sm);
+      font-size: .8rem;
+      font-weight: 400;
+      letter-spacing: normal;
+      text-transform: none;
+      width: 280px;
+      max-width: 80vw;
+      line-height: 1.5;
+      box-shadow: 0 6px 20px rgba(0,0,0,.2);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .2s, visibility .2s;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .help-icon .tooltip::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: var(--teal-deep);
+    }
+    .help-icon .tooltip a {
+      color: var(--gold-light);
+      text-decoration: underline;
+    }
+    .help-icon:hover .tooltip,
+    .help-icon:focus .tooltip,
+    .help-icon.active .tooltip {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    /* Teléfono con prefijo */
+    .phone-group {
+      display: grid;
+      grid-template-columns: 130px 1fr;
+      gap: .5rem;
+    }
+    #prefijo { font-family: var(--font-body), "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji"; }
+    .phone-prefix-wrap { position: relative; }
+    .phone-flag {
+      position: absolute;
+      left: 1.5px;
+      top: 1.5px;
+      bottom: 1.5px;
+      width: 38px;
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      border-radius: calc(var(--r-sm) - 1px) 0 0 calc(var(--r-sm) - 1px);
+      z-index: 1;
+    }
+    .phone-flag img {
+      display: block;
+      width: 20px;
+      height: 15px;
+      object-fit: cover;
+      border-radius: 2px;
+      box-shadow: 0 0 0 1px rgba(0,0,0,.08);
+    }
+
+    /* Checkbox */
+    .checkbox-field {
+      display: flex;
+      align-items: flex-start;
+      gap: .7rem;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      background: var(--cream);
+      border-radius: var(--r-sm);
+      border: 1px solid rgba(189,144,72,.2);
+    }
+    .checkbox-field input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      cursor: pointer;
+      accent-color: var(--gold-deep);
+      flex-shrink: 0;
+    }
+    .checkbox-field label {
+      font-size: 10px;
+      color: #444;
+      line-height: 1.5;
+      cursor: pointer;
+      font-weight: 400;
+      text-transform: none;
+      letter-spacing: normal;
+    }
+    .checkbox-field label a {
+      color: var(--gold-deep);
+      text-decoration: underline;
+    }
+    .checkbox-field.error {
+      border-color: var(--error);
+      background: #fff5f4;
+    }
+
+    /* BTN */
+    .btn-pay {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 1.1rem 1rem;
+      border: none;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      margin-top: 1.5rem;
+      box-shadow: 0 6px 28px rgba(189,144,72,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-pay:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(189,144,72,.5);
+    }
+    .btn-pay:active { transform: translateY(0); }
+    .btn-pay:disabled {
+      background: #bbb;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    /* Progreso del formulario en 3 pasos */
+    .form-progress {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: 1.8rem;
+    }
+    .form-progress-dots {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .form-progress-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(14,63,75,.15);
+      transition: background .2s;
+    }
+    .form-progress-dot.active {
+      background: var(--gold-deep);
+    }
+    .form-progress-label {
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--teal-deep);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .form-step.hidden { display: none; }
+    .form-step-nav {
+      display: flex;
+      gap: .8rem;
+      margin-top: 1.5rem;
+    }
+    .form-step-nav .btn-next {
+      flex: 1;
+      display: block;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 10px;
+      border: none;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      box-shadow: 0 6px 28px rgba(189,144,72,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .form-step-nav .btn-next:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 36px rgba(189,144,72,.5);
+    }
+    .form-step-nav .btn-back {
+      background: none;
+      border: 1.5px solid rgba(14,63,75,.2);
+      color: var(--teal-deep);
+      font-family: var(--font-body);
+      font-size: .95rem;
+      font-weight: 600;
+      padding: 10px;
+      border-radius: var(--r-sm);
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+    .form-step-nav .btn-back:hover {
+      background: rgba(14,63,75,.05);
+      border-color: rgba(14,63,75,.4);
+    }
+    .form-step-nav-final .btn-pay {
+      width: auto;
+      flex: 1;
+      margin-top: 0;
+    }
+
+    .secure-note {
+      text-align: center;
+      font-size: .82rem;
+      color: #0c0c0c;
+      margin-top: 1rem;
+    }
+    /* Errores generales */
+    .error-banner {
+      display: none;
+      background: #fff5f4;
+      border: 1.5px solid var(--error);
+      color: var(--error);
+      padding: 1rem;
+      border-radius: var(--r-sm);
+      margin-top: 1rem;
+      font-size: .9rem;
+    }
+    .error-banner.show { display: block; }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      background: var(--teal-deep);
+      color: rgba(255,251,239,.6);
+      padding-block: 2.5rem;
+      font-size: .82rem;
+    }
+    .footer-inner {
+      display: flex; flex-direction: column;
+      align-items: center; gap: .9rem;
+      text-align: center;
+      width: min(1100px, 92vw);
+      margin-inline: auto;
+    }
+    .footer-email a { color: var(--gold-light); font-weight: 500; font-size: .82rem; }
+    .footer-email a:hover { color: var(--white); }
+    .footer-links {
+      display: flex; flex-wrap: wrap;
+      gap: .3rem .75rem;
+      justify-content: center;
+      align-items: center;
+    }
+    .footer-links a { color: rgba(255,251,239,.65); transition: color .15s; }
+    .footer-links a:hover { color: var(--gold-light); }
+    .footer-links .sep { opacity: .35; }
+    .footer-copy { color: rgba(255,251,239,.4); font-size: .8rem; }
+
+    /* Lo responsive de esta página está unificado en el bloque
+       @media (max-width: 600px) del final de la hoja. */
+
+    /* ── BLOQUES COPIADOS DE INDEX.HTML ── */
+    /* Los tokens de color y tipografía viven en el :root único de arriba. */
+
+    /* ─── RESET ──────────────────────────────────── */
+    body {
+      font-family: var(--font-body);
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+
+    /* ─── UTILITIES ──────────────────────────────── */
+    .container-home { width: min(1100px, 92vw); margin-inline: auto; }
+    .text-center { text-align: center; }
+    .sr-only { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0); }
+
+    /* ─── TYPOGRAPHY ─────────────────────────────── */
+    h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.2; }
+    h1 { font-size: clamp(2rem, 5vw, 2.4rem); font-weight: 700; }
+    h2 { font-size: clamp(1.6rem, 3.5vw, 2.5rem); font-weight: 700; }
+    h3 { font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 600; }
+    h4 { font-size: 1.1rem; font-weight: 600; }
+    p  { font-size: clamp(.95rem, 1.5vw, 1.05rem); }
+
+    /* ─── CTA BUTTON ─────────────────────────────── */
+    .btn-cta {
+      display: inline-block;
+text-align: center;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 1rem 2.2rem;
+      border-radius: var(--r-sm);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 28px rgba(189,144,72,.35);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(189,144,72,.5); }
+    .btn-cta:active { transform: translateY(0); }
+
+    /* ─── SECTION SPACING ────────────────────────── */
+    section { padding-block: 5rem; }
+
+    /* ══════════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════════ */
+    .hero-home {
+      position: relative;
+      overflow: hidden;
+      background-color: #fffbef;
+      background-image: url('images/fondo-hear-origen-natal-carta-4.webp');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding-block: 35px 0;
+      text-align: center;
+    }
+
+    /* Contenido del hero, sin tarjeta */
+    .hero-home .container-home {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-sub,
+    .hero-statement {
+      width: 100%;
+      max-width: 640px;
+    }
+
+    .hero-kicker {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 500;
+      font-size: 28px;
+      color: var(--teal-deep);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .hero-deco {
+      display: block;
+      width: 120px;
+      height: auto;
+      margin: 1px auto 22px;
+    }
+
+    .hero-home h1 { width: 100%; max-width: 700px; color: var(--teal-deep); margin-bottom: 1.5rem; line-height: 1.25; }
+    .hero-home h1 .hero-script {
+      display: inline-block;
+      font-family: 'Italianno', cursive;
+      font-weight: 400;
+      font-size: 2em;
+      line-height: 1;
+      color: var(--gold-deep);
+      padding-inline: .06em;
+    }
+
+    .underline-curve { position: relative; display: inline-block; }
+    .underline-curve::after {
+      content: "";
+      position: absolute;
+      left: -3%; right: -3%; bottom: -0.04em;
+      height: 0.32em;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M3,13 Q52,2 97,4' stroke='%230e3f4b' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      pointer-events: none;
+    }
+
+    .hero-sub {
+      font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 18px;
+      color: #0c0c0c;
+      margin-bottom: 1.1rem;
+    }
+    .hero-sub strong { font-weight: 700; color: #0c0c0c; }
+
+    .hero-statement {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 700;
+      color: var(--gold-deep);
+      font-size: 22px;
+      margin-bottom: 40px;
+    }
+
+    .hero-purchase {
+      position: relative;
+      width: 100%;
+    }
+    .hero-video {
+      position: relative;
+      z-index: 2;
+      width: calc(100% - 120px);
+      margin-inline: auto;
+      height: 300px;
+      border-radius: 3px;
+      background: linear-gradient(135deg, #0e3f4b, #14525f);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
+    }
+    .hero-video-embed { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .hero-video-play {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--gold-deep);
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25);
+      transition: transform .2s;
+    }
+    .hero-video-play:hover { transform: scale(1.06); }
+    .hero-video-play span {
+      width: 0; height: 0;
+      margin-left: 4px;
+      border-style: solid;
+      border-width: 11px 0 11px 17px;
+      border-color: transparent transparent transparent #fff;
+    }
+
+    .hero-purchase-box {
+      position: relative;
+      z-index: 1;
+      width: calc(100% - 36px);
+      margin-inline: auto;
+      margin-top: -48px;
+      margin-bottom: 70px;
+      background: #ffffff;
+      border-radius: 3px;
+      box-shadow: 0 6px 16px rgba(14,63,75,.10);
+      padding: 90px 32px 50px;
+    }
+
+    .hero-offer {
+      font-family: var(--font-body);
+      font-weight: 400;
+      color: #0c0c0c;
+      font-size: 18px;
+      margin-bottom: 1.4rem;
+      width: 100%;
+      max-width: 640px;
+      margin-inline: auto;
+    }
+    .hero-offer strong { font-weight: 700; }
+
+    .hero-home .price-wrap { justify-content: center; margin-bottom: 1.2rem; }
+    .hero-home .price-old-hero,
+    .hero-home .price-tag-hero {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 700;
+    }
+    .hero-home .price-old-hero { opacity: .32; }
+
+    .hero-home .btn-cta { box-shadow: 0 4px 12px rgba(189,144,72,.25); }
+    .hero-home .btn-cta:hover { box-shadow: 0 6px 18px rgba(189,144,72,.35); }
+
+    .hero-trust-note {
+      font-size: 15px;
+      color: #0c0c0c;
+      margin-top: 15px;
+      opacity: .62;
+    }
+
+    /* Cinta continua al final del hero */
+    .hero-ribbon {
+      position: relative;
+      z-index: 1;
+      margin-top: 0;
+      background: var(--teal-deep);
+      overflow: hidden;
+      white-space: nowrap;
+      padding-block: 14px;
+    }
+    .hero-ribbon-track { display: flex; width: max-content; animation: heroRibbonScroll 40s linear infinite; }
+    .hero-ribbon-group { display: flex; flex-shrink: 0; }
+    .hero-ribbon-track span {
+      font-family: 'Playfair Display', Georgia, serif;
+      color: #cfb180;
+      letter-spacing: 3.5px;
+      font-size: 15px;
+      white-space: nowrap;
+      padding-inline: 4px;
+    }
+    .hero-ribbon-name { font-style: italic; opacity: .75; }
+    @keyframes heroRibbonScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    /* ══════════════════════════════════════════════
+       AREAS SECTION
+    ══════════════════════════════════════════════ */
+    .areas {
+      background: var(--teal-deep);
+      color: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+    .areas::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 95% 20%, rgba(207,177,128,.12) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .areas h2 { color: var(--cream); font-size: 40px; }
+    .areas-subtitle {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--gold-light);
+      margin-top: 1.8rem;
+      margin-bottom: 3rem;
+    }
+    .areas-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      max-width: 620px;
+      margin-inline: auto;
+    }
+    .area-card {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(207,177,128,.2);
+      border-radius: var(--r-md);
+      padding: 1.5rem 1.6rem;
+display: block;
+      transition: background .25s, border-color .25s;
+    }
+.area-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: .5rem;
+    }
+    
+    .area-card:hover {
+      background: rgba(207,177,128,.1);
+      border-color: rgba(207,177,128,.5);
+    }
+    
+    .area-card p {
+      font-size: .9rem;
+      color: rgba(255,251,239,.75);
+    }
+
+    /* ══════════════════════════════════════════════
+       HOW IT WORKS
+    ══════════════════════════════════════════════ */
+    .how {
+      background: var(--cream);
+    }
+    .how h2 { color: var(--teal-deep); margin-bottom: 3rem; }
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .step {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      background: var(--white);
+      border-radius: var(--r-md);
+      border: 1px solid rgba(189,144,72,.15);
+      box-shadow: 0 4px 20px rgba(0,0,0,.04);
+      position: relative;
+    }
+    .step-num {
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
+      color: var(--white);
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1.2rem;
+      box-shadow: 0 4px 16px rgba(189,144,72,.35);
+    }
+    .step p { font-size: 1.05rem; color: var(--ink); }
+    
+    .how-cta-wrap { text-align: center; margin-top: 1.5rem; }
+
+/* ══════════════════════════════════════════════
+       TESTIMONIALS
+    ══════════════════════════════════════════════ */
+    .testimonials {
+      background: var(--cream);
+      border-top: 1px solid #cfb180;
+    }
+    .testimonials h2 { color: var(--teal-deep); margin-bottom: .5rem; }
+    /* Reviews grid — WhatsApp screenshots */
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+    .review-img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .video-testimonios {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5rem;
+      margin-top: 2rem;
+      margin-bottom: 3.5rem;
+    }
+    .video-wrap {
+      position: relative;
+      padding-bottom: 177.78%;
+      height: 0;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    .video-wrap iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    @media (min-width: 768px) {
+      .review-img {
+        width: 85%;
+        margin: 0 auto;
+        border-radius: 8px;
+      }
+      .reviews-grid {
+        gap: 2.5rem;
+      }
+      .video-wrap {
+        width: 85%;
+        margin: 0 auto;
+      }
+    }
+    @media (max-width: 767px) {
+      .video-testimonios {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        margin-top: 3rem;
+        margin-bottom: 4rem;
+        padding: 0 5%;
+      }
+      .reviews-grid { gap: 3rem; }
+    }
+/* ══════════════════════════════════════════════
+       BRIDGE (cierre emocional antes del precio)
+    ══════════════════════════════════════════════ */
+    .problema, .causa, .garantia {
+      padding-block: 4.5rem;
+      text-align: center;
+    }
+    .causa { background: #f5efdf; }
+    /* El h2 de .problema es siempre .b1-title, que define sus propios
+       márgenes y relleno; no se agrupa aquí para no pisarlo. */
+    .causa h2, .garantia h2 {
+      color: var(--teal-deep);
+      margin-bottom: 1.8rem;
+    }
+    .problema p, .causa p {
+      max-width: 680px;
+      margin-inline: auto;
+      font-size: 16.8px;
+      line-height: 1.7;
+      color: #0c0c0c;
+      margin-bottom: 1rem;
+    }
+    .garantia p {
+      max-width: 680px;
+      margin-inline: auto;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #0c0c0c;
+      margin-bottom: 1rem;
+    }
+    /* ══════════════════════════════════════════════
+       PROBLEMA — bloque 1: foto + texto + tarjeta a caballo
+    ══════════════════════════════════════════════ */
+    .problema {
+      position: relative;
+      background: #ffffff;
+      padding-top: 30px;
+      /* Reserva el hueco de la tarjeta que sobresale. El valor de
+         escritorio vive aquí, no en una media query, para que no quede
+         ningún ancho sin cubrir entre 860 y 861 px. */
+      padding-bottom: 330px;
+      text-align: left;
+    }
+    .b1-inner { position: relative; }
+    .b1-row { display: flex; align-items: stretch; }
+    .b1-photo {
+      flex: 0 0 46%;
+      margin: 60px 0 20px 30px;
+      min-height: 400px;
+      background: #e3d3b5;
+    }
+    .b1-textcol { flex: 1; padding: 180px 56px 40px 46px; }
+    .b1-textcol .b1-line { font-size: 16.8px; line-height: 1.7; color: #4a4538; margin: 0 0 12px; }
+    .b1-textcol .b1-line strong { color: var(--teal-deep); }
+    .b1-textcol .b1-line span.b1-turn-point {
+      font-family: 'Italianno', cursive;
+      font-style: normal;
+      color: var(--gold-deep);
+      font-size: 40px;
+      line-height: 33px;
+      display: inline-block;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .b1-textcol .b1-line strong.b1-inner-voice {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      color: #729790;
+      font-size: 20px;
+      line-height: 32px;
+    }
+    .b1-textcol .b1-line strong.b1-plain-bold { color: #4a4538; font-style: italic; }
+    .b1-textcol .b1-line.b1-line-voice { margin-top: 20px; }
+    .b1-textcol .b1-line.b1-line-tight { margin: 0; }
+    .b1-title {
+      position: absolute;
+      top: 70px;
+      left: 34%;
+      width: 54%;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 40px;
+      line-height: 1.25;
+      color: var(--teal-deep);
+      padding-top: 10px;
+      margin: 0 0 1.8rem;
+      z-index: 3;
+    }
+    .b1-title em { font-style: italic; color: var(--gold-deep); }
+    .b1-wave { position: absolute; left: 0; right: 0; bottom: 0; line-height: 0; }
+    .b1-wave svg { display: block; width: 100%; height: 90px; }
+    .b1-card {
+      position: absolute;
+      left: 50%;
+      bottom: 0;
+      /* Posición de escritorio en la regla base para que no quede ningún
+         ancho sin cubrir entre 860 y 861 px; móvil la sobrescribe. */
+      transform: translate(-50%, calc(50% + -30px));
+      width: min(600px, calc(100% - 40px));
+      background: var(--cream);
+      padding: 40px 20px 20px;
+      text-align: center;
+      z-index: 4;
+    }
+    /* La tarjeta no hereda el ancho máximo que .problema p impone al
+       texto de la columna de la izquierda. */
+    .b1-card p { max-width: none; }
+    .b1-card .b1-card-intro {
+      font-family: 'Italianno', cursive;
+      font-style: normal;
+      color: var(--gold-deep);
+      font-size: 60px;
+      font-weight: 400;
+      line-height: 1.2;
+      margin: 0 0 40px;
+      text-transform: none;
+    }
+    .b1-intro-dots { color: var(--gold-deep); }
+    .b1-card .b1-card-q {
+      font-size: 18px;
+      color: #3d3a33;
+      margin: 0 0 10px;
+      text-align: center;
+    }
+    .b1-card .b1-card-q strong { color: var(--ink); }
+    .b1-card .b1-card-q strong em { font-style: normal; }
+    .b1-card-rule {
+      width: 32px;
+      height: 1px;
+      background: var(--gold-deep);
+      margin: 15px auto;
+    }
+    .b1-final-line2 { display: inline-block; color: var(--gold-deep); }
+    .b1-card .b1-card-final {
+      font-family: 'Italianno', cursive;
+      font-weight: 400;
+      color: var(--gold-deep);
+      font-style: normal;
+      font-size: 40px;
+      line-height: 25px;
+      margin-top: 40px;
+      margin-bottom: 0;
+    }
+    .b1-card-arrow {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      animation: b1ArrowBounce 0.8s ease-in-out infinite;
+    }
+    @keyframes b1ArrowBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(14px); }
+    }
+    /* ══════════════════════════════════════════════
+       CAUSA (bloque 2) — texto sobre fondo teal
+    ══════════════════════════════════════════════ */
+    .causa.b2 {
+      background: #f7ecd9;
+      padding: 270px 24px 90px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .b2-inner { max-width: 520px; margin: 0 auto; position: relative; z-index: 2; }
+    .b2-rings {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 680px; height: 680px;
+      border-radius: 50%;
+      border: 1px solid rgba(207,177,128,.12);
+    }
+    .b2-rings::before, .b2-rings::after {
+      content: ''; position: absolute; border-radius: 50%;
+      border: 1px solid rgba(207,177,128,.12);
+    }
+    .b2-rings::before { inset: 80px; }
+    .b2-rings::after { inset: 170px; }
+    .b2-inner .b2-q {
+      font-family: var(--font-display);
+      font-size: 35px;
+      font-weight: 700;
+      color: var(--teal-deep);
+      margin: 0 0 2px;
+      line-height: 1.25;
+    }
+    .b2-inner .b2-cursive {
+      font-family: 'Italianno', cursive;
+      font-weight: 400;
+      font-size: 50px;
+      color: #729790;
+      line-height: 1;
+      margin: 0 0 40px;
+      margin-top: 20px;
+    }
+    .b2-inner .b2-line {
+      font-size: 16.8px;
+      line-height: 1.7;
+      color: var(--ink);
+      margin: 0 0 25px;
+    }
+    .b2-inner .b2-line strong { color: var(--gold-deep); }
+    .b2-rule { width: 44px; height: 2px; background: var(--gold-deep); margin: 22px auto 16px; }
+    .b2-inner .b2-final {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 26px;
+      font-style: italic;
+      color: #729790;
+      line-height: 1.5;
+      margin: 0;
+      margin-top: 40px;
+    }
+    /* ══════════════════════════════════════════════
+       PRICE & FINAL CTA
+    ══════════════════════════════════════════════ */
+    .price-cta {
+      background: var(--teal-deep);
+      color: var(--cream);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .price-cta::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(207,177,128,.15) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .price-cta h2 {
+      color: var(--cream);
+      font-style: italic;
+      margin-bottom: 3rem;
+    }
+
+    .price-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(207,177,128,.3);
+      border-radius: var(--r-lg);
+      max-width: 520px;
+      margin-inline: auto;
+      margin-top: 1.5rem;
+      padding: 2.5rem 2.5rem 2rem;
+      position: relative;
+    }
+.price-wrap {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+/* La familia tipográfica de estos dos la fija .hero-home .price-*, que es
+   el único sitio donde se usan y gana en especificidad. */
+.price-old-hero {
+  font-size: 30px;
+  color: #bd9048;
+  opacity: .4;
+}
+.price-tag-hero {
+  font-size: 36px;
+  font-weight: 500;
+  color: #bd9048;
+  line-height: 1;
+}
+.currency {
+  font-size: .65em;
+  font-weight: 600;
+  vertical-align: .15em;
+  margin-left: .05em;
+}
+.break-mobile { display: none; }
+    .features-list {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+    .features-list li {
+      display: flex; align-items: flex-start; gap: .75rem;
+      padding-block: .55rem;
+      border-bottom: 1px solid rgba(255,255,255,.07);
+      font-size: .95rem;
+      color: rgba(255,251,239,.88);
+    }
+    .features-list li:last-child { border-bottom: none; }
+    .features-list .check {
+      color: var(--gold-deep);
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      margin-top: .05rem;
+    }
+
+    /* ══════════════════════════════════════════════
+       FAQ
+    ══════════════════════════════════════════════ */
+    .faq { background: #f5efdf; }
+    .faq h2 { color: var(--teal-deep); margin-bottom: 3rem; }
+    .faq-list {
+      text-align: left;
+      max-width: 780px;
+      margin-inline: auto;
+      display: flex; flex-direction: column; gap: .75rem;
+    }
+    details {
+      background: var(--white);
+      border: 1px solid rgba(189,144,72,.2);
+      border-radius: var(--r-md);
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,.04);
+    }
+    details[open] { border-color: rgba(189,144,72,.5); }
+    summary {
+      cursor: pointer;
+      padding: 1.1rem 1.4rem;
+      font-weight: 600;
+      font-size: .98rem;
+      color: var(--teal-deep);
+      list-style: none;
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 1rem;
+      user-select: none;
+      transition: background .15s;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary:hover { background: rgba(189,144,72,.05); }
+    .faq-arrow {
+      flex-shrink: 0;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: rgba(189,144,72,.15);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--gold-deep);
+      font-size: .9rem;
+      transition: transform .25s;
+    }
+    details[open] .faq-arrow { transform: rotate(45deg); }
+    .faq-body {
+      padding: 0 1.4rem 1.2rem;
+      font-size: .93rem;
+      color: #444;
+      border-top: 1px solid rgba(189,144,72,.1);
+      padding-top: 1rem;
+    }
+    .faq-body a { color: var(--gold-deep); text-decoration: underline; }
+    .faq-body a:hover { color: var(--teal-deep); }
+
+    /* ══════════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════════ */
+    .footer-inner {
+      display: flex; flex-direction: column;
+      align-items: center; gap: .9rem;
+      text-align: center;
+    }
+    .footer-email a {
+      color: var(--gold-light);
+      font-weight: 500;
+      font-size: .82rem;
+    }
+
+    /* ══════════════════════════════════════════════
+       ANIMATIONS (fade + slide on scroll)
+    ══════════════════════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+    .reveal-delay-4 { transition-delay: .4s; }
+    .reveal-delay-5 { transition-delay: .5s; }
+    .reveal-delay-6 { transition-delay: .6s; }
+    .reveal-delay-7 { transition-delay: .7s; }
+
+    .value-compare {
+      position: relative;
+      max-width: 640px;
+      margin: 2.2rem auto 0;
+      font-size: .95rem;
+      line-height: 1.65;
+      color: rgba(255,251,239,.75);
+      font-style: italic;
+    }
+
+    /* ══════════════════════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════════════════════ */
+    @media (max-width: 860px) {
+      .break-mobile { display: block; }
+      .break-desktop { display: none; }
+      .problema p { font-size: 20px; }
+      .causa p { font-size: 20px; }
+      summary { font-size: 20px; }
+      .faq-body { font-size: 16px; }
+      .garantia p { font-size: 20px; }
+      .value-compare { font-size: 20px; }
+      .price-wrap { justify-content: center; margin: 0 0 14px; }
+      .hero-home h1, .hero-sub { text-align: center; }
+      .steps { grid-template-columns: 1fr; }
+      .problema { padding-top: 40px; padding-bottom: 470px; }
+      .b1-row { flex-direction: column; }
+      .b1-photo { flex-basis: auto; min-height: 240px; margin: 60px 0 30px 0; }
+      .b1-textcol { padding: 30px 0px 20px; text-align: center; }
+      .b1-title { position: static; width: auto; font-size: 40px; margin: -70px 10px 1.8rem; text-align: center; }
+      .b1-card { padding: 50px 15px 40px; transform: translate(-50%, calc(50% + -90px)); }
+      .b1-card .b1-card-intro { font-size: 40px; margin: 0 0 50px; }
+      .b1-card .b1-card-final { margin-top: 50px; font-size: 48px; line-height: 40px; }
+      .b1-card-arrow svg { width: 32px; height: 56px; }
+      .causa.b2 { padding: 320px 24px 90px; }
+      .b2-rings { display: none; }
+      .hero-purchase-box { padding: 100px 10px 60px; }
+    }
+    @media (min-width: 861px) {
+      .b2-inner .b2-final { max-width: 760px; width: calc(100% + 240px); margin-left: -120px; margin-right: -120px; }
+      .price-wrap { margin: 0; }
+      .btn-cta { padding: 10px 40px; min-width: 400px; }
+      .field label { font-size: 12px; }
+      .field input, .field select { font-size: 14px; padding: 10px; }
+      .btn-pay { padding: 10px; }
+      .b1-card .b1-card-q { margin: 0 0 0px; }
+      .b1-final-line2 { margin-top: 10px; }
+    }
+
+    /* ══════════════════════════════════════════════
+       AJUSTES LANDING P1 — estructura y estilo ANEXO-02 / Fase 3
+    ══════════════════════════════════════════════ */
+
+    /* Ancla del formulario (compensa el nav sticky) */
+    #formulario { scroll-margin-top: 80px; }
+
+    /* ─── QUÉ ES + LAS 7 ÁREAS (fondo teal corporativo) ─── */
+    .areas p {
+      max-width: 680px;
+      margin-inline: auto;
+      color: rgba(255,251,239,.85);
+      font-size: 1.05rem;
+      line-height: 1.7;
+      position: relative;
+    }
+    .areas .areas-lead {
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 1.2rem;
+    }
+    /* No es redundante con .areas-subtitle: hace falta ganarle a
+       .areas p, que tiene más especificidad y otro color. */
+    .areas .areas-subtitle { color: var(--gold-light); }
+    .areas .areas-lead strong { color: var(--gold-light); }
+    .areas p strong { color: var(--cream); }
+    .mockup-placeholder {
+  width: 240px;
+  height: 300px;
+  margin: 40px auto;
+  background: #e3d3b5;
+  border-radius: 8px;
+}
+    .areas h2 { position: relative; margin-bottom: 1.8rem; }
+
+    /* ─── PRECIO — stack de valor ─── */
+    .price-cta h2 { position: relative; }
+    .features-list li { line-height: 1.55; }
+    .features-list li strong { color: var(--cream); font-weight: 600; }
+    .feat-val {
+      display: block;
+      font-style: normal;
+      font-size: .78rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      opacity: .8;
+      margin-top: .2rem;
+    }
+    .price-old {
+      font-family: var(--font-display);
+      font-size: 35px;
+      color: var(--gold-light);
+      opacity: .45;
+    }
+    .price-tag {
+      font-family: var(--font-display);
+      font-size: 54px;
+      font-weight: 700;
+      color: var(--gold-light);
+      line-height: 1;
+    }
+    .price-card .price-wrap { justify-content: center; margin-bottom: 1.8rem; }
+
+    /* ─── GARANTÍA (fondo claro, tarjeta) ─── */
+    .garantia { background: var(--cream); }
+    .garantia-card {
+      max-width: 680px;
+      margin-inline: auto;
+      background: var(--white);
+      border: 1px solid #cfb180;
+      border-left: 4px solid var(--gold-deep);
+      border-radius: var(--r-md);
+      padding: 2rem 2.2rem;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,.05);
+    }
+    .garantia-card p {
+      color: var(--ink);
+      font-size: 15px;
+      margin-bottom: .8rem;
+      max-width: none;
+    }
+    .garantia-card p:last-child { margin-bottom: 0; }
+    .garantia-card a { color: var(--gold-deep); text-decoration: underline; }
+    .garantia-card a:hover { color: var(--teal-deep); }
+
+    /* ─── RESPONSIVE MÓVIL ───────────────────────────
+       Único bloque de 600px de la hoja. Lo que ya cubre
+       @media (max-width: 860px) no se repite aquí.       */
+
+    @media (max-width: 600px) {
+      /* Nav, hero de formulario y campos */
+      .break-mobile-form { display: block; }
+      .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
+      .nav-cta { width: 100%; text-align: center; font-size: 19px; padding: .6rem; }
+      .nav-logo img { height: 34px; width: auto; }
+      .nav.scrolled .nav-inner { padding-block: .4rem; }
+      .nav.scrolled .nav-logo { display: none; }
+      .hero { padding-block: 2rem 1.5rem; }
+      .form-card { padding: 1.5rem 1.2rem; }
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+      .phone-group { grid-template-columns: 110px 1fr; }
+      .help-icon .tooltip { width: 240px; }
+      .checkbox-field label { font-size: 11px; }
+      .field label { font-size: 15px; }
+
+      /* Ritmo general y tipografía */
+      section { padding-block: 3.5rem; }
+      h2 { font-size: 2.5rem; }
+      .btn-cta { width: 100%; font-size: 20px; padding: 12px 1rem; }
+
+      /* Hero */
+      .hero-home { background-image: url('images/fondo-hear-origen-natal-carta-movil-4.webp'); }
+      .hero-home h1 { font-size: 38px; margin-bottom: 2.5rem; line-height: 1.40; }
+      .hero-home .container-home { width: calc(100% - 20px); }
+      .hero-sub { margin-bottom: 2rem; font-size: 20px; }
+      .hero-statement { font-size: 24px; margin-bottom: 50px; }
+      .hero-offer { font-size: 20px; }
+      .hero-kicker { font-size: 25px; }
+      .hero-deco { width: 130px; }
+      .hero-ribbon-track span { font-size: 18px; }
+      .hero-video { width: calc(100% - 48px); }
+      .hero-purchase-box { width: calc(100% - 20px); margin-bottom: 80px; }
+      .hero-trust-note { font-size: 15px; }
+      .price-old-hero { font-size: 38px; }
+      .price-tag-hero { font-size: 48px; }
+      .price-wrap { margin-top: 6px; }
+
+      /* Bloque 1 y bloque 2 */
+      .b1-textcol .b1-line { font-size: 20px; }
+      .b1-textcol .b1-line span.b1-turn-point { font-size: 48px; line-height: 40px; }
+      .b1-textcol .b1-line strong.b1-inner-voice { font-size: 25px; }
+      .b1-card .b1-card-q { font-size: 22px; }
+      .b2-inner .b2-line { font-size: 20px; }
+
+      /* Áreas, pasos y reseñas */
+      .areas-grid { grid-template-columns: 1fr; }
+      .area-title { font-size: 1.5rem; }
+      .area-card p { font-size: 20px; }
+      .areas-subtitle { font-size: 24px; }
+      .areas .areas-lead { font-size: 20px; }
+      .areas p { font-size: 20px; }
+      .step p { font-size: 20px; }
+      .step-num { font-size: 2rem; }
+      .reviews-grid { grid-template-columns: 1fr 1fr; }
+
+      /* Precio, garantía y FAQ */
+      .price-card { padding: 1.8rem 1.4rem; }
+      .price-old { font-size: 45px; }
+      .price-tag { font-size: 60px; }
+      .features-list li { font-size: 20px; }
+      .feat-val { font-size: 17px; }
+      .garantia-card { padding: 1.5rem 1.3rem; }
+      .garantia-card p { font-size: 20px; }
+    }
+
+    /* Va después del bloque de 600px: misma especificidad, tiene que ganar. */
+    @media (max-width: 400px) {
+      .reviews-grid { grid-template-columns: 1fr; }
+    }
+
+</style>
+<noscript>
+  <!-- Sin JavaScript el observador no llega a mostrar el contenido: lo dejamos visible. -->
+  <style>.reveal { opacity: 1; transform: none; }</style>
+</noscript>
+<!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJSDFDFZ3G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-EJSDFDFZ3G');
+  </script>
+
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1729071528498639');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1729071528498639&ev=PageView&noscript=1"/></noscript>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="container-home nav-inner">
+      <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
+        <img src="images/logo-origen-natal-carta-oscuro.webp"
+             alt="Origen Natal — Tu carta natal descifrada" width="395" height="48"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
+        <span style="display:none; font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--teal-deep); letter-spacing:.02em;">
+          ORIGEN NATAL
+        </span>
+      </a>
+      <a href="#formulario" class="nav-cta">Quiero descubrirlo</a>
+    </div>
+  </nav>
+
+
+  <!-- ENTRADA PROVISIONAL. El titulo y el texto que presenta el regalo se
+       escriben cuando esten decididos su nombre y su contenido. -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="form-title">P0</h1>
+      <p style="text-align:center;max-width:640px;margin:0 auto;">
+        Página provisional. Aquí irá el texto que presenta el regalo.
+      </p>
+    </div>
+  </section>
+
+  <div id="formulario"></div>
+
+
+  <section class="hero">
+    <div class="container">
+      <h2 class="form-title">Completa<br class="break-mobile-form"> tus datos</h2>
+      
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section class="form-wrap">
+    <div class="container">
+      <div class="form-card">
+        
+
+        <script>
+          // Red de seguridad. El botón de pagar es de tipo "enviar", así que si
+          // el script del formulario (más abajo) no llegara a ejecutarse, el
+          // navegador haría un envío normal: la página se recargaría sola, los
+          // datos se perderían y el email quedaría a la vista en la barra de
+          // direcciones, sin que el cliente entendiera nada. Esto lo impide y
+          // le dice qué hacer.
+          function alEnviarFormulario(evento) {
+            evento.preventDefault();
+            if (window.formularioPreparado) return false; // lo gestiona su propio código
+            var aviso = document.getElementById('errorBanner');
+            if (aviso) {
+              aviso.textContent = 'No hemos podido cargar el formulario del todo. Recarga la página e inténtalo de nuevo. Si vuelve a pasar, escríbenos a hola@origennatal.com';
+              aviso.classList.add('show');
+              aviso.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            return false;
+          }
+        </script>
+
+        <form id="formDatos" novalidate onsubmit="return alEnviarFormulario(event);">
+
+          <div class="form-progress">
+            <div class="form-progress-dots">
+              <span class="form-progress-dot active" data-dot="1"></span>
+              <span class="form-progress-dot" data-dot="2"></span>
+              <span class="form-progress-dot" data-dot="3"></span>
+            </div>
+            <p class="form-progress-label" id="formProgressLabel">Paso 1 de 3</p>
+          </div>
+
+          <div class="form-step" data-form-step="1">
+
+          <div class="field">
+            <label for="nombre">Nombre completo *</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Tu nombre y apellidos" autocomplete="name" required>
+            <div class="field-error" id="err-nombre">Por favor, introduce tu nombre completo.</div>
+          </div>
+
+          <div class="field">
+            <label for="email">Email *</label>
+            <input type="email" id="email" name="email" placeholder="tu@email.com" autocomplete="email" required>
+            <div class="field-error" id="err-email">Por favor, introduce un email válido.</div>
+          </div>
+
+          <div class="field">
+            <label for="email2">Confirma tu email *</label>
+            <input type="email" id="email2" name="email2" placeholder="Repite tu email" autocomplete="new-password" onpaste="return false;" ondrop="return false;" oncopy="return false;" required>
+            <div class="field-error" id="err-email2">Los emails no coinciden. Escribe tu email manualmente.</div>
+          </div>
+
+          <div class="field">
+            <label for="telefono">Teléfono *</label>
+            <div class="phone-group">
+              <div class="phone-prefix-wrap">
+                <span class="phone-flag" id="phoneFlag" aria-hidden="true"><img id="phoneFlagImg" src="images/flags/es.svg" alt=""></span>
+                <select id="prefijo" name="prefijo" required>
+                <option value="+34">🇪🇸 +34</option>
+                <option value="+52">🇲🇽 +52</option>
+                <option value="+54">🇦🇷 +54</option>
+                <option value="+56">🇨🇱 +56</option>
+                <option value="+57">🇨🇴 +57</option>
+                <option value="+58">🇻🇪 +58</option>
+                <option value="+51">🇵🇪 +51</option>
+                <option value="+593">🇪🇨 +593</option>
+                <option value="+598">🇺🇾 +598</option>
+                <option value="+595">🇵🇾 +595</option>
+                <option value="+591">🇧🇴 +591</option>
+                <option value="+502">🇬🇹 +502</option>
+                <option value="+503">🇸🇻 +503</option>
+                <option value="+504">🇭🇳 +504</option>
+                <option value="+505">🇳🇮 +505</option>
+                <option value="+506">🇨🇷 +506</option>
+                <option value="+507">🇵🇦 +507</option>
+                <option value="+1">🇺🇸 +1</option>
+                <option value="+33">🇫🇷 +33</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+49">🇩🇪 +49</option>
+                <option value="+351">🇵🇹 +351</option>
+                <option value="+39">🇮🇹 +39</option>
+              </select>
+              </div>
+              <input type="tel" id="telefono" name="telefono" placeholder="Número de teléfono" autocomplete="tel" required>
+            </div>
+            <div class="field-error" id="err-telefono">Introduce un número de teléfono válido para el país seleccionado.</div>
+          </div>
+
+          <div class="form-step-nav">
+            <button type="button" class="btn-next" data-next="2">Siguiente</button>
+          </div>
+
+          </div>
+
+          <div class="form-step hidden" data-form-step="2">
+
+          <div class="field-row">
+            <div class="field">
+              <label for="sexo">Sexo *</label>
+              <select id="sexo" name="sexo" required>
+                <option value="">Selecciona</option>
+                <option value="mujer">Mujer</option>
+                <option value="hombre">Hombre</option>
+                <option value="otro">Otro</option>
+              </select>
+              <div class="field-error" id="err-sexo">Por favor, selecciona una opción.</div>
+            </div>
+
+            <div class="field">
+              <label for="fecha">Fecha de nacimiento *</label>
+              <div class="date-selects">
+                <select id="fecha-dia" required><option value="">Día</option></select>
+                <select id="fecha-mes" required>
+                  <option value="">Mes</option>
+                  <option value="01">Enero</option>
+                  <option value="02">Febrero</option>
+                  <option value="03">Marzo</option>
+                  <option value="04">Abril</option>
+                  <option value="05">Mayo</option>
+                  <option value="06">Junio</option>
+                  <option value="07">Julio</option>
+                  <option value="08">Agosto</option>
+                  <option value="09">Septiembre</option>
+                  <option value="10">Octubre</option>
+                  <option value="11">Noviembre</option>
+                  <option value="12">Diciembre</option>
+                </select>
+                <select id="fecha-anio" required><option value="">Año</option></select>
+              </div>
+              <input type="hidden" id="fecha" name="fecha">
+              <div class="field-error" id="err-fecha">Por favor, introduce una fecha válida.</div>
+            </div>
+          </div>
+
+          <div class="field">
+              <label for="hora">
+                Hora de nacimiento *
+                <span class="help-icon" tabindex="0" id="helpHora">
+                  ?
+                  <span class="tooltip">
+                    Si no recuerdas tu hora, consulta con familiares o pide tu Certificado de Nacimiento (es gratuito).<br><br>
+                    <strong>España:</strong> <a href="https://sede.mjusticia.gob.es/tramites/certificado-nacimiento" target="_blank" rel="noopener">sede.mjusticia.gob.es</a><br>
+                    <strong>Fuera de España:</strong> consulta el Registro Civil oficial de tu país.
+                  </span>
+                </span>
+              </label>
+              <div class="date-selects date-selects-2col">
+                <select id="hora-h" required><option value="">Hora</option></select>
+                <select id="hora-m" required><option value="">Minuto</option></select>
+              </div>
+              <input type="hidden" id="hora" name="hora">
+              <div class="field-error" id="err-hora">Por favor, introduce una hora.</div>
+          </div>
+
+          <div class="form-step-nav">
+            <button type="button" class="btn-back" data-back="1">Atrás</button>
+            <button type="button" class="btn-next" data-next="3">Siguiente</button>
+          </div>
+
+          </div>
+
+          <div class="form-step hidden" data-form-step="3">
+
+          <div class="field">
+              <label for="municipio">Lugar de nacimiento *</label>
+              <input type="text" id="municipio" name="municipio" placeholder="Municipio" required>
+              <div class="field-error" id="err-municipio">Por favor, introduce tu municipio de nacimiento.</div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="provincia" class="sr-only">Provincia / Estado *</label>
+              <input type="text" id="provincia" name="provincia" placeholder="Provincia / Estado" required>
+              <div class="field-error" id="err-provincia">Por favor, introduce tu provincia o estado.</div>
+            </div>
+
+            <div class="field">
+              <label for="pais" class="sr-only">País *</label>
+              <input type="text" id="pais" name="pais" placeholder="País" required>
+              <div class="field-error" id="err-pais">Por favor, introduce tu país.</div>
+            </div>
+          </div>
+
+          <div class="checkbox-field" id="politicaField">
+            <input type="checkbox" id="politica" name="politica" required>
+            <label for="politica">
+              He leído y acepto la <a href="/politica-de-privacidad" target="_blank" rel="noopener">Política de Privacidad</a> y los <a href="/terminos-y-condiciones" target="_blank" rel="noopener">Términos y Condiciones</a> de Origen Natal, incluyendo recibir las promociones.
+            </label>
+          </div>
+
+          <div class="form-step-nav form-step-nav-final">
+            <button type="button" class="btn-back" data-back="2">Atrás</button>
+            <button type="submit" class="btn-pay" id="btnPay">Quiero verlo</button>
+          </div>
+
+          <p class="secure-note">Es gratis. No se te pide ninguna tarjeta.</p>
+
+          </div>
+
+          <div class="error-banner" id="errorBanner"></div>
+
+        </form>
+      </div>
+    </div>
+  </section>
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <p class="footer-email">
+        <a href="mailto:hola@origennatal.com">hola@origennatal.com</a>
+      </p>
+      <nav class="footer-links" aria-label="Legal">
+        <a href="/aviso-legal">Aviso legal</a>
+        <span class="sep">|</span>
+        <a href="/politica-de-privacidad">Política de privacidad</a>
+        <span class="sep">|</span>
+        <a href="/politica-de-cookies">Política de cookies</a>
+        <span class="sep">|</span>
+        <a href="/terminos-y-condiciones">Términos y condiciones</a>
+      </nav>
+      <p class="footer-copy">
+        © 2026 ORIGEN NATAL. Todos los derechos reservados. Operado por Pura Group LLC
+      </p>
+    </div>
+  </footer>
+
+  <script>
+// Rellenar desplegables de fecha y hora
+    function actualizarFecha() {
+      const d = document.getElementById('fecha-dia').value;
+      const m = document.getElementById('fecha-mes').value;
+      const y = document.getElementById('fecha-anio').value;
+      document.getElementById('fecha').value = (d && m && y) ? y + '-' + m + '-' + d : '';
+    }
+    function actualizarHora() {
+      const h = document.getElementById('hora-h').value;
+      const m = document.getElementById('hora-m').value;
+      document.getElementById('hora').value = (h && m) ? h + ':' + m : '';
+    }
+    (function() {
+      const dia = document.getElementById('fecha-dia');
+      for (let i = 1; i <= 31; i++) {
+        const o = document.createElement('option');
+        o.value = String(i).padStart(2, '0');
+        o.textContent = i;
+        dia.appendChild(o);
+      }
+      const anio = document.getElementById('fecha-anio');
+      const anioActual = new Date().getFullYear();
+      for (let i = anioActual; i >= 1925; i--) {
+        const o = document.createElement('option');
+        o.value = String(i);
+        o.textContent = i;
+        anio.appendChild(o);
+      }
+      const horaH = document.getElementById('hora-h');
+      for (let i = 0; i < 24; i++) {
+        const o = document.createElement('option');
+        o.value = String(i).padStart(2, '0');
+        o.textContent = String(i).padStart(2, '0');
+        horaH.appendChild(o);
+      }
+      const horaM = document.getElementById('hora-m');
+      for (let i = 0; i < 60; i++) {
+        const o = document.createElement('option');
+        o.value = String(i).padStart(2, '0');
+        o.textContent = String(i).padStart(2, '0');
+        horaM.appendChild(o);
+      }
+      ['fecha-dia','fecha-mes','fecha-anio'].forEach(id => {
+        document.getElementById(id).addEventListener('change', actualizarFecha);
+      });
+      ['hora-h','hora-m'].forEach(id => {
+        document.getElementById(id).addEventListener('change', actualizarHora);
+      });
+    })();
+    // Tooltip tap en móvil
+    const helpHora = document.getElementById('helpHora');
+    helpHora.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;
+      e.preventDefault();
+      helpHora.classList.toggle('active');
+    });
+    document.addEventListener('click', (e) => {
+      if (!helpHora.contains(e.target)) helpHora.classList.remove('active');
+    });
+
+    // Utilidades de validación
+    function showError(id) {
+      const input = document.getElementById(id);
+      const err = document.getElementById('err-' + id);
+      if (input) input.classList.add('error');
+      if (err) err.classList.add('show');
+    }
+    function clearError(id) {
+      const input = document.getElementById(id);
+      const err = document.getElementById('err-' + id);
+      if (input) input.classList.remove('error');
+      if (err) err.classList.remove('show');
+    }
+    function clearAllErrors() {
+      ['nombre','sexo','fecha','hora','municipio','provincia','pais','email','email2','telefono']
+        .forEach(clearError);
+      document.getElementById('politicaField').classList.remove('error');
+      document.getElementById('errorBanner').classList.remove('show');
+    }
+
+    function validarEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+    // Longitudes válidas de teléfono por prefijo (dígitos sin prefijo)
+    const TELEFONO_LONGITUDES = {
+      '+34': [9],        // España
+      '+52': [10],       // México
+      '+54': [10],       // Argentina
+      '+56': [9],        // Chile
+      '+57': [10],       // Colombia
+      '+58': [10],       // Venezuela
+      '+51': [9],        // Perú
+      '+593': [9],       // Ecuador
+      '+598': [8, 9],    // Uruguay
+      '+595': [9],       // Paraguay
+      '+591': [8],       // Bolivia
+      '+502': [8],       // Guatemala
+      '+503': [8],       // El Salvador
+      '+504': [8],       // Honduras
+      '+505': [8],       // Nicaragua
+      '+506': [8],       // Costa Rica
+      '+507': [7, 8],    // Panamá
+      '+1':   [10],      // USA/Canadá
+      '+33':  [9],       // Francia
+      '+44':  [10, 11],  // Reino Unido
+      '+49':  [10, 11],  // Alemania
+      '+351': [9],       // Portugal
+      '+39':  [9, 10],   // Italia
+    };
+
+    // Bandera del prefijo como imagen (independiente del emoji del sistema)
+    const PREFIJO_PAIS = {
+      '+34': 'es', '+52': 'mx', '+54': 'ar', '+56': 'cl', '+57': 'co',
+      '+58': 've', '+51': 'pe', '+593': 'ec', '+598': 'uy', '+595': 'py',
+      '+591': 'bo', '+502': 'gt', '+503': 'sv', '+504': 'hn', '+505': 'ni',
+      '+506': 'cr', '+507': 'pa', '+1': 'us', '+33': 'fr', '+44': 'gb',
+      '+49': 'de', '+351': 'pt', '+39': 'it',
+    };
+    const prefijoSelect = document.getElementById('prefijo');
+    const phoneFlagImg = document.getElementById('phoneFlagImg');
+    function actualizarBanderaTelefono() {
+      const pais = PREFIJO_PAIS[prefijoSelect.value];
+      if (pais) phoneFlagImg.src = 'images/flags/' + pais + '.svg';
+    }
+    prefijoSelect.addEventListener('change', actualizarBanderaTelefono);
+
+    function validarTelefono(tel, prefijo) {
+      const limpio = tel.replace(/[\s\-()]/g, '');
+      if (!/^\d+$/.test(limpio)) return false;
+      const longitudes = TELEFONO_LONGITUDES[prefijo];
+      if (!longitudes) return limpio.length >= 7 && limpio.length <= 15;
+      return longitudes.includes(limpio.length);
+    }
+
+    // ── Comparar lo escrito con lo que devuelve el mapa ──────────────────
+    // El buscador de OpenStreetMap "adivina": si el municipio o la provincia
+    // están mal escritos devuelve igualmente el sitio que más se le parece.
+    // Antes eso se daba por bueno, el cliente pagaba y el informe se calculaba
+    // sobre las coordenadas de otro lugar. Aquí comprobamos, con manga ancha,
+    // que lo devuelto sea de verdad lo que el cliente escribió.
+
+    // Palabras que no distinguen un lugar de otro: quitándolas, "Barcelona"
+    // coincide con "Provincia de Barcelona" y "La Coruña" con "A Coruña".
+    const RELLENO_LUGAR = /\b(provincia|departamento|estado|comunidad|comunitat|autonoma|autonomo|region|regiao|municipio|municipality|canton|prefectura|condado|county|area|metropolitana|de|del|la|el|los|las|do|da|dos|das)\b/g;
+
+    // Nombres con dos formas igual de válidas (lengua propia / castellano, o
+    // abreviaturas de uso corriente). Sin esto rechazaríamos a un cliente que
+    // escribe su provincia bien, pero en la otra lengua.
+    const ALIAS_LUGAR = {
+      'lleida': 'lerida', 'girona': 'gerona', 'ourense': 'orense',
+      'araba': 'alava', 'gipuzkoa': 'guipuzcoa', 'bizkaia': 'vizcaya',
+      'nafarroa': 'navarra', 'alacant': 'alicante', 'castello': 'castellon',
+      'illes balears': 'islas baleares', 'eivissa': 'ibiza',
+      'donostia': 'san sebastian', 'a coruna': 'coruna',
+      'cdmx': 'ciudad mexico', 'distrito federal': 'ciudad mexico',
+      'caba': 'buenos aires', 'eeuu': 'estados unidos', 'usa': 'estados unidos',
+      'estados unidos america': 'estados unidos', 'uk': 'reino unido',
+      'holanda': 'paises bajos',
+    };
+
+    function normalizarLugar(texto) {
+      return (texto || '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // fuera tildes
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, ' ')                      // fuera puntuación
+        .trim();
+    }
+
+    function canonizarLugar(texto) {
+      let t = normalizarLugar(texto).replace(RELLENO_LUGAR, ' ').replace(/\s+/g, ' ').trim();
+      for (const alias in ALIAS_LUGAR) {
+        t = t.replace(new RegExp('(^| )' + alias + '( |$)', 'g'), '$1' + ALIAS_LUGAR[alias] + '$2');
+      }
+      return t.replace(/\s+/g, ' ').trim();
+    }
+
+    // Todas las palabras de `buscado`, seguidas y en orden, dentro de `texto`.
+    // Comparamos palabras enteras y no trozos sueltos: si no, una provincia
+    // inventada como "Val" colaría dentro de "Valencia".
+    function contienePalabras(texto, buscado) {
+      const t = texto.split(' '), q = buscado.split(' ');
+      if (!q[0] || q.length > t.length) return false;
+      for (let i = 0; i + q.length <= t.length; i++) {
+        let igual = true;
+        for (let j = 0; j < q.length; j++) {
+          if (t[i + j] !== q[j]) { igual = false; break; }
+        }
+        if (igual) return true;
+      }
+      return false;
+    }
+
+    function coincideLugar(escrito, devuelto) {
+      const a = canonizarLugar(escrito), b = canonizarLugar(devuelto);
+      if (!a || !b) return false;
+      return a === b || contienePalabras(b, a) || contienePalabras(a, b);
+    }
+
+    // Campos de la respuesta donde puede venir el nombre del municipio...
+    const CAMPOS_MUNICIPIO = ['city', 'town', 'village', 'hamlet', 'municipality', 'city_district', 'suburb', 'neighbourhood', 'locality'];
+    // ...y dónde puede venir la provincia, el estado o la región.
+    const CAMPOS_PROVINCIA = ['province', 'state', 'county', 'state_district', 'region', 'city', 'town', 'municipality'];
+    // Un resultado de este tamaño no es un municipio: quiere decir que el mapa
+    // no ha encontrado lo que el cliente escribió y ha devuelto la zona entera.
+    const RESULTADOS_DEMASIADO_GRANDES = ['country', 'continent', 'state', 'region'];
+
+    // Devuelve qué campos no cuadran con este resultado del mapa (lista vacía
+    // si el resultado es de verdad el lugar escrito). Se comprueban los tres
+    // siempre, sin parar en el primero que falle: así, si el municipio y la
+    // provincia están mal pero el país bien, se puede marcar solo lo que falla.
+    function camposQueFallan(res, municipio, provincia, pais) {
+      const dir = res.address || {};
+      const falla = [];
+
+      // 1) El país devuelto tiene que ser el escrito. Pedimos los nombres en
+      //    castellano (accept-language), así "Francia" no choca con "France".
+      if (dir.country && !coincideLugar(pais, dir.country)) falla.push('pais');
+
+      // 2) El municipio devuelto tiene que ser el escrito. Miramos todos sus
+      //    nombres: el oficial, los alternativos y los de otras lenguas. Si el
+      //    mapa ha devuelto una región entera en vez de un municipio, es el
+      //    municipio escrito lo que no ha sabido encontrar.
+      const nombres = [];
+      if (res.name) nombres.push(res.name);
+      if (res.namedetails) {
+        for (const clave in res.namedetails) {
+          if (/^(name|official_name|alt_name|short_name)(:|$)/.test(clave)) nombres.push(res.namedetails[clave]);
+        }
+      }
+      CAMPOS_MUNICIPIO.forEach(campo => { if (dir[campo]) nombres.push(dir[campo]); });
+      if (res.display_name) nombres.push(res.display_name.split(',')[0]);
+      const demasiadoGrande = RESULTADOS_DEMASIADO_GRANDES.includes(res.addresstype);
+      if (demasiadoGrande || !nombres.some(nombre => coincideLugar(municipio, nombre))) falla.push('municipio');
+
+      // 3) La provincia escrita tiene que aparecer en la dirección devuelta.
+      //    Es lo que distingue dos municipios con el mismo nombre. Si el
+      //    resultado no trae ninguna división de ese nivel (países pequeños
+      //    que no las tienen), no hay nada que contradecir y pasa.
+      const provinciasDevueltas = CAMPOS_PROVINCIA.map(c => dir[c]).filter(Boolean);
+      if (provinciasDevueltas.length && !provinciasDevueltas.some(p => coincideLugar(provincia, p))) falla.push('provincia');
+
+      return falla;
+    }
+
+    // El mapa devuelve varios resultados. Un campo solo se puede dar por malo
+    // si no cuadra en NINGUNO de ellos: si alguno lo da por bueno, el problema
+    // esta en otro sitio y marcarlo confundiria al cliente.
+    function camposCulpables(fallosPorResultado) {
+      return ['municipio', 'provincia', 'pais']
+        .filter(campo => fallosPorResultado.every(falla => falla.includes(campo)));
+    }
+
+    // Avisar a la tienda de que el servicio de mapas no responde. Sin esto, un
+    // corte del servicio deja a todos los clientes sin poder pagar y desde
+    // fuera no se nota nada. Se manda una sola vez por visita para no llenar
+    // el correo si el cliente reintenta varias veces.
+    let avisoMapaEnviado = false;
+    function avisarFalloDelMapa(datos) {
+      if (avisoMapaEnviado) return;
+      avisoMapaEnviado = true;
+      fetch('/api/avisar-fallo-mapa', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nombre: datos.nombre,
+          email: datos.email,
+          municipio: datos.municipio,
+          provincia: datos.provincia,
+          pais: datos.pais,
+        }),
+      }).catch(() => {});
+    }
+
+    // Cierto solo cuando se han marcado los tres campos del lugar por no poder
+    // saber cuál falla. Entonces, al corregir cualquiera de ellos, se limpian
+    // los tres: si no, quedan dos en rojo sin que el cliente sepa por qué.
+    let lugarMarcadoEntero = false;
+
+    // Una consulta al mapa. Devuelve la lista de resultados (vacía si no
+    // existe lo preguntado) o null si el servicio no ha respondido, que no es
+    // lo mismo: lo primero es culpa de lo escrito, lo segundo no.
+    // limit=5: el primer resultado no siempre es el municipio (puede ser un
+    // barrio o una calle con ese nombre), así que revisamos los cinco.
+    async function consultarMapa(consulta) {
+      const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(consulta) +
+        '&format=json&limit=5&addressdetails=1&namedetails=1&accept-language=es';
+
+      const INTENTOS = 3; // 1 intento inicial + 2 reintentos
+      for (let intento = 1; intento <= INTENTOS; intento++) {
+        try {
+          const r = await fetch(url, { headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' } });
+          if (!r.ok) throw new Error('Nominatim respondió ' + r.status);
+          const data = await r.json();
+          return Array.isArray(data) ? data : [];
+        } catch (e) {
+          // Antes de darlo por caído, absorbemos fallos pasajeros con 2 reintentos.
+          if (intento === INTENTOS) return null;
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+    }
+
+    // Cuando la consulta con los tres campos no encuentra nada, no hay ningún
+    // resultado con el que comparar y no se puede saber qué campo está mal:
+    // por eso antes se marcaban los tres, incluido el país estando bien.
+    // Aquí se le pregunta al mapa por partes, que es la única forma de saberlo:
+    // lo que no encuentra ni él solo, es lo que está mal escrito.
+    async function camposQueNoExisten(municipio, provincia, pais) {
+      const resultadoPais = await consultarMapa(pais);
+      if (resultadoPais === null) return [];           // no se ha podido comprobar
+      if (resultadoPais.length === 0) return ['pais']; // el país no existe
+
+      // El país existe: a partir de aquí nunca se marca.
+      const resultadoMunicipio = await consultarMapa(municipio + ', ' + pais);
+      const resultadoProvincia = await consultarMapa(provincia + ', ' + pais);
+      if (resultadoMunicipio === null || resultadoProvincia === null) return [];
+
+      const malos = [];
+      if (resultadoMunicipio.length === 0) malos.push('municipio');
+      if (resultadoProvincia.length === 0) malos.push('provincia');
+
+      // Los dos existen por separado pero no juntos: el municipio no está en
+      // esa provincia. No se puede saber cuál de los dos escribió mal, así que
+      // se marcan los dos — pero el país no, que ya sabemos que existe.
+      return malos.length ? malos : ['municipio', 'provincia'];
+    }
+
+    // Validar lugar con Nominatim (OpenStreetMap) — gratis
+    async function validarLugar(municipio, provincia, pais) {
+      // Un país de 1-2 caracteres nunca es un nombre real (el país más corto
+      // del mundo tiene 3+ letras) — lo rechazamos sin consultar la API.
+      if (pais.trim().length < 3) return { ok: false, motivo: 'no_encontrado', campos: ['pais'] };
+
+      const data = await consultarMapa([municipio, provincia, pais].filter(Boolean).join(', '));
+
+      // Un lugar no verificable nunca debe dejar avanzar al pago, ni siquiera
+      // si el fallo es del servicio externo. Pero aquí el cliente no ha hecho
+      // nada mal, así que no se le marca ningún campo en rojo.
+      if (data === null) return { ok: false, motivo: 'sin_respuesta', campos: [] };
+
+      if (data.length) {
+        const fallosPorResultado = data.map(res => camposQueFallan(res, municipio, provincia, pais));
+        const bueno = fallosPorResultado.findIndex(falla => falla.length === 0);
+        if (bueno !== -1) return { ok: true, lat: parseFloat(data[bueno].lat), lon: parseFloat(data[bueno].lon) };
+
+        const campos = camposCulpables(fallosPorResultado);
+        if (campos.length) return { ok: false, motivo: 'no_encontrado', campos };
+      }
+
+      // Ni un solo resultado, o resultados que no coinciden en qué falla:
+      // se pregunta por partes.
+      return { ok: false, motivo: 'no_encontrado', campos: await camposQueNoExisten(municipio, provincia, pais) };
+    }
+
+    // Submit
+    document.getElementById('formDatos').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      clearAllErrors();
+      actualizarFecha();
+      actualizarHora();
+
+      const datos = {
+        nombre: document.getElementById('nombre').value.trim(),
+        sexo: document.getElementById('sexo').value,
+        fecha: document.getElementById('fecha').value,
+        hora: document.getElementById('hora').value,
+        municipio: document.getElementById('municipio').value.trim(),
+        provincia: document.getElementById('provincia').value.trim(),
+        pais: document.getElementById('pais').value.trim(),
+        email: document.getElementById('email').value.trim().toLowerCase(),
+        email2: document.getElementById('email2').value.trim().toLowerCase(),
+        prefijo: document.getElementById('prefijo').value,
+        telefono: document.getElementById('telefono').value.trim(),
+        politica: document.getElementById('politica').checked
+      };
+
+      let valido = true;
+
+      if (!datos.nombre || datos.nombre.length < 3) { showError('nombre'); valido = false; }
+      if (!datos.sexo) { showError('sexo'); valido = false; }
+      if (!datos.fecha) { showError('fecha'); valido = false; }
+      else {
+        const fechaD = new Date(datos.fecha);
+        const ahora = new Date();
+        if (fechaD > ahora || fechaD.getFullYear() < 1900) { showError('fecha'); valido = false; }
+      }
+      if (!datos.hora) { showError('hora'); valido = false; }
+      if (!datos.municipio) { showError('municipio'); valido = false; }
+      if (!datos.provincia) { showError('provincia'); valido = false; }
+      if (!datos.pais) { showError('pais'); valido = false; }
+      if (!validarEmail(datos.email)) { showError('email'); valido = false; }
+      if (datos.email !== datos.email2 || !datos.email2) { showError('email2'); valido = false; }
+      if (!validarTelefono(datos.telefono, datos.prefijo)) { showError('telefono'); valido = false; }
+      if (!datos.politica) {
+        document.getElementById('politicaField').classList.add('error');
+        valido = false;
+      }
+
+      if (!valido) {
+        const banner = document.getElementById('errorBanner');
+        banner.textContent = 'Por favor, revisa los campos marcados en rojo antes de continuar.';
+        banner.classList.add('show');
+        const primerError = document.querySelector('.error');
+        if (primerError) {
+          // Si el campo con error está en un paso oculto, navegamos ahí primero para que se vea
+          const pasoDelError = primerError.closest('.form-step');
+          if (pasoDelError && pasoDelError.classList.contains('hidden')) {
+            irAPaso(Number(pasoDelError.dataset.formStep));
+          }
+          primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+      }
+
+      // VALIDACIÓN DEL LUGAR antes de pagar
+      const btn = document.getElementById('btnPay');
+      btn.disabled = true;
+      btn.textContent = 'Verificando lugar de nacimiento...';
+
+      const lugarOk = await validarLugar(datos.municipio, datos.provincia, datos.pais);
+
+      if (!lugarOk.ok) {
+        const banner = document.getElementById('errorBanner');
+        if (lugarOk.motivo === 'sin_respuesta') {
+          // El servicio de mapas no contesta. No es culpa del cliente: ni se le
+          // marcan los campos en rojo ni se le manda revisar lo que ha escrito.
+          // Y avisamos a la tienda, porque si no esto no se nota desde fuera.
+          avisarFalloDelMapa(datos);
+          banner.textContent = 'No podemos verificar tu lugar de nacimiento en este momento. Inténtalo de nuevo en unos minutos, o escríbenos a hola@origennatal.com y lo hacemos nosotros.';
+        } else {
+          // Se marcan en rojo solo los campos que no cuadran. Cuando no se
+          // puede saber cuáles son (el mapa no ha devuelto nada, o cada
+          // resultado falla por un motivo distinto) se marcan los tres.
+          const campos = lugarOk.campos && lugarOk.campos.length
+            ? lugarOk.campos
+            : ['municipio', 'provincia', 'pais'];
+          lugarMarcadoEntero = campos.length === 3;
+          campos.forEach(showError);
+          banner.textContent = 'No hemos encontrado el lugar de nacimiento que has escrito. Por favor revisa el municipio, la provincia y el país (sin abreviaturas) antes de continuar.';
+        }
+        banner.classList.add('show');
+        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        btn.disabled = false;
+        btn.textContent = 'Quiero verlo';
+        return;
+      }
+
+      // Todo válido → se guardan los datos en el navegador, para la pantalla
+      // del resultado que vendrá después.
+      // Sin espacios: Brevo rechaza el numero entero si los lleva, y entonces
+      // el contacto se guarda sin telefono y no se le puede mandar un SMS.
+      datos.telefonoCompleto = (datos.prefijo + datos.telefono).replace(/\s+/g, '');
+      // Coordenadas ya comprobadas: se guardan con el pedido para que el
+      // informe se calcule con ellas y no con una segunda búsqueda distinta.
+      datos.lat = lugarOk.lat;
+      datos.lon = lugarOk.lon;
+      datos.edadCalculada = calcularEdad(datos.fecha);
+      datos.gaClientId = obtenerGAClientId();
+      delete datos.email2;
+
+      try {
+        // SU PROPIA CASILLA. La del P1 se llama "tcb_pedido" y guarda un pedido
+        // a medio pagar: si esta pagina escribiera ahi, se lo pisaria.
+        localStorage.setItem('tcb_p0', JSON.stringify(datos));
+
+        // Aqui ira el alta en Brevo, en la lista 14. De momento no sale.
+        const leadPayload = {
+          nombre: datos.nombre,
+          email: datos.email,
+          telefono: datos.telefonoCompleto,
+          sexo: datos.sexo,
+          fecha: datos.fecha,
+          hora: datos.hora,
+          municipio: datos.municipio,
+          provincia: datos.provincia,
+          pais: datos.pais,
+          edad: datos.edadCalculada,
+        };
+        sinApuntarTodavia('/api/captar-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(leadPayload),
+          keepalive: true,
+        }).catch(() => {});
+      } catch (err) {
+        // Si falla el navegador al guardar, se sigue igual.
+      }
+
+      // AQUI TODAVIA NO VA NADA.
+      //
+      // Esta pagina es solo el formulario: los datos se comprueban, el lugar de
+      // nacimiento se verifica, y ahi se para. Lo que viene detras -guardar sus
+      // datos, apuntarla en Brevo y generarle su regalo- se monta despues, y
+      // hasta entonces no se llama a ninguna parte.
+      btn.disabled = false;
+      btn.textContent = 'Quiero verlo';
+      const bannerPendiente = document.getElementById('errorBanner');
+      bannerPendiente.textContent = 'Formulario correcto. El resto todavía no está montado.';
+      bannerPendiente.classList.add('show');
+      bannerPendiente.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    // El envío ya está en manos del código de arriba: la red de seguridad de
+    // la etiqueta <form> se aparta.
+    window.formularioPreparado = true;
+
+    function calcularEdad(fechaISO) {
+      const nacimiento = new Date(fechaISO);
+      const hoy = new Date();
+      let edad = hoy.getFullYear() - nacimiento.getFullYear();
+      const m = hoy.getMonth() - nacimiento.getMonth();
+      if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) edad--;
+      return edad;
+    }
+
+    // Client ID de GA4 desde la cookie _ga (formato GA1.1.XXXXXXXXXX.XXXXXXXXXX)
+    function obtenerGAClientId() {
+      const match = document.cookie.match(/(?:^|;\s*)_ga=([^;]+)/);
+      if (!match) return '';
+      const partes = match[1].split('.');
+      return partes.length >= 4 ? partes[2] + '.' + partes[3] : '';
+    }
+
+    // Limpiar error individual al escribir
+    ['nombre','sexo','fecha','hora','municipio','provincia','pais','email','email2','telefono'].forEach(id => {
+      const input = document.getElementById(id);
+      if (input) {
+        input.addEventListener('input', () => clearError(id));
+        input.addEventListener('change', () => clearError(id));
+      }
+    });
+    ['municipio', 'provincia', 'pais'].forEach(id => {
+      const campo = document.getElementById(id);
+      if (!campo) return;
+      campo.addEventListener('input', () => {
+        if (!lugarMarcadoEntero) return;
+        lugarMarcadoEntero = false;
+        clearError('municipio');
+        clearError('provincia');
+        clearError('pais');
+      });
+    });
+
+    document.getElementById('politica').addEventListener('change', () => {
+      document.getElementById('politicaField').classList.remove('error');
+    });
+
+    // TODAVIA NO SE APUNTA A NADIE EN BREVO.
+    //
+    // La pagina del P1 manda sus leads a su lista de carrito abandonado. Esta
+    // pagina tiene la suya, la 14, y se conecta en el paso siguiente: hasta
+    // entonces esto se traga la llamada y no sale de aqui.
+    function sinApuntarTodavia() { return Promise.resolve(); }
+
+    // Captación silenciosa del lead en Brevo al salir del campo email
+    let ultimoLeadCaptado = '';
+    function construirDatosLead() {
+      const emailInput = document.getElementById('email');
+      if (!validarEmail(emailInput.value)) return null;
+      const emailNormalizado = emailInput.value.trim().toLowerCase();
+      const nombre = document.getElementById('nombre').value;
+      const telefonoInput = document.getElementById('telefono').value;
+      const telefono = telefonoInput
+        ? (document.getElementById('prefijo').value + telefonoInput).replace(/\s+/g, '')
+        : '';
+      const clave = emailNormalizado + '|' + nombre + '|' + telefono;
+      if (clave === ultimoLeadCaptado) return null;
+      ultimoLeadCaptado = clave;
+      return { nombre, email: emailNormalizado, telefono };
+    }
+
+    function capturarLead() {
+      const datos = construirDatosLead();
+      if (!datos) return;
+      sinApuntarTodavia('/api/captar-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos),
+      }).catch(() => {});
+    }
+
+    function capturarLeadAlCerrar() {
+      const datos = construirDatosLead();
+      if (!datos) return;
+      sinApuntarTodavia('/api/captar-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(datos),
+        keepalive: true,
+      }).catch(() => {});
+    }
+
+    document.getElementById('email').addEventListener('blur', capturarLead);
+    document.getElementById('telefono').addEventListener('blur', capturarLead);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        capturarLeadAlCerrar();
+      }
+    });
+
+    // Formulario en 3 pasos
+    const PASO_CAMPOS_REQUERIDOS = {
+      1: ['nombre', 'email', 'email2', 'telefono'],
+      2: ['sexo', 'fecha', 'hora'],
+    };
+
+    function campoPasoVacio(id) {
+      const el = document.getElementById(id);
+      return !el || !el.value || !el.value.trim();
+    }
+
+    function irAPaso(n) {
+      document.querySelectorAll('.form-step').forEach(paso => {
+        paso.classList.toggle('hidden', paso.dataset.formStep !== String(n));
+      });
+      document.querySelectorAll('.form-progress-dot').forEach(dot => {
+        dot.classList.toggle('active', Number(dot.dataset.dot) <= n);
+      });
+      document.getElementById('formProgressLabel').textContent = 'Paso ' + n + ' de 3';
+      document.querySelector('.form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    document.querySelectorAll('.btn-next').forEach(btn => {
+      btn.addEventListener('click', () => {
+        actualizarFecha();
+        actualizarHora();
+        const pasoActual = btn.closest('.form-step').dataset.formStep;
+        const requeridos = PASO_CAMPOS_REQUERIDOS[pasoActual] || [];
+        let ok = true;
+        requeridos.forEach(id => {
+          if (campoPasoVacio(id)) { showError(id); ok = false; }
+          else clearError(id);
+        });
+        if (pasoActual === '1') {
+          const telefono = document.getElementById('telefono').value.trim();
+          const prefijo = document.getElementById('prefijo').value;
+          if (!validarTelefono(telefono, prefijo)) { showError('telefono'); ok = false; }
+          else clearError('telefono');
+        }
+        if (!ok) return;
+        irAPaso(Number(btn.dataset.next));
+      });
+    });
+
+    document.querySelectorAll('.btn-back').forEach(btn => {
+      btn.addEventListener('click', () => irAPaso(Number(btn.dataset.back)));
+    });
+
+  </script>
+
+<script src="/cookie-consent.js"></script>
+
+  <!-- ════════════ JS SCROLL REVEAL (bloques copiados del index) ════════════ -->
+  <script>
+    const revealsHome = document.querySelectorAll('.reveal');
+    // El contenido arranca a opacity:0, así que cualquier fallo aquí dejaría
+    // la página en blanco: ante la duda, se muestra todo.
+    const mostrarTodo = () => revealsHome.forEach(el => el.classList.add('visible'));
+
+    try {
+      if (!('IntersectionObserver' in window)) {
+        mostrarTodo();
+      } else {
+        const ioHome = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible');
+              ioHome.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.12 });
+        revealsHome.forEach(el => ioHome.observe(el));
+
+        document.querySelectorAll('.hero-home .reveal').forEach(el => {
+          setTimeout(() => el.classList.add('visible'), 80);
+        });
+      }
+    } catch (err) {
+      mostrarTodo();
+    }
+
+    // Un solo listener para los dos umbrales del nav:
+    // 20px -> borde inferior (is-scrolled); 50px -> además oculta el logo (scrolled).
+    const navEl = document.querySelector('.nav');
+    if (navEl) {
+      const updateNavScrolled = () => {
+        const y = window.scrollY;
+        navEl.classList.toggle('is-scrolled', y > 20);
+        navEl.classList.toggle('scrolled', y > 50);
+      };
+      updateNavScrolled();
+      window.addEventListener('scroll', updateNavScrolled, { passive: true });
+    }
+  </script>
+</body>
+</html>
