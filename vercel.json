@@ -10,6 +10,9 @@
       "memory": 1024,
       "maxDuration": 300
     },
+    "api/validar-lugar.js": {
+      "maxDuration": 30
+    },
     "api/generar-pdf.js": {
       "memory": 1024,
       "maxDuration": 300
