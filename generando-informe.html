@@ -660,11 +660,6 @@ if (!cartaResp.ok) {
 // PDF, y los dos textos que lee el modelo por otro.
 const { cartaTexto, casasTexto, ...carta } = await cartaResp.json();
 
-// SI EL TEXTO NO VIENE, SE PARA AQUI Y NO SE GASTA NADA. Mandar el informe a
-// escribir sin la carta seria escribirle a la clienta sobre nadie, y para
-// cuando se notara ya se habria cobrado el intento.
-if (!cartaTexto) throw new Error('CARTA_SIN_TEXTO');
-
   // Formato fecha bonito
   const meses = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
   const fechaNice = dy + ' de ' + meses[mo-1] + ' de ' + yr;
