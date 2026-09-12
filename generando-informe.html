@@ -857,20 +857,36 @@ async function getTZOffset(lat, lon, fechaISO, hora) {
 }
 // ─── GEOCODIFICACIÓN ──────────────────────────────────────────────────────────
 async function geocode(ciudad, provincia, pais) {
-  const query = [ciudad, provincia, pais].filter(Boolean).join(', ');
-  // Dos intentos: Nominatim limita las peticiones y a veces rechaza la primera.
+  // AL MAPA LE PREGUNTA EL SERVIDOR, NO ESTE NAVEGADOR. De ese punto salen la
+  // hora real y el Ascendente, asi que no puede depender de la cobertura de
+  // quien compra. Aqui solo se pide y se espera.
+  // Dos intentos: un fallo puntual de red no debe estropear el informe.
   for (let intento = 0; intento < 2; intento++) {
     try {
-      const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(query) + '&format=json&limit=1&addressdetails=1';
-      const r = await fetch(url, { headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' } });
-      const data = await r.json();
-      if (data && data.length > 0) {
-        const lat = parseFloat(data[0].lat), lon = parseFloat(data[0].lon);
+      const r = await fetch('/api/geocodificar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: new URLSearchParams(window.location.search).get('session_id'),
+          municipio: ciudad, provincia, pais
+        })
+      });
+      // EL INFORME YA ESTA HECHO, O SE ESTA HACIENDO: se corta aqui con el
+      // mismo motivo que usa el calculo de la carta, para que al cliente le
+      // salga "ya lo tienes" o "viene en camino" y no la pantalla de
+      // reintentar. Repetir la busqueda no cambiaria nada.
+      if (r.status === 409) throw new Error('EN_CURSO');
+      if (r.status === 403) throw new Error('YA_GENERADO');
+      if (r.ok) {
+        const data = await r.json();
+        const lat = parseFloat(data && data.lat), lon = parseFloat(data && data.lon);
         if (isFinite(lat) && isFinite(lon)) {
           return { lat, lon, ok: true };
         }
       }
-    } catch(e) {}
+    } catch(e) {
+      if (e.message === 'EN_CURSO' || e.message === 'YA_GENERADO') throw e;
+    }
     if (intento === 0) await new Promise(r => setTimeout(r, 1200));
   }
 
