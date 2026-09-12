@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { estado, compraValida, esDelProducto } from '../lib/reserva.js';
+import { montarCartaTexto, montarCasasTexto } from '../lib/carta-texto.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -579,7 +580,19 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
 }
 
 const carta = calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDeg, tzOffset);
-    return res.status(200).json(carta);
+
+    // Y EL TEXTO QUE LEE EL MODELO SALE DE AQUI, no del navegador del cliente.
+    // Es lo unico que el modelo llega a ver de su carta, asi que se monta al
+    // lado del calculo del que sale.
+    //
+    // VAN AÑADIDOS, NO EN LUGAR DE NADA: la carta sigue saliendo entera y con
+    // los mismos nombres de siempre, asi que una pagina antigua que solo mire
+    // sus posiciones sigue funcionando igual.
+    return res.status(200).json({
+      ...carta,
+      cartaTexto: montarCartaTexto(carta),
+      casasTexto: montarCasasTexto(carta),
+    });
 
   } catch (error) {
     console.error('Error calculando carta:', error);
