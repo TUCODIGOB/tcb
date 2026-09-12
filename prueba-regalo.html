@@ -238,14 +238,66 @@ document.getElementById('datos').addEventListener('submit', function (e) {
     return;
   }
 
-  // AQUI TODAVIA NO SE GENERA NADA. Esta pagina es, de momento, solo el
-  // formulario: se comprueba que los datos estan bien y se enseñan. Calcular
-  // la carta y pedirle los tres textos al modelo viene en los pasos
-  // siguientes, y hasta entonces no se llama a ninguna parte.
-  banda.className = 'banda puesta';
-  banda.innerHTML = '<b>Datos correctos.</b> La generación todavía no está montada.'
-                  + '<pre>' + JSON.stringify(datos, null, 2) + '</pre>';
+  pedirLaCarta(datos);
 });
+
+// ── SE LE PIDE LA CARTA AL SERVIDOR ─────────────────────────────
+//
+// Aqui no se calcula nada: se le mandan los datos al servidor y el devuelve
+// la carta hecha, con el mismo calculo del P1. Los tres textos vienen despues,
+// en el paso siguiente.
+async function pedirLaCarta(datos) {
+  const banda = document.getElementById('banda');
+  const boton = document.querySelector('button[type=submit]');
+
+  banda.className = 'banda puesta';
+  banda.innerHTML = 'Calculando su carta…';
+  boton.disabled = true;
+
+  const arranque = Date.now();
+  try {
+    const resp = await fetch('/api/prueba-regalo/carta', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos),
+    });
+    const salida = await resp.json();
+
+    if (!resp.ok) {
+      banda.innerHTML = '<b>No ha salido.</b> ' + (salida.error || 'Error del servidor.');
+      return;
+    }
+
+    const segundos = ((Date.now() - arranque) / 1000).toFixed(1);
+    const c = salida.carta;
+    banda.innerHTML =
+      '<b>Su carta, calculada en el servidor.</b> ' + segundos + ' s.'
+      + '<pre>'
+      + 'Lugar encontrado: ' + salida.lugar.nombre + '\n'
+      + 'Coordenadas:      ' + salida.lugar.lat.toFixed(4) + ', ' + salida.lugar.lon.toFixed(4) + '\n'
+      + 'Zona horaria:     ' + salida.zona + '  (desfase ' + salida.tzOffset + ' h)\n\n'
+      + 'Ascendente: ' + c.ascendente + '\n'
+      + 'Sol:        ' + c.sol + '\n'
+      + 'Luna:       ' + c.luna + '\n'
+      + 'Mercurio:   ' + c.mercurio + '\n'
+      + 'Venus:      ' + c.venus + '\n'
+      + 'Marte:      ' + c.marte + '\n'
+      + 'Júpiter:    ' + c.jupiter + '\n'
+      + 'Saturno:    ' + c.saturno + '\n'
+      + 'Urano:      ' + c.urano + '\n'
+      + 'Neptuno:    ' + c.neptuno + '\n'
+      + 'Plutón:     ' + c.pluton + '\n'
+      + 'Quirón:     ' + c.quiron + '\n'
+      + 'Nodo Norte: ' + c.nodoNorte + '\n'
+      + 'Medio Cielo: ' + c.medioCielo + '\n'
+      + '</pre>';
+
+  } catch (err) {
+    banda.innerHTML = '<b>No ha salido.</b> ' + err.message;
+  } finally {
+    boton.disabled = false;
+  }
+}
 </script>
 
 </body>
