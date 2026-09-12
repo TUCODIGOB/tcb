@@ -143,19 +143,19 @@ button:hover{filter:brightness(.96);}
     <div class="campo" id="c-municipio">
       <label for="municipio">Lugar de nacimiento</label>
       <input type="text" id="municipio" placeholder="Municipio" autocomplete="off">
-      <span class="aviso">Falta el municipio.</span>
+      <span class="aviso" id="a-municipio">Falta el municipio.</span>
     </div>
 
     <div class="campo" id="c-provincia">
       <label for="provincia">Provincia o estado</label>
       <input type="text" id="provincia" placeholder="Provincia / Estado" autocomplete="off">
-      <span class="aviso">Falta la provincia.</span>
+      <span class="aviso" id="a-provincia">Falta la provincia.</span>
     </div>
 
     <div class="campo" id="c-pais">
       <label for="pais">País</label>
       <input type="text" id="pais" placeholder="País, sin abreviaturas" autocomplete="off">
-      <span class="aviso">Falta el país.</span>
+      <span class="aviso" id="a-pais">Falta el país.</span>
     </div>
 
     <button type="submit">Generar los tres textos</button>
@@ -232,6 +232,13 @@ document.getElementById('datos').addEventListener('submit', function (e) {
   };
   Object.entries(falla).forEach(([id, mal]) => marcar(id, mal));
 
+  // Los avisos del lugar vuelven a su texto: el del mapa solo vale para el
+  // intento en que salio.
+  const avisosDeSiempre = { municipio: 'Falta el municipio.', provincia: 'Falta la provincia.', pais: 'Falta el país.' };
+  Object.entries(avisosDeSiempre).forEach(([campo, texto]) => {
+    document.getElementById('a-' + campo).textContent = texto;
+  });
+
   const banda = document.getElementById('banda');
   if (Object.values(falla).some(Boolean)) {
     banda.className = 'banda';
@@ -264,6 +271,13 @@ async function pedirLaCarta(datos) {
     const salida = await resp.json();
 
     if (!resp.ok) {
+      // EL LUGAR, COMO EN EL P1. Si el servidor dice que campos no cuadran, se
+      // marcan en rojo con su aviso, igual que le pasa a la clienta.
+      (salida.campos || []).forEach(campo => {
+        marcar('c-' + campo, true);
+        const aviso = document.getElementById('a-' + campo);
+        if (aviso) aviso.textContent = 'Esto no cuadra con el mapa. Revísalo.';
+      });
       banda.innerHTML = '<b>No ha salido.</b> ' + (salida.error || 'Error del servidor.');
       return;
     }
