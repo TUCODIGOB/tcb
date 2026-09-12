@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "@vercel/functions": "^3.9.7",
     "jspdf": "^2.5.1",
     "stripe": "^17.4.0",
     "tz-lookup": "^6.1.25"

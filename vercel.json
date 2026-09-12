@@ -6,6 +6,10 @@
       "memory": 1024,
       "maxDuration": 300
     },
+    "api/generar-informe.js": {
+      "memory": 1024,
+      "maxDuration": 300
+    },
     "api/generar-pdf.js": {
       "memory": 1024,
       "maxDuration": 300

@@ -5,6 +5,7 @@
 
 import Stripe from 'stripe';
 import crypto from 'crypto';
+import { waitUntil } from '@vercel/functions';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -65,6 +66,11 @@ export default async function handler(req, res) {
       return res.status(200).json({ received: true });
     }
 
+    // EL INFORME PRIMERO. Se arranca antes de guardar en Brevo y por fuera de
+    // su try: lo que la clienta ha pagado es el informe, y no puede quedarse
+    // sin el porque falle el alta en la lista de correo.
+    arrancarElInforme(session.id);
+
     try {
       await guardarContactoBrevo({
         email,
@@ -110,6 +116,38 @@ export default async function handler(req, res) {
 
   // Responder 200 a Stripe (si no, reintentará)
   return res.status(200).json({ received: true });
+}
+
+// ════════════════════════════════════════════════════════════════
+// ARRANCAR EL INFORME DESDE AQUI
+//
+// Hasta ahora el informe lo encadenaba el navegador de quien compra, y si
+// cerraba el movil a mitad se quedaba sin el. Ahora lo arranca este aviso,
+// que lo manda Stripe a nuestro servidor y no depende de su cobertura.
+//
+// SIN HACER ESPERAR A STRIPE. Stripe corta si no se le contesta en unos
+// segundos y el informe tarda minutos, asi que se le contesta primero y el
+// trabajo sigue por detras. Eso es lo que hace waitUntil.
+//
+// Y LA PAGINA SIGUE IGUAL, de reserva: si esto no llegara a arrancar, el
+// navegador hace lo de siempre. No pueden salir dos informes, porque el
+// primero que entra coge la reserva y al otro se le dice que se esta haciendo.
+// ════════════════════════════════════════════════════════════════
+function arrancarElInforme(sessionId) {
+  const clave = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!clave) {
+    console.error('No se arranca el informe: falta STRIPE_WEBHOOK_SECRET');
+    return;
+  }
+  waitUntil(
+    fetch('https://origennatal.com/api/generar-informe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-origen-interno': clave },
+      body: JSON.stringify({ session_id: sessionId }),
+    })
+      .then(r => console.log('Informe arrancado desde el servidor:', sessionId, r.status))
+      .catch(err => console.error('No se ha podido arrancar el informe:', sessionId, err.message))
+  );
 }
 
 // ═════════════════════════════════════════════════════════════════
