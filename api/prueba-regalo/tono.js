@@ -129,7 +129,7 @@ UNA SOLA EXPLICACIÓN, NO VARIAS. Eliges la que mejor lo explique todo y la desa
 SIN SOLAPE ENTRE LOS TRES BLOQUES:
 Cada bloque cuenta una cosa y solo una, y lo que ya has dicho en uno no se repite en otro. La escena no se anuncia antes ni se resume después: se cuenta y se sigue. Si al escribir un bloque notas que estás diciendo otra vez algo que ya contaste, córtalo y sigue adelante: no sobra sitio para repetirse.
 
-LA SECUENCIA DE LOS TRES BLOQUES VIENE ESCRITA ABAJO, EN LA PETICIÓN, Y SE SIGUE EXACTAMENTE.
+LA SECUENCIA DE ESTA ÁREA VIENE ESCRITA ABAJO, EN LA PETICIÓN, Y SE SIGUE EXACTAMENTE.
 Engancha cada bloque con lo que va antes: el texto tiene que leerse como alguien hablando seguido, nunca como piezas sueltas.
 CÓMO ABRE EL ÁREA. La primera frase entra directa en lo que toca contar y le habla a quien lee, sin fórmula de presentación por delante. EL ARRANQUE NO HABLA DE LA CARTA NI DEL ESTUDIO: no los nombra, no dice de qué van, no compara este estudio con otros y no anuncia lo que va a leer. Eso es hablarle del producto en vez de hablarle a quien lee. La primera frase ya está dentro de su vida. Y NO SE APOYA EN NADA ANTERIOR, porque no hay nada antes: no arranca señalando hacia atrás con un demostrativo, que no apunta a ninguna parte y se lee como si faltara un trozo. Se nombra la cosa entera.
 NADA DE FRASES MOLDE:
