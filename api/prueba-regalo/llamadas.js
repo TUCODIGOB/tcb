@@ -412,9 +412,12 @@ function laListaNumerada(rasgos) {
     .join('\n');
 }
 
-// EL ENCARGO. Es el del P1, copiado entero, con lo justo cambiado porque
-// aqui todos los rasgos son de la misma area. Lo demas esta igual, palabra
-// por palabra: que se quita, que pesa mas y que tiene que devolver.
+// EL ENCARGO. Era el del P1 copiado entero, y aqui hacia dano: alli le llegan
+// treinta y tantos rasgos de siete areas y si hay repetidos, pero aqui le
+// llegan cinco de una sola area. Las ordenes de quitar por parecido, por
+// contradiccion y juntando las dos caras de una misma cosa le hacian emparejar
+// conductas distintas -todo habla de quien es- y cortar los rasgos de mas peso.
+// Ahora solo queda un motivo para quitar, el calco, y tiene que ensenarlo.
 const ENCARGO_DE_LIMPIAR = `Abajo tienes las fortalezas y los desafíos interiores de una persona. Cada uno está escrito por separado, enumerado, dice si es una fortaleza o un desafío y su conducta. Todos son de la misma área, IDENTIDAD: quién es por dentro y cómo se vive a sí mismo o a sí misma.
 QUÉ SE QUITA, Y SOLO ESTO
 Un rasgo se quita SOLO cuando otro de la lista cuenta LA MISMA CONDUCTA. La misma, no una parecida: lo que hace esa persona es lo mismo, dicho con otras palabras. De esos dos se queda uno, el que más pese, y el otro se va.
