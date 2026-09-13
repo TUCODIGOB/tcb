@@ -746,8 +746,47 @@ function pasarLasRedes(escritos, reloj) {
 const INTENTOS_POR_AREA = 3;
 const TOPE_DEL_AREA = 90000;
 
-// EL PROMPT DEL AREA VA EN EL PASO SIGUIENTE. Aqui todavia no hay ninguno.
-const PROMPT_DEL_AREA = '';
+// EL PROMPT DEL AREA. Es el del area 1 del P1, copiado entero, con seis
+// cosas cambiadas: aqui el area acaba en el [C] -el porque-, no en el [E].
+// Lo demas esta igual, palabra por palabra: las cuatro cosas que cubre el
+// [A], la escena con sus marcas, y las siete cosas sin las que el area no
+// esta terminada.
+const PROMPT_DEL_AREA = `Genera ÚNICAMENTE el ÁREA 1 — IDENTIDAD para esta persona: quién es por dentro y cómo se vive a sí mismo o a sí misma.
+
+Esta área abre el estudio, así que empieza con una entrada de dos o tres frases que le sitúen antes de entrar en materia, como se abre un libro. Suave, sin prisa y sin adelantar lo que viene.
+
+EN ESTA ÁREA, EL BLOQUE [A] CUBRE cuatro cosas, cada una sacada de sus rasgos y ninguna afirmada de pasada:
+
+Cómo funciona por dentro: el mecanismo con el que procesa lo que le pasa, qué le ocurre primero y qué después, y qué consecuencia tiene ese orden en lo que hace por fuera. Es lo que le pone nombre a su manera de funcionar y lo que se lleva puesto al terminar de leer.
+
+Lo que se le da bien de verdad: sus fortalezas reales, sobre todo las que no pondría primero si le preguntaras. Sin esto el área se convierte en un repaso de defectos y la persona cierra el informe tocada.
+
+Los puntos ciegos que no ve: lo que hace y no registra como un problema, o que registra al revés, como si fuera una virtud. Es lo único del área que le cuenta algo que no sabía, así que aquí no te quedes en lo cómodo.
+
+Qué muestra, qué oculta y qué contradicciones tiene: la distancia entre la persona que enseña y la que guarda, y las cosas suyas que no encajan entre sí y conviven igual. Es lo que hace que el texto suene a esa persona y no a un perfil que le valdría a cualquiera.
+
+Esas cuatro cosas no se solapan entre ellas y ninguna vuelve a aparecer más adelante.
+
+LA SECUENCIA DE ESTA ÁREA, EN ESTE ORDEN EXACTO: [A], [B], [C]
+
+CÓMO ENTRA CADA BLOQUE EN ESTA ÁREA: la [B] entra sin avisar, pegada a la frase anterior y arrancando por el momento concreto. El [C] entra contestando algo que ya se ha preguntado alguna vez.
+No pongas título ni encabezado. Solo el texto del área. Entre 650 y 700 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
+EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SIETE COSAS. Son obligatorias, no van a tu criterio, y son lo último que tienes que tener delante mientras escribes:
+
+1. TODOS los puntos que le tocan a ESTA área, contados uno a uno y desarrollados. Si le tocan cuatro, están los cuatro; si le tocan tres, los tres. Ninguno resuelto de pasada dentro de otro ni dado por dicho.
+
+2. LA [B], con "> " delante de CADA UNO de sus párrafos: el signo mayor, un espacio, y ya la primera palabra del párrafo. Sin esa marca el área está sin terminar. Ningún otro párrafo del área lleva esa marca.
+
+3. LOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. En un área de este largo eso son DOS. Ninguno abre el área.
+
+4. UNA o DOS fortalezas y DOS o TRES desafíos, ni más ni menos.
+
+5. Su nombre de pila, dos veces como mínimo y separadas.
+
+6. Los tres bloques en la secuencia exacta de ESTA área, ningún párrafo por encima de 90 palabras, y ninguna fortaleza con un porqué inventado.
+7. TODO EL ÁREA ESCRITA DE TÚ, de la primera palabra a la última. En ningún momento hablas de ella en tercera persona ni la nombras como sujeto de una frase. Su nombre, si lo usas, es solo para llamarla directamente a ella, nunca seguido de un verbo que hable de lo que hace o siente.
+`;
 
 // LAS FORTALEZAS VAN SIN SU PORQUE Y LOS DESAFIOS CON EL, igual que en el P1.
 function losRasgosDelArea(rasgos) {
