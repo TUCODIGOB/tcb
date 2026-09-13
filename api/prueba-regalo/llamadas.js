@@ -230,7 +230,10 @@ async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'm
     que: `sacar los rasgos (${esfuerzo})`,
     modelo: 'claude-opus-5',
     razona: esfuerzo,
-    techo: 16000,
+    // EL MISMO TECHO QUE EL P1. No es lo que escribe -que son cinco rasgos
+    // cortos-: es que pensar sale tambien de aqui, y apretarlo le corta el
+    // pensamiento a la mitad.
+    techo: 32000,
     system: encargoDeElegir(nombrePila, sexo, cartaTexto),
     mensaje: 'Saca los rasgos.',
     molde: ESQUEMA_DE_ELEGIR,
@@ -248,7 +251,7 @@ async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj) {
   try {
     rasgos = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'medium');
   } catch (err) {
-    if (err.temporal === false || !reloj.hayTiempoPara(120)) throw err;
+    if (err.temporal === false || !reloj.hayTiempoPara(180)) throw err;
     console.warn(`la tirada con esfuerzo medio fallo (${err.message.slice(0, 80)}), se repite pensando menos`);
     return await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'low');
   }
@@ -257,7 +260,7 @@ async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj) {
   // que faltan: los compara entre ellos mientras los escribe, y sin ver los que
   // ya hay los repetiria. Se queda la mejor de las dos, nunca la ultima por ser
   // la ultima.
-  if (rasgos.length < CUANTOS_RASGOS && reloj.hayTiempoPara(120)) {
+  if (rasgos.length < CUANTOS_RASGOS && reloj.hayTiempoPara(180)) {
     console.warn(`la 1a llamada ha devuelto ${rasgos.length} rasgos de ${CUANTOS_RASGOS}, se pide otra vez`);
     try {
       const otra = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'medium');
