@@ -256,7 +256,7 @@ lista         si ese rasgo es una fortaleza o un desafío.
 
 conducta    El rasgo en corto, de cuatro a siete palabras: lo que hace esa
 persona o lo que le pasa por dentro. No de qué habla ni dónde le pasa.
-No es para ella, es para comparar: dos rasgos con la misma
+No es para quien lee, es para comparar: dos rasgos con la misma
 conducta son el mismo rasgo, aunque estén escritos distinto.
 Se escribe con las mismas palabras siempre que la conducta sea la misma. Si buscas variar, dejan de verse los repetidos. 
 
@@ -626,7 +626,7 @@ LO QUE ESCRIBES de cada uno: el título, la descripción y la causa. Y su númer
 TODO SALE DE ESA POSICIÓN. Es lo único que dice lo que a esta persona le pasa de verdad: el cuerpo, su signo, su casa y sus aspectos. De ahí sale la descripción y de ahí sale la causa. Si algo no se puede sacar de esa posición, no se escribe.
 Y LA CONDUCTA MANDA. Esa posición se podría contar de muchas maneras. La conducta dice cuál de todas es la de esta persona: escribes esa, no otra.
 EL SIGNO Y LA CASA TIENEN QUE NOTARSE. El cuerpo dice QUÉ le pasa, el signo DE QUÉ MANERA le pasa y la casa EN QUÉ PARTE DE SU VIDA le pasa. Si lo que escribes valdría igual cambiándole el signo o la casa, es que no lo has escrito de ESTA carta y hay que escribirlo otra vez.
-LA POSICIÓN ES PARA TI, NO PARA ELLA. No la nombres, ni nada técnico ni de astrología. Se cuenta en situaciones reales de su vida.
+LA POSICIÓN ES PARA TI, NO PARA QUIEN LEE. No la nombres, ni nada técnico ni de astrología. Se cuenta en situaciones reales de su vida.
 LAS CASILLAS DE CADA RASGO
 titulo Se le habla de tu, igual que en todo lo demás: es lo que hace
  o lo que le pasa, dicho a la persona. No el nombre de eso.
@@ -845,7 +845,7 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS OCHO COSAS. Son obliga
 
 7. LA ÚLTIMA COSA DEL ÁREA ES UNA PREGUNTA, sola en su párrafo y sin nada detrás. Sale de lo último que le has contado.
 
-8. TODO EL ÁREA ESCRITA DE TÚ, de la primera palabra a la última. En ningún momento hablas de ella en tercera persona ni la nombras como sujeto de una frase. Su nombre, si lo usas, es solo para llamarla directamente a ella, nunca seguido de un verbo que hable de lo que hace o siente.
+8. TODO EL ÁREA ESCRITA DE TÚ, de la primera palabra a la última. En ningún momento hablas de quien lee en tercera persona ni le nombras como sujeto de una frase. Su nombre, si lo usas, es solo para llamarle directamente, nunca seguido de un verbo que hable de lo que hace o siente.
 `;
 
 // LAS FORTALEZAS VAN SIN SU PORQUE Y LOS DESAFIOS CON EL, igual que en el P1.
