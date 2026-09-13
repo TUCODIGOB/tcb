@@ -2204,8 +2204,12 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
     // entere: se comprueba que el dia cabe de verdad en ese mes.
     function fechaReal(fechaISO) {
       const [anio, mes, dia] = String(fechaISO).split('-').map(Number);
-      const d = new Date(anio, mes - 1, dia);
-      return d.getFullYear() === anio && d.getMonth() === mes - 1 && d.getDate() === dia;
+      // Se cuenta en hora universal a proposito. Con la hora del movil del
+      // cliente habria dias que en su pais no existieron (islas que se han
+      // cambiado de lado de la linea del cambio de fecha) y le rechazariamos
+      // un cumpleanos que si existe. En hora universal no falta ningun dia.
+      const d = new Date(Date.UTC(anio, mes - 1, dia));
+      return d.getUTCFullYear() === anio && d.getUTCMonth() === mes - 1 && d.getUTCDate() === dia;
     }
     // Longitudes válidas de teléfono por prefijo (dígitos sin prefijo)
     const TELEFONO_LONGITUDES = {
