@@ -715,7 +715,7 @@ async function pedirLaCarta(datos) {
       // un corte del servicio no se nota desde fuera.
       if (salida.motivo === 'sin_respuesta') {
         avisarDelFalloDelMapa(datos);
-      } else {
+      } else if (salida.motivo === 'no_encontrado') {
         // Se marcan solo los campos que no cuadran. Cuando no se puede saber
         // cuales son, se marcan los tres.
         const campos = (salida.campos && salida.campos.length)
@@ -727,6 +727,8 @@ async function pedirLaCarta(datos) {
           if (aviso) aviso.textContent = 'Esto no cuadra con el mapa. Revísalo.';
         });
       }
+      // Cualquier otro fallo es del servidor y no de lo que ha escrito: no se
+      // le marca ningun campo en rojo.
       banda.innerHTML = '<b>No ha salido.</b> ' + (salida.error || 'Error del servidor.');
       return;
     }
