@@ -321,7 +321,7 @@ async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'm
     // pensamiento a la mitad.
     techo: 32000,
     system: encargoDeElegir(nombrePila, sexo, cartaTexto),
-    mensaje: 'Saca los rasgos.',
+    mensaje: 'Elige los rasgos de esta carta, siguiendo el esquema.',
     molde: ESQUEMA_DE_ELEGIR,
     espera: reloj.senal(TOPE_DE_ELEGIR),
   });
@@ -410,18 +410,34 @@ async function limpiarLosRasgos(rasgos, reloj) {
     // El techo es holgado y no por lo que escribe -que son unos pocos numeros-,
     // sino porque pensar tambien gasta de aqui.
     techo: 16000,
-    system: ENCARGO_DE_LIMPIAR,
-    mensaje: `LA LISTA:\n\n${laListaNumerada(rasgos)}`,
+    // LA LISTA VA DENTRO DEL ENCARGO, igual que en el P1, y el mensaje es una
+    // frase fija.
+    system: `${ENCARGO_DE_LIMPIAR}\n\nLA LISTA:\n\n${laListaNumerada(rasgos)}`,
+    mensaje: 'Di cuáles se quedan y cuáles se quitan, siguiendo el esquema.',
     molde: ESQUEMA_DE_LIMPIAR,
     espera: reloj.senal(TOPE_DE_LIMPIAR),
   });
   reloj.apunta('limpiar los rasgos', arranque);
 
-  const numeros = v => (Array.isArray(v) ? v : [])
-    .map(Number)
-    .filter(n => Number.isInteger(n) && n >= 1 && n <= rasgos.length);
+  // Solo numeros que existan, sin repetir y en el orden de la lista.
+  const validos = new Set(rasgos.map((_, i) => i + 1));
+  const sequedan = [...new Set((Array.isArray(salida?.sequedan) ? salida.sequedan : [])
+    .map(Number).filter(n => validos.has(n)))].sort((a, b) => a - b);
 
-  return { sequedan: numeros(salida?.sequedan), sequitan: numeros(salida?.sequitan) };
+  const sequitan = [...new Set((Array.isArray(salida?.sequitan) ? salida.sequitan : [])
+    .map(Number).filter(n => validos.has(n) && !sequedan.includes(n)))].sort((a, b) => a - b);
+
+  // SI SE DEJA ALGUNO SIN CLASIFICAR, SE QUEDA. Un rasgo que no esta ni en una
+  // lista ni en la otra es un descuido suyo, no una decision: tirarlo seria
+  // quitarle a la clienta algo que nadie ha decidido quitar.
+  const olvidados = [...validos].filter(n => !sequedan.includes(n) && !sequitan.includes(n));
+  if (olvidados.length) {
+    console.warn(`la limpieza no ha dicho nada de ${olvidados.join(', ')}: se quedan`);
+    sequedan.push(...olvidados);
+    sequedan.sort((a, b) => a - b);
+  }
+
+  return { sequedan, sequitan };
 }
 
 // SIN LLAMAR A NADIE, Y GRATIS: EL SUELO.
@@ -553,8 +569,10 @@ async function pedirLoEscrito(rasgos, nombrePila, sexo, reloj, esfuerzo = 'low')
     techo: 8000,
     // EL TONO VA DELANTE, igual que en el P1: primero como se escribe, y
     // detras el encargo.
-    system: `${TONO}\n\n\n${ENCARGO_DE_ESCRIBIR}`,
-    mensaje: `LOS RASGOS:\n${losRasgosSinEscribir(rasgos)}\nPersona: ${comoSeLeHabla(sexo)}\nNombre de pila: ${nombrePila}`,
+    // LOS RASGOS VAN DENTRO DEL ENCARGO, igual que en el P1, y el mensaje es
+    // una frase fija.
+    system: `${TONO}\n\n\n${ENCARGO_DE_ESCRIBIR}\nLOS RASGOS: \n${losRasgosSinEscribir(rasgos)}\nPersona: ${comoSeLeHabla(sexo)}\nNombre de pila: ${nombrePila}`,
+    mensaje: 'Escribe estos rasgos, siguiendo el esquema.',
     molde: ESQUEMA_DE_ESCRIBIR,
     espera: reloj.senal(TOPE_DE_ESCRIBIR),
   });
