@@ -7,8 +7,9 @@
 // topes-, copiada de api/chat.js. Alli no se toca nada: esto es una copia
 // aparte para el trozo gratis.
 //
-// LOS ENCARGOS NO ESTAN AQUI TODAVIA. Estan vacios a proposito: son el paso
-// siguiente. Sin ellos esto no genera nada, pero la maquina ya esta montada.
+// LOS ENCARGOS SON LOS DEL P1, copiados enteros, con lo justo cambiado porque
+// aqui solo hay un area -IDENTIDAD- y el texto acaba en el porque, no en el
+// cierre.
 // ═══════════════════════════════════════════════════════════════
 
 import { TONO, SYSTEM_PROMPT } from './tono.js';
@@ -918,6 +919,14 @@ export async function escribirElRegalo({ nombre, sexo, fechaNice, hora, lugar, e
 
   // Las redes de codigo, gratis.
   const rasgos = pasarLasRedes(escritos, reloj);
+
+  // Y SI LAS REDES SE LO LLEVAN TODO, SE CORTA AQUI. El area escribe con los
+  // rasgos y con nada mas: sin ninguno saldria un texto que no habla de esta
+  // persona ni de ninguna. Es la misma regla que con el relleno: mas vale no
+  // dar nada que dar algo que no es suyo.
+  if (rasgos.fortalezas.length + rasgos.desafios.length === 0) {
+    throw new Error('las redes han dejado el area sin ningun rasgo');
+  }
 
   // 4a — el area, con sus dos llamadas de repuesto.
   const texto = await generarElArea(contextoPersona, rasgos, reloj);
