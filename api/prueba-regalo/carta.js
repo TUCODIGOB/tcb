@@ -17,7 +17,10 @@
 // quien lo prueba no hace ni una cuenta.
 // ═════════════════════════════════════════════════════════════════
 
+import crypto from 'crypto';
 import tzlookup from 'tz-lookup';
+import { waitUntil } from '@vercel/functions';
+import { guardarInforme } from '../../lib/guardar-informe.js';
 
 // ─── EL LUGAR ────────────────────────────────────────────────────────────────
 //
@@ -780,13 +783,82 @@ function calcularCartaNatal(year, month, day, localHour, localMin, latDeg, lonDe
   };
 }
 
+// ─── LO SUYO, GUARDADO ───────────────────────────────────────────────────────
+//
+// Se guarda para el dia de mañana: cuando pague, el P1 tiene que seguir por
+// donde lo dejo el regalo y no contradecir lo que ya ha leido. Aqui va todo lo
+// suyo y la carta entera, con las coordenadas del lugar tal y como salieron
+// hoy: eso es lo unico que no se puede volver a sacar igual mas adelante.
+//
+// EL NOMBRE DEL FICHERO es una huella de su email. Asi el mismo email cae
+// siempre en el mismo sitio -y se puede encontrar lo suyo con solo el email-,
+// pero el email no queda escrito en el nombre.
+//
+// SI FALLA, NO PASA NADA: es una copia para despues, no un paso de la entrega.
+
+function huellaDelEmail(email) {
+  const limpio = String(email || '').trim().toLowerCase();
+  if (!limpio) return '';
+  return crypto.createHash('sha256').update(limpio).digest('hex').slice(0, 32);
+}
+
+function edadHoy(fechaISO) {
+  const [a, m, d] = String(fechaISO || '').split('-').map(Number);
+  if (!a || !m || !d) return null;
+  const hoy = new Date();
+  let edad = hoy.getUTCFullYear() - a;
+  const mes = hoy.getUTCMonth() + 1;
+  if (mes < m || (mes === m && hoy.getUTCDate() < d)) edad--;
+  return edad;
+}
+
+async function guardarLoSuyo({ datos, lugar, zona, tzOffset, carta }) {
+  const huella = huellaDelEmail(datos.email);
+  if (!huella) {
+    console.warn('[prueba-regalo] Sin email: no se guarda nada.');
+    return;
+  }
+  try {
+    const guardado = await guardarInforme({
+      producto: 'p0',
+      sessionId: huella,
+      cliente: {
+        nombre: datos.nombre || '',
+        sexo: datos.sexo || '',
+        email: String(datos.email || '').trim().toLowerCase(),
+        telefono: datos.telefono ? String(datos.prefijo || '') + String(datos.telefono) : '',
+        fecha: datos.fecha,
+        hora: datos.hora,
+        municipio: datos.municipio,
+        provincia: datos.provincia,
+        pais: datos.pais,
+        edad: edadHoy(datos.fecha),
+        lat: lugar.lat,
+        lon: lugar.lon,
+        zona,
+        tzOffset,
+      },
+      carta,
+      // El area escrita y los rasgos entran cuando se escriban: de momento no
+      // existen todavia.
+      areas: null,
+      rasgos: null,
+    });
+    if (guardado.guardado) console.log(`[prueba-regalo] Guardado: ${guardado.ruta} (${guardado.bytes} bytes)`);
+    else console.warn(`[prueba-regalo] No se ha guardado: ${guardado.motivo}`);
+  } catch (err) {
+    console.error('[prueba-regalo] No se ha podido guardar lo suyo:', err.message);
+  }
+}
+
 // ─── LA PETICION ─────────────────────────────────────────────────────────────
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  const { fecha, hora, municipio, provincia, pais } = req.body || {};
+  const datos = req.body || {};
+  const { fecha, hora, municipio, provincia, pais } = datos;
 
   const [year, month, day] = String(fecha || '').split('-').map(Number);
   const [localHour, localMin] = String(hora || '').split(':').map(Number);
@@ -820,6 +892,15 @@ export default async function handler(req, res) {
     }
 
     const carta = calcularCartaNatal(year, month, day, localHour, localMin, lugar.lat, lugar.lon, tzOffset);
+
+    // Se guarda por detras, sin hacer esperar a nadie: la carta se contesta ya
+    // y el guardado sigue su camino aunque la respuesta haya salido. Va
+    // envuelto porque el guardado nunca puede dejar sin carta a nadie.
+    try {
+      waitUntil(guardarLoSuyo({ datos, lugar, zona, tzOffset, carta }));
+    } catch (err) {
+      console.error('[prueba-regalo] No se ha podido lanzar el guardado:', err.message);
+    }
 
     return res.status(200).json({
       carta,
