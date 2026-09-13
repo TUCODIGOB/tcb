@@ -802,41 +802,41 @@ function huellaDelEmail(email) {
   return crypto.createHash('sha256').update(limpio).digest('hex').slice(0, 32);
 }
 
-function edadHoy(fechaISO) {
-  const [a, m, d] = String(fechaISO || '').split('-').map(Number);
-  if (!a || !m || !d) return null;
+// La fecha, el lugar y la edad se montan igual que en el P1, para que lo
+// guardado tenga la misma forma en los dos.
+const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+function calcularEdad(fechaISO) {
+  const nacimiento = new Date(fechaISO);
   const hoy = new Date();
-  let edad = hoy.getUTCFullYear() - a;
-  const mes = hoy.getUTCMonth() + 1;
-  if (mes < m || (mes === m && hoy.getUTCDate() < d)) edad--;
+  let edad = hoy.getFullYear() - nacimiento.getFullYear();
+  const m = hoy.getMonth() - nacimiento.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) edad--;
   return edad;
 }
 
-async function guardarLoSuyo({ datos, lugar, zona, tzOffset, carta }) {
+async function guardarLoSuyo({ datos, carta }) {
   const huella = huellaDelEmail(datos.email);
   if (!huella) {
     console.warn('[prueba-regalo] Sin email: no se guarda nada.');
     return;
   }
+  const [anio, mes, dia] = String(datos.fecha || '').split('-').map(Number);
+  const fechaNice = dia + ' de ' + MESES[mes - 1] + ' de ' + anio;
   try {
     const guardado = await guardarInforme({
       producto: 'p0',
       sessionId: huella,
+      // LOS MISMOS SIETE DATOS QUE GUARDA EL P1, NI UNO MAS. Las coordenadas
+      // del lugar no van aqui porque ya viajan dentro de la carta.
       cliente: {
         nombre: datos.nombre || '',
         sexo: datos.sexo || '',
         email: String(datos.email || '').trim().toLowerCase(),
-        telefono: datos.telefono ? String(datos.prefijo || '') + String(datos.telefono) : '',
-        fecha: datos.fecha,
+        fecha: fechaNice,
         hora: datos.hora,
-        municipio: datos.municipio,
-        provincia: datos.provincia,
-        pais: datos.pais,
-        edad: edadHoy(datos.fecha),
-        lat: lugar.lat,
-        lon: lugar.lon,
-        zona,
-        tzOffset,
+        lugar: [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', '),
+        edad: calcularEdad(datos.fecha),
       },
       carta,
       // El area escrita y los rasgos entran cuando se escriban: de momento no
@@ -897,7 +897,7 @@ export default async function handler(req, res) {
     // y el guardado sigue su camino aunque la respuesta haya salido. Va
     // envuelto porque el guardado nunca puede dejar sin carta a nadie.
     try {
-      waitUntil(guardarLoSuyo({ datos, lugar, zona, tzOffset, carta }));
+      waitUntil(guardarLoSuyo({ datos, carta }));
     } catch (err) {
       console.error('[prueba-regalo] No se ha podido lanzar el guardado:', err.message);
     }
