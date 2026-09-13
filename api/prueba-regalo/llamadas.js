@@ -396,8 +396,24 @@ function laListaNumerada(rasgos) {
     .join('\n');
 }
 
-// EL ENCARGO VA EN EL PASO SIGUIENTE. Aqui todavia no hay ninguno.
-const ENCARGO_DE_LIMPIAR = '';
+// EL ENCARGO. Es el del P1, copiado entero, con lo justo cambiado porque
+// aqui todos los rasgos son de la misma area. Lo demas esta igual, palabra
+// por palabra: que se quita, que pesa mas y que tiene que devolver.
+const ENCARGO_DE_LIMPIAR = `Abajo tienes las fortalezas y los desafíos interiores de una persona. Cada uno está escrito por separado, enumerado, dice si es una fortaleza o un desafío y su conducta. Todos son de la misma área, IDENTIDAD: quién es por dentro y cómo se vive a sí mismo o a sí misma.
+QUÉ SE QUITA
+Revisa la conducta de todos, las fortalezas y los desafíos a la vez. Elimina los que dicen prácticamente lo mismo sobre la persona, los que sean la misma idea, dejando solo 1 de ellos, el que más pese. Y elimina los que se contradigan entre sí, dejando solo uno de ellos, el que más pese.
+Se comparan todos con todos, aunque uno sea una fortaleza y el otro un desafío. La misma conducta contada como algo que se le da bien y como algo que le cuesta es un solo rasgo con sus dos caras: se queda la cara que más pese y la otra se va.
+Pesa más la conducta más concreta y central para la persona, no la más genérica. 
+
+
+LO QUE NO SE PUEDE QUEDAR CORTO
+Tienen que quedar al menos 1 fortaleza y 2 desafíos. Si al quitar uno se bajaría de ahí, ese no se quita: se queda aunque repita.
+No es un número al que llegar: si quedan más y no se repiten entre ellos, se quedan todos.
+
+LO QUE DEVUELVES
+"sequedan": los números de los que se quedan, en el orden de abajo.
+ "sequitan": los números de los que quitas.
+Cada número tiene que quedar en una sola, nunca en las 2. Todos los números de la lista tienen que aparecer en "sequedan" o en "sequitan", ninguno se queda fuera y ninguno se repite en las dos. `;
 
 async function limpiarLosRasgos(rasgos, reloj) {
   const arranque = Date.now();
@@ -412,7 +428,7 @@ async function limpiarLosRasgos(rasgos, reloj) {
     techo: 16000,
     // LA LISTA VA DENTRO DEL ENCARGO, igual que en el P1, y el mensaje es una
     // frase fija.
-    system: `${ENCARGO_DE_LIMPIAR}\n\nLA LISTA:\n\n${laListaNumerada(rasgos)}`,
+    system: `${ENCARGO_DE_LIMPIAR}\n\n\nLA LISTA:\n\n${laListaNumerada(rasgos)}`,
     mensaje: 'Di cuáles se quedan y cuáles se quitan, siguiendo el esquema.',
     molde: ESQUEMA_DE_LIMPIAR,
     espera: reloj.senal(TOPE_DE_LIMPIAR),
