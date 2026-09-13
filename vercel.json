@@ -17,6 +17,10 @@
       "memory": 1024,
       "maxDuration": 300
     },
+    "api/prueba-regalo/escribir.js": {
+      "memory": 1024,
+      "maxDuration": 300
+    },
     "api/p2-plan/prueba.js": {
       "memory": 1024,
       "maxDuration": 300
