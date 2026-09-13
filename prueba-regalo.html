@@ -552,7 +552,7 @@ function montarElContacto() {
 function guardarElContacto(alCerrar) {
   const datos = montarElContacto();
   if (!datos) return;
-  fetch('/api/captar-lead', {
+  fetch('/api/prueba-regalo/contacto', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(datos),
@@ -577,7 +577,7 @@ function calcularEdad(fechaISO) {
 }
 
 function guardarlaEntera(datos) {
-  fetch('/api/captar-lead', {
+  fetch('/api/prueba-regalo/contacto', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -591,6 +591,30 @@ function guardarlaEntera(datos) {
       provincia: datos.provincia,
       pais: datos.pais,
       edad: calcularEdad(datos.fecha),
+      sacado: true, // el regalo ya ha salido: se le pone la etiqueta P0_SACADO
+    }),
+  }).catch(() => {});
+}
+
+// ── SI EL MAPA SE CAE, SE AVISA A LA TIENDA ─────────────────────
+//
+// COPIADO DEL P1. Un corte del servicio de mapas deja a todo el mundo sin
+// poder sacar nada y desde fuera no se nota. Se manda un solo aviso por
+// visita, para no llenar el correo si se reintenta varias veces.
+let avisoDelMapaMandado = false;
+
+function avisarDelFalloDelMapa(datos) {
+  if (avisoDelMapaMandado) return;
+  avisoDelMapaMandado = true;
+  fetch('/api/avisar-fallo-mapa', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      nombre: datos.nombre,
+      email: datos.email,
+      municipio: datos.municipio,
+      provincia: datos.provincia,
+      pais: datos.pais,
     }),
   }).catch(() => {});
 }
@@ -684,13 +708,25 @@ async function pedirLaCarta(datos) {
     const salida = await resp.json();
 
     if (!resp.ok) {
-      // EL LUGAR, COMO EN EL P1. Si el servidor dice que campos no cuadran, se
-      // marcan en rojo con su aviso, igual que le pasa a la clienta.
-      (salida.campos || []).forEach(campo => {
-        marcar('c-' + campo, true);
-        const aviso = document.getElementById('a-' + campo);
-        if (aviso) aviso.textContent = 'Esto no cuadra con el mapa. Revísalo.';
-      });
+      // EL LUGAR, COMO EN EL P1.
+      //
+      // Si el mapa no contesta no es culpa de quien escribe: no se le marca
+      // ningun campo en rojo, y se avisa a la tienda por email, porque si no
+      // un corte del servicio no se nota desde fuera.
+      if (salida.motivo === 'sin_respuesta') {
+        avisarDelFalloDelMapa(datos);
+      } else {
+        // Se marcan solo los campos que no cuadran. Cuando no se puede saber
+        // cuales son, se marcan los tres.
+        const campos = (salida.campos && salida.campos.length)
+          ? salida.campos
+          : ['municipio', 'provincia', 'pais'];
+        campos.forEach(campo => {
+          marcar('c-' + campo, true);
+          const aviso = document.getElementById('a-' + campo);
+          if (aviso) aviso.textContent = 'Esto no cuadra con el mapa. Revísalo.';
+        });
+      }
       banda.innerHTML = '<b>No ha salido.</b> ' + (salida.error || 'Error del servidor.');
       return;
     }

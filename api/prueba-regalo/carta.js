@@ -808,6 +808,7 @@ export default async function handler(req, res) {
         error: lugar.motivo === 'sin_respuesta'
           ? 'El servicio de mapas no contesta. Prueba otra vez en un minuto.'
           : 'No hemos encontrado ese lugar de nacimiento. Revisa lo marcado en rojo.',
+        motivo: lugar.motivo,
         campos: lugar.campos || [],
       });
     }
