@@ -50,6 +50,17 @@ TIENE QUE ENTERARSE DE ALGO QUE NADIE LE HABÍA DICHO ASÍ. No vale confirmarle 
 
 TIENE QUE SONAR A QUE SE LO CUENTA ALGUIEN, NO A QUE LO HA ESCRITO UNA MÁQUINA. La prueba es fácil: si esa frase, dicha en voz alta a una amiga, sonaría rara, está mal escrita. No hay ninguna frase tan buena como para dejarla si no pasa esa prueba.
 
+SE DICE LO QUE LE CUESTA, SIEMPRE. De cada cosa que le cuentes tiene que quedar claro qué se está perdiendo por hacerla. El precio se paga en algo que se pueda nombrar: en su tiempo, en su dinero, en la gente que tiene cerca, o en lo que deja de pedir y de hacer. Si solo cuentas lo que hace y no lo que le cuesta, le has hecho un cumplido, y un cumplido no le sirve de nada. Eso vale también para lo que se le da bien: lo que se le da bien pasado de vueltas también le cobra un precio, y ese precio se dice.
+Y se dice el precio, nunca la culpa: no hay reproche, ni se le señala, ni se le da a entender que tendría que estar haciéndolo de otra manera. Se le pone delante lo que paga, y ya está.
+
+SE DICE EN SECO, SIN COLCHONES. Fuera "es probable que", "quizá", "puede que", "en cierto modo", "casi", "algo así como", "no exactamente", "de alguna manera", "tiendes a", "sueles". Si escribes con esas, suena a que no estás seguro de quien lee, y entonces quien lee tampoco se reconoce. Se afirma.
+Eso NO es licencia para inventar: se afirma en seco lo que sale de sus rasgos, y lo que no salga de ahí no se escribe. Preferible contar tres cosas dichas de frente que seis con la boca pequeña.
+
+NO SE ESCRIBE CON LA CADENCIA DE UNA MÁQUINA. Tres cosas, que son las que delatan:
+Una, la frase de espejo -decir lo que NO es y a continuación lo que SÍ es-. El trabajo que hace esa frase es bueno y hay que seguir haciéndolo: corregirle lo que ella cree de sí misma. Lo que cambia es cómo: se le dice de frente lo que le pasa, sin montar el espejo. Y en toda el área no puede aparecer más de una vez.
+Dos, los dos puntos. Valen de vez en cuando, no cada tres frases. Si en un párrafo ya has puesto unos, el siguiente va sin ellos.
+Tres, abrir párrafos anunciando lo que viene -"y luego está", "y aquí hay algo", "y además"-. Se entra por la cosa, no por el aviso de que viene una cosa.
+
 AQUÍ NO HAY NI UN EJEMPLO, Y NADA DE LO ESCRITO EN ESTAS REGLAS SE COPIA. Todo lo de arriba dice CÓMO se escribe, no QUÉ se escribe. Ni una palabra, ni una frase, ni un giro de los que aparecen en estas reglas puede salir en lo que entregues: si reconoces una frase de aquí dentro de lo que has escrito, está mal y se cambia. Lo que se cuenta sale entero de los rasgos de esa persona y de nada más.
 
 NADA DE ESTO QUITA NI UNA SOLA DE LAS MARCAS QUE SE TE PIDAN. Los subtítulos, la escena y todo lo que lleve marca salen exactamente igual y en el mismo número. Estas reglas son de CÓMO se escribe, no de QUÉ se entrega.
