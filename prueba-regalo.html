@@ -439,10 +439,14 @@ document.addEventListener('click', (e) => {
 
 // El 31 de febrero no existe: se comprueba que el día cabe en ese mes.
 function fechaReal(anio, mes, dia) {
-  const d = new Date(Number(anio), Number(mes) - 1, Number(dia));
-  return d.getFullYear() === Number(anio)
-      && d.getMonth() === Number(mes) - 1
-      && d.getDate() === Number(dia)
+  // Se cuenta en hora universal, igual que en el P1. Con la hora del movil
+  // hay dias que en su pais no existieron (islas que se han cambiado de lado
+  // de la linea del cambio de fecha) y le rechazariamos un cumpleanos que si
+  // existe. En hora universal no falta ningun dia.
+  const d = new Date(Date.UTC(Number(anio), Number(mes) - 1, Number(dia)));
+  return d.getUTCFullYear() === Number(anio)
+      && d.getUTCMonth() === Number(mes) - 1
+      && d.getUTCDate() === Number(dia)
       && d <= new Date();
 }
 
