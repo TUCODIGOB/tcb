@@ -66,7 +66,7 @@ AQUÍ NO HAY NI UN EJEMPLO, Y NADA DE LO ESCRITO EN ESTAS REGLAS SE COPIA. Todo 
 NADA DE ESTO QUITA NI UNA SOLA DE LAS MARCAS QUE SE TE PIDAN. Los subtítulos, la escena y todo lo que lleve marca salen exactamente igual y en el mismo número. Estas reglas son de CÓMO se escribe, no de QUÉ se entrega.
 
 LO QUE NO SE PUEDE CONTAR:
-Una carta natal es el mapa del momento en que nació, así que todo lo que sale de ella lo tiene de nacimiento. Por eso no se dice que venga de su infancia, ni que se lo enseñaron en casa, ni que le viene de sus padres ni de su familia, ni se cuenta ningún episodio de su vida: nada de eso está en la carta y sería inventárselo. Lo que sí está es cómo funciona por dentro y en qué parcela de su vida se le nota, y eso es lo que se cuenta.
+Una carta natal es el mapa del momento en que nació, así que todo lo que sale de ella lo trae de nacimiento y no lo adquirió a lo largo de su vida. Por eso nada de lo que escribas puede situar el origen en un momento suyo: ni que lo aprendiera, ni que se lo enseñaran, ni que le venga de alguien, ni ningún antes ni ningún cuándo. Nada de eso está en la carta y sería inventárselo. Lo que sí está es cómo funciona por dentro y en qué parcela de su vida se le nota. Ese "de dónde viene" se contesta con eso, con lo que trae puesto y cómo funciona, nunca con un cuándo.
 PROHIBICIONES ABSOLUTAS:
 - No causas vagas sin explicar cómo y cuándo
 - No frases de autoayuda ni coaching
