@@ -382,8 +382,23 @@ const ESQUEMA_DE_LIMPIAR = {
   properties: {
     sequedan: { type: 'array', items: { type: 'integer' } },
     sequitan: { type: 'array', items: { type: 'integer' } },
+    // POR CADA UNO QUE QUITA, CON CUAL REPITE. Sin esta casilla no se le
+    // puede comprobar nada: es la que convierte "lo he quitado" en "lo he
+    // quitado porque el 3 cuenta lo mismo".
+    parejas: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          seva:    { type: 'integer' },
+          sequeda: { type: 'integer' },
+        },
+        required: ['seva', 'sequeda'],
+        additionalProperties: false,
+      },
+    },
   },
-  required: ['sequedan', 'sequitan'],
+  required: ['sequedan', 'sequitan', 'parejas'],
   additionalProperties: false,
 };
 
@@ -401,10 +416,16 @@ function laListaNumerada(rasgos) {
 // aqui todos los rasgos son de la misma area. Lo demas esta igual, palabra
 // por palabra: que se quita, que pesa mas y que tiene que devolver.
 const ENCARGO_DE_LIMPIAR = `Abajo tienes las fortalezas y los desafíos interiores de una persona. Cada uno está escrito por separado, enumerado, dice si es una fortaleza o un desafío y su conducta. Todos son de la misma área, IDENTIDAD: quién es por dentro y cómo se vive a sí mismo o a sí misma.
-QUÉ SE QUITA
-Revisa la conducta de todos, las fortalezas y los desafíos a la vez. Elimina los que dicen prácticamente lo mismo sobre la persona, los que sean la misma idea, dejando solo 1 de ellos, el que más pese. Y elimina los que se contradigan entre sí, dejando solo uno de ellos, el que más pese.
-Se comparan todos con todos, aunque uno sea una fortaleza y el otro un desafío. La misma conducta contada como algo que se le da bien y como algo que le cuesta es un solo rasgo con sus dos caras: se queda la cara que más pese y la otra se va.
-Pesa más la conducta más concreta y central para la persona, no la más genérica. 
+QUÉ SE QUITA, Y SOLO ESTO
+Un rasgo se quita SOLO cuando otro de la lista cuenta LA MISMA CONDUCTA. La misma, no una parecida: lo que hace esa persona es lo mismo, dicho con otras palabras. De esos dos se queda uno, el que más pese, y el otro se va.
+Pesa más la conducta más concreta y central para la persona, no la más genérica.
+Se comparan las fortalezas entre sí y los desafíos entre sí. Una fortaleza y un desafío nunca se quitan el uno al otro.
+
+SI NO HAY DOS QUE CUENTEN LA MISMA CONDUCTA, NO SE QUITA NADA Y SE QUEDAN TODOS.
+Que dos rasgos se parezcan, hablen del mismo tema, vayan juntos o suenen a dos caras de una misma cosa NO es motivo para quitar ninguno. Que uno diga lo contrario del otro tampoco. Si dudas, se quedan los dos: quitar de más le arranca a esta persona algo suyo y no hay manera de devolvérselo.
+
+Y POR CADA UNO QUE QUITAS, DICES CON CUÁL REPITE
+No se puede quitar un rasgo sin enseñar el que cuenta esa misma conducta. Si no puedes nombrar su número, ese rasgo no se quita. 
 
 
 LO QUE NO SE PUEDE QUEDAR CORTO
@@ -414,6 +435,7 @@ No es un número al que llegar: si quedan más y no se repiten entre ellos, se q
 LO QUE DEVUELVES
 "sequedan": los números de los que se quedan, en el orden de abajo.
  "sequitan": los números de los que quitas.
+ "parejas": una entrada por cada número que hay en "sequitan", y ninguna más. En cada una, "seva" es el número del rasgo que se va y "sequeda" es el número del rasgo que cuenta esa misma conducta y se queda. Si "sequitan" está vacía, "parejas" también.
 Cada número tiene que quedar en una sola, nunca en las 2. Todos los números de la lista tienen que aparecer en "sequedan" o en "sequitan", ninguno se queda fuera y ninguno se repite en las dos. `;
 
 async function limpiarLosRasgos(rasgos, reloj) {
@@ -441,20 +463,51 @@ async function limpiarLosRasgos(rasgos, reloj) {
   const sequedan = [...new Set((Array.isArray(salida?.sequedan) ? salida.sequedan : [])
     .map(Number).filter(n => validos.has(n)))].sort((a, b) => a - b);
 
-  const sequitan = [...new Set((Array.isArray(salida?.sequitan) ? salida.sequitan : [])
+  const pedidos = [...new Set((Array.isArray(salida?.sequitan) ? salida.sequitan : [])
     .map(Number).filter(n => validos.has(n) && !sequedan.includes(n)))].sort((a, b) => a - b);
 
   // SI SE DEJA ALGUNO SIN CLASIFICAR, SE QUEDA. Un rasgo que no esta ni en una
   // lista ni en la otra es un descuido suyo, no una decision: tirarlo seria
   // quitarle a la clienta algo que nadie ha decidido quitar.
-  const olvidados = [...validos].filter(n => !sequedan.includes(n) && !sequitan.includes(n));
+  const olvidados = [...validos].filter(n => !sequedan.includes(n) && !pedidos.includes(n));
   if (olvidados.length) {
     console.warn(`la limpieza no ha dicho nada de ${olvidados.join(', ')}: se quedan`);
-    sequedan.push(...olvidados);
-    sequedan.sort((a, b) => a - b);
   }
 
-  return { sequedan, sequitan };
+  // CADA QUITADA TIENE QUE ENSENAR SU GEMELO, Y SI NO, SE ANULA.
+  //
+  // Sin esto, quitar depende de que el modelo se porte bien, y es justo ahi
+  // donde falla: se lleva rasgos distintos creyendo que son el mismo. Para
+  // llevarse uno tiene que decir con cual repite, y ese numero tiene que
+  // existir y tiene que quedarse. Si no, el rasgo vuelve.
+  // Y EL GEMELO TIENE QUE SER DE SU MISMA LISTA. Una fortaleza y un desafio
+  // no son la misma conducta contada dos veces, son dos rasgos. Emparejarlos
+  // es lo que se llevaba por delante los de mas peso.
+  const gemelos = new Map();
+  for (const p of (Array.isArray(salida?.parejas) ? salida.parejas : [])) {
+    const seva = Number(p?.seva);
+    const sequeda = Number(p?.sequeda);
+    if (!validos.has(seva) || !validos.has(sequeda) || seva === sequeda) continue;
+    if (rasgos[seva - 1].lista !== rasgos[sequeda - 1].lista) continue;
+    if (!gemelos.has(seva)) gemelos.set(seva, sequeda);
+  }
+
+  const sequitan = [];
+  const anulados = [];
+  for (const n of pedidos) {
+    const gemelo = gemelos.get(n);
+    // El gemelo tiene que quedarse: si tambien se lo lleva, esa conducta no
+    // la recoge nadie y la quitada no vale.
+    if (gemelo == null || pedidos.includes(gemelo)) anulados.push(n);
+    else sequitan.push(n);
+  }
+  if (anulados.length) {
+    console.warn(`la limpieza quiso quitar ${anulados.join(', ')} sin ensenar con cual repite: vuelven`);
+  }
+
+  // Se queda todo lo que no se va de verdad: lo que dijo que se quedaba, lo
+  // que se dejo sin clasificar y lo que se le ha anulado.
+  return { sequedan: [...validos].filter(n => !sequitan.includes(n)).sort((a, b) => a - b), sequitan };
 }
 
 // SIN LLAMAR A NADIE, Y GRATIS: EL SUELO.
