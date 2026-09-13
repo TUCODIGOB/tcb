@@ -16,11 +16,19 @@
 // cuaderno -que llamada ha hecho que, cuanto ha tardado y que quito la
 // limpieza-. El cuaderno es para mirar, no decide nada.
 //
+// Y QUE GUARDA: lo mismo que ya guardaba la carta -sus datos y la carta
+// entera- mas los cinco rasgos y el area escrita. El dia de mañana, cuando
+// esa persona pague, el P1 tiene que poder empezar por donde lo dejo el
+// regalo y decirle exactamente lo mismo, no otra cosa.
+//
 // EL TIEMPO: las cuatro llamadas se dan a si mismas 4 minutos y 45 segundos,
 // los mismos que el P1, y la funcion tiene 5 minutos en vercel.json.
 // ═════════════════════════════════════════════════════════════════
 
+import crypto from 'crypto';
+import { waitUntil } from '@vercel/functions';
 import { montarCartaTexto, montarCasasTexto } from '../../lib/carta-texto.js';
+import { guardarInforme } from '../../lib/guardar-informe.js';
 import { escribirElRegalo } from './llamadas.js';
 
 // La fecha, el lugar y la edad se montan igual que en el P1 y que en
@@ -36,12 +44,58 @@ function calcularEdad(fechaISO) {
   return edad;
 }
 
+// EL MISMO SITIO QUE YA USO LA CARTA: una huella de su email. Asi lo que se
+// guarda aqui completa lo que se guardo alli en vez de quedar en otro lado.
+function huellaDelEmail(email) {
+  const limpio = String(email || '').trim().toLowerCase();
+  if (!limpio) return '';
+  return crypto.createHash('sha256').update(limpio).digest('hex').slice(0, 32);
+}
+
+// SE VUELVE A ESCRIBIR EL FICHERO ENTERO, no solo lo nuevo: sus datos y la
+// carta van otra vez, montados igual que en carta.js, para que al añadir los
+// rasgos y el area no se pierda lo que ya habia.
+//
+// SI FALLA, NO PASA NADA: el area ya esta escrita y se entrega igual.
+async function guardarLoEscrito({ datos, carta, texto, rasgos }) {
+  const huella = huellaDelEmail(datos.email);
+  if (!huella) {
+    console.warn('[prueba-regalo] Sin email: no se guarda el area.');
+    return;
+  }
+  const [anio, mes, dia] = String(datos.fecha || '').split('-').map(Number);
+  try {
+    const guardado = await guardarInforme({
+      producto: 'p0',
+      sessionId: huella,
+      cliente: {
+        nombre: datos.nombre || '',
+        sexo: datos.sexo || '',
+        email: String(datos.email || '').trim().toLowerCase(),
+        fecha: dia + ' de ' + MESES[mes - 1] + ' de ' + anio,
+        hora: datos.hora,
+        lugar: [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', '),
+        edad: calcularEdad(datos.fecha),
+      },
+      carta,
+      // Una sola area, pero en lista, igual que el P1 guarda las siete.
+      areas: [texto],
+      rasgos,
+    });
+    if (guardado.guardado) console.log(`[prueba-regalo] Guardada el area: ${guardado.ruta} (${guardado.bytes} bytes)`);
+    else console.warn(`[prueba-regalo] El area no se ha guardado: ${guardado.motivo}`);
+  } catch (err) {
+    console.error('[prueba-regalo] No se ha podido guardar el area:', err.message);
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  const { nombre, sexo, fecha, hora, municipio, provincia, pais, carta } = req.body || {};
+  const datos = req.body || {};
+  const { nombre, sexo, fecha, hora, municipio, provincia, pais, carta } = datos;
 
   if (!nombre || !sexo) {
     return res.status(400).json({ error: 'Faltan el nombre o el sexo' });
@@ -73,6 +127,14 @@ export default async function handler(req, res) {
       cartaTexto: montarCartaTexto(carta),
       casasTexto: montarCasasTexto(carta),
     });
+
+    // Se guarda por detras, sin hacer esperar a nadie, y envuelto: el area ya
+    // esta escrita y se entrega pase lo que pase con el guardado.
+    try {
+      waitUntil(guardarLoEscrito({ datos, carta, texto: salida.texto, rasgos: salida.rasgos }));
+    } catch (err) {
+      console.error('[prueba-regalo] No se ha podido lanzar el guardado del area:', err.message);
+    }
 
     return res.status(200).json({
       texto: salida.texto,
