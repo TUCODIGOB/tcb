@@ -772,7 +772,7 @@ async function generarElArea(contextoPersona, rasgos, reloj) {
 // aqui en vez de entregar algo a medias.
 // ═══════════════════════════════════════════════════════════════
 
-export async function escribirElRegalo({ nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto }, reloj = crearReloj()) {
+export async function escribirElRegalo({ nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto, casasTexto }, reloj = crearReloj()) {
   // El cliente escribe nombre y apellidos en la misma casilla, asi que aqui se
   // separa la primera palabra: al modelo se le habla de ella por su nombre de
   // pila, nunca por el apellido ni por el nombre entero.
@@ -786,7 +786,13 @@ export async function escribirElRegalo({ nombre, sexo, fechaNice, hora, lugar, e
   ].join('\n');
 
   // 1a — sacar los rasgos, con sus dos llamadas de repuesto.
-  const todos = await unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj);
+  //
+  // LO QUE HAY EN CADA CASA VA SOLO AQUI, igual que en el P1. Sin esto el
+  // modelo no sabe que hay dentro de la casa 1 y se lo inventa. El area, mas
+  // abajo, no recibe nada de la carta: escribe con los rasgos que salen de
+  // aqui.
+  const cartaConLasCasas = casasTexto ? `${cartaTexto}\n\n${casasTexto}` : cartaTexto;
+  const todos = await unaListaDeRasgos(nombrePila, sexo, cartaConLasCasas, reloj);
   reloj.cuaderno.entraron = todos.map((r, i) => ({
     n: i + 1, lista: r.lista, area: r.area, conducta: r.conducta, origen: r.origen,
   }));
