@@ -213,8 +213,93 @@ const ESQUEMA_DE_ELEGIR = {
   additionalProperties: false,
 };
 
-// EL ENCARGO VA EN EL PASO SIGUIENTE. Aqui todavia no hay ninguno.
-const ENCARGO_DE_ELEGIR = '';
+// EL ENCARGO. Es el del P1, copiado entero, con lo justo cambiado para que
+// busque solo en IDENTIDAD y saque cinco rasgos en vez de treinta y cinco.
+// Lo que no habla de repartir entre siete areas esta igual, palabra por
+// palabra: el peso, que todo salga de la carta, las casillas de cada rasgo y
+// el no repetirse ni contradecirse.
+const ENCARGO_DE_ELEGIR = `Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
+AQUÍ SOLO SE BUSCAN, NO SE ESCRIBEN: De cada rasgo sale si es una fortaleza o un desafío, su conducta, el área a la que pertenece y de qué posición de la carta lo has sacado. Ni título, ni descripción, ni causa: eso lo escribe otro después.  
+QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. No que suene bien ni que esté bien escrito. Entre dos que dicen casi lo mismo, se queda el que más le cuesta o más le da, y el otro se va.
+TODO SALE DE LA CARTA. No hay ninguna otra fuente. Si algo no se puede sacar de una posición concreta de esta carta, no se escribe.
+
+1. LO QUE BUSCAS
+FORTALEZAS: lo que se le da bien, sus dones, sus ventajas, lo que hace bien sin darse cuenta.
+DESAFÍOS: lo que le cuesta, lo que le pesa, dónde tropieza.
+Sacas las fortalezas y los desafíos a la vez, todos seguidos, y cada rasgo dice cuál de las dos cosas es. 
+
+2. CUÁNTOS
+Sacas 2 fortalezas y 3 desafíos, ni una más ni una menos. Todos de IDENTIDAD: quién es por dentro y cómo se vive a sí mismo o a sí misma.
+
+
+3. DE DONDE LOS SACAS
+
+Recorre la carta ENTERA, no solo lo que más salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona.
+No empieces por la lista de aspectos. Es lo más largo que tienes delante y arrastra: se llena la lista con lo que sale de ahí y no llegas nunca a lo que de verdad buscas. Se empieza por lo del área y se busca lo suyo, que a veces es un aspecto y a veces no.
+
+Esto es lo que hay de esta área:
+
+IDENTIDAD    el Sol, el Ascendente, la casa 1
+
+Ahí miras todo lo que tienes de eso: en qué signo está y en qué casa cae, qué aspectos forma con los demás, si va retrógrado, y si ahí se junta más de una cosa o la casa está vacía. Cada dato dice algo distinto.
+
+Y EL SIGNO Y LA CASA TIENEN QUE CAMBIAR LO QUE ESCRIBES, no solo lo que pones en "origen". Un mismo cuerpo en dos signos distintos no da el mismo rasgo, y en dos casas distintas tampoco: el cuerpo dice QUÉ le pasa, el signo dice DE QUÉ MANERA le pasa y la casa dice EN QUÉ PARTE DE SU VIDA le pasa. Si te quedas en lo que ese cuerpo significa en general, escribes lo mismo que le escribirías a cualquiera, porque ese cuerpo lo tiene todo el mundo. Lo que no tiene todo el mundo es este cuerpo en este signo, en esta casa y con estos aspectos.
+LA PRUEBA: si le cambiaras el signo o la casa a esa posición y el rasgo que has escrito siguiera valiendo igual, es que no lo has escrito de ESTA carta y hay que escribirlo otra vez.
+
+Y si Marte, Urano o Júpiter caen en la casa 1, lo que salga de ellos también es de aquí.
+
+
+4. LAS CASILLAS DE CADA RASGO
+Todos van en una sola lista, seguidos, y cada uno lleva sus cuatro casillas llenas: 
+lista         si ese rasgo es una fortaleza o un desafío. 
+
+conducta    El rasgo en corto, de cuatro a siete palabras: lo que hace esa
+persona o lo que le pasa por dentro. No de qué habla ni dónde le pasa.
+No es para ella, es para comparar: dos rasgos con la misma
+conducta son el mismo rasgo, aunque estén escritos distinto.
+Se escribe con las mismas palabras siempre que la conducta sea la misma. Si buscas variar, dejan de verse los repetidos. 
+
+area         siempre IDENTIDAD, escrita así, en mayúsculas.
+
+origen       De donde sale el rasgo en la carta, en técnico y en corto: el
+             cuerpo con su signo y su casa, o los dos cuerpos con su signo y su
+             casa cada uno y el aspecto que forman. Nada más: ni explicación ni
+             frase.
+             Es obligatoria. Y no repartas todos los rasgos sobre las mismas
+             dos o tres posiciones: la carta tiene de sobra.
+
+Un rasgo es su conducta y su posición. Si empiezas uno y no sabes de dónde lo sacas, se quita entero. 
+
+5. NO SE REPITE NI SE CONTRADICE, Y ESO SE COMPRUEBA MIENTRAS ESCRIBES
+
+Esto no es un repaso del final. Se hace rasgo a rasgo, ANTES de escribir cada uno.
+
+PONLE NOMBRE A LA CONDUCTA. Antes de escribir un rasgo, nombra su conducta, que es la casilla de arriba: lo que hace esa persona o lo que le pasa por dentro, de cuatro a siete palabras. 
+
+Y ANTES DE ESCRIBIRLO, MÍRALO CONTRA LOS QUE YA LLEVAS. Comparas conductas, no palabras. Da igual que uno hable de su trabajo y otro de su casa, o que uno sea una fortaleza y el otro un desafío.
+
+LA PRUEBA: si al corregir uno el otro se corrige solo, son el mismo rasgo.
+
+SI YA ESTÁ, NO LO ESCRIBES. Vuelves a la carta, al Sol, al Ascendente y a la casa 1, y sacas otro distinto de verdad. No vale una variante del que acabas de descartar.
+
+Y UNA MISMA CONDUCTA NO SALE EN LAS DOS LISTAS. Si lo que ibas a escribir como desafío es la misma conducta que ya has escrito como fortaleza, no son dos rasgos: es uno con sus dos caras. Se queda la que más pese hoy en su vida, y la otra no se escribe.
+
+LLEVA LA CUENTA. Ten presentes las conductas que ya has nombrado, desde la primera hasta la última. Los repetidos se cuelan al final de la lista, cuando ya has escrito muchos y dejas de mirar atrás.
+
+6. DE QUÉ HABLA CADA UNO, Y AQUÍ NO MANDA LA POSICIÓN. 
+
+Tapa de dónde lo sacaste. Lee solo el rasgo y pregúntate si de verdad habla de quién es por dentro y de cómo se vive a sí mismo o a sí misma. Si habla de otra cosa -de su dinero, de su pareja, de lo que repite sin darse cuenta, de lo que le da miedo-, no es de aquí y no se escribe.
+
+La posición sirvió para encontrarlo; a partir de aquí no decide nada, porque quien lo lee no la ve: solo ve el texto.
+
+Esto se hace rasgo por rasgo y sin saltarse ninguno: es el paso que más veces sale mal.
+
+DESPUÉS, LA CUENTA. Cuentas cuántas fortalezas y cuántos desafíos has sacado. Si te falta alguna, vuelves a la carta, al Sol, al Ascendente y a la casa 1, y sacas otra distinta de verdad. No vale escribir una variante de una que ya tienes. 
+
+DESPUÉS, EL TECHO. Si te pasas de dos fortalezas o de tres desafíos, se quedan los que más pesan y los demás se van.
+
+Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ninguna conducta nombre la carta ni nada técnico ni de astrología, y que a ningún rasgo le falte una casilla. 
+Devuelve solo la lista.`;
 
 function encargoDeElegir(nombrePila, sexo, cartaTexto) {
   return `${ENCARGO_DE_ELEGIR}
