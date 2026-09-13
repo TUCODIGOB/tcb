@@ -2198,6 +2198,15 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
     function validarEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
+
+    // El 31 de febrero no existe. Si se elige, el navegador lo convierte solo
+    // en el 2 de marzo y el informe saldria de otro dia sin que nadie se
+    // entere: se comprueba que el dia cabe de verdad en ese mes.
+    function fechaReal(fechaISO) {
+      const [anio, mes, dia] = String(fechaISO).split('-').map(Number);
+      const d = new Date(anio, mes - 1, dia);
+      return d.getFullYear() === anio && d.getMonth() === mes - 1 && d.getDate() === dia;
+    }
     // Longitudes válidas de teléfono por prefijo (dígitos sin prefijo)
     const TELEFONO_LONGITUDES = {
       '+34': [9],        // España
@@ -2327,7 +2336,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       else {
         const fechaD = new Date(datos.fecha);
         const ahora = new Date();
-        if (fechaD > ahora || fechaD.getFullYear() < 1900) { showError('fecha'); valido = false; }
+        if (fechaD > ahora || fechaD.getFullYear() < 1900 || !fechaReal(datos.fecha)) { showError('fecha'); valido = false; }
       }
       if (!datos.hora) { showError('hora'); valido = false; }
       if (!datos.municipio) { showError('municipio'); valido = false; }
