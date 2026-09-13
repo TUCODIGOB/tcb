@@ -124,6 +124,31 @@ button:hover{filter:brightness(.96);}
 .acepta.mal label{color:var(--rojo);}
 .acepta.mal input{outline:2px solid var(--rojo);outline-offset:2px;}
 
+/* La ayudita de la hora, copiada del P1. */
+.ayuda{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--oro);color:#fff;font-size:.7rem;font-weight:700;
+  cursor:help;position:relative;text-transform:none;font-family:inherit;
+  vertical-align:middle;margin-left:4px;
+}
+.ayuda .globo{
+  position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:var(--tinta);color:var(--crema);padding:.8rem 1rem;border-radius:8px;
+  font-size:.8rem;font-weight:400;letter-spacing:normal;text-transform:none;
+  width:280px;max-width:80vw;line-height:1.5;box-shadow:0 6px 20px rgba(0,0,0,.2);
+  opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s;
+  z-index:10;pointer-events:none;
+}
+.ayuda .globo::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:var(--tinta);
+}
+.ayuda .globo a{color:var(--oro);text-decoration:underline;}
+.ayuda:hover .globo,.ayuda:focus .globo,.ayuda.abierta .globo{
+  opacity:1;visibility:visible;pointer-events:auto;
+}
+
 .botonera{display:flex;gap:8px;}
 .atras{background:transparent;color:var(--tinta);border:1px solid var(--borde);flex:0 0 34%;}
 .atras:hover{background:var(--crema);filter:none;}
@@ -265,7 +290,17 @@ button:hover{filter:brightness(.96);}
       </div>
 
       <div class="campo" id="c-hora">
-        <label for="horas">Hora de nacimiento</label>
+        <label for="horas">
+          Hora de nacimiento
+          <span class="ayuda" tabindex="0" id="ayudaHora">
+            ?
+            <span class="globo">
+              Si no recuerdas tu hora, consulta con familiares o pide tu Certificado de Nacimiento (es gratuito).<br><br>
+              <strong>España:</strong> <a href="https://sede.mjusticia.gob.es/tramites/certificado-nacimiento" target="_blank" rel="noopener">sede.mjusticia.gob.es</a><br>
+              <strong>Fuera de España:</strong> consulta el Registro Civil oficial de tu país.
+            </span>
+          </span>
+        </label>
         <div class="fila">
           <select id="horas"><option value="">Hora</option></select>
           <select id="minutos"><option value="">Minuto</option></select>
@@ -383,6 +418,18 @@ function actualizarHora() {
 });
 ['horas','minutos'].forEach(id => {
   document.getElementById(id).addEventListener('change', actualizarHora);
+});
+
+// La ayudita de la hora se abre al tocarla, y se cierra al tocar fuera.
+// Copiado del P1, que en el movil no hay raton que valga.
+const ayudaHora = document.getElementById('ayudaHora');
+ayudaHora.addEventListener('click', (e) => {
+  if (e.target.closest('a')) return;
+  e.preventDefault();
+  ayudaHora.classList.toggle('abierta');
+});
+document.addEventListener('click', (e) => {
+  if (!ayudaHora.contains(e.target)) ayudaHora.classList.remove('abierta');
 });
 
 // ── QUE LOS DATOS ESTEN Y SEAN REALES ───────────────────────────
