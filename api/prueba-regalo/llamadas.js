@@ -446,9 +446,11 @@ async function limpiarLosRasgos(rasgos, reloj) {
   const salida = await alModelo({
     que: 'limpiar los rasgos',
     modelo: 'claude-opus-5',
-    // AQUI SI PIENSA, Y ALTO: comparar rasgos entre si es pensar, y con el
-    // esfuerzo bajo no se hace.
-    razona: 'high',
+    // PIENSA BAJO, Y SOBRA. Pensar se paga como lo escrito y aqui el modelo es
+    // el caro, asi que el esfuerzo alto costaba dinero de verdad. Con el
+    // trabajo que le queda -mirar si dos frases cortas cuentan lo mismo, y sin
+    // poder quitar nada sin ensenar con cual repite- el esfuerzo bajo llega.
+    razona: 'low',
     // El techo es holgado y no por lo que escribe -que son unos pocos numeros-,
     // sino porque pensar tambien gasta de aqui.
     techo: 16000,
