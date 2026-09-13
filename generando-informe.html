@@ -410,8 +410,11 @@ function showAviso(titulo, msg) {
   const h = document.getElementById('errorTitulo');
   if (h) h.textContent = titulo;
   document.getElementById('errorMsg').textContent = msg;
+  // EL RECUADRO DE "¿ACABAS DE PAGAR?" NO SALE AQUI. Esto no es un fallo: su
+  // informe esta bien y viene en camino. Decirle que escriba a la tienda solo
+  // le hace pensar que algo ha ido mal.
   const box = document.querySelector('#screenError .error-box');
-  if (box) box.style.display = '';
+  if (box) box.style.display = 'none';
   const btn = document.getElementById('errorBtn');
   if (btn) btn.style.display = 'none';
   showScreen('screenError');
