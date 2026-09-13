@@ -234,7 +234,7 @@ Sacas 2 fortalezas y 3 desafíos, ni una más ni una menos. Todos de IDENTIDAD: 
 
 3. DE DONDE LOS SACAS
 
-Recorre la carta ENTERA, no solo lo que más salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona.
+Mira TODO lo que tienes de esta área, no solo lo que más salta a la vista. Quedarse en lo evidente deja fuera la mitad de la persona.
 No empieces por la lista de aspectos. Es lo más largo que tienes delante y arrastra: se llena la lista con lo que sale de ahí y no llegas nunca a lo que de verdad buscas. Se empieza por lo del área y se busca lo suyo, que a veces es un aspecto y a veces no.
 
 Esto es lo que hay de esta área:
@@ -265,8 +265,9 @@ origen       De donde sale el rasgo en la carta, en técnico y en corto: el
              cuerpo con su signo y su casa, o los dos cuerpos con su signo y su
              casa cada uno y el aspecto que forman. Nada más: ni explicación ni
              frase.
-             Es obligatoria. Y no repartas todos los rasgos sobre las mismas
-             dos o tres posiciones: la carta tiene de sobra.
+             Es obligatoria. Y no saques los cinco rasgos de la misma
+             posición: entre el Sol, el Ascendente, lo que haya en la casa 1
+             y los aspectos de los tres, hay de sobra.
 
 Un rasgo es su conducta y su posición. Si empiezas uno y no sabes de dónde lo sacas, se quita entero. 
 
