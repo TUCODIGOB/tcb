@@ -85,6 +85,48 @@ button:hover{filter:brightness(.96);}
   margin:10px 0 0; padding:12px; background:var(--crema); border-radius:8px;
   font-size:.82rem; overflow-x:auto; white-space:pre-wrap; word-break:break-word;
 }
+
+/* ── EL FORMULARIO EN TRES PASOS, COMO EL DEL P1 ────────────── */
+.paso{display:flex;flex-direction:column;gap:16px;}
+.paso.oculta{display:none;}
+
+.pasos{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.pasos-puntos{display:flex;gap:8px;}
+.punto{
+  width:9px;height:9px;border-radius:50%;
+  background:var(--borde);transition:background .2s;
+}
+.punto.puesto{background:var(--oro);}
+.pasos-texto{margin:0;font-size:.78rem;letter-spacing:.06em;color:var(--suave);text-transform:uppercase;}
+
+.tel{display:flex;gap:8px;}
+.prefijo-caja{position:relative;flex:0 0 128px;}
+.prefijo-caja select{padding-left:12px;}
+/* La bandera tapa el emoji del desplegable, como en el P1: asi se ve igual
+   en cualquier movil y no salen dos banderas. */
+.bandera{
+  position:absolute;left:1.5px;top:1.5px;bottom:1.5px;width:38px;
+  background:var(--crema);display:flex;align-items:center;justify-content:center;
+  pointer-events:none;border-radius:7px 0 0 7px;z-index:1;
+}
+.bandera img{
+  display:block;width:20px;height:15px;object-fit:cover;
+  border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.08);
+}
+.tel input{flex:1;min-width:0;}
+
+.acepta{display:flex;gap:10px;align-items:flex-start;}
+.acepta input{width:auto;flex:0 0 auto;margin-top:3px;}
+.acepta label{
+  font-size:.82rem;font-weight:400;letter-spacing:0;text-transform:none;
+  color:var(--texto);line-height:1.45;
+}
+.acepta.mal label{color:var(--rojo);}
+.acepta.mal input{outline:2px solid var(--rojo);outline-offset:2px;}
+
+.botonera{display:flex;gap:8px;}
+.atras{background:transparent;color:var(--tinta);border:1px solid var(--borde);flex:0 0 34%;}
+.atras:hover{background:var(--crema);filter:none;}
 </style>
 </head>
 <body>
@@ -94,71 +136,186 @@ button:hover{filter:brightness(.96);}
   <h1>Prueba del regalo</h1>
   <p class="entradilla">Página de trabajo. Metes los datos de nacimiento de alguien y aquí abajo saldrán los tres textos, con lo que ha tardado y lo que ha costado cada uno.</p>
 
-  <form id="datos" class="tarjeta" novalidate>
+  <script>
+    // RED DE SEGURIDAD, COPIADA DEL P1. El boton de sacar es de tipo "enviar",
+    // asi que si el script de mas abajo no llegara a ejecutarse el navegador
+    // haria un envio normal: la pagina se recargaria sola, los datos se
+    // perderian y el email quedaria a la vista en la barra de direcciones.
+    // Esto lo impide y dice que hacer.
+    function alEnviarElFormulario(evento) {
+      evento.preventDefault();
+      if (window.formularioListo) return false; // lo lleva su propio codigo
+      var banda = document.getElementById('banda');
+      if (banda) {
+        banda.className = 'banda puesta';
+        banda.innerHTML = '<b>La página no se ha cargado del todo.</b> Recárgala e inténtalo otra vez.';
+        banda.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      return false;
+    }
+  </script>
 
-    <div class="campo" id="c-nombre">
-      <label for="nombre">Nombre completo</label>
-      <input type="text" id="nombre" name="nombre" placeholder="Nombre y apellidos" autocomplete="off">
-      <span class="aviso">Escribe el nombre completo.</span>
+  <form id="datos" class="tarjeta" novalidate onsubmit="return alEnviarElFormulario(event);">
+
+    <div class="pasos">
+      <div class="pasos-puntos">
+        <span class="punto puesto" data-punto="1"></span>
+        <span class="punto" data-punto="2"></span>
+        <span class="punto" data-punto="3"></span>
+      </div>
+      <p class="pasos-texto" id="pasosTexto">Paso 1 de 3</p>
     </div>
 
-    <div class="campo" id="c-sexo">
-      <label for="sexo">Sexo</label>
-      <select id="sexo" name="sexo">
-        <option value="">Selecciona</option>
-        <option value="mujer">Mujer</option>
-        <option value="hombre">Hombre</option>
-        <option value="otro">Prefiere no decirlo</option>
-      </select>
-      <span class="aviso">Elige una opción.</span>
+    <!-- ── PASO 1: QUIEN ES Y COMO LOCALIZARLA ──────────────────── -->
+    <div class="paso" data-paso="1">
+
+      <div class="campo" id="c-nombre">
+        <label for="nombre">Nombre completo</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Nombre y apellidos" autocomplete="name">
+        <span class="aviso">Escribe el nombre completo.</span>
+      </div>
+
+      <div class="campo" id="c-email">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="tu@email.com" autocomplete="email">
+        <span class="aviso">Escribe un email válido.</span>
+      </div>
+
+      <!-- Sin pegar, sin arrastrar y sin copiar: si no, se repite el mismo
+           error dos veces y el informe se va a un email que no existe. -->
+      <div class="campo" id="c-email2">
+        <label for="email2">Confirma el email</label>
+        <input type="email" id="email2" name="email2" placeholder="Repite el email" autocomplete="new-password" onpaste="return false;" ondrop="return false;" oncopy="return false;">
+        <span class="aviso">Los emails no coinciden. Escríbelo a mano.</span>
+      </div>
+
+      <div class="campo" id="c-telefono">
+        <label for="telefono">Teléfono</label>
+        <div class="tel">
+          <div class="prefijo-caja">
+            <span class="bandera" aria-hidden="true"><img id="banderaImg" src="images/flags/es.svg" alt=""></span>
+            <select id="prefijo" name="prefijo">
+              <option value="+34">🇪🇸 +34</option>
+              <option value="+52">🇲🇽 +52</option>
+              <option value="+54">🇦🇷 +54</option>
+              <option value="+56">🇨🇱 +56</option>
+              <option value="+57">🇨🇴 +57</option>
+              <option value="+58">🇻🇪 +58</option>
+              <option value="+51">🇵🇪 +51</option>
+              <option value="+593">🇪🇨 +593</option>
+              <option value="+598">🇺🇾 +598</option>
+              <option value="+595">🇵🇾 +595</option>
+              <option value="+591">🇧🇴 +591</option>
+              <option value="+502">🇬🇹 +502</option>
+              <option value="+503">🇸🇻 +503</option>
+              <option value="+504">🇭🇳 +504</option>
+              <option value="+505">🇳🇮 +505</option>
+              <option value="+506">🇨🇷 +506</option>
+              <option value="+507">🇵🇦 +507</option>
+              <option value="+1">🇺🇸 +1</option>
+              <option value="+33">🇫🇷 +33</option>
+              <option value="+44">🇬🇧 +44</option>
+              <option value="+49">🇩🇪 +49</option>
+              <option value="+351">🇵🇹 +351</option>
+              <option value="+39">🇮🇹 +39</option>
+            </select>
+          </div>
+          <input type="tel" id="telefono" name="telefono" placeholder="Número de teléfono" autocomplete="tel">
+        </div>
+        <span class="aviso">Introduce un número de teléfono válido para el país elegido.</span>
+      </div>
+
+      <div class="botonera">
+        <button type="button" class="siguiente" data-va="2">Siguiente</button>
+      </div>
+
     </div>
 
-    <div class="campo" id="c-fecha">
-      <label for="dia">Fecha de nacimiento</label>
-      <div class="fila">
-        <select id="dia"><option value="">Día</option></select>
-        <select id="mes">
-          <option value="">Mes</option>
-          <option value="01">Enero</option><option value="02">Febrero</option>
-          <option value="03">Marzo</option><option value="04">Abril</option>
-          <option value="05">Mayo</option><option value="06">Junio</option>
-          <option value="07">Julio</option><option value="08">Agosto</option>
-          <option value="09">Septiembre</option><option value="10">Octubre</option>
-          <option value="11">Noviembre</option><option value="12">Diciembre</option>
+    <!-- ── PASO 2: CUANDO NACIO ─────────────────────────────────── -->
+    <div class="paso oculta" data-paso="2">
+
+      <div class="campo" id="c-sexo">
+        <label for="sexo">Sexo</label>
+        <select id="sexo" name="sexo">
+          <option value="">Selecciona</option>
+          <option value="mujer">Mujer</option>
+          <option value="hombre">Hombre</option>
+          <option value="otro">Prefiere no decirlo</option>
         </select>
-        <select id="anio"><option value="">Año</option></select>
+        <span class="aviso">Elige una opción.</span>
       </div>
-      <span class="aviso">Falta la fecha, o no es una fecha real.</span>
-    </div>
 
-    <div class="campo" id="c-hora">
-      <label for="horas">Hora de nacimiento</label>
-      <div class="fila">
-        <select id="horas"><option value="">Hora</option></select>
-        <select id="minutos"><option value="">Minuto</option></select>
+      <div class="campo" id="c-fecha">
+        <label for="dia">Fecha de nacimiento</label>
+        <div class="fila">
+          <select id="dia"><option value="">Día</option></select>
+          <select id="mes">
+            <option value="">Mes</option>
+            <option value="01">Enero</option><option value="02">Febrero</option>
+            <option value="03">Marzo</option><option value="04">Abril</option>
+            <option value="05">Mayo</option><option value="06">Junio</option>
+            <option value="07">Julio</option><option value="08">Agosto</option>
+            <option value="09">Septiembre</option><option value="10">Octubre</option>
+            <option value="11">Noviembre</option><option value="12">Diciembre</option>
+          </select>
+          <select id="anio"><option value="">Año</option></select>
+        </div>
+        <input type="hidden" id="fecha" name="fecha">
+        <span class="aviso">Falta la fecha, o no es una fecha real.</span>
       </div>
-      <span class="aviso">Falta la hora.</span>
+
+      <div class="campo" id="c-hora">
+        <label for="horas">Hora de nacimiento</label>
+        <div class="fila">
+          <select id="horas"><option value="">Hora</option></select>
+          <select id="minutos"><option value="">Minuto</option></select>
+        </div>
+        <input type="hidden" id="hora" name="hora">
+        <span class="aviso">Falta la hora.</span>
+      </div>
+
+      <div class="botonera">
+        <button type="button" class="atras" data-va="1">Atrás</button>
+        <button type="button" class="siguiente" data-va="3">Siguiente</button>
+      </div>
+
     </div>
 
-    <div class="campo" id="c-municipio">
-      <label for="municipio">Lugar de nacimiento</label>
-      <input type="text" id="municipio" placeholder="Municipio" autocomplete="off">
-      <span class="aviso" id="a-municipio">Falta el municipio.</span>
+    <!-- ── PASO 3: DONDE NACIO ──────────────────────────────────── -->
+    <div class="paso oculta" data-paso="3">
+
+      <div class="campo" id="c-municipio">
+        <label for="municipio">Lugar de nacimiento</label>
+        <input type="text" id="municipio" placeholder="Municipio" autocomplete="off">
+        <span class="aviso" id="a-municipio">Falta el municipio.</span>
+      </div>
+
+      <div class="campo" id="c-provincia">
+        <label for="provincia">Provincia o estado</label>
+        <input type="text" id="provincia" placeholder="Provincia / Estado" autocomplete="off">
+        <span class="aviso" id="a-provincia">Falta la provincia.</span>
+      </div>
+
+      <div class="campo" id="c-pais">
+        <label for="pais">País</label>
+        <input type="text" id="pais" placeholder="País, sin abreviaturas" autocomplete="off">
+        <span class="aviso" id="a-pais">Falta el país.</span>
+      </div>
+
+      <div class="acepta" id="c-politica">
+        <input type="checkbox" id="politica" name="politica">
+        <label for="politica">
+          He leído y acepto la <a href="/politica-de-privacidad" target="_blank" rel="noopener">Política de Privacidad</a> y los <a href="/terminos-y-condiciones" target="_blank" rel="noopener">Términos y Condiciones</a> de Origen Natal, incluyendo recibir las promociones.
+        </label>
+      </div>
+
+      <div class="botonera">
+        <button type="button" class="atras" data-va="2">Atrás</button>
+        <button type="submit">Generar los tres textos</button>
+      </div>
+
     </div>
 
-    <div class="campo" id="c-provincia">
-      <label for="provincia">Provincia o estado</label>
-      <input type="text" id="provincia" placeholder="Provincia / Estado" autocomplete="off">
-      <span class="aviso" id="a-provincia">Falta la provincia.</span>
-    </div>
-
-    <div class="campo" id="c-pais">
-      <label for="pais">País</label>
-      <input type="text" id="pais" placeholder="País, sin abreviaturas" autocomplete="off">
-      <span class="aviso" id="a-pais">Falta el país.</span>
-    </div>
-
-    <button type="submit">Generar los tres textos</button>
   </form>
 
   <div class="banda" id="banda"></div>
@@ -166,6 +323,26 @@ button:hover{filter:brightness(.96);}
 </div>
 
 <script>
+// ── ATAJOS ──────────────────────────────────────────────────────
+const v = id => (document.getElementById(id).value || '').trim();
+
+// Cada campo y la caja que se pone en rojo cuando falla.
+const CAJA = {
+  nombre: 'c-nombre', email: 'c-email', email2: 'c-email2', telefono: 'c-telefono',
+  sexo: 'c-sexo', fecha: 'c-fecha', hora: 'c-hora',
+  municipio: 'c-municipio', provincia: 'c-provincia', pais: 'c-pais',
+};
+
+function marcar(caja, mal) {
+  document.getElementById(caja).classList.toggle('mal', mal);
+}
+
+function limpiarLosAvisos() {
+  Object.values(CAJA).forEach(caja => marcar(caja, false));
+  marcar('c-politica', false);
+  document.getElementById('banda').className = 'banda';
+}
+
 // ── LOS DESPLEGABLES SE RELLENAN SOLOS ──────────────────────────
 (function rellenar(){
   const pon = (id, desde, hasta, formato) => {
@@ -180,25 +357,40 @@ button:hover{filter:brightness(.96);}
   pon('dia', 1, 31, dosCifras);
   pon('horas', 0, 23, dosCifras);
   pon('minutos', 0, 59, dosCifras);
-  // De este año hacia atras: el mas reciente primero, que es lo comodo.
+  // Los mismos años que el P1: de este hacia atrás hasta 1925, el más
+  // reciente primero, que es lo cómodo.
   const sel = document.getElementById('anio');
   const esteAnio = new Date().getFullYear();
-  for (let a = esteAnio; a >= 1900; a--) {
+  for (let a = esteAnio; a >= 1925; a--) {
     const o = document.createElement('option');
     o.value = String(a); o.textContent = String(a);
     sel.appendChild(o);
   }
 })();
 
+// LA FECHA Y LA HORA VAN A UN CAMPO ESCONDIDO, COMO EN EL P1. Los
+// desplegables lo van armando y ese es el dato que se comprueba y se manda.
+function actualizarFecha() {
+  const d = v('dia'), m = v('mes'), a = v('anio');
+  document.getElementById('fecha').value = (d && m && a) ? a + '-' + m + '-' + d : '';
+}
+function actualizarHora() {
+  const h = v('horas'), m = v('minutos');
+  document.getElementById('hora').value = (h && m) ? h + ':' + m : '';
+}
+['dia','mes','anio'].forEach(id => {
+  document.getElementById(id).addEventListener('change', actualizarFecha);
+});
+['horas','minutos'].forEach(id => {
+  document.getElementById(id).addEventListener('change', actualizarHora);
+});
+
 // ── QUE LOS DATOS ESTEN Y SEAN REALES ───────────────────────────
 //
-// Se mira lo mismo que en el P1, menos el lugar, que aqui no se verifica
-// contra el mapa: eso llega con el paso siguiente.
-function marcar(id, mal) {
-  document.getElementById(id).classList.toggle('mal', mal);
-}
+// Las mismas comprobaciones que en el P1, campo por campo. El lugar no se
+// comprueba aquí: eso lo hace el servidor contra el mapa, al darle al botón.
 
-// El 31 de febrero no existe: se comprueba que el dia cabe en ese mes.
+// El 31 de febrero no existe: se comprueba que el día cabe en ese mes.
 function fechaReal(anio, mes, dia) {
   const d = new Date(Number(anio), Number(mes) - 1, Number(dia));
   return d.getFullYear() === Number(anio)
@@ -207,30 +399,238 @@ function fechaReal(anio, mes, dia) {
       && d <= new Date();
 }
 
+function validarEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// Cuántos dígitos tiene un teléfono de verdad en cada país (sin el prefijo).
+// Copiado del P1.
+const TELEFONO_LONGITUDES = {
+  '+34': [9],        // España
+  '+52': [10],       // México
+  '+54': [10],       // Argentina
+  '+56': [9],        // Chile
+  '+57': [10],       // Colombia
+  '+58': [10],       // Venezuela
+  '+51': [9],        // Perú
+  '+593': [9],       // Ecuador
+  '+598': [8, 9],    // Uruguay
+  '+595': [9],       // Paraguay
+  '+591': [8],       // Bolivia
+  '+502': [8],       // Guatemala
+  '+503': [8],       // El Salvador
+  '+504': [8],       // Honduras
+  '+505': [8],       // Nicaragua
+  '+506': [8],       // Costa Rica
+  '+507': [7, 8],    // Panamá
+  '+1':   [10],      // USA/Canadá
+  '+33':  [9],       // Francia
+  '+44':  [10, 11],  // Reino Unido
+  '+49':  [10, 11],  // Alemania
+  '+351': [9],       // Portugal
+  '+39':  [9, 10],   // Italia
+};
+
+function validarTelefono(tel, prefijo) {
+  const limpio = tel.replace(/[\s\-()]/g, '');
+  if (!/^\d+$/.test(limpio)) return false;
+  const longitudes = TELEFONO_LONGITUDES[prefijo];
+  if (!longitudes) return limpio.length >= 7 && limpio.length <= 15;
+  return longitudes.includes(limpio.length);
+}
+
+// La bandera del prefijo como imagen, no como emoji: así se ve igual en
+// cualquier móvil. Copiado del P1.
+const PREFIJO_PAIS = {
+  '+34': 'es', '+52': 'mx', '+54': 'ar', '+56': 'cl', '+57': 'co',
+  '+58': 've', '+51': 'pe', '+593': 'ec', '+598': 'uy', '+595': 'py',
+  '+591': 'bo', '+502': 'gt', '+503': 'sv', '+504': 'hn', '+505': 'ni',
+  '+506': 'cr', '+507': 'pa', '+1': 'us', '+33': 'fr', '+44': 'gb',
+  '+49': 'de', '+351': 'pt', '+39': 'it',
+};
+document.getElementById('prefijo').addEventListener('change', () => {
+  const pais = PREFIJO_PAIS[v('prefijo')];
+  if (pais) document.getElementById('banderaImg').src = 'images/flags/' + pais + '.svg';
+});
+
+// El rojo se va en cuanto empieza a corregir, no cuando vuelve a darle al botón.
+//
+// Y si los tres campos del lugar están en rojo a la vez es que no se sabía
+// cuál falla: al tocar cualquiera se limpian los tres. Si no, quedarían dos
+// en rojo sin que se entienda por qué. Igual que en el P1.
+const CAJAS_DEL_LUGAR = ['c-municipio', 'c-provincia', 'c-pais'];
+const losTresEnRojo = () =>
+  CAJAS_DEL_LUGAR.every(caja => document.getElementById(caja).classList.contains('mal'));
+
+Object.entries(CAJA).forEach(([campo, caja]) => {
+  const el = document.getElementById(campo);
+  if (!el) return;
+  const limpiar = () => {
+    const eranLosTres = CAJAS_DEL_LUGAR.includes(caja) && losTresEnRojo();
+    marcar(caja, false);
+    if (eranLosTres) CAJAS_DEL_LUGAR.forEach(otra => marcar(otra, false));
+  };
+  el.addEventListener('input', limpiar);
+  el.addEventListener('change', limpiar);
+});
+['dia','mes','anio'].forEach(id => {
+  document.getElementById(id).addEventListener('change', () => marcar('c-fecha', false));
+});
+['horas','minutos'].forEach(id => {
+  document.getElementById(id).addEventListener('change', () => marcar('c-hora', false));
+});
+document.getElementById('politica').addEventListener('change', () => marcar('c-politica', false));
+
+// ── LOS TRES PASOS ──────────────────────────────────────────────
+//
+// Para pasar de pantalla basta con que el paso esté relleno; lo demás se
+// comprueba entero al final. Igual que en el P1.
+const CAMPOS_DEL_PASO = {
+  '1': ['nombre', 'email', 'email2', 'telefono'],
+  '2': ['sexo', 'fecha', 'hora'],
+};
+
+function estaVacio(id) {
+  const el = document.getElementById(id);
+  return !el || !el.value || !el.value.trim();
+}
+
+function irAlPaso(n) {
+  document.querySelectorAll('.paso').forEach(paso => {
+    paso.classList.toggle('oculta', paso.dataset.paso !== String(n));
+  });
+  document.querySelectorAll('.punto').forEach(punto => {
+    punto.classList.toggle('puesto', Number(punto.dataset.punto) <= n);
+  });
+  document.getElementById('pasosTexto').textContent = 'Paso ' + n + ' de 3';
+  document.querySelector('.tarjeta').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+document.querySelectorAll('.siguiente').forEach(boton => {
+  boton.addEventListener('click', () => {
+    actualizarFecha();
+    actualizarHora();
+    const paso = boton.closest('.paso').dataset.paso;
+    let bien = true;
+    (CAMPOS_DEL_PASO[paso] || []).forEach(id => {
+      const mal = estaVacio(id);
+      marcar(CAJA[id], mal);
+      if (mal) bien = false;
+    });
+    if (paso === '1' && !validarTelefono(v('telefono'), v('prefijo'))) {
+      marcar('c-telefono', true);
+      bien = false;
+    }
+    if (!bien) return;
+    irAlPaso(Number(boton.dataset.va));
+  });
+});
+
+document.querySelectorAll('.atras').forEach(boton => {
+  boton.addEventListener('click', () => irAlPaso(Number(boton.dataset.va)));
+});
+
+// ── SE VA GUARDANDO EL CONTACTO SOBRE LA MARCHA ─────────────────
+//
+// COPIADO DEL P1. En cuanto sale del email o del teléfono, el contacto queda
+// guardado. Así, si se va a mitad, el nombre, el email y el teléfono ya están.
+// Mismo aviso dos veces seguidas no se manda: se guarda lo último enviado.
+let ultimoContacto = '';
+
+function montarElContacto() {
+  const email = v('email').toLowerCase();
+  if (!validarEmail(email)) return null;
+  const nombre = document.getElementById('nombre').value;
+  const numero = v('telefono');
+  const telefono = numero ? (v('prefijo') + numero).replace(/\s+/g, '') : '';
+  const clave = email + '|' + nombre + '|' + telefono;
+  if (clave === ultimoContacto) return null;
+  ultimoContacto = clave;
+  return { nombre, email, telefono };
+}
+
+function guardarElContacto(alCerrar) {
+  const datos = montarElContacto();
+  if (!datos) return;
+  fetch('/api/captar-lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(datos),
+    keepalive: alCerrar, // si cierra la pestaña, el envío sobrevive
+  }).catch(() => {});
+}
+
+document.getElementById('email').addEventListener('blur', () => guardarElContacto(false));
+document.getElementById('telefono').addEventListener('blur', () => guardarElContacto(false));
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') guardarElContacto(true);
+});
+
+// Y al darle al botón, con el lugar ya comprobado, se guarda todo lo demás.
+function calcularEdad(fechaISO) {
+  const nacimiento = new Date(fechaISO);
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - nacimiento.getFullYear();
+  const m = hoy.getMonth() - nacimiento.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) edad--;
+  return edad;
+}
+
+function guardarlaEntera(datos) {
+  fetch('/api/captar-lead', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      nombre: datos.nombre,
+      email: datos.email,
+      telefono: (datos.prefijo + datos.telefono).replace(/\s+/g, ''),
+      sexo: datos.sexo,
+      fecha: datos.fecha,
+      hora: datos.hora,
+      municipio: datos.municipio,
+      provincia: datos.provincia,
+      pais: datos.pais,
+      edad: calcularEdad(datos.fecha),
+    }),
+  }).catch(() => {});
+}
+
+// ── AL DARLE AL BOTON ───────────────────────────────────────────
 document.getElementById('datos').addEventListener('submit', function (e) {
   e.preventDefault();
+  limpiarLosAvisos();
+  actualizarFecha();
+  actualizarHora();
 
-  const v = id => document.getElementById(id).value.trim();
   const datos = {
     nombre: v('nombre'),
+    email: v('email').toLowerCase(),
+    email2: v('email2').toLowerCase(),
+    prefijo: v('prefijo'),
+    telefono: v('telefono'),
     sexo: v('sexo'),
-    fecha: (v('anio') && v('mes') && v('dia')) ? `${v('anio')}-${v('mes')}-${v('dia')}` : '',
-    hora: (v('horas') && v('minutos')) ? `${v('horas')}:${v('minutos')}` : '',
+    fecha: v('fecha'),
+    hora: v('hora'),
     municipio: v('municipio'),
     provincia: v('provincia'),
     pais: v('pais'),
   };
+  const acepta = document.getElementById('politica').checked;
 
   const falla = {
     'c-nombre': datos.nombre.length < 3,
+    'c-email': !validarEmail(datos.email),
+    'c-email2': !datos.email2 || datos.email !== datos.email2,
+    'c-telefono': !validarTelefono(datos.telefono, datos.prefijo),
     'c-sexo': !datos.sexo,
     'c-fecha': !datos.fecha || !fechaReal(v('anio'), v('mes'), v('dia')),
     'c-hora': !datos.hora,
     'c-municipio': !datos.municipio,
     'c-provincia': !datos.provincia,
     'c-pais': !datos.pais,
+    'c-politica': !acepta,
   };
-  Object.entries(falla).forEach(([id, mal]) => marcar(id, mal));
+  Object.entries(falla).forEach(([caja, mal]) => marcar(caja, mal));
 
   // Los avisos del lugar vuelven a su texto: el del mapa solo vale para el
   // intento en que salio.
@@ -241,12 +641,25 @@ document.getElementById('datos').addEventListener('submit', function (e) {
 
   const banda = document.getElementById('banda');
   if (Object.values(falla).some(Boolean)) {
-    banda.className = 'banda';
+    banda.className = 'banda puesta';
+    banda.innerHTML = 'Revisa lo que está marcado en rojo.';
+    // Si lo que falla está en un paso que no se ve, se va a ese paso primero.
+    const primero = document.querySelector('.mal');
+    if (primero) {
+      const suPaso = primero.closest('.paso');
+      if (suPaso && suPaso.classList.contains('oculta')) irAlPaso(Number(suPaso.dataset.paso));
+      primero.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     return;
   }
 
+  delete datos.email2;
   pedirLaCarta(datos);
 });
+
+// El envío ya está en manos del código de arriba: la red de seguridad de la
+// etiqueta <form> se aparta.
+window.formularioListo = true;
 
 // ── SE LE PIDE LA CARTA AL SERVIDOR ─────────────────────────────
 //
@@ -281,6 +694,10 @@ async function pedirLaCarta(datos) {
       banda.innerHTML = '<b>No ha salido.</b> ' + (salida.error || 'Error del servidor.');
       return;
     }
+
+    // El lugar ya esta comprobado contra el mapa: se guarda el resto de sus
+    // datos, igual que hace el P1 justo antes de mandarla a pagar.
+    guardarlaEntera(datos);
 
     const segundos = ((Date.now() - arranque) / 1000).toFixed(1);
     const c = salida.carta;
