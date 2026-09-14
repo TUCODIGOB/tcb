@@ -21,13 +21,26 @@ import { TONO, SYSTEM_PROMPT } from './tono.js';
 // Una sola area, y es la primera del informe.
 const EL_AREA = 'IDENTIDAD';
 
-// Los mismos topes por area que el P1.
+// Los mismos topes por area que el P1: esto es lo que se ENTREGA al final.
 const POR_AREA = {
   fortalezas: { min: 1, max: 2 },
   desafios:   { min: 2, max: 3 },
 };
 
-const CUANTOS_RASGOS = POR_AREA.fortalezas.max + POR_AREA.desafios.max;   // 5
+// LO QUE SACA LA 1a, QUE ES MAS DE LO QUE SE ENTREGA.
+//
+// Antes se le pedian justo cinco, y por eso salian flojos: a quien le piden
+// cinco te da los cinco primeros que se le forman. No deja fuera a ninguno,
+// asi que no tiene que compararlos, y si no los compara no los ordena por
+// peso aunque se lo pidas. Pidiendole ocho para quedarse con cinco, tiene que
+// descartar tres, y para descartar hay que comparar.
+const CANDIDATOS = { fortalezas: 3, desafios: 5 };
+
+const CUANTOS_RASGOS = CANDIDATOS.fortalezas + CANDIDATOS.desafios;   // 8
+
+// Y por debajo de esto no hay ni para llenar lo que se entrega, asi que se
+// vuelve a pedir la lista.
+const MINIMO_DE_CANDIDATOS = POR_AREA.fortalezas.max + POR_AREA.desafios.max;   // 5
 
 // ═══════════════════════════════════════════════════════════════
 // EL RELOJ DE LA PETICION. Copiado del P1.
@@ -175,15 +188,21 @@ function hablaDeAstrologia(rasgo) {
 
 
 // ═══════════════════════════════════════════════════════════════
-// 1a LLAMADA — SACAR LOS RASGOS · Opus, pensando medio
+// 1a LLAMADA — PROPONER LOS CANDIDATOS · Opus, pensando medio
+//
+// AQUI YA NO SE ELIGE, SOLO SE PROPONE. Antes esta llamada sacaba de la carta
+// y decidia los cinco definitivos a la vez, y por eso salian flojos: hacia dos
+// trabajos de golpe. Ahora propone ocho y elige la siguiente, que ya lee una
+// lista escrita en cristiano en vez de posiciones en tecnico.
 //
 // Recibe: la carta natal entera, con las casas.
-// Entrega: 5 rasgos (2 fortalezas y 3 desafios). De cada uno: si es fortaleza
-//          o desafio, la conducta, el area y de que posicion de la carta sale.
+// Entrega: 8 candidatos (3 fortalezas y 5 desafios). De cada uno: si es
+//          fortaleza o desafio, la conducta, que le cuesta o que le da, el
+//          area y de que posicion de la carta sale.
 //
 // POR SI ACASO, HASTA 2 LLAMADAS MAS:
 //   - si falla, se repite pensando menos;
-//   - si vuelven menos de 5, se pide la lista ENTERA otra vez y se queda la
+//   - si vuelven menos de 8, se pide la lista ENTERA otra vez y se queda la
 //     mejor de las dos.
 // ═══════════════════════════════════════════════════════════════
 
@@ -202,10 +221,15 @@ const ESQUEMA_DE_ELEGIR = {
           // clienta: es con lo que compara la limpieza. Dos rasgos con la misma
           // conducta son el mismo rasgo, aunque esten escritos distinto.
           conducta: { type: 'string' },
+          // QUE LE CUESTA O QUE LE DA. Tampoco lo lee la clienta: es con lo
+          // que la llamada siguiente compara unos rasgos con otros. Sin esto
+          // elegir "los de mas peso" es una corazonada; con esto hay algo
+          // escrito delante que comparar.
+          precio:   { type: 'string' },
           area:     { type: 'string', enum: [EL_AREA] },
           origen:   { type: 'string' },
         },
-        required: ['lista', 'conducta', 'area', 'origen'],
+        required: ['lista', 'conducta', 'precio', 'area', 'origen'],
         additionalProperties: false,
       },
     },
@@ -230,7 +254,8 @@ DESAFÍOS: lo que le cuesta, lo que le pesa, dónde tropieza.
 Sacas las fortalezas y los desafíos a la vez, todos seguidos, y cada rasgo dice cuál de las dos cosas es. 
 
 2. CUÁNTOS
-Sacas 2 fortalezas y 3 desafíos, ni una más ni una menos. Todos de IDENTIDAD: quién es por dentro y cómo se vive a sí mismo o a sí misma.
+Sacas 3 fortalezas y 5 desafíos, ni una más ni una menos. Todos de IDENTIDAD: quién es por dentro y cómo se vive a sí mismo o a sí misma.
+ESTOS OCHO SON CANDIDATOS, NO LA LISTA FINAL. Después otra lectura se queda con los que más pesen y descarta el resto, así que aquí no te guardes ninguno ni te quedes corto: pon los ocho mejores que encuentres, cada uno con su precio, y que decida el de después.
 
 
 3. DE DONDE LOS SACAS
@@ -258,7 +283,18 @@ conducta    El rasgo en corto, de cuatro a siete palabras: lo que hace esa
 persona o lo que le pasa por dentro. No de qué habla ni dónde le pasa.
 No es para quien lee, es para comparar: dos rasgos con la misma
 conducta son el mismo rasgo, aunque estén escritos distinto.
-Se escribe con las mismas palabras siempre que la conducta sea la misma. Si buscas variar, dejan de verse los repetidos. 
+Se escribe con las mismas palabras siempre que la conducta sea la misma. Si buscas variar, dejan de verse los repetidos.
+
+precio      Qué le cuesta o qué le da ese rasgo, en concreto y en una frase
+corta. Se paga en algo que se pueda nombrar: su tiempo, su
+dinero, su salud, la gente que tiene cerca, o su calma. Si es
+una fortaleza, lo que le da; si es un desafío, lo que le quita.
+NO ES PARA QUIEN LEE, es para que la lectura de después sepa
+cuál pesa más que cuál. Por eso se dice en seco y sin adornos.
+Y SI NO PUEDES NOMBRAR EL PRECIO, ESE RASGO NO ENTRA. Un rasgo
+del que no sabes decir qué le cuesta o qué le da es un rasgo que
+no le está pasando de verdad: lo dejas fuera y buscas otro en la
+carta.
 
 area         siempre IDENTIDAD, escrita así, en mayúsculas.
 
@@ -266,7 +302,7 @@ origen       De donde sale el rasgo en la carta, en técnico y en corto: el
              cuerpo con su signo y su casa, o los dos cuerpos con su signo y su
              casa cada uno y el aspecto que forman. Nada más: ni explicación ni
              frase.
-             Es obligatoria. Y no saques los cinco rasgos de la misma
+             Es obligatoria. Y no saques los ocho rasgos de la misma
              posición: entre el Sol, el Ascendente, lo que haya en la casa 1
              y los aspectos de los tres, hay de sobra.
 
@@ -298,9 +334,9 @@ Esto se hace rasgo por rasgo y sin saltarse ninguno: es el paso que más veces s
 
 DESPUÉS, LA CUENTA. Cuentas cuántas fortalezas y cuántos desafíos has sacado. Si te falta alguna, vuelves a la carta, al Sol, al Ascendente y a la casa 1, y sacas otra distinta de verdad. No vale escribir una variante de una que ya tienes. 
 
-DESPUÉS, EL TECHO. Si te pasas de dos fortalezas o de tres desafíos, se quedan los que más pesan y los demás se van.
+DESPUÉS, EL TECHO. Si te pasas de tres fortalezas o de cinco desafíos, se quedan los que más pesan y los demás se van.
 
-Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ninguna conducta nombre la carta ni nada técnico ni de astrología, y que a ningún rasgo le falte una casilla. 
+Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ninguna conducta ni ningún precio nombren la carta ni nada técnico ni de astrología, y que a ningún rasgo le falte una casilla.
 Devuelve solo la lista.`;
 
 function encargoDeElegir(nombrePila, sexo, cartaTexto) {
@@ -317,7 +353,7 @@ async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'm
     que: `sacar los rasgos (${esfuerzo})`,
     modelo: 'claude-opus-5',
     razona: esfuerzo,
-    // EL MISMO TECHO QUE EL P1. No es lo que escribe -que son cinco rasgos
+    // EL MISMO TECHO QUE EL P1. No es lo que escribe -que son ocho rasgos
     // cortos-: es que pensar sale tambien de aqui, y apretarlo le corta el
     // pensamiento a la mitad.
     techo: 32000,
@@ -328,8 +364,10 @@ async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'm
   });
   reloj.apunta(`sacar los rasgos (${esfuerzo})`, arranque);
 
+  // SIN PRECIO NO ES UN CANDIDATO. Es la casilla con la que se eligen despues
+  // los cinco, asi que un rasgo sin ella no se puede comparar con nadie.
   const rasgos = (Array.isArray(salida?.rasgos) ? salida.rasgos : [])
-    .filter(r => r && r.lista && r.conducta && r.area && r.origen);
+    .filter(r => r && r.lista && r.conducta && r.precio && r.area && r.origen);
   return rasgos;
 }
 
@@ -347,8 +385,13 @@ async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj) {
   // que faltan: los compara entre ellos mientras los escribe, y sin ver los que
   // ya hay los repetiria. Se queda la mejor de las dos, nunca la ultima por ser
   // la ultima.
-  if (rasgos.length < CUANTOS_RASGOS && reloj.hayTiempoPara(180)) {
-    console.warn(`la 1a llamada ha devuelto ${rasgos.length} rasgos de ${CUANTOS_RASGOS}, se pide otra vez`);
+  // Y SE PIDE OTRA VEZ SOLO SI NO HAY NI PARA ELEGIR. Se le piden ocho, pero
+  // con seis o siete todavia hay de sobra para quedarse con cinco: repetir
+  // toda la llamada -que es la mas cara de las cuatro- por un candidato de
+  // menos seria tirar el dinero. Se repite solo cuando no llegan ni a los
+  // cinco que hay que entregar.
+  if (rasgos.length < MINIMO_DE_CANDIDATOS && reloj.hayTiempoPara(180)) {
+    console.warn(`la 1a llamada ha devuelto ${rasgos.length} candidatos de ${CUANTOS_RASGOS}, se pide otra vez`);
     try {
       const otra = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'medium');
       if (otra.length > rasgos.length) rasgos = otra;
@@ -361,201 +404,156 @@ async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj) {
 
 
 // ═══════════════════════════════════════════════════════════════
-// 2a LLAMADA — LA LIMPIEZA · Opus, pensando alto
+// 2a LLAMADA — ELEGIR LOS CINCO · Opus, pensando medio
 //
-// Recibe: solo los 5. Numero, tipo, area y conducta. NO VE LA CARTA.
-// Entrega: numeros. Cuales se quedan y cuales se quitan.
+// AQUI ES DONDE SE ELIGE, Y ES LO UNICO QUE HACE. Antes buscaba calcos entre
+// cinco rasgos que ya venian sin repetir, o sea que no hacia nada: en tres
+// pruebas seguidas no quito ninguno. Ahora recibe los ocho candidatos escritos
+// en cristiano, con lo que a cada uno le cuesta o le da, y se queda con los
+// cinco que mas pesan.
 //
-// AQUI NO SE ESCRIBE NI UNA PALABRA. El texto ya lo tiene guardado el codigo
-// del paso anterior y lo recupera por el numero, asi que de aqui no puede
-// salir un rasgo con la descripcion cambiada.
+// POR QUE AQUI Y NO EN LA DE ANTES: elegir por peso leyendo una lista ya
+// escrita sale bien; elegir mientras se lee una carta en tecnico, no. Son dos
+// trabajos distintos y cada uno va en su llamada.
 //
-// POR SI ACASO, NINGUNA LLAMADA MAS: si se cae, se sigue con los 5. Un texto
-// con algun rasgo repetido es peor que uno limpio, pero es muchisimo mejor
-// que ninguno.
+// Recibe: los 8. Numero, tipo, conducta y precio. NO VE LA CARTA.
+// Entrega: numeros. Que 2 fortalezas y que 3 desafios se quedan.
+//
+// AQUI NO SE ESCRIBE NI UNA PALABRA. El texto lo tiene guardado el codigo del
+// paso anterior y lo recupera por el numero, asi que de aqui no puede salir un
+// rasgo cambiado.
+//
+// POR SI ACASO, NINGUNA LLAMADA MAS: si se cae, elige el codigo -los primeros
+// de cada lista-. Peor elegidos, pero la clienta tiene su texto.
 // ═══════════════════════════════════════════════════════════════
 
-const TOPE_DE_LIMPIAR = 90000;
+const TOPE_DE_ELEGIR_CINCO = 90000;
 
-const ESQUEMA_DE_LIMPIAR = {
+const ESQUEMA_DE_ELEGIR_CINCO = {
   type: 'object',
   properties: {
-    sequedan: { type: 'array', items: { type: 'integer' } },
-    sequitan: { type: 'array', items: { type: 'integer' } },
-    // POR CADA UNO QUE QUITA, CON CUAL REPITE. Sin esta casilla no se le
-    // puede comprobar nada: es la que convierte "lo he quitado" en "lo he
-    // quitado porque el 3 cuenta lo mismo".
-    parejas: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          seva:    { type: 'integer' },
-          sequeda: { type: 'integer' },
-        },
-        required: ['seva', 'sequeda'],
-        additionalProperties: false,
-      },
-    },
+    fortalezas: { type: 'array', items: { type: 'integer' } },
+    desafios:   { type: 'array', items: { type: 'integer' } },
   },
-  required: ['sequedan', 'sequitan', 'parejas'],
+  required: ['fortalezas', 'desafios'],
   additionalProperties: false,
 };
 
-// LO QUE SE LE ENSENA PARA COMPARAR, Y NADA MAS. El numero, si es fortaleza o
-// desafio, el area y la conducta. Lo demas no hace falta para decidir si dos
-// rasgos dicen lo mismo, y todo lo que se le manda de mas es sitio que le
-// quita a lo que si tiene que leer.
+// LO QUE SE LE ENSENA PARA ELEGIR, Y NADA MAS: el numero, si es fortaleza o
+// desafio, la conducta y el precio. La posicion de la carta no va, que para
+// elegir no pinta nada y solo le quita sitio a lo que si tiene que leer.
 function laListaNumerada(rasgos) {
   return rasgos
-    .map((r, i) => `${i + 1}. ${r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO'} — ${r.area} — ${r.conducta}`)
+    .map((r, i) => {
+      const tipo = r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO';
+      const que  = r.lista === 'fortalezas' ? 'LE DA' : 'LE CUESTA';
+      return `${i + 1}. ${tipo} — ${r.conducta} — ${que}: ${r.precio}`;
+    })
     .join('\n');
 }
 
-// EL ENCARGO. Era el del P1 copiado entero, y aqui hacia dano: alli le llegan
-// treinta y tantos rasgos de siete areas y si hay repetidos, pero aqui le
-// llegan cinco de una sola area. Las ordenes de quitar por parecido, por
-// contradiccion y juntando las dos caras de una misma cosa le hacian emparejar
-// conductas distintas -todo habla de quien es- y cortar los rasgos de mas peso.
-// Ahora solo queda un motivo para quitar, el calco, y tiene que ensenarlo.
-const ENCARGO_DE_LIMPIAR = `Abajo tienes las fortalezas y los desafíos interiores de una persona. Cada uno está escrito por separado, enumerado, dice si es una fortaleza o un desafío y su conducta. Todos son de la misma área, IDENTIDAD: quién es por dentro y cómo se vive a sí mismo o a sí misma.
-QUÉ SE QUITA, Y SOLO ESTO
-Un rasgo se quita SOLO cuando otro de la lista cuenta LA MISMA CONDUCTA. La misma, no una parecida: lo que hace esa persona es lo mismo, dicho con otras palabras. De esos dos se queda uno, el que más pese, y el otro se va.
-Pesa más la conducta más concreta y central para la persona, no la más genérica.
-Se comparan las fortalezas entre sí y los desafíos entre sí. Una fortaleza y un desafío nunca se quitan el uno al otro.
+// EL ENCARGO. Este si es nuevo, porque el trabajo es nuevo: el del P1 buscaba
+// repetidos entre treinta y tantos rasgos de siete areas, y aqui lo que hace
+// falta es elegir por peso entre ocho de una sola area.
+const ENCARGO_DE_ELEGIR_CINCO = `Abajo tienes ocho rasgos interiores de una persona, enumerados. De cada uno sabes tres cosas: si es una fortaleza o un desafío, qué hace esa persona, y qué le cuesta o qué le da. Todos son del área IDENTIDAD: quién es por dentro y cómo se vive a sí mismo o a sí misma.
+Son candidatos, no la lista final. Tu único trabajo es quedarte con los que más pesan en su vida y dejar fuera los demás. Ni escribes, ni cambias ninguno, ni añades nada que no esté en la lista.
 
-SI NO HAY DOS QUE CUENTEN LA MISMA CONDUCTA, NO SE QUITA NADA Y SE QUEDAN TODOS.
-Que dos rasgos se parezcan, hablen del mismo tema, vayan juntos o suenen a dos caras de una misma cosa NO es motivo para quitar ninguno. Que uno diga lo contrario del otro tampoco. Si dudas, se quedan los dos: quitar de más le arranca a esta persona algo suyo y no hay manera de devolvérselo.
+CUÁNTOS TE QUEDAS
+DOS fortalezas y TRES desafíos. Ni uno más ni uno menos. Los otros tres se quedan fuera y no pasa nada: para eso hay ocho.
 
-Y POR CADA UNO QUE QUITAS, DICES CON CUÁL REPITE
-No se puede quitar un rasgo sin enseñar el que cuenta esa misma conducta. Si no puedes nombrar su número, ese rasgo no se quita. 
+QUÉ ES QUE UN RASGO PESE
+Que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. Eso lo tienes escrito en cada uno, detrás de la conducta: es lo que tienes que comparar.
+Pesa más lo que le cuesta o le da algo concreto y grande que lo que le cuesta o le da algo pequeño o difuso. Pesa más lo que le pasa a menudo que lo que le pasa de vez en cuando. Y pesa más lo que le toca en varias partes de su vida que lo que se le queda en una esquina.
+NO PESA que suene bien, ni que esté mejor escrito, ni que sea más raro o más original. Se elige por lo que le está pasando, no por cómo está contado.
+NO PESA MÁS POR SER MÁS DRAMÁTICO. Un rasgo que le quita horas cada semana pesa más que uno que suena grave y le pasa una vez al año.
+Y NO PESA que sea cómodo de leer. Entre uno que le va a doler reconocer y otro que le va a dar la razón, pesa el primero.
 
-
-LO QUE NO SE PUEDE QUEDAR CORTO
-Tienen que quedar al menos 1 fortaleza y 2 desafíos. Si al quitar uno se bajaría de ahí, ese no se quita: se queda aunque repita.
-No es un número al que llegar: si quedan más y no se repiten entre ellos, se quedan todos.
+Y NO COGES DOS QUE CUENTEN LO MISMO
+Si dos de los que ibas a coger dicen la misma conducta con otras palabras, coges solo el que más pese y llenas ese sitio con otro distinto de la lista. Quedarte con dos que dicen lo mismo es tirar uno de los cinco sitios que tienes.
 
 LO QUE DEVUELVES
-"sequedan": los números de los que se quedan, en el orden de abajo.
- "sequitan": los números de los que quitas.
- "parejas": una entrada por cada número que hay en "sequitan", y ninguna más. En cada una, "seva" es el número del rasgo que se va y "sequeda" es el número del rasgo que cuenta esa misma conducta y se queda. Si "sequitan" está vacía, "parejas" también.
-Cada número tiene que quedar en una sola, nunca en las 2. Todos los números de la lista tienen que aparecer en "sequedan" o en "sequitan", ninguno se queda fuera y ninguno se repite en las dos. `;
+"fortalezas": los números de las DOS fortalezas que se quedan, la que más pesa primero.
+"desafios": los números de los TRES desafíos que se quedan, el que más pesa primero.
+Solo números de la lista de abajo. Un número que está marcado como FORTALEZA no puede ir en "desafios", ni al revés. Ningún número se repite.`;
 
-async function limpiarLosRasgos(rasgos, reloj) {
+async function pedirLosCinco(rasgos, reloj) {
   const arranque = Date.now();
   const salida = await alModelo({
-    que: 'limpiar los rasgos',
+    que: 'elegir los cinco',
     modelo: 'claude-opus-5',
-    // PIENSA BAJO, Y SOBRA. Pensar se paga como lo escrito y aqui el modelo es
-    // el caro, asi que el esfuerzo alto costaba dinero de verdad. Con el
-    // trabajo que le queda -mirar si dos frases cortas cuentan lo mismo, y sin
-    // poder quitar nada sin ensenar con cual repite- el esfuerzo bajo llega.
-    razona: 'low',
+    // AQUI SI PIENSA. Elegir por peso es comparar ocho cosas entre si, y eso no
+    // sale sin pensar. Medio y no alto: la comparacion se hace sobre una lista
+    // corta y ya escrita, no sobre una carta en tecnico.
+    razona: 'medium',
     // El techo es holgado y no por lo que escribe -que son unos pocos numeros-,
     // sino porque pensar tambien gasta de aqui.
     techo: 16000,
     // LA LISTA VA DENTRO DEL ENCARGO, igual que en el P1, y el mensaje es una
     // frase fija.
-    system: `${ENCARGO_DE_LIMPIAR}\n\n\nLA LISTA:\n\n${laListaNumerada(rasgos)}`,
-    mensaje: 'Di cuáles se quedan y cuáles se quitan, siguiendo el esquema.',
-    molde: ESQUEMA_DE_LIMPIAR,
-    espera: reloj.senal(TOPE_DE_LIMPIAR),
+    system: `${ENCARGO_DE_ELEGIR_CINCO}\n\n\nLA LISTA:\n\n${laListaNumerada(rasgos)}`,
+    mensaje: 'Di qué dos fortalezas y qué tres desafíos se quedan, siguiendo el esquema.',
+    molde: ESQUEMA_DE_ELEGIR_CINCO,
+    espera: reloj.senal(TOPE_DE_ELEGIR_CINCO),
   });
+  // EL NOMBRE DEL APUNTE NO CAMBIA: es el que busca la pagina para enseñar lo
+  // que ha tardado esta llamada.
   reloj.apunta('limpiar los rasgos', arranque);
-
-  // Solo numeros que existan, sin repetir y en el orden de la lista.
-  const validos = new Set(rasgos.map((_, i) => i + 1));
-  const sequedan = [...new Set((Array.isArray(salida?.sequedan) ? salida.sequedan : [])
-    .map(Number).filter(n => validos.has(n)))].sort((a, b) => a - b);
-
-  const pedidos = [...new Set((Array.isArray(salida?.sequitan) ? salida.sequitan : [])
-    .map(Number).filter(n => validos.has(n) && !sequedan.includes(n)))].sort((a, b) => a - b);
-
-  // SI SE DEJA ALGUNO SIN CLASIFICAR, SE QUEDA. Un rasgo que no esta ni en una
-  // lista ni en la otra es un descuido suyo, no una decision: tirarlo seria
-  // quitarle a la clienta algo que nadie ha decidido quitar.
-  const olvidados = [...validos].filter(n => !sequedan.includes(n) && !pedidos.includes(n));
-  if (olvidados.length) {
-    console.warn(`la limpieza no ha dicho nada de ${olvidados.join(', ')}: se quedan`);
-  }
-
-  // CADA QUITADA TIENE QUE ENSENAR SU GEMELO, Y SI NO, SE ANULA.
-  //
-  // Sin esto, quitar depende de que el modelo se porte bien, y es justo ahi
-  // donde falla: se lleva rasgos distintos creyendo que son el mismo. Para
-  // llevarse uno tiene que decir con cual repite, y ese numero tiene que
-  // existir y tiene que quedarse. Si no, el rasgo vuelve.
-  // Y EL GEMELO TIENE QUE SER DE SU MISMA LISTA. Una fortaleza y un desafio
-  // no son la misma conducta contada dos veces, son dos rasgos. Emparejarlos
-  // es lo que se llevaba por delante los de mas peso.
-  const gemelos = new Map();
-  for (const p of (Array.isArray(salida?.parejas) ? salida.parejas : [])) {
-    const seva = Number(p?.seva);
-    const sequeda = Number(p?.sequeda);
-    if (!validos.has(seva) || !validos.has(sequeda) || seva === sequeda) continue;
-    if (rasgos[seva - 1].lista !== rasgos[sequeda - 1].lista) continue;
-    if (!gemelos.has(seva)) gemelos.set(seva, sequeda);
-  }
-
-  const sequitan = [];
-  const anulados = [];
-  for (const n of pedidos) {
-    const gemelo = gemelos.get(n);
-    // El gemelo tiene que quedarse: si tambien se lo lleva, esa conducta no
-    // la recoge nadie y la quitada no vale.
-    if (gemelo == null || pedidos.includes(gemelo)) anulados.push(n);
-    else sequitan.push(n);
-  }
-  if (anulados.length) {
-    console.warn(`la limpieza quiso quitar ${anulados.join(', ')} sin ensenar con cual repite: vuelven`);
-  }
-
-  // Se queda todo lo que no se va de verdad: lo que dijo que se quedaba, lo
-  // que se dejo sin clasificar y lo que se le ha anulado.
-  return { sequedan: [...validos].filter(n => !sequitan.includes(n)).sort((a, b) => a - b), sequitan };
+  return salida;
 }
 
-// SIN LLAMAR A NADIE, Y GRATIS: EL SUELO.
+// SIN LLAMAR A NADIE, Y GRATIS: EL CODIGO DE ARBITRO.
 //
-// Si la limpieza dejo las fortalezas o los desafios por debajo de su minimo,
-// se devuelven los que hagan falta hasta cubrirlo. El encargo ya se lo pide,
-// y aun asi a veces no obedece: si se queda sin fortalezas, el texto sale
-// cojo.
-function conElSuelo(sequedan, todos, reloj) {
-  const dentro = new Set(sequedan);
+// El modelo dice cuales, pero quien cuenta es esto: salen DOS fortalezas y
+// TRES desafios exactos, siempre. Si nombra de mas, sobran los ultimos -los
+// devuelve por orden de peso-. Si nombra de menos, o nombra un numero que no
+// existe, o mete una fortaleza en los desafios, se completa con los que el
+// paso anterior puso primero. Y si la llamada se ha caido, esto elige solo.
+function losCincoQueQuedan(salida, todos, reloj) {
+  const elegidos = [];
   const devueltos = [];
+
   for (const cual of ['fortalezas', 'desafios']) {
-    const hay = sequedan.filter(r => r.lista === cual).length;
-    let faltan = POR_AREA[cual].min - hay;
-    if (faltan <= 0) continue;
-    const antes = devueltos.length;
-    for (const r of todos) {
-      if (faltan === 0) break;
-      if (dentro.has(r) || r.lista !== cual) continue;
-      dentro.add(r); devueltos.push(r); faltan--;
+    const tope = POR_AREA[cual].max;
+
+    // Solo numeros que existan, que sean de esta lista y sin repetir. Se
+    // respeta el orden en que los ha dado, que es su orden de peso.
+    const suyos = [...new Set((Array.isArray(salida?.[cual]) ? salida[cual] : [])
+      .map(Number)
+      .filter(n => Number.isInteger(n) && n >= 1 && n <= todos.length && todos[n - 1].lista === cual))]
+      .slice(0, tope);
+
+    if (suyos.length < tope) {
+      const antes = suyos.length;
+      for (let n = 1; n <= todos.length && suyos.length < tope; n++) {
+        if (todos[n - 1].lista !== cual || suyos.includes(n)) continue;
+        suyos.push(n);
+        devueltos.push(n);
+      }
+      console.warn(`la eleccion dejo ${cual} en ${antes} de ${tope}, el codigo pone ${suyos.length - antes}`);
     }
-    console.warn(`la limpieza dejo ${cual} en ${hay} de ${POR_AREA[cual].min}, se devuelven ${devueltos.length - antes}`);
+
+    elegidos.push(...suyos);
   }
-  reloj.cuaderno.devueltos = devueltos.map(r => todos.indexOf(r) + 1);
-  return devueltos.length ? [...sequedan, ...devueltos] : sequedan;
+
+  reloj.cuaderno.devueltos = devueltos;
+  reloj.cuaderno.quitaLimpieza = todos.map((_, i) => i + 1).filter(n => !elegidos.includes(n));
+  return elegidos.map(n => todos[n - 1]);
 }
 
-// SI LA LIMPIEZA SE CAE, SE SIGUE CON TODOS.
-async function limpiarYSuelo(todos, reloj) {
+// SI LA ELECCION SE CAE, ELIGE EL CODIGO Y SE SIGUE.
+async function elegirLosCinco(todos, reloj) {
   if (todos.length === 0) return [];
 
-  let sequedan;
+  let salida = null;
   try {
-    const salida = await limpiarLosRasgos(todos, reloj);
-    sequedan = salida.sequedan.map(n => todos[n - 1]).filter(Boolean);
-    reloj.cuaderno.quitaLimpieza = salida.sequitan;
-    console.log(`de ${todos.length} rasgos se quedan ${sequedan.length}`);
+    salida = await pedirLosCinco(todos, reloj);
   } catch (err) {
-    console.warn(`la limpieza se ha caido (${err.message.slice(0, 80)}), se sigue con los ${todos.length} rasgos`);
-    return todos;
+    console.warn(`la eleccion se ha caido (${err.message.slice(0, 80)}), elige el codigo`);
   }
 
-  return conElSuelo(sequedan, todos, reloj);
+  const cinco = losCincoQueQuedan(salida, todos, reloj);
+  console.log(`de ${todos.length} candidatos se quedan ${cinco.length}`);
+  return cinco;
 }
 
 
@@ -939,7 +937,7 @@ async function generarElArea(contextoPersona, rasgos, reloj) {
 // ═══════════════════════════════════════════════════════════════
 // LAS CUATRO, ENCADENADAS
 //
-// 1a sacar  ->  2a limpiar  ->  3a escribir  ->  4a el area
+// 1a proponer 8  ->  2a elegir 5  ->  3a escribir  ->  4a el area
 //
 // SIN RED EN LAS DOS PRIMERAS: si no salen los rasgos, no hay texto. Se corta
 // aqui en vez de entregar algo a medias.
@@ -958,7 +956,7 @@ export async function escribirElRegalo({ nombre, sexo, fechaNice, hora, lugar, e
     `Edad: ${edad} anos`,
   ].join('\n');
 
-  // 1a — sacar los rasgos, con sus dos llamadas de repuesto.
+  // 1a — proponer los ocho candidatos, con sus dos llamadas de repuesto.
   //
   // LO QUE HAY EN CADA CASA VA SOLO AQUI, igual que en el P1. Sin esto el
   // modelo no sabe que hay dentro de la casa 1 y se lo inventa. El area, mas
@@ -971,8 +969,8 @@ export async function escribirElRegalo({ nombre, sexo, fechaNice, hora, lugar, e
   }));
   if (todos.length === 0) throw new Error('no ha salido ni un rasgo');
 
-  // 2a — la limpieza, y el suelo detras sin llamar a nadie.
-  const quedan = await limpiarYSuelo(todos, reloj);
+  // 2a — elegir los cinco de mas peso, con el codigo de arbitro detras.
+  const quedan = await elegirLosCinco(todos, reloj);
 
   // 3a — escribirlos, con sus dos llamadas de repuesto.
   const escritos = await escribirLosRasgos(quedan, nombrePila, sexo, reloj);
