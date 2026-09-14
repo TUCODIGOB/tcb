@@ -339,6 +339,7 @@ LLEVA LA CUENTA. Ten presentes las conductas que ya has nombrado, desde la prime
 6. DE QUÉ HABLA CADA UNO, Y AQUÍ NO MANDA LA POSICIÓN. 
 
 Tapa de dónde lo sacaste. Lee solo el rasgo y pregúntate si de verdad habla de quién es por dentro y de cómo se vive a sí mismo o a sí misma. Si habla de otra cosa -de su dinero, de su pareja, de lo que repite sin darse cuenta, de lo que le da miedo-, no es de aquí y no se escribe.
+ESTE ESTUDIO TIENE SIETE ÁREAS Y TÚ SOLO SACAS LA PRIMERA. Las otras seis son PATRONES -lo que repite sin darse cuenta-, MIEDOS, HERIDA, AMOR, RELACIONES y DINERO, y cada una la saca otra lectura aparte. Un rasgo que sea de una de esas seis NO ENTRA AQUÍ, por bueno que sea y aunque te deje la lista corta: no lo estás quitando, lo estás dejando para quien le toca.
 
 La posición sirvió para encontrarlo; a partir de aquí no decide nada, porque quien lo lee no la ve: solo ve el texto.
 
