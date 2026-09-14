@@ -492,18 +492,19 @@ Y no escribes nada, ni cambias ninguno, ni añades ninguno que no esté en la li
 LOS CUATRO CRITERIOS, DEL 1 AL 5
 Del 1 al 5 en los cuatro, siempre número entero. 1 es lo más bajo y 5 lo más alto. Usa el 1 y usa el 5 cuando toque: si todo lo puntúas con un 3 o un 4, la nota no distingue nada y no sirve.
 
-"cuanto" — CUÁNTO LE CUESTA O CUÁNTO LE DA. Mira el precio que lleva escrito ese rasgo. 5 es que le está costando o dando algo grande y que se puede tocar: horas de su vida, dinero, salud, la gente que tiene cerca, su calma. 1 es que el precio es pequeño, o está dicho en vago y no se puede tocar.
+"cuanto" — CUÁNTO LE CUESTA O CUÁNTO LE DA. Mira el precio que lleva escrito ese rasgo. 5 es que nombra algo que se puede contar y que es mucho: horas de su vida, dinero, salud, la gente que tiene cerca, su calma. 3 es que nombra algo que se puede contar pero es poco. 1 es que no nombra nada que se pueda contar, o lo dice en vago.
 
-"cuando" — CADA CUÁNTO LE PASA. 5 es que le pasa casi todos los días, sin que haga falta que ocurra nada especial. 1 es que le pasa muy de tarde en tarde, o solo cuando se juntan cosas raras.
+"cuando" — CADA CUÁNTO LE PASA. 5 es casi todos los días, sin que haga falta que ocurra nada especial. 3 es algunas veces al mes, o cuando se dan ciertas situaciones. 1 es muy de tarde en tarde, o solo cuando se juntan cosas raras.
 
-"donde" — EN CUÁNTAS PARTES DE SU VIDA SE LE NOTA. 5 es que se le nota en casi todo lo que hace, con quien sea y donde sea. 1 es que se le queda en una esquina de su vida y fuera de ahí no aparece.
+"donde" — EN CUÁNTAS PARTES DE SU VIDA SE LE NOTA. 5 es en casi todo lo que hace, con quien sea y donde sea. 3 es en dos o tres partes suyas, y en el resto no. 1 es en una sola esquina de su vida, y fuera de ahí no aparece.
 
-"duele" — CUÁNTO LE VA A COSTAR RECONOCERLO. 5 es que es algo que hace y no ha mirado nunca de frente, o que se cuenta al revés y cree que es una virtud. 1 es algo que ya sabe de sí y que le va a confirmar lo que piensa. Si es una fortaleza, 5 es una fuerza suya que no se reconoce y 1 es la que pondría primero si le preguntaras.
+"duele" — CUÁNTO LE VA A COSTAR RECONOCERLO. 5 es algo que hace y no ha mirado nunca de frente, o que se cuenta al revés y cree que es una virtud. 3 es algo que sospecha de sí pero no ha llamado por su nombre. 1 es algo que ya sabe y que le va a confirmar lo que piensa. Si es una fortaleza, 5 es una fuerza suya que no se reconoce y 1 es la que pondría primero si le preguntaras.
 
 Ninguno de los cuatro vale más que los otros. Se suman igual.
 
 LO QUE NO PUNTÚAS
 Que suene bien, que esté mejor escrito, que sea más raro o más bonito. Eso no es una nota, es un gusto. Aquí se mide lo que le está pasando a esa persona, no cómo está contado.
+Y NO PUNTÚAS MÁS ALTO LO MÁS LARGO. Que un rasgo traiga el precio escrito con más palabras no lo hace más pesado. Un precio dicho en cuatro palabras y uno dicho en veinte sacan la misma nota si lo que nombran es lo mismo.
 Y lo grave no es lo mismo que lo pesado. Algo que suena dramático y le pasa una vez al año saca nota baja en "cuando", por muy fuerte que suene.
 
 "repite" — CON CUÁL DICE LO MISMO
