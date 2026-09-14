@@ -567,7 +567,7 @@ async function pedirLosCinco(rasgos, reloj) {
   const arranque = Date.now();
   const salida = await alModelo({
     que: 'elegir los cinco',
-    modelo: 'claude-opus-5',
+    modelo: 'claude-sonnet-5',
     // AQUI SI PIENSA. Poner nota a ocho cosas en cuatro criterios es trabajo, y
     // sin pensar sale todo con un 3. Medio y no alto: se puntua sobre una lista
     // corta y ya escrita, no sobre una carta en tecnico.
