@@ -27,16 +27,21 @@ const POR_AREA = {
   desafios:   { min: 2, max: 3 },
 };
 
-// LO QUE SACA LA 1a, QUE ES MAS DE LO QUE SE ENTREGA.
+// LO QUE SACA LA 1a: UN TOPE, NO UN CUPO.
 //
-// Antes se le pedian justo cinco, y por eso salian flojos: a quien le piden
-// cinco te da los cinco primeros que se le forman. No deja fuera a ninguno,
-// asi que no tiene que compararlos, y si no los compara no los ordena por
-// peso aunque se lo pidas. Pidiendole ocho para quedarse con cinco, tiene que
-// descartar tres, y para descartar hay que comparar.
-const CANDIDATOS = { fortalezas: 3, desafios: 5 };
+// Se le pide MAS de lo que se entrega, para que tenga que dejar a alguien
+// fuera: quien no descarta no compara, y quien no compara no ordena por peso
+// aunque se lo pidas.
+//
+// Pero se le pide como tope, no como cantidad obligatoria. Con ocho se salio
+// del area: IDENTIDAD es el Sol, el Ascendente, lo que caiga en la casa 1 y
+// los aspectos de los tres, y de ahi no salen ocho rasgos de verdad en
+// cualquier carta. Cuando el cupo y el area se peleaban, obedecia al cupo y se
+// iba a buscar a otras casas. Con seis de tope y permiso para devolver menos,
+// no tiene que ir a ningun sitio a rellenar.
+const CANDIDATOS = { fortalezas: 2, desafios: 4 };
 
-const CUANTOS_RASGOS = CANDIDATOS.fortalezas + CANDIDATOS.desafios;   // 8
+const CUANTOS_RASGOS = CANDIDATOS.fortalezas + CANDIDATOS.desafios;   // 6
 
 // Y por debajo de esto no hay ni para llenar lo que se entrega, asi que se
 // vuelve a pedir la lista.
@@ -254,8 +259,9 @@ DESAFÍOS: lo que le cuesta, lo que le pesa, dónde tropieza.
 Sacas las fortalezas y los desafíos a la vez, todos seguidos, y cada rasgo dice cuál de las dos cosas es. 
 
 2. CUÁNTOS
-Sacas 3 fortalezas y 5 desafíos, ni una más ni una menos. Todos de IDENTIDAD: quién es por dentro y cómo se vive a sí mismo o a sí misma.
-ESTOS OCHO SON CANDIDATOS, NO LA LISTA FINAL. Después otra lectura se queda con los que más pesen y descarta el resto, así que aquí no te guardes ninguno ni te quedes corto: pon los ocho mejores que encuentres, cada uno con su precio, y que decida el de después.
+Sacas HASTA 2 fortalezas y HASTA 4 desafíos. Todos de IDENTIDAD: quién es por dentro y cómo se vive a sí mismo o a sí misma.
+ES UN TOPE, NO UNA CANTIDAD QUE HAYA QUE LLENAR. Si de IDENTIDAD no salen tantos de verdad, devuelves menos y ya está: mejor tres buenos que seis rellenando. Lo que no vale, en ningún caso, es salirte del área para llegar al número. Un rasgo que habla de otra cosa no cuenta como rasgo de esta área, por bueno que sea.
+SON CANDIDATOS, NO LA LISTA FINAL. Después otra lectura se queda con los que más pesen y descarta el resto, así que aquí no te guardes ninguno: pon los que encuentres de verdad, cada uno con su precio, y que decida el de después.
 
 
 3. DE DONDE LOS SACAS
@@ -293,8 +299,10 @@ NO ES PARA QUIEN LEE, es para que la lectura de después sepa
 cuál pesa más que cuál. Por eso se dice en seco y sin adornos.
 Y SI NO PUEDES NOMBRAR EL PRECIO, ESE RASGO NO ENTRA. Un rasgo
 del que no sabes decir qué le cuesta o qué le da es un rasgo que
-no le está pasando de verdad: lo dejas fuera y buscas otro en la
-carta.
+no le está pasando de verdad. Lo dejas fuera y NO RELLENAS SU
+SITIO: se queda vacío y devuelves uno menos. Un hueco vacío no
+hace daño; uno relleno con un rasgo flojo se lo lleva puesto un
+sitio de los que se entregan.
 
 area         siempre IDENTIDAD, escrita así, en mayúsculas.
 
@@ -302,9 +310,13 @@ origen       De donde sale el rasgo en la carta, en técnico y en corto: el
              cuerpo con su signo y su casa, o los dos cuerpos con su signo y su
              casa cada uno y el aspecto que forman. Nada más: ni explicación ni
              frase.
-             Es obligatoria. Y no saques los ocho rasgos de la misma
+             Es obligatoria. Y no saques todos los rasgos de la misma
              posición: entre el Sol, el Ascendente, lo que haya en la casa 1
              y los aspectos de los tres, hay de sobra.
+             Y DE AHÍ NO SE SALE. Esas son las posiciones de esta área y no
+             hay más: si se te acaban, es que esta carta da los rasgos que
+             da, y devuelves los que hayas encontrado. Ir a buscar a otra
+             casa para llenar la lista es traer rasgos que no son de aquí.
 
 Un rasgo es su conducta y su posición. Si empiezas uno y no sabes de dónde lo sacas, se quita entero. 
 
@@ -332,9 +344,9 @@ La posición sirvió para encontrarlo; a partir de aquí no decide nada, porque 
 
 Esto se hace rasgo por rasgo y sin saltarse ninguno: es el paso que más veces sale mal.
 
-DESPUÉS, LA CUENTA. Cuentas cuántas fortalezas y cuántos desafíos has sacado. Si te falta alguna, vuelves a la carta, al Sol, al Ascendente y a la casa 1, y sacas otra distinta de verdad. No vale escribir una variante de una que ya tienes. 
+DESPUÉS, LA CUENTA. Cuentas cuántas fortalezas y cuántos desafíos has sacado. Si te falta alguna, vuelves al Sol, al Ascendente y a la casa 1 a ver si queda alguna sin sacar. Y si de ahí no sale ninguna más, entregas las que tengas: el tope no obliga a llenarlo. No vale escribir una variante de una que ya tienes, ni traerte una de otra parte de la carta para cuadrar el número. 
 
-DESPUÉS, EL TECHO. Si te pasas de tres fortalezas o de cinco desafíos, se quedan los que más pesan y los demás se van.
+DESPUÉS, EL TECHO. Si te pasas de dos fortalezas o de cuatro desafíos, se quedan los que más pesan y los demás se van.
 
 Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ninguna conducta ni ningún precio nombren la carta ni nada técnico ni de astrología, y que a ningún rasgo le falte una casilla.
 Devuelve solo la lista.`;
