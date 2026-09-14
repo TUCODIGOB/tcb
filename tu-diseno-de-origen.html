@@ -1928,6 +1928,99 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
           </div>
 
           <div class="field">
+            <label for="sexo">Sexo *</label>
+            <select id="sexo" name="sexo" required>
+              <option value="">Selecciona</option>
+              <option value="mujer">Mujer</option>
+              <option value="hombre">Hombre</option>
+              <option value="otro">Otro</option>
+            </select>
+            <div class="field-error" id="err-sexo">Por favor, selecciona una opción.</div>
+          </div>
+
+          <div class="form-step-nav">
+            <button type="button" class="btn-next" data-next="2">Siguiente</button>
+          </div>
+
+          </div>
+
+          <div class="form-step hidden" data-form-step="2">
+
+          <div class="field">
+            <label for="fecha">Fecha de nacimiento *</label>
+            <div class="date-selects">
+              <select id="fecha-dia" required><option value="">Día</option></select>
+              <select id="fecha-mes" required>
+                <option value="">Mes</option>
+                <option value="01">Enero</option>
+                <option value="02">Febrero</option>
+                <option value="03">Marzo</option>
+                <option value="04">Abril</option>
+                <option value="05">Mayo</option>
+                <option value="06">Junio</option>
+                <option value="07">Julio</option>
+                <option value="08">Agosto</option>
+                <option value="09">Septiembre</option>
+                <option value="10">Octubre</option>
+                <option value="11">Noviembre</option>
+                <option value="12">Diciembre</option>
+              </select>
+              <select id="fecha-anio" required><option value="">Año</option></select>
+            </div>
+            <input type="hidden" id="fecha" name="fecha">
+            <div class="field-error" id="err-fecha">Por favor, introduce una fecha válida.</div>
+          </div>
+
+          <div class="field">
+              <label for="hora">
+                Hora de nacimiento *
+                <span class="help-icon" tabindex="0" id="helpHora">
+                  ?
+                  <span class="tooltip">
+                    Si no recuerdas tu hora, consulta con familiares o pide tu Certificado de Nacimiento (es gratuito).<br><br>
+                    <strong>España:</strong> <a href="https://sede.mjusticia.gob.es/tramites/certificado-nacimiento" target="_blank" rel="noopener">sede.mjusticia.gob.es</a><br>
+                    <strong>Fuera de España:</strong> consulta el Registro Civil oficial de tu país.
+                  </span>
+                </span>
+              </label>
+              <div class="date-selects date-selects-2col">
+                <select id="hora-h" required><option value="">Hora</option></select>
+                <select id="hora-m" required><option value="">Minuto</option></select>
+              </div>
+              <input type="hidden" id="hora" name="hora">
+              <div class="field-error" id="err-hora">Por favor, introduce una hora.</div>
+          </div>
+
+          <div class="field">
+              <label for="municipio">Lugar de nacimiento *</label>
+              <input type="text" id="municipio" name="municipio" placeholder="Municipio" required>
+              <div class="field-error" id="err-municipio">Por favor, introduce tu municipio de nacimiento.</div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="provincia" class="sr-only">Provincia / Estado *</label>
+              <input type="text" id="provincia" name="provincia" placeholder="Provincia / Estado" required>
+              <div class="field-error" id="err-provincia">Por favor, introduce tu provincia o estado.</div>
+            </div>
+
+            <div class="field">
+              <label for="pais" class="sr-only">País *</label>
+              <input type="text" id="pais" name="pais" placeholder="País" required>
+              <div class="field-error" id="err-pais">Por favor, introduce tu país.</div>
+            </div>
+          </div>
+
+          <div class="form-step-nav">
+            <button type="button" class="btn-back" data-back="1">Atrás</button>
+            <button type="button" class="btn-next" data-next="3">Siguiente</button>
+          </div>
+
+          </div>
+
+          <div class="form-step hidden" data-form-step="3">
+
+          <div class="field">
             <label for="email">Email *</label>
             <input type="email" id="email" name="email" placeholder="tu@email.com" autocomplete="email" required>
             <div class="field-error" id="err-email">Por favor, introduce un email válido.</div>
@@ -1973,101 +2066,6 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
               <input type="tel" id="telefono" name="telefono" placeholder="Número de teléfono" autocomplete="tel" required>
             </div>
             <div class="field-error" id="err-telefono">Introduce un número de teléfono válido para el país seleccionado.</div>
-          </div>
-
-          <div class="form-step-nav">
-            <button type="button" class="btn-next" data-next="2">Siguiente</button>
-          </div>
-
-          </div>
-
-          <div class="form-step hidden" data-form-step="2">
-
-          <div class="field-row">
-            <div class="field">
-              <label for="sexo">Sexo *</label>
-              <select id="sexo" name="sexo" required>
-                <option value="">Selecciona</option>
-                <option value="mujer">Mujer</option>
-                <option value="hombre">Hombre</option>
-                <option value="otro">Otro</option>
-              </select>
-              <div class="field-error" id="err-sexo">Por favor, selecciona una opción.</div>
-            </div>
-
-            <div class="field">
-              <label for="fecha">Fecha de nacimiento *</label>
-              <div class="date-selects">
-                <select id="fecha-dia" required><option value="">Día</option></select>
-                <select id="fecha-mes" required>
-                  <option value="">Mes</option>
-                  <option value="01">Enero</option>
-                  <option value="02">Febrero</option>
-                  <option value="03">Marzo</option>
-                  <option value="04">Abril</option>
-                  <option value="05">Mayo</option>
-                  <option value="06">Junio</option>
-                  <option value="07">Julio</option>
-                  <option value="08">Agosto</option>
-                  <option value="09">Septiembre</option>
-                  <option value="10">Octubre</option>
-                  <option value="11">Noviembre</option>
-                  <option value="12">Diciembre</option>
-                </select>
-                <select id="fecha-anio" required><option value="">Año</option></select>
-              </div>
-              <input type="hidden" id="fecha" name="fecha">
-              <div class="field-error" id="err-fecha">Por favor, introduce una fecha válida.</div>
-            </div>
-          </div>
-
-          <div class="field">
-              <label for="hora">
-                Hora de nacimiento *
-                <span class="help-icon" tabindex="0" id="helpHora">
-                  ?
-                  <span class="tooltip">
-                    Si no recuerdas tu hora, consulta con familiares o pide tu Certificado de Nacimiento (es gratuito).<br><br>
-                    <strong>España:</strong> <a href="https://sede.mjusticia.gob.es/tramites/certificado-nacimiento" target="_blank" rel="noopener">sede.mjusticia.gob.es</a><br>
-                    <strong>Fuera de España:</strong> consulta el Registro Civil oficial de tu país.
-                  </span>
-                </span>
-              </label>
-              <div class="date-selects date-selects-2col">
-                <select id="hora-h" required><option value="">Hora</option></select>
-                <select id="hora-m" required><option value="">Minuto</option></select>
-              </div>
-              <input type="hidden" id="hora" name="hora">
-              <div class="field-error" id="err-hora">Por favor, introduce una hora.</div>
-          </div>
-
-          <div class="form-step-nav">
-            <button type="button" class="btn-back" data-back="1">Atrás</button>
-            <button type="button" class="btn-next" data-next="3">Siguiente</button>
-          </div>
-
-          </div>
-
-          <div class="form-step hidden" data-form-step="3">
-
-          <div class="field">
-              <label for="municipio">Lugar de nacimiento *</label>
-              <input type="text" id="municipio" name="municipio" placeholder="Municipio" required>
-              <div class="field-error" id="err-municipio">Por favor, introduce tu municipio de nacimiento.</div>
-          </div>
-
-          <div class="field-row">
-            <div class="field">
-              <label for="provincia" class="sr-only">Provincia / Estado *</label>
-              <input type="text" id="provincia" name="provincia" placeholder="Provincia / Estado" required>
-              <div class="field-error" id="err-provincia">Por favor, introduce tu provincia o estado.</div>
-            </div>
-
-            <div class="field">
-              <label for="pais" class="sr-only">País *</label>
-              <input type="text" id="pais" name="pais" placeholder="País" required>
-              <div class="field-error" id="err-pais">Por favor, introduce tu país.</div>
-            </div>
           </div>
 
           <div class="checkbox-field" id="politicaField">
@@ -2568,8 +2566,8 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
 
     // Formulario en 3 pasos
     const PASO_CAMPOS_REQUERIDOS = {
-      1: ['nombre', 'email', 'email2', 'telefono'],
-      2: ['sexo', 'fecha', 'hora'],
+      1: ['nombre', 'sexo'],
+      2: ['fecha', 'hora', 'municipio', 'provincia', 'pais'],
     };
 
     function campoPasoVacio(id) {
@@ -2599,12 +2597,6 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
           if (campoPasoVacio(id)) { showError(id); ok = false; }
           else clearError(id);
         });
-        if (pasoActual === '1') {
-          const telefono = document.getElementById('telefono').value.trim();
-          const prefijo = document.getElementById('prefijo').value;
-          if (!validarTelefono(telefono, prefijo)) { showError('telefono'); ok = false; }
-          else clearError('telefono');
-        }
         if (!ok) return;
         irAPaso(Number(btn.dataset.next));
       });
