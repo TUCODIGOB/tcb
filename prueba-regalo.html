@@ -1067,6 +1067,12 @@ function pintarElCuaderno(salida) {
     const t = (c.tiempos || []).find(x => x.que && x.que.indexOf(que) === 0);
     return t ? t.segundos + ' s' : '—';
   };
+  const gasto = que => {
+    const g = (c.gastos || []).filter(x => x.que && x.que.indexOf(que) === 0);
+    if (!g.length) return '';
+    return ' · ' + g.reduce((suma, x) => suma + (x.dolares || 0), 0).toFixed(4) + ' $';
+  };
+  const gastoTotal = (c.gastos || []).reduce((suma, x) => suma + (x.dolares || 0), 0);
   const quitados = new Set(c.quitaLimpieza || []);
   const devueltos = new Set(c.devueltos || []);
 
@@ -1097,13 +1103,14 @@ function pintarElCuaderno(salida) {
 
     + '<p class="resumen">'
     +   '<span>Total: <b>' + (salida.segundos != null ? salida.segundos + ' s' : '—') + '</b></span>'
+    +   '<span>Coste: <b>' + gastoTotal.toFixed(4) + ' $</b></span>'
     +   '<span>Rasgos que salieron: <b>' + ((c.entraron || []).length) + '</b></span>'
     +   '<span>La limpieza quitó: <b>' + ((c.quitaLimpieza || []).length) + '</b></span>'
     +   '<span>Las redes dejaron: <b>' + cuantos + '</b></span>'
     + '</p>'
 
     + '<details><summary>1ª llamada · sacar los rasgos de la carta'
-    +   '<span class="tarda">' + tiempo('sacar los rasgos') + '</span></summary>'
+    +   '<span class="tarda">' + tiempo('sacar los rasgos') + gasto('sacar los rasgos') + '</span></summary>'
     +   '<div class="dentro-det">'
     +     '<table><thead><tr><th>Nº</th><th>Lista</th><th>Conducta</th><th>De dónde sale</th></tr></thead>'
     +     '<tbody>' + (entraron || '<tr><td colspan="4">No devolvió ninguno.</td></tr>') + '</tbody></table>'
@@ -1111,14 +1118,14 @@ function pintarElCuaderno(salida) {
     +   '</div></details>'
 
     + '<details><summary>2ª llamada · la limpieza'
-    +   '<span class="tarda">' + tiempo('limpiar los rasgos') + '</span></summary>'
+    +   '<span class="tarda">' + tiempo('limpiar los rasgos') + gasto('elegir los cinco') + '</span></summary>'
     +   '<div class="dentro-det">'
     +     '<p>Quitó: <b>' + ((c.quitaLimpieza || []).join(', ') || 'ninguno') + '</b></p>'
     +     '<p>Se quedan: <b>' + ((c.devueltos || []).join(', ') || '—') + '</b></p>'
     +   '</div></details>'
 
     + '<details><summary>3ª llamada · escribir los rasgos'
-    +   '<span class="tarda">' + tiempo('escribir los rasgos') + '</span></summary>'
+    +   '<span class="tarda">' + tiempo('escribir los rasgos') + gasto('escribir los rasgos') + '</span></summary>'
     +   '<div class="dentro-det">'
     +     '<table><thead><tr><th>Lista</th><th>Título</th><th>Descripción</th></tr></thead>'
     +     '<tbody>' + (escritos || '<tr><td colspan="3">No devolvió ninguno.</td></tr>') + '</tbody></table>'
@@ -1132,7 +1139,7 @@ function pintarElCuaderno(salida) {
     +   '</div></details>'
 
     + '<details><summary>4ª llamada · escribir el área'
-    +   '<span class="tarda">' + tiempo('el area') + '</span></summary>'
+    +   '<span class="tarda">' + tiempo('el area') + gasto('el area') + '</span></summary>'
     +   '<div class="dentro-det">'
     +     '<p>Letras del área: <b>' + String(salida.texto || '').length + '</b>'
     +     ' · Párrafos: <b>' + String(salida.texto || '').split(/\n\n+/).filter(t => t.trim()).length + '</b>'

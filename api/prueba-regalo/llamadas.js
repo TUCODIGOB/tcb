@@ -48,6 +48,19 @@ const CUANTOS_RASGOS = CANDIDATOS.fortalezas + CANDIDATOS.desafios;   // 6
 const MINIMO_DE_CANDIDATOS = POR_AREA.fortalezas.max + POR_AREA.desafios.max;   // 5
 
 // ═══════════════════════════════════════════════════════════════
+// LO QUE CUESTA CADA MODELO, EN DOLARES POR MILLON DE TOKENS.
+//
+// Son los precios de Anthropic. Si los cambian, se cambian aqui y ya esta.
+// Lo que el modelo piensa se cobra como salida y viene ya sumado dentro de
+// output_tokens, asi que no hay que contarlo aparte.
+// ═══════════════════════════════════════════════════════════════
+
+const PRECIOS = {
+  'claude-opus-5':   { entrada: 5, salida: 25 },
+  'claude-sonnet-5': { entrada: 2, salida: 10 },
+};
+
+// ═══════════════════════════════════════════════════════════════
 // EL RELOJ DE LA PETICION. Copiado del P1.
 //
 // Vercel corta la funcion a los 300 segundos. El reloj arranca al entrar la
@@ -62,7 +75,7 @@ export function crearReloj(margen = TOPE_DE_LA_PETICION) {
   const fin = Date.now() + margen;
   // EL CUADERNO. Solo sirve para poder mirar despues que ha hecho cada llamada,
   // cuanto ha tardado y que ha quitado la limpieza. No decide NADA.
-  const cuaderno = { tiempos: [], entraron: [], quitaLimpieza: [], devueltos: [], escritos: [] };
+  const cuaderno = { tiempos: [], gastos: [], entraron: [], quitaLimpieza: [], devueltos: [], escritos: [] };
   return {
     quedan: () => fin - Date.now(),
     senal: tope => AbortSignal.timeout(Math.max(1000, Math.min(tope, fin - Date.now()))),
@@ -72,6 +85,23 @@ export function crearReloj(margen = TOPE_DE_LA_PETICION) {
       const segundos = Math.round((Date.now() - arranque) / 100) / 10;
       cuaderno.tiempos.push({ que, segundos });
       console.log(`[regalo] ${que}: ${segundos} s`);
+    },
+    // LO QUE HA COSTADO UNA LLAMADA. Igual que los tiempos: solo sirve para
+    // poder mirar despues cual se lleva el dinero. No decide NADA. Si el
+    // modelo no estuviera en la tabla de precios, se apuntan los tokens y el
+    // gasto se queda en cero, pero no se rompe nada.
+    gasta: (que, modelo, uso) => {
+      if (!uso) return;
+      const entrada = (uso.input_tokens || 0)
+        + (uso.cache_read_input_tokens || 0)
+        + (uso.cache_creation_input_tokens || 0);
+      const salida = uso.output_tokens || 0;
+      const precio = PRECIOS[modelo];
+      const dolares = precio
+        ? (entrada * precio.entrada + salida * precio.salida) / 1000000
+        : 0;
+      cuaderno.gastos.push({ que, modelo, entrada, salida, dolares });
+      console.log(`[regalo] ${que}: ${entrada} de entrada + ${salida} de salida = ${dolares.toFixed(4)} $`);
     },
   };
 }
@@ -84,7 +114,7 @@ export function crearReloj(margen = TOPE_DE_LA_PETICION) {
 // modelo se ha cortado a medias y volver a pedirlo suele arreglarlo.
 // ═══════════════════════════════════════════════════════════════
 
-async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, espera }) {
+async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, espera, reloj }) {
   const cuerpo = {
     model: modelo,
     max_tokens: techo,
@@ -118,6 +148,11 @@ async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, es
   }
 
   const data = await response.json();
+
+  // EL GASTO SE APUNTA AQUI, antes de mirar si lo que vino sirve: los tokens
+  // ya se han pagado aunque la respuesta haya que tirarla.
+  if (reloj) reloj.gasta(que, modelo, data.usage);
+
   const texto = (data.content || [])
     .filter(b => b && b.type === 'text' && typeof b.text === 'string')
     .map(b => b.text)
@@ -372,6 +407,7 @@ async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'm
     techo: 32000,
     system: encargoDeElegir(nombrePila, sexo, cartaTexto),
     mensaje: 'Elige los rasgos de esta carta, siguiendo el esquema.',
+    reloj,
     molde: ESQUEMA_DE_ELEGIR,
     espera: reloj.senal(TOPE_DE_ELEGIR),
   });
@@ -543,6 +579,7 @@ async function pedirLosCinco(rasgos, reloj) {
     // frase fija.
     system: `${ENCARGO_DE_ELEGIR_CINCO}\n\n\nLA LISTA:\n\n${laListaNumerada(rasgos)}`,
     mensaje: 'Ponles nota a los ocho, siguiendo el esquema.',
+    reloj,
     molde: ESQUEMA_DE_ELEGIR_CINCO,
     espera: reloj.senal(TOPE_DE_ELEGIR_CINCO),
   });
@@ -767,6 +804,7 @@ async function pedirLoEscrito(rasgos, nombrePila, sexo, reloj, esfuerzo = 'low')
     // una frase fija.
     system: `${TONO}\n\n\n${ENCARGO_DE_ESCRIBIR}\nLOS RASGOS: \n${losRasgosSinEscribir(rasgos)}\nPersona: ${comoSeLeHabla(sexo)}\nNombre de pila: ${nombrePila}`,
     mensaje: 'Escribe estos rasgos, siguiendo el esquema.',
+    reloj,
     molde: ESQUEMA_DE_ESCRIBIR,
     espera: reloj.senal(TOPE_DE_ESCRIBIR),
   });
@@ -969,6 +1007,10 @@ async function pedirElArea(contextoPersona, rasgos, reloj) {
   }
 
   const data = await response.json();
+
+  // Igual que en alModelo: el gasto se apunta antes de mirar el texto.
+  reloj.gasta('el area', 'claude-sonnet-5', data.usage);
+
   const texto = data.content?.[0]?.text || '';
 
   if (!texto || texto.trim().length < 100) {
