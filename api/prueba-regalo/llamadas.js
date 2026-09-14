@@ -404,20 +404,24 @@ async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj) {
 
 
 // ═══════════════════════════════════════════════════════════════
-// 2a LLAMADA — ELEGIR LOS CINCO · Opus, pensando medio
+// 2a LLAMADA — PONERLES NOTA · Opus, pensando medio
 //
-// AQUI ES DONDE SE ELIGE, Y ES LO UNICO QUE HACE. Antes buscaba calcos entre
-// cinco rasgos que ya venian sin repetir, o sea que no hacia nada: en tres
-// pruebas seguidas no quito ninguno. Ahora recibe los ocho candidatos escritos
-// en cristiano, con lo que a cada uno le cuesta o le da, y se queda con los
-// cinco que mas pesan.
+// AQUI NO ELIGE EL MODELO: PUNTUA. Y despues ordena el codigo.
 //
-// POR QUE AQUI Y NO EN LA DE ANTES: elegir por peso leyendo una lista ya
-// escrita sale bien; elegir mientras se lee una carta en tecnico, no. Son dos
-// trabajos distintos y cada uno va en su llamada.
+// Elegir cinco de un vistazo es una decision de golpe, y por eso bailaba de una
+// tirada a otra: la misma carta daba cinco rasgos distintos cada vez, todos
+// defendibles. Puntuar es otra cosa. Se mira un candidato, se le pone nota en
+// cuatro cosas con nombre, se pasa al siguiente, y al final hay ocho columnas
+// de numeros que se comparan solas. Eso es mucho mas estable que el vistazo, y
+// es como se hace donde esto funciona: criterios con nombre, nota por criterio,
+// y la suma la hace el codigo.
+//
+// Y ASI NO PUEDE CONTRADECIRSE. Antes podia decir que buscaba peso y quedarse
+// con otra cosa. Ahora la nota que pone manda: si puntua alto un rasgo, ese
+// entra, porque quien ordena no es el.
 //
 // Recibe: los 8. Numero, tipo, conducta y precio. NO VE LA CARTA.
-// Entrega: numeros. Que 2 fortalezas y que 3 desafios se quedan.
+// Entrega: la nota de los 8 en cuatro criterios, y con cual repite cada uno.
 //
 // AQUI NO SE ESCRIBE NI UNA PALABRA. El texto lo tiene guardado el codigo del
 // paso anterior y lo recupera por el numero, asi que de aqui no puede salir un
@@ -429,13 +433,36 @@ async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj) {
 
 const TOPE_DE_ELEGIR_CINCO = 90000;
 
+// LOS CUATRO CRITERIOS, Y SE SUMAN IGUAL. Ninguno vale mas que otro: un rasgo
+// que le cuesta mucho pero casi nunca no pesa mas que uno mediano que le pasa
+// todas las semanas y en media vida.
+const CRITERIOS = ['cuanto', 'cuando', 'donde', 'duele'];
+
 const ESQUEMA_DE_ELEGIR_CINCO = {
   type: 'object',
   properties: {
-    fortalezas: { type: 'array', items: { type: 'integer' } },
-    desafios:   { type: 'array', items: { type: 'integer' } },
+    notas: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          n:      { type: 'integer' },
+          cuanto: { type: 'integer' },
+          cuando: { type: 'integer' },
+          donde:  { type: 'integer' },
+          duele:  { type: 'integer' },
+          // CON CUAL REPITE, O 0. La nota sola no quita los repetidos: dos
+          // rasgos que cuentan lo mismo pueden puntuar alto los dos y comerse
+          // dos de los cinco sitios. Esto lo dice y el codigo tira al de nota
+          // mas baja de la pareja.
+          repite: { type: 'integer' },
+        },
+        required: ['n', 'cuanto', 'cuando', 'donde', 'duele', 'repite'],
+        additionalProperties: false,
+      },
+    },
   },
-  required: ['fortalezas', 'desafios'],
+  required: ['notas'],
   additionalProperties: false,
 };
 
@@ -452,37 +479,47 @@ function laListaNumerada(rasgos) {
     .join('\n');
 }
 
-// EL ENCARGO. Este si es nuevo, porque el trabajo es nuevo: el del P1 buscaba
-// repetidos entre treinta y tantos rasgos de siete areas, y aqui lo que hace
-// falta es elegir por peso entre ocho de una sola area.
+// EL ENCARGO. Es una rubrica: criterios con nombre, una nota por criterio y por
+// candidato, y la suma la hace el codigo. No se le pide que elija, se le pide
+// que mida.
 const ENCARGO_DE_ELEGIR_CINCO = `Abajo tienes ocho rasgos interiores de una persona, enumerados. De cada uno sabes tres cosas: si es una fortaleza o un desafío, qué hace esa persona, y qué le cuesta o qué le da. Todos son del área IDENTIDAD: quién es por dentro y cómo se vive a sí mismo o a sí misma.
-Son candidatos, no la lista final. Tu único trabajo es quedarte con los que más pesan en su vida y dejar fuera los demás. Ni escribes, ni cambias ninguno, ni añades nada que no esté en la lista.
 
-CUÁNTOS TE QUEDAS
-DOS fortalezas y TRES desafíos. Ni uno más ni uno menos. Los otros tres se quedan fuera y no pasa nada: para eso hay ocho.
+TU TRABAJO ES PONERLES NOTA, NO ELEGIR
+No decides cuáles se quedan. Puntúas los ocho y ya está: quién se queda lo decide después una suma, no tú. Así que no vayas guardando sitio ni pensando en cuántos caben, porque no hay cupo que repartir.
+Los puntúas TODOS, los ocho, uno por uno y en el orden en que están. Miras uno, le pones sus cuatro notas, y pasas al siguiente. No lo compares con los otros mientras lo puntúas: cada uno se mide contra lo que dice de esa persona, no contra sus vecinos.
+Y no escribes nada, ni cambias ninguno, ni añades ninguno que no esté en la lista.
 
-QUÉ ES QUE UN RASGO PESE
-Que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. Eso lo tienes escrito en cada uno, detrás de la conducta: es lo que tienes que comparar.
-Pesa más lo que le cuesta o le da algo concreto y grande que lo que le cuesta o le da algo pequeño o difuso. Pesa más lo que le pasa a menudo que lo que le pasa de vez en cuando. Y pesa más lo que le toca en varias partes de su vida que lo que se le queda en una esquina.
-NO PESA que suene bien, ni que esté mejor escrito, ni que sea más raro o más original. Se elige por lo que le está pasando, no por cómo está contado.
-NO PESA MÁS POR SER MÁS DRAMÁTICO. Un rasgo que le quita horas cada semana pesa más que uno que suena grave y le pasa una vez al año.
-Y NO PESA que sea cómodo de leer. Entre uno que le va a doler reconocer y otro que le va a dar la razón, pesa el primero.
+LOS CUATRO CRITERIOS, DEL 1 AL 5
+Del 1 al 5 en los cuatro, siempre número entero. 1 es lo más bajo y 5 lo más alto. Usa el 1 y usa el 5 cuando toque: si todo lo puntúas con un 3 o un 4, la nota no distingue nada y no sirve.
 
-Y NO COGES DOS QUE CUENTEN LO MISMO
-Si dos de los que ibas a coger dicen la misma conducta con otras palabras, coges solo el que más pese y llenas ese sitio con otro distinto de la lista. Quedarte con dos que dicen lo mismo es tirar uno de los cinco sitios que tienes.
+"cuanto" — CUÁNTO LE CUESTA O CUÁNTO LE DA. Mira el precio que lleva escrito ese rasgo. 5 es que le está costando o dando algo grande y que se puede tocar: horas de su vida, dinero, salud, la gente que tiene cerca, su calma. 1 es que el precio es pequeño, o está dicho en vago y no se puede tocar.
+
+"cuando" — CADA CUÁNTO LE PASA. 5 es que le pasa casi todos los días, sin que haga falta que ocurra nada especial. 1 es que le pasa muy de tarde en tarde, o solo cuando se juntan cosas raras.
+
+"donde" — EN CUÁNTAS PARTES DE SU VIDA SE LE NOTA. 5 es que se le nota en casi todo lo que hace, con quien sea y donde sea. 1 es que se le queda en una esquina de su vida y fuera de ahí no aparece.
+
+"duele" — CUÁNTO LE VA A COSTAR RECONOCERLO. 5 es que es algo que hace y no ha mirado nunca de frente, o que se cuenta al revés y cree que es una virtud. 1 es algo que ya sabe de sí y que le va a confirmar lo que piensa. Si es una fortaleza, 5 es una fuerza suya que no se reconoce y 1 es la que pondría primero si le preguntaras.
+
+Ninguno de los cuatro vale más que los otros. Se suman igual.
+
+LO QUE NO PUNTÚAS
+Que suene bien, que esté mejor escrito, que sea más raro o más bonito. Eso no es una nota, es un gusto. Aquí se mide lo que le está pasando a esa persona, no cómo está contado.
+Y lo grave no es lo mismo que lo pesado. Algo que suena dramático y le pasa una vez al año saca nota baja en "cuando", por muy fuerte que suene.
+
+"repite" — CON CUÁL DICE LO MISMO
+Después de puntuarlos, mira si alguno cuenta la misma conducta que otro con otras palabras. Si es así, pones en "repite" el número del otro. Si no repite con ninguno, pones 0.
+Repetir es contar la misma conducta. Que dos hablen del mismo tema, o que vayan juntos, o que uno sea la consecuencia del otro, no es repetir: ahí va 0.
 
 LO QUE DEVUELVES
-"fortalezas": los números de las DOS fortalezas que se quedan, la que más pesa primero.
-"desafios": los números de los TRES desafíos que se quedan, el que más pesa primero.
-Solo números de la lista de abajo. Un número que está marcado como FORTALEZA no puede ir en "desafios", ni al revés. Ningún número se repite.`;
+"notas": una entrada por cada uno de los ocho, con su número, sus cuatro notas y su "repite". Los ocho, ninguno suelto y ninguno repetido.`;
 
 async function pedirLosCinco(rasgos, reloj) {
   const arranque = Date.now();
   const salida = await alModelo({
     que: 'elegir los cinco',
     modelo: 'claude-opus-5',
-    // AQUI SI PIENSA. Elegir por peso es comparar ocho cosas entre si, y eso no
-    // sale sin pensar. Medio y no alto: la comparacion se hace sobre una lista
+    // AQUI SI PIENSA. Poner nota a ocho cosas en cuatro criterios es trabajo, y
+    // sin pensar sale todo con un 3. Medio y no alto: se puntua sobre una lista
     // corta y ya escrita, no sobre una carta en tecnico.
     razona: 'medium',
     // El techo es holgado y no por lo que escribe -que son unos pocos numeros-,
@@ -491,7 +528,7 @@ async function pedirLosCinco(rasgos, reloj) {
     // LA LISTA VA DENTRO DEL ENCARGO, igual que en el P1, y el mensaje es una
     // frase fija.
     system: `${ENCARGO_DE_ELEGIR_CINCO}\n\n\nLA LISTA:\n\n${laListaNumerada(rasgos)}`,
-    mensaje: 'Di qué dos fortalezas y qué tres desafíos se quedan, siguiendo el esquema.',
+    mensaje: 'Ponles nota a los ocho, siguiendo el esquema.',
     molde: ESQUEMA_DE_ELEGIR_CINCO,
     espera: reloj.senal(TOPE_DE_ELEGIR_CINCO),
   });
@@ -501,41 +538,73 @@ async function pedirLosCinco(rasgos, reloj) {
   return salida;
 }
 
-// SIN LLAMAR A NADIE, Y GRATIS: EL CODIGO DE ARBITRO.
+// LAS NOTAS, LIMPIAS. Una suma por candidato y con quien repite, o nada si de
+// ese no ha dicho nada. Cada nota tiene que ser un entero del 1 al 5: lo que
+// venga fuera de ahi no se recorta a la fuerza, se tira la entera, que una nota
+// inventada ensucia la suma mas que una que falta.
+function lasNotas(salida, todos) {
+  const notas = new Map();
+  for (const e of (Array.isArray(salida?.notas) ? salida.notas : [])) {
+    const n = Number(e?.n);
+    if (!Number.isInteger(n) || n < 1 || n > todos.length || notas.has(n)) continue;
+
+    const puntos = CRITERIOS.map(c => Number(e?.[c]));
+    if (puntos.some(p => !Number.isInteger(p) || p < 1 || p > 5)) continue;
+
+    // El gemelo tiene que existir, no ser el mismo, y ser de su misma lista:
+    // una fortaleza y un desafio no son la misma conducta contada dos veces.
+    const otro = Number(e?.repite);
+    const repite = Number.isInteger(otro) && otro >= 1 && otro <= todos.length
+      && otro !== n && todos[otro - 1].lista === todos[n - 1].lista ? otro : 0;
+
+    notas.set(n, { suma: puntos.reduce((a, b) => a + b, 0), repite });
+  }
+  return notas;
+}
+
+// SIN LLAMAR A NADIE, Y GRATIS: EL CODIGO SUMA Y ORDENA.
 //
-// El modelo dice cuales, pero quien cuenta es esto: salen DOS fortalezas y
-// TRES desafios exactos, siempre. Si nombra de mas, sobran los ultimos -los
-// devuelve por orden de peso-. Si nombra de menos, o nombra un numero que no
-// existe, o mete una fortaleza en los desafios, se completa con los que el
-// paso anterior puso primero. Y si la llamada se ha caido, esto elige solo.
+// El modelo pone las notas; quien decide es esto. Se ordena cada lista por la
+// suma, de mas a menos, y se cogen los de arriba. En caso de empate manda el
+// orden en que llegaron, que no hay nada mejor con lo que desempatar y asi la
+// misma respuesta da siempre lo mismo.
+//
+// Y salen DOS fortalezas y TRES desafios exactos, pase lo que pase: si de
+// alguno no ha dicho nada, va detras de todos los puntuados; si la llamada se
+// ha caido y no hay ninguna nota, se cogen los primeros de cada lista.
 function losCincoQueQuedan(salida, todos, reloj) {
+  const notas = lasNotas(salida, todos);
   const elegidos = [];
-  const devueltos = [];
+  const sinNota = [];
 
   for (const cual of ['fortalezas', 'desafios']) {
-    const tope = POR_AREA[cual].max;
+    const suyos = todos
+      .map((r, i) => i + 1)
+      .filter(n => todos[n - 1].lista === cual)
+      .sort((a, b) => (notas.get(b)?.suma ?? 0) - (notas.get(a)?.suma ?? 0) || a - b);
 
-    // Solo numeros que existan, que sean de esta lista y sin repetir. Se
-    // respeta el orden en que los ha dado, que es su orden de peso.
-    const suyos = [...new Set((Array.isArray(salida?.[cual]) ? salida[cual] : [])
-      .map(Number)
-      .filter(n => Number.isInteger(n) && n >= 1 && n <= todos.length && todos[n - 1].lista === cual))]
-      .slice(0, tope);
-
-    if (suyos.length < tope) {
-      const antes = suyos.length;
-      for (let n = 1; n <= todos.length && suyos.length < tope; n++) {
-        if (todos[n - 1].lista !== cual || suyos.includes(n)) continue;
-        suyos.push(n);
-        devueltos.push(n);
+    const cogidos = [];
+    for (const n of suyos) {
+      if (cogidos.length === POR_AREA[cual].max) break;
+      // SI REPITE CON UNO QUE YA ESTA DENTRO, NO ENTRA. Como la lista va por
+      // nota, el que ya esta dentro es el de la pareja que mas puntuo.
+      const gemelo = notas.get(n)?.repite || 0;
+      if (gemelo && cogidos.includes(gemelo)) {
+        console.warn(`el ${n} repite con el ${gemelo}, que ya esta dentro: se coge otro`);
+        continue;
       }
-      console.warn(`la eleccion dejo ${cual} en ${antes} de ${tope}, el codigo pone ${suyos.length - antes}`);
+      if (!notas.has(n)) sinNota.push(n);
+      cogidos.push(n);
     }
 
-    elegidos.push(...suyos);
+    if (cogidos.length < POR_AREA[cual].max) {
+      console.warn(`${cual}: solo hay ${cogidos.length} candidatos de ${POR_AREA[cual].max}`);
+    }
+    elegidos.push(...cogidos);
   }
 
-  reloj.cuaderno.devueltos = devueltos;
+  console.log(`notas: ${todos.map((_, i) => `${i + 1}:${notas.get(i + 1)?.suma ?? '-'}`).join(' ')}`);
+  reloj.cuaderno.devueltos = sinNota;
   reloj.cuaderno.quitaLimpieza = todos.map((_, i) => i + 1).filter(n => !elegidos.includes(n));
   return elegidos.map(n => todos[n - 1]);
 }
