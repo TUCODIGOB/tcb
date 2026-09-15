@@ -275,10 +275,52 @@ button:hover{filter:brightness(.96);}
 </style>
 
 <style>
-/* EL TEXTO DE LA LECTURA, CON LOS TAMAÑOS DEL P1: 16 en el ordenador y 18 en
-   el movil. Es lo unico que cambia respecto a la pagina de pruebas. */
+/* LOS TAMAÑOS DEL P1, Y NINGUNO MAS. Alli solo hay dos: el de los titulares
+   -que se encoge solo segun el ancho- y el del texto, que es 16 en el
+   ordenador y 18 en el movil. Aqui se usan esos dos y ya esta. */
+
+.portada h1,
+.cabecera-area h2,
+.venta h2 {
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+}
+
+body,
+.portada .suya,
+.datos-nac,
+.cabecera-area p,
+.area p,
+.area h3,
+.area p.pregunta,
+.area .escena p,
+.cerrados b,
+.cerrados .que,
+.cerrados li.suelto b,
+.venta .cifras,
+.venta .dice,
+.venta a.comprar,
+.venta .letra {
+  font-size: 16px;
+}
+
 @media (max-width: 600px) {
-  body { font-size: 18px; }
+  body,
+  .portada .suya,
+  .datos-nac,
+  .cabecera-area p,
+  .area p,
+  .area h3,
+  .area p.pregunta,
+  .area .escena p,
+  .cerrados b,
+  .cerrados .que,
+  .cerrados li.suelto b,
+  .venta .cifras,
+  .venta .dice,
+  .venta a.comprar,
+  .venta .letra {
+    font-size: 18px;
+  }
 }
 </style>
 </head>
