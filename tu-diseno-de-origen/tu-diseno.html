@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Tu Diseño de Origen</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" type="image/webp" href="/images/favicon-origen-natal-oscuro.webp" />
+
+<style>
+@font-face{
+  font-display:swap; font-family:'Playfair Display'; font-style:normal; font-weight:700;
+  src:url('fonts-web/playfair-display-v40-latin_latin-ext-700.woff2') format('woff2');
+}
+@font-face{
+  font-display:swap; font-family:'Open Sans'; font-style:normal; font-weight:400;
+  src:url('fonts-web/open-sans-v44-latin_latin-ext-regular.woff2') format('woff2');
+}
+@font-face{
+  font-display:swap; font-family:'Open Sans'; font-style:normal; font-weight:600;
+  src:url('fonts-web/open-sans-v44-latin_latin-ext-600.woff2') format('woff2');
+}
+
+:root{
+  --crema:#FDF9EF;
+  --papel:#FFFFFF;
+  --tinta:#0E3F4B;
+  --texto:#3A3A3A;
+  --suave:#6E7B7F;
+  --oro:#CFB180;
+  --borde:#E3DDD2;
+  --rojo:#B3261E;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--crema); color:var(--texto);
+  font-family:'Open Sans',system-ui,sans-serif; font-size:16px; line-height:1.55;
+  padding:0 16px; padding-block:40px 64px;
+}
+.hoja{max-width:560px;margin:0 auto;}
+
+h1{
+  font-family:'Playfair Display',Georgia,serif; color:var(--tinta);
+  font-size:1.7rem; line-height:1.2; margin:0 0 6px; text-wrap:balance;
+}
+.entradilla{margin:0 0 28px;color:var(--suave);font-size:.95rem;}
+
+.tarjeta{
+  background:var(--papel); border:1px solid var(--borde); border-radius:14px;
+  padding:22px 20px; display:flex; flex-direction:column; gap:16px;
+}
+
+.campo{display:flex;flex-direction:column;gap:6px;}
+label{font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta);}
+input,select{
+  font-family:inherit; font-size:1rem; color:var(--texto);
+  background:var(--crema); border:1px solid var(--borde); border-radius:8px;
+  padding:11px 12px; width:100%;
+}
+input:focus,select:focus{outline:2px solid var(--oro);outline-offset:1px;}
+.fila{display:flex;gap:8px;}
+.fila > *{flex:1;min-width:0;}
+
+.campo.mal input,.campo.mal select{border-color:var(--rojo);background:#FDF2F1;}
+.aviso{display:none;font-size:.8rem;color:var(--rojo);}
+.campo.mal .aviso{display:block;}
+
+button{
+  font-family:inherit; font-size:1rem; font-weight:600; letter-spacing:.03em;
+  background:var(--oro); color:#fff; border:0; border-radius:9px;
+  padding:14px 16px; cursor:pointer; width:100%;
+}
+button:hover{filter:brightness(.96);}
+
+.banda{
+  display:none; margin-top:18px; padding:14px 16px; border-radius:10px;
+  background:var(--papel); border:1px solid var(--borde); font-size:.92rem;
+}
+.banda.puesta{display:block;}
+.banda b{color:var(--tinta);}
+.banda pre{
+  margin:10px 0 0; padding:12px; background:var(--crema); border-radius:8px;
+  font-size:.82rem; overflow-x:auto; white-space:pre-wrap; word-break:break-word;
+}
+
+/* ── EL FORMULARIO EN TRES PASOS, COMO EL DEL P1 ────────────── */
+.paso{display:flex;flex-direction:column;gap:16px;}
+.paso.oculta{display:none;}
+
+.pasos{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.pasos-puntos{display:flex;gap:8px;}
+.punto{
+  width:9px;height:9px;border-radius:50%;
+  background:var(--borde);transition:background .2s;
+}
+.punto.puesto{background:var(--oro);}
+.pasos-texto{margin:0;font-size:.78rem;letter-spacing:.06em;color:var(--suave);text-transform:uppercase;}
+
+.tel{display:flex;gap:8px;}
+.prefijo-caja{position:relative;flex:0 0 128px;}
+.prefijo-caja select{padding-left:12px;}
+/* La bandera tapa el emoji del desplegable, como en el P1: asi se ve igual
+   en cualquier movil y no salen dos banderas. */
+.bandera{
+  position:absolute;left:1.5px;top:1.5px;bottom:1.5px;width:38px;
+  background:var(--crema);display:flex;align-items:center;justify-content:center;
+  pointer-events:none;border-radius:7px 0 0 7px;z-index:1;
+}
+.bandera img{
+  display:block;width:20px;height:15px;object-fit:cover;
+  border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.08);
+}
+.tel input{flex:1;min-width:0;}
+
+.acepta{display:flex;gap:10px;align-items:flex-start;}
+.acepta input{width:auto;flex:0 0 auto;margin-top:3px;}
+.acepta label{
+  font-size:.82rem;font-weight:400;letter-spacing:0;text-transform:none;
+  color:var(--texto);line-height:1.45;
+}
+.acepta.mal label{color:var(--rojo);}
+.acepta.mal input{outline:2px solid var(--rojo);outline-offset:2px;}
+
+/* La ayudita de la hora, copiada del P1. */
+.ayuda{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:16px;height:16px;border-radius:50%;
+  background:var(--oro);color:#fff;font-size:.7rem;font-weight:700;
+  cursor:help;position:relative;text-transform:none;font-family:inherit;
+  vertical-align:middle;margin-left:4px;
+}
+.ayuda .globo{
+  position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:var(--tinta);color:var(--crema);padding:.8rem 1rem;border-radius:8px;
+  font-size:.8rem;font-weight:400;letter-spacing:normal;text-transform:none;
+  width:280px;max-width:80vw;line-height:1.5;box-shadow:0 6px 20px rgba(0,0,0,.2);
+  opacity:0;visibility:hidden;transition:opacity .2s,visibility .2s;
+  z-index:10;pointer-events:none;
+}
+.ayuda .globo::after{
+  content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);
+  border:6px solid transparent;border-top-color:var(--tinta);
+}
+.ayuda .globo a{color:var(--oro);text-decoration:underline;}
+.ayuda:hover .globo,.ayuda:focus .globo,.ayuda.abierta .globo{
+  opacity:1;visibility:visible;pointer-events:auto;
+}
+
+.botonera{display:flex;gap:8px;}
+.atras{background:transparent;color:var(--tinta);border:1px solid var(--borde);flex:0 0 34%;}
+.atras:hover{background:var(--crema);filter:none;}
+/* ── EL RESULTADO, TAL COMO LO VERÍA LA CLIENTA ─────────────── */
+.resultado{display:none;margin-top:26px;}
+.resultado.puesto{display:block;}
+
+.folio{
+  background:var(--papel);border:1px solid var(--borde);border-radius:2px;
+  padding:34px 24px 38px;margin-bottom:20px;
+}
+
+.portada{text-align:center;padding-block:44px 40px;}
+.portada h1{
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:700;font-size:2.1rem;line-height:1.08;
+  color:var(--tinta);margin:0;text-wrap:balance;
+}
+.portada .suya{
+  font-family:'Playfair Display',Georgia,serif;
+  font-style:italic;font-weight:400;font-size:1.3rem;
+  color:var(--oro);margin:16px 0 0;
+}
+.filete{width:56px;height:1px;background:var(--oro);margin:24px auto;border:0;}
+.datos-nac{font-size:.88rem;color:var(--suave);margin:0;}
+
+.cabecera-area{text-align:center;margin-bottom:30px;}
+.cabecera-area h2{
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:700;font-size:1.5rem;letter-spacing:.02em;
+  color:var(--tinta);margin:0;text-transform:uppercase;
+}
+.cabecera-area p{
+  font-style:italic;font-weight:700;font-size:.95rem;color:var(--oro);
+  margin:10px auto 0;line-height:1.5;
+}
+
+.area{line-height:1.62;}
+.area p{margin:0 0 1.15em;}
+.area p:last-child{margin-bottom:0;}
+.area h3{
+  font-family:'Playfair Display',Georgia,serif;
+  font-weight:700;font-size:1.14rem;color:var(--tinta);
+  margin:2em 0 .8em;text-wrap:balance;
+}
+.area .escena{
+  border-left:2px solid var(--oro);padding:2px 0 2px 20px;margin:1.6em 0;color:#33474C;
+}
+.area .escena p{font-style:italic;line-height:1.66;}
+.area p.pregunta{
+  text-align:center;font-weight:700;font-size:1.14rem;color:var(--tinta);
+  line-height:1.4;margin:1.9em auto;text-wrap:balance;
+}
+
+.tapado{position:relative;margin:1.4em 0 22px;overflow:hidden;}
+.tapado i{
+  display:block;height:9px;border-radius:99px;
+  background:linear-gradient(90deg,#8FA3A8,#B9C6C9);
+  margin-bottom:13px;filter:blur(4.5px);opacity:.5;
+}
+.tapado::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:52%;
+  background:linear-gradient(180deg,rgba(255,255,255,0),var(--papel));
+}
+
+.cerrados{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;}
+.cerrados li{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;background:var(--crema);border-radius:2px;}
+.cerrados svg{flex:0 0 auto;width:17px;height:17px;margin-top:3px;color:var(--oro);}
+.cerrados b{
+  display:block;color:var(--tinta);font-weight:600;font-size:.86rem;
+  letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px;
+}
+.cerrados .que{display:block;font-size:.93rem;color:var(--suave);line-height:1.45;}
+.cerrados li.suelto b{text-transform:none;letter-spacing:0;font-size:.97rem;}
+.cerrados.dentro{margin-left:26px;}
+
+.separa{border:0;height:1px;background:var(--oro);margin:30px 0 22px;}
+
+.venta{background:var(--tinta);border-color:var(--tinta);color:#E9E2D4;text-align:center;}
+.venta .cifras{
+  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  color:#8FA8AE;margin:0 0 20px;
+}
+.venta h2{
+  font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:1.4rem;
+  color:#FFFFFF;margin:0 auto 14px;max-width:20ch;line-height:1.25;text-wrap:balance;
+}
+.venta .dice{font-size:.95rem;margin:0 auto 24px;max-width:34ch;color:#C9D6D9;}
+.venta .dice b{color:var(--oro);font-weight:600;}
+.venta a.comprar{
+  display:block;background:var(--oro);color:#20323A;font-weight:700;
+  font-size:1rem;border-radius:3px;padding:16px;text-decoration:none;
+}
+.venta .letra{font-size:.78rem;color:#9FB3B8;margin:14px 0 0;}
+
+/* ── LOS DESPLEGABLES DE LA PRUEBA ──────────────────────────── */
+.detras{margin-top:30px;}
+.detras > h2{
+  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--suave);margin:0 0 12px;font-weight:600;
+}
+.detras details{
+  background:var(--papel);border:1px solid var(--borde);border-radius:8px;
+  margin-bottom:8px;
+}
+.detras summary{
+  cursor:pointer;padding:13px 15px;font-size:.92rem;color:var(--tinta);
+  font-weight:600;display:flex;justify-content:space-between;gap:12px;
+}
+.detras summary::-webkit-details-marker{display:none;}
+.detras summary .tarda{color:var(--suave);font-weight:400;white-space:nowrap;}
+.detras .dentro-det{padding:0 15px 15px;font-size:.86rem;}
+.detras table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.detras th,.detras td{
+  text-align:left;padding:7px 8px;border-bottom:1px solid var(--borde);
+  vertical-align:top;
+}
+.detras th{color:var(--suave);font-weight:600;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;}
+.detras .fuera td{color:var(--rojo);text-decoration:line-through;}
+.detras .resumen{
+  display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.86rem;
+  color:var(--suave);margin:0 0 14px;
+}
+.detras .resumen b{color:var(--tinta);}
+</style>
+
+<style>
+/* EL TEXTO DE LA LECTURA, CON LOS TAMAÑOS DEL P1: 16 en el ordenador y 18 en
+   el movil. Es lo unico que cambia respecto a la pagina de pruebas. */
+@media (max-width: 600px) {
+  body { font-size: 18px; }
+}
+</style>
+</head>
+<body>
+
+<div class="hoja">
+  <div class="resultado" id="resultado"></div>
+</div>
+
+<script>
+// Todo lo que sale aquí viene del modelo. Aquí no se escribe ni una frase
+// suya a mano.
+// ═══════════════════════════════════════════════════════════════
+
+// LAS OTRAS SECCIONES DEL INFORME, tal como están escritas en el índice del
+// PDF. Es lo que no ve, y es lo único fijo de esta pantalla.
+const LO_CERRADO_DE_SU_AREA = [
+  ['Las creencias que sostienen todo esto', 'La frase que das por cierta y nunca has puesto en duda', true],
+  ['Qué se te abre el día que se caigan', 'Qué deja de pasarte y qué puedes hacer que hoy no haces', true],
+];
+const LO_CERRADO_DEL_RESTO = [
+  ['Tus patrones', 'Por qué siempre te pasa lo mismo y qué repites sin poder parar'],
+  ['Tus miedos', 'Lo que gobierna tu vida sin que te des cuenta'],
+  ['Tu herida', 'Lo que hoy sigue bloqueándote en silencio'],
+  ['Tú y el amor', 'Por qué amas como amas y por qué atraes a quien atraes'],
+  ['Tus relaciones', 'Cómo te vinculas con los demás y qué rol acabas ocupando'],
+  ['Tú y el dinero', 'Por qué el dinero no termina de fluir en tu vida'],
+  ['Tu programación inicial', 'Tu carta entera: posiciones, casas, ejes y aspectos', true],
+  ['Tu mapa de un vistazo', 'Tus fortalezas y tus desafíos, ordenados', true],
+  ['Tu próximo paso', 'Por dónde se empieza cuando ya sabes todo esto', true],
+];
+
+const CANDADO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'
+  + '<rect x="4" y="10.5" width="16" height="11" rx="2"></rect>'
+  + '<path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"></path></svg>';
+
+function comoTexto(t) {
+  return String(t == null ? '' : t)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// LAS MISMAS MARCAS QUE EL PDF: "## " es un subtítulo, "> " es la escena, y
+// un párrafo que es solo una pregunta va centrado. Lo demás es texto normal.
+function pintarElArea(texto) {
+  const trozos = String(texto || '').split(/\n\n+/).map(t => t.trim()).filter(Boolean);
+  let html = '', escenaAbierta = false;
+
+  const cerrarEscena = () => { if (escenaAbierta) { html += '</div>'; escenaAbierta = false; } };
+
+  trozos.forEach(trozo => {
+    if (/^##\s+/.test(trozo)) {
+      cerrarEscena();
+      html += '<h3>' + comoTexto(trozo.replace(/^##\s+/, '').replace(/[.:]+$/, '')) + '</h3>';
+      return;
+    }
+    if (/^>\s*/.test(trozo)) {
+      if (!escenaAbierta) { html += '<div class="escena">'; escenaAbierta = true; }
+      html += '<p>' + comoTexto(trozo.replace(/^>\s*/, '')) + '</p>';
+      return;
+    }
+    cerrarEscena();
+    const esPregunta = /^¿[\s\S]*\?$/.test(trozo);
+    html += '<p' + (esPregunta ? ' class="pregunta"' : '') + '>' + comoTexto(trozo) + '</p>';
+  });
+  cerrarEscena();
+  return html;
+}
+
+function listaDeCandados(filas, clase) {
+  return '<ul class="cerrados' + (clase ? ' ' + clase : '') + '">'
+    + filas.map(f => '<li' + (f[2] ? ' class="suelto"' : '') + '>' + CANDADO
+        + '<span><b>' + comoTexto(f[0]) + '</b>'
+        + '<span class="que">' + comoTexto(f[1]) + '</span></span></li>').join('')
+    + '</ul>';
+}
+
+const MESES_NICE = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+function pintarElResultado(datos, salida) {
+  const [anio, mes, dia] = String(datos.fecha).split('-').map(Number);
+  const fechaNice = dia + ' de ' + MESES_NICE[mes - 1] + ' de ' + anio;
+  const lugar = [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', ');
+
+  return ''
+    + '<div class="folio portada">'
+    +   '<h1>Tu Diseño de Origen</h1>'
+    +   '<p class="suya">' + comoTexto(datos.nombre) + '</p>'
+    +   '<hr class="filete">'
+    +   '<p class="datos-nac">' + comoTexto(fechaNice + ' · ' + datos.hora) + '<br>' + comoTexto(lugar) + '</p>'
+    + '</div>'
+
+    + '<div class="folio">'
+    +   '<header class="cabecera-area">'
+    +     '<h2>Tu identidad</h2>'
+    +     '<p>Por qué eres como eres y por qué tu vida es como es</p>'
+    +   '</header>'
+    +   '<div class="area">' + pintarElArea(salida.texto)
+    +     '<div class="tapado" aria-hidden="true">'
+    +       '<i style="width:100%"></i><i style="width:96%"></i><i style="width:99%"></i>'
+    +       '<i style="width:63%"></i><i style="width:98%"></i><i style="width:88%"></i>'
+    +       '<i style="width:72%"></i><i style="width:97%"></i>'
+    +     '</div>'
+    +   '</div>'
+    +   listaDeCandados(LO_CERRADO_DE_SU_AREA, 'dentro')
+    +   '<hr class="separa">'
+    +   listaDeCandados(LO_CERRADO_DEL_RESTO)
+    + '</div>'
+
+    + '<div class="folio venta">'
+    +   '<p class="cifras">43 páginas · 7 áreas · 35 rasgos tuyos</p>'
+    +   '<h2>Acabas de leer una de las siete</h2>'
+    +   '<p class="dice">Las otras seis ya están calculadas con tu carta. Solo falta que las leas.<br><b>Tuyo para siempre, en PDF.</b></p>'
+    +   '<a class="comprar" href="#" onclick="return false;">Desbloquear mi Diseño completo — 47 €</a>'
+    +   '<p class="letra">Pago seguro con Stripe · Lo recibes en tu email</p>'
+    + '</div>';
+}
+
+// ── LO QUE HA HECHO CADA LLAMADA ───────────────────────────────
+function pintarElCuaderno(salida) {
+  const c = salida.cuaderno || {};
+  const tiempo = que => {
+    const t = (c.tiempos || []).find(x => x.que && x.que.indexOf(que) === 0);
+    return t ? t.segundos + ' s' : '—';
+  };
+  const gasto = que => {
+    const g = (c.gastos || []).filter(x => x.que && x.que.indexOf(que) === 0);
+    if (!g.length) return '';
+    return ' · ' + g.reduce((suma, x) => suma + (x.dolares || 0), 0).toFixed(4) + ' $';
+  };
+  const gastoTotal = (c.gastos || []).reduce((suma, x) => suma + (x.dolares || 0), 0);
+  const quitados = new Set(c.quitaLimpieza || []);
+  const devueltos = new Set(c.devueltos || []);
+
+  // 1ª — los rasgos que sacó de la carta
+  const entraron = (c.entraron || []).map(r =>
+    '<tr' + (quitados.has(r.n) ? ' class="fuera"' : '') + '>'
+    + '<td>' + r.n + '</td><td>' + comoTexto(r.lista) + '</td>'
+    + '<td>' + comoTexto(r.conducta) + '</td><td>' + comoTexto(r.origen) + '</td></tr>').join('');
+
+  // 3ª — los que llegaron escritos
+  const escritos = (c.escritos || []).map(r =>
+    '<tr><td>' + comoTexto(r.lista) + '</td><td>' + comoTexto(r.titulo) + '</td>'
+    + '<td>' + comoTexto(r.descripcion) + '</td></tr>').join('');
+
+  // Lo que se entrega al final, después de las redes
+  const final = ['fortalezas', 'desafios'].map(cual =>
+    ((salida.rasgos && salida.rasgos[cual]) || []).map(r =>
+      '<tr><td>' + cual + '</td><td>' + comoTexto(r.nombre) + '</td>'
+      + '<td>' + comoTexto(r.descripcion) + (r.causa ? '<br><i>' + comoTexto(r.causa) + '</i>' : '') + '</td></tr>'
+    ).join('')).join('');
+
+  const cuantos = ((salida.rasgos && salida.rasgos.fortalezas) || []).length
+                + ((salida.rasgos && salida.rasgos.desafios) || []).length;
+
+  return ''
+    + '<div class="detras">'
+    + '<h2>Lo que ha pasado por detrás</h2>'
+
+    + '<p class="resumen">'
+    +   '<span>Total: <b>' + (salida.segundos != null ? salida.segundos + ' s' : '—') + '</b></span>'
+    +   '<span>Coste: <b>' + gastoTotal.toFixed(4) + ' $</b></span>'
+    +   '<span>Rasgos que salieron: <b>' + ((c.entraron || []).length) + '</b></span>'
+    +   '<span>La limpieza quitó: <b>' + ((c.quitaLimpieza || []).length) + '</b></span>'
+    +   '<span>Las redes dejaron: <b>' + cuantos + '</b></span>'
+    + '</p>'
+
+    + '<details><summary>1ª llamada · sacar los rasgos de la carta'
+    +   '<span class="tarda">' + tiempo('sacar los rasgos') + gasto('sacar los rasgos') + '</span></summary>'
+    +   '<div class="dentro-det">'
+    +     '<table><thead><tr><th>Nº</th><th>Lista</th><th>Conducta</th><th>De dónde sale</th></tr></thead>'
+    +     '<tbody>' + (entraron || '<tr><td colspan="4">No devolvió ninguno.</td></tr>') + '</tbody></table>'
+    +     '<p class="letra-chica">Los tachados en rojo son los que quitó la limpieza.</p>'
+    +   '</div></details>'
+
+    + '<details><summary>2ª llamada · la limpieza'
+    +   '<span class="tarda">' + tiempo('limpiar los rasgos') + gasto('elegir los cinco') + '</span></summary>'
+    +   '<div class="dentro-det">'
+    +     '<p>Quitó: <b>' + ((c.quitaLimpieza || []).join(', ') || 'ninguno') + '</b></p>'
+    +     '<p>Se quedan: <b>' + ((c.devueltos || []).join(', ') || '—') + '</b></p>'
+    +   '</div></details>'
+
+    + '<details><summary>3ª llamada · escribir los rasgos'
+    +   '<span class="tarda">' + tiempo('escribir los rasgos') + gasto('escribir los rasgos') + '</span></summary>'
+    +   '<div class="dentro-det">'
+    +     '<table><thead><tr><th>Lista</th><th>Título</th><th>Descripción</th></tr></thead>'
+    +     '<tbody>' + (escritos || '<tr><td colspan="3">No devolvió ninguno.</td></tr>') + '</tbody></table>'
+    +   '</div></details>'
+
+    + '<details><summary>Las redes · los que se entregan de verdad'
+    +   '<span class="tarda">' + cuantos + ' de ' + ((c.escritos || []).length) + '</span></summary>'
+    +   '<div class="dentro-det">'
+    +     '<table><thead><tr><th>Lista</th><th>Título</th><th>Lo que se le cuenta</th></tr></thead>'
+    +     '<tbody>' + (final || '<tr><td colspan="3">Ninguno.</td></tr>') + '</tbody></table>'
+    +   '</div></details>'
+
+    + '<details><summary>4ª llamada · escribir el área'
+    +   '<span class="tarda">' + tiempo('el area') + gasto('el area') + '</span></summary>'
+    +   '<div class="dentro-det">'
+    +     '<p>Letras del área: <b>' + String(salida.texto || '').length + '</b>'
+    +     ' · Párrafos: <b>' + String(salida.texto || '').split(/\n\n+/).filter(t => t.trim()).length + '</b>'
+    +     ' · Subtítulos: <b>' + (String(salida.texto || '').match(/^##\s+/gm) || []).length + '</b>'
+    +     ' · Escena: <b>' + (String(salida.texto || '').match(/^>\s*/gm) || []).length + '</b></p>'
+    +   '</div></details>'
+
+    + '</div>';
+}
+
+// ── LO QUE SE PINTA AL ABRIR LA PAGINA ─────────────────────────
+//
+// Todavia no esta enchufada: de donde salen el regalo y sus datos es el paso
+// siguiente. Mientras tanto la pagina se queda en blanco, que es lo que tiene
+// que hacer si alguien entra sin su enlace.
+function pintarTodo(datos, salida) {
+  const caja = document.getElementById('resultado');
+  caja.innerHTML = pintarElResultado(datos, salida) + pintarElCuaderno(salida);
+  caja.classList.add('puesto');
+}
+</script>
+
+<script src="/cookie-consent.js"></script>
+</body>
+</html>
