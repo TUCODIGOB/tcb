@@ -33,6 +33,11 @@ import { correoListo, correoRevisando, correoALaTienda } from './avisos.js';
 const UNA_HORA = 60 * 60 * 1000;
 const CUANDO = [1 * UNA_HORA, 2 * UNA_HORA, 5 * UNA_HORA];
 
+// Veces que se vuelve a intentar SOLO LA ENTREGA, cuando el diseño ya esta
+// escrito y lo unico que ha fallado es guardar su enlace y mandarle el correo.
+// Eso no cuesta dinero y sale a la primera casi siempre.
+const MAX_ENTREGAS = 2;
+
 const LA_WEB = 'https://origennatal.com';
 
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
@@ -160,6 +165,37 @@ export default async function handler(req, res) {
   } catch (err) {
     console.error('[regalo] Ha fallado el reintento:', err.message);
     try {
+      // SI SU DISEÑO YA ESTA ESCRITO, lo que ha fallado no es el diseño sino
+      // la entrega: guardar el codigo de su enlace y mandarle el correo. Eso
+      // no gasta ninguno de los tres intentos de escribirlo, que son los que
+      // cuestan dinero.
+      const guardado = await leer('', ficha.huella);
+      const cuenta = await leerVeces(ficha.huella);
+      if (guardado && guardado.areas && guardado.areas.length
+          && sonLosMismos(cuenta.datos, ficha.datos)) {
+        const entregas = Number(ficha.entregas || 0) + 1;
+
+        if (entregas <= MAX_ENTREGAS) {
+          await guardarPendiente(ficha.huella, { ...ficha, entregas, ultimoEn: Date.now() });
+          console.warn(`[regalo] Escrito pero sin entregar (${entregas}), se entrega en la siguiente vuelta: ${ficha.huella}`);
+          return res.status(200).json({ mirados: fichas.length, hecho: 0, sinEntregar: entregas });
+        }
+
+        // Se acabaron las vueltas de la entrega. Se para y nos lo decimos:
+        // su diseño esta hecho y hay que mandarselo a mano.
+        await guardarPendiente(ficha.huella, { ...ficha, entregas, acabado: true, ultimoEn: Date.now() });
+        await correoALaTienda({
+          nombre: ficha.datos.nombre,
+          email: ficha.datos.email,
+          telefono: ficha.datos.telefono,
+          nacimiento: `${fechaBonita(ficha.datos.fecha)} · ${ficha.datos.hora} · ${[ficha.datos.municipio, ficha.datos.provincia, ficha.datos.pais].filter(Boolean).join(', ')}`,
+          motivo: 'SU DISEÑO ESTA ESCRITO Y GUARDADO, lo que no se ha podido es entregarselo: ' + err.message,
+          cuando: new Date().toISOString(),
+        });
+        console.error(`[regalo] Escrito y sin poder entregar: ${ficha.huella}`);
+        return res.status(200).json({ mirados: fichas.length, hecho: 0, sinEntregar: entregas, acabado: true });
+      }
+
       await noHaSalido(ficha, err.message);
     } catch (e) {
       console.error('[regalo] Y tampoco se ha podido apuntar el fallo:', e.message);
