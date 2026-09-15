@@ -247,6 +247,20 @@ button:hover{filter:brightness(.96);}
    algo no cuadra. */
 .portada .corregir-datos{display:block;margin:14px 0 0;font-size:14px;color:var(--suave);font-style:italic;font-weight:600;text-decoration:none;}
 
+/* ── LA VENTANA DE "YA LO HAS CAMBIADO DOS VECES" ───────────── */
+.aviso{display:none;position:fixed;inset:0;z-index:200;background:rgba(14,63,75,.55);padding:24px 16px;overflow-y:auto;}
+.aviso.abierta{display:flex;align-items:center;justify-content:center;}
+.aviso-caja{position:relative;background:var(--papel);border-radius:12px;box-shadow:0 24px 60px rgba(14,63,75,.35);
+  max-width:440px;width:100%;padding:40px 32px;text-align:center;}
+.aviso h2{font-family:'Playfair Display',Georgia,serif;font-weight:700;color:var(--tinta);
+  line-height:1.2;margin:0 0 22px;}
+.aviso p{color:var(--texto);margin:0 0 28px;}
+.aviso p a{color:var(--oro);font-weight:600;}
+.aviso .vale{display:block;width:100%;background:var(--oro);color:#20323A;font-weight:700;
+  border:none;border-radius:3px;padding:16px;cursor:pointer;font-family:'Open Sans',system-ui,sans-serif;}
+.aviso .cerrar{position:absolute;top:10px;right:14px;background:none;border:none;
+  font-size:26px;line-height:1;color:var(--suave);cursor:pointer;padding:4px 8px;}
+
 /* ── LOS DESPLEGABLES DE LA PRUEBA ──────────────────────────── */
 .detras{margin-top:30px;}
 .detras > h2{
@@ -285,7 +299,8 @@ button:hover{filter:brightness(.96);}
 
 .portada h1,
 .cabecera-area h2,
-.venta h2 {
+.venta h2,
+.aviso h2 {
   font-size: clamp(1.8rem, 5vw, 2.4rem);
 }
 
@@ -303,7 +318,9 @@ body,
 .venta .cifras,
 .venta .dice,
 .venta a.comprar,
-.venta .letra {
+.venta .letra,
+.aviso p,
+.aviso .vale {
   font-size: 16px;
 }
 
@@ -322,7 +339,9 @@ body,
   .venta .cifras,
   .venta .dice,
   .venta a.comprar,
-  .venta .letra {
+  .venta .letra,
+  .aviso p,
+  .aviso .vale {
     font-size: 18px;
   }
 }
@@ -417,7 +436,7 @@ function pintarElResultado(datos, salida) {
     +   '<p class="datos-nac">' + comoTexto(fechaNice + ' · ' + datos.hora) + '<br>' + comoTexto(lugar) + '</p>'
     +   (salida.puedeCorregir
           ? '<a class="corregir-datos" href="/tu-diseno-de-origen?corregir=1#formulario">¿Hay algo mal en tus datos?</a>'
-          : '')
+          : '<a class="corregir-datos" href="#" id="yaNoQuedan">¿Hay algo mal en tus datos?</a>')
     + '</div>'
 
     + '<div class="folio">'
@@ -559,6 +578,21 @@ function pintarTodo(datos, salida) {
   caja.innerHTML = pintarElResultado(datos, salida) + pintarElCuaderno(salida);
   caja.classList.add('puesto');
   document.getElementById('comprar').addEventListener('click', alComprar);
+
+  // Si ya ha gastado sus dos cambios, el enlace sigue ahi pero abre la
+  // ventana que se lo explica en vez de llevarle al formulario.
+  const sinMas = document.getElementById('yaNoQuedan');
+  if (sinMas) sinMas.addEventListener('click', e => { e.preventDefault(); abrirElAviso(); });
+}
+
+// ── LA VENTANA DE LOS DOS CAMBIOS ──────────────────────────────
+function abrirElAviso() {
+  const ventana = document.getElementById('avisoCambios');
+  const cerrar = () => ventana.classList.remove('abierta');
+  document.getElementById('avisoCambiosVale').onclick = cerrar;
+  document.getElementById('avisoCambiosCerrar').onclick = cerrar;
+  ventana.classList.add('abierta');
+  document.getElementById('avisoCambiosVale').focus();
 }
 
 // EL PAGO, IGUAL QUE EN EL FORMULARIO. Aqui no se dice el precio ni se monta
@@ -644,6 +678,17 @@ async function alComprar(e) {
   }
 }
 </script>
+
+<!-- YA HA CAMBIADO SUS DATOS LAS DOS VECES. El enlace sigue saliendo, pero
+     en vez de llevarle al formulario le explica por que no puede seguir. -->
+<div class="aviso" id="avisoCambios" role="dialog" aria-modal="true" aria-labelledby="avisoCambiosTitulo">
+  <div class="aviso-caja">
+    <button type="button" class="cerrar" id="avisoCambiosCerrar" aria-label="Cerrar">&times;</button>
+    <h2 id="avisoCambiosTitulo">Ya has cambiado tus datos dos veces</h2>
+    <p>Para volver a intentarlo, hazlo con un email nuevo. Si crees que hay un error, escríbenos a <a href="mailto:hola@origennatal.com">hola@origennatal.com</a> y te ayudamos.</p>
+    <button type="button" class="vale" id="avisoCambiosVale">Entendido</button>
+  </div>
+</div>
 
 <script src="/cookie-consent.js"></script>
 </body>
