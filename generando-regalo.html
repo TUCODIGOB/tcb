@@ -177,7 +177,7 @@
     #screenError p { font-size: 20px; }
     #screenError.active { align-items: flex-start; padding-top: 22vh; }
     /* En el movil se aprovecha el ancho, igual que en la de preparando. */
-    #screenError > .container { width: 100vw; padding-inline: 14px; }
+    #screenError > .container { width: 100vw; padding-inline: 22px; }
   }
   /* MOVILES DE PANTALLA CORTA. Arranca mas arriba para que el boton se vea de
      primeras, sin tener que bajar. */
@@ -413,12 +413,11 @@ function pantallaReintento(alPulsar) {
 // PANTALLA DE FALLO, SIN BOTON. Se acabaron los intentos. Sin boton a
 // proposito: pulsarlo no generaria nada y le dejaria dandole en balde.
 function pantallaSinIntentos() {
-  document.getElementById('errorTitulo').textContent = 'Algo está fallando en este momento';
-  document.getElementById('errorMsg').textContent =
-    'No te preocupes, escríbenos a hola@origennatal.com y te lo mandamos nosotros mismos en breve.';
-  // Y aqui si sale el cajon rojo: ya no puede hacer nada el solo.
+  document.getElementById('errorTitulo').textContent = 'Ahora mismo el servidor va saturado';
+  document.getElementById('errorMsg').innerHTML =
+    'Tus datos ya están guardados, no se pierde nada.<br> En cuanto se libere, te preparamos tu Diseño de Origen y <strong style="color:#bd9048;">te lo mandamos directo a tu email</strong>.';
   const caja = document.querySelector('#screenError .error-box');
-  if (caja) caja.style.display = '';
+  if (caja) caja.style.display = 'none';
   const btn = document.getElementById('errorBtn');
   btn.style.display = 'none';
   btn.onclick = null;
