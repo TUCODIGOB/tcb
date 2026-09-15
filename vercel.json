@@ -17,6 +17,9 @@
       "memory": 1024,
       "maxDuration": 300
     },
+    "api/prueba-regalo/carta.js": {
+      "maxDuration": 30
+    },
     "api/prueba-regalo/escribir.js": {
       "memory": 1024,
       "maxDuration": 300
