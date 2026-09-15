@@ -635,6 +635,10 @@ async function pedirloAlServidor() {
     if (!resp.ok) return false;
     const suyo = await resp.json();
     if (!suyo || !suyo.datos || !suyo.salida || !suyo.salida.texto) return false;
+    // Se deja guardado en este aparato, igual que cuando se prepara: asi
+    // puede volver a abrirlo sin el enlace, y si le hace falta corregir sus
+    // datos el formulario sale relleno con los suyos.
+    try { localStorage.setItem(EL_DISENO, JSON.stringify(suyo)); } catch (e) {}
     pintarTodo(suyo.datos, suyo.salida);
     return true;
   } catch (e) {
