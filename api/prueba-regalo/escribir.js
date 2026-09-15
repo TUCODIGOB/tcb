@@ -32,7 +32,7 @@ import { guardarInforme } from '../../lib/guardar-informe.js';
 import { escribirElRegalo } from './llamadas.js';
 import { cobrarElVale, soltarElVale, quemarElVale } from './vale.js';
 import { leer } from './almacen.js';
-import { apuntarElFallo } from './pendientes.js';
+import { apuntarElFallo, marcarEnBrevo } from './pendientes.js';
 
 // La fecha, el lugar y la edad se montan igual que en el P1 y que en
 // carta.js, para que al modelo le llegue lo mismo escrito de la misma forma.
@@ -197,6 +197,15 @@ export default async function handler(req, res) {
 
     // YA ESTA ESCRITO: el vale se quema y no sirve nunca mas.
     await quemarElVale(codigo);
+
+    // Y SE MARCA EN BREVO COMO ENTREGADO. Es lo que distingue a quien tiene
+    // su diseño de quien se quedo por el camino. Va por detras y envuelto:
+    // el diseño ya esta escrito y se entrega pase lo que pase con la marca.
+    try {
+      waitUntil(marcarEnBrevo({ email: delVale.email, estado: 'entregado', intentos: 0 }));
+    } catch (e) {
+      console.error('[prueba-regalo] No se ha podido marcar el entregado:', e.message);
+    }
 
     return res.status(200).json({
       texto: salida.texto,
