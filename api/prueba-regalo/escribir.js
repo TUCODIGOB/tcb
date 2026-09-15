@@ -231,7 +231,8 @@ export default async function handler(req, res) {
     // su diseño de quien se quedo por el camino. Va por detras y envuelto:
     // el diseño ya esta escrito y se entrega pase lo que pase con la marca.
     try {
-      waitUntil(marcarEnBrevo({ email: delVale.email, estado: 'entregado', intentos: 0 }));
+      waitUntil(marcarEnBrevo({ email: delVale.email, estado: 'entregado', intentos: 0,
+                                veces: vecesAntes + 1 }));
     } catch (e) {
       console.error('[prueba-regalo] No se ha podido marcar el entregado:', e.message);
     }

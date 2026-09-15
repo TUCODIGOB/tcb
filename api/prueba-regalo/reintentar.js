@@ -49,13 +49,15 @@ function fechaBonita(iso) {
 // su regalo, asi que se crea antes de mandar el correo: si eso fallara, no
 // se manda un correo con un boton que no lleva a ningun sitio.
 async function entregarlo(ficha) {
+  const cuenta = await leerVeces(ficha.huella);
   const codigo = await crearEnlace({ huella: ficha.huella, datos: ficha.datos });
   await correoListo({
     email: ficha.datos.email,
     nombre: ficha.datos.nombre,
     enlace: `${LA_WEB}/tu-diseno-de-origen/tu-diseno?d=${encodeURIComponent(codigo)}`,
   });
-  await marcarEnBrevo({ email: ficha.datos.email, estado: 'entregado', intentos: Number(ficha.intentos || 0) });
+  await marcarEnBrevo({ email: ficha.datos.email, estado: 'entregado',
+                        intentos: Number(ficha.intentos || 0), veces: cuenta.veces });
   await quitarPendiente(ficha.huella);
   console.log(`[regalo] Entregado por detras: ${ficha.huella}`);
 }

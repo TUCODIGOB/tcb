@@ -11,9 +11,10 @@
 // del regalo y de nadie mas. Uno por email: si ya estaba apuntado no se
 // apunta otra vez ni se le avisa dos veces.
 //
-// LA MARCA DE BREVO es solo para mirar: P0_ESTADO dice como va y P0_INTENTOS
-// cuantas veces se ha probado. No se mete a nadie en ninguna lista ni se
-// toca nada mas de su ficha.
+// LA MARCA DE BREVO es solo para mirar: P0_ESTADO dice como va, P0_INTENTOS
+// cuantas veces lo ha probado el servidor, y P0_VECES cuantos diseños se le
+// han escrito -1 si salio a la primera, 2 si corrigio sus datos-. No se mete
+// a nadie en ninguna lista ni se toca nada mas de su ficha.
 //
 // NADA DE AQUI PUEDE ROMPER EL REGALO. Todo esto pasa por detras, despues de
 // que la pagina ya haya contestado.
@@ -30,7 +31,7 @@ const PENDIENTES = 'pendientes';
 // updateEnabled deja actualizar a quien ya esta. Sin listIds a proposito: no
 // queremos meter a nadie en ninguna lista desde aqui, solo dejar escrito como
 // va lo suyo. Si Brevo no contesta, se apunta en el registro y se sigue.
-export async function marcarEnBrevo({ email, estado, intentos }) {
+export async function marcarEnBrevo({ email, estado, intentos, veces }) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) {
     console.error('[regalo] Sin BREVO_API_KEY: no se marca el contacto');
@@ -48,7 +49,11 @@ export async function marcarEnBrevo({ email, estado, intentos }) {
       },
       body: JSON.stringify({
         email,
-        attributes: { P0_ESTADO: estado, P0_INTENTOS: Number(intentos || 0) },
+        // P0_VECES solo va cuando se sabe: en un fallo no ha cambiado, y
+        // mandarlo a ciegas borraria el numero bueno.
+        attributes: veces === undefined || veces === null
+          ? { P0_ESTADO: estado, P0_INTENTOS: Number(intentos || 0) }
+          : { P0_ESTADO: estado, P0_INTENTOS: Number(intentos || 0), P0_VECES: Number(veces) },
         updateEnabled: true,
       }),
     });
