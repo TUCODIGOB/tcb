@@ -33,7 +33,7 @@ import { escribirElRegalo } from './llamadas.js';
 import { cobrarElVale, soltarElVale, quemarElVale,
          leerVeces, apuntarUnaVez, sonLosMismos, MAX_VECES } from './vale.js';
 import { leer } from './almacen.js';
-import { apuntarElFallo, marcarEnBrevo } from './pendientes.js';
+import { apuntarElFallo, marcarEnBrevo, quitarPendiente } from './pendientes.js';
 
 // La fecha, el lugar y la edad se montan igual que en el P1 y que en
 // carta.js, para que al modelo le llegue lo mismo escrito de la misma forma.
@@ -92,6 +92,11 @@ export async function guardarLoEscrito({ datos, carta, texto, rasgos }) {
       // email saque diseños sin parar, y lo que permite saber si vuelve con
       // los mismos datos o con otros.
       await apuntarUnaVez(huella, datos);
+      // Y SE BORRA LO QUE HUBIERA PENDIENTE SUYO: ya tiene su diseño, asi que
+      // no hay nada que reintentar. Si mañana corrige sus datos y aquello
+      // falla, se apunta de cero y le vuelve a llegar todo como la primera
+      // vez; con el apunte viejo ahi, no le llegaria nada.
+      await quitarPendiente(huella);
     } else {
       console.warn(`[prueba-regalo] El area no se ha guardado: ${guardado.motivo}`);
     }

@@ -25,6 +25,7 @@ import { leer } from './almacen.js';
 import { escribirElRegalo } from './llamadas.js';
 import { loQueVaAlModelo, guardarLoEscrito } from './escribir.js';
 import { losPendientes, guardarPendiente, quitarPendiente, marcarEnBrevo } from './pendientes.js';
+import { leerVeces, sonLosMismos } from './vale.js';
 import { crearEnlace } from './mio.js';
 import { correoListo, correoRevisando, correoALaTienda } from './avisos.js';
 
@@ -131,8 +132,15 @@ export default async function handler(req, res) {
   try {
     // POR SI YA LO TIENE. Puede haberlo sacado por su cuenta mientras tanto;
     // escribirle otro le daria una persona distinta de la que ya leyo.
+    //
+    // OJO: solo cuenta si lo guardado es DE ESTOS DATOS. Si corrigio su hora
+    // y lo que hay guardado es el de antes, lo suyo esta sin escribir y hay
+    // que escribirlo; mandarle el viejo seria darle lo que ya sabe que esta
+    // mal.
     const guardado = await leer('', ficha.huella);
-    if (guardado && guardado.areas && guardado.areas.length) {
+    const cuenta = await leerVeces(ficha.huella);
+    if (guardado && guardado.areas && guardado.areas.length
+        && sonLosMismos(cuenta.datos, ficha.datos)) {
       await entregarlo(ficha);
       return res.status(200).json({ mirados: fichas.length, hecho: 1, yaLoTenia: true });
     }
