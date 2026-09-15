@@ -30,7 +30,8 @@ import { waitUntil } from '@vercel/functions';
 import { montarCartaTexto, montarCasasTexto } from '../../lib/carta-texto.js';
 import { guardarInforme } from '../../lib/guardar-informe.js';
 import { escribirElRegalo } from './llamadas.js';
-import { cobrarElVale, soltarElVale, quemarElVale } from './vale.js';
+import { cobrarElVale, soltarElVale, quemarElVale,
+         leerVeces, apuntarUnaVez, sonLosMismos, MAX_VECES } from './vale.js';
 import { leer } from './almacen.js';
 import { apuntarElFallo, marcarEnBrevo } from './pendientes.js';
 
@@ -85,8 +86,15 @@ export async function guardarLoEscrito({ datos, carta, texto, rasgos }) {
       areas: [texto],
       rasgos,
     });
-    if (guardado.guardado) console.log(`[prueba-regalo] Guardada el area: ${guardado.ruta} (${guardado.bytes} bytes)`);
-    else console.warn(`[prueba-regalo] El area no se ha guardado: ${guardado.motivo}`);
+    if (guardado.guardado) {
+      console.log(`[prueba-regalo] Guardada el area: ${guardado.ruta} (${guardado.bytes} bytes)`);
+      // SE APUNTA LA VEZ, y con que datos. Es lo que impide que un mismo
+      // email saque diseños sin parar, y lo que permite saber si vuelve con
+      // los mismos datos o con otros.
+      await apuntarUnaVez(huella, datos);
+    } else {
+      console.warn(`[prueba-regalo] El area no se ha guardado: ${guardado.motivo}`);
+    }
   } catch (err) {
     console.error('[prueba-regalo] No se ha podido guardar el area:', err.message);
   }
@@ -136,22 +144,38 @@ export default async function handler(req, res) {
   }
   const delVale = cobrado.datos;
 
-  // ── UN REGALO POR EMAIL ────────────────────────────────────
+  // ── LO QUE SE LE ESCRIBE A UN MISMO EMAIL ──────────────────
   //
-  // Si ese email ya tiene el suyo, no se escribe otro: se devuelve el que ya
-  // habia. El modelo no elige los mismos rasgos dos veces, asi que escribir
-  // otro le daria una persona distinta de la que ya leyo.
+  // El suyo, y una correccion si se equivoco al escribir sus datos. Si vuelve
+  // con los mismos datos, o si ya gasto su correccion, no se escribe nada
+  // nuevo: se le devuelve el que ya tenia. El modelo no elige los mismos
+  // rasgos dos veces, asi que escribir otro le daria una persona distinta de
+  // la que ya leyo.
+  //
+  // La misma cuenta que lleva la puerta del vale, comprobada otra vez aqui:
+  // esta es la que cuesta dinero.
+  let vecesAntes = 0;
   try {
-    const yaLoTiene = await leer('', huellaDelEmail(delVale.email));
+    const huella = huellaDelEmail(delVale.email);
+    const cuenta = await leerVeces(huella);
+    vecesAntes = cuenta.veces;
+    const yaLoTiene = await leer('', huella);
+
     if (yaLoTiene && yaLoTiene.areas && yaLoTiene.areas.length) {
-      await quemarElVale(codigo);
-      return res.status(200).json({
-        yaLoTenia: true,
-        texto: yaLoTiene.areas[0],
-        rasgos: yaLoTiene.rasgos || {},
-        cuaderno: {},
-        segundos: 0,
-      });
+      // Sin la cuenta no se sabe con que datos se le escribio: no se le
+      // escribe otro, se le devuelve el suyo.
+      const losMismos = !cuenta.datos || sonLosMismos(cuenta.datos, delVale);
+      if (losMismos || cuenta.veces >= MAX_VECES) {
+        await quemarElVale(codigo);
+        return res.status(200).json({
+          yaLoTenia: true,
+          texto: yaLoTiene.areas[0],
+          rasgos: yaLoTiene.rasgos || {},
+          cuaderno: {},
+          segundos: 0,
+          puedeCorregir: Boolean(cuenta.datos) && losMismos && cuenta.veces < MAX_VECES,
+        });
+      }
     }
   } catch (err) {
     // Si el almacen no contesta no se le deja sin regalo: se sigue y, como
@@ -212,6 +236,9 @@ export default async function handler(req, res) {
       rasgos: salida.rasgos,
       cuaderno: salida.cuaderno,
       segundos: Math.round((Date.now() - arranque) / 100) / 10,
+      // Con este ya van vecesAntes + 1. Si aun no ha llegado al tope, le
+      // queda la correccion y su pagina se lo puede ofrecer.
+      puedeCorregir: (vecesAntes + 1) < MAX_VECES,
     });
 
   } catch (err) {

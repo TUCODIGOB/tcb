@@ -19,6 +19,14 @@ import { leer, escribir, borrar } from './almacen.js';
 // Los vales viven aqui dentro, aparte de los regalos ya escritos.
 const VALES = 'vales';
 
+// Y aqui se apunta cuantas veces se le ha escrito un diseño a cada email, con
+// los datos que se usaron la ultima vez.
+const VECES = 'veces';
+
+// LO QUE SE LE ESCRIBE A UN MISMO EMAIL: el suyo y una correccion, por si se
+// equivoco al escribir su hora o su lugar. Ni uno mas.
+export const MAX_VECES = 2;
+
 // Un dia de sobra para lo que tarda esto. Un vale mas viejo no se usa.
 const CADUCA_MS = 24 * 60 * 60 * 1000;
 
@@ -31,6 +39,74 @@ export function huellaDelEmail(email) {
   const limpio = String(email || '').trim().toLowerCase();
   if (!limpio) return '';
   return crypto.createHash('sha256').update(limpio).digest('hex').slice(0, 32);
+}
+
+// ── LAS VECES QUE SE LE HA ESCRITO ─────────────────────────────
+//
+// Se lleva la cuenta en el servidor, en la carpeta del regalo. El navegador
+// no pinta nada aqui: por mucho que se borre, la cuenta sigue siendo la
+// misma.
+export async function leerVeces(huella) {
+  if (!huella) return { veces: 0, datos: null };
+  try {
+    const guardado = await leer(VECES, huella);
+    if (!guardado) return { veces: 0, datos: null };
+    return { veces: Number(guardado.veces || 0), datos: guardado.datos || null };
+  } catch (err) {
+    console.error('[regalo] No se ha podido leer las veces:', err.message);
+    return { veces: 0, datos: null };
+  }
+}
+
+// Se apunta una vez mas, y con que datos. Si esto fallara, como mucho le
+// quedaria una correccion de mas; nunca deja a nadie sin su diseño.
+export async function apuntarUnaVez(huella, datos) {
+  if (!huella) return false;
+  try {
+    const ahora = await leerVeces(huella);
+    await escribir(VECES, huella, { veces: ahora.veces + 1, datos: loQueGuarda(datos), cuando: Date.now() });
+    return true;
+  } catch (err) {
+    console.error('[regalo] No se ha podido apuntar la vez:', err.message);
+    return false;
+  }
+}
+
+// ¿SON LOS MISMOS DATOS? Solo se miran los que cambian lo que se escribe. El
+// telefono no: cambiarlo no cambia ni una palabra de su diseño.
+const igual = (a, b) => String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
+
+export function sonLosMismos(a, b) {
+  if (!a || !b) return false;
+  return ['nombre', 'sexo', 'fecha', 'hora', 'municipio', 'provincia', 'pais']
+    .every(campo => igual(a[campo], b[campo]));
+}
+
+// COMO LOS ESPERA EL FORMULARIO. Lo guardado se devuelve con los mismos
+// nombres que usa la pagina, para que la portada y el boton de comprar
+// enseñen exactamente los datos con los que se calculo su carta.
+function comoLosPideLaPagina(datos) {
+  if (!datos) return null;
+  const [anio, mes, dia] = String(datos.fecha || '').split('-').map(Number);
+  let edad = '';
+  if (anio && mes && dia) {
+    const hoy = new Date();
+    edad = hoy.getFullYear() - anio;
+    const m = (hoy.getMonth() + 1) - mes;
+    if (m < 0 || (m === 0 && hoy.getDate() < dia)) edad--;
+  }
+  return {
+    nombre: datos.nombre || '',
+    sexo: datos.sexo || '',
+    email: datos.email || '',
+    telefonoCompleto: datos.telefono || '',
+    fecha: datos.fecha || '',
+    hora: datos.hora || '',
+    municipio: datos.municipio || '',
+    provincia: datos.provincia || '',
+    pais: datos.pais || '',
+    edadCalculada: edad,
+  };
 }
 
 // LO QUE GUARDA EL VALE. Solo lo que hace falta para escribir el regalo.
@@ -125,17 +201,31 @@ export default async function handler(req, res) {
   }
 
   try {
-    // SI ESE EMAIL YA TIENE SU REGALO, no se da vale nuevo: no hay nada que
-    // escribir. Se le dice que ya lo tiene y quien llama le lleva a leerlo.
-    // SE LE DEVUELVE EL QUE YA TENIA, tal cual se guardo. Solo llega hasta
-    // aqui quien ha escrito su email y sus datos de nacimiento enteros.
-    const yaLoTiene = await leer('', huellaDelEmail(datos.email));
-    if (yaLoTiene && yaLoTiene.areas && yaLoTiene.areas.length) {
-      return res.status(200).json({
-        yaLoTiene: true,
-        texto: yaLoTiene.areas[0],
-        rasgos: yaLoTiene.rasgos || {},
-      });
+    const huella = huellaDelEmail(datos.email);
+    const yaLoTiene = await leer('', huella);
+    const tieneDiseno = Boolean(yaLoTiene && yaLoTiene.areas && yaLoTiene.areas.length);
+
+    if (tieneDiseno) {
+      const cuenta = await leerVeces(huella);
+      // Sin la cuenta no se sabe con que datos se le escribio, asi que no se
+      // le escribe otro: se le devuelve el suyo. Antes escribir de mas que
+      // darle una persona distinta de la que ya leyo.
+      const losMismos = !cuenta.datos || sonLosMismos(cuenta.datos, datos);
+
+      // SE LE DEVUELVE EL QUE YA TENIA cuando no hay nada nuevo que escribir:
+      // porque vuelve con los mismos datos, o porque ya ha gastado su
+      // correccion. Se devuelve tambien CON QUE DATOS se escribio, no con los
+      // que acaba de teclear, para que lo que lea y lo que vea cuadren.
+      if (losMismos || cuenta.veces >= MAX_VECES) {
+        return res.status(200).json({
+          yaLoTiene: true,
+          texto: yaLoTiene.areas[0],
+          rasgos: yaLoTiene.rasgos || {},
+          datos: comoLosPideLaPagina(cuenta.datos),
+          puedeCorregir: Boolean(cuenta.datos) && losMismos && cuenta.veces < MAX_VECES,
+        });
+      }
+      // Datos distintos y le queda su correccion: se le escribe de nuevo.
     }
 
     const codigo = nuevoCodigo();

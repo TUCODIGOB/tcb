@@ -243,6 +243,9 @@ button:hover{filter:brightness(.96);}
 }
 .venta .letra{font-size:.78rem;color:#9FB3B8;margin:14px 0 0;}
 .venta .fallo-pago{display:none;color:#F2C4BE;margin:14px 0 0;}
+/* El enlace para arreglar sus datos. Discreto: solo lo busca quien ve que
+   algo no cuadra. */
+.portada .corregir-datos{display:block;margin:14px 0 0;font-size:14px;color:var(--suave);text-decoration:underline;}
 
 /* ── LOS DESPLEGABLES DE LA PRUEBA ──────────────────────────── */
 .detras{margin-top:30px;}
@@ -412,6 +415,9 @@ function pintarElResultado(datos, salida) {
     +   '<p class="suya">' + comoTexto(datos.nombre) + '</p>'
     +   '<hr class="filete">'
     +   '<p class="datos-nac">' + comoTexto(fechaNice + ' · ' + datos.hora) + '<br>' + comoTexto(lugar) + '</p>'
+    +   (salida.puedeCorregir
+          ? '<a class="corregir-datos" href="/tu-diseno-de-origen?corregir=1#formulario">¿Hay algo mal en tus datos?</a>'
+          : '')
     + '</div>'
 
     + '<div class="folio">'

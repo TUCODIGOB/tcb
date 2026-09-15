@@ -18,6 +18,7 @@
 import crypto from 'crypto';
 import { leer, escribir } from './almacen.js';
 import { calcularEdad } from './escribir.js';
+import { leerVeces, MAX_VECES } from './vale.js';
 
 // Los enlaces viven aparte de los vales y de los regalos.
 const ENLACES = 'enlaces';
@@ -57,6 +58,9 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'Todavía no está listo' });
     }
 
+    // Si todavia le queda su correccion, su pagina se la puede ofrecer.
+    const cuenta = await leerVeces(enlace.huella);
+
     const datos = enlace.datos || {};
     return res.status(200).json({
       datos: {
@@ -75,6 +79,7 @@ export default async function handler(req, res) {
         texto: guardado.areas[0],
         rasgos: guardado.rasgos || {},
         cuaderno: {},
+        puedeCorregir: cuenta.veces < MAX_VECES,
       },
     });
 

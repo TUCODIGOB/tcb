@@ -2530,34 +2530,40 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       datos.gaClientId = obtenerGAClientId();
       delete datos.email2;
 
-      try {
-        localStorage.setItem('tcb_pedido', JSON.stringify(datos));
+      // LO QUE SE GUARDA EN BREVO Y LO QUE SE USA PARA SU CARTA TIENEN QUE
+      // SER LO MISMO. Por eso esto no se manda todavia: primero se pregunta
+      // si se le va a escribir un diseño con estos datos. Si no se le va a
+      // escribir ninguno, en Brevo se quedan los de antes, que son los del
+      // diseño que va a leer.
+      const guardarloTodo = () => {
+        try {
+          localStorage.setItem('tcb_pedido', JSON.stringify(datos));
 
-        // Enviamos el pedido completo a Brevo justo antes de irnos de esta pagina.
-        // keepalive: true (no fetch normal) porque la página redirige justo
-        // después y la petición debe sobrevivir a la navegación.
-        const leadPayload = {
-          nombre: datos.nombre,
-          email: datos.email,
-          telefono: datos.telefonoCompleto,
-          sexo: datos.sexo,
-          fecha: datos.fecha,
-          hora: datos.hora,
-          municipio: datos.municipio,
-          provincia: datos.provincia,
-          pais: datos.pais,
-          edad: datos.edadCalculada,
-        };
-        fetch('/api/captar-lead', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(leadPayload),
-          keepalive: true,
-        }).catch(() => {});
-      } catch (err) {
-        // Si falla guardar en este navegador o el envío a Brevo, se sigue igual:
-        // el regalo se prepara en la pantalla siguiente de todas formas.
-      }
+          // keepalive: true (no fetch normal) porque la página redirige justo
+          // después y la petición debe sobrevivir a la navegación.
+          fetch('/api/captar-lead', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              nombre: datos.nombre,
+              email: datos.email,
+              telefono: datos.telefonoCompleto,
+              sexo: datos.sexo,
+              fecha: datos.fecha,
+              hora: datos.hora,
+              municipio: datos.municipio,
+              provincia: datos.provincia,
+              pais: datos.pais,
+              edad: datos.edadCalculada,
+            }),
+            keepalive: true,
+          }).catch(() => {});
+        } catch (err) {
+          // Si falla guardar en este navegador o el envío a Brevo, se sigue
+          // igual: el diseño se prepara en la pantalla siguiente de todas
+          // formas.
+        }
+      };
 
       btn.textContent = 'Preparando tu diseño...';
 
@@ -2574,11 +2580,20 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
 
         // Si ese email ya tiene el suyo, no se prepara otro: se le lleva
         // directo a leer el que ya habia.
+        //
+        // SE GUARDAN LOS DATOS CON LOS QUE SE ESCRIBIO, que es lo que
+        // devuelve el servidor, y no lo que acaba de teclear: si no, la
+        // portada diria una fecha y el texto hablaria de otra.
         if (permiso.yaLoTiene && permiso.texto) {
           try {
             localStorage.setItem('tcb_diseno', JSON.stringify({
-              datos,
-              salida: { texto: permiso.texto, rasgos: permiso.rasgos || {}, cuaderno: {} },
+              datos: permiso.datos || datos,
+              salida: {
+                texto: permiso.texto,
+                rasgos: permiso.rasgos || {},
+                cuaderno: {},
+                puedeCorregir: Boolean(permiso.puedeCorregir),
+              },
             }));
           } catch (e) {}
           window.location.href = '/tu-diseno-de-origen/tu-diseno';
@@ -2586,6 +2601,8 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
         }
         if (!permiso.vale) throw new Error('Respuesta inválida del servidor');
 
+        // Se le va a escribir un diseño con estos datos: ahora si se guardan.
+        guardarloTodo();
         window.location.href = '/preparando-tu-diseno?v=' + encodeURIComponent(permiso.vale);
       } catch (err) {
         console.error('Error vale:', err);
@@ -2719,6 +2736,66 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
     }
 
     // Un solo listener para los dos umbrales del nav:
+    // ── VUELVE A CORREGIR SUS DATOS ──────────────────────────
+    //
+    // Se llega aqui desde su diseño, con ?corregir=1. Se le deja el
+    // formulario relleno con los datos que se usaron para escribirlo, para
+    // que solo tenga que arreglar lo que estaba mal.
+    //
+    // EL EMAIL NO SE TOCA: es lo que le identifica, y cambiarlo seria pedir
+    // otro diseño distinto en vez de corregir el suyo.
+    (function rellenarParaCorregir() {
+      if (new URLSearchParams(location.search).get('corregir') !== '1') return;
+
+      let suyo = null;
+      try {
+        const crudo = localStorage.getItem('tcb_diseno');
+        suyo = crudo ? JSON.parse(crudo).datos : null;
+      } catch (e) {}
+      if (!suyo || !suyo.email) return;
+
+      const poner = (id, valor) => {
+        const campo = document.getElementById(id);
+        if (campo && valor) campo.value = valor;
+      };
+
+      poner('nombre', suyo.nombre);
+      poner('sexo', suyo.sexo);
+
+      const [anio, mes, dia] = String(suyo.fecha || '').split('-');
+      poner('fecha-dia', dia); poner('fecha-mes', mes); poner('fecha-anio', anio);
+      const [hh, mm] = String(suyo.hora || '').split(':');
+      poner('hora-h', hh); poner('hora-m', mm);
+      actualizarFecha();
+      actualizarHora();
+
+      poner('municipio', suyo.municipio);
+      poner('provincia', suyo.provincia);
+      poner('pais', suyo.pais);
+
+      // El telefono llega entero: se parte por el prefijo mas largo que case.
+      const entero = String(suyo.telefonoCompleto || '');
+      const prefijos = Array.from(document.querySelectorAll('#prefijo option'))
+        .map(o => o.value).filter(Boolean).sort((a, b) => b.length - a.length);
+      const suPrefijo = prefijos.find(p => entero.startsWith(p));
+      if (suPrefijo) {
+        poner('prefijo', suPrefijo);
+        poner('telefono', entero.slice(suPrefijo.length));
+        actualizarBanderaTelefono();
+      }
+
+      // Su email, puesto y bloqueado. El de confirmar tambien: si no, tendria
+      // que escribirlo otra vez a mano, que ahi no se puede pegar.
+      ['email', 'email2'].forEach(id => {
+        const campo = document.getElementById(id);
+        if (!campo) return;
+        campo.value = suyo.email;
+        campo.readOnly = true;
+        campo.style.background = '#f4f1ea';
+        campo.style.color = '#8a8a8a';
+      });
+    })();
+
     // 20px -> borde inferior (is-scrolled); 50px -> además oculta el logo (scrolled).
     const navEl = document.querySelector('.nav');
     if (navEl) {
