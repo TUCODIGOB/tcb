@@ -476,7 +476,13 @@ async function pedir(sitio, cuerpo) {
     body: JSON.stringify(cuerpo),
   });
   const salida = await resp.json().catch(() => ({}));
-  if (!resp.ok) throw new Error(salida.error || 'No ha salido');
+  if (!resp.ok) {
+    // El numero del fallo viaja con el: hay uno, el del permiso que no vale,
+    // que no se arregla volviendo a intentarlo.
+    const fallo = new Error(salida.error || 'No ha salido');
+    fallo.estado = resp.status;
+    throw fallo;
+  }
   return salida;
 }
 
@@ -500,6 +506,10 @@ async function prepararlo() {
     window.location.href = '/tu-diseno-de-origen/tu-diseno';
   } catch (err) {
     console.error('[diseño] No ha salido:', err.message);
+    // EL PERMISO NO VALE: no se ha gastado, es que no sirve -no existe, ya se
+    // uso, o se abrio esta direccion sin pasar por el formulario-. Aqui no
+    // hay nada que reintentar: se le manda al formulario.
+    if (err.estado === 403) { showScreen('screenSinDatos'); return; }
     if (_intentos >= MAX_INTENTOS) pantallaSinIntentos();
     else pantallaReintento(prepararlo);
   }
