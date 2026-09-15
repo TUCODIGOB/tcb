@@ -561,28 +561,48 @@ function pintarTodo(datos, salida) {
 // AL ABRIR LA PAGINA. Se pinta lo que dejo preparado la pantalla anterior, o
 // lo que traiga el codigo del correo si se ha venido por ahi.
 (function arrancar() {
-  if (EL_CODIGO) { pedirloAlServidor(); return; }
+  if (EL_CODIGO) {
+    pedirloAlServidor().then(salio => { if (!salio) leFaltaUnPaso(); });
+    return;
+  }
 
   let guardado = null;
   try {
     const crudo = localStorage.getItem(EL_DISENO);
     guardado = crudo ? JSON.parse(crudo) : null;
   } catch (e) {}
-  if (!guardado || !guardado.datos || !guardado.salida || !guardado.salida.texto) return;
+  if (!guardado || !guardado.datos || !guardado.salida || !guardado.salida.texto) {
+    leFaltaUnPaso();
+    return;
+  }
   pintarTodo(guardado.datos, guardado.salida);
 })();
 
-// SI VIENE DEL CORREO. Se le pide al servidor el diseño de ese codigo. Si el
-// codigo no vale, la pagina se queda en blanco, igual que si entrara de
-// cualquier otra manera.
+// CUANDO NO HAY NADA QUE ENSEÑAR. Pasa si el enlace se reenvia sin su codigo,
+// si lo abre en otro aparato, o si ha borrado los datos de su navegador: aqui
+// no queda nada suyo. En vez de dejarlo en blanco, se le lleva a la pantalla
+// que se lo explica y le devuelve al formulario.
+//
+// SE SUSTITUYE, no se apila: asi el boton de atras no le trae de vuelta a
+// esta pagina vacia una y otra vez.
+function leFaltaUnPaso() {
+  window.location.replace('/preparando-tu-diseno');
+}
+
+// SI VIENE DEL CORREO. Se le pide al servidor el diseño de ese codigo.
+// Devuelve si ha salido o no, que es lo que decide si se pinta o se le manda
+// al formulario.
 async function pedirloAlServidor() {
   try {
     const resp = await fetch('/api/prueba-regalo/mio?d=' + encodeURIComponent(EL_CODIGO));
-    if (!resp.ok) return;
+    if (!resp.ok) return false;
     const suyo = await resp.json();
-    if (!suyo || !suyo.datos || !suyo.salida || !suyo.salida.texto) return;
+    if (!suyo || !suyo.datos || !suyo.salida || !suyo.salida.texto) return false;
     pintarTodo(suyo.datos, suyo.salida);
-  } catch (e) {}
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 async function alComprar(e) {
