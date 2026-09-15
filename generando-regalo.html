@@ -272,8 +272,8 @@
   <div class="container">
     <div class="screen-inner">
       <div class="spin"></div>
-      <h1>Preparando tu <em>identidad</em></h1>
-      <p>Estamos calculando tu carta y escribiendo tu lectura. Esto tarda <strong>entre 1 y 2 minutos</strong>.</p>
+      <h2>Generando <em>Tu Diseño de Origen</em></h2>
+      <p>Estamos calculando tus datos y preparando tu estudio personalizado. Esto tarda <strong>entre 1 y 2 minutos</strong>.</p>
       <p class="small-note"><strong>No cierres esta pestaña hasta que termine.</strong></p>
       <div class="pbar"><div class="pfill"></div></div>
     </div>
@@ -285,9 +285,13 @@
 <section id="screenError" class="screen">
   <div class="container">
     <div class="screen-inner">
-      <h2 id="errorTitulo">No hemos podido terminar tu lectura</h2>
-      <p id="errorMsg">No se ha perdido nada. Dale al botón y termina de generarse.</p>
-      <button type="button" id="errorBtn" class="btn-download">Generar mi lectura</button>
+      <h2 id="errorTitulo">No hemos podido terminar tu estudio</h2>
+      <p id="errorMsg">No te preocupes, dale al botón para que termine de generarse.</p>
+      <button type="button" id="errorBtn" class="btn-download">Generar mi informe</button>
+      <div class="error-box">
+        <strong>¿Sigue sin salir?</strong><br><br>
+        Si estás viendo este mensaje, escríbenos a <a href="mailto:hola@origennatal.com">hola@origennatal.com</a> con tu nombre, tu número de teléfono y el email que has puesto, contactaremos contigo.
+      </div>
     </div>
   </div>
 </section>
@@ -329,12 +333,15 @@ function showScreen(id) {
 // PANTALLA DE FALLO, CON BOTON. Ha fallado y todavia queda algun intento. No
 // se genera nada hasta que lo pulse: recargar la pagina no vuelve a gastar.
 function pantallaReintento(alPulsar) {
-  document.getElementById('errorTitulo').textContent = 'No hemos podido terminar tu lectura';
+  document.getElementById('errorTitulo').textContent = 'No hemos podido terminar tu estudio';
   document.getElementById('errorMsg').textContent =
-    'No se ha perdido nada. Dale al botón y termina de generarse.';
+    'No te preocupes, dale al botón para que termine de generarse.';
+  // El cajon rojo no sale aqui: todavia puede arreglarlo el solo con el boton.
+  const caja = document.querySelector('#screenError .error-box');
+  if (caja) caja.style.display = 'none';
   const btn = document.getElementById('errorBtn');
   btn.style.display = 'inline-block';
-  btn.textContent = 'Generar mi lectura';
+  btn.textContent = 'Generar mi informe';
   btn.onclick = () => {
     btn.onclick = null;                 // un solo clic, no dos generaciones
     if (typeof alPulsar === 'function') alPulsar();
@@ -347,7 +354,10 @@ function pantallaReintento(alPulsar) {
 function pantallaSinIntentos() {
   document.getElementById('errorTitulo').textContent = 'Algo está fallando en este momento';
   document.getElementById('errorMsg').textContent =
-    'Escríbenos a hola@origennatal.com con el email que has puesto y te lo mandamos nosotros mismos en breve.';
+    'No te preocupes, escríbenos a hola@origennatal.com y te lo mandamos nosotros mismos en breve.';
+  // Y aqui si sale el cajon rojo: ya no puede hacer nada el solo.
+  const caja = document.querySelector('#screenError .error-box');
+  if (caja) caja.style.display = '';
   const btn = document.getElementById('errorBtn');
   btn.style.display = 'none';
   btn.onclick = null;
