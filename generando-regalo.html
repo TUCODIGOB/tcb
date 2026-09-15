@@ -176,6 +176,13 @@
   @media (max-width: 600px) {
     #screenError p { font-size: 20px; }
     #screenError.active { align-items: flex-start; padding-top: 22vh; }
+    /* En el movil se aprovecha el ancho, igual que en la de preparando. */
+    #screenError > .container { width: 100vw; padding-inline: 14px; }
+  }
+  /* MOVILES DE PANTALLA CORTA. Arranca mas arriba para que el boton se vea de
+     primeras, sin tener que bajar. */
+  @media (max-width: 600px) and (max-height: 700px) {
+    #screenError.active { padding-top: 8vh; }
   }
   .salto-movil { display: none; }
   @media (max-width: 600px) {
