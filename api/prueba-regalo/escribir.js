@@ -34,12 +34,16 @@ import { cobrarElVale, soltarElVale, quemarElVale,
          leerVeces, apuntarUnaVez, sonLosMismos, MAX_VECES } from './vale.js';
 import { leer } from './almacen.js';
 import { apuntarElFallo, marcarEnBrevo, quitarPendiente } from './pendientes.js';
+import { crearEnlace } from './mio.js';
+import { correoListo } from './avisos.js';
 
 // La fecha, el lugar y la edad se montan igual que en el P1 y que en
 // carta.js, para que al modelo le llegue lo mismo escrito de la misma forma.
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
-export function calcularEdad(fechaISO) {
+const LA_WEB = 'https://origennatal.com';
+
+function calcularEdad(fechaISO) {
   const nacimiento = new Date(fechaISO);
   const hoy = new Date();
   let edad = hoy.getFullYear() - nacimiento.getFullYear();
@@ -61,7 +65,7 @@ function huellaDelEmail(email) {
 // rasgos y el area no se pierda lo que ya habia.
 //
 // SI FALLA, NO PASA NADA: el area ya esta escrita y se entrega igual.
-export async function guardarLoEscrito({ datos, carta, texto, rasgos }) {
+export async function guardarLoEscrito({ datos, carta, texto, rasgos, avisar }) {
   const huella = huellaDelEmail(datos.email);
   if (!huella) {
     console.warn('[prueba-regalo] Sin email: no se guarda el area.');
@@ -97,11 +101,36 @@ export async function guardarLoEscrito({ datos, carta, texto, rasgos }) {
       // falla, se apunta de cero y le vuelve a llegar todo como la primera
       // vez; con el apunte viejo ahi, no le llegaria nada.
       await quitarPendiente(huella);
+
+      // SU CORREO CON SU ENLACE, siempre que se le escribe un diseño. Lo haya
+      // visto en pantalla o no: si cerro la pestaña, si refresco, o si se
+      // quedo sin cobertura, lo tiene en su correo.
+      //
+      // Va aqui y no antes a proposito: el enlace no puede salir hasta que lo
+      // guardado este de verdad guardado.
+      if (avisar) await mandarleSuEnlace(huella, datos);
     } else {
       console.warn(`[prueba-regalo] El area no se ha guardado: ${guardado.motivo}`);
     }
   } catch (err) {
     console.error('[prueba-regalo] No se ha podido guardar el area:', err.message);
+  }
+}
+
+// SU ENLACE Y SU CORREO. Envuelto: el diseño ya esta escrito y guardado, asi
+// que un fallo aqui no le quita nada. La carta no viaja al enlace, que ahi
+// solo hacen falta sus datos.
+async function mandarleSuEnlace(huella, datos) {
+  try {
+    const { carta: laCarta, ...susDatos } = datos;
+    const codigo = await crearEnlace({ huella, datos: susDatos });
+    await correoListo({
+      email: susDatos.email,
+      nombre: susDatos.nombre,
+      enlace: `${LA_WEB}/tu-diseno-de-origen/tu-diseno?d=${encodeURIComponent(codigo)}`,
+    });
+  } catch (err) {
+    console.error('[prueba-regalo] No se ha podido mandarle su enlace:', err.message);
   }
 }
 
@@ -219,7 +248,7 @@ export default async function handler(req, res) {
     // Se guarda por detras, sin hacer esperar a nadie, y envuelto: el area ya
     // esta escrita y se entrega pase lo que pase con el guardado.
     try {
-      waitUntil(guardarLoEscrito({ datos, carta, texto: salida.texto, rasgos: salida.rasgos }));
+      waitUntil(guardarLoEscrito({ datos, carta, texto: salida.texto, rasgos: salida.rasgos, avisar: true }));
     } catch (err) {
       console.error('[prueba-regalo] No se ha podido lanzar el guardado del area:', err.message);
     }

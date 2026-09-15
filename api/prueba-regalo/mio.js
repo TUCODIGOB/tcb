@@ -17,8 +17,19 @@
 
 import crypto from 'crypto';
 import { leer, escribir } from './almacen.js';
-import { calcularEdad } from './escribir.js';
 import { leerVeces, MAX_VECES } from './vale.js';
+
+// La edad, contada aqui mismo. Es la misma cuenta de siempre, pero escrita
+// aparte a proposito: quien escribe el diseño llama a esta puerta, y si cada
+// uno dependiera del otro se quedarian enganchados al arrancar.
+function calcularEdad(fechaISO) {
+  const nacimiento = new Date(fechaISO);
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - nacimiento.getFullYear();
+  const m = hoy.getMonth() - nacimiento.getMonth();
+  if (m < 0 || (m === 0 && hoy.getDate() < nacimiento.getDate())) edad--;
+  return edad;
+}
 
 // Los enlaces viven aparte de los vales y de los regalos.
 const ENLACES = 'enlaces';
