@@ -437,9 +437,8 @@ function pantallaSinIntentos() {
 }
 
 // ── DE DONDE SALEN SUS DATOS ───────────────────────────────────
-// Los deja el formulario al pulsar el boton. Sin ellos no hay nada que
-// preparar, asi que se le devuelve al formulario en vez de dejarle mirando
-// una rueda que no va a terminar nunca.
+// Los deja el formulario al pulsar el boton, que es la unica manera de
+// llegar hasta aqui. Sin ellos no hay nada que preparar.
 function loSuyo() {
   try {
     const crudo = localStorage.getItem(EL_PEDIDO);
@@ -488,10 +487,7 @@ async function prepararlo() {
 // ── AL ABRIR LA PAGINA ─────────────────────────────────────────
 (function arrancar() {
   _pedido = loSuyo();
-  if (!_pedido) {
-    window.location.replace('/tu-diseno-de-origen#formulario');
-    return;
-  }
+  if (!_pedido) return;
   prepararlo();
 })();
 </script>
