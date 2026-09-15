@@ -2409,7 +2409,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
         return;
       }
 
-      // Todo válido → guardamos datos en localStorage y redirigimos a Stripe
+      // Todo válido → guardamos los datos y vamos a la pantalla que prepara el regalo
       // Sin espacios: Brevo rechaza el numero entero si los lleva, y entonces
       // el contacto se guarda sin telefono y no se le puede mandar un SMS.
       datos.telefonoCompleto = (datos.prefijo + datos.telefono).replace(/\s+/g, '');
@@ -2424,7 +2424,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       try {
         localStorage.setItem('tcb_pedido', JSON.stringify(datos));
 
-        // Enviamos el pedido completo a Brevo justo antes de salir hacia Stripe.
+        // Enviamos el pedido completo a Brevo justo antes de irnos de esta pagina.
         // keepalive: true (no fetch normal) porque la página redirige justo
         // después y la petición debe sobrevivir a la navegación.
         const leadPayload = {
@@ -2446,38 +2446,14 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
           keepalive: true,
         }).catch(() => {});
       } catch (err) {
-        // Si falla localStorage o el envío a Brevo, seguimos igual (el webhook de Stripe recogerá los datos vía email)
+        // Si falla guardar en este navegador o el envío a Brevo, se sigue igual:
+        // el regalo se prepara en la pantalla siguiente de todas formas.
       }
 
-      btn.textContent = 'Redirigiendo al pago seguro...';
+      btn.textContent = 'Preparando tu diseño...';
 
-      // Llamamos a nuestra API que crea la sesión de Stripe con los datos del formulario
-      try {
-        const resp = await fetch('/api/create-checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(datos),
-        });
-
-        if (!resp.ok) {
-          const errData = await resp.json().catch(() => ({}));
-          throw new Error(errData.error || 'No se pudo iniciar el pago');
-        }
-
-        const { url } = await resp.json();
-        if (!url) throw new Error('Respuesta inválida del servidor');
-
-        // Redirigimos al cliente a Stripe
-        window.location.href = url;
-      } catch (err) {
-        console.error('Error create-checkout:', err);
-        const banner = document.getElementById('errorBanner');
-        banner.textContent = 'No hemos podido iniciar el pago. Por favor inténtalo de nuevo en unos segundos. Si el problema persiste, escríbenos a hola@origennatal.com';
-        banner.classList.add('show');
-        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        btn.disabled = false;
-        btn.textContent = 'Ver mi resultado gratis';
-      }
+      // A LA PANTALLA QUE PREPARA EL REGALO. Aqui no se paga nada.
+      window.location.href = '/generando-regalo';
     });
 
     // El envío ya está en manos del código de arriba: la red de seguridad de
