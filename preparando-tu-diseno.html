@@ -382,6 +382,18 @@
 // genera el regalo todavia no esta puesto: eso llega despues.
 // ═════════════════════════════════════════════════════════════════
 
+// DONDE VIVEN SUS COSAS MIENTRAS PASA DE UNA PANTALLA A OTRA. El formulario
+// deja aqui sus datos, y esta pagina deja aqui el diseño para que la pagina
+// del resultado lo pinte.
+const EL_PEDIDO = 'tcb_pedido';
+const EL_DISENO = 'tcb_diseno';
+
+// Dos intentos, los mismos que el P1.
+const MAX_INTENTOS = 2;
+
+let _pedido = null;
+let _intentos = 0;
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -423,6 +435,65 @@ function pantallaSinIntentos() {
   btn.onclick = null;
   showScreen('screenError');
 }
+
+// ── DE DONDE SALEN SUS DATOS ───────────────────────────────────
+// Los deja el formulario al pulsar el boton. Sin ellos no hay nada que
+// preparar, asi que se le devuelve al formulario en vez de dejarle mirando
+// una rueda que no va a terminar nunca.
+function loSuyo() {
+  try {
+    const crudo = localStorage.getItem(EL_PEDIDO);
+    const p = crudo ? JSON.parse(crudo) : null;
+    return (p && p.nombre && p.sexo && p.fecha && p.hora && p.municipio && p.provincia && p.pais) ? p : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// ── HABLAR CON EL SERVIDOR ─────────────────────────────────────
+async function pedir(sitio, cuerpo) {
+  const resp = await fetch(sitio, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(cuerpo),
+  });
+  const salida = await resp.json().catch(() => ({}));
+  if (!resp.ok) throw new Error(salida.error || 'No ha salido');
+  return salida;
+}
+
+// ── PREPARAR EL DISEÑO ─────────────────────────────────────────
+// Primero su carta, y con ella el area escrita. Son los mismos dos pasos que
+// ya hacia la pagina de trabajo: aqui no se calcula ni se escribe nada, solo
+// se piden.
+async function prepararlo() {
+  _intentos++;
+  showScreen('screenGenerate');
+
+  try {
+    const carta = await pedir('/api/prueba-regalo/carta', _pedido);
+    const salida = await pedir('/api/prueba-regalo/escribir', { ..._pedido, carta: carta.carta });
+
+    // Se guarda para que lo pinte la pagina del resultado. Si este navegador
+    // no deja guardar, no se le manda a una pagina que va a salir en blanco.
+    localStorage.setItem(EL_DISENO, JSON.stringify({ datos: _pedido, salida }));
+    window.location.href = '/tu-diseno-de-origen/tu-diseno';
+  } catch (err) {
+    console.error('[diseño] No ha salido:', err.message);
+    if (_intentos >= MAX_INTENTOS) pantallaSinIntentos();
+    else pantallaReintento(prepararlo);
+  }
+}
+
+// ── AL ABRIR LA PAGINA ─────────────────────────────────────────
+(function arrancar() {
+  _pedido = loSuyo();
+  if (!_pedido) {
+    window.location.replace('/tu-diseno-de-origen#formulario');
+    return;
+  }
+  prepararlo();
+})();
 </script>
 
 <script src="/cookie-consent.js"></script>

@@ -533,9 +533,12 @@ function pintarElCuaderno(salida) {
 
 // ── LO QUE SE PINTA AL ABRIR LA PAGINA ─────────────────────────
 //
-// Todavia no esta enchufada: de donde salen el regalo y sus datos es el paso
-// siguiente. Mientras tanto la pagina se queda en blanco, que es lo que tiene
-// que hacer si alguien entra sin su enlace.
+// El diseño lo deja preparado la pantalla anterior. Si no hay nada, la pagina
+// se queda en blanco, que es lo que tiene que hacer si alguien entra de
+// cualquier manera.
+// Donde deja el diseño la pantalla que lo prepara.
+const EL_DISENO = 'tcb_diseno';
+
 let _datosSuyos = null;
 
 function pintarTodo(datos, salida) {
@@ -549,6 +552,17 @@ function pintarTodo(datos, salida) {
 // EL PAGO, IGUAL QUE EN EL FORMULARIO. Aqui no se dice el precio ni se monta
 // la compra: se le pasan sus datos al servidor, que es quien la crea con el
 // producto de Stripe. Ni el importe ni el producto viven en esta pagina.
+// AL ABRIR LA PAGINA. Se pinta lo que dejo preparado la pantalla anterior.
+(function arrancar() {
+  let guardado = null;
+  try {
+    const crudo = localStorage.getItem(EL_DISENO);
+    guardado = crudo ? JSON.parse(crudo) : null;
+  } catch (e) {}
+  if (!guardado || !guardado.datos || !guardado.salida || !guardado.salida.texto) return;
+  pintarTodo(guardado.datos, guardado.salida);
+})();
+
 async function alComprar(e) {
   e.preventDefault();
   const boton = document.getElementById('comprar');
