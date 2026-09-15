@@ -242,6 +242,7 @@ button:hover{filter:brightness(.96);}
   font-size:1rem;border-radius:3px;padding:16px;text-decoration:none;
 }
 .venta .letra{font-size:.78rem;color:#9FB3B8;margin:14px 0 0;}
+.venta .fallo-pago{display:none;color:#F2C4BE;margin:14px 0 0;}
 
 /* ── LOS DESPLEGABLES DE LA PRUEBA ──────────────────────────── */
 .detras{margin-top:30px;}
@@ -434,7 +435,8 @@ function pintarElResultado(datos, salida) {
     +   '<p class="cifras">43 páginas · 7 áreas · 35 rasgos tuyos</p>'
     +   '<h2>Acabas de leer una de las siete</h2>'
     +   '<p class="dice">Las otras seis ya están calculadas con tu carta. Solo falta que las leas.<br><b>Tuyo para siempre, en PDF.</b></p>'
-    +   '<a class="comprar" href="#" onclick="return false;">Desbloquear mi Diseño completo — 47 €</a>'
+    +   '<a class="comprar" href="#" id="comprar">Desbloquear mi Diseño completo — 47 €</a>'
+    +   '<p class="fallo-pago" id="falloDelPago"></p>'
     +   '<p class="letra">🔒 Pago 100% seguro con Stripe</p>'
     + '</div>';
 }
@@ -534,10 +536,50 @@ function pintarElCuaderno(salida) {
 // Todavia no esta enchufada: de donde salen el regalo y sus datos es el paso
 // siguiente. Mientras tanto la pagina se queda en blanco, que es lo que tiene
 // que hacer si alguien entra sin su enlace.
+let _datosSuyos = null;
+
 function pintarTodo(datos, salida) {
+  _datosSuyos = datos;
   const caja = document.getElementById('resultado');
   caja.innerHTML = pintarElResultado(datos, salida) + pintarElCuaderno(salida);
   caja.classList.add('puesto');
+  document.getElementById('comprar').addEventListener('click', alComprar);
+}
+
+// EL PAGO, IGUAL QUE EN EL FORMULARIO. Aqui no se dice el precio ni se monta
+// la compra: se le pasan sus datos al servidor, que es quien la crea con el
+// producto de Stripe. Ni el importe ni el producto viven en esta pagina.
+async function alComprar(e) {
+  e.preventDefault();
+  const boton = document.getElementById('comprar');
+  const aviso = document.getElementById('falloDelPago');
+  if (!_datosSuyos || boton.dataset.yendo === 'si') return;
+
+  boton.dataset.yendo = 'si';          // un solo clic, no dos compras
+  const dice = boton.textContent;
+  boton.textContent = 'Redirigiendo al pago seguro...';
+  aviso.style.display = '';
+
+  try {
+    const resp = await fetch('/api/create-checkout', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(_datosSuyos),
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      throw new Error(err.error || 'No se pudo iniciar el pago');
+    }
+    const { url } = await resp.json();
+    if (!url) throw new Error('Respuesta inválida del servidor');
+    window.location.href = url;
+  } catch (err) {
+    console.error('Error create-checkout:', err);
+    aviso.textContent = 'No hemos podido iniciar el pago. Por favor inténtalo de nuevo en unos segundos. Si el problema persiste, escríbenos a hola@origennatal.com';
+    aviso.style.display = 'block';
+    boton.textContent = dice;
+    boton.dataset.yendo = '';
+  }
 }
 </script>
 
