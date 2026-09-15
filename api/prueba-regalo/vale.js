@@ -58,32 +58,51 @@ function estaCompleto(p) {
 // mismo que hace el P1 en lib/reserva.js.
 const ESPERA_MS = 1500;
 
+// Escrituras que se permiten con un mismo vale: la que falla y una mas. Los
+// mismos dos que da el P1 por cada compra.
+const MAX_INTENTOS = 2;
+
 // ── LO QUE USA QUIEN ESCRIBE EL REGALO ─────────────────────────
 //
-// Devuelve los datos del vale, o null si no vale: no existe, ya se gasto,
-// esta caducado, o lo ha cogido otro.
+// Devuelve { datos, marca } o null si el vale no sirve: no existe, esta
+// caducado, se le han acabado los intentos, o lo tiene cogido otro.
 //
-// DOS PESTANAS A LA VEZ NO SON DOS REGALOS. No basta con mirar y borrar: las
-// dos mirarian antes de que ninguna borrara, y las dos escribirian. Asi que
+// DOS PESTANAS A LA VEZ NO SON DOS REGALOS. No basta con mirar: las dos
+// mirarian antes de que ninguna escribiera, y las dos escribirian. Asi que
 // primero se coge poniendole una marca, se espera, y se vuelve a mirar: solo
 // sigue quien encuentre su propia marca. El que pierde, se queda fuera.
 export async function cobrarElVale(codigo) {
   const guardado = await leer(VALES, codigo);
   if (!guardado || !guardado.datos) return null;
   if (Date.now() - Number(guardado.creado || 0) > CADUCA_MS) return null;
-  if (guardado.cogidoPor) return null;          // ya lo tiene otro
+  if (guardado.cogidoPor) return null;                       // lo tiene otro
+  if (Number(guardado.intentos || 0) >= MAX_INTENTOS) return null;
 
   const marca = nuevoCodigo();
-  await escribir(VALES, codigo, { ...guardado, cogidoPor: marca, cogidoEn: Date.now() });
+  const intentos = Number(guardado.intentos || 0) + 1;
+  await escribir(VALES, codigo, { ...guardado, cogidoPor: marca, cogidoEn: Date.now(), intentos });
   await new Promise(r => setTimeout(r, ESPERA_MS));
 
   const comprobar = await leer(VALES, codigo);
   if (!comprobar || comprobar.cogidoPor !== marca) return null;
 
-  return guardado.datos;
+  return { datos: guardado.datos, marca };
 }
 
-// SE QUEMA. A partir de aqui ese codigo no sirve para nada.
+// SE SUELTA CUANDO NO HA SALIDO. Asi el boton de volver a intentarlo puede
+// usarlo otra vez en el acto, sin esperar a nada. El intento ya esta contado,
+// asi que soltarlo no regala escrituras.
+export async function soltarElVale(codigo, marca) {
+  try {
+    const guardado = await leer(VALES, codigo);
+    if (!guardado || guardado.cogidoPor !== marca) return;
+    await escribir(VALES, codigo, { ...guardado, cogidoPor: '', cogidoEn: 0 });
+  } catch (err) {
+    console.error('[regalo] No se ha podido soltar el vale:', err.message);
+  }
+}
+
+// SE QUEMA CUANDO YA HA SALIDO. A partir de aqui ese codigo no sirve de nada.
 export async function quemarElVale(codigo) {
   try {
     await borrar(VALES, codigo);

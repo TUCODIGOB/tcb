@@ -30,7 +30,7 @@ import { waitUntil } from '@vercel/functions';
 import { montarCartaTexto, montarCasasTexto } from '../../lib/carta-texto.js';
 import { guardarInforme } from '../../lib/guardar-informe.js';
 import { escribirElRegalo } from './llamadas.js';
-import { cobrarElVale, quemarElVale } from './vale.js';
+import { cobrarElVale, soltarElVale, quemarElVale } from './vale.js';
 import { leer } from './almacen.js';
 
 // La fecha, el lugar y la edad se montan igual que en el P1 y que en
@@ -107,16 +107,17 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Falta el permiso' });
   }
 
-  let delVale;
+  let cobrado;
   try {
-    delVale = await cobrarElVale(codigo);
+    cobrado = await cobrarElVale(codigo);
   } catch (err) {
     console.error('[prueba-regalo] No se ha podido leer el vale:', err.message);
     return res.status(500).json({ error: 'No se ha podido comprobar el permiso' });
   }
-  if (!delVale) {
+  if (!cobrado) {
     return res.status(403).json({ error: 'Este permiso no vale' });
   }
+  const delVale = cobrado.datos;
 
   // ── UN REGALO POR EMAIL ────────────────────────────────────
   //
@@ -141,28 +142,27 @@ export default async function handler(req, res) {
     console.error('[prueba-regalo] No se ha podido mirar si ya lo tenia:', err.message);
   }
 
-  // SE QUEMA ANTES DE GASTAR UN SOLO CENTIMO. Si se quemara al terminar, una
-  // recarga o dos pestanas a la vez lanzarian dos regalos con el mismo vale.
-  await quemarElVale(codigo);
-
   const datos = { ...delVale, carta: (req.body || {}).carta };
   const { nombre, sexo, fecha, hora, municipio, provincia, pais, carta } = datos;
 
-  if (!nombre || !sexo) {
-    return res.status(400).json({ error: 'Faltan el nombre o el sexo' });
-  }
+  // SI ALGO NO CUADRA, EL VALE SE SUELTA: no se ha escrito nada, asi que no
+  // tiene por que perder el intento por un fallo que no es suyo.
+  const noVale = async (mensaje) => {
+    await soltarElVale(codigo, cobrado.marca);
+    return res.status(400).json({ error: mensaje });
+  };
+
+  if (!nombre || !sexo) return noVale('Faltan el nombre o el sexo');
 
   const [anio, mes, dia] = String(fecha || '').split('-').map(Number);
   if (!anio || !mes || !dia || mes < 1 || mes > 12 || !hora) {
-    return res.status(400).json({ error: 'Falta la fecha o la hora de nacimiento' });
+    return noVale('Falta la fecha o la hora de nacimiento');
   }
-  if (!municipio || !provincia || !pais) {
-    return res.status(400).json({ error: 'Falta el lugar de nacimiento' });
-  }
+  if (!municipio || !provincia || !pais) return noVale('Falta el lugar de nacimiento');
 
   // Sin carta no hay nada que leer: el modelo se inventaria la persona entera.
   if (!carta || typeof carta !== 'object' || !carta.sol || !carta.ascendente || !carta.casas) {
-    return res.status(400).json({ error: 'Falta la carta natal' });
+    return noVale('Falta la carta natal');
   }
 
   const arranque = Date.now();
@@ -187,6 +187,9 @@ export default async function handler(req, res) {
       console.error('[prueba-regalo] No se ha podido lanzar el guardado del area:', err.message);
     }
 
+    // YA ESTA ESCRITO: el vale se quema y no sirve nunca mas.
+    await quemarElVale(codigo);
+
     return res.status(200).json({
       texto: salida.texto,
       rasgos: salida.rasgos,
@@ -196,6 +199,9 @@ export default async function handler(req, res) {
 
   } catch (err) {
     console.error('[prueba-regalo] No ha salido el area:', err.message);
+    // NO HA SALIDO: se suelta el vale para que el boton de volver a
+    // intentarlo pueda usarlo en el acto. El intento ya esta contado.
+    await soltarElVale(codigo, cobrado.marca);
     return res.status(500).json({ error: err.message || 'No ha salido el área' });
   }
 }
