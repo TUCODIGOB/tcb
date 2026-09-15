@@ -2213,13 +2213,22 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
         o.textContent = i;
         anio.appendChild(o);
       }
+      // LA HORA, DE LA 1 A LAS 24, con su equivalencia al lado para quien
+      // cuenta las horas en am/pm. Lo que se guarda no cambia: sigue siendo
+      // de 00 a 23, que es lo que entiende el calculo. La 24 es su 00, la
+      // medianoche con la que empieza el dia que haya puesto.
       const horaH = document.getElementById('hora-h');
-      for (let i = 0; i < 24; i++) {
+      const enAmPm = i => (i === 0 ? '12am' : i < 12 ? i + 'am' : i === 12 ? '12pm' : (i - 12) + 'pm');
+      const ponerHora = (valor, letra) => {
         const o = document.createElement('option');
-        o.value = String(i).padStart(2, '0');
-        o.textContent = String(i).padStart(2, '0');
+        o.value = valor;
+        o.textContent = letra;
         horaH.appendChild(o);
+      };
+      for (let i = 1; i < 24; i++) {
+        ponerHora(String(i).padStart(2, '0'), String(i).padStart(2, '0') + ' (' + enAmPm(i) + ')');
       }
+      ponerHora('00', '24 (12am)');
       const horaM = document.getElementById('hora-m');
       for (let i = 0; i < 60; i++) {
         const o = document.createElement('option');
