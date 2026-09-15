@@ -539,6 +539,12 @@ function pintarElCuaderno(salida) {
 // Donde deja el diseño la pantalla que lo prepara.
 const EL_DISENO = 'tcb_diseno';
 
+// EL CODIGO DEL CORREO. Cuando el diseño no sale a la primera y se escribe
+// horas despues, se le manda por correo con un enlace que trae este codigo.
+// Entonces lo de esta pantalla no esta en su navegador -cerro la pestaña hace
+// rato-, asi que se le pide al servidor, que es donde esta guardado.
+const EL_CODIGO = new URLSearchParams(location.search).get('d') || '';
+
 let _datosSuyos = null;
 
 function pintarTodo(datos, salida) {
@@ -552,8 +558,11 @@ function pintarTodo(datos, salida) {
 // EL PAGO, IGUAL QUE EN EL FORMULARIO. Aqui no se dice el precio ni se monta
 // la compra: se le pasan sus datos al servidor, que es quien la crea con el
 // producto de Stripe. Ni el importe ni el producto viven en esta pagina.
-// AL ABRIR LA PAGINA. Se pinta lo que dejo preparado la pantalla anterior.
+// AL ABRIR LA PAGINA. Se pinta lo que dejo preparado la pantalla anterior, o
+// lo que traiga el codigo del correo si se ha venido por ahi.
 (function arrancar() {
+  if (EL_CODIGO) { pedirloAlServidor(); return; }
+
   let guardado = null;
   try {
     const crudo = localStorage.getItem(EL_DISENO);
@@ -562,6 +571,19 @@ function pintarTodo(datos, salida) {
   if (!guardado || !guardado.datos || !guardado.salida || !guardado.salida.texto) return;
   pintarTodo(guardado.datos, guardado.salida);
 })();
+
+// SI VIENE DEL CORREO. Se le pide al servidor el diseño de ese codigo. Si el
+// codigo no vale, la pagina se queda en blanco, igual que si entrara de
+// cualquier otra manera.
+async function pedirloAlServidor() {
+  try {
+    const resp = await fetch('/api/prueba-regalo/mio?d=' + encodeURIComponent(EL_CODIGO));
+    if (!resp.ok) return;
+    const suyo = await resp.json();
+    if (!suyo || !suyo.datos || !suyo.salida || !suyo.salida.texto) return;
+    pintarTodo(suyo.datos, suyo.salida);
+  } catch (e) {}
+}
 
 async function alComprar(e) {
   e.preventDefault();

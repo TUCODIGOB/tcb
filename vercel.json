@@ -21,6 +21,10 @@
       "memory": 1024,
       "maxDuration": 300
     },
+    "api/prueba-regalo/reintentar.js": {
+      "memory": 1024,
+      "maxDuration": 300
+    },
     "api/p2-plan/prueba.js": {
       "memory": 1024,
       "maxDuration": 300
@@ -30,6 +34,9 @@
       "maxDuration": 60
     }
   },
+  "crons": [
+    { "path": "/api/prueba-regalo/reintentar", "schedule": "*/15 * * * *" }
+  ],
   "redirects": [
     { "source": "/Aviso-Legal", "destination": "/aviso-legal", "permanent": true },
     { "source": "/Politica-De-Privacidad", "destination": "/politica-de-privacidad", "permanent": true },

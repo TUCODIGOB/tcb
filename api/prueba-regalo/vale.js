@@ -64,7 +64,7 @@ const MAX_INTENTOS = 2;
 
 // ── LO QUE USA QUIEN ESCRIBE EL REGALO ─────────────────────────
 //
-// Devuelve { datos, marca } o null si el vale no sirve: no existe, esta
+// Devuelve { datos, marca, ultimo } o null si el vale no sirve: no existe, esta
 // caducado, se le han acabado los intentos, o lo tiene cogido otro.
 //
 // DOS PESTANAS A LA VEZ NO SON DOS REGALOS. No basta con mirar: las dos
@@ -86,7 +86,9 @@ export async function cobrarElVale(codigo) {
   const comprobar = await leer(VALES, codigo);
   if (!comprobar || comprobar.cogidoPor !== marca) return null;
 
-  return { datos: guardado.datos, marca };
+  // `ultimo` avisa de que este era el ultimo intento: si sale mal, ya no
+  // queda ninguno y hay que apuntarlo para reintentarlo por detras.
+  return { datos: guardado.datos, marca, ultimo: intentos >= MAX_INTENTOS };
 }
 
 // SE SUELTA CUANDO NO HA SALIDO. Asi el boton de volver a intentarlo puede

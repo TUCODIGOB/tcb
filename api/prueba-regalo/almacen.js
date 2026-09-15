@@ -34,7 +34,7 @@ const limpio = txt => String(txt || '').replace(/[^A-Za-z0-9_-]/g, '');
 // TODO LO DEL REGALO CUELGA DE AQUI, aparte de cualquier otro producto.
 const CARPETA = 'p0';
 
-async function pedir(metodo, ruta, cuerpo) {
+async function pedir(metodo, ruta, cuerpo, consulta) {
   const cfg = ajustes();
   if (!cfg) throw new Error('Faltan las variables INFORME_P1_CLOUDFLARE_*');
 
@@ -47,6 +47,12 @@ async function pedir(metodo, ruta, cuerpo) {
   const datos = cuerpo ? Buffer.from(JSON.stringify(cuerpo), 'utf8') : Buffer.alloc(0);
   const hash = crypto.createHash('sha256').update(datos).digest('hex');
 
+  // La consulta va aparte y ordenada: asi la firma la lee igual que R2.
+  const query = consulta
+    ? Object.keys(consulta).sort()
+        .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(consulta[k])).join('&')
+    : '';
+
   const conTipo = metodo === 'PUT';
   const cabeceras =
     (conTipo ? `content-type:application/json\n` : '') +
@@ -54,7 +60,8 @@ async function pedir(metodo, ruta, cuerpo) {
     `x-amz-content-sha256:${hash}\n` +
     `x-amz-date:${marca}\n`;
   const firmadas = (conTipo ? 'content-type;' : '') + 'host;x-amz-content-sha256;x-amz-date';
-  const peticion = [metodo, `/${cfg.bucket}/${ruta}`, '', cabeceras, firmadas, hash].join('\n');
+  const camino = ruta ? `/${cfg.bucket}/${ruta}` : `/${cfg.bucket}`;
+  const peticion = [metodo, camino, query, cabeceras, firmadas, hash].join('\n');
   const aFirmar = ['AWS4-HMAC-SHA256', marca, ambito,
     crypto.createHash('sha256').update(peticion).digest('hex')].join('\n');
   const firma = crypto.createHmac('sha256', firmaDelDia(cfg.secreto, dia, region, servicio))
@@ -67,7 +74,7 @@ async function pedir(metodo, ruta, cuerpo) {
   };
   if (conTipo) cabecerasHttp['Content-Type'] = 'application/json';
 
-  return fetch(`https://${host}/${cfg.bucket}/${ruta}`, {
+  return fetch(`https://${host}${camino}${query ? '?' + query : ''}`, {
     method: metodo,
     signal: AbortSignal.timeout(10000),
     headers: cabecerasHttp,
@@ -95,6 +102,40 @@ export async function escribir(cual, nombre, contenido) {
   const resp = await pedir('PUT', donde(cual, nombre), contenido);
   if (!resp.ok) throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
   return true;
+}
+
+// LISTAR. Devuelve los nombres de lo que hay guardado en una carpeta, sin
+// leer el contenido de nada. Lo usa el reintento para saber a quien le falta
+// su regalo. Si hay mas de los que caben en una tanda, se piden las
+// siguientes hasta acabar.
+export async function listar(cual) {
+  const prefijo = `${CARPETA}/${limpio(cual)}/`;
+  const nombres = [];
+  let desde = '';
+
+  for (let vuelta = 0; vuelta < 20; vuelta++) {
+    const consulta = { 'list-type': '2', prefix: prefijo, 'max-keys': '200' };
+    if (desde) consulta['continuation-token'] = desde;
+
+    const resp = await pedir('GET', '', null, consulta);
+    if (!resp.ok) throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+    const xml = await resp.text();
+
+    const claves = xml.match(/<Key>([^<]+)<\/Key>/g) || [];
+    claves.forEach(trozo => {
+      const clave = trozo.slice(5, -6);
+      if (clave.startsWith(prefijo) && clave.endsWith('.json')) {
+        nombres.push(clave.slice(prefijo.length, -5));
+      }
+    });
+
+    if (!/<IsTruncated>true<\/IsTruncated>/.test(xml)) break;
+    const sigue = xml.match(/<NextContinuationToken>([^<]+)<\/NextContinuationToken>/);
+    if (!sigue) break;
+    desde = sigue[1];
+  }
+
+  return nombres;
 }
 
 // BORRAR. Se usa para quemar un vale cuando ya se ha gastado.

@@ -32,12 +32,13 @@ import { guardarInforme } from '../../lib/guardar-informe.js';
 import { escribirElRegalo } from './llamadas.js';
 import { cobrarElVale, soltarElVale, quemarElVale } from './vale.js';
 import { leer } from './almacen.js';
+import { apuntarElFallo } from './pendientes.js';
 
 // La fecha, el lugar y la edad se montan igual que en el P1 y que en
 // carta.js, para que al modelo le llegue lo mismo escrito de la misma forma.
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
-function calcularEdad(fechaISO) {
+export function calcularEdad(fechaISO) {
   const nacimiento = new Date(fechaISO);
   const hoy = new Date();
   let edad = hoy.getFullYear() - nacimiento.getFullYear();
@@ -59,7 +60,7 @@ function huellaDelEmail(email) {
 // rasgos y el area no se pierda lo que ya habia.
 //
 // SI FALLA, NO PASA NADA: el area ya esta escrita y se entrega igual.
-async function guardarLoEscrito({ datos, carta, texto, rasgos }) {
+export async function guardarLoEscrito({ datos, carta, texto, rasgos }) {
   const huella = huellaDelEmail(datos.email);
   if (!huella) {
     console.warn('[prueba-regalo] Sin email: no se guarda el area.');
@@ -89,6 +90,22 @@ async function guardarLoEscrito({ datos, carta, texto, rasgos }) {
   } catch (err) {
     console.error('[prueba-regalo] No se ha podido guardar el area:', err.message);
   }
+}
+
+// LO QUE SE LE DA AL MODELO. Esta aqui suelto porque lo usan dos sitios: esta
+// puerta y el reintento de por detras. Los dos tienen que mandarle lo mismo.
+export function loQueVaAlModelo(datos, carta) {
+  const [anio, mes, dia] = String(datos.fecha || '').split('-').map(Number);
+  return {
+    nombre: datos.nombre,
+    sexo: datos.sexo,
+    fechaNice: dia + ' de ' + MESES[mes - 1] + ' de ' + anio,
+    hora: datos.hora,
+    lugar: [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', '),
+    edad: calcularEdad(datos.fecha),
+    cartaTexto: montarCartaTexto(carta),
+    casasTexto: montarCasasTexto(carta),
+  };
 }
 
 export default async function handler(req, res) {
@@ -168,16 +185,7 @@ export default async function handler(req, res) {
   const arranque = Date.now();
 
   try {
-    const salida = await escribirElRegalo({
-      nombre,
-      sexo,
-      fechaNice: dia + ' de ' + MESES[mes - 1] + ' de ' + anio,
-      hora,
-      lugar: [municipio, provincia, pais].filter(Boolean).join(', '),
-      edad: calcularEdad(fecha),
-      cartaTexto: montarCartaTexto(carta),
-      casasTexto: montarCasasTexto(carta),
-    });
+    const salida = await escribirElRegalo(loQueVaAlModelo(datos, carta));
 
     // Se guarda por detras, sin hacer esperar a nadie, y envuelto: el area ya
     // esta escrita y se entrega pase lo que pase con el guardado.
@@ -202,6 +210,17 @@ export default async function handler(req, res) {
     // NO HA SALIDO: se suelta el vale para que el boton de volver a
     // intentarlo pueda usarlo en el acto. El intento ya esta contado.
     await soltarElVale(codigo, cobrado.marca);
+
+    // Y SI ERA EL ULTIMO INTENTO, esa persona se queda sin nada delante. Se
+    // apunta para seguir intentandolo por detras y se le avisa por correo.
+    // Va por detras y envuelto: la respuesta no espera por esto ni se rompe.
+    if (cobrado.ultimo) {
+      try {
+        waitUntil(apuntarElFallo({ datos: delVale, carta, motivo: err.message }));
+      } catch (e) {
+        console.error('[prueba-regalo] No se ha podido apuntar el fallo:', e.message);
+      }
+    }
     return res.status(500).json({ error: err.message || 'No ha salido el área' });
   }
 }
