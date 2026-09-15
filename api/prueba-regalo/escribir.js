@@ -30,6 +30,8 @@ import { waitUntil } from '@vercel/functions';
 import { montarCartaTexto, montarCasasTexto } from '../../lib/carta-texto.js';
 import { guardarInforme } from '../../lib/guardar-informe.js';
 import { escribirElRegalo } from './llamadas.js';
+import { cobrarElVale, quemarElVale } from './vale.js';
+import { leer } from './almacen.js';
 
 // La fecha, el lugar y la edad se montan igual que en el P1 y que en
 // carta.js, para que al modelo le llegue lo mismo escrito de la misma forma.
@@ -94,7 +96,56 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  const datos = req.body || {};
+  // ── EL VALE ────────────────────────────────────────────────
+  //
+  // Escribir un regalo cuesta dinero, asi que no se escribe ninguno sin un
+  // vale que hayamos dado nosotros y que no este gastado. SUS DATOS SALEN DEL
+  // VALE, no de lo que llegue en la peticion: asi nadie puede pedir un regalo
+  // de una persona que se invente.
+  const codigo = String((req.body || {}).vale || '').trim();
+  if (!codigo) {
+    return res.status(400).json({ error: 'Falta el permiso' });
+  }
+
+  let delVale;
+  try {
+    delVale = await cobrarElVale(codigo);
+  } catch (err) {
+    console.error('[prueba-regalo] No se ha podido leer el vale:', err.message);
+    return res.status(500).json({ error: 'No se ha podido comprobar el permiso' });
+  }
+  if (!delVale) {
+    return res.status(403).json({ error: 'Este permiso no vale' });
+  }
+
+  // ── UN REGALO POR EMAIL ────────────────────────────────────
+  //
+  // Si ese email ya tiene el suyo, no se escribe otro: se devuelve el que ya
+  // habia. El modelo no elige los mismos rasgos dos veces, asi que escribir
+  // otro le daria una persona distinta de la que ya leyo.
+  try {
+    const yaLoTiene = await leer('', huellaDelEmail(delVale.email));
+    if (yaLoTiene && yaLoTiene.areas && yaLoTiene.areas.length) {
+      await quemarElVale(codigo);
+      return res.status(200).json({
+        yaLoTenia: true,
+        texto: yaLoTiene.areas[0],
+        rasgos: yaLoTiene.rasgos || {},
+        cuaderno: {},
+        segundos: 0,
+      });
+    }
+  } catch (err) {
+    // Si el almacen no contesta no se le deja sin regalo: se sigue y, como
+    // mucho, se le escribe otra vez.
+    console.error('[prueba-regalo] No se ha podido mirar si ya lo tenia:', err.message);
+  }
+
+  // SE QUEMA ANTES DE GASTAR UN SOLO CENTIMO. Si se quemara al terminar, una
+  // recarga o dos pestanas a la vez lanzarian dos regalos con el mismo vale.
+  await quemarElVale(codigo);
+
+  const datos = { ...delVale, carta: (req.body || {}).carta };
   const { nombre, sexo, fecha, hora, municipio, provincia, pais, carta } = datos;
 
   if (!nombre || !sexo) {

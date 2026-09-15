@@ -2452,8 +2452,41 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
 
       btn.textContent = 'Preparando tu diseño...';
 
-      // A LA PANTALLA QUE PREPARA EL REGALO. Aqui no se paga nada.
-      window.location.href = '/preparando-tu-diseno';
+      // EL PERMISO PARA PREPARARLO. El servidor guarda sus datos y devuelve un
+      // codigo de un solo uso: es lo unico que viaja a la pantalla siguiente.
+      try {
+        const resp = await fetch('/api/prueba-regalo/vale', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(datos),
+        });
+        const permiso = await resp.json().catch(() => ({}));
+        if (!resp.ok) throw new Error(permiso.error || 'No se ha podido empezar');
+
+        // Si ese email ya tiene el suyo, no se prepara otro: se le lleva
+        // directo a leer el que ya habia.
+        if (permiso.yaLoTiene && permiso.texto) {
+          try {
+            localStorage.setItem('tcb_diseno', JSON.stringify({
+              datos,
+              salida: { texto: permiso.texto, rasgos: permiso.rasgos || {}, cuaderno: {} },
+            }));
+          } catch (e) {}
+          window.location.href = '/tu-diseno-de-origen/tu-diseno';
+          return;
+        }
+        if (!permiso.vale) throw new Error('Respuesta inválida del servidor');
+
+        window.location.href = '/preparando-tu-diseno?v=' + encodeURIComponent(permiso.vale);
+      } catch (err) {
+        console.error('Error vale:', err);
+        const banner = document.getElementById('errorBanner');
+        banner.textContent = 'No hemos podido empezar. Por favor inténtalo de nuevo en unos segundos. Si el problema persiste, escríbenos a hola@origennatal.com';
+        banner.classList.add('show');
+        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        btn.disabled = false;
+        btn.textContent = 'Ver mi resultado gratis';
+      }
     });
 
     // El envío ya está en manos del código de arriba: la red de seguridad de

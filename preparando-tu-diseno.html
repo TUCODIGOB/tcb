@@ -388,6 +388,9 @@
 const EL_PEDIDO = 'tcb_pedido';
 const EL_DISENO = 'tcb_diseno';
 
+// EL PERMISO, que viene en la direccion. Sin el no se prepara nada.
+const EL_VALE = new URLSearchParams(location.search).get('v') || '';
+
 // Dos intentos, los mismos que el P1.
 const MAX_INTENTOS = 2;
 
@@ -471,7 +474,9 @@ async function prepararlo() {
 
   try {
     const carta = await pedir('/api/prueba-regalo/carta', _pedido);
-    const salida = await pedir('/api/prueba-regalo/escribir', { ..._pedido, carta: carta.carta });
+    // AL ESCRIBIR SOLO VA EL PERMISO Y SU CARTA. Sus datos de nacimiento ya
+    // los tiene el servidor guardados con el vale.
+    const salida = await pedir('/api/prueba-regalo/escribir', { vale: EL_VALE, carta: carta.carta });
 
     // Se guarda para que lo pinte la pagina del resultado. Si este navegador
     // no deja guardar, no se le manda a una pagina que va a salir en blanco.
@@ -487,7 +492,7 @@ async function prepararlo() {
 // ── AL ABRIR LA PAGINA ─────────────────────────────────────────
 (function arrancar() {
   _pedido = loSuyo();
-  if (!_pedido) return;
+  if (!_pedido || !EL_VALE) return;
   prepararlo();
 })();
 </script>
