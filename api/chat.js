@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { compraValida, esDelProducto, MAX_INTENTOS, estado, reservar, liberar } from '../lib/reserva.js';
+import { leerLaFicha } from '../lib/ficha-del-lead.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -151,6 +152,35 @@ function crearReloj(margen = TOPE_DE_LA_PETICION) {
   };
 }
 
+// ── LO QUE EL REGALO LE DEJO ESCRITO ─────────────────────────
+//
+// Lee el fichero de su email y devuelve, si estan, el area 1 tal cual se la
+// entrego el regalo y los rasgos con los que se escribio. Devuelve null
+// cuando no hay regalo, cuando falta una de las dos cosas, o cuando el
+// almacen no contesta: en todos esos casos el informe se hace entero.
+//
+// NUNCA CORTA EL INFORME. Que esto falle no puede dejar a nadie sin lo que ha
+// pagado, asi que no deja salir ningun error.
+async function loQueTraeDelRegalo(email) {
+  if (!email) return null;
+  try {
+    const ficha = await leerLaFicha(email);
+    if (!ficha) return null;
+
+    const texto = Array.isArray(ficha.areas) && typeof ficha.areas[0] === 'string'
+      ? ficha.areas[0].trim() : '';
+    const rasgos = ficha.rasgos && typeof ficha.rasgos === 'object' ? ficha.rasgos : null;
+    const cuantos = rasgos
+      ? (rasgos.fortalezas || []).length + (rasgos.desafios || []).length : 0;
+
+    if (!texto || !cuantos) return null;
+    return { texto, rasgos, cuantos };
+  } catch (err) {
+    console.error('[p1] No se ha podido leer lo del regalo:', err.message);
+    return null;
+  }
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -174,9 +204,10 @@ export default async function handler(req, res) {
   // puertas van en este orden a proposito: primero lo definitivo, luego lo
   // temporal, y el contador de intentos el ultimo, para que una recarga
   // mientras se genera no consuma intentos ni dispare avisos en falso.
-  let reserva;
+  let reserva, suEmail = '';
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id);
+    suEmail = session.customer_email || session.customer_details?.email || '';
     // La cerradura del P1: se exige que este pagado Y que sea del P1. El
     // recibo de otro producto no abre este camino.
     if (!compraValida(session) || !esDelProducto(session, 'p1')) {
@@ -687,6 +718,22 @@ Edad: ${edad} años`;
     // areas ya no reciben nada de la carta: escriben con los rasgos que salen
     // de aqui.
     const cartaConLasCasas = casasTexto ? `${cartaTexto}\n\n${casasTexto}` : cartaTexto;
+
+    // LO QUE YA TIENE DEL REGALO.
+    //
+    // Si esta persona hizo el regalo, su area 1 ya esta escrita y sus rasgos
+    // ya estan elegidos, guardados en el fichero de su email. Aqui se leen,
+    // antes de empezar, para poder continuar por donde ella lo dejo en vez de
+    // volver a hacer -y a cobrar- lo que ya esta hecho.
+    //
+    // O ESTA TODO O NO ESTA NADA: hace falta el texto y los rasgos, porque van
+    // juntos. Con la mitad no se continua nada, asi que se hace el informe
+    // entero, igual que para quien nunca paso por el regalo.
+    const delRegalo = await loQueTraeDelRegalo(suEmail);
+    console.log(delRegalo
+      ? `[p1] Del regalo: el area 1 escrita y ${delRegalo.cuantos} rasgos suyos`
+      : '[p1] Sin regalo que aprovechar: el informe se hace entero');
+
     const rasgos = await sacarRasgos(nombrePila, sexo, cartaConLasCasas, INTENTOS_POR_AREA, reloj);
 
     // Despues, las 7 areas a la vez. Cada una recibe los rasgos que el codigo
