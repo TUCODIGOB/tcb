@@ -137,6 +137,8 @@ export default async function handler(req, res) {
     const pdf = await pedir('/api/generar-pdf', {
       session_id, token: escrito.token, nombre: m.nombre, sexo: m.sexo,
       fechaNice, hora: m.hora, lugar, edad, carta, areas, rasgos: escrito.rasgos || null,
+      // El cuaderno de como ha ido: viaja hasta el guardado y ahi se queda.
+      cuaderno: escrito.cuaderno || null,
     }, 300);
     if (!pdf.pdfBase64) throw new Error('el PDF no ha llegado');
 

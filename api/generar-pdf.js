@@ -27,6 +27,8 @@ export default async function handler(req, res) {
   }
 
   let sessionEmail = '';
+  // En que intento se esta generando. Solo para dejarlo apuntado al guardar.
+  let intentoActual = null;
   {
     const { session_id, token } = req.body;
 
@@ -54,12 +56,13 @@ export default async function handler(req, res) {
       }
 
       sessionEmail = session.customer_email || session.customer_details?.email || '';
+      intentoActual = st.intentos || null;
     } catch (err) {
       return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
     }
   }
 
-  const { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas, rasgos, session_id, token } = req.body;
+  const { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas, rasgos, cuaderno, session_id, token } = req.body;
 
   if (!nombre || !areas || !session_id) {
     return res.status(400).json({ error: 'Faltan parámetros' });
@@ -1054,6 +1057,10 @@ export default async function handler(req, res) {
         carta: carta || null,
         areas,
         rasgos: rasgos || null,
+        // Como fue la generacion y en que intento salio. Es para mirar: no
+        // entra en el PDF ni en el correo.
+        cuaderno: cuaderno || null,
+        intento: intentoActual,
       });
       if (guardado.guardado) console.log(`Informe guardado: ${guardado.ruta} (${guardado.bytes} bytes)`);
     } catch (err) {
