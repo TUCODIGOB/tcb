@@ -289,6 +289,25 @@ button:hover{filter:brightness(.96);}
 }
 .detras .resumen b{color:var(--tinta);}
 
+/* ── EL NAV, EL MISMO DEL RESTO ──────────────────────────────
+   Esta pagina lleva un margen a los lados y otro arriba en todo el cuerpo;
+   el nav los anula con margenes negativos para ocupar el ancho entero. */
+.nav{
+  margin:-40px -16px 40px;
+  background:rgba(255,251,239,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid transparent;
+}
+.nav-inner{
+  display:flex; align-items:center; justify-content:space-between;
+  width:min(1100px, 92vw); margin-inline:auto;
+  padding-block:6px;
+}
+.nav-logo img{height:34px;width:auto;display:block;}
+@media (max-width:600px){
+  .nav-inner{flex-direction:column; gap:1rem; padding-block:18px;}
+}
+
 /* ── EL PIE, EL MISMO DEL INDEX ──────────────────────────────
    Esta pagina lleva un margen a los lados y otro abajo en todo el cuerpo;
    el pie los anula con margenes negativos para ocupar el ancho entero,
@@ -380,6 +399,15 @@ body,
 </style>
 </head>
 <body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
+      <img src="/images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" width="395" height="48" />
+    </a>
+  </div>
+</nav>
 
 <div class="hoja">
   <div class="resultado" id="resultado"></div>

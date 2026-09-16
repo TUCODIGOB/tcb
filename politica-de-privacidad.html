@@ -93,13 +93,12 @@
        En ambos casos el logo se mantiene al scrollear
     ══════════════════════════════════════════════ */
     .nav {
-      position: sticky; top: 0; z-index: 100;
       background: rgba(255,251,239,.92);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(189,144,72,.2);
+      border-bottom: 1px solid transparent;
     }
     .nav-inner {
-      display: flex; align-items: center;
+      display: flex; align-items: center; justify-content: space-between;
       padding-block: 6px;
     }
     .nav-logo img {
@@ -215,7 +214,7 @@
       section { padding-block: 3.5rem; }
 
       /* NAV móvil — logo centrado, sin esconderse al scroll */
-      .nav-inner { justify-content: center; padding-block: 1rem; }
+      .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
 
       /* Legal móvil */
       .legal { padding-block: 2.5rem 3.5rem; }

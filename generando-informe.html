@@ -67,11 +67,11 @@
   /* NAV */
   .nav {
     background: rgba(255,251,239,.92);
-    border-bottom: 1px solid rgba(189,144,72,.2);
-    padding-block: 0.2rem;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
   }
   .nav-inner {
-    display: flex; align-items: center;
+    display: flex; align-items: center; justify-content: space-between;
     width: min(1100px, 92vw);
     margin-inline: auto;
     padding-block: 6px;
@@ -244,7 +244,7 @@
   .footer-copy { color: rgba(255,251,239,.4); font-size: .8rem; }
 
   @media (max-width: 600px) {
-    .nav-inner { justify-content: center; padding-block: 1rem; }
+    .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
     .screen { padding-block: 2rem; }
     .ready-box { padding: 2rem 1.5rem; }
     .screen p { font-size: 18px; }
