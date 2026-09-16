@@ -775,9 +775,9 @@ Edad: ${edad} años`;
     // dos veces, y peor todavia dejarla sin informe.
     if (ultimoError && ultimoError.repetido) {
       console.warn(`Área ${area.id}: ha seguido repitiendo lo ya entregado, se escribe entera`);
-      const entera = await pedirArea(area, rasgos, null);
-      reloj.apunta(`area ${area.id}`, arranque);
-      return entera;
+      // El tiempo ya lo apunta pedirArea al salir bien: aqui no se apunta otra
+      // vez, que dejaria el area dos veces en el cuaderno.
+      return await pedirArea(area, rasgos, null);
     }
 
     throw ultimoError;
