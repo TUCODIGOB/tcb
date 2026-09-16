@@ -1050,11 +1050,12 @@ export default async function handler(req, res) {
       const guardado = await guardarInforme({
         producto: 'p1',
         sessionId: session_id,
-        cliente: { nombre, sexo, email: sessionEmail, fecha: fechaNice, hora, lugar, edad },
-        // La carta tal y como se calculo hoy, con las coordenadas del lugar
-        // incluidas: es lo unico que no se puede volver a sacar igual mas
-        // adelante. Ver el porque en lib/guardar-informe.js.
-        carta: carta || null,
+        // SUS DATOS Y SU CARTA NO SE GUARDAN AQUI. Ya los guarda el P0, que es
+        // por donde pasa siempre antes de comprar, y tienen que ser los mismos
+        // en los dos sitios: si se guardaran dos veces, acabarian no
+        // coincidiendo. Aqui queda solo su email, que es lo que ata este
+        // informe con el fichero del P0 donde estan sus datos y su carta.
+        cliente: { email: sessionEmail },
         areas,
         rasgos: rasgos || null,
         // Como fue la generacion y en que intento salio. Es para mirar: no
