@@ -1040,6 +1040,11 @@ export default async function handler(req, res) {
       }
     }
 
+    // EL EMAIL, LIMPIO Y EN MINUSCULAS: es lo que ata el informe con la ficha,
+    // y el nombre de la ficha sale de el. Tiene que ser el mismo escrito de la
+    // misma manera en los dos sitios.
+    const elEmail = String(sessionEmail || '').trim().toLowerCase();
+
     // Guardar lo que se le ha entregado, para que el siguiente producto pueda
     // apoyarse en ESTE informe y no en una tirada nueva.
     //
@@ -1050,11 +1055,11 @@ export default async function handler(req, res) {
       const guardado = await guardarInforme({
         producto: 'p1',
         sessionId: session_id,
-        cliente: { nombre, sexo, email: sessionEmail, fecha: fechaNice, hora, lugar, edad },
-        // La carta tal y como se calculo hoy, con las coordenadas del lugar
-        // incluidas: es lo unico que no se puede volver a sacar igual mas
-        // adelante. Ver el porque en lib/guardar-informe.js.
-        carta: carta || null,
+        // SUS DATOS Y SU CARTA NO SE GUARDAN AQUI: van en el fichero de su
+        // email, que es uno solo y no puede tener dos versiones distintas de
+        // lo mismo. Aqui queda ese email, que es lo que ata este informe con
+        // aquel.
+        cliente: { email: elEmail },
         areas,
         rasgos: rasgos || null,
         // Como fue la generacion y en que intento salio. Es para mirar: no

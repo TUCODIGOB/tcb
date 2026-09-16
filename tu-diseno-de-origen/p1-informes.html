@@ -208,7 +208,7 @@ function pintar(informe){
     : 'sin apuntar';
 
   $('ficha').innerHTML =
-    '<h2>' + esc(cl.nombre || '(sin nombre)') + ' — ' + esc(informe.compra || '') + '</h2>' +
+    '<h2>' + esc(cl.nombre || cl.email || '(sin nombre)') + ' — ' + esc(informe.compra || '') + '</h2>' +
 
     '<p class="resumen">' +
       '<span>Salió: <b>' + intento + '</b></span>' +

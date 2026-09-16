@@ -20,7 +20,9 @@
 // ═════════════════════════════════════════════════════════════════
 
 import Stripe from 'stripe';
+import { waitUntil } from '@vercel/functions';
 import { compraValida, esDelProducto, estado } from '../lib/reserva.js';
+import { asegurarLaFicha } from '../lib/ficha-del-lead.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -72,7 +74,7 @@ export default async function handler(req, res) {
   // LA MISMA CERRADURA DE SIEMPRE, y antes de gastar nada. Los sitios a los
   // que se llama la vuelven a mirar cada uno por su cuenta; esto solo evita
   // arrancar una cadena que se iba a caer en el primer paso.
-  let m;
+  let m, suEmail = '';
   try {
     const session = await stripe.checkout.sessions.retrieve(session_id);
     if (!compraValida(session) || !esDelProducto(session, 'p1')) {
@@ -86,6 +88,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, nota: 'se esta haciendo' });
     }
     m = session.metadata || {};
+    suEmail = session.customer_email || session.customer_details?.email || '';
   } catch (err) {
     console.error('generar-informe: no se ha podido leer la compra:', err.message);
     return res.status(403).json({ error: 'Pago no verificado' });
@@ -123,6 +126,29 @@ export default async function handler(req, res) {
       session_id, year, month, day, localHour: hh, localMin: mm,
       latDeg: geo.lat, lonDeg: geo.lon, tzOffset: zona.offset,
     }, 60);
+
+    // 3 bis. SU FICHA, SI NO LA TIENE.
+    //
+    // Sus datos y su carta se guardan en un fichero suyo, uno por email. Casi
+    // siempre ya esta hecho, porque se compra desde el regalo y el regalo lo
+    // deja escrito. Pero si algun dia entra alguien que compra sin haber
+    // pasado por ahi, ese fichero no existe: se crea aqui, en cuanto la carta
+    // esta calculada, que es cuando hay algo que guardar.
+    //
+    // SI YA ESTABA, NO SE TOCA: dentro puede estar lo que el regalo le
+    // escribio, y volver a guardarlo lo borraria.
+    //
+    // NO SE ESPERA A QUE TERMINE, igual que hace el regalo: guardar no puede
+    // retrasar ni un segundo el informe, que es lo que ha pagado.
+    waitUntil(
+      asegurarLaFicha({
+        email: suEmail,
+        cliente: { nombre: m.nombre, sexo: m.sexo || '', fecha: fechaNice, hora: m.hora, lugar, edad },
+        carta,
+      })
+        .then(ficha => { if (ficha.creada) console.log('generar-informe: ficha creada (' + ficha.ruta + ')'); })
+        .catch(err => console.error('generar-informe: no se ha podido crear la ficha:', err.message))
+    );
 
     // 4. EL INFORME. Es el paso largo, y lleva su propio reloj dentro.
     const escrito = await pedir('/api/chat', {
