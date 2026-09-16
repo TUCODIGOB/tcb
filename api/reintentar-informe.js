@@ -75,6 +75,13 @@ export default async function handler(req, res) {
   if (req.headers.authorization !== `Bearer ${secreto}`) {
     return res.status(401).json({ error: 'No autorizado' });
   }
+  // SE COMPRUEBA ANTES DE TOCAR NADA. Sin la llave interna no se puede
+  // arrancar ningun informe, y un intento que no se llega a lanzar no puede
+  // darse por gastado: si no, una variable mal puesta se comeria los tres.
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    console.error('[p1] Sin STRIPE_WEBHOOK_SECRET: no se puede arrancar ningun informe');
+    return res.status(500).json({ error: 'Sin llave interna' });
+  }
 
   let fichas;
   try {
