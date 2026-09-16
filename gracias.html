@@ -64,19 +64,22 @@
   a { color: inherit; text-decoration: none; }
   .container { width: min(720px, 92vw); margin-inline: auto; padding-inline: 20px; }
 
-  /* NAV */
+  /* ─── NAV ─── (el mismo del index, sin el boton) */
+  .container-home { width: min(1100px, 92vw); margin-inline: auto; }
   .nav {
+    position: sticky; top: 0; z-index: 100;
     background: rgba(255,251,239,.92);
+    backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(189,144,72,.2);
-    padding-block: 0.2rem;
   }
   .nav-inner {
-    display: flex; align-items: center;
-    width: min(1100px, 92vw);
-    margin-inline: auto;
+    display: flex; align-items: center; justify-content: space-between;
     padding-block: 6px;
   }
-  .nav-logo img { height: 34px; width: auto; }
+  .nav-logo img {
+    height: 34px;
+    width: auto;
+  }
 
   /* PANTALLA */
   .screen {
@@ -144,7 +147,8 @@
   .salto-movil { display: none; }
   @media (max-width: 600px) {
     .salto-movil { display: inline; }
-    .nav-inner { justify-content: center; padding-block: 1rem; }
+    .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
+    .nav-logo img { height: 34px; width: auto; }
     .screen { align-items: flex-start; padding-top: 10vh; padding-bottom: 5rem; }
     .screen > .container { width: 100vw; padding-inline: 14px; }
     .screen h1 { margin-bottom: 64px; }
@@ -163,6 +167,8 @@
     color: rgba(255,251,239,.6);
     padding-block: 2.5rem;
     font-size: .82rem;
+    /* El index escribe con este interlineado; el pie tiene que medir igual. */
+    line-height: 1.7;
   }
   .footer-inner {
     display: flex; flex-direction: column;
@@ -171,7 +177,11 @@
     width: min(1100px, 92vw);
     margin-inline: auto;
   }
-  .footer-email a { color: var(--gold-light); font-weight: 500; }
+  /* El renglon del correo mide como en el index: el parrafo con el tamano
+     general de los textos y el enlace con el del pie. */
+  .footer-email { font-size: clamp(.95rem, 1.5vw, 1.05rem); }
+  .footer-email a { color: var(--gold-light); font-weight: 500; font-size: .82rem; }
+  .footer-email a:hover { color: var(--white); }
   .footer-links {
     display: flex; flex-wrap: wrap;
     gap: .3rem .75rem;
@@ -221,9 +231,14 @@
 
 <!-- NAV -->
 <nav class="nav">
-  <div class="nav-inner">
+  <div class="container-home nav-inner">
     <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
-      <img src="images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" width="395" height="48" />
+      <img src="images/logo-origen-natal-carta-oscuro.webp"
+           alt="Origen Natal — Tu carta natal descifrada" width="395" height="48"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
+      <span style="display:none; font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; color:var(--teal-deep); letter-spacing:.02em;">
+        ORIGEN NATAL
+      </span>
     </a>
   </div>
 </nav>
