@@ -734,7 +734,7 @@ Edad: ${edad} años`;
       ? `[p1] Del regalo: el area 1 escrita y ${delRegalo.cuantos} rasgos suyos`
       : '[p1] Sin regalo que aprovechar: el informe se hace entero');
 
-    const rasgos = await sacarRasgos(nombrePila, sexo, cartaConLasCasas, INTENTOS_POR_AREA, reloj);
+    const rasgos = await sacarRasgos(nombrePila, sexo, cartaConLasCasas, INTENTOS_POR_AREA, reloj, delRegalo);
 
     // Despues, las 7 areas a la vez. Cada una recibe los rasgos que el codigo
     // etiqueto con ella, que son los mismos que la clienta va a leer en el PDF.
@@ -806,7 +806,8 @@ const POR_AREA = {
 // LOS QUE TIENE QUE DEVOLVER EL PASO 1: cinco por area, treinta y cinco. No es
 // un objetivo, es lo que su encargo le pide, y si vuelve con menos el informe
 // arranca ya corto.
-const CUANTOS_RASGOS = NOMBRES_DE_AREA.length * (POR_AREA.fortalezas.max + POR_AREA.desafios.max);
+const RASGOS_POR_AREA = POR_AREA.fortalezas.max + POR_AREA.desafios.max;
+const CUANTOS_RASGOS = NOMBRES_DE_AREA.length * RASGOS_POR_AREA;
 
 // ═════════════════════════════════════════════════════════════════
 // A QUE AREA DEL ESTUDIO PERTENECE CADA RASGO
@@ -1064,8 +1065,66 @@ function comoSeLeHabla(sexo) {
       : 'una persona que no se identifica como hombre ni como mujer. Evita marcar el genero en los adjetivos.';
 }
 
+// ── LOS RASGOS QUE YA TRAE DEL REGALO ───────────────────────
+//
+// Vienen guardados con las mismas casillas que usa el P1 -su conducta, de
+// donde sale, su titulo, su descripcion y su porque-, asi que entran en la
+// lista como uno mas. Tres cosas se les ponen aqui:
+//
+//   · el area es IDENTIDAD y no puede ser otra: el regalo solo escribe esa.
+//   · quedan marcados, para que ni la limpieza ni las redes se los lleven:
+//     ella ya los ha leido y tienen que salir igual en su informe.
+//   · y no vuelven a escribirse, porque ya estan escritos.
+//
+// El que venga a medias se cae: sin titulo y sin descripcion no se puede
+// imprimir, y sin conducta no se puede comparar con ningun otro.
+function losDelRegalo(delRegalo) {
+  if (!delRegalo || !delRegalo.rasgos) return [];
+  const salen = [];
+  for (const cual of ['fortalezas', 'desafios']) {
+    for (const r of (delRegalo.rasgos[cual] || [])) {
+      const conducta = String(r?.conducta ?? '').trim();
+      const nombre = String(r?.nombre ?? '').trim();
+      const descripcion = String(r?.descripcion ?? '').trim();
+      if (!conducta || !nombre || !descripcion) continue;
+      salen.push({
+        conducta,
+        origen: String(r?.origen ?? '').trim(),
+        area: NOMBRES_DE_AREA[0],
+        lista: cual,
+        nombre,
+        descripcion,
+        causa: String(r?.causa ?? '').trim(),
+        delRegalo: true,
+      });
+    }
+  }
+  return salen;
+}
+
+// LO QUE SE LE DICE AL PASO 1 CUANDO EL AREA 1 YA ESTA HECHA. Si no trae
+// regalo, esto no existe y el encargo es el de siempre, palabra por palabra.
+function elBloqueDelRegalo(yaTiene) {
+  if (!yaTiene.length) return '';
+  const suyos = yaTiene
+    .map(r => `- ${r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO'} — ${r.conducta}`)
+    .join('\n');
+  return `
+7. IDENTIDAD YA ESTÁ HECHA Y NO SE VUELVE A HACER
+
+A esta persona ya se le sacaron sus rasgos de IDENTIDAD, de esta misma carta, y ya los ha leído. Son estos:
+
+${suyos}
+
+NO SACAS NI UNO DE IDENTIDAD. Ni otro distinto, ni uno mejor: esa área está cerrada. Sacas los de las otras SEIS áreas, y en la cuenta del suelo y del techo IDENTIDAD no entra.
+
+Y ESOS CUENTAN COMO YA ESCRITOS PARA NO REPETIRSE. Antes de escribir cada rasgo, míralo también contra ellos, igual que contra los que ya llevas: si dice lo mismo que uno de esos, no lo escribes y vuelves a la carta a por otro distinto de verdad.
+
+`;
+}
+
 // ── PASO 1: ELEGIR ──────────────────────────────────────────
-async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'medium') {
+async function pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, esfuerzo = 'medium', yaTiene = []) {
   const encargo = `Eres astróloga. Lees una carta natal y decides los rasgos de esa persona: los que se le dan bien y los que le cuestan.
 AQUÍ SOLO SE BUSCAN, NO SE ESCRIBEN: De cada rasgo sale si es una fortaleza o un desafío, su conducta, el área a la que pertenece y de qué posición de la carta lo has sacado. Ni título, ni descripción, ni causa: eso lo escribe otro después.  
 QUÉ ES QUE UN RASGO PESE: que le esté costando algo de verdad en su vida -tiempo, dinero, salud, gente, calma- o que le esté dando algo de verdad. No que suene bien ni que esté bien escrito. Entre dos que dicen casi lo mismo, se queda el que más le cuesta o más le da, y el otro se va.
@@ -1157,7 +1216,7 @@ DESPUÉS, EL SUELO DE CADA ÁREA. Cuentas, área por área, cuántas fortalezas 
 DESPUÉS, EL TECHO. Si un área pasa de su máximo, se quedan los que más pesan y los demás se van.
 
 Y POR ÚLTIMO, DOS COSAS QUE SE MIRAN EN UN MINUTO: que ninguna conducta nombre la carta ni nada técnico ni de astrología, y que a ningún rasgo le falte una casilla. 
-Devuelve solo la lista.
+${elBloqueDelRegalo(yaTiene)}Devuelve solo la lista.
 Carta natal:
 ${cartaTexto}
 Persona: ${comoSeLeHabla(sexo)}
@@ -1222,24 +1281,29 @@ Nombre de pila: ${nombrePila}`;
 // La segunda tirada va con el esfuerzo bajo, que es la mitad de rato: los
 // rasgos salen algo menos afinados, y eso es mucho mejor que dejar sin informe
 // a alguien que ha pagado.
-async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj) {
+async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj, yaTiene = []) {
   let rasgos;
   try {
-    rasgos = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'medium');
+    rasgos = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'medium', yaTiene);
   } catch (err) {
     if (err.temporal === false || !reloj.hayTiempoPara(180)) throw err;
     console.warn(`la tirada con esfuerzo medio fallo (${err.message.slice(0, 80)}), se repite pensando menos`);
-    return await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'low');
+    return await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'low', yaTiene);
   }
 
   // Y SI VUELVE CORTA, SE PIDE OTRA VEZ ENTERA. No se le puede pedir solo los
   // que faltan: los compara entre ellos mientras los escribe, y sin ver los que
   // ya hay los repetiria. Se queda la mejor de las dos, nunca la ultima por ser
   // la ultima.
-  if (rasgos.length < CUANTOS_RASGOS && reloj.hayTiempoPara(180)) {
-    console.warn(`el paso 1 ha devuelto ${rasgos.length} rasgos de ${CUANTOS_RASGOS}, se pide otra vez`);
+  //
+  // CON EL AREA 1 YA HECHA SE ESPERAN SEIS AREAS, NO SIETE. Si se siguiera
+  // esperando la cuenta entera, la lista vendria siempre corta y se pediria
+  // otra vez para nada, pagandola.
+  const seEsperan = CUANTOS_RASGOS - (yaTiene.length ? RASGOS_POR_AREA : 0);
+  if (rasgos.length < seEsperan && reloj.hayTiempoPara(180)) {
+    console.warn(`el paso 1 ha devuelto ${rasgos.length} rasgos de ${seEsperan}, se pide otra vez`);
     try {
-      const otra = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'medium');
+      const otra = await pedirLosRasgos(nombrePila, sexo, cartaTexto, reloj, 'medium', yaTiene);
       if (otra.length > rasgos.length) rasgos = otra;
     } catch (err) {
       console.warn(`la segunda tirada no ha salido (${err.message.slice(0, 80)}), se sigue con la primera`);
@@ -1266,8 +1330,20 @@ async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj) {
 // sitio que le quita a lo que si tiene que leer.
 function laListaNumerada(rasgos) {
   return rasgos
-    .map((r, i) => `${i + 1}. ${r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO'} — ${r.area} — ${r.conducta}`)
+    .map((r, i) => `${i + 1}. ${r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO'} — ${r.area} — ${r.conducta}${r.delRegalo ? ' — YA ENTREGADO' : ''}`)
     .join('\n');
+}
+
+// LOS QUE NO SE PUEDEN QUITAR. Algunos rasgos ya se los entregamos en su
+// regalo y ya los ha leido: quitarlos ahora seria darle un informe que no
+// cuadra con lo que tiene. Van marcados en la lista, y aqui se le dice lo que
+// significa esa marca. Si no hay ninguno, esto no aparece.
+function losIntocables(rasgos) {
+  if (!rasgos.some(r => r.delRegalo)) return '';
+  return `LOS MARCADOS "YA ENTREGADO" NO SE QUITAN NUNCA
+Esos rasgos ya se le entregaron y ya los ha leído: van en "sequedan" pase lo que pase, aunque repitan con otro. Cuando uno de los demás diga lo mismo que uno marcado, el que se quita es el otro, nunca el marcado.
+
+`;
 }
 
 async function limpiarLosRasgos(rasgos, piensa, reloj) {
@@ -1280,7 +1356,7 @@ Revisa la conducta de todos, las fortalezas y los desafíos a la vez. Elimina lo
 Se comparan todos con todos, aunque sean de áreas distintas y aunque uno sea una fortaleza y el otro un desafío. La misma conducta contada como algo que se le da bien y como algo que le cuesta es un solo rasgo con sus dos caras: se queda la cara que más pese y la otra se va.
 Pesa más la conducta más concreta y central para la persona, no la más genérica. 
 
-
+${losIntocables(rasgos)}
 LO QUE NO SE PUEDE QUEDAR CORTO
 De cada área tienen que quedar al menos 1 fortaleza y 2 desafíos. Si al quitar uno un área bajaría de ahí, ese no se quita: se queda aunque repita.
 No es un número al que llegar: si de un área quedan más y no se repiten entre ellos, se quedan todos.
@@ -1396,13 +1472,28 @@ async function alModelo({ que, modelo, razona, techo, system, mensaje, molde, es
 
 // Los dos pasos, encadenados: una llamada saca las dos listas y despues se
 // limpian juntas.
-async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj) {
+async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj, yaTiene = []) {
   // UNA SOLA LLAMADA, Y LAS DOS LISTAS DENTRO. Antes eran dos a la vez, una por
   // lista, y ninguna veia lo que sacaba la otra: la misma posicion de la carta
   // salia leida en bueno por una y en malo por la otra, y la clienta se
   // encontraba las dos cosas en su informe. Con una sola cabeza eso no puede
   // pasar: mira esa posicion, decide que cara pesa y escribe una.
-  const todos = await unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj);
+  const delModelo = await unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj, yaTiene);
+
+  // EL AREA 1 ES LA DEL REGALO Y NO ADMITE MAS. Al paso 1 se le ha dicho que
+  // no saque ninguno de IDENTIDAD, pero el area de un rasgo tambien la puede
+  // poner el codigo por la posicion de la que sale, asi que puede colarse
+  // alguno igual. Si se quedaran, esa area llegaria con mas rasgos de los que
+  // caben y el techo podria dejar fuera justo los que ella ya ha leido.
+  const delArea1 = yaTiene.length
+    ? delModelo.filter(r => r.area === NOMBRES_DE_AREA[0]).length : 0;
+  if (delArea1) console.warn(`el paso 1 saco ${delArea1} rasgos de ${NOMBRES_DE_AREA[0]} y esa area ya estaba hecha: se quitan`);
+
+  // LOS SUYOS VAN DELANTE. El numero que llevan aqui es con el que los ve la
+  // limpieza y con el que salen en el cuaderno.
+  const todos = yaTiene.length
+    ? [...yaTiene, ...delModelo.filter(r => r.area !== NOMBRES_DE_AREA[0])]
+    : delModelo;
 
   // Se apuntan tal como se los va a ver la limpieza, con el mismo numero. Aqui
   // todavia no hay titulo ni descripcion: eso se escribe despues, en el paso 3.
@@ -1457,7 +1548,18 @@ async function limpiarYRepasar(todos, reloj) {
     }
   }
 
-  return conElSueloDeCadaArea(sequedan.map(n => todos[n - 1]).filter(Boolean), todos, reloj);
+  let quedan = sequedan.map(n => todos[n - 1]).filter(Boolean);
+
+  // Y LOS DEL REGALO VUELVEN SI SE LOS HA LLEVADO. En el encargo se le dice
+  // que esos no se quitan, pero decide el solo y esto no puede depender de que
+  // haga caso: ella ya los ha leido en su regalo y tienen que estar.
+  const suyos = todos.filter(r => r.delRegalo && !quedan.includes(r));
+  if (suyos.length) {
+    console.warn(`la limpieza se llevo ${suyos.length} rasgos del regalo: vuelven`);
+    quedan = [...suyos, ...quedan];
+  }
+
+  return conElSueloDeCadaArea(quedan, todos, reloj);
 }
 
 // EL SUELO DE CADA AREA, DESPUES DE LIMPIAR.
@@ -1509,8 +1611,8 @@ function conElSueloDeCadaArea(sequedan, todos, reloj) {
   return devueltos.length ? [...sequedan, ...devueltos] : sequedan;
 }
 
-async function sacarLasListas(nombrePila, sexo, cartaTexto, reloj) {
-  return await pedirLasListas(nombrePila, sexo, cartaTexto, reloj);
+async function sacarLasListas(nombrePila, sexo, cartaTexto, reloj, yaTiene = []) {
+  return await pedirLasListas(nombrePila, sexo, cartaTexto, reloj, yaTiene);
 }
 
 // ── PASO 3: ESCRIBIR LOS RASGOS ─────────────────────────────
@@ -1802,24 +1904,40 @@ function hablaDeAstrologia(rasgo) {
 // Una llamada -la que piensa- y dos redes de codigo detras. Las redes no
 // opinan: cuentan y comparan cadenas. Estan porque el modelo se despista, no
 // porque decidan nada.
-async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj) {
+async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj, delRegalo = null) {
+  // LO QUE YA TRAE HECHO. Si hizo el regalo, los rasgos de su area 1 ya estan
+  // elegidos y escritos: entran en la lista tal cual y no se vuelven a sacar
+  // ni a pagar.
+  const yaTiene = losDelRegalo(delRegalo);
+
   // 1. Las dos listas, ya comparadas entre si, etiquetadas y con su suelo y su
   //    techo por area. Todo lo que antes eran cinco llamadas.
-  let { fortalezas, desafios } = await sacarLasListas(nombrePila, sexo, cartaTexto, reloj);
+  let { fortalezas, desafios } = await sacarLasListas(nombrePila, sexo, cartaTexto, reloj, yaTiene);
 
   // 1b. Y AHORA SE ESCRIBEN. Hasta aqui cada rasgo era su conducta y la posicion
   //     de la carta de la que sale; aqui se le pone el titulo, la descripcion y
   //     la causa, que es lo que la clienta lee. Las dos listas van juntas para
   //     que las dos mitades salgan parejas.
-  const escritos = await escribirLosRasgos([...fortalezas, ...desafios], nombrePila, sexo, reloj);
+  //     LOS DEL REGALO NO PASAN POR AQUI: ya vienen escritos de entonces, con
+  //     su titulo, su descripcion y su porque, y son los que ella tiene
+  //     delante. Volver a escribirlos seria pagarlos otra vez para darle otra
+  //     cosa distinta de la que ya leyo.
+  const todosLosRasgos = [...fortalezas, ...desafios];
+  const porEscribir = todosLosRasgos.filter(r => !r.delRegalo);
+  const escritos = porEscribir.length
+    ? [...todosLosRasgos.filter(r => r.delRegalo),
+       ...await escribirLosRasgos(porEscribir, nombrePila, sexo, reloj)]
+    : todosLosRasgos;
   fortalezas = escritos.filter(r => r.lista === 'fortalezas');
   desafios   = escritos.filter(r => r.lista === 'desafios');
 
   // 2. RED: fuera el que le nombra la carta a la clienta. El encargo lo prohibe
   //    y aun asi se cuela alguno; esto no es criterio, son palabras que se
   //    buscan y se ven.
+  //    Los del regalo ya pasaron esta misma red el dia que se escribieron, y
+  //    ademas ya estan entregados: no se les vuelve a mirar.
   const limpios = lista => {
-    const quedan = lista.filter(r => !hablaDeAstrologia(r));
+    const quedan = lista.filter(r => r.delRegalo || !hablaDeAstrologia(r));
     if (quedan.length < lista.length) {
       console.warn(`${lista.length - quedan.length} rasgos nombraban la carta a la clienta, se quitan`);
     }
