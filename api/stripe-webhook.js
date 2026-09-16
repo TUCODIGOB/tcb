@@ -7,6 +7,7 @@ import Stripe from 'stripe';
 import crypto from 'crypto';
 import { waitUntil } from '@vercel/functions';
 import { apuntarPendiente } from '../lib/pendientes-p1.js';
+import { correoBienvenida } from '../lib/correos-p1.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -80,6 +81,14 @@ export default async function handler(req, res) {
     // su try: lo que la clienta ha pagado es el informe, y no puede quedarse
     // sin el porque falle el alta en la lista de correo.
     arrancarElInforme(session.id);
+
+    // Y SE LE DA LA BIENVENIDA (P1-1), mientras su informe se escribe por
+    // detras. Va por fuera tambien: si el correo no sale, su informe llega
+    // igual.
+    waitUntil(
+      correoBienvenida({ email, nombre: metadata.nombre || '' })
+        .catch(err => console.error('No se ha podido mandar la bienvenida:', session.id, err.message))
+    );
 
     try {
       await guardarContactoBrevo({

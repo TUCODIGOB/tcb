@@ -35,6 +35,7 @@
 import Stripe from 'stripe';
 import { estado } from '../lib/reserva.js';
 import { losPendientes, guardarPendiente, quitarPendiente } from '../lib/pendientes-p1.js';
+import { correoRevisando, correoALaTienda } from '../lib/correos-p1.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -43,6 +44,11 @@ const UNA_HORA = 60 * UN_MINUTO;
 
 // Cuanto hay que esperar desde el cobro para cada reintento.
 const CUANDO = [10 * UN_MINUTO, 3 * UNA_HORA];
+
+// Cuanto se espera desde el ultimo intento antes de darlo por perdido y
+// avisar. Media hora es de sobra: escribir un informe entero, con su PDF y su
+// correo, no pasa de unos minutos.
+const CIERRE_MS = 30 * UN_MINUTO;
 
 // ── DARLE AL BOTON DE ARRANQUE ───────────────────────────────────
 //
@@ -95,6 +101,52 @@ export default async function handler(req, res) {
   }
 
   const ahora = Date.now();
+
+  // ── LOS QUE YA NO TIENEN MAS INTENTOS ────────────────────────────
+  //
+  // Se les dio el ultimo hace rato y siguen sin entregarse. Se mira si salio
+  // -puede haber salido despues- y, si no, se le dice a la clienta que lo
+  // estamos revisando y nos lo decimos a nosotros para sacarlo a mano.
+  //
+  // UNO POR VUELTA, igual que los reintentos. Y si el correo no sale, no se
+  // marca como avisado: se vuelve a intentar en la siguiente vuelta.
+  const paraCerrar = fichas
+    .filter(f => f.compra && f.acabado && !f.avisado)
+    .filter(f => ahora - Number(f.ultimo || f.creado || 0) >= CIERRE_MS)
+    .sort((a, b) => Number(a.creado || 0) - Number(b.creado || 0));
+
+  if (paraCerrar.length) {
+    const ficha = paraCerrar[0];
+    try {
+      const st = await estado(stripe, ficha.compra);
+      if (st.completado || st.emailEnviado) {
+        await quitarPendiente(ficha.compra);
+        console.log(`[p1] ${ficha.compra} acabo saliendo: fuera de pendientes`);
+        return res.status(200).json({ mirados: fichas.length, hecho: 0, yaEstaba: ficha.compra });
+      }
+      if (st.ocupada) {
+        console.log(`[p1] ${ficha.compra} todavia se esta generando: se mira en la proxima vuelta`);
+        return res.status(200).json({ mirados: fichas.length, hecho: 0, ocupada: ficha.compra });
+      }
+
+      await correoRevisando({ email: ficha.email, nombre: ficha.nombre });
+      await correoALaTienda({
+        compra: ficha.compra,
+        email: ficha.email,
+        nombre: ficha.nombre,
+        intentos: Number(ficha.intentos || 0),
+        motivo: 'Se agotaron los intentos y el informe sigue sin entregarse',
+      });
+      await guardarPendiente({ ...ficha, avisado: true, avisadoEn: Date.now() });
+      console.error(`[p1] Sin informe tras ${ficha.intentos} intentos, avisados: ${ficha.compra}`);
+      return res.status(200).json({ mirados: fichas.length, hecho: 0, avisado: ficha.compra });
+
+    } catch (err) {
+      console.error(`[p1] No se ha podido cerrar ${ficha.compra}:`, err.message);
+      return res.status(500).json({ error: 'No se ha podido cerrar' });
+    }
+  }
+
   const leToca = fichas
     .filter(f => !f.acabado && f.compra)
     .filter(f => {
