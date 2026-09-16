@@ -35,10 +35,14 @@
     "api/p2-plan/pdf.js": {
       "memory": 1024,
       "maxDuration": 60
+    },
+    "api/reintentar-informe.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
-    { "path": "/api/prueba-regalo/reintentar", "schedule": "*/15 * * * *" }
+    { "path": "/api/prueba-regalo/reintentar", "schedule": "*/15 * * * *" },
+    { "path": "/api/reintentar-informe", "schedule": "*/15 * * * *" }
   ],
   "redirects": [
     { "source": "/Aviso-Legal", "destination": "/aviso-legal", "permanent": true },
