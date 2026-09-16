@@ -5,6 +5,7 @@
 
 import Stripe from 'stripe';
 import { estado, marcarEmailEnviado, compraValida, esDelProducto } from '../lib/reserva.js';
+import { quitarPendiente } from '../lib/pendientes-p1.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -87,6 +88,14 @@ export default async function handler(req, res) {
       await marcarEmailEnviado(stripe, session_id);
     } catch (err) {
       console.error('[save-pdf] Error marcando email_enviado:', err.message);
+    }
+
+    // Y DEJA DE CONSTAR COMO PENDIENTE: ya tiene su informe en el correo. Si
+    // esto fallara, el informe ya esta entregado igual, asi que solo se avisa.
+    try {
+      await quitarPendiente(session_id);
+    } catch (err) {
+      console.error('[save-pdf] Error quitando el pendiente:', err.message);
     }
 
     // 5. Actualizar contacto en Brevo

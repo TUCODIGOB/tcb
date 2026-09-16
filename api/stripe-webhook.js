@@ -6,6 +6,7 @@
 import Stripe from 'stripe';
 import crypto from 'crypto';
 import { waitUntil } from '@vercel/functions';
+import { apuntarPendiente } from '../lib/pendientes-p1.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -65,6 +66,15 @@ export default async function handler(req, res) {
       console.log(`Venta de "${producto}": no es del P1, aqui no se guarda nada suyo (${session.id})`);
       return res.status(200).json({ received: true });
     }
+
+    // QUEDA APUNTADA COMO PENDIENTE. Desde este momento consta que esta
+    // clienta espera su informe, y deja de constar cuando su correo salga. Si
+    // esto fallara, el informe se genera igual: por eso no se espera por ello
+    // ni se corta nada.
+    waitUntil(
+      apuntarPendiente({ sessionId: session.id, email, nombre: metadata.nombre || '' })
+        .catch(err => console.error('No se ha podido apuntar el pendiente:', session.id, err.message))
+    );
 
     // EL INFORME PRIMERO. Se arranca antes de guardar en Brevo y por fuera de
     // su try: lo que la clienta ha pagado es el informe, y no puede quedarse
