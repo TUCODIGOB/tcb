@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>¡Gracias por tu compra! | Origen Natal</title>
+<meta name="robots" content="noindex, nofollow" />
+
+<!-- Favicon -->
+<link rel="icon" type="image/webp" href="images/favicon-origen-natal-oscuro.webp" />
+<link rel="shortcut icon" href="images/favicon-origen-natal-oscuro.webp" />
+
+<!-- Fonts del index -->
+<style>
+@font-face {
+  font-display: swap;
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  src: url('fonts-web/playfair-display-v40-latin_latin-ext-700.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('fonts-web/open-sans-v44-latin_latin-ext-regular.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('fonts-web/open-sans-v44-latin_latin-ext-600.woff2') format('woff2');
+}
+</style>
+
+<style>
+  :root {
+    --teal-deep:   #0e3f4b;
+    --teal-mid:    #729790;
+    --gold-deep:   #bd9048;
+    --gold-light:  #cfb180;
+    --cream:       #fffbef;
+    --white:       #ffffff;
+    --ink:         #0c0c0c;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body:    'Open Sans', sans-serif;
+    --r-sm: 6px;
+    --r-md: 12px;
+    --r-lg: 24px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-body);
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  .container { width: min(720px, 92vw); margin-inline: auto; padding-inline: 20px; }
+
+  /* NAV */
+  .nav {
+    background: rgba(255,251,239,.92);
+    border-bottom: 1px solid rgba(189,144,72,.2);
+    padding-block: 0.2rem;
+  }
+  .nav-inner {
+    display: flex; align-items: center;
+    width: min(1100px, 92vw);
+    margin-inline: auto;
+    padding-block: 6px;
+  }
+  .nav-logo img { height: 34px; width: auto; }
+
+  /* PANTALLA */
+  .screen {
+    min-height: calc(100vh - 80px);
+    padding-block: 3rem;
+    display: flex; align-items: center;
+  }
+  .screen > .container { width: min(960px, 92vw); }
+  .screen-inner {
+    text-align: center;
+    max-width: 900px;
+    margin-inline: auto;
+  }
+
+  /* El visto: la compra ya esta hecha, aqui no hay nada girando ni cargando. */
+  .visto {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px solid rgba(189,144,72,.45);
+    background: rgba(189,144,72,.08);
+    color: var(--gold-deep);
+    font-size: 1.7rem;
+    line-height: 52px;
+    margin: 0 auto 2rem;
+  }
+
+  .screen h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    font-weight: 700;
+    color: var(--teal-deep);
+    line-height: 1.2;
+    margin-bottom: 48px;
+  }
+
+  .screen p {
+    font-size: 18px;
+    color: #444;
+    max-width: 720px;
+    margin-inline: auto;
+    margin-bottom: .5rem;
+  }
+
+  /* LAS TRES LINEAS SON UN SOLO MENSAJE, no tres avisos sueltos. */
+  .mensaje {
+    font-size: 20px;
+    color: var(--ink);
+    line-height: 1.8;
+    margin-bottom: 0;
+  }
+  .mensaje .oro { color: var(--gold-deep); font-weight: 700; font-style: normal; }
+
+  /* EL AVISO DEL SPAM CABE EN UNA LINEA EN EL ORDENADOR. En el movil no cabe
+     de ninguna manera, asi que alli se parte como cualquier otro texto. */
+  .aviso {
+    margin-top: 2.5rem;
+    color: var(--gold-deep);
+    font-weight: 700;
+    font-size: 20px;
+    max-width: none;
+    white-space: nowrap;
+  }
+
+  .salto-movil { display: none; }
+  @media (max-width: 600px) {
+    .salto-movil { display: inline; }
+    .nav-inner { justify-content: center; padding-block: 1rem; }
+    .screen { align-items: flex-start; padding-top: 10vh; padding-bottom: 5rem; }
+    .screen > .container { width: 100vw; padding-inline: 14px; }
+    .screen h1 { margin-bottom: 64px; }
+    .mensaje, .aviso { font-size: 22px; }
+    .aviso { white-space: normal; margin-top: 3.5rem; }
+  }
+
+  /* MOVILES DE PANTALLA CORTA. Se recorta el aire para que quepa sin bajar. */
+  @media (max-width: 600px) and (max-height: 700px) {
+    .screen { padding-top: 8vh; padding-bottom: 4rem; }
+  }
+
+  /* FOOTER */
+  .footer {
+    background: var(--teal-deep);
+    color: rgba(255,251,239,.6);
+    padding-block: 2.5rem;
+    font-size: .82rem;
+  }
+  .footer-inner {
+    display: flex; flex-direction: column;
+    align-items: center; gap: .9rem;
+    text-align: center;
+    width: min(1100px, 92vw);
+    margin-inline: auto;
+  }
+  .footer-email a { color: var(--gold-light); font-weight: 500; }
+  .footer-links {
+    display: flex; flex-wrap: wrap;
+    gap: .3rem .75rem;
+    justify-content: center;
+    align-items: center;
+  }
+  .footer-links a { color: rgba(255,251,239,.65); transition: color .15s; }
+  .footer-links a:hover { color: var(--gold-light); }
+  .footer-links .sep { opacity: .35; }
+  .footer-copy { color: rgba(255,251,239,.4); font-size: .8rem; }
+</style>
+
+<!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJSDFDFZ3G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-EJSDFDFZ3G');
+  </script>
+
+<script type="text/javascript">
+    (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "xf6ygmm5pw");
+</script>
+
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1729071528498639');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1729071528498639&ev=PageView&noscript=1"/></noscript>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
+      <img src="images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" width="395" height="48" />
+    </a>
+  </div>
+</nav>
+
+<section class="screen">
+  <div class="container">
+    <div class="screen-inner">
+      <div class="visto">&#10003;</div>
+      <h1>¡Ya está! Acabas de dar<br class="salto-movil"> un paso importante por ti</h1>
+      <p class="mensaje">
+        Estamos preparando<br class="salto-movil"> <strong class="oro">Tu Diseño de Origen</strong>.<br>
+        <strong>Te llegará directo al email en unos 5 minutos aproximadamente.</strong><br>
+        Puedes cerrar esta pantalla tranquilamente.
+      </p>
+      <p class="aviso">Guarda hola@origennatal.com en los contactos de tu email, para que no se vaya a spam.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <p class="footer-email">
+      <a href="mailto:hola@origennatal.com">hola@origennatal.com</a>
+    </p>
+    <nav class="footer-links" aria-label="Legal">
+      <a href="/aviso-legal">Aviso legal</a>
+      <span class="sep">|</span>
+      <a href="/politica-de-privacidad">Política de privacidad</a>
+      <span class="sep">|</span>
+      <a href="/politica-de-cookies">Política de cookies</a>
+      <span class="sep">|</span>
+      <a href="/terminos-y-condiciones">Términos y condiciones</a>
+    </nav>
+    <p class="footer-copy">
+      © 2026 ORIGEN NATAL. Todos los derechos reservados. Operado por Pura Group LLC
+    </p>
+  </div>
+</footer>
+
+<script src="/cookie-consent.js"></script>
+</body>
+</html>
