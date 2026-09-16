@@ -221,6 +221,7 @@
     color: rgba(255,251,239,.6);
     padding-block: 2.5rem;
     font-size: .82rem;
+    line-height: 1.7;
   }
   .footer-inner {
     display: flex; flex-direction: column;
@@ -229,7 +230,8 @@
     width: min(1100px, 92vw);
     margin-inline: auto;
   }
-  .footer-email a { color: var(--gold-light); font-weight: 500; }
+  .footer-email { font-size: clamp(.95rem, 1.5vw, 1.05rem); }
+  .footer-email a { color: var(--gold-light); font-weight: 500; font-size: .82rem; }
   .footer-links {
     display: flex; flex-wrap: wrap;
     gap: .3rem .75rem;
