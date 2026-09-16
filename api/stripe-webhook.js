@@ -261,9 +261,10 @@ async function guardarContactoBrevo(datos) {
     throw new Error(`Brevo ${resp.status}: ${errText}`);
   }
 
-  // Ya ha comprado, asi que deja de ser un carrito abandonado y se le saca de
-  // esa lista para que no se quede en las dos a la vez. Va aparte porque el
-  // alta del contacto no permite desvincular listas, solo vincularlas.
+  // Ya ha comprado, asi que deja de ser un carrito abandonado y deja de ser
+  // un lead del regalo: se le saca de esas dos listas para que no se quede en
+  // varias a la vez. Va aparte porque el alta del contacto no permite
+  // desvincular listas, solo vincularlas.
   // Si esto falla no se corta nada: la compra ya esta guardada y lo unico que
   // queda es una lista sin limpiar, que se arregla a mano.
   try {
@@ -274,13 +275,14 @@ async function guardarContactoBrevo(datos) {
         'content-type': 'application/json',
         'api-key': BREVO_API_KEY,
       },
-      body: JSON.stringify({ unlinkListIds: [11] }), // Lista "1 P1-carrito-abandonado"
+      // 11 = "1 P1-carrito-abandonado"; 14 = "0 P1 Lead Magnet".
+      body: JSON.stringify({ unlinkListIds: [11, 14] }),
     });
     if (!quitar.ok) {
-      console.error(`No se pudo sacar de carrito abandonado (${quitar.status}):`, await quitar.text());
+      console.error(`No se pudo sacar de sus listas anteriores (${quitar.status}):`, await quitar.text());
     }
   } catch (err) {
-    console.error('No se pudo sacar de carrito abandonado:', err.message);
+    console.error('No se pudo sacar de sus listas anteriores:', err.message);
   }
 
   return await resp.json().catch(() => ({}));

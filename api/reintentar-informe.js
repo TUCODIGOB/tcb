@@ -6,8 +6,11 @@
 // quien hay apuntado en p1/pendientes/ y coge al que le toque:
 //
 //   · el 1º reintento, diez minutos despues de pagar
-//   · el 2º, a la hora
-//   · el 3º, a las tres horas
+//   · el 2º, a las tres horas
+//
+// DOS Y NO MAS. El primero recoge el tropiezo del momento, que es lo que pasa
+// casi siempre; el segundo cubre una caida larga. Con la generacion del cobro
+// son tres en total, y cada una se paga.
 //
 // POR QUE ASI Y NO COMO EL REGALO. El regalo escribe un trozo corto y su
 // reintento lo hace el mismo. Un informe del P1 son siete areas, un PDF de
@@ -39,7 +42,7 @@ const UN_MINUTO = 60 * 1000;
 const UNA_HORA = 60 * UN_MINUTO;
 
 // Cuanto hay que esperar desde el cobro para cada reintento.
-const CUANDO = [10 * UN_MINUTO, 1 * UNA_HORA, 3 * UNA_HORA];
+const CUANDO = [10 * UN_MINUTO, 3 * UNA_HORA];
 
 // ── DARLE AL BOTON DE ARRANQUE ───────────────────────────────────
 //
