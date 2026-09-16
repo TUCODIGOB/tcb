@@ -36,6 +36,8 @@ import Stripe from 'stripe';
 import { estado } from '../lib/reserva.js';
 import { losPendientes, guardarPendiente, quitarPendiente } from '../lib/pendientes-p1.js';
 import { correoRevisando, correoALaTienda } from '../lib/correos-p1.js';
+import { leerInforme } from '../lib/guardar-informe.js';
+import { leerLaFicha } from '../lib/ficha-del-lead.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -44,6 +46,12 @@ const UNA_HORA = 60 * UN_MINUTO;
 
 // Cuanto hay que esperar desde el cobro para cada reintento.
 const CUANDO = [10 * UN_MINUTO, 3 * UNA_HORA];
+
+// Veces que se vuelve a intentar SOLO LA ENTREGA, cuando el informe ya esta
+// escrito y guardado y lo unico que fallo fue el correo. Eso no cuesta ni una
+// llamada al modelo: se vuelve a montar el PDF con lo que hay guardado y se
+// manda. Por eso no gasta ninguno de los intentos de generacion.
+const MAX_ENTREGAS = 2;
 
 // Cuanto se espera desde el ultimo intento antes de darlo por perdido y
 // avisar. Media hora es de sobra: escribir un informe entero, con su PDF y su
@@ -70,6 +78,60 @@ function arrancarElInforme(sessionId) {
   }).catch(err => {
     // Un corte por tiempo es lo normal y lo esperado: significa que la
     // peticion llego y el informe se esta haciendo.
+    if (err.name === 'TimeoutError' || err.name === 'AbortError') return null;
+    throw err;
+  });
+}
+
+// COMO VA UNA COMPRA. Se trae de Stripe y se lee su estado: si ya se genero,
+// si el correo salio, si se esta generando ahora mismo.
+async function comoVa(compra) {
+  return estado(await stripe.checkout.sessions.retrieve(compra));
+}
+
+// ── VOLVER A MANDARLO, SIN ESCRIBIR NADA NUEVO ───────────────────
+//
+// El informe ya esta escrito y guardado: sus siete areas y sus rasgos estan en
+// su fichero, y sus datos y su carta en el de su email. Con eso se vuelve a
+// montar el PDF y se manda. No se llama al modelo ni una sola vez.
+//
+// NO SE ESPERA A QUE TERMINE, igual que al arrancar un informe: montar el PDF
+// lleva su rato y esta puerta no puede quedarse ahi. Si sale, la compra queda
+// marcada como enviada y en la vuelta siguiente se le quita de pendientes.
+async function volverAMandarlo(ficha) {
+  const clave = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!clave) throw new Error('Falta STRIPE_WEBHOOK_SECRET');
+
+  const informe = await leerInforme({ producto: 'p1', sessionId: ficha.compra });
+  if (!informe || !Array.isArray(informe.areas) || !informe.areas.length) {
+    throw new Error('no hay informe guardado con el que volver a montarlo');
+  }
+
+  const suFicha = await leerLaFicha(ficha.email || informe.cliente?.email || '');
+  const cliente = suFicha && suFicha.cliente ? suFicha.cliente : null;
+  if (!cliente || !cliente.nombre || !suFicha.carta) {
+    throw new Error('no estan sus datos o su carta para volver a montarlo');
+  }
+
+  return fetch('https://origennatal.com/api/generar-pdf', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-origen-interno': clave },
+    body: JSON.stringify({
+      session_id: ficha.compra,
+      nombre: cliente.nombre,
+      sexo: cliente.sexo || '',
+      fechaNice: cliente.fecha || '',
+      hora: cliente.hora || '',
+      lugar: cliente.lugar || '',
+      edad: cliente.edad || '',
+      carta: suFicha.carta,
+      areas: informe.areas,
+      rasgos: informe.rasgos || null,
+    }),
+    signal: AbortSignal.timeout(5000),
+  }).catch(err => {
+    // Un corte por tiempo es lo normal: la peticion llego y el PDF se esta
+    // montando al otro lado.
     if (err.name === 'TimeoutError' || err.name === 'AbortError') return null;
     throw err;
   });
@@ -102,6 +164,83 @@ export default async function handler(req, res) {
 
   const ahora = Date.now();
 
+  // ── LOS QUE YA ESTAN ESCRITOS Y SOLO FALTA MANDARLOS ─────────────
+  //
+  // El informe salio, se guardo, y lo que fallo fue el correo. Eso no se
+  // arregla escribiendolo otra vez -seria pagar dos veces por lo mismo y
+  // darle un informe distinto del que ya esta guardado-: se vuelve a montar
+  // el PDF con lo guardado y se manda, y ya esta.
+  //
+  // DOS VECES Y NO MAS. Si a las dos sigue sin salir, se le dice a la clienta
+  // que lo estamos revisando y nos llega el aviso para mandarlo a mano.
+  //
+  // SE MIRA COMO VA CADA UNO, uno por uno: la lista de pendientes es corta y
+  // esto es lo unico que dice si un informe esta escrito o no.
+  for (const ficha of [...fichas].sort((a, b) => Number(a.creado || 0) - Number(b.creado || 0))) {
+    if (!ficha.compra) continue;
+
+    let st;
+    try {
+      st = await comoVa(ficha.compra);
+    } catch (err) {
+      console.error(`[p1] No se ha podido mirar como va ${ficha.compra}:`, err.message);
+      continue;
+    }
+
+    // Su correo salio: ya no esta pendiente de nada.
+    if (st.emailEnviado) {
+      await quitarPendiente(ficha.compra);
+      console.log(`[p1] ${ficha.compra} ya estaba entregado: fuera de pendientes`);
+      return res.status(200).json({ mirados: fichas.length, hecho: 0, yaEstaba: ficha.compra });
+    }
+
+    // Todavia no esta escrito, o se esta escribiendo: no es cosa de aqui.
+    if (!st.completado || st.ocupada) continue;
+
+    const entregas = Number(ficha.entregas || 0);
+
+    if (entregas < MAX_ENTREGAS) {
+      // SE APUNTA LA VEZ ANTES DE LANZARLA, igual que con los reintentos: si
+      // esto fallara, vale mas dejarlo para la vuelta siguiente que mandar sin
+      // poder contar las veces.
+      try {
+        await guardarPendiente({ ...ficha, entregas: entregas + 1, ultimo: ahora });
+      } catch (err) {
+        console.error(`[p1] No se ha podido apuntar la entrega de ${ficha.compra}:`, err.message);
+        return res.status(500).json({ error: 'No se ha podido apuntar la entrega' });
+      }
+      try {
+        await volverAMandarlo(ficha);
+        console.log(`[p1] Entrega ${entregas + 1} lanzada: ${ficha.compra}`);
+        return res.status(200).json({ mirados: fichas.length, hecho: 0, reenviado: ficha.compra, entregas: entregas + 1 });
+      } catch (err) {
+        console.error(`[p1] La entrega ${entregas + 1} no se ha podido lanzar (${ficha.compra}):`, err.message);
+        continue;
+      }
+    }
+
+    // SE ACABARON LAS ENTREGAS y su correo sigue sin salir. Se le avisa a ella
+    // y a nosotros, con su informe ya escrito y guardado esperando.
+    if (!ficha.avisado) {
+      try {
+        await correoRevisando({ email: ficha.email, nombre: ficha.nombre });
+        await correoALaTienda({
+          compra: ficha.compra,
+          email: ficha.email,
+          nombre: ficha.nombre,
+          intentos: Number(ficha.intentos || 0),
+          motivo: `Su informe ESTA escrito y guardado; lo que no ha salido es el correo, tras ${entregas} entregas`,
+        });
+        await guardarPendiente({ ...ficha, avisado: true, avisadoEn: Date.now() });
+        console.error(`[p1] Escrito y sin poder entregar: ${ficha.compra}`);
+        return res.status(200).json({ mirados: fichas.length, hecho: 0, sinEntregar: ficha.compra });
+      } catch (err) {
+        console.error(`[p1] No se ha podido avisar de ${ficha.compra}:`, err.message);
+        return res.status(500).json({ error: 'No se ha podido avisar' });
+      }
+    }
+  }
+
   // ── LOS QUE YA NO TIENEN MAS INTENTOS ────────────────────────────
   //
   // Se les dio el ultimo hace rato y siguen sin entregarse. Se mira si salio
@@ -118,11 +257,16 @@ export default async function handler(req, res) {
   if (paraCerrar.length) {
     const ficha = paraCerrar[0];
     try {
-      const st = await estado(stripe, ficha.compra);
-      if (st.completado || st.emailEnviado) {
+      const st = await comoVa(ficha.compra);
+      if (st.emailEnviado) {
         await quitarPendiente(ficha.compra);
         console.log(`[p1] ${ficha.compra} acabo saliendo: fuera de pendientes`);
         return res.status(200).json({ mirados: fichas.length, hecho: 0, yaEstaba: ficha.compra });
+      }
+      // Escrito y sin entregar: de eso se encarga la entrega de mas arriba.
+      if (st.completado) {
+        console.log(`[p1] ${ficha.compra} esta escrito y sin entregar: lo lleva la entrega`);
+        return res.status(200).json({ mirados: fichas.length, hecho: 0, sinEntregar: ficha.compra });
       }
       if (st.ocupada) {
         console.log(`[p1] ${ficha.compra} todavia se esta generando: se mira en la proxima vuelta`);
@@ -164,11 +308,16 @@ export default async function handler(req, res) {
   // ¿YA LO TIENE? Si su informe salio mientras tanto, deja de estar pendiente
   // y aqui no se toca nada mas.
   try {
-    const st = await estado(stripe, ficha.compra);
-    if (st.completado || st.emailEnviado) {
+    const st = await comoVa(ficha.compra);
+    if (st.emailEnviado) {
       await quitarPendiente(ficha.compra);
       console.log(`[p1] ${ficha.compra} ya estaba entregado: fuera de pendientes`);
       return res.status(200).json({ mirados: fichas.length, hecho: 0, yaEstaba: ficha.compra });
+    }
+    // Escrito y sin entregar: no se escribe otra vez, lo lleva la entrega.
+    if (st.completado) {
+      console.log(`[p1] ${ficha.compra} esta escrito y sin entregar: no se genera otra vez`);
+      return res.status(200).json({ mirados: fichas.length, hecho: 0, sinEntregar: ficha.compra });
     }
     // Y SI SE ESTA GENERANDO AHORA MISMO, no se toca: se deja pasar esta
     // vuelta y se mira en la siguiente.

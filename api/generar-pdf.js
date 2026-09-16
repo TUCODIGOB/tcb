@@ -7,6 +7,20 @@ import { guardarInforme } from '../lib/guardar-informe.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// Cuantas veces se intenta mandar el correo aqui mismo, con el PDF todavia en
+// la mano. Casi todos los fallos de Brevo son un tropiezo de unos segundos.
+const INTENTOS_DE_ENVIO = 3;
+
+// LA SEGUNDA ENTREGA. Cuando el informe ya esta escrito y lo unico que fallo
+// fue el correo, el reloj vuelve a pasar por aqui para montar el PDF otra vez
+// y mandarlo. Quien llama es nuestro propio servidor y trae la misma llave
+// interna que el aviso de Stripe: sin ella, tener el enlace bastaria para
+// hacer que Brevo mandara correos.
+function esNuestroServidor(req) {
+  const clave = process.env.STRIPE_WEBHOOK_SECRET || '';
+  return Boolean(clave) && req.headers['x-origen-interno'] === clave;
+}
+
 const BASE_URL = 'https://origennatal.com';
 
 // Las 16 imagenes y las 3 fuentes del PDF son identicas para todos los clientes,
@@ -29,6 +43,8 @@ export default async function handler(req, res) {
   let sessionEmail = '';
   // En que intento se esta generando. Solo para dejarlo apuntado al guardar.
   let intentoActual = null;
+  // Si esto es una segunda entrega de un informe que ya estaba escrito.
+  let reenvio = false;
   {
     const { session_id, token } = req.body;
 
@@ -45,13 +61,19 @@ export default async function handler(req, res) {
       }
 
       const st = estado(session);
-      if (st.completado) {
+
+      // LA SEGUNDA ENTREGA, y solo esa. El informe ya esta escrito, su correo
+      // no ha salido, y quien lo pide es nuestro servidor con la llave
+      // interna. En cuanto el correo sale, esta puerta se cierra sola.
+      reenvio = esNuestroServidor(req) && st.completado && !st.emailEnviado;
+
+      if (st.completado && !reenvio) {
         return res.status(403).json({ error: 'Este informe ya fue generado.' });
       }
       // Sin la reserva que dio chat.js no se genera nada. Tener el enlace
       // (el session_id) no basta: el token solo lo tiene el navegador que
       // acaba de pasar por chat.js con la reserva en la mano.
-      if (!token || typeof token !== 'string' || token !== st.token) {
+      if (!reenvio && (!token || typeof token !== 'string' || token !== st.token)) {
         return res.status(403).json({ error: 'Este informe ya fue generado.' });
       }
 
@@ -1014,29 +1036,46 @@ export default async function handler(req, res) {
     // seguridad para el caso de que este envio falle. Si este ha salido bien,
     // save-pdf ve email_enviado='si' y no manda nada (su guarda ya existia), asi
     // que el cliente nunca recibe el informe dos veces.
-    try {
-      await entregarInformePorEmail({
-        stripe,
-        sessionId: session_id,
-        email: sessionEmail,
-        pdfBase64,
-        cliente: { nombre, sexo, fechaNice, hora, lugar, edad },
-      });
-      console.log(`[generar-pdf] Email de entrega enviado a ${sessionEmail}`);
-    } catch (err) {
-      // No se corta la respuesta: el navegador recibe el PDF igual y llamara a
-      // save-pdf, que reintentara el envio. Pero se avisa, porque si ademas el
-      // navegador ya no esta, este aviso es lo unico que queda.
-      console.error('[generar-pdf] Fallo enviando el email de entrega:', err.message);
+    // Y SE REINTENTA EN EL ACTO SI NO SALE. Tres tiradas, con dos y cuatro
+    // segundos de espera entre ellas: casi todos los fallos de Brevo son un
+    // tropiezo de unos segundos, y aqui el PDF todavia esta en la mano, que es
+    // el momento mas barato de volver a intentarlo. Si sale a la primera, esto
+    // no cambia nada.
+    //
+    // NO SE MARCA NADA HASTA QUE EL CORREO SALE, asi que reintentar no puede
+    // mandar dos: entregarInformePorEmail solo marca cuando Brevo ha dicho que
+    // si, y si dijo que no es que no salio.
+    for (let envio = 1; envio <= INTENTOS_DE_ENVIO; envio++) {
       try {
-        await enviarAvisoEntregaFallida({
-          nombre,
-          email: sessionEmail,
+        await entregarInformePorEmail({
+          stripe,
           sessionId: session_id,
-          motivo: err.message,
+          email: sessionEmail,
+          pdfBase64,
+          cliente: { nombre, sexo, fechaNice, hora, lugar, edad },
         });
-      } catch (avisoErr) {
-        console.error('Tampoco se pudo avisar del fallo de entrega:', avisoErr.message);
+        console.log(`[generar-pdf] Email de entrega enviado a ${sessionEmail}`);
+        break;
+      } catch (err) {
+        if (envio < INTENTOS_DE_ENVIO) {
+          console.warn(`[generar-pdf] El email de entrega no ha salido (${envio}): ${err.message}, se reintenta`);
+          await new Promise(r => setTimeout(r, 2000 * envio));
+          continue;
+        }
+        // No se corta la respuesta: el navegador recibe el PDF igual y llamara a
+        // save-pdf, que reintentara el envio. Pero se avisa, porque si ademas el
+        // navegador ya no esta, este aviso es lo unico que queda.
+        console.error('[generar-pdf] Fallo enviando el email de entrega:', err.message);
+        try {
+          await enviarAvisoEntregaFallida({
+            nombre,
+            email: sessionEmail,
+            sessionId: session_id,
+            motivo: err.message,
+          });
+        } catch (avisoErr) {
+          console.error('Tampoco se pudo avisar del fallo de entrega:', avisoErr.message);
+        }
       }
     }
 
@@ -1051,7 +1090,11 @@ export default async function handler(req, res) {
     // Va lo ultimo a proposito: el PDF ya esta hecho y la compra ya esta
     // cerrada, asi que a partir de aqui no queda nada que esto pueda estropear.
     // Y nunca corta: si falla, el cliente recibe su informe igual.
-    try {
+    //
+    // EN UNA SEGUNDA ENTREGA NO SE GUARDA NADA: lo guardado es justo de donde
+    // ha salido esto, y volver a escribirlo encima borraria el cuaderno y el
+    // numero de intento de aquel dia.
+    if (!reenvio) try {
       const guardado = await guardarInforme({
         producto: 'p1',
         sessionId: session_id,
