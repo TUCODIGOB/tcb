@@ -1583,6 +1583,17 @@ async function pedirLasListas(nombrePila, sexo, cartaTexto, reloj, yaTiene = [])
     n: i + 1, lista: r.lista, area: r.area, conducta: r.conducta, origen: r.origen,
   }));
 
+  // SI EL PASO 1 NO HA TRAIDO NI UN RASGO, SE CORTA AQUI.
+  //
+  // El informe entero se escribe con estos rasgos y con nada mas: sin ninguno,
+  // las siete areas saldrian hablando de cualquiera y las listas del PDF
+  // saldrian en blanco. Vale mas no entregar nada -el intento se da por
+  // fallido y se vuelve a intentar- que entregar eso.
+  //
+  // Y se corta ANTES de la limpieza: asi no se paga por limpiar una lista
+  // vacia ni por escribirla despues.
+  if (todos.length === 0) throw new Error('el paso 1 no ha traido ni un rasgo');
+
   const enteros = await limpiarYRepasar(todos, reloj);
 
   return {
@@ -2093,6 +2104,22 @@ async function sacarRasgos(nombrePila, sexo, cartaTexto, INTENTOS, reloj, delReg
     lista: r.lista, area: r.area, conducta: r.conducta,
     titulo: r.nombre, descripcion: r.descripcion,
   }));
+
+  // Y AQUI SE MIRA POR ULTIMA VEZ, ANTES DE ESCRIBIR LAS SIETE AREAS.
+  //
+  // Es el ultimo momento en que se puede parar sin haber pagado las areas, y
+  // recoge de una vez todo lo que se haya podido perder por el camino: en la
+  // limpieza, al escribirlos o en las redes de aqui arriba.
+  //
+  // UN AREA SIN NINGUN RASGO NO SE ESCRIBE. Cada area se escribe con los suyos
+  // y con nada mas, asi que sin ninguno saldria un texto que le valdria a
+  // cualquiera, y sus dos listas del PDF saldrian cojas. Si eso pasa en una
+  // sola de las siete, el intento se da por fallido y se vuelve a intentar.
+  const sinRasgos = NOMBRES_DE_AREA.filter(area =>
+    !fortalezas.some(r => r.area === area) && !desafios.some(r => r.area === area));
+  if (sinRasgos.length) {
+    throw new Error(`estas areas se han quedado sin ningun rasgo: ${sinRasgos.join(', ')}`);
+  }
 
   // UNA SOLA LISTA PARA LAS DOS COSAS. Antes habia dos: la entera para el PDF y
   // otra recortada para las areas, porque la entera traia hasta cuarenta rasgos
