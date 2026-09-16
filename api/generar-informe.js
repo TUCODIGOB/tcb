@@ -22,7 +22,8 @@
 import Stripe from 'stripe';
 import { waitUntil } from '@vercel/functions';
 import { compraValida, esDelProducto, estado } from '../lib/reserva.js';
-import { asegurarLaFicha } from '../lib/ficha-del-lead.js';
+import { asegurarLaFicha, leerLaFicha } from '../lib/ficha-del-lead.js';
+import { montarCartaTexto, montarCasasTexto } from '../lib/carta-texto.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -39,6 +40,33 @@ const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto'
 function laLlaveEsBuena(req) {
   const clave = process.env.STRIPE_WEBHOOK_SECRET || '';
   return Boolean(clave) && req.headers['x-origen-interno'] === clave;
+}
+
+// ── SU CARTA, SI YA LA TIENE ─────────────────────────────────────
+//
+// La carta de una persona es siempre la misma, y si paso por el regalo ya
+// esta calculada y guardada en el fichero de su email. Volver a calcularla
+// son tres llamadas -el mapa, la hora de ese sitio y el calculo- y, lo que
+// importa mas, el mapa puede devolver un punto algo distinto del de aquel
+// dia: saldria una carta que no es la que ella leyo.
+//
+// SI NO ESTA, O ESTA A MEDIAS, se devuelve null y se calcula como siempre.
+// Se le piden las tres posiciones sin las que no se puede escribir nada, que
+// son las mismas que comprueba el regalo antes de ponerse.
+//
+// Y NO PUEDE CORTAR NADA: si el almacen no contesta, se deja aviso y se
+// calcula, que es lo que se hacia hasta ahora.
+async function suCartaGuardada(email) {
+  if (!email) return null;
+  try {
+    const ficha = await leerLaFicha(email);
+    const carta = ficha && ficha.carta;
+    if (!carta || !carta.sol || !carta.ascendente || !carta.casas) return null;
+    return carta;
+  } catch (err) {
+    console.error('generar-informe: no se ha podido leer su carta guardada:', err.message);
+    return null;
+  }
 }
 
 async function pedir(camino, cuerpo, segundos) {
@@ -106,49 +134,60 @@ export default async function handler(req, res) {
   const edad = parseInt(m.edad, 10) || (new Date().getFullYear() - year);
 
   try {
-    // 1. EL PUNTO DEL MAPA. La pagina usa las coordenadas que guardo el
-    //    formulario si las tiene; aqui no hay navegador donde mirar, asi que
-    //    se piden siempre, que es justo lo que hace ella cuando no las tiene.
-    const geo = await pedir('/api/geocodificar', {
-      session_id, municipio: m.municipio, provincia: m.provincia, pais: m.pais,
-    }, 30);
+    let carta = await suCartaGuardada(suEmail);
+    let cartaTexto, casasTexto;
 
-    // 2. LA HORA REAL DE ESE SITIO EN ESA FECHA.
-    const zona = await pedir('/api/timezone', {
-      lat: geo.lat, lon: geo.lon, fechaISO: m.fecha, hora: m.hora,
-    }, 30);
-    if (typeof zona.offset !== 'number' || !isFinite(zona.offset)) {
-      throw new Error('la zona horaria no ha venido');
+    if (carta) {
+      // YA LA TENIA. No se pide el mapa, ni la hora de ese sitio, ni se
+      // calcula nada: se monta el texto que lee el modelo con la carta
+      // guardada, con las mismas dos funciones que usa el calculo.
+      cartaTexto = montarCartaTexto(carta);
+      casasTexto = montarCasasTexto(carta);
+      console.log('generar-informe: su carta ya estaba guardada, no se vuelve a calcular');
+
+    } else {
+      // 1. EL PUNTO DEL MAPA. La pagina usa las coordenadas que guardo el
+      //    formulario si las tiene; aqui no hay navegador donde mirar, asi que
+      //    se piden siempre, que es justo lo que hace ella cuando no las tiene.
+      const geo = await pedir('/api/geocodificar', {
+        session_id, municipio: m.municipio, provincia: m.provincia, pais: m.pais,
+      }, 30);
+
+      // 2. LA HORA REAL DE ESE SITIO EN ESA FECHA.
+      const zona = await pedir('/api/timezone', {
+        lat: geo.lat, lon: geo.lon, fechaISO: m.fecha, hora: m.hora,
+      }, 30);
+      if (typeof zona.offset !== 'number' || !isFinite(zona.offset)) {
+        throw new Error('la zona horaria no ha venido');
+      }
+
+      // 3. LA CARTA Y EL TEXTO QUE LEE EL MODELO.
+      ({ cartaTexto, casasTexto, ...carta } = await pedir('/api/calcular-carta', {
+        session_id, year, month, day, localHour: hh, localMin: mm,
+        latDeg: geo.lat, lonDeg: geo.lon, tzOffset: zona.offset,
+      }, 60));
+
+      // 3 bis. SU FICHA, QUE NO LA TIENE.
+      //
+      // Sus datos y su carta se guardan en un fichero suyo, uno por email. Si
+      // se ha llegado hasta aqui es que no lo tenia -o lo tenia sin carta-,
+      // asi que se crea ahora, que es cuando hay algo que guardar.
+      //
+      // SI YA ESTABA, NO SE TOCA: dentro puede estar lo que el regalo le
+      // escribio, y volver a guardarlo lo borraria.
+      //
+      // NO SE ESPERA A QUE TERMINE, igual que hace el regalo: guardar no puede
+      // retrasar ni un segundo el informe, que es lo que ha pagado.
+      waitUntil(
+        asegurarLaFicha({
+          email: suEmail,
+          cliente: { nombre: m.nombre, sexo: m.sexo || '', fecha: fechaNice, hora: m.hora, lugar, edad },
+          carta,
+        })
+          .then(ficha => { if (ficha.creada) console.log('generar-informe: ficha creada (' + ficha.ruta + ')'); })
+          .catch(err => console.error('generar-informe: no se ha podido crear la ficha:', err.message))
+      );
     }
-
-    // 3. LA CARTA Y EL TEXTO QUE LEE EL MODELO.
-    const { cartaTexto, casasTexto, ...carta } = await pedir('/api/calcular-carta', {
-      session_id, year, month, day, localHour: hh, localMin: mm,
-      latDeg: geo.lat, lonDeg: geo.lon, tzOffset: zona.offset,
-    }, 60);
-
-    // 3 bis. SU FICHA, SI NO LA TIENE.
-    //
-    // Sus datos y su carta se guardan en un fichero suyo, uno por email. Casi
-    // siempre ya esta hecho, porque se compra desde el regalo y el regalo lo
-    // deja escrito. Pero si algun dia entra alguien que compra sin haber
-    // pasado por ahi, ese fichero no existe: se crea aqui, en cuanto la carta
-    // esta calculada, que es cuando hay algo que guardar.
-    //
-    // SI YA ESTABA, NO SE TOCA: dentro puede estar lo que el regalo le
-    // escribio, y volver a guardarlo lo borraria.
-    //
-    // NO SE ESPERA A QUE TERMINE, igual que hace el regalo: guardar no puede
-    // retrasar ni un segundo el informe, que es lo que ha pagado.
-    waitUntil(
-      asegurarLaFicha({
-        email: suEmail,
-        cliente: { nombre: m.nombre, sexo: m.sexo || '', fecha: fechaNice, hora: m.hora, lugar, edad },
-        carta,
-      })
-        .then(ficha => { if (ficha.creada) console.log('generar-informe: ficha creada (' + ficha.ruta + ')'); })
-        .catch(err => console.error('generar-informe: no se ha podido crear la ficha:', err.message))
-    );
 
     // 4. EL INFORME. Es el paso largo, y lleva su propio reloj dentro.
     const escrito = await pedir('/api/chat', {
