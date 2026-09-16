@@ -263,15 +263,20 @@
       color: rgba(255,251,239,.6);
       padding-block: 2.5rem;
       font-size: .82rem;
+      /* El index escribe con este interlineado: sin esto el pie mide menos. */
+      line-height: 1.7;
     }
     .footer-inner {
       display: flex; flex-direction: column;
       align-items: center; gap: .9rem;
       text-align: center;
     }
+    /* Como en el index: el parrafo con el tamano general de los textos. */
+    .footer-email { font-size: clamp(.95rem, 1.5vw, 1.05rem); }
     .footer-email a {
       color: var(--gold-light);
       font-weight: 500;
+      font-size: .82rem;
     }
     .footer-email a:hover { color: var(--white); }
     .footer-links {
