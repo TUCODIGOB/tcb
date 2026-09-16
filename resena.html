@@ -103,36 +103,14 @@
     .success-msg { display: none; text-align: center; padding: 3.5rem 2rem; background: var(--white); border: 1px solid rgba(189,144,72,.2); border-radius: var(--r-md); box-shadow: 0 4px 24px rgba(0,0,0,.05); }
     .check-icon { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-deep), var(--gold-light)); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--white); font-size: 2rem; font-weight: 700; box-shadow: 0 8px 24px rgba(189,144,72,.3); }
     .success-msg h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--teal-deep); }
-    /* ── EL PIE, EL MISMO DEL INDEX ──────────────────────────
-       Se mantiene el hueco de arriba, que es de esta pagina. */
-    .footer {
-      background: var(--teal-deep);
-      color: rgba(255,251,239,.6);
-      padding-block: 2.5rem;
-      font-size: .82rem;
-      line-height: 1.7;
-      margin-top: 4rem;
-    }
-    .footer-inner {
-      display: flex; flex-direction: column;
-      align-items: center; gap: .9rem;
-      text-align: center;
-      width: min(1100px, 92vw);
-      margin-inline: auto;
-    }
-    .footer-email { font-size: clamp(.95rem, 1.5vw, 1.05rem); }
-    .footer-email a { color: var(--gold-light); font-weight: 500; font-size: .82rem; }
-    .footer-email a:hover { color: var(--white); }
-    .footer-links {
-      display: flex; flex-wrap: wrap;
-      gap: .3rem .75rem;
-      justify-content: center;
-      align-items: center;
-    }
-    .footer-links a { color: rgba(255,251,239,.65); transition: color .15s; }
+    .footer { background: var(--teal-deep); color: var(--cream); padding-block: 2.5rem; margin-top: 4rem; }
+    .footer-inner { width: min(1100px, 92vw); margin-inline: auto; text-align: center; display: flex; flex-direction: column; gap: .8rem; }
+    .footer-email a { color: var(--gold-light); font-size: .82rem; }
+    .footer-links { display: flex; justify-content: center; flex-wrap: wrap; gap: .5rem 1rem; font-size: .82rem; }
+    .footer-links a { color: rgba(255,251,239,.7); transition: color .2s; }
     .footer-links a:hover { color: var(--gold-light); }
-    .footer-links .sep { opacity: .35; }
-    .footer-copy { color: rgba(255,251,239,.4); font-size: .8rem; }
+    .sep { color: rgba(255,251,239,.3); }
+    .footer-copy { font-size: .78rem; color: rgba(255,251,239,.45); line-height: 1.6; }
     @media (max-width: 600px) {
       .nav { padding-block: 1rem; }
       .instrucciones-inner { grid-template-columns: 1fr; }
