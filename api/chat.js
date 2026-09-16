@@ -39,8 +39,31 @@ LE HABLAS A LA PERSONA, NUNCA DE LA PERSONA. Todo lo que escribas va dirigido a 
 - No se le pone un diagnóstico: se cuenta lo que le ocurre, no cómo se llama eso.
 - CUIDADO CON LA COMA ANTES DE "Y". La mayoría de las veces sobra, porque en una enumeración corriente la "y" ya separa. Solo se pone cuando de verdad hace falta, cuando lo que va detrás de la "y" es otra frase distinta con su propio sujeto. Ante la duda, quítala.
 
+LA PRIMERA FRASE ES SUYA, Y AFIRMA. Se abre diciéndole algo suyo, en seco y de tú, que pueda reconocer en el acto. Nada de abrir con una observación general sobre la gente, ni con una frase bonita, ni presentando lo que viene después: quien lee tiene que saber en el primer renglón que le están hablando a él o a ella. Si la primera frase le valdría igual a otra persona, está mal y se reescribe.
+
+DESPUÉS DE TOCARLE LO QUE LE DUELE, SE LE QUITA UN PESO DE ENCIMA. No se deja la herida abierta y se pasa a otra cosa: se le quita la culpa de encima, en claro y sin rodeos, con las palabras que pida ese párrafo y sin fórmulas hechas. Con un renglón basta, y nunca dos veces dicho igual. Eso NO es decirle qué hacer ni darle la solución -eso es otro producto y aquí no va-: es que no cargue con algo que no eligió. Sin ese renglón, el texto solo describe a quien lee y ahí le deja, y entonces no le sirve de nada.
+
+TIENE QUE ENTERARSE DE ALGO QUE NADIE LE HABÍA DICHO ASÍ. No vale confirmarle con otras palabras lo que ya sabe de sí. En cada cosa que le cuentes, la parte que de verdad pesa es la que quien lee no había puesto ahí: lo que hace y llama de otra manera, o lo que cree que es una virtud suya y le está costando tiempo, dinero o gente. Si al acabar un párrafo puede pensar que eso ya lo sabía, ese párrafo no valía.
+
+TIENE QUE SONAR A QUE SE LO CUENTA ALGUIEN, NO A QUE LO HA ESCRITO UNA MÁQUINA. La prueba es fácil: si esa frase, dicha en voz alta a alguien de confianza, sonaría rara, está mal escrita. No hay ninguna frase tan buena como para dejarla si no pasa esa prueba.
+
+SE DICE LO QUE LE CUESTA, SIEMPRE. De cada cosa que le cuentes tiene que quedar claro qué se está perdiendo por hacerla. El precio se paga en algo que se pueda nombrar: en su tiempo, en su dinero, en la gente que tiene cerca, o en lo que deja de pedir y de hacer. Si solo cuentas lo que hace y no lo que le cuesta, le has hecho un cumplido, y un cumplido no le sirve de nada. Esto es para lo que le cuesta, no para todo: lo que se le da bien de verdad se le dice a la cara y no hay que cobrárselo, que si a cada cosa buena le pones un precio el área acaba siendo un repaso de defectos y quien lee cierra el informe tocado. El precio solo se dice cuando esa misma cualidad suya, pasada de vueltas, le está costando algo de verdad.
+Y se dice el precio, nunca la culpa: no hay reproche, ni se le señala, ni se le da a entender que tendría que estar haciéndolo de otra manera. Se le pone delante lo que paga, y ya está.
+
+SE DICE EN SECO, SIN COLCHONES. Fuera "es probable que", "quizá", "puede que", "en cierto modo", "casi", "algo así como", "no exactamente", "de alguna manera", "tiendes a", "sueles". Si escribes con esas, suena a que no estás seguro de quien lee, y entonces quien lee tampoco se reconoce. Se afirma.
+Eso NO es licencia para inventar: se afirma en seco lo que sale de sus rasgos, y lo que no salga de ahí no se escribe. Preferible contar tres cosas dichas de frente que seis con la boca pequeña.
+
+NO SE ESCRIBE CON LA CADENCIA DE UNA MÁQUINA. Tres cosas, que son las que delatan:
+Una, la frase de espejo -decir lo que NO es y a continuación lo que SÍ es-. El trabajo que hace esa frase es bueno y hay que seguir haciéndolo: corregirle lo que cree de sí. Lo que cambia es cómo: se le dice de frente lo que le pasa, sin montar el espejo. Y en toda el área no puede aparecer más de una vez.
+Dos, los dos puntos. Valen de vez en cuando, no cada tres frases. Si en un párrafo ya has puesto unos, el siguiente va sin ellos.
+Tres, abrir párrafos anunciando lo que viene -"y luego está", "y aquí hay algo", "y además"-. Se entra por la cosa, no por el aviso de que viene una cosa.
+
+AQUÍ NO HAY NI UN EJEMPLO, Y NADA DE LO ESCRITO EN ESTAS REGLAS SE COPIA. Todo lo de arriba dice CÓMO se escribe, no QUÉ se escribe. Ni una palabra, ni una frase, ni un giro de los que aparecen en estas reglas puede salir en lo que entregues: si reconoces una frase de aquí dentro de lo que has escrito, está mal y se cambia. Lo que se cuenta sale entero de los rasgos de esa persona y de nada más.
+
+NADA DE ESTO QUITA NI UNA SOLA DE LAS MARCAS QUE SE TE PIDAN. Los subtítulos, la escena y todo lo que lleve marca salen exactamente igual y en el mismo número. Estas reglas son de CÓMO se escribe, no de QUÉ se entrega.
+
 LO QUE NO SE PUEDE CONTAR:
-Una carta natal es el mapa del momento en que nació, así que todo lo que sale de ella lo tiene de nacimiento. Por eso no se dice que venga de su infancia, ni que se lo enseñaron en casa, ni que le viene de sus padres ni de su familia, ni se cuenta ningún episodio de su vida: nada de eso está en la carta y sería inventárselo. Lo que sí está es cómo funciona por dentro y en qué parcela de su vida se le nota, y eso es lo que se cuenta.
+Una carta natal es el mapa del momento en que nació, así que todo lo que sale de ella lo trae de nacimiento y no lo adquirió a lo largo de su vida. Por eso nada de lo que escribas puede situar el origen en un momento suyo: ni que lo aprendiera, ni que se lo enseñaran, ni que le venga de alguien, ni ningún antes ni ningún cuándo. Nada de eso está en la carta y sería inventárselo. Lo que sí está es cómo funciona por dentro y en qué parcela de su vida se le nota. Ese "de dónde viene" se contesta con eso, con lo que trae puesto y cómo funciona, nunca con un cuándo.
 PROHIBICIONES ABSOLUTAS:
 - No causas vagas sin explicar cómo y cuándo
 - No frases de autoayuda ni coaching
