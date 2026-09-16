@@ -34,7 +34,7 @@
 
 import Stripe from 'stripe';
 import { estado } from '../lib/reserva.js';
-import { losPendientes, guardarPendiente, quitarPendiente } from '../lib/pendientes-p1.js';
+import { losPendientes, guardarPendiente, quitarPendiente, marcarEnBrevo } from '../lib/pendientes-p1.js';
 import { correoRevisando, correoALaTienda } from '../lib/correos-p1.js';
 import { leerInforme } from '../lib/guardar-informe.js';
 import { leerLaFicha } from '../lib/ficha-del-lead.js';
@@ -370,6 +370,10 @@ export default async function handler(req, res) {
   if (seAcabo) {
     console.error(`[p1] Se acabaron los reintentos: ${ficha.compra}`);
   }
+
+  // Y queda escrito en su ficha de Brevo por donde va. Detras de todo lo
+  // demas: es para mirar, y si no sale no pasa nada.
+  await marcarEnBrevo({ email: ficha.email, estado: seAcabo ? 'fallido' : 'pendiente', intentos });
 
   return res.status(200).json({ mirados: fichas.length, hecho: 1, compra: ficha.compra, intentos });
 }
