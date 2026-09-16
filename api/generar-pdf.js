@@ -1094,25 +1094,27 @@ export default async function handler(req, res) {
     // EN UNA SEGUNDA ENTREGA NO SE GUARDA NADA: lo guardado es justo de donde
     // ha salido esto, y volver a escribirlo encima borraria el cuaderno y el
     // numero de intento de aquel dia.
-    if (!reenvio) try {
-      const guardado = await guardarInforme({
-        producto: 'p1',
-        sessionId: session_id,
-        // SUS DATOS Y SU CARTA NO SE GUARDAN AQUI: van en el fichero de su
-        // email, que es uno solo y no puede tener dos versiones distintas de
-        // lo mismo. Aqui queda ese email, que es lo que ata este informe con
-        // aquel.
-        cliente: { email: elEmail },
-        areas,
-        rasgos: rasgos || null,
-        // Como fue la generacion y en que intento salio. Es para mirar: no
-        // entra en el PDF ni en el correo.
-        cuaderno: cuaderno || null,
-        intento: intentoActual,
-      });
-      if (guardado.guardado) console.log(`Informe guardado: ${guardado.ruta} (${guardado.bytes} bytes)`);
-    } catch (err) {
-      console.error('No se pudo guardar el informe:', err.message);
+    if (!reenvio) {
+      try {
+        const guardado = await guardarInforme({
+          producto: 'p1',
+          sessionId: session_id,
+          // SUS DATOS Y SU CARTA NO SE GUARDAN AQUI: van en el fichero de su
+          // email, que es uno solo y no puede tener dos versiones distintas de
+          // lo mismo. Aqui queda ese email, que es lo que ata este informe con
+          // aquel.
+          cliente: { email: elEmail },
+          areas,
+          rasgos: rasgos || null,
+          // Como fue la generacion y en que intento salio. Es para mirar: no
+          // entra en el PDF ni en el correo.
+          cuaderno: cuaderno || null,
+          intento: intentoActual,
+        });
+        if (guardado.guardado) console.log(`Informe guardado: ${guardado.ruta} (${guardado.bytes} bytes)`);
+      } catch (err) {
+        console.error('No se pudo guardar el informe:', err.message);
+      }
     }
 
     return res.status(200).json({ pdfBase64 });
