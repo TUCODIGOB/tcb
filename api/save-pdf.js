@@ -199,7 +199,7 @@ async function enviarEmailAdmin({ asunto, mensaje }) {
 
   const body = {
     sender: { email: 'hola@origennatal.com', name: 'ORIGEN NATAL — Alertas' },
-    to: [{ email: 'hola@origennatal.com', name: 'Admin' }],
+    to: [{ email: 'hola.origennatal@gmail.com', name: 'Admin' }],
     subject: asunto,
     htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
   };
