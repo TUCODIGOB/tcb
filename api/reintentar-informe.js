@@ -84,9 +84,23 @@ function arrancarElInforme(sessionId) {
 }
 
 // COMO VA UNA COMPRA. Se trae de Stripe y se lee su estado: si ya se genero,
-// si el correo salio, si se esta generando ahora mismo.
+// si el correo salio, si se esta generando ahora mismo. Y de paso se queda con
+// lo que la compra trae escrito de esa persona: sus datos de nacimiento son lo
+// que hace falta para sacarle el informe a mano si un dia hay que hacerlo.
 async function comoVa(compra) {
-  return estado(await stripe.checkout.sessions.retrieve(compra));
+  const session = await stripe.checkout.sessions.retrieve(compra);
+  return { ...estado(session), datos: session.metadata || {} };
+}
+
+// SUS DATOS, COMO VAN EN EL AVISO. Salen de la compra, que es donde quedaron
+// escritos al pagar.
+function comoNacio(datos = {}) {
+  const lugar = [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', ');
+  return {
+    telefono: datos.telefono || '',
+    sexo: datos.sexo || '',
+    nacimiento: `${datos.fecha || '-'} a las ${datos.hora || '-'} en ${lugar || '-'}`,
+  };
 }
 
 // ── VOLVER A MANDARLO, SIN ESCRIBIR NADA NUEVO ───────────────────
@@ -228,6 +242,7 @@ export default async function handler(req, res) {
           compra: ficha.compra,
           email: ficha.email,
           nombre: ficha.nombre,
+          ...comoNacio(st.datos),
           intentos: Number(ficha.intentos || 0),
           motivo: `Su informe ESTA escrito y guardado; lo que no ha salido es el correo, tras ${entregas} entregas`,
         });
@@ -278,6 +293,7 @@ export default async function handler(req, res) {
         compra: ficha.compra,
         email: ficha.email,
         nombre: ficha.nombre,
+        ...comoNacio(st.datos),
         intentos: Number(ficha.intentos || 0),
         motivo: 'Se agotaron los intentos y el informe sigue sin entregarse',
       });
