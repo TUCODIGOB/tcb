@@ -716,6 +716,16 @@ Edad: ${edad} años`;
       throw err;
     }
 
+    // LO YA ENTREGADO NO SE VUELVE A ESCRIBIR. Va delante de las otras redes:
+    // si ademas acabara a media frase, esa lo entregaria igual, y esto no se
+    // entrega nunca.
+    if (area.id === 1 && delRegalo && repiteLoYaEntregado(delRegalo.texto, texto)) {
+      const err = new Error(`Área ${area.id} ha vuelto a escribir lo que ya estaba entregado`);
+      err.temporal = true;
+      err.repetido = true;
+      throw err;
+    }
+
     // NI RELLENO NI FRASE CORTADA. Un area con una palabra de relleno dentro, o
     // que se corta a media frase, se imprime tal cual en el PDF. Se vuelve a
     // pedir, que para eso lleva tres intentos.
@@ -758,6 +768,18 @@ Edad: ${edad} años`;
         await new Promise(r => setTimeout(r, 1500 * intento));
       }
     }
+
+    // SI HA SEGUIDO REPITIENDO LO YA ENTREGADO, SE ESCRIBE EL AREA ENTERA, sin
+    // el texto del regalo delante. Es lo mismo que se le escribe a quien nunca
+    // paso por el regalo: un area completa y bien hecha. Peor seria darsela
+    // dos veces, y peor todavia dejarla sin informe.
+    if (ultimoError && ultimoError.repetido) {
+      console.warn(`Área ${area.id}: ha seguido repitiendo lo ya entregado, se escribe entera`);
+      const entera = await pedirArea(area, rasgos, null);
+      reloj.apunta(`area ${area.id}`, arranque);
+      return entera;
+    }
+
     throw ultimoError;
   }
 
@@ -1953,6 +1975,31 @@ const PALABRAS_DE_ASTROLOGIA = [
   /\b(los|tus|sus) planetas\b/,
   /\b(zodiaco|horoscopo|astrolog|efemerides)\b/,
 ];
+
+// ¿HA VUELTO A ESCRIBIR LO QUE YA ESTABA ENTREGADO?
+//
+// Al area 1 empezada se le manda el texto del regalo para que lo lea y siga
+// desde ahi, y se le dice tres veces que no lo repita. Si algun dia lo
+// repitiera, la clienta leeria su area 1 dos veces, y eso no se le puede
+// mandar a quien ha pagado un informe.
+//
+// SE COMPARAN TROZOS, NO EL TEXTO ENTERO: se buscan cuatro trozos del de antes
+// -el principio y tres mas repartidos- dentro del nuevo, sin tildes, sin
+// signos y sin dobles espacios. Cuarenta letras seguidas iguales no son una
+// casualidad: es el mismo texto.
+const soloLetras = txt => sinTildes(String(txt || '').toLowerCase())
+  .replace(/[^a-z0-9]+/g, ' ').trim();
+
+function repiteLoYaEntregado(yaEscrito, nuevo) {
+  const antes = soloLetras(yaEscrito);
+  const ahora = soloLetras(nuevo);
+  if (antes.length < 40 || !ahora) return false;
+  for (const donde of [0, 0.25, 0.5, 0.75]) {
+    const trozo = antes.slice(Math.floor(antes.length * donde), Math.floor(antes.length * donde) + 40);
+    if (trozo.length === 40 && ahora.includes(trozo)) return true;
+  }
+  return false;
+}
 
 function hablaDeAstrologia(rasgo) {
   const texto = sinTildes(`${rasgo.nombre} ${rasgo.descripcion} ${rasgo.causa}`);
