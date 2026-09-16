@@ -71,7 +71,7 @@ export default async function handler(req, res) {
         edad: String(datos.edadCalculada || ''),
         gaClientId: (datos.gaClientId || '').substring(0, 50),
       },
-      success_url: `${origin}/generando-informe?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/tu-diseno-de-origen/gracias?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/tu-diseno-de-origen`,
     });
 
