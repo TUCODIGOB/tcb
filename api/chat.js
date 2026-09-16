@@ -561,6 +561,55 @@ EL ÁREA NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS SIETE COSAS. Son oblig
     },
   ];
 
+  // ── CUANDO EL AREA 1 YA ESTA EMPEZADA ────────────────────────────
+  //
+  // El regalo escribe el area 1 hasta el [C] -lo que le pasa, la escena y el
+  // porque-, unas setecientas palabras. El informe la lleva hasta el [E], unas
+  // mil cien. Si hizo el regalo, esa primera parte ya la ha leido, asi que no
+  // se vuelve a escribir: se le pega delante tal cual y aqui solo se pide lo
+  // que falta, el [D] y el [E].
+  //
+  // POR QUE NO SE LE PIDE QUE LA COPIE Y SIGA. Porque copiando la cambiaria, y
+  // entonces el area no empezaria como ella recuerda. El texto suyo lo pone el
+  // codigo, no el modelo: asi es imposible que salga distinto.
+  //
+  // Y SE LE DA ENTERO PARA LEERLO, no para repetirlo: el [D] tiene que salir
+  // de los desafios que se cuentan ahi y el [E] tiene que cerrar eso mismo.
+  const elFinalDelArea1 = (yaEscrito) => `Esta área ya está empezada. El texto de aquí abajo ya se le entregó y ya lo ha leído, y va delante del tuyo tal cual. Tu trabajo es TERMINARLA.
+
+LO QUE YA ESTÁ ESCRITO, Y NO LO ESCRIBES TÚ:
+
+${yaEscrito}
+
+AHÍ TERMINA LO QUE YA TIENE. No lo repitas, no lo resumas, no lo corrijas y no lo vuelvas a contar con otras palabras: quien lee lo tiene justo encima. Léelo entero antes de empezar, porque de ahí sale lo que te toca escribir.
+
+LO QUE ESCRIBES TÚ: el [D] y el [E], en ese orden, y nada más. Los dos tal como los pide el encargo general.
+El [D] lleva una por cada desafío contado ahí arriba: los lees y salen de ahí, no de otro sitio. Y de cada una, qué se le abre el día que caiga.
+El [E] cierra el área, y cierra lo que se ha contado arriba: sale de eso y de esta persona, no de una frase que valdría para cualquiera.
+
+CÓMO EMPIEZAS: pegado a la última frase de arriba y entrando directo por lo que toca contar. Sin fórmula de presentación, sin anunciar lo que viene, sin señalar hacia atrás y sin recoger lo ya dicho. Tiene que leerse como si lo hubiera escrito la misma mano y del tirón, no como un trozo pegado después. Si lo de arriba acaba en una pregunta, no la contestas, no la nombras y no la das por contestada: sigues.
+
+LO QUE TU PARTE NO LLEVA:
+- Ni escena, ni un solo párrafo con "> " delante. La escena ya está contada arriba y no hay otra.
+- Ni una sola pregunta, en ninguna parte.
+- Ni entrada ni presentación: el área ya está abierta.
+- Ningún rasgo nuevo: son los mismos de arriba, los que tienes al final de esta petición.
+
+Entre 350 y 420 palabras, en párrafos de longitud variada, entre 2 y 7 líneas, ninguno de más de 90 palabras.
+
+TU PARTE NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS CINCO COSAS:
+
+1. El [D] entero: una por cada desafío de arriba, y de cada una qué se le abre en su vida el día que caiga. Después de lo que ya está escrito, es lo que más sitio ocupa.
+
+2. El [E]: un párrafo de cierre firme, no una frase suelta, y sin ninguna pregunta ni dentro ni justo antes.
+
+3. UNO O DOS SUBTÍTULOS, con "## " delante, uno cada vez que dejas un asunto y empiezas otro. El primero puede ir al empezar tu parte, porque el área ya está abierta.
+
+4. TODO ESCRITO DE TÚ, de la primera palabra a la última. Su nombre ya sale arriba: aquí lo usas solo si cae natural, y nunca seguido de un verbo que hable de lo que hace o siente.
+
+5. Nada de lo de arriba repetido: ni cómo funciona por dentro, ni sus fortalezas, ni la escena, ni el porqué.
+`;
+
   // LA CARTA NATAL YA NO VIENE AQUI.
   //
   // Antes se le mandaba entera a cada una de las siete, y hacia falta: los
@@ -602,7 +651,18 @@ Edad: ${edad} años`;
     return `\n\nRASGOS QUE SE LE HAN SACADO PARA ESTA AREA:\n\nFORTALEZAS\n${f.join('\n') || '(ninguna)'}\n\nDESAFIOS\n${d.join('\n') || '(ninguno)'}`;
   }
 
-  async function pedirArea(area, rasgos) {
+  // EL ENCARGO DE CADA AREA. El de siempre, menos el del area 1 cuando ya
+  // viene empezada del regalo: ahi se pide solo lo que le falta.
+  const elEncargo = (area, delRegalo) =>
+    (area.id === 1 && delRegalo) ? elFinalDelArea1(delRegalo.texto) : area.prompt;
+
+  // Y LO QUE SE ENTREGA DE ESA AREA ES SU TEXTO DE ANTES MAS LO NUEVO, pegados
+  // en ese orden. El de antes va tal cual, sin pasar por ningun modelo: es el
+  // que ella tiene delante.
+  const conLoQueYaLeyo = (area, texto, delRegalo) =>
+    (area.id === 1 && delRegalo) ? `${delRegalo.texto}\n\n${texto}` : texto;
+
+  async function pedirArea(area, rasgos, delRegalo) {
     const arranque = Date.now();
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -630,7 +690,7 @@ Edad: ${edad} años`;
         system: `${TONO}\n\n\n${SYSTEM_PROMPT}`,
         messages: [{
           role: 'user',
-          content: `${contextoPersona}\n\n${area.prompt}${rasgosDelArea(area, rasgos)}`,
+          content: `${contextoPersona}\n\n${elEncargo(area, delRegalo)}${rasgosDelArea(area, rasgos)}`,
         }],
       }),
     });
@@ -656,6 +716,16 @@ Edad: ${edad} años`;
       throw err;
     }
 
+    // LO YA ENTREGADO NO SE VUELVE A ESCRIBIR. Va delante de las otras redes:
+    // si ademas acabara a media frase, esa lo entregaria igual, y esto no se
+    // entrega nunca.
+    if (area.id === 1 && delRegalo && repiteLoYaEntregado(delRegalo.texto, texto)) {
+      const err = new Error(`Área ${area.id} ha vuelto a escribir lo que ya estaba entregado`);
+      err.temporal = true;
+      err.repetido = true;
+      throw err;
+    }
+
     // NI RELLENO NI FRASE CORTADA. Un area con una palabra de relleno dentro, o
     // que se corta a media frase, se imprime tal cual en el PDF. Se vuelve a
     // pedir, que para eso lleva tres intentos.
@@ -676,12 +746,12 @@ Edad: ${edad} años`;
     return texto.trim();
   }
 
-  async function generarArea(area, rasgos) {
+  async function generarArea(area, rasgos, delRegalo) {
     const arranque = Date.now();
     let ultimoError;
     for (let intento = 1; intento <= INTENTOS_POR_AREA; intento++) {
       try {
-        return await pedirArea(area, rasgos);
+        return conLoQueYaLeyo(area, await pedirArea(area, rasgos, delRegalo), delRegalo);
       } catch (err) {
         ultimoError = err;
         // Un corte de red llega sin marca; se trata como temporal.
@@ -691,13 +761,25 @@ Edad: ${edad} años`;
         if (intento === INTENTOS_POR_AREA && err.seEntregaIgual) {
           console.warn(`Área ${area.id} sigue acabando a media frase, se entrega igual`);
           reloj.apunta(`area ${area.id}`, arranque);
-          return err.seEntregaIgual;
+          return conLoQueYaLeyo(area, err.seEntregaIgual, delRegalo);
         }
         if (!temporal || intento === INTENTOS_POR_AREA) break;
         console.warn(`Área ${area.id}: intento ${intento} fallido (${err.message.slice(0, 80)}), reintentando`);
         await new Promise(r => setTimeout(r, 1500 * intento));
       }
     }
+
+    // SI HA SEGUIDO REPITIENDO LO YA ENTREGADO, SE ESCRIBE EL AREA ENTERA, sin
+    // el texto del regalo delante. Es lo mismo que se le escribe a quien nunca
+    // paso por el regalo: un area completa y bien hecha. Peor seria darsela
+    // dos veces, y peor todavia dejarla sin informe.
+    if (ultimoError && ultimoError.repetido) {
+      console.warn(`Área ${area.id}: ha seguido repitiendo lo ya entregado, se escribe entera`);
+      // El tiempo ya lo apunta pedirArea al salir bien: aqui no se apunta otra
+      // vez, que dejaria el area dos veces en el cuaderno.
+      return await pedirArea(area, rasgos, null);
+    }
+
     throw ultimoError;
   }
 
@@ -739,7 +821,7 @@ Edad: ${edad} años`;
     // Despues, las 7 areas a la vez. Cada una recibe los rasgos que el codigo
     // etiqueto con ella, que son los mismos que la clienta va a leer en el PDF.
     const resultados = await Promise.all(
-      AREAS.map(area => generarArea(area, rasgos))
+      AREAS.map(area => generarArea(area, rasgos, delRegalo))
     );
 
     // Unir con el separador. Es U+001F (Unit Separator), un caracter de
@@ -1893,6 +1975,31 @@ const PALABRAS_DE_ASTROLOGIA = [
   /\b(los|tus|sus) planetas\b/,
   /\b(zodiaco|horoscopo|astrolog|efemerides)\b/,
 ];
+
+// ¿HA VUELTO A ESCRIBIR LO QUE YA ESTABA ENTREGADO?
+//
+// Al area 1 empezada se le manda el texto del regalo para que lo lea y siga
+// desde ahi, y se le dice tres veces que no lo repita. Si algun dia lo
+// repitiera, la clienta leeria su area 1 dos veces, y eso no se le puede
+// mandar a quien ha pagado un informe.
+//
+// SE COMPARAN TROZOS, NO EL TEXTO ENTERO: se buscan cuatro trozos del de antes
+// -el principio y tres mas repartidos- dentro del nuevo, sin tildes, sin
+// signos y sin dobles espacios. Cuarenta letras seguidas iguales no son una
+// casualidad: es el mismo texto.
+const soloLetras = txt => sinTildes(String(txt || '').toLowerCase())
+  .replace(/[^a-z0-9]+/g, ' ').trim();
+
+function repiteLoYaEntregado(yaEscrito, nuevo) {
+  const antes = soloLetras(yaEscrito);
+  const ahora = soloLetras(nuevo);
+  if (antes.length < 40 || !ahora) return false;
+  for (const donde of [0, 0.25, 0.5, 0.75]) {
+    const trozo = antes.slice(Math.floor(antes.length * donde), Math.floor(antes.length * donde) + 40);
+    if (trozo.length === 40 && ahora.includes(trozo)) return true;
+  }
+  return false;
+}
 
 function hablaDeAstrologia(rasgo) {
   const texto = sinTildes(`${rasgo.nombre} ${rasgo.descripcion} ${rasgo.causa}`);
