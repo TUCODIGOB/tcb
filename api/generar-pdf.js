@@ -4,6 +4,7 @@ const { jsPDF } = require('jspdf');
 import Stripe from 'stripe';
 import { compraValida, esDelProducto, estado, liberar, completar, marcarEmailEnviado } from '../lib/reserva.js';
 import { guardarInforme } from '../lib/guardar-informe.js';
+import { marcarEnBrevo } from '../lib/pendientes-p1.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -1055,6 +1056,9 @@ export default async function handler(req, res) {
           cliente: { nombre, sexo, fechaNice, hora, lugar, edad },
         });
         console.log(`[generar-pdf] Email de entrega enviado a ${sessionEmail}`);
+        // Y queda marcado como entregado en su ficha de Brevo. Es para mirar:
+        // si no sale, el informe ya esta en su correo igual.
+        await marcarEnBrevo({ email: sessionEmail, estado: 'entregado', intentos: intentoActual || 0 });
         break;
       } catch (err) {
         if (envio < INTENTOS_DE_ENVIO) {

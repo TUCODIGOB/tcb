@@ -5,7 +5,7 @@
 
 import Stripe from 'stripe';
 import { estado, marcarEmailEnviado, compraValida, esDelProducto } from '../lib/reserva.js';
-import { quitarPendiente } from '../lib/pendientes-p1.js';
+import { quitarPendiente, marcarEnBrevo } from '../lib/pendientes-p1.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -97,6 +97,10 @@ export default async function handler(req, res) {
     } catch (err) {
       console.error('[save-pdf] Error quitando el pendiente:', err.message);
     }
+
+    // Y queda marcado como entregado en su ficha de Brevo, igual que cuando lo
+    // manda generar-pdf. Es para mirar: si no sale, no pasa nada.
+    await marcarEnBrevo({ email, estado: 'entregado', intentos: st.intentos || 0 });
 
     // 5. Actualizar contacto en Brevo
     try {
