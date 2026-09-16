@@ -4,7 +4,6 @@ const { jsPDF } = require('jspdf');
 import Stripe from 'stripe';
 import { compraValida, esDelProducto, estado, liberar, completar, marcarEmailEnviado } from '../lib/reserva.js';
 import { guardarInforme } from '../lib/guardar-informe.js';
-import { asegurarLaFicha } from '../lib/ficha-del-lead.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -1056,10 +1055,10 @@ export default async function handler(req, res) {
       const guardado = await guardarInforme({
         producto: 'p1',
         sessionId: session_id,
-        // SUS DATOS Y SU CARTA NO SE GUARDAN AQUI: van en la ficha de su
-        // email, que es una sola y no puede haber dos versiones distintas de
-        // lo mismo. Aqui queda solo ese email, que es lo que ata este informe
-        // con su ficha. Y justo debajo se mira si esa ficha existe.
+        // SUS DATOS Y SU CARTA NO SE GUARDAN AQUI: van en el fichero de su
+        // email, que es uno solo y no puede tener dos versiones distintas de
+        // lo mismo. Aqui queda ese email, que es lo que ata este informe con
+        // aquel.
         cliente: { email: elEmail },
         areas,
         rasgos: rasgos || null,
@@ -1071,33 +1070,6 @@ export default async function handler(req, res) {
       if (guardado.guardado) console.log(`Informe guardado: ${guardado.ruta} (${guardado.bytes} bytes)`);
     } catch (err) {
       console.error('No se pudo guardar el informe:', err.message);
-    }
-
-    // Y SU FICHA, SI NO LA TIENE.
-    //
-    // Casi siempre la tiene: se compra desde el regalo, y el regalo la deja
-    // hecha con sus datos y su carta. Pero si algun dia entra alguien que
-    // compra sin haber pasado por ahi, esa ficha no existe, y sus datos y su
-    // carta se quedarian sin guardar en ninguna parte. Aqui se crea.
-    //
-    // SI YA ESTABA, NO SE TOCA: dentro puede estar lo que el regalo le
-    // escribio, y volver a guardarla lo borraria.
-    //
-    // Va aparte del guardado de arriba a proposito: si uno de los dos falla,
-    // el otro se hace igual. Y ninguno puede estropear nada, porque el informe
-    // ya esta entregado.
-    try {
-      const ficha = await asegurarLaFicha({
-        email: elEmail,
-        cliente: { nombre, sexo, fecha: fechaNice, hora, lugar, edad },
-        // La carta tal y como se calculo hoy, con las coordenadas del lugar
-        // incluidas: es lo unico que no se puede volver a sacar igual mas
-        // adelante. Ver el porque en lib/guardar-informe.js.
-        carta: carta || null,
-      });
-      if (ficha.creada) console.log(`Ficha del lead creada desde el informe: ${ficha.ruta}`);
-    } catch (err) {
-      console.error('No se pudo crear la ficha del lead:', err.message);
     }
 
     return res.status(200).json({ pdfBase64 });
