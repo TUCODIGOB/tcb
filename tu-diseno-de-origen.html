@@ -2773,6 +2773,9 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
           btn.disabled = false;
           btn.textContent = loQuePone;
           if (!vale) return;
+          // Si mientras contestaba el mapa se ha ido a otro paso -le ha dado
+          // a Atras-, no se le mueve de donde este ahora.
+          if (btn.closest('.form-step').classList.contains('hidden')) return;
         }
 
         irAPaso(Number(btn.dataset.next));
