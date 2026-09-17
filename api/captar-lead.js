@@ -53,7 +53,9 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         email,
         attributes,
-        listIds: [11],
+        // 14 = "0 P1 Lead Magnet", la lista de quien pide su regalo. Al
+        // comprar el P1, el webhook le saca de aqui y le pasa a la suya.
+        listIds: [14],
         updateEnabled: true,
       }),
     });
