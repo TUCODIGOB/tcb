@@ -40,6 +40,11 @@ body{
   padding:0 16px; padding-block:40px 64px;
 }
 .hoja{max-width:560px;margin:0 auto;}
+/* EN EL ORDENADOR LA HOJA ES MAS ANCHA. En el movil no cambia nada: la
+   pantalla ya es mas estrecha que esto. */
+@media (min-width:601px){
+  .hoja{max-width:700px;}
+}
 
 h1{
   font-family:'Playfair Display',Georgia,serif; color:var(--tinta);
@@ -344,10 +349,7 @@ button:hover{filter:brightness(.96);}
 body,
 .portada .suya,
 .datos-nac,
-.cabecera-area p,
 .area p,
-.area h3,
-.area p.pregunta,
 .area .escena p,
 .cerrados b,
 .cerrados .que,
@@ -359,6 +361,18 @@ body,
 .aviso p,
 .aviso .vale {
   font-size: 16px;
+}
+
+/* Y TRES QUE VAN APARTE, cada uno con el suyo: el subtitulo del area, sus
+   titulos y su pregunta. Esto es lo del ordenador; en el movil siguen con los
+   18 de aqui abajo, como el resto. */
+.cabecera-area p {
+  font-size: 20px;
+}
+
+.area h3,
+.area p.pregunta {
+  font-size: 22px;
 }
 
 @media (max-width: 600px) {
