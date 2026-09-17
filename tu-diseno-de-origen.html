@@ -503,10 +503,11 @@
       padding: 2.4rem 2rem;
       text-align: center;
     }
-    /* Los mismos tamaños que las pantallas de preparar el diseño. */
+    /* El titulo, a 35 en pantalla grande y a 26 en el movil: en los dos
+       cabe entero en una sola linea. */
     .compruebalo h3 {
       font-family: var(--font-display);
-      font-size: clamp(1.8rem, 5vw, 2.4rem);
+      font-size: clamp(26px, 5vw, 35px);
       font-weight: 700;
       color: var(--teal-deep);
       line-height: 1.2;
@@ -2498,7 +2499,9 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       // Lo que ha escrito se pone como texto, nunca como HTML.
       const linea = document.getElementById('compruebaloDatos');
       linea.textContent = '';
-      linea.appendChild(document.createTextNode('Naciste el ' + fechaNice + ' a las ' + laHoraEnDos(datos.hora)));
+      linea.appendChild(document.createTextNode('Naciste el ' + fechaNice));
+      linea.appendChild(document.createElement('br'));
+      linea.appendChild(document.createTextNode('a las ' + laHoraEnDos(datos.hora)));
       linea.appendChild(document.createElement('br'));
       linea.appendChild(document.createTextNode('en ' + lugar));
 
