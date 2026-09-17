@@ -9,9 +9,10 @@
 // un bloqueador puesto, el mapa cortandole a el- se queda sin poder pagar
 // sin que aqui se entere nadie.
 //
-// ES EL MISMO CODIGO, LINEA POR LINEA, que el que estaba en la pagina. No se
-// ha cambiado ni una comparacion ni un nombre de campo: cualquier cambio aqui
-// cambia que lugares se dan por buenos.
+// LO QUE SE DA POR BUENO NO HA CAMBIADO: es la misma comprobacion, con las
+// mismas comparaciones, que la que estaba en la pagina. Lo unico que se ha
+// rehecho es lo de despues: cuando el lugar no sale, que casillas se le
+// marcan en rojo. Antes se marcaban de mas.
 //
 // AQUI NO HAY COMPRA QUE MIRAR: esto pasa antes de pagar, asi que no lleva la
 // cerradura del P1. Lo unico que hace es preguntarle al mapa por un pueblo.
@@ -89,6 +90,22 @@ const CAMPOS_PROVINCIA = ['province', 'state', 'county', 'state_district', 'regi
 // no ha encontrado lo que el cliente escribió y ha devuelto la zona entera.
 const RESULTADOS_DEMASIADO_GRANDES = ['country', 'continent', 'state', 'region'];
 
+// TODOS LOS NOMBRES DE UN SITIO: el oficial, los alternativos, los de otras
+// lenguas y el de la casilla que le toque en la direccion.
+function nombresDelSitio(res) {
+  const dir = res.address || {};
+  const nombres = [];
+  if (res.name) nombres.push(res.name);
+  if (res.namedetails) {
+    for (const clave in res.namedetails) {
+      if (/^(name|official_name|alt_name|short_name)(:|$)/.test(clave)) nombres.push(res.namedetails[clave]);
+    }
+  }
+  CAMPOS_MUNICIPIO.forEach(campo => { if (dir[campo]) nombres.push(dir[campo]); });
+  if (res.display_name) nombres.push(res.display_name.split(',')[0]);
+  return nombres;
+}
+
 // Devuelve qué campos no cuadran con este resultado del mapa (lista vacía
 // si el resultado es de verdad el lugar escrito). Se comprueban los tres
 // siempre, sin parar en el primero que falle: así, si el municipio y la
@@ -105,15 +122,7 @@ function camposQueFallan(res, municipio, provincia, pais) {
   //    nombres: el oficial, los alternativos y los de otras lenguas. Si el
   //    mapa ha devuelto una región entera en vez de un municipio, es el
   //    municipio escrito lo que no ha sabido encontrar.
-  const nombres = [];
-  if (res.name) nombres.push(res.name);
-  if (res.namedetails) {
-    for (const clave in res.namedetails) {
-      if (/^(name|official_name|alt_name|short_name)(:|$)/.test(clave)) nombres.push(res.namedetails[clave]);
-    }
-  }
-  CAMPOS_MUNICIPIO.forEach(campo => { if (dir[campo]) nombres.push(dir[campo]); });
-  if (res.display_name) nombres.push(res.display_name.split(',')[0]);
+  const nombres = nombresDelSitio(res);
   const demasiadoGrande = RESULTADOS_DEMASIADO_GRANDES.includes(res.addresstype);
   if (demasiadoGrande || !nombres.some(nombre => coincideLugar(municipio, nombre))) falla.push('municipio');
 
@@ -189,127 +198,159 @@ function hayUnPaisAsi(resultados, pais) {
   });
 }
 
-// ¿Existe ese municipio en alguna parte, sin mirar en que pais? Se comprueba
-// que algun resultado se llame de verdad asi, no que el mapa devuelva algo.
-async function existeElMunicipio(municipio) {
-  const data = await consultarMapa(municipio);
-  if (!data || !data.length) return false;
-  // La provincia y el pais van vacios a proposito: aqui solo se mira el
-  // municipio.
-  return data.some(res => !camposQueFallan(res, municipio, '', '').includes('municipio'));
-}
-
-// Lo mismo con la provincia.
-async function existeLaProvincia(provincia) {
-  const data = await consultarMapa(provincia);
-  if (!data || !data.length) return false;
-  return data.some(res => !camposQueFallan(res, '', provincia, '').includes('provincia'));
-}
-
-// ¿EL MUNICIPIO Y LA PROVINCIA SON BUENOS, Y LO QUE FALLA ES EL PAIS?
+// ¿CUADRA ESA CASILLA, ELLA SOLA?
 //
-// Se le pregunta al mapa por el municipio y la provincia SIN pais. Si de ahi
-// sale ese mismo sitio, lo que escribio esta bien y el que no cuadra es el
-// pais: es el unico que hay que marcar. Marcarle en rojo el municipio y la
-// provincia, que ha escrito bien, solo le confunde.
-async function elParEsBueno(municipio, provincia) {
-  const data = await consultarMapa([municipio, provincia].filter(Boolean).join(', '));
-  if (!data || !data.length) return false;
-  // El pais va vacio a proposito: aqui solo se mira si el municipio y la
-  // provincia cuadran con algun resultado.
+// Se le pregunta al mapa por esa consulta y se mira si algun resultado se
+// llama DE VERDAD asi. No basta con que el mapa devuelva algo: buscando "Val"
+// devuelve cualquier sitio que se le parezca, y darlo por bueno es lo que
+// hacia que el rojo acabara en una casilla bien escrita.
+//
+// Devuelve null si el mapa no ha contestado, que no es lo mismo que no
+// encontrarlo: eso no es culpa de lo que ha escrito el cliente.
+async function casillaCuadra(consulta, campo, municipio, provincia) {
+  const data = await consultarMapa(consulta);
+  if (data === null) return null;
+  if (!data.length) return false;
+  // La casilla que no se pregunta va vacia a proposito: aqui solo se mira la
+  // que se pregunta.
+  return data.some(res => !camposQueFallan(res, municipio, provincia, '').includes(campo));
+}
+
+// ¿EL MUNICIPIO Y LA PROVINCIA SON UN SITIO DE VERDAD, JUNTOS?
+// Se pregunta por los dos sin pais. Si de ahi sale ese mismo sitio, los dos
+// estan bien escritos y el que sobra es el pais.
+async function elParCuadra(municipio, provincia) {
+  const data = await consultarMapa(municipio + ', ' + provincia);
+  if (data === null) return null;
+  if (!data.length) return false;
+  // El pais va vacio a proposito: aqui solo se miran esas dos casillas.
   return data.some(res => {
     const falla = camposQueFallan(res, municipio, provincia, '');
     return !falla.includes('municipio') && !falla.includes('provincia');
   });
 }
 
-// Cuando la consulta con los tres campos no encuentra nada, no hay ningún
-// resultado con el que comparar y no se puede saber qué campo está mal:
-// por eso antes se marcaban los tres, incluido el país estando bien.
-// Aquí se le pregunta al mapa por partes, que es la única forma de saberlo:
-// lo que no encuentra ni él solo, es lo que está mal escrito.
-async function camposQueNoExisten(municipio, provincia, pais) {
-  const resultadoPais = await consultarMapa(pais);
-  // NO SE HA PODIDO COMPROBAR. Se devuelve null -no una lista vacia- para que
-  // quien llama lo trate como que el mapa no ha contestado: al cliente no se
-  // le marca ningun campo en rojo por un fallo que no es suyo.
-  if (resultadoPais === null) return null;
+// ¿HAY ALGO QUE SE LLAME ASI? Aqui no se le pide que sea un municipio: es
+// para cuando ya no queda provincia buena donde buscarlo, y basta con que el
+// nombre exista de verdad en alguna parte para NO marcarlo en rojo. Lo que no
+// se sabe no se marca.
+async function hayAlgoLlamadoAsi(consulta, nombre) {
+  const data = await consultarMapa(consulta);
+  if (data === null) return null;
+  return data.some(res => nombresDelSitio(res).some(n => coincideLugar(nombre, n)));
+}
 
-  // EL PAIS NO ES UN PAIS. Lo de dentro no se puede buscar ahi, asi que se
-  // comprueba por su cuenta: se marca el pais y, ademas, el municipio o la
-  // provincia solo si de verdad no existen en ninguna parte.
-  if (!hayUnPaisAsi(resultadoPais, pais)) {
-    const hayMunicipio = await existeElMunicipio(municipio);
-    const hayProvincia = await existeLaProvincia(provincia);
+// QUE CASILLAS ESTAN MAL, UNA POR UNA.
+//
+// Se comprueban de fuera hacia dentro -pais, provincia, municipio- y cada una
+// DENTRO de lo que ya se ha dado por bueno: la provincia dentro de su pais si
+// el pais esta bien, y el municipio dentro de su provincia si la provincia
+// esta bien. Asi cada casilla responde por si misma y se marca en rojo solo
+// la que falla, sea cual sea la combinacion.
+//
+// Devuelve null si el mapa no ha contestado a alguna: entonces no se marca
+// nada, porque no se sabe.
+async function camposMalos(municipio, provincia, pais) {
+  // 1) EL PAIS. Uno de 1-2 letras no es un pais real -el mas corto del mundo
+  //    tiene 3- asi que se da por malo sin gastar una consulta.
+  let paisBueno = false;
+  if (pais.length >= 3) {
+    const data = await consultarMapa(pais);
+    if (data === null) return null;
+    paisBueno = hayUnPaisAsi(data, pais);
+  }
+
+  // EL PAIS NO EXISTE. Lo de dentro no se puede buscar ahi, asi que la
+  // provincia se comprueba sola y el municipio dentro de esa provincia.
+  if (!paisBueno) {
+    const provinciaBuena = await casillaCuadra(provincia, 'provincia', '', provincia);
+    if (provinciaBuena === null) return null;
+
+    // El municipio, dentro de esa provincia si la provincia vale. Si tampoco
+    // vale, se queda sin sitio donde buscarlo y solo se puede mirar si el
+    // nombre existe en alguna parte.
+    const municipioBueno = provinciaBuena
+      ? await casillaCuadra(municipio + ', ' + provincia, 'municipio', municipio, '')
+      : await hayAlgoLlamadoAsi(municipio, municipio);
+    if (municipioBueno === null) return null;
+
     const malos = [];
-    if (!hayMunicipio) malos.push('municipio');
-    if (!hayProvincia) malos.push('provincia');
+    if (!municipioBueno) malos.push('municipio');
+    if (!provinciaBuena) malos.push('provincia');
     malos.push('pais');
     return malos;
   }
 
-  // El país existe: a partir de aquí nunca se marca.
-  const resultadoMunicipio = await consultarMapa(municipio + ', ' + pais);
-  const resultadoProvincia = await consultarMapa(provincia + ', ' + pais);
-  if (resultadoMunicipio === null || resultadoProvincia === null) return null;
+  // 2) LA PROVINCIA, dentro de su pais.
+  const provinciaEnElPais = await casillaCuadra(provincia + ', ' + pais, 'provincia', '', provincia);
+  if (provinciaEnElPais === null) return null;
 
-  const malos = [];
-  if (resultadoMunicipio.length === 0) malos.push('municipio');
-  if (resultadoProvincia.length === 0) malos.push('provincia');
+  // 3) EL MUNICIPIO, dentro de su provincia. Preguntar por el solo lo daria
+  //    por bueno solo por parecerse a un sitio cualquiera del mundo.
+  if (provinciaEnElPais) {
+    const municipioBueno = await casillaCuadra(
+      municipio + ', ' + provincia + ', ' + pais, 'municipio', municipio, '');
+    if (municipioBueno === null) return null;
+    return municipioBueno ? [] : ['municipio'];
+  }
 
-  if (malos.length) return malos;
+  // ESA PROVINCIA NO ESTA EN ESE PAIS. O el pais no es el suyo, o la
+  // provincia esta mal escrita. Si el municipio y la provincia son un sitio
+  // de verdad, los dos estan bien y el unico que sobra es el pais.
+  const parBueno = await elParCuadra(municipio, provincia);
+  if (parBueno === null) return null;
+  if (parBueno) return ['pais'];
 
-  // Los dos existen por separado pero no juntos en ese pais. Si juntos si
-  // existen en otro, lo que esta mal es el pais y solo se marca ese.
-  if (await elParEsBueno(municipio, provincia)) return ['pais'];
-
-  // No se puede saber cuál de los dos escribió mal, así que se marcan los
-  // dos — pero el país no, que ya sabemos que existe.
-  return ['municipio', 'provincia'];
+  // La provincia esta mal. Del municipio solo se puede saber si hay algo que
+  // se llame asi en ese pais, que es lo unico que ha quedado en pie. Aqui no
+  // se le pide que sea un municipio: sin su provincia, el mapa devuelve lo
+  // que sea que lleve ese nombre, y con eso basta para NO marcarlo en rojo.
+  const hayAlgoAsi = await hayAlgoLlamadoAsi(municipio + ', ' + pais, municipio);
+  if (hayAlgoAsi === null) return null;
+  return hayAlgoAsi ? ['provincia'] : ['municipio', 'provincia'];
 }
 
 // Validar lugar con Nominatim (OpenStreetMap) — gratis
 async function validarLugar(municipio, provincia, pais) {
-  // Un país de 1-2 caracteres nunca es un nombre real (el país más corto
-  // del mundo tiene 3+ letras) — lo rechazamos sin consultar la API.
-  if (pais.trim().length < 3) return { ok: false, motivo: 'no_encontrado', campos: ['pais'] };
+  // Lo que no cuadra en NINGUNO de los resultados de la consulta con las tres
+  // casillas. Solo se usa en el ultimo caso de todos, el de aqui abajo.
+  let culpables = [];
 
-  const data = await consultarMapa([municipio, provincia, pais].filter(Boolean).join(', '));
+  // Con un pais de 1-2 letras esta consulta no puede salir bien: se va
+  // derecho a mirar casilla por casilla.
+  if (pais.length >= 3) {
+    const data = await consultarMapa([municipio, provincia, pais].filter(Boolean).join(', '));
 
-  // Un lugar no verificable nunca debe dejar avanzar al pago, ni siquiera
-  // si el fallo es del servicio externo. Pero aquí el cliente no ha hecho
-  // nada mal, así que no se le marca ningún campo en rojo.
-  if (data === null) return { ok: false, motivo: 'sin_respuesta', campos: [] };
+    // Un lugar no verificable nunca debe dejar avanzar al pago, ni siquiera
+    // si el fallo es del servicio externo. Pero aquí el cliente no ha hecho
+    // nada mal, así que no se le marca ningún campo en rojo.
+    if (data === null) return { ok: false, motivo: 'sin_respuesta', campos: [] };
 
-  if (data.length) {
-    const fallosPorResultado = data.map(res => camposQueFallan(res, municipio, provincia, pais));
-    const bueno = fallosPorResultado.findIndex(falla => falla.length === 0);
-    if (bueno !== -1) return { ok: true, lat: parseFloat(data[bueno].lat), lon: parseFloat(data[bueno].lon) };
-
-    const campos = camposCulpables(fallosPorResultado);
-    // SI EL PAIS NO CUADRA, no se marcan los tres de golpe: se comprueba por
-    // partes, que es la unica forma de saber cual de ellos esta mal de verdad.
-    if (campos.includes('pais')) {
-      const porPartes = await camposQueNoExisten(municipio, provincia, pais);
-      if (!porPartes) return { ok: false, motivo: 'sin_respuesta', campos: [] };
-      return { ok: false, motivo: 'no_encontrado', campos: porPartes };
+    if (data.length) {
+      const fallosPorResultado = data.map(res => camposQueFallan(res, municipio, provincia, pais));
+      const bueno = fallosPorResultado.findIndex(falla => falla.length === 0);
+      if (bueno !== -1) return { ok: true, lat: parseFloat(data[bueno].lat), lon: parseFloat(data[bueno].lon) };
+      culpables = camposCulpables(fallosPorResultado);
     }
-    // Y SI NO CUADRAN LOS DOS DE DENTRO, se mira si ese municipio y esa
-    // provincia existen de verdad juntos en otra parte: entonces el que esta
-    // mal es el pais, y es el unico que se marca. Si solo falla uno de los
-    // dos, no hace falta preguntar: el par no puede ser bueno.
-    if (campos.length === 2 && campos.includes('municipio') && campos.includes('provincia')
-        && await elParEsBueno(municipio, provincia)) {
-      return { ok: false, motivo: 'no_encontrado', campos: ['pais'] };
-    }
-    if (campos.length) return { ok: false, motivo: 'no_encontrado', campos };
   }
 
-  // Ni un solo resultado, o resultados que no coinciden en qué falla:
-  // se pregunta por partes.
-  const porPartes = await camposQueNoExisten(municipio, provincia, pais);
-  if (!porPartes) return { ok: false, motivo: 'sin_respuesta', campos: [] };
-  return { ok: false, motivo: 'no_encontrado', campos: porPartes };
+  // NO ES EL SITIO QUE HA ESCRITO. Cual de las tres casillas esta mal no lo
+  // dice esa consulta, asi que se miran una por una: es la unica forma de
+  // marcar en rojo exactamente la que falla y ninguna mas.
+  const malos = await camposMalos(municipio, provincia, pais);
+  if (malos === null) return { ok: false, motivo: 'sin_respuesta', campos: [] };
+  if (malos.length) return { ok: false, motivo: 'no_encontrado', campos: malos };
+
+  // Las tres existen, pero juntas no son ese sitio: el municipio no esta en
+  // esa provincia. Cual de las dos escribio mal solo puede decirlo la
+  // consulta con las tres; si esa tampoco devolvio nada, no hay forma de
+  // saberlo y se marcan las dos. El pais no, que ya se sabe que esta bien.
+  const soloDeDentro = culpables.filter(campo => campo !== 'pais');
+  return {
+    ok: false,
+    motivo: 'no_encontrado',
+    campos: soloDeDentro.length ? soloDeDentro : ['municipio', 'provincia'],
+  };
 }
 
 export default async function handler(req, res) {
