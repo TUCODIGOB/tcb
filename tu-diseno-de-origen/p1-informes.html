@@ -121,8 +121,13 @@ $('entrar').addEventListener('click', async () => {
     const { informes } = await pedir('');
     const lista = $('lista');
     lista.innerHTML = informes.length
-      ? informes.map(i => '<option value="' + esc(i.compra) + '">' +
-          esc(String(i.guardado).replace('T',' ').slice(0,16)) + ' — ' + esc(i.compra) + '</option>').join('')
+      ? informes.map(i => {
+          // La fecha y la hora, y de quien es. Si de alguno no se sabe, se
+          // enseña su numero de compra, que es lo que habia antes.
+          const cuando = String(i.guardado).replace('T', ' ').slice(0, 16);
+          const quien = [i.nombre, i.email].filter(Boolean).join(' — ') || i.compra;
+          return '<option value="' + esc(i.compra) + '">' + esc(cuando) + ' — ' + esc(quien) + '</option>';
+        }).join('')
       : '<option value="">(todavia no hay informes guardados)</option>';
     $('mandoInforme').style.display = '';
   } catch (err) {

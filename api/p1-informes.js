@@ -19,6 +19,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
+import { leerLaFicha } from '../lib/ficha-del-lead.js';
 
 function ajustes() {
   const cuenta = process.env.INFORME_P1_CLOUDFLARE_ACCOUNT_ID;
@@ -82,6 +83,27 @@ async function pedir(metodo, ruta, consulta) {
   });
 }
 
+// CUANTOS SE ABREN PARA SABER DE QUIEN SON. El nombre y el email no estan en
+// la lista de R2, hay que abrir el informe. Se abren los ultimos, que son los
+// que se miran, y todos a la vez para que no se note.
+const CON_NOMBRE = 15;
+
+// DE QUIEN ES ESE INFORME. El email va dentro del informe. El nombre, en los
+// de antes tambien; en los de ahora esta en la ficha de ese email, y se busca
+// alli. Si no sale, se queda sin nombre y la lista lo enseña igual.
+async function deQuienEs(compra) {
+  const resp = await pedir('GET', `${CARPETA}/${compra}.json`);
+  if (!resp.ok) return {};
+  const informe = await resp.json();
+  const dentro = informe.cliente || {};
+  const email = dentro.email || '';
+  if (dentro.nombre) return { nombre: String(dentro.nombre).trim(), email };
+  if (!email) return { email: '' };
+  const ficha = await leerLaFicha(email);
+  const suyo = (ficha && ficha.cliente) || {};
+  return { nombre: String(suyo.nombre || '').trim(), email };
+}
+
 // LA LISTA. Se piden los nombres y la fecha de cada fichero de p1/, sin bajar
 // el contenido: la lista tiene que salir rapida aunque haya cientos.
 async function laLista() {
@@ -113,7 +135,21 @@ async function laLista() {
     desde = sigue[1];
   }
 
-  return informes.sort((a, b) => String(b.guardado).localeCompare(String(a.guardado)));
+  const ordenados = informes.sort((a, b) => String(b.guardado).localeCompare(String(a.guardado)));
+
+  // Y a los ultimos se les pone nombre y email. Si alguno no se puede abrir, se
+  // queda sin ellos: la lista sale igual.
+  await Promise.all(ordenados.slice(0, CON_NOMBRE).map(async inf => {
+    try {
+      const quien = await deQuienEs(inf.compra);
+      inf.nombre = quien.nombre || '';
+      inf.email = quien.email || '';
+    } catch (err) {
+      console.error(`[p1-informes] No se ha podido saber de quien es ${inf.compra}:`, err.message);
+    }
+  }));
+
+  return ordenados;
 }
 
 export default async function handler(req, res) {
