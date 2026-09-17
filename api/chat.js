@@ -1107,10 +1107,15 @@ const ESQUEMA_DE_ELEGIR = {
           // compara la limpieza. Dos rasgos con la misma conducta son el mismo
           // rasgo, aunque esten escritos con palabras distintas.
           conducta:    { type: 'string' },
+          // QUE LE CUESTA O QUE LE DA. Tampoco lo lee la clienta: es con lo
+          // que la limpieza compara unos rasgos con otros. Sin esto, quedarse
+          // con "el que mas pesa" es una corazonada; con esto hay algo escrito
+          // delante que comparar.
+          precio:      { type: 'string' },
           area:        { type: 'string', enum: NOMBRES_DE_AREA },
           origen:      { type: 'string' },
         },
-        required: ['lista', 'conducta', 'area', 'origen'],
+        required: ['lista', 'conducta', 'precio', 'area', 'origen'],
         additionalProperties: false,
       },
     },
@@ -1171,6 +1176,9 @@ function losDelRegalo(delRegalo) {
       if (!conducta || !nombre || !descripcion) continue;
       salen.push({
         conducta,
+        // El regalo tambien lo escribe, asi que sus rasgos entran en la
+        // limpieza con el suyo delante, igual que los demas.
+        precio: String(r?.precio ?? '').trim(),
         origen: String(r?.origen ?? '').trim(),
         area: NOMBRES_DE_AREA[0],
         lista: cual,
@@ -1255,6 +1263,17 @@ persona o lo que le pasa por dentro. No de qué habla ni dónde le pasa.
 No es para quien lee, es para comparar: dos rasgos con la misma
 conducta son el mismo rasgo, aunque estén escritos distinto.
 Se escribe con las mismas palabras siempre que la conducta sea la misma. Si buscas variar, dejan de verse los repetidos. 
+
+precio      Qué le cuesta o qué le da ese rasgo, en concreto y en una frase
+corta. Se paga en algo que se pueda nombrar: su tiempo, su
+dinero, su salud, la gente que tiene cerca, o su calma. Si es
+una fortaleza, lo que le da; si es un desafío, lo que le quita.
+NO ES PARA QUIEN LEE, es para que la limpieza de después sepa
+cuál pesa más que cuál. Por eso se dice en seco y sin adornos.
+Y SI NO PUEDES NOMBRAR EL PRECIO, ESE RASGO NO ENTRA. Un rasgo
+del que no sabes decir qué le cuesta o qué le da es un rasgo que
+no le está pasando de verdad. Vuelves a la carta, a la parte que
+le toca a esa área, y sacas otro distinto de verdad.
 
 area         una de las siete, escrita como están escritas arriba.
 
@@ -1345,6 +1364,11 @@ Nombre de pila: ${nombrePila}`;
     if (!conducta) continue;
     rasgos.push({
       conducta, origen,
+      // Lo que le cuesta o lo que le da. No se exige para que el rasgo entre:
+      // eso se le pide en el encargo. Aqui solo se recoge, y si viniera vacio
+      // el rasgo sigue siendo suyo y la limpieza lo compara por su conducta,
+      // como hasta ahora.
+      precio: String(r?.precio ?? '').trim(),
       // El area la dice el modelo, que es el unico que ha leido el rasgo. Si no
       // la dice, o dice una que no existe, la saca el codigo de la posicion.
       area: areaDelRasgo(origen, String(r?.area ?? '').trim()),
@@ -1412,7 +1436,12 @@ async function unaListaDeRasgos(nombrePila, sexo, cartaTexto, reloj, yaTiene = [
 // sitio que le quita a lo que si tiene que leer.
 function laListaNumerada(rasgos) {
   return rasgos
-    .map((r, i) => `${i + 1}. ${r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO'} — ${r.area} — ${r.conducta}${r.delRegalo ? ' — YA ENTREGADO' : ''}`)
+    .map((r, i) => {
+      const tipo = r.lista === 'fortalezas' ? 'FORTALEZA' : 'DESAFÍO';
+      const que = r.lista === 'fortalezas' ? 'LE DA' : 'LE CUESTA';
+      const precio = r.precio ? ` — ${que}: ${r.precio}` : '';
+      return `${i + 1}. ${tipo} — ${r.area} — ${r.conducta}${precio}${r.delRegalo ? ' — YA ENTREGADO' : ''}`;
+    })
     .join('\n');
 }
 
@@ -1437,6 +1466,7 @@ QUÉ SE QUITA
 Revisa la conducta de todos, las fortalezas y los desafíos a la vez. Elimina los que dicen prácticamente lo mismo sobre la persona, los que sean la misma idea, dejando solo 1 de ellos, el que más pese. Y elimina los que se contradigan entre sí, dejando solo uno de ellos, el que más pese.
 Se comparan todos con todos, aunque sean de áreas distintas y aunque uno sea una fortaleza y el otro un desafío. La misma conducta contada como algo que se le da bien y como algo que le cuesta es un solo rasgo con sus dos caras: se queda la cara que más pese y la otra se va.
 Pesa más la conducta más concreta y central para la persona, no la más genérica. 
+Y PARA SABER CUÁL PESA MÁS, MIRA LO QUE LE CUESTA O LO QUE LE DA, que va escrito en cada uno. Pesa más el que se paga en algo que se pueda contar -su tiempo, su dinero, su salud, la gente que tiene cerca, su calma- y cuanto más de eso, más pesa.
 
 ${losIntocables(rasgos)}
 LO QUE NO SE PUEDE QUEDAR CORTO
