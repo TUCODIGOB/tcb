@@ -169,6 +169,35 @@ async function consultarMapa(consulta) {
   }
 }
 
+// ¿ESO QUE HA ESCRITO ES UN PAIS DE VERDAD?
+//
+// No basta con que el mapa devuelva algo: escribiendo cuatro letras sueltas
+// devuelve cualquier cosa que las lleve -un edificio, una empresa- y dando
+// eso por pais bueno acabariamos buscando su pueblo "dentro" de esa cosa, no
+// encontrandolo, y marcandole en rojo el municipio y la provincia, que ha
+// escrito bien. Es un pais solo si algun resultado esta EN un pais que se
+// llama como lo que ha escrito.
+function hayUnPaisAsi(resultados, pais) {
+  return (resultados || []).some(res => coincideLugar(pais, (res.address || {}).country || ''));
+}
+
+// ¿Existe ese municipio en alguna parte, sin mirar en que pais? Se comprueba
+// que algun resultado se llame de verdad asi, no que el mapa devuelva algo.
+async function existeElMunicipio(municipio) {
+  const data = await consultarMapa(municipio);
+  if (!data || !data.length) return false;
+  // La provincia y el pais van vacios a proposito: aqui solo se mira el
+  // municipio.
+  return data.some(res => !camposQueFallan(res, municipio, '', '').includes('municipio'));
+}
+
+// Lo mismo con la provincia.
+async function existeLaProvincia(provincia) {
+  const data = await consultarMapa(provincia);
+  if (!data || !data.length) return false;
+  return data.some(res => !camposQueFallan(res, '', provincia, '').includes('provincia'));
+}
+
 // ¿EL MUNICIPIO Y LA PROVINCIA SON BUENOS, Y LO QUE FALLA ES EL PAIS?
 //
 // Se le pregunta al mapa por el municipio y la provincia SIN pais. Si de ahi
@@ -194,7 +223,19 @@ async function elParEsBueno(municipio, provincia) {
 async function camposQueNoExisten(municipio, provincia, pais) {
   const resultadoPais = await consultarMapa(pais);
   if (resultadoPais === null) return [];           // no se ha podido comprobar
-  if (resultadoPais.length === 0) return ['pais']; // el país no existe
+
+  // EL PAIS NO ES UN PAIS. Lo de dentro no se puede buscar ahi, asi que se
+  // comprueba por su cuenta: se marca el pais y, ademas, el municipio o la
+  // provincia solo si de verdad no existen en ninguna parte.
+  if (!hayUnPaisAsi(resultadoPais, pais)) {
+    const hayMunicipio = await existeElMunicipio(municipio);
+    const hayProvincia = await existeLaProvincia(provincia);
+    const malos = [];
+    if (!hayMunicipio) malos.push('municipio');
+    if (!hayProvincia) malos.push('provincia');
+    malos.push('pais');
+    return malos;
+  }
 
   // El país existe: a partir de aquí nunca se marca.
   const resultadoMunicipio = await consultarMapa(municipio + ', ' + pais);
@@ -235,9 +276,11 @@ async function validarLugar(municipio, provincia, pais) {
     if (bueno !== -1) return { ok: true, lat: parseFloat(data[bueno].lat), lon: parseFloat(data[bueno].lon) };
 
     const campos = camposCulpables(fallosPorResultado);
-    // SI EL PAIS NO CUADRA, SOLO SE MARCA EL PAIS: con el pais mal, lo de
-    // dentro no se puede juzgar.
-    if (campos.includes('pais')) return { ok: false, motivo: 'no_encontrado', campos: ['pais'] };
+    // SI EL PAIS NO CUADRA, no se marcan los tres de golpe: se comprueba por
+    // partes, que es la unica forma de saber cual de ellos esta mal de verdad.
+    if (campos.includes('pais')) {
+      return { ok: false, motivo: 'no_encontrado', campos: await camposQueNoExisten(municipio, provincia, pais) };
+    }
     // Y SI NO CUADRAN LOS DOS DE DENTRO, se mira si ese municipio y esa
     // provincia existen de verdad juntos en otra parte: entonces el que esta
     // mal es el pais, y es el unico que se marca. Si solo falla uno de los
