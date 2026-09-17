@@ -2669,14 +2669,35 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
     });
 
     // Formulario en 3 pasos
-    const PASO_CAMPOS_REQUERIDOS = {
-      1: ['nombre', 'sexo'],
-      2: ['fecha', 'hora', 'municipio', 'provincia', 'pais'],
-    };
+    //
+    // CADA PASO SE COMPRUEBA ENTERO ANTES DE PASAR AL SIGUIENTE. Son las
+    // mismas comprobaciones que se hacen al enviar, pero hechas aqui: asi lo
+    // arregla donde lo acaba de escribir y no al final, con todo junto y
+    // teniendo que volver atras.
+    function pasoBienPuesto(paso) {
+      let ok = true;
+      const mal = id => { showError(id); ok = false; };
 
-    function campoPasoVacio(id) {
-      const el = document.getElementById(id);
-      return !el || !el.value || !el.value.trim();
+      if (paso === '1') {
+        const nombre = document.getElementById('nombre').value.trim();
+        if (!nombre || nombre.length < 3) mal('nombre'); else clearError('nombre');
+        if (!document.getElementById('sexo').value) mal('sexo'); else clearError('sexo');
+      }
+
+      if (paso === '2') {
+        const fecha = document.getElementById('fecha').value;
+        if (!fecha) mal('fecha');
+        else {
+          const fechaD = new Date(fecha);
+          if (fechaD > new Date() || fechaD.getFullYear() < 1900 || !fechaReal(fecha)) mal('fecha');
+          else clearError('fecha');
+        }
+        if (!document.getElementById('hora').value) mal('hora'); else clearError('hora');
+        ['municipio', 'provincia', 'pais'].forEach(id =>
+          document.getElementById(id).value.trim() ? clearError(id) : mal(id));
+      }
+
+      return ok;
     }
 
     function irAPaso(n) {
@@ -2694,14 +2715,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       btn.addEventListener('click', () => {
         actualizarFecha();
         actualizarHora();
-        const pasoActual = btn.closest('.form-step').dataset.formStep;
-        const requeridos = PASO_CAMPOS_REQUERIDOS[pasoActual] || [];
-        let ok = true;
-        requeridos.forEach(id => {
-          if (campoPasoVacio(id)) { showError(id); ok = false; }
-          else clearError(id);
-        });
-        if (!ok) return;
+        if (!pasoBienPuesto(btn.closest('.form-step').dataset.formStep)) return;
         irAPaso(Number(btn.dataset.next));
       });
     });
