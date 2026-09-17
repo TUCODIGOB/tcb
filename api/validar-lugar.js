@@ -144,19 +144,46 @@ async function consultarMapa(consulta) {
   const url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(consulta) +
     '&format=json&limit=5&addressdetails=1&namedetails=1&accept-language=es';
 
-  const INTENTOS = 3; // 1 intento inicial + 2 reintentos
+  // CADA CONSULTA TIENE SU TOPE. El cliente esta esperando delante de la
+  // pantalla: si el mapa tarda mas de esto, no se le deja colgado, se corta y
+  // se le vuelve a preguntar. Sin tope, una sola consulta lenta se lleva ella
+  // sola toda la espera.
+  const TOPE = 4000;
+  const INTENTOS = 2; // 1 intento inicial + 1 reintento
   for (let intento = 1; intento <= INTENTOS; intento++) {
     try {
-      const r = await fetch(url, { headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' } });
+      const r = await fetch(url, {
+        headers: { 'User-Agent': 'TuDisenoDeOrigen/1.0' },
+        signal: AbortSignal.timeout(TOPE),
+      });
       if (!r.ok) throw new Error('Nominatim respondió ' + r.status);
       const data = await r.json();
       return Array.isArray(data) ? data : [];
     } catch (e) {
-      // Antes de darlo por caído, absorbemos fallos pasajeros con 2 reintentos.
+      // Antes de darlo por caído, se absorbe un fallo pasajero con un
+      // reintento. La espera es corta a proposito: es tiempo que el cliente
+      // pasa mirando una pantalla parada.
       if (intento === INTENTOS) return null;
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 300));
     }
   }
+}
+
+// ¿EL MUNICIPIO Y LA PROVINCIA SON BUENOS, Y LO QUE FALLA ES EL PAIS?
+//
+// Se le pregunta al mapa por el municipio y la provincia SIN pais. Si de ahi
+// sale ese mismo sitio, lo que escribio esta bien y el que no cuadra es el
+// pais: es el unico que hay que marcar. Marcarle en rojo el municipio y la
+// provincia, que ha escrito bien, solo le confunde.
+async function elParEsBueno(municipio, provincia) {
+  const data = await consultarMapa([municipio, provincia].filter(Boolean).join(', '));
+  if (!data || !data.length) return false;
+  // El pais va vacio a proposito: aqui solo se mira si el municipio y la
+  // provincia cuadran con algun resultado.
+  return data.some(res => {
+    const falla = camposQueFallan(res, municipio, provincia, '');
+    return !falla.includes('municipio') && !falla.includes('provincia');
+  });
 }
 
 // Cuando la consulta con los tres campos no encuentra nada, no hay ningún
@@ -178,10 +205,15 @@ async function camposQueNoExisten(municipio, provincia, pais) {
   if (resultadoMunicipio.length === 0) malos.push('municipio');
   if (resultadoProvincia.length === 0) malos.push('provincia');
 
-  // Los dos existen por separado pero no juntos: el municipio no está en
-  // esa provincia. No se puede saber cuál de los dos escribió mal, así que
-  // se marcan los dos — pero el país no, que ya sabemos que existe.
-  return malos.length ? malos : ['municipio', 'provincia'];
+  if (malos.length) return malos;
+
+  // Los dos existen por separado pero no juntos en ese pais. Si juntos si
+  // existen en otro, lo que esta mal es el pais y solo se marca ese.
+  if (await elParEsBueno(municipio, provincia)) return ['pais'];
+
+  // No se puede saber cuál de los dos escribió mal, así que se marcan los
+  // dos — pero el país no, que ya sabemos que existe.
+  return ['municipio', 'provincia'];
 }
 
 // Validar lugar con Nominatim (OpenStreetMap) — gratis
@@ -203,6 +235,17 @@ async function validarLugar(municipio, provincia, pais) {
     if (bueno !== -1) return { ok: true, lat: parseFloat(data[bueno].lat), lon: parseFloat(data[bueno].lon) };
 
     const campos = camposCulpables(fallosPorResultado);
+    // SI EL PAIS NO CUADRA, SOLO SE MARCA EL PAIS: con el pais mal, lo de
+    // dentro no se puede juzgar.
+    if (campos.includes('pais')) return { ok: false, motivo: 'no_encontrado', campos: ['pais'] };
+    // Y SI NO CUADRAN LOS DOS DE DENTRO, se mira si ese municipio y esa
+    // provincia existen de verdad juntos en otra parte: entonces el que esta
+    // mal es el pais, y es el unico que se marca. Si solo falla uno de los
+    // dos, no hace falta preguntar: el par no puede ser bueno.
+    if (campos.length === 2 && campos.includes('municipio') && campos.includes('provincia')
+        && await elParEsBueno(municipio, provincia)) {
+      return { ok: false, motivo: 'no_encontrado', campos: ['pais'] };
+    }
     if (campos.length) return { ok: false, motivo: 'no_encontrado', campos };
   }
 
