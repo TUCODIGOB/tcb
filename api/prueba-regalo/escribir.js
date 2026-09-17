@@ -65,7 +65,7 @@ function huellaDelEmail(email) {
 // rasgos y el area no se pierda lo que ya habia.
 //
 // SI FALLA, NO PASA NADA: el area ya esta escrita y se entrega igual.
-export async function guardarLoEscrito({ datos, carta, texto, rasgos, avisar }) {
+export async function guardarLoEscrito({ datos, carta, texto, rasgos, cuaderno, avisar }) {
   const huella = huellaDelEmail(datos.email);
   if (!huella) {
     console.warn('[prueba-regalo] Sin email: no se guarda el area.');
@@ -89,6 +89,11 @@ export async function guardarLoEscrito({ datos, carta, texto, rasgos, avisar }) 
       // Una sola area, pero en lista, igual que el P1 guarda las siete.
       areas: [texto],
       rasgos,
+      // EL CUADERNO: que hizo cada llamada, cuanto tardo, cuanto costo y que
+      // quito la limpieza. Es para mirarlo despues desde la pagina de
+      // informes; no entra en lo que se le entrega ni cambia nada. Si no
+      // viniera, se guarda igual sin el.
+      cuaderno,
     });
     if (guardado.guardado) {
       console.log(`[prueba-regalo] Guardada el area: ${guardado.ruta} (${guardado.bytes} bytes)`);
@@ -248,7 +253,7 @@ export default async function handler(req, res) {
     // Se guarda por detras, sin hacer esperar a nadie, y envuelto: el area ya
     // esta escrita y se entrega pase lo que pase con el guardado.
     try {
-      waitUntil(guardarLoEscrito({ datos, carta, texto: salida.texto, rasgos: salida.rasgos, avisar: true }));
+      waitUntil(guardarLoEscrito({ datos, carta, texto: salida.texto, rasgos: salida.rasgos, cuaderno: salida.cuaderno, avisar: true }));
     } catch (err) {
       console.error('[prueba-regalo] No se ha podido lanzar el guardado del area:', err.message);
     }

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Regalos del P0</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" type="image/webp" href="/images/favicon-origen-natal-oscuro.webp" />
+
+<style>
+@font-face{
+  font-display:swap; font-family:'Open Sans'; font-style:normal; font-weight:400;
+  src:url('/fonts-web/open-sans-v44-latin_latin-ext-regular.woff2') format('woff2');
+}
+@font-face{
+  font-display:swap; font-family:'Open Sans'; font-style:normal; font-weight:600;
+  src:url('/fonts-web/open-sans-v44-latin_latin-ext-600.woff2') format('woff2');
+}
+
+:root{
+  --crema:#FDF9EF; --papel:#FFFFFF; --tinta:#0E3F4B; --texto:#3A3A3A;
+  --suave:#6E7B7F; --oro:#CFB180; --borde:#E3DDD2; --rojo:#B3261E;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--crema); color:var(--texto);
+  font-family:'Open Sans',system-ui,sans-serif; font-size:16px; line-height:1.55;
+  padding:32px 16px 64px;
+}
+.hoja{max-width:900px;margin:0 auto;}
+h1{font-size:1.2rem;color:var(--tinta);margin:0 0 4px;letter-spacing:.02em;}
+.entradilla{margin:0 0 24px;color:var(--suave);font-size:.9rem;}
+
+.mando{
+  background:var(--papel); border:1px solid var(--borde); border-radius:10px;
+  padding:16px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+}
+label{font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta);}
+input,select{
+  font-family:inherit; font-size:.95rem; color:var(--texto);
+  background:var(--crema); border:1px solid var(--borde); border-radius:8px;
+  padding:10px 12px; min-width:0;
+}
+select{flex:1 1 320px;}
+input{flex:1 1 200px;}
+button{
+  background:var(--tinta); color:var(--crema); font-family:inherit; font-size:.9rem;
+  font-weight:600; border:none; border-radius:8px; padding:11px 22px; cursor:pointer;
+}
+button:disabled{background:var(--suave);cursor:not-allowed;}
+
+.aviso{margin-top:14px;font-size:.9rem;color:var(--rojo);}
+.aviso:empty{display:none;}
+
+.ficha{
+  margin-top:20px; background:var(--papel); border:1px solid var(--borde);
+  border-radius:10px; padding:18px 20px;
+}
+.ficha:empty{display:none;}
+.ficha h2{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--suave);margin:0 0 12px;font-weight:600;}
+.resumen{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.86rem;color:var(--suave);margin:0 0 16px;}
+.resumen b{color:var(--tinta);}
+
+details{background:var(--crema);border:1px solid var(--borde);border-radius:8px;margin-bottom:8px;}
+summary{cursor:pointer;padding:11px 14px;font-weight:600;font-size:.9rem;color:var(--tinta);}
+summary::-webkit-details-marker{display:none;}
+.dentro{padding:0 14px 14px;font-size:.86rem;}
+table{width:100%;border-collapse:collapse;font-size:.82rem;}
+th,td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--borde);vertical-align:top;}
+th{color:var(--suave);font-weight:600;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;}
+td.num,th.num{text-align:right;white-space:nowrap;}
+.linea{margin:.6rem 0;}
+.fuera td{color:var(--rojo);text-decoration:line-through;}
+</style>
+</head>
+<body>
+
+<div class="hoja">
+  <h1>Regalos del P0</h1>
+  <p class="entradilla">Cómo ha ido cada regalo escrito. Solo para revisar; no toca nada.</p>
+
+  <div class="mando">
+    <label for="clave">Llave</label>
+    <input id="clave" type="password" placeholder="la llave" autocomplete="off" />
+    <button type="button" id="entrar">Entrar</button>
+  </div>
+
+  <div class="mando" id="mandoInforme" style="margin-top:10px;display:none">
+    <label for="lista">Regalo</label>
+    <select id="lista"></select>
+    <button type="button" id="ver">Ver</button>
+  </div>
+
+  <p class="aviso" id="aviso"></p>
+  <div class="ficha" id="ficha"></div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = t => String(t == null ? '' : t)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+let _clave = '';
+
+function decir(txt){ $('aviso').textContent = txt || ''; }
+
+async function pedir(params){
+  const url = '/api/p0-informes' + (params ? '?' + params : '');
+  const resp = await fetch(url, { headers: { 'x-p0-clave': _clave } });
+  if (resp.status === 401) throw new Error('La llave no vale.');
+  const datos = await resp.json().catch(() => ({}));
+  if (!resp.ok) throw new Error(datos.error || 'No se ha podido leer.');
+  return datos;
+}
+
+$('entrar').addEventListener('click', async () => {
+  _clave = $('clave').value.trim();
+  if (!_clave) return decir('Escribe la llave.');
+  decir('');
+  $('entrar').disabled = true;
+  try {
+    const { informes } = await pedir('');
+    const lista = $('lista');
+    lista.innerHTML = informes.length
+      ? informes.map(i => {
+          // La fecha y la hora, y de quien es. Si de alguno no se sabe, se
+          // enseña su numero de compra, que es lo que habia antes.
+          const cuando = String(i.guardado).replace('T', ' ').slice(0, 16);
+          const quien = [i.nombre, i.email].filter(Boolean).join(' — ') || i.compra;
+          return '<option value="' + esc(i.compra) + '">' + esc(cuando) + ' — ' + esc(quien) + '</option>';
+        }).join('')
+      : '<option value="">(todavia no hay regalos guardados)</option>';
+    $('mandoInforme').style.display = '';
+  } catch (err) {
+    decir(err.message);
+  }
+  $('entrar').disabled = false;
+});
+
+$('ver').addEventListener('click', async () => {
+  const compra = $('lista').value;
+  if (!compra) return decir('No hay ningun regalo que ver.');
+  decir('');
+  $('ver').disabled = true;
+  $('ficha').innerHTML = '';
+  try {
+    pintar(await pedir('compra=' + encodeURIComponent(compra)));
+  } catch (err) {
+    decir(err.message);
+  }
+  $('ver').disabled = false;
+});
+
+// ═══════════════════════════════════════════════════════════════
+// EL CUADERNO. Lo mismo que se pintaba al terminar el regalo, con la misma
+// informacion y los mismos desplegables, pero aqui y no delante de quien lo
+// recibe.
+// ═══════════════════════════════════════════════════════════════
+function pintar(regalo){
+  const c = regalo.cuaderno;
+  if (!c) {
+    $('ficha').innerHTML = '<h2>Sin cuaderno</h2><p class="linea">Este regalo se escribió antes de que se empezara a apuntar cómo iba. Solo está el texto.</p>';
+    return;
+  }
+
+  const cl = regalo.cliente || {};
+  const texto = (Array.isArray(regalo.areas) && regalo.areas[0]) ? String(regalo.areas[0]) : '';
+
+  const tiempos = Array.isArray(c.tiempos) ? c.tiempos : [];
+  const gastos  = Array.isArray(c.gastos) ? c.gastos : [];
+  const total = tiempos.reduce((a,t) => a + (Number(t.segundos) || 0), 0);
+  const gastoTotal = gastos.reduce((a,g) => a + (Number(g.dolares) || 0), 0);
+
+  const tiempo = que => {
+    const t = tiempos.find(x => x.que && x.que.indexOf(que) === 0);
+    return t ? t.segundos + ' s' : '—';
+  };
+  const gasto = que => {
+    const g = gastos.filter(x => x.que && x.que.indexOf(que) === 0);
+    if (!g.length) return '';
+    return ' · ' + g.reduce((a,x) => a + (Number(x.dolares) || 0), 0).toFixed(4) + ' $';
+  };
+
+  const entraron = Array.isArray(c.entraron) ? c.entraron : [];
+  const quitados = new Set(Array.isArray(c.quitaLimpieza) ? c.quitaLimpieza : []);
+  const filas1 = entraron.map(r =>
+    '<tr' + (quitados.has(r.n) ? ' class="fuera"' : '') + '>' +
+    '<td>' + esc(r.n) + '</td><td>' + esc(r.lista) + '</td>' +
+    '<td>' + esc(r.conducta) + '</td><td>' + esc(r.origen) + '</td></tr>').join('');
+
+  const escritos = Array.isArray(c.escritos) ? c.escritos : [];
+  const filas3 = escritos.map(r =>
+    '<tr><td>' + esc(r.lista) + '</td><td>' + esc(r.titulo) + '</td>' +
+    '<td>' + esc(r.descripcion) + '</td></tr>').join('');
+
+  const filasRedes = ['fortalezas','desafios'].map(cual =>
+    ((regalo.rasgos && regalo.rasgos[cual]) || []).map(r =>
+      '<tr><td>' + esc(cual) + '</td><td>' + esc(r.nombre) + '</td><td>' + esc(r.descripcion) +
+      (r.causa ? '<br><i>' + esc(r.causa) + '</i>' : '') + '</td></tr>').join('')).join('');
+
+  const cuantos = ((regalo.rasgos && regalo.rasgos.fortalezas) || []).length
+                + ((regalo.rasgos && regalo.rasgos.desafios) || []).length;
+
+  $('ficha').innerHTML =
+    '<h2>' + esc(cl.nombre || cl.email || '(sin nombre)') + ' — ' + esc(cl.email || '') + '</h2>' +
+
+    '<p class="resumen">' +
+      '<span>Total: <b>' + total.toFixed(1) + ' s</b></span>' +
+      '<span>Coste: <b>' + gastoTotal.toFixed(4) + ' $</b></span>' +
+      '<span>Rasgos que salieron: <b>' + entraron.length + '</b></span>' +
+      '<span>La limpieza quitó: <b>' + quitados.size + '</b></span>' +
+      '<span>Las redes dejaron: <b>' + cuantos + '</b></span>' +
+      '<span>Guardado: <b>' + esc(String(regalo.generado || '').replace('T',' ').slice(0,16)) + '</b></span>' +
+    '</p>' +
+
+    '<details open><summary>1ª llamada · sacar los rasgos de la carta ' + tiempo('sacar los rasgos') + gasto('sacar los rasgos') + '</summary><div class="dentro">' +
+    '<table><tr><th>Nº</th><th>Lista</th><th>Conducta</th><th>De dónde sale</th></tr>' +
+    (filas1 || '<tr><td colspan="4">No devolvió ninguno.</td></tr>') + '</table>' +
+    '<p class="linea">Los tachados en rojo son los que quitó la limpieza.</p>' +
+    '</div></details>' +
+
+    '<details><summary>2ª llamada · la limpieza ' + tiempo('elegir los cinco') + gasto('elegir los cinco') + '</summary><div class="dentro">' +
+    '<p class="linea">Quitó: <b>' + (Array.from(quitados).join(', ') || 'ninguno') + '</b></p>' +
+    '<p class="linea">Se quedan: <b>' + ((Array.isArray(c.devueltos) ? c.devueltos : []).join(', ') || '—') + '</b></p>' +
+    '</div></details>' +
+
+    '<details><summary>3ª llamada · escribir los rasgos ' + tiempo('escribir los rasgos') + gasto('escribir los rasgos') + '</summary><div class="dentro">' +
+    '<table><tr><th>Lista</th><th>Título</th><th>Descripción</th></tr>' +
+    (filas3 || '<tr><td colspan="3">No devolvió ninguno.</td></tr>') + '</table>' +
+    '</div></details>' +
+
+    '<details><summary>Las redes · los que se entregan de verdad ' + cuantos + ' de ' + escritos.length + '</summary><div class="dentro">' +
+    '<table><tr><th>Lista</th><th>Título</th><th>Lo que se le cuenta</th></tr>' +
+    (filasRedes || '<tr><td colspan="3">Ninguno.</td></tr>') + '</table>' +
+    '</div></details>' +
+
+    '<details><summary>4ª llamada · escribir el área ' + tiempo('el area') + gasto('el area') + '</summary><div class="dentro">' +
+    '<p class="linea">Letras del área: <b>' + texto.length + '</b>' +
+    ' · Párrafos: <b>' + texto.split(/\n\n+/).filter(t => t.trim()).length + '</b>' +
+    ' · Subtítulos: <b>' + (texto.match(/^##\s+/gm) || []).length + '</b>' +
+    ' · Escena: <b>' + (texto.match(/^>\s*/gm) || []).length + '</b></p>' +
+    '</div></details>';
+}
+</script>
+</body>
+</html>
