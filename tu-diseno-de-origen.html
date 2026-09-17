@@ -2389,6 +2389,65 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       }
     }
 
+    // EL LUGAR SE COMPRUEBA AL SALIR DEL PASO 2, QUE ES DONDE LO ESCRIBE, Y
+    // UNA SOLA VEZ. Aqui se guarda el que ya ha dado por bueno el mapa, con
+    // sus coordenadas: son las que se usan luego para calcular su carta, asi
+    // que al pagar no se vuelve a preguntar.
+    let _lugarBueno = null;
+
+    function mismoLugar(municipio, provincia, pais) {
+      return Boolean(_lugarBueno)
+        && _lugarBueno.municipio === municipio
+        && _lugarBueno.provincia === provincia
+        && _lugarBueno.pais === pais;
+    }
+
+    // Devuelve si se puede seguir. Si el mapa no lo encuentra, marca en rojo
+    // los campos que no cuadran y lo dice arriba, en el mismo paso.
+    async function lugarBienPuesto() {
+      const municipio = document.getElementById('municipio').value.trim();
+      const provincia = document.getElementById('provincia').value.trim();
+      const pais      = document.getElementById('pais').value.trim();
+
+      // Ya comprobado y sin tocar desde entonces: no se le pregunta otra vez.
+      if (mismoLugar(municipio, provincia, pais)) return true;
+
+      const lugarOk = await validarLugar(municipio, provincia, pais);
+      if (lugarOk.ok) {
+        _lugarBueno = { municipio, provincia, pais, lat: lugarOk.lat, lon: lugarOk.lon };
+        // Si antes le habiamos dicho que no lo encontrabamos, ese aviso se va.
+        document.getElementById('errorBanner').classList.remove('show');
+        return true;
+      }
+
+      _lugarBueno = null;
+      const banner = document.getElementById('errorBanner');
+      if (lugarOk.motivo === 'sin_respuesta') {
+        // El servicio de mapas no contesta. No es culpa del cliente: ni se le
+        // marcan los campos en rojo ni se le manda revisar lo que ha escrito.
+        // Y avisamos a la tienda, porque si no esto no se nota desde fuera.
+        avisarFalloDelMapa({
+          nombre: document.getElementById('nombre').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          municipio, provincia, pais,
+        });
+        banner.textContent = 'No podemos verificar tu lugar de nacimiento en este momento. Inténtalo de nuevo en unos minutos, o escríbenos a hola@origennatal.com y lo hacemos nosotros.';
+      } else {
+        // Se marcan en rojo solo los campos que no cuadran. Cuando no se
+        // puede saber cuáles son (el mapa no ha devuelto nada, o cada
+        // resultado falla por un motivo distinto) se marcan los tres.
+        const campos = lugarOk.campos && lugarOk.campos.length
+          ? lugarOk.campos
+          : ['municipio', 'provincia', 'pais'];
+        lugarMarcadoEntero = campos.length === 3;
+        campos.forEach(showError);
+        banner.textContent = 'No hemos encontrado el lugar de nacimiento que has escrito. Por favor revisa el municipio, la provincia y el país (sin abreviaturas) antes de continuar.';
+      }
+      banner.classList.add('show');
+      banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return false;
+    }
+
     // Submit
     // ── COMPRUEBA TUS DATOS ──────────────────────────────────
     // Enseña lo que ha escrito y no sigue hasta que conteste. Devuelve si
@@ -2485,38 +2544,23 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
         return;
       }
 
-      // VALIDACIÓN DEL LUGAR antes de pagar
+      // EL LUGAR YA LO DIO POR BUENO EL MAPA AL SALIR DEL PASO 2, con sus
+      // coordenadas guardadas. Aqui no se le pregunta otra vez: solo se mira
+      // que sea el mismo que tiene escrito. Si no lo fuera -por la pagina no
+      // se puede llegar hasta aqui de otra forma-, se le devuelve a ese paso.
       const btn = document.getElementById('btnPay');
-      btn.disabled = true;
-      btn.textContent = 'Verificando lugar de nacimiento...';
 
-      const lugarOk = await validarLugar(datos.municipio, datos.provincia, datos.pais);
-
-      if (!lugarOk.ok) {
+      if (!mismoLugar(datos.municipio, datos.provincia, datos.pais)) {
         const banner = document.getElementById('errorBanner');
-        if (lugarOk.motivo === 'sin_respuesta') {
-          // El servicio de mapas no contesta. No es culpa del cliente: ni se le
-          // marcan los campos en rojo ni se le manda revisar lo que ha escrito.
-          // Y avisamos a la tienda, porque si no esto no se nota desde fuera.
-          avisarFalloDelMapa(datos);
-          banner.textContent = 'No podemos verificar tu lugar de nacimiento en este momento. Inténtalo de nuevo en unos minutos, o escríbenos a hola@origennatal.com y lo hacemos nosotros.';
-        } else {
-          // Se marcan en rojo solo los campos que no cuadran. Cuando no se
-          // puede saber cuáles son (el mapa no ha devuelto nada, o cada
-          // resultado falla por un motivo distinto) se marcan los tres.
-          const campos = lugarOk.campos && lugarOk.campos.length
-            ? lugarOk.campos
-            : ['municipio', 'provincia', 'pais'];
-          lugarMarcadoEntero = campos.length === 3;
-          campos.forEach(showError);
-          banner.textContent = 'No hemos encontrado el lugar de nacimiento que has escrito. Por favor revisa el municipio, la provincia y el país (sin abreviaturas) antes de continuar.';
-        }
+        lugarMarcadoEntero = true;
+        ['municipio', 'provincia', 'pais'].forEach(showError);
+        banner.textContent = 'Por favor, revisa tu lugar de nacimiento antes de continuar.';
         banner.classList.add('show');
-        banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        btn.disabled = false;
-        btn.textContent = 'QUIERO MI DISEÑO';
+        irAPaso(2);
         return;
       }
+
+      btn.disabled = true;
 
       // ANTES DE CALCULAR NADA, que confirme lo que ha escrito. Si dice que
       // no, se le deja el formulario como estaba para que lo corrija.
@@ -2533,8 +2577,8 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       datos.telefonoCompleto = (datos.prefijo + datos.telefono).replace(/\s+/g, '');
       // Coordenadas ya comprobadas: se guardan con el pedido para que el
       // informe se calcule con ellas y no con una segunda búsqueda distinta.
-      datos.lat = lugarOk.lat;
-      datos.lon = lugarOk.lon;
+      datos.lat = _lugarBueno.lat;
+      datos.lon = _lugarBueno.lon;
       datos.edadCalculada = calcularEdad(datos.fecha);
       datos.gaClientId = obtenerGAClientId();
       delete datos.email2;
@@ -2712,10 +2756,25 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
     }
 
     document.querySelectorAll('.btn-next').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         actualizarFecha();
         actualizarHora();
-        if (!pasoBienPuesto(btn.closest('.form-step').dataset.formStep)) return;
+        const paso = btn.closest('.form-step').dataset.formStep;
+        if (!pasoBienPuesto(paso)) return;
+
+        // EL LUGAR, LO ULTIMO DE ESTE PASO. Se pregunta al mapa solo cuando
+        // todo lo demas esta bien, y con el boton parado para que no se pulse
+        // dos veces mientras contesta.
+        if (paso === '2') {
+          const loQuePone = btn.textContent;
+          btn.disabled = true;
+          btn.textContent = 'Comprobando el lugar...';
+          const vale = await lugarBienPuesto();
+          btn.disabled = false;
+          btn.textContent = loQuePone;
+          if (!vale) return;
+        }
+
         irAPaso(Number(btn.dataset.next));
       });
     });
