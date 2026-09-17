@@ -2514,7 +2514,12 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
     function comprobarSusDatos(datos) {
       const [anio, mes, dia] = String(datos.fecha || '').split('-').map(Number);
       const fechaNice = dia + ' de ' + MESES_LARGOS[mes - 1] + ' de ' + anio;
-      const lugar = [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', ');
+      // EL LUGAR, SIEMPRE EN MAYUSCULAS. Lo escriba como lo escriba -"ValENCIA",
+      // "valencia"-, aqui se le enseña igual de bien. Solo cambia como se ve
+      // en este aviso: lo que se guarda y con lo que se calcula su carta es
+      // lo que el escribio.
+      const lugar = [datos.municipio, datos.provincia, datos.pais]
+        .filter(Boolean).map(parte => parte.toUpperCase()).join(', ');
 
       // Lo que ha escrito se pone como texto, nunca como HTML.
       const linea = document.getElementById('compruebaloDatos');
