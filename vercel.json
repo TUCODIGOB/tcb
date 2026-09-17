@@ -38,11 +38,15 @@
     },
     "api/reintentar-informe.js": {
       "maxDuration": 60
+    },
+    "api/brevo-pendientes.js": {
+      "maxDuration": 60
     }
   },
   "crons": [
     { "path": "/api/prueba-regalo/reintentar", "schedule": "*/15 * * * *" },
-    { "path": "/api/reintentar-informe", "schedule": "*/15 * * * *" }
+    { "path": "/api/reintentar-informe", "schedule": "*/15 * * * *" },
+    { "path": "/api/brevo-pendientes", "schedule": "*/15 * * * *" }
   ],
   "redirects": [
     { "source": "/Aviso-Legal", "destination": "/aviso-legal", "permanent": true },
