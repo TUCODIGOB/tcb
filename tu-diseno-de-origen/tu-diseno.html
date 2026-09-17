@@ -368,21 +368,41 @@ body,
   font-size: 22px;
 }
 
-/* LO DE LOS CANDADOS Y EL CARTEL DE ABAJO, cada uno por su cuenta. Van aqui
-   con el tamano que ya tenian, pero fuera de la lista de arriba: asi se le
-   puede cambiar el tamano a uno sin tocarle el suyo a los demas. */
-.cerrados b,
+/* LO DE LOS CANDADOS Y EL CARTEL DE ABAJO, CADA UNO POR SU CUENTA. Van aqui
+   con el tamano que ya tenian, pero uno por linea: asi se le puede cambiar el
+   tamano a cualquiera sin tocarle el suyo a los demas. */
+
+/* El titulo de un area cerrada. */
+.cerrados b {
+  font-size: 16px;
+}
+
+/* Y el de las que van sueltas, que se escribe distinto. */
 .cerrados li.suelto b {
   font-size: 16px;
 }
 
+/* Lo que pone debajo de cada titulo. */
 .cerrados .que {
   font-size: 16px;
 }
 
-.venta .cifras,
-.venta .dice,
-.venta a.comprar,
+/* El cartel de abajo, texto por texto: las cifras de arriba... */
+.venta .cifras {
+  font-size: 16px;
+}
+
+/* ...lo que dice debajo del titular... */
+.venta .dice {
+  font-size: 16px;
+}
+
+/* ...el boton de comprar... */
+.venta a.comprar {
+  font-size: 16px;
+}
+
+/* ...y la letra pequeña del pago. */
 .venta .letra {
   font-size: 16px;
 }
@@ -406,7 +426,10 @@ body,
     font-size: 22px;
   }
 
-  .cerrados b,
+  .cerrados b {
+    font-size: 18px;
+  }
+
   .cerrados li.suelto b {
     font-size: 18px;
   }
@@ -415,9 +438,18 @@ body,
     font-size: 18px;
   }
 
-  .venta .cifras,
-  .venta .dice,
-  .venta a.comprar,
+  .venta .cifras {
+    font-size: 18px;
+  }
+
+  .venta .dice {
+    font-size: 18px;
+  }
+
+  .venta a.comprar {
+    font-size: 18px;
+  }
+
   .venta .letra {
     font-size: 18px;
   }
