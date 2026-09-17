@@ -453,6 +453,20 @@ function listaDeCandados(filas, clase) {
 
 const MESES_NICE = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
+// LA HORA EN LAS DOS FORMAS: la de siempre y, entre parentesis, la de am y
+// pm. No sabemos de donde es quien lo lee -en España se lee de una manera y
+// en media America de la otra-, asi que se le dan las dos y no tiene que
+// traducir nada. Si la hora no viniera como toca, se deja tal cual estaba.
+function laHoraEnDos(hora) {
+  const partes = String(hora == null ? '' : hora).split(':');
+  if (partes.length !== 2) return String(hora == null ? '' : hora);
+  const h = partes[0], m = partes[1];
+  if (!/^\d{1,2}$/.test(h) || !/^\d{2}$/.test(m)) return String(hora);
+  const n = Number(h);
+  if (n > 23 || Number(m) > 59) return String(hora);
+  return hora + ' (' + (n % 12 === 0 ? 12 : n % 12) + ':' + m + (n < 12 ? 'am' : 'pm') + ')';
+}
+
 function pintarElResultado(datos, salida) {
   const [anio, mes, dia] = String(datos.fecha).split('-').map(Number);
   const fechaNice = dia + ' de ' + MESES_NICE[mes - 1] + ' de ' + anio;
@@ -463,7 +477,7 @@ function pintarElResultado(datos, salida) {
     +   '<h1>Tu Diseño de Origen</h1>'
     +   '<p class="suya">' + comoTexto(datos.nombre) + '</p>'
     +   '<hr class="filete">'
-    +   '<p class="datos-nac">' + comoTexto(fechaNice + ' · ' + datos.hora) + '<br>' + comoTexto(lugar) + '</p>'
+    +   '<p class="datos-nac">' + comoTexto(fechaNice + ' · ' + laHoraEnDos(datos.hora)) + '<br>' + comoTexto(lugar) + '</p>'
     +   (salida.puedeCorregir
           ? '<a class="corregir-datos" href="/tu-diseno-de-origen?corregir=1#formulario">¿Hay algo mal en tus datos?</a>'
           : '<a class="corregir-datos" href="#" id="yaNoQuedan">¿Hay algo mal en tus datos?</a>')

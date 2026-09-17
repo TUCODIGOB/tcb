@@ -2476,6 +2476,20 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
     // con estos datos se calcula su carta y despues ya no se cambian.
     const MESES_LARGOS = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
+    // LA HORA EN LAS DOS FORMAS: la de siempre y, entre parentesis, la de am y
+    // pm. No sabemos de donde es quien lo lee -en España se lee de una manera y
+    // en media America de la otra-, asi que se le dan las dos y no tiene que
+    // traducir nada. Si la hora no viniera como toca, se deja tal cual estaba.
+    function laHoraEnDos(hora) {
+      const partes = String(hora == null ? '' : hora).split(':');
+      if (partes.length !== 2) return String(hora == null ? '' : hora);
+      const h = partes[0], m = partes[1];
+      if (!/^\d{1,2}$/.test(h) || !/^\d{2}$/.test(m)) return String(hora);
+      const n = Number(h);
+      if (n > 23 || Number(m) > 59) return String(hora);
+      return hora + ' (' + (n % 12 === 0 ? 12 : n % 12) + ':' + m + (n < 12 ? 'am' : 'pm') + ')';
+    }
+
     function comprobarSusDatos(datos) {
       const [anio, mes, dia] = String(datos.fecha || '').split('-').map(Number);
       const fechaNice = dia + ' de ' + MESES_LARGOS[mes - 1] + ' de ' + anio;
@@ -2484,7 +2498,7 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       // Lo que ha escrito se pone como texto, nunca como HTML.
       const linea = document.getElementById('compruebaloDatos');
       linea.textContent = '';
-      linea.appendChild(document.createTextNode('Naciste el ' + fechaNice + ' a las ' + datos.hora));
+      linea.appendChild(document.createTextNode('Naciste el ' + fechaNice + ' a las ' + laHoraEnDos(datos.hora)));
       linea.appendChild(document.createElement('br'));
       linea.appendChild(document.createTextNode('en ' + lugar));
 

@@ -176,6 +176,20 @@ export default async function handler(req, res) {
     const _addImage = doc.addImage.bind(doc);
     doc.addImage = function (img, ...resto) { return img ? _addImage(img, ...resto) : doc; };
 
+    // LA HORA EN LAS DOS FORMAS: la de siempre y, entre parentesis, la de am y
+    // pm. No sabemos de donde es quien lo lee -en España se lee de una manera y
+    // en media America de la otra-, asi que se le dan las dos y no tiene que
+    // traducir nada. Si la hora no viniera como toca, se deja tal cual estaba.
+    function laHoraEnDos(hora) {
+      const partes = String(hora == null ? '' : hora).split(':');
+      if (partes.length !== 2) return String(hora == null ? '' : hora);
+      const h = partes[0], m = partes[1];
+      if (!/^\d{1,2}$/.test(h) || !/^\d{2}$/.test(m)) return String(hora);
+      const n = Number(h);
+      if (n > 23 || Number(m) > 59) return String(hora);
+      return hora + ' (' + (n % 12 === 0 ? 12 : n % 12) + ':' + m + (n < 12 ? 'am' : 'pm') + ')';
+    }
+
     function fx(s) { return s || ''; }
     var W = 210, H = 297;
 
@@ -588,7 +602,7 @@ export default async function handler(req, res) {
     doc.setFont('Roboto','bold'); doc.setFontSize(16); doc.setTextColor(14,63,75);
     doc.text(fx(nombre.toUpperCase()),W/2,250,{align:'center'});
     doc.setFont('Roboto','normal'); doc.setFontSize(11); doc.setTextColor(14,63,75);
-    doc.text(fx(fechaNice+' a las '+hora),W/2,260,{align:'center'});
+    doc.text(fx(fechaNice+' a las '+laHoraEnDos(hora)),W/2,260,{align:'center'});
     var lugarFmt = lugar.split(',').map(p=>p.trim().charAt(0).toUpperCase()+p.trim().slice(1).toLowerCase()).join(', ');
     doc.text(fx(lugarFmt),W/2,270,{align:'center'});
 
