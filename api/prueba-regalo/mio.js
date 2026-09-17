@@ -72,7 +72,12 @@ export default async function handler(req, res) {
     // Si todavia le queda su correccion, su pagina se la puede ofrecer.
     const cuenta = await leerVeces(enlace.huella);
 
-    const datos = enlace.datos || {};
+    // LOS DATOS SON LOS DEL ULTIMO DISEÑO QUE SE LE ESCRIBIO, no los que
+    // llevaba este enlace. Si corrigio sus datos, el correo viejo sigue
+    // valiendo y le lleva a lo ultimo suyo, con los datos que cuadran con lo
+    // que va a leer. Los del enlace quedan de respaldo por si no hubiera
+    // cuenta guardada.
+    const datos = cuenta.datos || enlace.datos || {};
     return res.status(200).json({
       datos: {
         nombre: datos.nombre || '',
