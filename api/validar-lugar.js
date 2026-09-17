@@ -178,7 +178,15 @@ async function consultarMapa(consulta) {
 // escrito bien. Es un pais solo si algun resultado esta EN un pais que se
 // llama como lo que ha escrito.
 function hayUnPaisAsi(resultados, pais) {
-  return (resultados || []).some(res => coincideLugar(pais, (res.address || {}).country || ''));
+  return (resultados || []).some(res => {
+    // Lo normal: el resultado dice en que pais esta.
+    if (coincideLugar(pais, (res.address || {}).country || '')) return true;
+    // Y por si algun pais viniera sin esa casilla, vale tambien que el
+    // resultado sea un pais y se llame asi.
+    return res.addresstype === 'country'
+      && (coincideLugar(pais, res.name || '')
+          || coincideLugar(pais, String(res.display_name || '').split(',')[0]));
+  });
 }
 
 // ¿Existe ese municipio en alguna parte, sin mirar en que pais? Se comprueba
@@ -222,7 +230,10 @@ async function elParEsBueno(municipio, provincia) {
 // lo que no encuentra ni él solo, es lo que está mal escrito.
 async function camposQueNoExisten(municipio, provincia, pais) {
   const resultadoPais = await consultarMapa(pais);
-  if (resultadoPais === null) return [];           // no se ha podido comprobar
+  // NO SE HA PODIDO COMPROBAR. Se devuelve null -no una lista vacia- para que
+  // quien llama lo trate como que el mapa no ha contestado: al cliente no se
+  // le marca ningun campo en rojo por un fallo que no es suyo.
+  if (resultadoPais === null) return null;
 
   // EL PAIS NO ES UN PAIS. Lo de dentro no se puede buscar ahi, asi que se
   // comprueba por su cuenta: se marca el pais y, ademas, el municipio o la
@@ -240,7 +251,7 @@ async function camposQueNoExisten(municipio, provincia, pais) {
   // El país existe: a partir de aquí nunca se marca.
   const resultadoMunicipio = await consultarMapa(municipio + ', ' + pais);
   const resultadoProvincia = await consultarMapa(provincia + ', ' + pais);
-  if (resultadoMunicipio === null || resultadoProvincia === null) return [];
+  if (resultadoMunicipio === null || resultadoProvincia === null) return null;
 
   const malos = [];
   if (resultadoMunicipio.length === 0) malos.push('municipio');
@@ -279,7 +290,9 @@ async function validarLugar(municipio, provincia, pais) {
     // SI EL PAIS NO CUADRA, no se marcan los tres de golpe: se comprueba por
     // partes, que es la unica forma de saber cual de ellos esta mal de verdad.
     if (campos.includes('pais')) {
-      return { ok: false, motivo: 'no_encontrado', campos: await camposQueNoExisten(municipio, provincia, pais) };
+      const porPartes = await camposQueNoExisten(municipio, provincia, pais);
+      if (!porPartes) return { ok: false, motivo: 'sin_respuesta', campos: [] };
+      return { ok: false, motivo: 'no_encontrado', campos: porPartes };
     }
     // Y SI NO CUADRAN LOS DOS DE DENTRO, se mira si ese municipio y esa
     // provincia existen de verdad juntos en otra parte: entonces el que esta
@@ -294,7 +307,9 @@ async function validarLugar(municipio, provincia, pais) {
 
   // Ni un solo resultado, o resultados que no coinciden en qué falla:
   // se pregunta por partes.
-  return { ok: false, motivo: 'no_encontrado', campos: await camposQueNoExisten(municipio, provincia, pais) };
+  const porPartes = await camposQueNoExisten(municipio, provincia, pais);
+  if (!porPartes) return { ok: false, motivo: 'sin_respuesta', campos: [] };
+  return { ok: false, motivo: 'no_encontrado', campos: porPartes };
 }
 
 export default async function handler(req, res) {
