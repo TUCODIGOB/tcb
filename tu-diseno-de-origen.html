@@ -2499,7 +2499,9 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       // Lo que ha escrito se pone como texto, nunca como HTML.
       const linea = document.getElementById('compruebaloDatos');
       linea.textContent = '';
-      linea.appendChild(document.createTextNode('Naciste el ' + fechaNice + ' a las ' + laHoraEnDos(datos.hora)));
+      linea.appendChild(document.createTextNode('Naciste el ' + fechaNice));
+      linea.appendChild(document.createElement('br'));
+      linea.appendChild(document.createTextNode('a las ' + laHoraEnDos(datos.hora)));
       linea.appendChild(document.createElement('br'));
       linea.appendChild(document.createTextNode('en ' + lugar));
 
