@@ -134,16 +134,30 @@
   }
   .screen p.mensaje .oro { color: var(--gold-deep); font-weight: 700; font-style: normal; }
 
+  /* LA LINEA DE "ESTAMOS PREPARANDO": mas grande, en mostaza y toda en
+     negrita, con el nombre del producto en cursiva. */
+  .screen p.preparando {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gold-deep);
+  }
+  .screen p.preparando .oro { font-style: italic; }
+
+  /* Y "puedes cerrar esta pantalla", lo ultimo del todo. */
+  .screen p.cerrar { margin-top: 2.5rem; }
+
   /* EL AVISO DEL SPAM CABE EN UNA LINEA EN EL ORDENADOR. En el movil no cabe
      de ninguna manera, asi que alli se parte como cualquier otro texto. */
   .screen p.aviso {
     margin-top: 2.5rem;
-    color: var(--gold-deep);
+    color: var(--ink);
     font-weight: 700;
     font-size: 20px;
     max-width: none;
     white-space: nowrap;
   }
+  /* El correo, en mostaza dentro de la linea en negro. */
+  .screen p.aviso .oro { color: var(--gold-deep); }
 
   .salto-movil { display: none; }
   @media (max-width: 600px) {
@@ -154,6 +168,7 @@
     .screen > .container { width: 100vw; padding-inline: 14px; }
     .screen h1 { margin-bottom: 64px; }
     .screen p.mensaje, .screen p.aviso { font-size: 22px; }
+    .screen p.preparando { font-size: 26px; }
     .screen p.aviso { white-space: normal; margin-top: 3.5rem; }
   }
 
@@ -249,12 +264,14 @@
     <div class="screen-inner">
       <div class="visto">&#10003;</div>
       <h1>¡Ya está! Acabas de dar<br class="salto-movil"> un paso importante por ti</h1>
-      <p class="mensaje">
-        Estamos preparando<br class="salto-movil"> <strong class="oro">Tu Diseño de Origen</strong>.<br>
-        <strong>Te llegará directo al email en unos 5 minutos aproximadamente.</strong><br>
-        Puedes cerrar esta pantalla tranquilamente.
+      <p class="mensaje preparando">
+        Estamos preparando<br class="salto-movil"> <em class="oro">Tu Diseño de Origen</em>.
       </p>
-      <p class="aviso">Guarda hola@origennatal.com en los contactos de tu email, para que no se vaya a spam.</p>
+      <p class="mensaje">
+        <strong>Te llegará directo al email en unos 5 minutos aproximadamente.</strong>
+      </p>
+      <p class="aviso">Guarda <span class="oro">hola@origennatal.com</span> en los contactos de tu email, para que no se vaya a spam.</p>
+      <p class="mensaje cerrar">Puedes cerrar esta pantalla tranquilamente.</p>
     </div>
   </div>
 </section>
