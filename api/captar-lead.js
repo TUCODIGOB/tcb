@@ -25,6 +25,29 @@ function telefonoValido(telefono) {
   return /^\+\d{7,15}$/.test(telefonoLimpio(telefono));
 }
 
+// ¿SE QUEJA POR EL TELEFONO REPETIDO? Brevo no admite el mismo movil en dos
+// contactos -una pareja, el movil de casa, un numero de empresa- y cuando pasa
+// contesta esto.
+function esElTelefonoRepetido(estado, queja) {
+  return estado === 400 && /duplicate_parameter/i.test(queja) && /\bSMS\b/i.test(queja);
+}
+
+function mandarABrevo(body, apiKey) {
+  return fetch('https://api.brevo.com/v3/contacts', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': apiKey,
+    },
+    body: JSON.stringify(body),
+    // SU TOPE. Con esto delante esta el cliente esperando su diseño, y la
+    // funcion entera tiene su limite de tiempo: si Brevo no contesta pronto,
+    // se corta y se sigue. Nunca se le deja mirando la pantalla por esto.
+    signal: AbortSignal.timeout(4000),
+  });
+}
+
 // ── EL REGISTRO EN BREVO ─────────────────────────────────────────
 //
 // SALE AQUI FUERA PARA QUE LO HAGA EL SERVIDOR. Esto lo pedia el navegador
@@ -49,26 +72,31 @@ export async function registrarLead({ nombre, email, telefono, sexo, fecha, hora
   if (lugarNac) attributes.LUGAR_NAC = lugarNac;
   if (edad) attributes.EDAD = parseInt(edad);
 
-  const resp = await fetch('https://api.brevo.com/v3/contacts', {
-    method: 'POST',
-    headers: {
-      'accept': 'application/json',
-      'content-type': 'application/json',
-      'api-key': BREVO_API_KEY,
-    },
-    body: JSON.stringify({
-      email,
-      attributes,
-      // 14 = "0 P1 Lead Magnet", la lista de quien pide su regalo. Al
-      // comprar el P1, el webhook le saca de aqui y le pasa a la suya.
-      listIds: [14],
-      updateEnabled: true,
-    }),
-    // SU TOPE. Con esto delante esta el cliente esperando su diseño, y la
-    // funcion entera tiene su limite de tiempo: si Brevo no contesta pronto,
-    // se corta y se sigue. Nunca se le deja mirando la pantalla por esto.
-    signal: AbortSignal.timeout(4000),
-  });
+  const body = {
+    email,
+    attributes,
+    // 14 = "0 P1 Lead Magnet", la lista de quien pide su regalo. Al
+    // comprar el P1, el webhook le saca de aqui y le pasa a la suya.
+    listIds: [14],
+    updateEnabled: true,
+  };
+
+  let resp = await mandarABrevo(body, BREVO_API_KEY);
+
+  // EL TELEFONO NO PUEDE COSTARLE LA FICHA A UN LEAD. Si ese movil ya esta en
+  // otro contacto, Brevo rechaza este ENTERO: ni la lista 14, ni sus datos de
+  // nacimiento, ni nada. Asi que se guarda otra vez sin el telefono, que es un
+  // dato de mas: el numero ya esta en el otro contacto, y lo que importa es
+  // que el lead quede registrado.
+  if (!resp.ok && attributes.SMS) {
+    const queja = await resp.text();
+    if (!esElTelefonoRepetido(resp.status, queja)) {
+      throw new Error(`Brevo ha contestado ${resp.status}: ${queja}`);
+    }
+    console.warn('⚠️ Ese telefono ya estaba en otro contacto de Brevo: se guarda sin el.');
+    const { SMS, ...sinTelefono } = attributes;
+    resp = await mandarABrevo({ ...body, attributes: sinTelefono }, BREVO_API_KEY);
+  }
 
   if (!resp.ok) {
     throw new Error(`Brevo ha contestado ${resp.status}: ${await resp.text()}`);
