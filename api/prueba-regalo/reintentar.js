@@ -158,6 +158,7 @@ export default async function handler(req, res) {
       carta: ficha.carta,
       texto: salida.texto,
       rasgos: salida.rasgos,
+      cuaderno: salida.cuaderno,
     });
     await entregarlo(ficha);
     return res.status(200).json({ mirados: fichas.length, hecho: 1 });
