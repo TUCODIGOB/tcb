@@ -42,29 +42,37 @@ function laLlaveEsBuena(req) {
   return Boolean(clave) && req.headers['x-origen-interno'] === clave;
 }
 
-// ── SU CARTA, SI YA LA TIENE ─────────────────────────────────────
+// ── LO QUE YA TIENE GUARDADO ─────────────────────────────────────
 //
-// La carta de una persona es siempre la misma, y si paso por el regalo ya
-// esta calculada y guardada en el fichero de su email. Volver a calcularla
-// son tres llamadas -el mapa, la hora de ese sitio y el calculo- y, lo que
-// importa mas, el mapa puede devolver un punto algo distinto del de aquel
-// dia: saldria una carta que no es la que ella leyo.
+// Si paso por el regalo, sus datos y su carta ya estan escritos en el fichero
+// de su email. De ahi salen los dos: son los mismos con los que se le escribio
+// el regalo que ya ha leido, asi que su informe habla de la misma persona y le
+// llama igual.
 //
-// SI NO ESTA, O ESTA A MEDIAS, se devuelve null y se calcula como siempre.
-// Se le piden las tres posiciones sin las que no se puede escribir nada, que
-// son las mismas que comprueba el regalo antes de ponerse.
+// Y ADEMAS NO SE VUELVE A CALCULAR NADA. Calcular la carta son tres llamadas
+// -el mapa, la hora de ese sitio y el calculo- y, lo que importa mas, el mapa
+// puede devolver un punto algo distinto del de aquel dia: saldria una carta
+// que no es la que ella leyo.
 //
-// Y NO PUEDE CORTAR NADA: si el almacen no contesta, se deja aviso y se
-// calcula, que es lo que se hacia hasta ahora.
-async function suCartaGuardada(email) {
+// O ESTA TODO O NO ESTA NADA. Hacen falta sus datos enteros y una carta con
+// las tres posiciones sin las que no se puede escribir -las mismas que
+// comprueba el regalo antes de ponerse-. Si falta algo se devuelve null, y
+// entonces el informe saca y guarda todo, igual que para quien no paso por el
+// regalo.
+//
+// Y NO PUEDE CORTAR NADA: si el almacen no contesta, se deja aviso y se hace
+// todo, que es lo que se hacia hasta ahora.
+async function loSuyoGuardado(email) {
   if (!email) return null;
   try {
     const ficha = await leerLaFicha(email);
     const carta = ficha && ficha.carta;
+    const cliente = ficha && ficha.cliente;
     if (!carta || !carta.sol || !carta.ascendente || !carta.casas) return null;
-    return carta;
+    if (!cliente || !cliente.nombre || !cliente.fecha || !cliente.hora || !cliente.lugar) return null;
+    return { carta, cliente };
   } catch (err) {
-    console.error('generar-informe: no se ha podido leer su carta guardada:', err.message);
+    console.error('generar-informe: no se ha podido leer lo suyo guardado:', err.message);
     return null;
   }
 }
@@ -129,12 +137,21 @@ export default async function handler(req, res) {
 
   const [year, month, day] = String(m.fecha).split('-').map(Number);
   const [hh, mm] = String(m.hora).split(':').map(Number);
-  const fechaNice = day + ' de ' + MESES[month - 1] + ' de ' + year;
-  const lugar = [m.municipio, m.provincia, m.pais].filter(Boolean).join(', ');
-  const edad = parseInt(m.edad, 10) || (new Date().getFullYear() - year);
+
+  // LO QUE YA TIENE GUARDADO MANDA. Si esta ahi, sus datos salen de su fichero
+  // y no de la compra: son los mismos con los que se le escribio el regalo. Si
+  // no esta, salen de la compra y se monta todo como siempre.
+  const suyo = await loSuyoGuardado(suEmail);
+
+  const nombre    = suyo ? suyo.cliente.nombre : m.nombre;
+  const sexo      = suyo ? (suyo.cliente.sexo || '') : (m.sexo || '');
+  const hora      = suyo ? suyo.cliente.hora : m.hora;
+  const fechaNice = suyo ? suyo.cliente.fecha : day + ' de ' + MESES[month - 1] + ' de ' + year;
+  const lugar     = suyo ? suyo.cliente.lugar : [m.municipio, m.provincia, m.pais].filter(Boolean).join(', ');
+  const edad      = suyo ? (suyo.cliente.edad || '') : (parseInt(m.edad, 10) || (new Date().getFullYear() - year));
 
   try {
-    let carta = await suCartaGuardada(suEmail);
+    let carta = suyo ? suyo.carta : null;
     let cartaTexto, casasTexto;
 
     if (carta) {
@@ -181,7 +198,7 @@ export default async function handler(req, res) {
       waitUntil(
         asegurarLaFicha({
           email: suEmail,
-          cliente: { nombre: m.nombre, sexo: m.sexo || '', fecha: fechaNice, hora: m.hora, lugar, edad },
+          cliente: { nombre, sexo, fecha: fechaNice, hora, lugar, edad },
           carta,
         })
           .then(ficha => { if (ficha.creada) console.log('generar-informe: ficha creada (' + ficha.ruta + ')'); })
@@ -191,7 +208,7 @@ export default async function handler(req, res) {
 
     // 4. EL INFORME. Es el paso largo, y lleva su propio reloj dentro.
     const escrito = await pedir('/api/chat', {
-      session_id, nombre: m.nombre, sexo: m.sexo, fechaNice, hora: m.hora,
+      session_id, nombre, sexo, fechaNice, hora,
       lugar, edad, cartaTexto, casasTexto,
     }, 300);
     if (!escrito.texto) throw new Error('el informe ha vuelto vacio');
@@ -200,8 +217,8 @@ export default async function handler(req, res) {
 
     // 5. EL PDF.
     const pdf = await pedir('/api/generar-pdf', {
-      session_id, token: escrito.token, nombre: m.nombre, sexo: m.sexo,
-      fechaNice, hora: m.hora, lugar, edad, carta, areas, rasgos: escrito.rasgos || null,
+      session_id, token: escrito.token, nombre, sexo,
+      fechaNice, hora, lugar, edad, carta, areas, rasgos: escrito.rasgos || null,
       // El cuaderno de como ha ido: viaja hasta el guardado y ahi se queda.
       cuaderno: escrito.cuaderno || null,
     }, 300);
@@ -210,8 +227,8 @@ export default async function handler(req, res) {
     // 6. EL CORREO CON EL PDF.
     await pedir('/api/save-pdf', {
       session_id, token: escrito.token, pdfBase64: pdf.pdfBase64,
-      nombre: m.nombre, sexo: m.sexo || '', fecha: fechaNice,
-      hora: m.hora || '', lugar, edad,
+      nombre, sexo, fecha: fechaNice,
+      hora: hora || '', lugar, edad,
     }, 120);
 
     console.log('generar-informe: informe entregado desde el servidor (' + session_id + ')');
