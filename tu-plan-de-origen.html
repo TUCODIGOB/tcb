@@ -77,10 +77,14 @@
        NAV (solo logo)
     ══════════════════════════════════════════════ */
     .nav {
+      position: sticky; top: 0; z-index: 100;
       background: rgba(255,251,239,.92);
       backdrop-filter: blur(12px);
-      border-bottom: 1px solid transparent;
+      border-bottom: 1px solid rgba(189,144,72,.2);
     }
+    /* Al bajar, el nav se queda arriba y a los 50px se quita el logo para
+       dejarle el sitio al boton. Lo mismo que hace el index. */
+    .nav.scrolled .nav-logo { visibility: hidden; }
     .nav-inner {
       display: flex; align-items: center; justify-content: space-between;
       padding-block: 6px;
@@ -89,6 +93,19 @@
       height: 34px;
       width: auto;
     }
+    .nav-cta {
+      background: var(--gold-deep);
+      color: var(--white);
+      font-size: .82rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .55rem 1.2rem;
+      border-radius: var(--r-sm);
+      transition: background .2s;
+      white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--gold-light); }
 
     /* ══════════════════════════════════════════════
        PLAN — contenido y formulario
@@ -297,6 +314,9 @@
 
     @media (max-width: 600px) {
       .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
+      .nav-cta { width: 100%; text-align: center; font-size: 19px; padding: .6rem; }
+      .nav.scrolled .nav-inner { padding-block: .4rem; }
+      .nav.scrolled .nav-logo { display: none; }
       .plan { padding-block: 3rem; }
       .plan-form-card, .plan-success { padding: 1.6rem 1.4rem; }
       .checkbox-field label { font-size: 12px; }
@@ -323,6 +343,7 @@
           ORIGEN NATAL
         </span>
       </a>
+      <a href="/tu-diseno-de-origen" class="nav-cta">Quiero descubrirlo</a>
     </div>
   </nav>
 
@@ -391,6 +412,16 @@
   </footer>
 
   <script>
+    // EL NAV AL BAJAR. A los 50px se quita el logo y se queda solo el boton.
+    // Es el mismo que lleva el index.
+    (function(){
+      const nav = document.querySelector('.nav');
+      if (!nav) return;
+      const alBajar = () => nav.classList.toggle('scrolled', window.scrollY > 50);
+      alBajar();
+      window.addEventListener('scroll', alBajar, { passive: true });
+    })();
+
     document.getElementById('formPlan').addEventListener('submit', function (e) {
       e.preventDefault();
       document.getElementById('formPlan').style.display = 'none';
