@@ -351,21 +351,14 @@ body,
 .datos-nac,
 .area p,
 .area .escena p,
-.cerrados b,
-.cerrados .que,
-.cerrados li.suelto b,
-.venta .cifras,
-.venta .dice,
-.venta a.comprar,
-.venta .letra,
 .aviso p,
 .aviso .vale {
   font-size: 16px;
 }
 
 /* Y TRES QUE VAN APARTE, cada uno con el suyo: el subtitulo del area, sus
-   titulos y su pregunta. Esto es lo del ordenador; en el movil siguen con los
-   18 de aqui abajo, como el resto. */
+   titulos y su pregunta. Esto es lo del ordenador; en el movil llevan el suyo,
+   mas abajo. */
 .cabecera-area p {
   font-size: 20px;
 }
@@ -375,24 +368,57 @@ body,
   font-size: 22px;
 }
 
+/* LO DE LOS CANDADOS Y EL CARTEL DE ABAJO, cada uno por su cuenta. Van aqui
+   con el tamano que ya tenian, pero fuera de la lista de arriba: asi se le
+   puede cambiar el tamano a uno sin tocarle el suyo a los demas. */
+.cerrados b,
+.cerrados li.suelto b {
+  font-size: 16px;
+}
+
+.cerrados .que {
+  font-size: 16px;
+}
+
+.venta .cifras,
+.venta .dice,
+.venta a.comprar,
+.venta .letra {
+  font-size: 16px;
+}
+
 @media (max-width: 600px) {
   body,
   .portada .suya,
   .datos-nac,
-  .cabecera-area p,
   .area p,
-  .area h3,
-  .area p.pregunta,
   .area .escena p,
+  .aviso p,
+  .aviso .vale {
+    font-size: 18px;
+  }
+
+  /* En el movil, el subtitulo del area, sus titulos y su pregunta van los
+     tres al mismo tamano. */
+  .cabecera-area p,
+  .area h3,
+  .area p.pregunta {
+    font-size: 22px;
+  }
+
   .cerrados b,
-  .cerrados .que,
-  .cerrados li.suelto b,
+  .cerrados li.suelto b {
+    font-size: 18px;
+  }
+
+  .cerrados .que {
+    font-size: 18px;
+  }
+
   .venta .cifras,
   .venta .dice,
   .venta a.comprar,
-  .venta .letra,
-  .aviso p,
-  .aviso .vale {
+  .venta .letra {
     font-size: 18px;
   }
 }
