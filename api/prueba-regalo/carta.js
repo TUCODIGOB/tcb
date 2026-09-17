@@ -20,7 +20,7 @@
 import crypto from 'crypto';
 import tzlookup from 'tz-lookup';
 import { waitUntil } from '@vercel/functions';
-import { guardarInforme } from '../../lib/guardar-informe.js';
+import { escribir } from './almacen.js';
 
 // ─── EL LUGAR ────────────────────────────────────────────────────────────────
 //
@@ -806,6 +806,10 @@ function huellaDelEmail(email) {
 // guardado tenga la misma forma en los dos.
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
+// Donde se guarda lo de quien esta empezando un diseño, aparte de los
+// diseños ya escritos.
+const EN_PROCESO = 'enproceso';
+
 function calcularEdad(fechaISO) {
   const nacimiento = new Date(fechaISO);
   const hoy = new Date();
@@ -815,6 +819,15 @@ function calcularEdad(fechaISO) {
   return edad;
 }
 
+// SE GUARDA APARTE, EN SU PROPIA CARPETA, Y NO DONDE ESTA SU DISEÑO.
+//
+// POR QUE. Si esto escribiera en el sitio de siempre, a quien ya tuviera un
+// diseño escrito se le borraria el suyo nada mas empezar otro: sus rasgos y
+// su area se irian y, si lo nuevo no llegara a terminarse, se quedaria sin
+// nada. Asi que lo que se va escribiendo vive aparte, sin tocar lo suyo, y
+// solo cuando el diseño nuevo esta entero sustituye al anterior de una vez.
+// Si no sale, esto se queda ahi sin molestar a nadie y el se queda con el
+// diseño que ya tenia.
 async function guardarLoSuyo({ datos, carta }) {
   const huella = huellaDelEmail(datos.email);
   if (!huella) {
@@ -824,9 +837,10 @@ async function guardarLoSuyo({ datos, carta }) {
   const [anio, mes, dia] = String(datos.fecha || '').split('-').map(Number);
   const fechaNice = dia + ' de ' + MESES[mes - 1] + ' de ' + anio;
   try {
-    const guardado = await guardarInforme({
+    await escribir(EN_PROCESO, huella, {
       producto: 'p0',
-      sessionId: huella,
+      compra: huella,
+      generado: new Date().toISOString(),
       // LOS MISMOS SIETE DATOS QUE GUARDA EL P1, NI UNO MAS. Las coordenadas
       // del lugar no van aqui porque ya viajan dentro de la carta.
       cliente: {
@@ -844,8 +858,7 @@ async function guardarLoSuyo({ datos, carta }) {
       areas: null,
       rasgos: null,
     });
-    if (guardado.guardado) console.log(`[prueba-regalo] Guardado: ${guardado.ruta} (${guardado.bytes} bytes)`);
-    else console.warn(`[prueba-regalo] No se ha guardado: ${guardado.motivo}`);
+    console.log(`[prueba-regalo] Guardado aparte mientras se escribe: ${huella}`);
   } catch (err) {
     console.error('[prueba-regalo] No se ha podido guardar lo suyo:', err.message);
   }

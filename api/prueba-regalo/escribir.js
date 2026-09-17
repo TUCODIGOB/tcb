@@ -32,7 +32,7 @@ import { guardarInforme } from '../../lib/guardar-informe.js';
 import { escribirElRegalo } from './llamadas.js';
 import { cobrarElVale, soltarElVale, quemarElVale,
          leerVeces, apuntarUnaVez, sonLosMismos, MAX_VECES } from './vale.js';
-import { leer } from './almacen.js';
+import { leer, borrar } from './almacen.js';
 import { apuntarElFallo, marcarEnBrevo, quitarPendiente } from './pendientes.js';
 import { crearEnlace } from './mio.js';
 import { correoListo } from './avisos.js';
@@ -42,6 +42,9 @@ import { correoListo } from './avisos.js';
 const MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
 const LA_WEB = 'https://origennatal.com';
+
+// La carpeta donde la carta deja lo suyo mientras se escribe el diseño.
+const EN_PROCESO = 'enproceso';
 
 function calcularEdad(fechaISO) {
   const nacimiento = new Date(fechaISO);
@@ -106,6 +109,13 @@ export async function guardarLoEscrito({ datos, carta, texto, rasgos, cuaderno, 
       // falla, se apunta de cero y le vuelve a llegar todo como la primera
       // vez; con el apunte viejo ahi, no le llegaria nada.
       await quitarPendiente(huella);
+      // Y LO QUE SE GUARDO APARTE MIENTRAS SE ESCRIBIA YA NO HACE FALTA: su
+      // diseño nuevo acaba de sustituir al anterior, entero y de una vez.
+      try {
+        await borrar(EN_PROCESO, huella);
+      } catch (err) {
+        console.warn('[prueba-regalo] No se ha podido quitar lo de aparte:', err.message);
+      }
 
       // SU CORREO CON SU ENLACE, siempre que se le escribe un diseño. Lo haya
       // visto en pantalla o no: si cerro la pestaña, si refresco, o si se
