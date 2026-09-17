@@ -2411,6 +2411,23 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       }
     }
 
+    // SE LE PREGUNTA AL MAPA MIENTRAS TERMINA DE RELLENAR, NO AL PULSAR.
+    //
+    // En cuanto tiene escritos el municipio, la provincia y el pais, se le
+    // pregunta al mapa por detras y la respuesta se guarda aqui. Asi, cuando
+    // pulsa Siguiente, casi siempre ya esta puesta y el paso cambia al
+    // momento en vez de dejarle mirando el boton. Si todavia no ha llegado,
+    // se espera a esa misma, no se pregunta otra vez.
+    let _enCamino = null;
+
+    function preguntarPorElLugar(municipio, provincia, pais) {
+      const clave = [municipio, provincia, pais].join('|');
+      if (!_enCamino || _enCamino.clave !== clave) {
+        _enCamino = { clave, respuesta: validarLugar(municipio, provincia, pais) };
+      }
+      return _enCamino.respuesta;
+    }
+
     // EL LUGAR SE COMPRUEBA AL SALIR DEL PASO 2, QUE ES DONDE LO ESCRIBE, Y
     // UNA SOLA VEZ. Aqui se guarda el que ya ha dado por bueno el mapa, con
     // sus coordenadas: son las que se usan luego para calcular su carta, asi
@@ -2434,7 +2451,10 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       // Ya comprobado y sin tocar desde entonces: no se le pregunta otra vez.
       if (mismoLugar(municipio, provincia, pais)) return true;
 
-      const lugarOk = await validarLugar(municipio, provincia, pais);
+      const lugarOk = await preguntarPorElLugar(municipio, provincia, pais);
+      // Si no ha salido bien, se olvida: la proxima vez se vuelve a preguntar
+      // de verdad en vez de repetirle una respuesta vieja.
+      if (!lugarOk.ok) _enCamino = null;
       if (lugarOk.ok) {
         _lugarBueno = { municipio, provincia, pais, lat: lugarOk.lat, lon: lugarOk.lon };
         // Si antes le habiamos dicho que no lo encontrabamos, ese aviso se va.
@@ -2734,6 +2754,23 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
         input.addEventListener('change', () => { clearError(id); quitarElAviso(); });
       }
     });
+    // EN CUANTO TIENE LOS TRES ESCRITOS, se le pregunta al mapa por detras.
+    // Aqui no se le enseña nada: si el lugar no existe se lo dira el boton de
+    // Siguiente, igual que antes. Esto solo es para que la respuesta este
+    // lista cuando pulse.
+    ['municipio', 'provincia', 'pais'].forEach(id => {
+      const campo = document.getElementById(id);
+      if (!campo) return;
+      campo.addEventListener('change', () => {
+        const municipio = document.getElementById('municipio').value.trim();
+        const provincia = document.getElementById('provincia').value.trim();
+        const pais = document.getElementById('pais').value.trim();
+        if (!municipio || !provincia || !pais) return;
+        if (mismoLugar(municipio, provincia, pais)) return;
+        preguntarPorElLugar(municipio, provincia, pais);
+      });
+    });
+
     ['municipio', 'provincia', 'pais'].forEach(id => {
       const campo = document.getElementById(id);
       if (!campo) return;
