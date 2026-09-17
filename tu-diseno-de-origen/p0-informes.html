@@ -213,33 +213,28 @@ function pintar(regalo){
       '<span>Guardado: <b>' + esc(String(regalo.generado || '').replace('T',' ').slice(0,16)) + '</b></span>' +
     '</p>' +
 
-    '<details open><summary>1ª llamada · sacar los rasgos de la carta ' +
-    '<span class="num">' + tiempo('sacar los rasgos') + gasto('sacar los rasgos') + '</span></summary><div class="dentro">' +
+    '<details open><summary>1ª llamada · sacar los rasgos de la carta ' + tiempo('sacar los rasgos') + gasto('sacar los rasgos') + '</summary><div class="dentro">' +
     '<table><tr><th>Nº</th><th>Lista</th><th>Conducta</th><th>De dónde sale</th></tr>' +
     (filas1 || '<tr><td colspan="4">No devolvió ninguno.</td></tr>') + '</table>' +
     '<p class="linea">Los tachados en rojo son los que quitó la limpieza.</p>' +
     '</div></details>' +
 
-    '<details><summary>2ª llamada · la limpieza ' +
-    '<span class="num">' + tiempo('elegir los cinco') + gasto('elegir los cinco') + '</span></summary><div class="dentro">' +
+    '<details><summary>2ª llamada · la limpieza ' + tiempo('elegir los cinco') + gasto('elegir los cinco') + '</summary><div class="dentro">' +
     '<p class="linea">Quitó: <b>' + (Array.from(quitados).join(', ') || 'ninguno') + '</b></p>' +
     '<p class="linea">Se quedan: <b>' + ((Array.isArray(c.devueltos) ? c.devueltos : []).join(', ') || '—') + '</b></p>' +
     '</div></details>' +
 
-    '<details><summary>3ª llamada · escribir los rasgos ' +
-    '<span class="num">' + tiempo('escribir los rasgos') + gasto('escribir los rasgos') + '</span></summary><div class="dentro">' +
+    '<details><summary>3ª llamada · escribir los rasgos ' + tiempo('escribir los rasgos') + gasto('escribir los rasgos') + '</summary><div class="dentro">' +
     '<table><tr><th>Lista</th><th>Título</th><th>Descripción</th></tr>' +
     (filas3 || '<tr><td colspan="3">No devolvió ninguno.</td></tr>') + '</table>' +
     '</div></details>' +
 
-    '<details><summary>Las redes · los que se entregan de verdad ' +
-    '<span class="num">' + cuantos + ' de ' + escritos.length + '</span></summary><div class="dentro">' +
+    '<details><summary>Las redes · los que se entregan de verdad ' + cuantos + ' de ' + escritos.length + '</summary><div class="dentro">' +
     '<table><tr><th>Lista</th><th>Título</th><th>Lo que se le cuenta</th></tr>' +
     (filasRedes || '<tr><td colspan="3">Ninguno.</td></tr>') + '</table>' +
     '</div></details>' +
 
-    '<details><summary>4ª llamada · escribir el área ' +
-    '<span class="num">' + tiempo('el area') + gasto('el area') + '</span></summary><div class="dentro">' +
+    '<details><summary>4ª llamada · escribir el área ' + tiempo('el area') + gasto('el area') + '</summary><div class="dentro">' +
     '<p class="linea">Letras del área: <b>' + texto.length + '</b>' +
     ' · Párrafos: <b>' + texto.split(/\n\n+/).filter(t => t.trim()).length + '</b>' +
     ' · Subtítulos: <b>' + (texto.match(/^##\s+/gm) || []).length + '</b>' +
