@@ -341,8 +341,13 @@ button:hover{filter:brightness(.96);}
 
 .portada h1,
 .cabecera-area h2,
-.venta h2,
 .aviso h2 {
+  font-size: clamp(1.8rem, 5vw, 2.4rem);
+}
+
+/* El titular del cartel de abajo, aparte de los demas titulares. Mismo
+   tamano que tenia: se encoge solo segun el ancho de la pantalla. */
+.venta h2 {
   font-size: clamp(1.8rem, 5vw, 2.4rem);
 }
 
