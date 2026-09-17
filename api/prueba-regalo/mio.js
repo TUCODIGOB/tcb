@@ -89,7 +89,6 @@ export default async function handler(req, res) {
       salida: {
         texto: guardado.areas[0],
         rasgos: guardado.rasgos || {},
-        cuaderno: {},
         puedeCorregir: cuenta.veces < MAX_VECES,
       },
     });
