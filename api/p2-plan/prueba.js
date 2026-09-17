@@ -74,6 +74,7 @@
 // ════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
+import { leerLaFicha } from '../../lib/ficha-del-lead.js';
 // ── COMO SE LE HABLA ────────────────────────────────────────
 //
 // Esto no es del P2: es de la marca. Es lo que ya se aprendio escribiendo el
@@ -1160,6 +1161,34 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
 // Asi ninguna se acerca al tiempo maximo que aguanta el servidor, y el
 // documento se ve llegar a trozos en vez de esperar a una pantalla en blanco.
 
+// ── QUIEN ES ─────────────────────────────────────────────────────
+//
+// Sus datos -su nombre y su sexo- viven en el fichero de su email, que es uno
+// solo: da igual que lo escribiera el regalo o el informe, o los dos. De ahi
+// se sacan.
+//
+// LOS INFORMES DE ANTES LOS LLEVABAN DENTRO, y esos se usan tal cual sin
+// abrir nada mas: es lo que se le entrego aquel dia.
+//
+// Si no aparece por ningun lado, se devuelve vacio y quien llama decide: aqui
+// no se inventa un nombre.
+async function susDatos(informe) {
+  const dentro = (informe && informe.cliente) || {};
+  if (dentro.nombre) {
+    return { nombre: String(dentro.nombre).trim(), sexo: dentro.sexo || '' };
+  }
+  try {
+    const ficha = await leerLaFicha(dentro.email || '');
+    const suyo = (ficha && ficha.cliente) || null;
+    if (suyo && suyo.nombre) {
+      return { nombre: String(suyo.nombre).trim(), sexo: suyo.sexo || '' };
+    }
+  } catch (err) {
+    console.error('[p2] No se ha podido leer la ficha del cliente:', err.message);
+  }
+  return { nombre: '', sexo: '' };
+}
+
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -1178,7 +1207,7 @@ export default async function handler(req, res) {
         if (i >= 10) return { ...inf, nombre: inf.compra };
         try {
           const datos = await leer(inf.compra);
-          return { ...inf, nombre: datos?.cliente?.nombre || inf.compra };
+          return { ...inf, nombre: (await susDatos(datos)).nombre || inf.compra };
         } catch {
           return { ...inf, nombre: '(no se pudo abrir)' };
         }
@@ -1206,7 +1235,7 @@ export default async function handler(req, res) {
       // acababa impreso en la portada del documento y dentro del texto. Un
       // documento que se entrega a alguien no lleva un relleno donde va su
       // nombre. Si falta, se para aqui y se dice.
-      const nombre = String(informe?.cliente?.nombre || '').trim();
+      const { nombre, sexo } = await susDatos(informe);
       if (!nombre) {
         return res.status(422).json({
           error: 'Ese informe se guardó sin el nombre del cliente, y el plan va dirigido a él: no se hace a medias',
@@ -1218,7 +1247,7 @@ export default async function handler(req, res) {
       // escriben con ellos y asi no hay que volver a abrir el informe.
       return res.status(200).json({
         limpia,
-        quien: { nombre, sexo: informe?.cliente?.sexo || '' },
+        quien: { nombre, sexo },
       });
     }
 
