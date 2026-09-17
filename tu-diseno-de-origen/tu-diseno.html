@@ -259,36 +259,6 @@ button:hover{filter:brightness(.96);}
 .aviso .vale{display:block;width:100%;background:var(--oro);color:#20323A;font-weight:700;
   border:none;border-radius:3px;padding:16px;cursor:pointer;font-family:'Open Sans',system-ui,sans-serif;}
 
-/* ── LOS DESPLEGABLES DE LA PRUEBA ──────────────────────────── */
-.detras{margin-top:30px;}
-.detras > h2{
-  font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;
-  color:var(--suave);margin:0 0 12px;font-weight:600;
-}
-.detras details{
-  background:var(--papel);border:1px solid var(--borde);border-radius:8px;
-  margin-bottom:8px;
-}
-.detras summary{
-  cursor:pointer;padding:13px 15px;font-size:.92rem;color:var(--tinta);
-  font-weight:600;display:flex;justify-content:space-between;gap:12px;
-}
-.detras summary::-webkit-details-marker{display:none;}
-.detras summary .tarda{color:var(--suave);font-weight:400;white-space:nowrap;}
-.detras .dentro-det{padding:0 15px 15px;font-size:.86rem;}
-.detras table{width:100%;border-collapse:collapse;font-size:.82rem;}
-.detras th,.detras td{
-  text-align:left;padding:7px 8px;border-bottom:1px solid var(--borde);
-  vertical-align:top;
-}
-.detras th{color:var(--suave);font-weight:600;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;}
-.detras .fuera td{color:var(--rojo);text-decoration:line-through;}
-.detras .resumen{
-  display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.86rem;
-  color:var(--suave);margin:0 0 14px;
-}
-.detras .resumen b{color:var(--tinta);}
-
 /* ── EL NAV, EL MISMO DEL RESTO ──────────────────────────────
    Esta pagina lleva un margen a los lados y otro arriba en todo el cuerpo;
    el nav los anula con margenes negativos para ocupar el ancho entero. */
@@ -526,96 +496,6 @@ function pintarElResultado(datos, salida) {
     + '</div>';
 }
 
-// ── LO QUE HA HECHO CADA LLAMADA ───────────────────────────────
-function pintarElCuaderno(salida) {
-  const c = salida.cuaderno || {};
-  const tiempo = que => {
-    const t = (c.tiempos || []).find(x => x.que && x.que.indexOf(que) === 0);
-    return t ? t.segundos + ' s' : '—';
-  };
-  const gasto = que => {
-    const g = (c.gastos || []).filter(x => x.que && x.que.indexOf(que) === 0);
-    if (!g.length) return '';
-    return ' · ' + g.reduce((suma, x) => suma + (x.dolares || 0), 0).toFixed(4) + ' $';
-  };
-  const gastoTotal = (c.gastos || []).reduce((suma, x) => suma + (x.dolares || 0), 0);
-  const quitados = new Set(c.quitaLimpieza || []);
-  const devueltos = new Set(c.devueltos || []);
-
-  // 1ª — los rasgos que sacó de la carta
-  const entraron = (c.entraron || []).map(r =>
-    '<tr' + (quitados.has(r.n) ? ' class="fuera"' : '') + '>'
-    + '<td>' + r.n + '</td><td>' + comoTexto(r.lista) + '</td>'
-    + '<td>' + comoTexto(r.conducta) + '</td><td>' + comoTexto(r.origen) + '</td></tr>').join('');
-
-  // 3ª — los que llegaron escritos
-  const escritos = (c.escritos || []).map(r =>
-    '<tr><td>' + comoTexto(r.lista) + '</td><td>' + comoTexto(r.titulo) + '</td>'
-    + '<td>' + comoTexto(r.descripcion) + '</td></tr>').join('');
-
-  // Lo que se entrega al final, después de las redes
-  const final = ['fortalezas', 'desafios'].map(cual =>
-    ((salida.rasgos && salida.rasgos[cual]) || []).map(r =>
-      '<tr><td>' + cual + '</td><td>' + comoTexto(r.nombre) + '</td>'
-      + '<td>' + comoTexto(r.descripcion) + (r.causa ? '<br><i>' + comoTexto(r.causa) + '</i>' : '') + '</td></tr>'
-    ).join('')).join('');
-
-  const cuantos = ((salida.rasgos && salida.rasgos.fortalezas) || []).length
-                + ((salida.rasgos && salida.rasgos.desafios) || []).length;
-
-  return ''
-    + '<div class="detras">'
-    + '<h2>Lo que ha pasado por detrás</h2>'
-
-    + '<p class="resumen">'
-    +   '<span>Total: <b>' + (salida.segundos != null ? salida.segundos + ' s' : '—') + '</b></span>'
-    +   '<span>Coste: <b>' + gastoTotal.toFixed(4) + ' $</b></span>'
-    +   '<span>Rasgos que salieron: <b>' + ((c.entraron || []).length) + '</b></span>'
-    +   '<span>La limpieza quitó: <b>' + ((c.quitaLimpieza || []).length) + '</b></span>'
-    +   '<span>Las redes dejaron: <b>' + cuantos + '</b></span>'
-    + '</p>'
-
-    + '<details><summary>1ª llamada · sacar los rasgos de la carta'
-    +   '<span class="tarda">' + tiempo('sacar los rasgos') + gasto('sacar los rasgos') + '</span></summary>'
-    +   '<div class="dentro-det">'
-    +     '<table><thead><tr><th>Nº</th><th>Lista</th><th>Conducta</th><th>De dónde sale</th></tr></thead>'
-    +     '<tbody>' + (entraron || '<tr><td colspan="4">No devolvió ninguno.</td></tr>') + '</tbody></table>'
-    +     '<p class="letra-chica">Los tachados en rojo son los que quitó la limpieza.</p>'
-    +   '</div></details>'
-
-    + '<details><summary>2ª llamada · la limpieza'
-    +   '<span class="tarda">' + tiempo('limpiar los rasgos') + gasto('elegir los cinco') + '</span></summary>'
-    +   '<div class="dentro-det">'
-    +     '<p>Quitó: <b>' + ((c.quitaLimpieza || []).join(', ') || 'ninguno') + '</b></p>'
-    +     '<p>Se quedan: <b>' + ((c.devueltos || []).join(', ') || '—') + '</b></p>'
-    +   '</div></details>'
-
-    + '<details><summary>3ª llamada · escribir los rasgos'
-    +   '<span class="tarda">' + tiempo('escribir los rasgos') + gasto('escribir los rasgos') + '</span></summary>'
-    +   '<div class="dentro-det">'
-    +     '<table><thead><tr><th>Lista</th><th>Título</th><th>Descripción</th></tr></thead>'
-    +     '<tbody>' + (escritos || '<tr><td colspan="3">No devolvió ninguno.</td></tr>') + '</tbody></table>'
-    +   '</div></details>'
-
-    + '<details><summary>Las redes · los que se entregan de verdad'
-    +   '<span class="tarda">' + cuantos + ' de ' + ((c.escritos || []).length) + '</span></summary>'
-    +   '<div class="dentro-det">'
-    +     '<table><thead><tr><th>Lista</th><th>Título</th><th>Lo que se le cuenta</th></tr></thead>'
-    +     '<tbody>' + (final || '<tr><td colspan="3">Ninguno.</td></tr>') + '</tbody></table>'
-    +   '</div></details>'
-
-    + '<details><summary>4ª llamada · escribir el área'
-    +   '<span class="tarda">' + tiempo('el area') + gasto('el area') + '</span></summary>'
-    +   '<div class="dentro-det">'
-    +     '<p>Letras del área: <b>' + String(salida.texto || '').length + '</b>'
-    +     ' · Párrafos: <b>' + String(salida.texto || '').split(/\n\n+/).filter(t => t.trim()).length + '</b>'
-    +     ' · Subtítulos: <b>' + (String(salida.texto || '').match(/^##\s+/gm) || []).length + '</b>'
-    +     ' · Escena: <b>' + (String(salida.texto || '').match(/^>\s*/gm) || []).length + '</b></p>'
-    +   '</div></details>'
-
-    + '</div>';
-}
-
 // ── LO QUE SE PINTA AL ABRIR LA PAGINA ─────────────────────────
 //
 // El diseño lo deja preparado la pantalla anterior. Si no hay nada, la pagina
@@ -635,7 +515,7 @@ let _datosSuyos = null;
 function pintarTodo(datos, salida) {
   _datosSuyos = datos;
   const caja = document.getElementById('resultado');
-  caja.innerHTML = pintarElResultado(datos, salida) + pintarElCuaderno(salida);
+  caja.innerHTML = pintarElResultado(datos, salida);
   caja.classList.add('puesto');
   document.getElementById('comprar').addEventListener('click', alComprar);
 
