@@ -335,9 +335,11 @@ button:hover{filter:brightness(.96);}
 </style>
 
 <style>
-/* LOS TAMAÑOS DEL P1, Y NINGUNO MAS. Alli solo hay dos: el de los titulares
-   -que se encoge solo segun el ancho- y el del texto, que es 16 en el
-   ordenador y 18 en el movil. Aqui se usan esos dos y ya esta. */
+/* LOS TAMAÑOS DE ESTA PAGINA, TODOS JUNTOS Y CADA UNO EN SU LINEA.
+   De base son los dos del P1: los titulares, que se encogen solos segun el
+   ancho, y el texto, 16 en el ordenador y 18 en el movil. Lo que lleva otro
+   tamano va aqui debajo con su propia regla, para poder cambiarle el suyo a
+   uno sin moverle el de los demas. */
 
 .portada h1,
 .cabecera-area h2,
@@ -361,14 +363,20 @@ body,
   font-size: 16px;
 }
 
-/* Y TRES QUE VAN APARTE, cada uno con el suyo: el subtitulo del area, sus
-   titulos y su pregunta. Esto es lo del ordenador; en el movil llevan el suyo,
-   mas abajo. */
+/* EL AREA, TEXTO POR TEXTO. Esto es lo del ordenador; en el movil llevan el
+   suyo, mas abajo. */
+
+/* El subtitulo, debajo del nombre del area. */
 .cabecera-area p {
   font-size: 20px;
 }
 
-.area h3,
+/* Los titulos de dentro del area. */
+.area h3 {
+  font-size: 22px;
+}
+
+/* Y la pregunta que va centrada. */
 .area p.pregunta {
   font-size: 22px;
 }
@@ -423,10 +431,14 @@ body,
     font-size: 18px;
   }
 
-  /* En el movil, el subtitulo del area, sus titulos y su pregunta van los
-     tres al mismo tamano. */
-  .cabecera-area p,
-  .area h3,
+  .cabecera-area p {
+    font-size: 22px;
+  }
+
+  .area h3 {
+    font-size: 22px;
+  }
+
   .area p.pregunta {
     font-size: 22px;
   }
