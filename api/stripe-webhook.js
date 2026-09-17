@@ -289,8 +289,6 @@ async function guardarContactoBrevo(datos) {
   } catch (err) {
     console.error('No se pudo sacar de sus listas anteriores:', err.message);
   }
-
-  return await resp.json().catch(() => ({}));
 }
 
 // ═════════════════════════════════════════════════════════════════
