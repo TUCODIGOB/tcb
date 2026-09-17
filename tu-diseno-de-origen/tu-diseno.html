@@ -263,19 +263,35 @@ button:hover{filter:brightness(.96);}
    Esta pagina lleva un margen a los lados y otro arriba en todo el cuerpo;
    el nav los anula con margenes negativos para ocupar el ancho entero. */
 .nav{
+  position:sticky; top:0; z-index:100;
   margin:-40px -16px 40px;
   background:rgba(255,251,239,.92);
   backdrop-filter:blur(12px);
-  border-bottom:1px solid transparent;
+  border-bottom:1px solid rgba(189,144,72,.2);
 }
+/* Al bajar, el nav se queda arriba y a los 50px se quita el logo para
+   dejarle el sitio al boton. Lo mismo que hace el index. */
+.nav.scrolled .nav-logo{visibility:hidden;}
 .nav-inner{
   display:flex; align-items:center; justify-content:space-between;
   width:min(1100px, 92vw); margin-inline:auto;
   padding-block:6px;
 }
 .nav-logo img{height:34px;width:auto;display:block;}
+.nav-cta{
+  background:#BD9048;color:var(--papel);font-size:.82rem;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;padding:.55rem 1.2rem;
+  border-radius:6px;transition:background .2s;white-space:nowrap;
+  /* Esta pagina escribe mas junto que el index; al boton se le pone el
+     alto de renglon de alli para que salga igual de alto. */
+  line-height:1.7;
+}
+.nav-cta:hover{background:var(--oro);}
 @media (max-width:600px){
   .nav-inner{flex-direction:column; gap:1rem; padding-block:18px;}
+  .nav-cta{width:100%; text-align:center; font-size:19px; padding:.6rem;}
+  .nav.scrolled .nav-inner{padding-block:.4rem;}
+  .nav.scrolled .nav-logo{display:none;}
 }
 
 /* ── EL PIE, EL MISMO DEL INDEX ──────────────────────────────
@@ -376,6 +392,7 @@ body,
     <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
       <img src="/images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" width="395" height="48" />
     </a>
+    <a href="#comprar" class="nav-cta">Desbloquear mi Diseño</a>
   </div>
 </nav>
 
@@ -509,6 +526,16 @@ function pintarElResultado(datos, salida) {
     +   '<p class="letra">🔒 Pago 100% seguro con Stripe</p>'
     + '</div>';
 }
+
+// EL NAV AL BAJAR. A los 50px se quita el logo y se queda solo el boton.
+// Es el mismo que lleva el index.
+(function elNavAlBajar() {
+  const nav = document.querySelector('.nav');
+  if (!nav) return;
+  const alBajar = () => nav.classList.toggle('scrolled', window.scrollY > 50);
+  alBajar();
+  window.addEventListener('scroll', alBajar, { passive: true });
+})();
 
 // ── LO QUE SE PINTA AL ABRIR LA PAGINA ─────────────────────────
 //
