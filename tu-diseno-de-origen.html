@@ -2346,7 +2346,13 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       const pais = PREFIJO_PAIS[prefijoSelect.value];
       if (pais) phoneFlagImg.src = 'images/flags/' + pais + '.svg';
     }
-    prefijoSelect.addEventListener('change', actualizarBanderaTelefono);
+    // Al cambiar de pais cambia lo que se le pide al numero, asi que el aviso
+    // del telefono se quita: con el prefijo nuevo puede estar ya bien.
+    prefijoSelect.addEventListener('change', () => {
+      actualizarBanderaTelefono();
+      clearError('telefono');
+      quitarElAviso();
+    });
 
     function validarTelefono(tel, prefijo) {
       const limpio = tel.replace(/[\s\-()]/g, '');
