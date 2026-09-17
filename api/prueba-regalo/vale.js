@@ -15,6 +15,7 @@
 
 import crypto from 'crypto';
 import { leer, escribir, borrar } from './almacen.js';
+import { registrarLead } from '../captar-lead.js';
 
 // Los vales viven aqui dentro, aparte de los regalos ya escritos.
 const VALES = 'vales';
@@ -82,19 +83,23 @@ export function sonLosMismos(a, b) {
     .every(campo => igual(a[campo], b[campo]));
 }
 
+// Los años que tiene hoy quien nacio ese dia.
+function laEdad(fecha) {
+  const [anio, mes, dia] = String(fecha || '').split('-').map(Number);
+  if (!anio || !mes || !dia) return '';
+  const hoy = new Date();
+  let edad = hoy.getFullYear() - anio;
+  const m = (hoy.getMonth() + 1) - mes;
+  if (m < 0 || (m === 0 && hoy.getDate() < dia)) edad--;
+  return edad;
+}
+
 // COMO LOS ESPERA EL FORMULARIO. Lo guardado se devuelve con los mismos
 // nombres que usa la pagina, para que la portada y el boton de comprar
 // enseñen exactamente los datos con los que se calculo su carta.
 function comoLosPideLaPagina(datos) {
   if (!datos) return null;
-  const [anio, mes, dia] = String(datos.fecha || '').split('-').map(Number);
-  let edad = '';
-  if (anio && mes && dia) {
-    const hoy = new Date();
-    edad = hoy.getFullYear() - anio;
-    const m = (hoy.getMonth() + 1) - mes;
-    if (m < 0 || (m === 0 && hoy.getDate() < dia)) edad--;
-  }
+  const edad = laEdad(datos.fecha);
   return {
     nombre: datos.nombre || '',
     sexo: datos.sexo || '',
@@ -230,6 +235,35 @@ export default async function handler(req, res) {
 
     const codigo = nuevoCodigo();
     await escribir(VALES, codigo, { creado: Date.now(), datos });
+
+    // SUS DATOS A BREVO, DESDE AQUI. Se le va a escribir un diseño con estos
+    // datos, asi que en Brevo tienen que estar estos mismos y no otros: es lo
+    // que hace que lo guardado y lo que se le escribe cuadren. Si vuelve a
+    // corregirlos, se pasa por aqui otra vez y se actualizan.
+    //
+    // ANTES LO PEDIA EL NAVEGADOR justo cuando la pagina saltaba a la
+    // siguiente pantalla, y si no le daba tiempo a salir, ese lead no llegaba
+    // a Brevo. Aqui no hay pantalla yendose.
+    //
+    // SI BREVO FALLA, NO SE LE QUITA SU DISEÑO: queda escrito en los
+    // registros y se sigue.
+    try {
+      await registrarLead({
+        nombre: datos.nombre,
+        email: datos.email,
+        telefono: datos.telefono,
+        sexo: datos.sexo,
+        fecha: datos.fecha,
+        hora: datos.hora,
+        municipio: datos.municipio,
+        provincia: datos.provincia,
+        pais: datos.pais,
+        edad: laEdad(datos.fecha),
+      });
+    } catch (err) {
+      console.error('[regalo] No se ha podido registrar el lead en Brevo:', err.message);
+    }
+
     return res.status(200).json({ vale: codigo });
 
   } catch (err) {

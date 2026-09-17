@@ -2646,38 +2646,16 @@ y te muestra las 7 áreas que están dirigiendo tu vida.</p>
       datos.gaClientId = obtenerGAClientId();
       delete datos.email2;
 
-      // LO QUE SE GUARDA EN BREVO Y LO QUE SE USA PARA SU CARTA TIENEN QUE
-      // SER LO MISMO. Por eso esto no se manda todavia: primero se pregunta
-      // si se le va a escribir un diseño con estos datos. Si no se le va a
-      // escribir ninguno, en Brevo se quedan los de antes, que son los del
-      // diseño que va a leer.
+      // SUS DATOS PARA LA PANTALLA SIGUIENTE. En Brevo ya no se guardan desde
+      // aqui: lo hace el servidor al dar el permiso, con estos mismos datos.
+      // Desde aqui se perdian cuando la pagina saltaba a la otra pantalla
+      // antes de que la peticion llegara a salir.
       const guardarloTodo = () => {
         try {
           localStorage.setItem('tcb_pedido', JSON.stringify(datos));
-
-          // keepalive: true (no fetch normal) porque la página redirige justo
-          // después y la petición debe sobrevivir a la navegación.
-          fetch('/api/captar-lead', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              nombre: datos.nombre,
-              email: datos.email,
-              telefono: datos.telefonoCompleto,
-              sexo: datos.sexo,
-              fecha: datos.fecha,
-              hora: datos.hora,
-              municipio: datos.municipio,
-              provincia: datos.provincia,
-              pais: datos.pais,
-              edad: datos.edadCalculada,
-            }),
-            keepalive: true,
-          }).catch(() => {});
         } catch (err) {
-          // Si falla guardar en este navegador o el envío a Brevo, se sigue
-          // igual: el diseño se prepara en la pantalla siguiente de todas
-          // formas.
+          // Si este navegador no deja guardar, se sigue igual: el diseño se
+          // prepara en la pantalla siguiente de todas formas.
         }
       };
 
