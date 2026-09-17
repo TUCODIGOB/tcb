@@ -12,9 +12,9 @@
 // otra vez el lugar al mapa y podria salir un punto distinto del que se
 // entrego.
 //
-// QUE DEVUELVE: el area escrita, los cinco rasgos con todos sus datos, y el
-// cuaderno -que llamada ha hecho que, cuanto ha tardado y que quito la
-// limpieza-. El cuaderno es para mirar, no decide nada.
+// QUE DEVUELVE: el area escrita y los cinco rasgos con todos sus datos. Nada
+// mas: el cuaderno -que llamada ha hecho que, cuanto ha tardado y que quito
+// la limpieza- se guarda pero no viaja al navegador, que no lo necesita.
 //
 // Y QUE GUARDA: lo mismo que ya guardaba la carta -sus datos y la carta
 // entera- mas los cinco rasgos y el area escrita. El dia de mañana, cuando
@@ -210,8 +210,6 @@ export default async function handler(req, res) {
           yaLoTenia: true,
           texto: yaLoTiene.areas[0],
           rasgos: yaLoTiene.rasgos || {},
-          cuaderno: {},
-          segundos: 0,
           puedeCorregir: Boolean(cuenta.datos) && losMismos && cuenta.veces < MAX_VECES,
         });
       }
@@ -245,8 +243,6 @@ export default async function handler(req, res) {
     return noVale('Falta la carta natal');
   }
 
-  const arranque = Date.now();
-
   try {
     const salida = await escribirElRegalo(loQueVaAlModelo(datos, carta));
 
@@ -274,8 +270,6 @@ export default async function handler(req, res) {
     return res.status(200).json({
       texto: salida.texto,
       rasgos: salida.rasgos,
-      cuaderno: salida.cuaderno,
-      segundos: Math.round((Date.now() - arranque) / 100) / 10,
       // Con este ya van vecesAntes + 1. Si aun no ha llegado al tope, le
       // queda la correccion y su pagina se lo puede ofrecer.
       puedeCorregir: (vecesAntes + 1) < MAX_VECES,
