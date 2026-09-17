@@ -86,7 +86,7 @@ td.num,th.num{text-align:right;white-space:nowrap;}
   </div>
 
   <div class="mando" id="mandoInforme" style="margin-top:10px;display:none">
-    <label for="lista">Regalo</label>
+    <label for="lista">Informe</label>
     <select id="lista"></select>
     <button type="button" id="ver">Ver</button>
   </div>
@@ -129,7 +129,7 @@ $('entrar').addEventListener('click', async () => {
           const quien = [i.nombre, i.email].filter(Boolean).join(' — ') || i.compra;
           return '<option value="' + esc(i.compra) + '">' + esc(cuando) + ' — ' + esc(quien) + '</option>';
         }).join('')
-      : '<option value="">(todavia no hay regalos guardados)</option>';
+      : '<option value="">(todavia no hay informes guardados)</option>';
     $('mandoInforme').style.display = '';
   } catch (err) {
     decir(err.message);
@@ -139,7 +139,7 @@ $('entrar').addEventListener('click', async () => {
 
 $('ver').addEventListener('click', async () => {
   const compra = $('lista').value;
-  if (!compra) return decir('No hay ningun regalo que ver.');
+  if (!compra) return decir('No hay ningun informe que ver.');
   decir('');
   $('ver').disabled = true;
   $('ficha').innerHTML = '';
@@ -152,19 +152,19 @@ $('ver').addEventListener('click', async () => {
 });
 
 // ═══════════════════════════════════════════════════════════════
-// EL CUADERNO. Lo mismo que se pintaba al terminar el regalo, con la misma
+// EL CUADERNO. Lo mismo que se pintaba al terminar el informe, con la misma
 // informacion y los mismos desplegables, pero aqui y no delante de quien lo
 // recibe.
 // ═══════════════════════════════════════════════════════════════
-function pintar(regalo){
-  const c = regalo.cuaderno;
+function pintar(informe){
+  const c = informe.cuaderno;
   if (!c) {
-    $('ficha').innerHTML = '<h2>Sin cuaderno</h2><p class="linea">Este regalo se escribió antes de que se empezara a apuntar cómo iba. Solo está el texto.</p>';
+    $('ficha').innerHTML = '<h2>Sin cuaderno</h2><p class="linea">Este informe se guardó antes de que se empezara a apuntar cómo iba. Solo está el texto.</p>';
     return;
   }
 
-  const cl = regalo.cliente || {};
-  const texto = (Array.isArray(regalo.areas) && regalo.areas[0]) ? String(regalo.areas[0]) : '';
+  const cl = informe.cliente || {};
+  const texto = (Array.isArray(informe.areas) && informe.areas[0]) ? String(informe.areas[0]) : '';
 
   const tiempos = Array.isArray(c.tiempos) ? c.tiempos : [];
   const gastos  = Array.isArray(c.gastos) ? c.gastos : [];
@@ -194,12 +194,12 @@ function pintar(regalo){
     '<td>' + esc(r.descripcion) + '</td></tr>').join('');
 
   const filasRedes = ['fortalezas','desafios'].map(cual =>
-    ((regalo.rasgos && regalo.rasgos[cual]) || []).map(r =>
+    ((informe.rasgos && informe.rasgos[cual]) || []).map(r =>
       '<tr><td>' + esc(cual) + '</td><td>' + esc(r.nombre) + '</td><td>' + esc(r.descripcion) +
       (r.causa ? '<br><i>' + esc(r.causa) + '</i>' : '') + '</td></tr>').join('')).join('');
 
-  const cuantos = ((regalo.rasgos && regalo.rasgos.fortalezas) || []).length
-                + ((regalo.rasgos && regalo.rasgos.desafios) || []).length;
+  const cuantos = ((informe.rasgos && informe.rasgos.fortalezas) || []).length
+                + ((informe.rasgos && informe.rasgos.desafios) || []).length;
 
   $('ficha').innerHTML =
     '<h2>' + esc(cl.nombre || cl.email || '(sin nombre)') + ' — ' + esc(cl.email || '') + '</h2>' +
@@ -210,7 +210,7 @@ function pintar(regalo){
       '<span>Rasgos que salieron: <b>' + entraron.length + '</b></span>' +
       '<span>La limpieza quitó: <b>' + quitados.size + '</b></span>' +
       '<span>Las redes dejaron: <b>' + cuantos + '</b></span>' +
-      '<span>Guardado: <b>' + esc(String(regalo.generado || '').replace('T',' ').slice(0,16)) + '</b></span>' +
+      '<span>Guardado: <b>' + esc(String(informe.generado || '').replace('T',' ').slice(0,16)) + '</b></span>' +
     '</p>' +
 
     '<details open><summary>1ª llamada · sacar los rasgos de la carta ' + tiempo('sacar los rasgos') + gasto('sacar los rasgos') + '</summary><div class="dentro">' +
