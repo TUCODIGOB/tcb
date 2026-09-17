@@ -576,7 +576,12 @@ function laHoraEnDos(hora) {
 function pintarElResultado(datos, salida) {
   const [anio, mes, dia] = String(datos.fecha).split('-').map(Number);
   const fechaNice = dia + ' de ' + MESES_NICE[mes - 1] + ' de ' + anio;
-  const lugar = [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', ');
+  // EL LUGAR, SIEMPRE EN MAYUSCULAS. Lo escriba como lo escriba -"ValENCIA",
+  // "valencia"-, en su portada se le enseña igual de bien, como en el aviso de
+  // comprobar sus datos. Solo cambia como se ve: lo guardado y la carta van
+  // con lo que el escribio.
+  const lugar = [datos.municipio, datos.provincia, datos.pais]
+    .filter(Boolean).map(parte => parte.toUpperCase()).join(', ');
 
   return ''
     + '<div class="folio portada">'
