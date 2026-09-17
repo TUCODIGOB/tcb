@@ -146,15 +146,19 @@
   /* Y "puedes cerrar esta pantalla", lo ultimo del todo. */
   .screen p.cerrar { margin-top: 2.5rem; }
 
-  /* EL AVISO DEL SPAM CABE EN UNA LINEA EN EL ORDENADOR. En el movil no cabe
-     de ninguna manera, asi que alli se parte como cualquier otro texto. */
+  /* EL AVISO DEL SPAM SE PARTE COMO CUALQUIER OTRO TEXTO, y solo se le pide
+     que vaya de una pieza en las pantallas anchas, que es donde cabe. Si se
+     le pedia siempre, en una tablet -o en una ventana a medio abrir- se salia
+     por el lado. */
   .screen p.aviso {
     margin-top: 2.5rem;
     color: var(--ink);
     font-weight: 700;
     font-size: 20px;
     max-width: none;
-    white-space: nowrap;
+  }
+  @media (min-width: 1024px) {
+    .screen p.aviso { white-space: nowrap; }
   }
   /* El correo, en mostaza dentro de la linea en negro. */
   .screen p.aviso .oro { color: var(--gold-deep); }
