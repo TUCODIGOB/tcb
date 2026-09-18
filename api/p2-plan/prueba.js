@@ -1164,6 +1164,546 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
 
 
 // ════════════════════════════════════════════════════════════════
+// TU NUEVA PROGRAMACION: LAS CREENCIAS
+// ════════════════════════════════════════════════════════════════
+//
+// EL OTRO TEMA DEL DOCUMENTO, Y VA POR SU LADO. Las pruebas dicen lo que tiene
+// que hacer; esto dice lo que se cree, que es lo que hace que no lo haga. Son
+// dos cosas distintas y no se mezclan en ninguna llamada: en las pruebas no se
+// habla de lo que cree, y aqui no se le manda hacer nada.
+//
+// SALE DE LOS MISMOS DESAFIOS, asi que arranca en cuanto la lista esta limpia
+// y va A LA VEZ que las pruebas: ninguna de las dos espera a la otra.
+//
+// CUATRO PASOS, igual que en las pruebas y por lo mismo: cada llamada hace UNA
+// cosa.
+//   A. SACA las creencias que hay debajo de los desafios. No filtra.
+//   B. LIMPIA Y PUNTUA, y solo devuelve numeros: fuera las repetidas y las que
+//      se contradicen, y a las que quedan les pone cuanto le mandan.
+//   C. REPASA lo que quedo. Si se cae, no pasa nada: se sigue con lo de B.
+//   D. ESCRIBE cada una, todas a la vez, y cada una ve solo la suya.
+
+// LOS DOS NOMBRES QUE VE DENTRO DE CADA CREENCIA, por lo mismo que los de las
+// pruebas: sin ellos quien lee no sabe de que le habla cada trozo.
+const BLOQUES_DE_CREENCIA = {
+  loQueCreesHoy: 'Lo que crees hoy',
+  loQueEsVerdad: 'Lo que es verdad',
+};
+const PUNTOS_DE_CREENCIA = Object.keys(BLOQUES_DE_CREENCIA);
+
+// Los mismos numeros que en las pruebas, y por las mismas razones: el techo es
+// holgado porque pensar sale del mismo sitio que escribir, y la espera deja
+// sitio para un segundo intento dentro del tiempo del servidor.
+const ESPERA_DE_CREENCIAS_MS = 90000;
+const TECHO_DE_CREENCIAS = 32000;
+
+// EL TITULO DE UNA CREENCIA, LA MISMA MEDIDA QUE EN EL P1. Alli los titulos de
+// los rasgos van de cuatro a siete palabras, y estos se leen al lado de
+// aquellos: si aqui salieran de dos lineas, el documento no se veria del mismo
+// sitio.
+const PALABRAS_DEL_TITULO = { min: 4, max: 7 };
+
+const cuantasPalabras = txt => String(txt || '').trim().split(/\s+/).filter(Boolean).length;
+
+// ── A. SACAR LAS CREENCIAS ──────────────────────────────────
+
+const MOLDE_DE_SACAR_CREENCIAS = {
+  type: 'object',
+  properties: {
+    creencias: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          // De que desafio de la lista limpia sale, por su numero.
+          deCual: { type: 'integer' },
+          titulo: { type: 'string' },
+          linea:  { type: 'string' },
+        },
+        required: ['deCual', 'titulo', 'linea'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['creencias'],
+  additionalProperties: false,
+};
+
+// AQUI NO SE FILTRA NADA. Salen todas las que haya, aunque dos digan lo mismo:
+// juntarlas y quitarlas es el trabajo de la siguiente, y pedirle las dos cosas
+// a la vez es lo que ya se aprendio caro en las pruebas.
+async function sacarLasCreencias({ lista, cuantos, sexo, piensa, espera = ESPERA_DE_CREENCIAS_MS,
+                                   modelo = EL_QUE_DECIDE, recordatorio = '' }) {
+  const encargo = `Abajo tienes los desafíos interiores de una persona. Cada uno lleva su número, lo que le pasa y por qué le pasa.
+
+QUÉ TIENES QUE SACAR
+
+Debajo de cada desafío hay una creencia: una frase que esa persona da por verdad sobre sí misma, sobre los demás o sobre cómo funciona la vida, y que es lo que hace que se comporte así. Eso es lo que buscas, y no hay que buscarlo fuera: está en lo que tienes abajo.
+
+Sacas TODAS las que haya. Un desafío puede traer más de una, y dos desafíos pueden traer la misma. Aquí no se filtra, no se junta y no se quita nada: eso se hace después. Y no hay un número que tenga que salir.
+
+Si una creencia no se puede rastrear a un desafío concreto de los de abajo, no la escribas.
+
+LO QUE DEVUELVES DE CADA UNA
+
+"deCual" — el número del desafío del que sale.
+
+"titulo" — la creencia dicha en corto, de ${PALABRAS_DEL_TITULO.min} a ${PALABRAS_DEL_TITULO.max} palabras, en primera persona y tal como se la dice por dentro. Empieza en mayúscula y sin punto al final. No es una etiqueta ni el nombre de un concepto: es la frase que se cree.
+
+"linea" — UNA línea: qué es lo que cree exactamente y de dónde le viene.
+
+LO QUE NO SE PUEDE ESCRIBIR
+
+No te inventes nada de su vida. No sabes si tiene pareja, trabajo, hijos, casa o familia.
+
+Nada técnico: ni planetas, ni signos, ni casas, ni nada relacionado con astrología.
+
+Sin metáforas y sin palabras de manual: las de todos los días, las que se dicen hablando.
+
+Español de España, con todas sus tildes y todas sus eñes.
+
+LOS DESAFÍOS:
+
+${lista}
+
+Quien lo va a leer es ${comoSeLeHabla(sexo)}`;
+
+  const salida = await alModelo({
+    que: 'sacar las creencias',
+    modelo,
+    piensa,
+    techo: TECHO_DE_CREENCIAS,
+    system: encargo,
+    mensaje: `Saca todas sus creencias, siguiendo el esquema.${recordatorio}`,
+    molde: MOLDE_DE_SACAR_CREENCIAS,
+    espera: AbortSignal.timeout(espera),
+  });
+
+  // Solo lo que viene entero y apunta a un desafio que existe. Una creencia sin
+  // su linea o sin su numero no se puede escribir ni colocar, asi que no entra.
+  const creencias = [];
+  let huecos = 0;
+  for (const c of (Array.isArray(salida.creencias) ? salida.creencias : [])) {
+    const deCual = Number(c?.deCual);
+    const titulo = String(c?.titulo || '').trim();
+    const linea = String(c?.linea || '').trim();
+    if (!Number.isInteger(deCual) || deCual < 1 || deCual > cuantos || !titulo || !linea
+        || esRelleno(titulo) || esRelleno(linea)) {
+      huecos++;
+      continue;
+    }
+    // UN TITULO FUERA DE MEDIDA CUENTA COMO HUECO, PERO NO SE TIRA. Es un
+    // titulo largo, no una creencia que falte: si se tirara, se le quitaria a
+    // la clienta algo suyo por una cuestion de tamano.
+    const palabras = cuantasPalabras(titulo);
+    if (palabras < PALABRAS_DEL_TITULO.min || palabras > PALABRAS_DEL_TITULO.max) huecos++;
+    creencias.push({ deCual, titulo, linea });
+  }
+
+  return { creencias, huecos };
+}
+
+// ── B. LIMPIAR Y PUNTUAR ────────────────────────────────────
+
+const MOLDE_DE_PUNTUAR_CREENCIAS = {
+  type: 'object',
+  properties: {
+    sequedan: { type: 'array', items: { type: 'integer' } },
+    sequitan: { type: 'array', items: { type: 'integer' } },
+    puntos: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          numero: { type: 'integer' },
+          puntuacion: { type: 'integer' },
+        },
+        required: ['numero', 'puntuacion'],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['sequedan', 'sequitan', 'puntos'],
+  additionalProperties: false,
+};
+
+// AQUI SOLO VE LAS CREENCIAS, numeradas, y nada mas: ni los desafios de los
+// que salieron, ni quien las lee, ni que es este producto. Su trabajo es mirar
+// una lista y decir cuales sobran, y para eso no le hace falta nada de eso.
+//
+// Y DEVUELVE NUMEROS. Lo mismo que en la limpieza de las pruebas: escribiendo
+// cifras, todo el esfuerzo se le va en comparar, que es lo unico que hace.
+async function limpiarLasCreencias({ creencias, piensa, espera = ESPERA_DE_CREENCIAS_MS,
+                                     modelo = EL_QUE_DECIDE, recordatorio = '' }) {
+  const encargo = `Abajo tienes las creencias de una persona, enumeradas. Cada una lleva la frase que se cree y una línea que dice qué es y de dónde le viene.
+
+QUÉ SE QUITA
+
+Las que digan prácticamente lo mismo, aunque estén escritas con otras palabras: se queda solo UNA, la que más pese.
+
+Y las que se contradigan entre sí: se queda solo UNA, la que más pese.
+
+Pesa más la que sea más concreta y más central para esa persona, no la más genérica.
+
+LA PUNTUACIÓN
+
+A cada una de las que se quedan le pones de 1 a 10 según cuánto le manda: 10 es la que le decide la vida y está debajo de casi todo lo que hace, 1 es la que apenas asoma.
+
+No puntúas más alto lo que esté escrito con más palabras: se puntúa lo que pesa, no lo largo que venga.
+
+LO QUE DEVUELVES
+
+"sequedan": los números de las que se quedan, en el orden de abajo.
+"sequitan": los números de las que quitas.
+"puntos": una entrada por CADA una de las que se quedan, con su número y su puntuación.
+
+Cada número tiene que quedar en una sola de las 2 listas, nunca en las 2. Todos los números tienen que aparecer en "sequedan" o en "sequitan", ninguno se queda fuera y ninguno se repite en las dos.
+
+LAS CREENCIAS:
+
+${creencias.map((c, i) => `${i + 1}. ${c.titulo}\n   ${c.linea}`).join('\n\n')}`;
+
+  const salida = await alModelo({
+    que: 'limpiar y puntuar las creencias',
+    modelo,
+    piensa,
+    techo: TECHO_DE_CREENCIAS,
+    system: encargo,
+    mensaje: `Di cuáles se quedan, cuáles se quitan y cuánto pesa cada una, siguiendo el esquema.${recordatorio}`,
+    molde: MOLDE_DE_PUNTUAR_CREENCIAS,
+    espera: AbortSignal.timeout(espera),
+  });
+
+  const validos = new Set(creencias.map((_, i) => i + 1));
+  const sequedan = [...new Set((Array.isArray(salida.sequedan) ? salida.sequedan : [])
+    .map(Number).filter(n => validos.has(n)))].sort((a, b) => a - b);
+  const sequitan = [...new Set((Array.isArray(salida.sequitan) ? salida.sequitan : [])
+    .map(Number).filter(n => validos.has(n) && !sequedan.includes(n)))].sort((a, b) => a - b);
+
+  const puntuacion = new Map();
+  for (const p of (Array.isArray(salida.puntos) ? salida.puntos : [])) {
+    const n = Number(p?.numero), cuanto = Number(p?.puntuacion);
+    if (!validos.has(n) || !Number.isFinite(cuanto)) continue;
+    puntuacion.set(n, Math.min(10, Math.max(1, Math.round(cuanto))));
+  }
+
+  // LO QUE SE HA DEJADO SIN DECIR ES UN HUECO, y por eso se pide otra vez: una
+  // creencia que no esta ni en una lista ni en la otra es un descuido suyo.
+  const olvidadas = [...validos].filter(n => !sequedan.includes(n) && !sequitan.includes(n));
+  const sinPuntuar = sequedan.filter(n => !puntuacion.has(n));
+
+  return {
+    sequedan, sequitan, puntuacion,
+    olvidadas,
+    huecos: olvidadas.length + sinPuntuar.length,
+  };
+}
+
+// ── C. REPASAR LO QUE HA QUEDADO ────────────────────────────
+//
+// Con las que quedaron, otra vez lo mismo. NO VE LAS QUE SE TIRARON: le llegan
+// renumeradas de uno en adelante, asi que no puede recuperar ninguna.
+//
+// ES UNA MEJORA, NO UN REQUISITO: si se cae, se sigue con lo que dejo la B.
+async function repasarLasCreencias({ creencias, espera }) {
+  const encargo = `Abajo tienes las creencias de una persona, enumeradas. Ya se han limpiado una vez; esto es el repaso.
+
+QUÉ SE QUITA
+
+Las que digan prácticamente lo mismo, aunque estén escritas con otras palabras: se queda solo UNA, la que más pese.
+
+Y las que se contradigan entre sí: se queda solo UNA, la que más pese.
+
+Pesa más la que sea más concreta y más central para esa persona, no la más genérica.
+
+Si no hay nada que quitar, no quitas nada: todas a "sequedan".
+
+LO QUE DEVUELVES
+
+"sequedan": los números de las que se quedan, en el orden de abajo.
+"sequitan": los números de las que quitas.
+
+Cada número tiene que quedar en una sola de las 2 listas, nunca en las 2. Todos los números tienen que aparecer en "sequedan" o en "sequitan", ninguno se queda fuera y ninguno se repite en las dos.
+
+LAS CREENCIAS:
+
+${creencias.map((c, i) => `${i + 1}. ${c.titulo}\n   ${c.linea}`).join('\n\n')}`;
+
+  const salida = await alModelo({
+    que: 'repasar las creencias',
+    modelo: EL_QUE_REMATA,
+    piensa: 'medium',
+    techo: TECHO_DE_CREENCIAS,
+    system: encargo,
+    mensaje: 'Di cuáles se quedan y cuáles se quitan, siguiendo el esquema.',
+    molde: MOLDE_DE_LIMPIAR,
+    espera: AbortSignal.timeout(espera),
+  });
+
+  const validos = new Set(creencias.map((_, i) => i + 1));
+  const sequedan = [...new Set((Array.isArray(salida.sequedan) ? salida.sequedan : [])
+    .map(Number).filter(n => validos.has(n)))].sort((a, b) => a - b);
+  const sequitan = [...new Set((Array.isArray(salida.sequitan) ? salida.sequitan : [])
+    .map(Number).filter(n => validos.has(n) && !sequedan.includes(n)))].sort((a, b) => a - b);
+
+  // Igual que en la limpieza de las pruebas: la que no clasifique, se queda.
+  for (const n of validos) {
+    if (!sequedan.includes(n) && !sequitan.includes(n)) sequedan.push(n);
+  }
+  sequedan.sort((a, b) => a - b);
+
+  return { sequedan, sequitan };
+}
+
+// ── LOS TRES PASOS SEGUIDOS ─────────────────────────────────
+//
+// Sale la lista de creencias lista para escribir: cada una con su titulo, su
+// linea, su area y su numero. Si no sale ninguna, esto LANZA: el documento no
+// se monta a medias.
+async function lasCreencias({ limpia, sexo }) {
+  const arranque = Date.now();
+  const cuantos = limpia.sequedan.length;
+
+  // ── A. SE SACAN ───────────────────────────────────────────
+  let sacadas;
+  try {
+    sacadas = await sacarLasCreencias({ lista: limpia.lista, cuantos, sexo, piensa: 'medium' });
+  } catch (err) {
+    // Si el que decide no puede, termina el otro: quedarse sin esta llamada es
+    // quedarse sin la mitad del documento.
+    const queda = loQueQueda(arranque, ESPERA_DE_CREENCIAS_MS);
+    if (queda < ESPERA_MINIMA_PARA_REHACER_MS) throw err;
+    console.warn(`[p2] ${EL_QUE_DECIDE} no ha podido sacar las creencias (${err.message}), lo termina ${EL_QUE_REMATA}`);
+    sacadas = await sacarLasCreencias({
+      lista: limpia.lista, cuantos, sexo, piensa: 'medium', espera: queda, modelo: EL_QUE_REMATA,
+    });
+  }
+
+  // Y SI HA VENIDO A MEDIAS, SE PIDE OTRA VEZ Y SE QUEDA LA MEJOR. Pedir otra
+  // vez no garantiza que salga mejor, asi que se comparan las dos.
+  if (sacadas.huecos || !sacadas.creencias.length) {
+    const queda = loQueQueda(arranque, ESPERA_DE_CREENCIAS_MS);
+    if (queda >= ESPERA_MINIMA_PARA_REHACER_MS) {
+      console.warn(`[p2] las creencias han venido ${sacadas.creencias.length ? `con ${sacadas.huecos} hueco(s)` : 'vacias'}, se piden otra vez`);
+      try {
+        const otra = await sacarLasCreencias({
+          lista: limpia.lista, cuantos, sexo, piensa: 'medium', espera: queda, modelo: EL_QUE_REMATA,
+          recordatorio: '\n\nY OJO: la vez anterior alguna vino sin su número de desafío, sin su línea o con el título fuera de medida. Todas enteras, y el título de cuatro a siete palabras.',
+        });
+        // Se queda la mejor de las dos: la que traiga menos huecos, o la
+        // segunda tal cual si la primera vino sin nada.
+        if (otra.creencias.length && (!sacadas.creencias.length || otra.huecos < sacadas.huecos)) sacadas = otra;
+      } catch (err) {
+        console.warn(`[p2] el segundo intento de sacar las creencias se ha caido (${err.message}), se sigue con el primero`);
+      }
+    }
+  }
+
+  let creencias = sacadas.creencias;
+  if (!creencias.length) {
+    throw new Error('no ha salido ninguna creencia, y sin ellas el documento no se monta');
+  }
+  console.log(`[p2] han salido ${creencias.length} creencias`);
+
+  // ── B. SE LIMPIAN Y SE PUNTUAN ────────────────────────────
+  const paraLimpiar = loQueQueda(arranque, ESPERA_DE_CREENCIAS_MS);
+  if (paraLimpiar < ESPERA_MINIMA_PARA_REHACER_MS) {
+    throw new Error('sacar sus creencias se ha llevado todo el tiempo y no queda para limpiarlas. Vuelve a darle.');
+  }
+
+  let limpiadas;
+  try {
+    limpiadas = await limpiarLasCreencias({ creencias, piensa: 'high', espera: paraLimpiar });
+  } catch (err) {
+    const queda = loQueQueda(arranque, ESPERA_DE_CREENCIAS_MS);
+    if (queda < ESPERA_MINIMA_PARA_REHACER_MS) throw err;
+    console.warn(`[p2] ${EL_QUE_DECIDE} no ha podido limpiar las creencias (${err.message}), lo termina ${EL_QUE_REMATA}`);
+    limpiadas = await limpiarLasCreencias({ creencias, piensa: 'high', espera: queda, modelo: EL_QUE_REMATA });
+  }
+
+  if (limpiadas.huecos || !limpiadas.sequedan.length) {
+    const queda = loQueQueda(arranque, ESPERA_DE_CREENCIAS_MS);
+    if (queda >= ESPERA_MINIMA_PARA_REHACER_MS) {
+      console.warn(`[p2] la limpieza de las creencias ${limpiadas.sequedan.length ? `ha venido con ${limpiadas.huecos} hueco(s)` : 'no ha dejado ninguna'}, se pide otra vez`);
+      try {
+        const otra = await limpiarLasCreencias({
+          creencias, piensa: 'high', espera: queda, modelo: EL_QUE_REMATA,
+          recordatorio: '\n\nY OJO: la vez anterior alguna se quedó sin decir si entra o sale, o sin su puntuación. Todas clasificadas y todas las que se quedan, puntuadas.',
+        });
+        if (otra.sequedan.length && (!limpiadas.sequedan.length || otra.huecos < limpiadas.huecos)) limpiadas = otra;
+      } catch (err) {
+        console.warn(`[p2] el segundo intento de limpiar las creencias se ha caido (${err.message}), se sigue con el primero`);
+      }
+    }
+  }
+
+  // LA QUE NO HAYA CLASIFICADO, SE QUEDA. Un descuido suyo no puede quitarle a
+  // la clienta una creencia que nadie ha decidido quitar.
+  let sequedan = [...limpiadas.sequedan, ...limpiadas.olvidadas].sort((a, b) => a - b);
+  if (limpiadas.olvidadas.length) {
+    console.warn(`[p2] la limpieza de creencias no ha dicho nada de ${limpiadas.olvidadas.join(', ')}: se quedan`);
+  }
+  if (!sequedan.length) {
+    throw new Error('después de limpiarlas no queda ninguna creencia, y sin ellas el documento no se monta');
+  }
+  console.log(`[p2] de ${creencias.length} creencias se quedan ${sequedan.length}` +
+    (limpiadas.sequitan.length ? `; fuera: ${limpiadas.sequitan.join(', ')}` : ''));
+
+  // Las que quedan, con su puntuacion pegada. La que se haya quedado sin nota
+  // no se tira: va sin ella.
+  let quedan = sequedan.map(n => ({ ...creencias[n - 1], puntuacion: limpiadas.puntuacion.get(n) || 0 }));
+
+  // ── C. Y SE REPASA LO QUE HA QUEDADO ──────────────────────
+  if (quedan.length >= 3) {
+    const queda = loQueQueda(arranque, ESPERA_DE_CREENCIAS_MS);
+    if (queda >= ESPERA_MINIMA_PARA_REHACER_MS) {
+      try {
+        const repaso = await repasarLasCreencias({ creencias: quedan, espera: queda });
+        const fuera = repaso.sequitan.map(n => quedan[n - 1]).filter(Boolean);
+        const dejadas = repaso.sequedan.map(n => quedan[n - 1]).filter(Boolean);
+        if (dejadas.length) {
+          quedan = dejadas;
+          console.log(`[p2] el repaso de las creencias deja ${quedan.length}` +
+            (fuera.length ? `; fuera tambien: ${fuera.map(c => c.titulo).join(' · ')}` : '; no ha quitado ninguna'));
+        }
+      } catch (err) {
+        console.warn(`[p2] el repaso de las creencias se ha caido (${err.message}), se sigue con la limpieza`);
+      }
+    }
+  }
+
+  // PRIMERO LAS QUE MAS LE MANDAN. Para eso se ha puntuado. Las que empaten se
+  // quedan en el orden en que salieron.
+  const areas = limpia.areas || [];
+  return quedan
+    .map((c, i) => ({ ...c, orden: i }))
+    .sort((a, b) => (b.puntuacion - a.puntuacion) || (a.orden - b.orden))
+    .map((c, i) => ({
+      numero: i + 1,
+      titulo: c.titulo,
+      linea: c.linea,
+      deCual: c.deCual,
+      puntuacion: c.puntuacion,
+      // EL AREA ES LA DEL DESAFIO DEL QUE SALE, y la pone el programa: viene
+      // pegada desde el P1, asi que no puede descuadrarse con lo escrito.
+      area: String(areas[c.deCual - 1] || '').trim(),
+    }));
+}
+
+// ── D. ESCRIBIR UNA CREENCIA ────────────────────────────────
+
+const MOLDE_DE_LA_CREENCIA = {
+  type: 'object',
+  properties: {
+    loQueCreesHoy: { type: 'string' },
+    loQueEsVerdad: { type: 'string' },
+  },
+  required: PUNTOS_DE_CREENCIA,
+  additionalProperties: false,
+};
+
+// CADA UNA VE SOLO LA SUYA. Ni las demas creencias ni las pruebas: aqui se
+// habla de lo que cree, y lo que tiene que hacer esta en otro sitio del
+// documento y lo escribe otro.
+async function escribirLaCreencia({ creencia, nombre, sexo }) {
+  const encargo = `${REGLAS_COMUNES}
+
+
+AQUÍ SE HABLA DE LO QUE CREE, NO DE LO QUE TIENE QUE HACER
+
+No le mandes hacer nada: ni un paso, ni un ejercicio, ni algo que probar, ni una señal a la que estar atenta. Eso está en otro sitio del documento, lo escribe otro y no es lo tuyo.
+
+Lo tuyo es lo que da por verdad sin darse cuenta, y lo que pasa el día que deje de mandarle.
+
+LO QUE TE TOCA AHORA
+
+Te dan UNA creencia suya y la línea que dice qué es y de dónde le viene. Escribes dos cosas, cada una por su lado, y no se repiten entre ellas: lo que ya has dicho en una no vuelve en la otra.
+
+NO DECIDES, EXPLICAS. Coges lo que te dan y lo abres. Todo lo que escribas tiene que poder rastrearse a eso. Si te falta un dato, no te lo inventas: cuentas mejor lo que ya está.
+
+LAS DOS, Y LO QUE VA EN CADA UNA:
+
+"loQueCreesHoy"
+
+Cuál es esa creencia, dicha a la cara y desde algo suyo, nunca desde la idea.
+
+Dentro va, entrecomillada y en primera persona, cómo se la dice por dentro: la frase tal cual le suena a ella, no arreglada.
+
+Y de dónde le viene: qué hay debajo que la sostiene, y que en su momento le sirvió para algo. Se le reconoce antes de decirle nada más.
+
+Unas 110 palabras para hacerte una idea del tamaño.
+
+"loQueEsVerdad"
+
+La creencia nueva, la que ocupa el sitio de la de arriba. Tiene que ser creíble: no es lo contrario dicho en bonito, ni una frase de ánimo, es algo que ella pueda leer hoy y reconocer que es verdad.
+
+Y la segunda mitad es qué cambia el día que la vieja deje de mandar: cómo es ahí su vida, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir.
+
+Unas 110 palabras para hacerte una idea del tamaño.
+
+LAS CIFRAS DE ARRIBA SON UNA GUÍA, no un límite. Cuanto más corto mejor, pero tiene que entenderse a la primera. Y nunca cortes una frase por la mitad para que quepa: si no cabe, quitas algo entero y cierras.
+
+LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que haces tú, y hace falta: sin esa línea todo sale pegado en un bloque y no hay quien lo lea en un móvil.
+
+LO QUE NO SE PUEDE ESCRIBIR
+
+No te inventes nada de su vida. No sabes si tiene pareja, trabajo, hijos, casa o familia.
+
+Nada que le valga igual a cualquier persona: este producto es de élite.
+
+Nada técnico: ni planetas, ni signos, ni casas, ni nada relacionado con astrología.
+
+Sin palabras técnicas ni metáforas.
+
+LA CREENCIA QUE TE TOCA:
+
+${creencia.titulo}
+
+${creencia.linea}
+
+Quien lo va a leer es ${comoSeLeHabla(sexo)}
+Nombre de pila: ${nombre}
+${REGLA_DEL_NOMBRE(false)}`;
+
+  const salida = await otraVezSiVieneRota({
+    que: `la creencia "${creencia.titulo}"`,
+    cojo: c => PUNTOS_DE_CREENCIA.some(punto => esRelleno(c[punto]) || acabaColgado(c[punto])),
+    aviso: c => !PUNTOS_DE_CREENCIA.some(punto => esRelleno(c[punto])) && PUNTOS_DE_CREENCIA.some(punto => acabaColgado(c[punto]))
+      ? `\n\nY OJO: la vez anterior algo se quedó a media frase (${PUNTOS_DE_CREENCIA.filter(punto => acabaColgado(c[punto])).map(x => BLOQUES_DE_CREENCIA[x]).join(', ')}). Se termina lo que se empieza: las dos acaban su última frase, con su punto.`
+      : `\n\nY OJO: la vez anterior dejaste una casilla con una palabra de relleno dentro (${PUNTOS_DE_CREENCIA.filter(punto => esRelleno(c[punto])).map(x => BLOQUES_DE_CREENCIA[x]).join(', ')}) en vez de escribirla. Esto lo lee una persona que ha pagado por ello: las dos se escriben, y si te has quedado sin hilo, se vuelve a empezar esa.`,
+    tope: ESPERA_DE_ESCRIBIR_MS,
+    pedir: (recordatorio, cuanto) => alModelo({
+      que: `escribir "${creencia.titulo}"`,
+      modelo: EL_QUE_REMATA,
+      piensa: '',
+      techo: TECHO_DE_ESCRIBIR,
+      system: encargo,
+      mensaje: `Escribe las dos partes de esta creencia, enteras.${recordatorio}`,
+      molde: MOLDE_DE_LA_CREENCIA,
+      espera: AbortSignal.timeout(cuanto),
+    }),
+  });
+
+  const escrita = { titulo: creencia.titulo, area: creencia.area };
+  for (const punto of PUNTOS_DE_CREENCIA) escrita[punto] = String(salida[punto] || '').trim();
+
+  // UNA CREENCIA ROTA NO SE ENTREGA, y rota es rota: lo mismo que en las
+  // pruebas. Solo se tira lo que de verdad no es texto -una casilla vacia o con
+  // una palabra de relleno haciendo bulto-, porque todo lo demas ya se ha
+  // pedido dos veces ahi arriba.
+  const roto = [];
+  for (const punto of PUNTOS_DE_CREENCIA) {
+    const txt = escrita[punto];
+    if (!txt) roto.push(`"${BLOQUES_DE_CREENCIA[punto]}" viene vacio`);
+    else if (esRelleno(txt)) roto.push(`"${BLOQUES_DE_CREENCIA[punto]}" trae texto de relleno en vez de contenido`);
+  }
+  if (roto.length) throw new Error(`la creencia "${creencia.titulo}" ha salido rota: ${roto.join('; ')}`);
+
+  return escrita;
+}
+
+
+// ════════════════════════════════════════════════════════════════
 // LA PAGINA Y SUS PETICIONES
 // ════════════════════════════════════════════════════════════════
 //
@@ -1305,6 +1845,41 @@ export default async function handler(req, res) {
       return res.status(200).json({ parte: escrita });
     }
 
+    // ── LAS CREENCIAS, QUE VAN POR SU LADO ────────────────────
+    //
+    // Su propia peticion, y por eso puede ir A LA VEZ que la que decide las
+    // pruebas: cada una tiene el tiempo del servidor entero para ella.
+    if (accion === 'creencias') {
+      const { sexo, limpia } = req.body || {};
+      if (!limpia || !Array.isArray(limpia.sequedan) || !limpia.lista) {
+        return res.status(400).json({ error: 'Falta la lista limpia y no se pueden sacar sus creencias' });
+      }
+      const creencias = await lasCreencias({ limpia, sexo: String(sexo || '') });
+      return res.status(200).json({ creencias });
+    }
+
+    if (accion === 'creencia') {
+      const { nombre, sexo, creencia } = req.body || {};
+      // Lo que llega del navegador se comprueba antes de meterlo en el encargo:
+      // si viniera a medias, el hueco lo rellenaria el modelo por su cuenta.
+      if (!String(creencia?.titulo || '').trim() || !String(creencia?.linea || '').trim()) {
+        return res.status(400).json({ error: 'Esa creencia llega a medias y no se escribe' });
+      }
+      if (!String(nombre || '').trim()) {
+        return res.status(400).json({ error: 'Esa creencia llega sin el nombre del cliente y no se escribe' });
+      }
+      const escrita = await escribirLaCreencia({
+        creencia: {
+          titulo: String(creencia.titulo).trim(),
+          linea: String(creencia.linea).trim(),
+          area: String(creencia.area || '').trim(),
+        },
+        nombre: String(nombre).trim(),
+        sexo: String(sexo || ''),
+      });
+      return res.status(200).json({ creencia: escrita });
+    }
+
     return res.status(400).json({ error: 'Acción no válida' });
   } catch (err) {
     console.error('[p2-plan/prueba]', err);
@@ -1382,6 +1957,8 @@ const PAGINA = `<!DOCTYPE html>
 <script>
 const BLOQUES = ${JSON.stringify(BLOQUES)};
 const PUNTOS = ${JSON.stringify(PUNTOS)};
+const BLOQUES_DE_CREENCIA = ${JSON.stringify(BLOQUES_DE_CREENCIA)};
+const PUNTOS_DE_CREENCIA = ${JSON.stringify(PUNTOS_DE_CREENCIA)};
 // El que va sobre beige, aqui y en el PDF: es la orden.
 const SOBRE_BEIGE = ['queHaces'];
 const quien = document.getElementById('quien');
@@ -1444,6 +2021,11 @@ ir.addEventListener('click', async () => {
     marca = Date.now();
     return va;
   };
+  // LAS CREENCIAS VAN POR SU LADO Y A LA VEZ. Es el otro tema del documento y
+  // no depende de las pruebas: en cuanto la lista esta limpia, se pide, y
+  // mientras se decide el plan y se escriben las partes, ellas van saliendo.
+  let vanCreencias = null;
+
   aviso.textContent = 'Limpiando la lista…';
   try {
     const uno = await llamar({ accion:'limpiar', compra });
@@ -1452,6 +2034,11 @@ ir.addEventListener('click', async () => {
     // deberia saltar nunca. Pero si saltara, es mejor pararse aqui que
     // escribir las partes dirigidas a "undefined".
     if (!quienEs || !quienEs.nombre) throw new Error('El informe ha venido sin el nombre del cliente');
+    // Se lanza y no se espera: se recoge al final. El fallo se guarda dentro en
+    // vez de soltarlo, para que no se pierda por el camino mientras nadie mira.
+    vanCreencias = llamar({ accion:'creencias', sexo:quienEs.sexo, limpia: uno.limpia })
+      .then(d => ({ ok:true, creencias: d.creencias || [] }))
+      .catch(e => ({ ok:false, error: e.message }));
     aviso.textContent = 'Limpiada en ' + cuanto() + '. Decidiendo su plan…';
     const dos = await llamar({ accion:'decidir', nombre:quienEs.nombre, sexo:quienEs.sexo, limpia: uno.limpia });
     plan = dos.plan;
@@ -1536,14 +2123,77 @@ ir.addEventListener('click', async () => {
 
   const completas = escritas.filter(Boolean);
 
-  // EL PDF SOLO SE OFRECE SI ESTA TODO. Con una parte caida saldria un
-  // documento con un agujero dentro, y eso no se le ensena a nadie.
-  if (completas.length === total) {
+  // 3. Y LAS CREENCIAS, QUE LLEVAN TODO ESTE RATO SALIENDO POR SU LADO.
+  //
+  // Se pidieron a la vez que el plan, asi que a estas alturas lo normal es que
+  // ya esten: aqui solo se recogen y se escriben, igual que las partes.
+  aviso.textContent = 'Las pruebas, en ' + cuanto() + '. Ahora sus creencias…';
+  const suyas = await vanCreencias;
+
+  let laProgramacion = [];
+  let enteras = false;
+
+  if (!suyas.ok) {
+    salida.insertAdjacentHTML('beforeend',
+      '<p class="aviso error">No han salido sus creencias: ' + escapar(suyas.error) + '</p>');
+  } else if (!suyas.creencias.length) {
+    salida.insertAdjacentHTML('beforeend', '<p class="aviso error">No ha salido ninguna creencia.</p>');
+  } else {
+    const cuantasC = suyas.creencias.length;
+    aviso.textContent = 'Han salido ' + cuantasC + ' creencias. Escribiéndolas todas a la vez…';
+
+    const huecosC = suyas.creencias.map((suya, i) => {
+      const hueco = document.createElement('div');
+      hueco.className = 'parte';
+      hueco.innerHTML = cabeceraDeParte(suya, i + 1) + '<p class="aviso">Escribiéndose…</p>';
+      salida.appendChild(hueco);
+      return hueco;
+    });
+
+    const escritasC = [];
+    const pasadaDeCreencias = async (cuales, segundaVuelta) => {
+      const caidas = [];
+      await Promise.all(cuales.map(async i => {
+        const suya = suyas.creencias[i];
+        const cabecera = cabeceraDeParte(suya, i + 1);
+        try {
+          const { creencia } = await llamar({ accion:'creencia', nombre:quienEs.nombre,
+                                              sexo:quienEs.sexo, creencia: suya });
+          escritasC[i] = creencia;
+          huecosC[i].outerHTML = pintarCreencia(creencia, i + 1);
+        } catch (err) {
+          caidas.push(i);
+          huecosC[i].innerHTML = cabecera + (segundaVuelta
+            ? '<p class="error">' + escapar(err.message) + '</p>'
+            : '<p class="aviso">Se ha caído, se vuelve a pedir…</p>');
+        }
+      }));
+      return caidas;
+    };
+
+    // Y SE INSISTE HASTA TRES VECES CON LA QUE SE CAIGA, por lo mismo que en
+    // las partes: solo se vuelve a pedir la que ha fallado, y casi siempre
+    // entra a la segunda.
+    let caidasC = suyas.creencias.map((_, i) => i);
+    for (let vuelta = 1; vuelta <= INTENTOS && caidasC.length; vuelta++) {
+      if (vuelta > 1) aviso.textContent = 'Se han caído ' + caidasC.length + ' creencias, se piden otra vez…';
+      caidasC = await pasadaDeCreencias(caidasC, vuelta === INTENTOS);
+    }
+
+    laProgramacion = escritasC.filter(Boolean);
+    enteras = laProgramacion.length === cuantasC;
+  }
+
+  // EL PDF SOLO SE OFRECE SI ESTA TODO. Con una parte caida -o sin sus
+  // creencias- saldria un documento con un agujero dentro, y eso no se le
+  // ensena a nadie.
+  if (completas.length === total && enteras) {
     elDocumento = {
       nombre: quienEs.nombre,
       // El numero que le toca a cada parte y los nombres de sus puntos van
       // desde aqui: el que maqueta no tiene que saberselos.
       partes: completas.map((p, i) => ({ ...p, numero: i + 1, nombres: BLOQUES })),
+      creencias: laProgramacion.map((c, i) => ({ ...c, numero: i + 1, nombres: BLOQUES_DE_CREENCIA })),
     };
     pdf.hidden = false;
     aviso.textContent = 'Listo. Ya se puede bajar el PDF.';
@@ -1629,6 +2279,15 @@ function pintarParte(p, n) {
       : '<div class="bloque"><h3>' + escapar(BLOQUES[punto]) + '</h3>' + dentro + '</div>';
   }).join('');
   return '<div class="parte">' + cabeceraDeParte(p, n) + bloques + '</div>';
+}
+
+// Y cada creencia con sus dos bloques. Va en texto corrido, sin fondo: aqui no
+// hay ninguna orden que vuelva a buscar, solo lo que cree y lo que es verdad.
+function pintarCreencia(c, n) {
+  const bloques = PUNTOS_DE_CREENCIA.map(punto =>
+    '<div class="bloque"><h3>' + escapar(BLOQUES_DE_CREENCIA[punto]) + '</h3>' + parrafos(c[punto]) + '</div>'
+  ).join('');
+  return '<div class="parte">' + cabeceraDeParte(c, n) + bloques + '</div>';
 }
 </script>
 </body>

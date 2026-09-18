@@ -76,10 +76,13 @@ const ENTRE_CAJAS = 5;
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
-  const { nombre, partes } = req.body || {};
+  const { nombre, partes, creencias } = req.body || {};
   if (!Array.isArray(partes) || !partes.length) {
     return res.status(400).json({ error: 'Falta el documento que hay que maquetar' });
   }
+  // El otro tema del documento. Si no viene, el PDF sale con las pruebas y ya:
+  // aqui no se monta nada a medias, pero tampoco se rompe por lo que falte.
+  const suProgramacion = Array.isArray(creencias) ? creencias : [];
 
   try {
     const fallos = [];
@@ -312,6 +315,32 @@ export default async function handler(req, res) {
         subtitulo(parte?.nombres?.[punto] || PORDEFECTO[punto]);
         if (SOBRE_BEIGE.has(punto)) caja('', parte[punto]);
         else corrido(parte[punto]);
+      }
+    }
+
+    // ── LAS CREENCIAS ─────────────────────────────────────────
+    //
+    // El otro tema, igual que las pruebas: cada una en su hoja, con su numero,
+    // su titulo y su area, y sus dos bloques en texto corrido. Aqui no hay
+    // ninguna orden que vuelva a buscar, asi que no lleva fondo beige.
+    //
+    // Y ANTES, UNA HOJA EN BLANCO. Ahi va la explicacion de que es una creencia
+    // y como cambia, que es la misma para todos y se pone luego sobre el
+    // documento. Se deja hecha, con su fondo y su numero, como las demas.
+    const PUNTOS_DE_CREENCIA = ['loQueCreesHoy', 'loQueEsVerdad'];
+    const PORDEFECTO_DE_CREENCIA = {
+      loQueCreesHoy: 'Lo que crees hoy', loQueEsVerdad: 'Lo que es verdad',
+    };
+
+    if (suProgramacion.length) {
+      hojaNueva();
+      for (const creencia of suProgramacion) {
+        abrirSeccion(creencia?.numero, t(creencia?.titulo), creencia?.area);
+        for (const punto of PUNTOS_DE_CREENCIA) {
+          if (!t(creencia?.[punto])) continue;
+          subtitulo(creencia?.nombres?.[punto] || PORDEFECTO_DE_CREENCIA[punto]);
+          corrido(creencia[punto]);
+        }
       }
     }
 
