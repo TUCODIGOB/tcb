@@ -294,7 +294,7 @@ export default async function handler(req, res) {
     // buscar uno el dia que le haga falta.
     const PUNTOS = ['tuPrueba', 'queHaces', 'dondeTeCaes'];
     const PORDEFECTO = {
-      tuPrueba: 'Tu prueba', queHaces: 'Qué haces',
+      tuPrueba: 'Tu prueba', queHaces: 'Qué hacer',
       dondeTeCaes: 'Dónde te vas a caer',
     };
 

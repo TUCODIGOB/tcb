@@ -166,7 +166,7 @@ Español, año, día, más, está, aquí, así, también, después, sensación, 
 // planes.
 const BLOQUES = {
   tuPrueba:     'Tu prueba',
-  queHaces:     'Qué haces',
+  queHaces:     'Qué hacer',
   dondeTeCaes:  'Dónde te vas a caer',
 };
 
