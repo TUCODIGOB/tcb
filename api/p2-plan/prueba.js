@@ -1611,7 +1611,7 @@ async function escribirLaCreencia({ creencia, nombre, sexo }) {
 
 AQUÍ SE HABLA DE LO QUE CREE, NO DE LO QUE TIENE QUE HACER
 
-No le mandes hacer nada: ni un paso, ni un ejercicio, ni algo que probar, ni una señal a la que estar atenta. Eso está en otro sitio del documento, lo escribe otro y no es lo tuyo.
+No le mandes hacer nada: ni un paso, ni un ejercicio, ni algo que probar, ni una señal que vigilar. Eso está en otro sitio del documento, lo escribe otro y no es lo tuyo.
 
 Lo tuyo es lo que da por verdad sin darse cuenta, y lo que pasa el día que deje de mandarle.
 
@@ -1627,7 +1627,7 @@ LAS DOS, Y LO QUE VA EN CADA UNA:
 
 Cuál es esa creencia, dicha a la cara y desde algo suyo, nunca desde la idea.
 
-Dentro va, entrecomillada y en primera persona, cómo se la dice por dentro: la frase tal cual le suena a ella, no arreglada.
+Dentro va, entrecomillada y en primera persona, cómo se la dice por dentro: la frase tal cual le suena por dentro, no arreglada.
 
 Y de dónde le viene: qué hay debajo que la sostiene, y que en su momento le sirvió para algo.
 
@@ -1635,7 +1635,7 @@ Unas 110 palabras para hacerte una idea del tamaño.
 
 "loQueEsVerdad"
 
-La creencia nueva, la que ocupa el sitio de la de arriba. Tiene que ser creíble: no es lo contrario dicho en bonito, ni una frase de ánimo, es algo que ella pueda leer hoy y reconocer que es verdad.
+La creencia nueva, la que ocupa el sitio de la de arriba. Tiene que ser creíble: no es lo contrario dicho en bonito, ni una frase de ánimo, es algo que pueda leer hoy y reconocer que es verdad.
 
 Y la segunda mitad es qué cambia el día que la vieja deje de mandar: cómo es ahí su vida, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir.
 
