@@ -1238,7 +1238,7 @@ async function sacarLasCreencias({ lista, cuantos, sexo, piensa, espera = ESPERA
 
 QUÉ TIENES QUE SACAR
 
-Debajo de cada desafío hay una creencia: una frase que esa persona da por verdad sobre sí misma, sobre los demás o sobre cómo funciona la vida, y que es lo que hace que se comporte así. Eso es lo que buscas, y no hay que buscarlo fuera: está en lo que tienes abajo.
+Debajo de cada desafío hay una creencia: una frase que esa persona da por verdad sobre sí misma, sobre los demás o sobre cómo funciona la vida, y que es lo que hace que se comporte así. Eso es lo que buscas.
 
 Sacas TODAS las que haya. Un desafío puede traer más de una, y dos desafíos pueden traer la misma. Aquí no se filtra, no se junta y no se quita nada: eso se hace después. Y no hay un número que tenga que salir.
 
@@ -1629,7 +1629,7 @@ Cuál es esa creencia, dicha a la cara y desde algo suyo, nunca desde la idea.
 
 Dentro va, entrecomillada y en primera persona, cómo se la dice por dentro: la frase tal cual le suena a ella, no arreglada.
 
-Y de dónde le viene: qué hay debajo que la sostiene, y que en su momento le sirvió para algo. Se le reconoce antes de decirle nada más.
+Y de dónde le viene: qué hay debajo que la sostiene, y que en su momento le sirvió para algo.
 
 Unas 110 palabras para hacerte una idea del tamaño.
 
