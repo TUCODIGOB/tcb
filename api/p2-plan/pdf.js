@@ -206,7 +206,7 @@ export default async function handler(req, res) {
         }
       }
 
-      y += ALTO_TITULO + 10;
+      y += ALTO_TITULO + 3;
     }
 
     // ── LAS CAJAS ─────────────────────────────────────────────
