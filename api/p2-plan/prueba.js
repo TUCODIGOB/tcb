@@ -839,6 +839,10 @@ async function soloLimpiar({ rasgos }) {
           desafios: sequedan.map(n => desafios[n - 1]),
           piensa: 'medium',
           espera: queda,
+          // EL REPASO LO HACE EL OTRO. Aqui la lista ya viene corta y hay
+          // mucho menos que comparar que en la primera pasada, asi que no hace
+          // falta el que decide: con este sale igual y cuesta bastante menos.
+          modelo: EL_QUE_REMATA,
         });
         // Los numeros del repaso son los de la lista que se le paso, no los de
         // la lista original: se traducen.
