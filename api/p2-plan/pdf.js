@@ -164,17 +164,49 @@ export default async function handler(req, res) {
       }
     }
 
-    // LA CABECERA DE CADA SECCION, Y SIEMPRE EN HOJA NUEVA. Arriba la etiqueta
-    // pequena en dorado, que dice de que parcela se habla, y debajo el titulo
-    // en el verde de la marca.
-    function abrirSeccion(etiqueta, titulo) {
+    // LA CABECERA DE CADA PARTE, Y SIEMPRE EN HOJA NUEVA.
+    //
+    // Va en una sola linea: su numero y el titulo del desafio en el verde de la
+    // marca, y detras, mas pequena y en dorado, el area de la que sale. Las dos
+    // cosas vienen del P1 tal cual, no las escribe nadie aqui.
+    //
+    // EL AREA VA PEGADA AL FINAL DEL TITULO, no debajo. Si no cabe en el ultimo
+    // renglon, baja ella sola al siguiente: nunca se sale del ancho ni se monta
+    // encima de la ultima palabra.
+    const TAM_TITULO = 17, TAM_AREA = 11, ALTO_TITULO = 8.5;
+
+    function abrirSeccion(numero, titulo, area) {
       hojaNueva();
       y = 42;
-      if (etiqueta) {
-        escribir(String(etiqueta).toUpperCase(), { fuente: 'bold', tam: 11, color: DORADO, alto: 10 });
+
+      const texto = (numero ? numero + '. ' : '') + t(titulo);
+      doc.setFont('Roboto', 'bold');
+      doc.setFontSize(TAM_TITULO);
+      const lineas = doc.splitTextToSize(texto, ANCHO);
+
+      doc.setTextColor(VERDE[0], VERDE[1], VERDE[2]);
+      lineas.forEach((linea, i) => {
+        doc.text(linea, X, y);
+        if (i < lineas.length - 1) y += ALTO_TITULO;
+      });
+
+      const suArea = t(area) ? '(' + String(area).toUpperCase() + ')' : '';
+      if (suArea) {
+        doc.setFont('Roboto', 'bold');
+        doc.setFontSize(TAM_TITULO);
+        const ultima = doc.getTextWidth(lineas[lineas.length - 1] || '');
+        doc.setFontSize(TAM_AREA);
+        const suyo = doc.getTextWidth(' ' + suArea);
+        doc.setTextColor(DORADO[0], DORADO[1], DORADO[2]);
+        if (ultima + suyo <= ANCHO) {
+          doc.text(' ' + suArea, X + ultima, y);
+        } else {
+          y += ALTO_TITULO;
+          doc.text(suArea, X, y);
+        }
       }
-      escribir(titulo, { fuente: 'bold', tam: 17, color: VERDE, alto: 8.5 });
-      y += 10;
+
+      y += ALTO_TITULO + 10;
     }
 
     // ── LAS CAJAS ─────────────────────────────────────────────
@@ -274,7 +306,7 @@ export default async function handler(req, res) {
     const SOBRE_BEIGE = new Set(['queHaces']);
 
     for (const parte of partes) {
-      abrirSeccion(parte?.etiqueta, t(parte?.titulo));
+      abrirSeccion(parte?.numero, t(parte?.titulo), parte?.area);
       for (const punto of PUNTOS) {
         if (!t(parte?.[punto])) continue;
         subtitulo(parte?.nombres?.[punto] || PORDEFECTO[punto]);

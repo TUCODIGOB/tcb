@@ -750,6 +750,9 @@ Nombre de pila: ${nombre}`;
       // EL TITULO ES EL DEL DESAFIO, y lo pone el programa: lo tiene tal cual
       // lo escribio el P1, asi que no hace falta que nadie lo copie.
       titulo: crudos.length ? limpia.titulos[crudos[0] - 1] : '',
+      // Y EL AREA, LA DEL MISMO DESAFIO. Tampoco pasa por el modelo: sale del
+      // numero que ha devuelto, asi que no puede descuadrarse con lo escrito.
+      area: crudos.length ? limpia.areas[crudos[0] - 1] : '',
     };
     for (const punto of PUNTOS) suyo[punto] = String(p?.[punto] || '').trim();
     // UNA PARTE A MEDIAS NO SE ESCRIBE. Si viene con una casilla vacia, quien
@@ -874,6 +877,9 @@ async function soloLimpiar({ rasgos }) {
     }).join('\n\n'),
     // El titulo de cada uno, en el mismo orden que la lista de arriba.
     titulos: sequedan.map(n => String(desafios[n - 1].nombre || '').trim()),
+    // Y su area, la que le puso el P1. Va pegada al desafio desde alli, asi
+    // que no la elige nadie aqui: solo se arrastra hasta la cabecera del PDF.
+    areas: sequedan.map(n => String(desafios[n - 1].area || '').trim()),
     // Los que se quitan, con su descripcion, para poder mirarlos en la pagina.
     quitados: sequitan.map(n => ({
       numero: n,
@@ -1327,7 +1333,7 @@ const PAGINA = `<!DOCTYPE html>
   .aviso { font-family:system-ui,sans-serif; font-size:.9rem; color:#6b6b6b; margin:1.2rem 0; }
   .error { color:#c0392b; }
   .parte { background:#fff; border:1px solid rgba(189,144,72,.25); border-left:4px solid var(--gold); border-radius:8px; padding:1.6rem 1.8rem; margin-top:1.6rem; }
-  .cual { font-family:system-ui,sans-serif; font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.12em; color:var(--gold); margin-bottom:.5rem; }
+  .parte h2 .area { font-size:.62em; font-weight:700; letter-spacing:.06em; color:var(--gold); }
   .parte h2 { font-size:1.25rem; color:var(--teal); margin-bottom:.9rem; line-height:1.35; }
   .bloque { margin-bottom:1.3rem; }
   .bloque:last-child { margin-bottom:0; }
@@ -1469,8 +1475,7 @@ ir.addEventListener('click', async () => {
   const huecos = plan.partes.map((suya, i) => {
     const hueco = document.createElement('div');
     hueco.className = 'parte';
-    hueco.innerHTML = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.titulo) +
-      '</h2><p class="aviso">Escribiéndose…</p>';
+    hueco.innerHTML = cabeceraDeParte(suya, i + 1) + '<p class="aviso">Escribiéndose…</p>';
     salida.appendChild(hueco);
     return hueco;
   });
@@ -1487,12 +1492,12 @@ ir.addEventListener('click', async () => {
     const caidas = [];
     await Promise.all(cuales.map(async i => {
       const suya = plan.partes[i];
-      const cabecera = '<p class="cual">' + (i+1) + ' de ' + total + '</p><h2>' + escapar(suya.titulo) + '</h2>';
+      const cabecera = cabeceraDeParte(suya, i + 1);
       try {
         const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo,
                                          parte: suya, puedeElNombre: conNombre.has(i) });
         escritas[i] = parte;
-        huecos[i].outerHTML = pintarParte(parte, i+1, total);
+        huecos[i].outerHTML = pintarParte(parte, i+1);
       } catch (err) {
         caidas.push(i);
         huecos[i].innerHTML = cabecera + (segundaVuelta
@@ -1532,9 +1537,9 @@ ir.addEventListener('click', async () => {
   if (completas.length === total) {
     elDocumento = {
       nombre: quienEs.nombre,
-      // La etiqueta pequena de cada parte y los nombres de sus puntos van
+      // El numero que le toca a cada parte y los nombres de sus puntos van
       // desde aqui: el que maqueta no tiene que saberselos.
-      partes: completas.map((p, i) => ({ ...p, etiqueta: (i+1) + ' de ' + total, nombres: BLOQUES })),
+      partes: completas.map((p, i) => ({ ...p, numero: i + 1, nombres: BLOQUES })),
     };
     pdf.hidden = false;
     aviso.textContent = 'Listo. Ya se puede bajar el PDF.';
@@ -1603,17 +1608,23 @@ function pintarLoDecidido(partes, limpieza) {
     filas + '</table></details>';
 }
 
-// Cada parte con sus cuatro puntos, cada uno con su nombre para saber de que
-// habla y para poder volver a buscarlo.
-function pintarParte(p, n, total) {
+// La cabecera de una parte: su numero, el titulo del desafio y, al lado, el
+// area de la que sale. La misma que lleva el PDF.
+function cabeceraDeParte(p, n) {
+  const elArea = p.area ? ' <span class="area">(' + escapar(String(p.area).toUpperCase()) + ')</span>' : '';
+  return '<h2>' + n + '. ' + escapar(p.titulo) + elArea + '</h2>';
+}
+
+// Cada parte con sus puntos, cada uno con su nombre para saber de que habla y
+// para poder volver a buscarlo.
+function pintarParte(p, n) {
   const bloques = PUNTOS.map(punto => {
     const dentro = parrafos(p[punto]);
     return SOBRE_BEIGE.includes(punto)
       ? '<div class="bloque beige"><h3>' + escapar(BLOQUES[punto]) + '</h3><div class="caja-texto">' + dentro + '</div></div>'
       : '<div class="bloque"><h3>' + escapar(BLOQUES[punto]) + '</h3>' + dentro + '</div>';
   }).join('');
-  return '<div class="parte"><p class="cual">' + n + ' de ' + total + '</p>' +
-    '<h2>' + escapar(p.titulo) + '</h2>' + bloques + '</div>';
+  return '<div class="parte">' + cabeceraDeParte(p, n) + bloques + '</div>';
 }
 </script>
 </body>
