@@ -1704,6 +1704,219 @@ ${REGLA_DEL_NOMBRE(false)}`;
 
 
 // ════════════════════════════════════════════════════════════════
+// TU HOJA DE RUTA: LAS DOS TABLAS
+// ════════════════════════════════════════════════════════════════
+//
+// LO ULTIMO DEL DOCUMENTO, Y LO ULTIMO QUE SE HACE. Son el resumen de lo que
+// ya ha leido: una tabla con sus pruebas y otra con sus creencias, para tener
+// en una hoja lo que en el documento ocupa veinte. Por eso no pueden salir
+// antes: necesitan las pruebas y las creencias hechas.
+//
+// AQUI NO SE DECIDE NI SE ESCRIBE NADA NUEVO. Se resume lo que ya esta. Si una
+// celda dijera algo que no esta en el documento, la tabla dejaria de ser un
+// resumen y seria otro texto que se contradice con el suyo.
+//
+// LAS DOS VAN A LA VEZ, cada una con su llamada: no se miran entre ellas.
+//
+// Y NO LLEVAN EL TONO ENTERO. El tono son cinco folios sobre escribir
+// parrafos, escenas y ritmo; aqui se escriben frases de una linea. Lo que una
+// celda necesita -de tu, palabras de todos los dias, sin metaforas, nada
+// tecnico y con sus tildes- va escrito aqui abajo y es lo unico que hace
+// falta.
+
+const ESPERA_DE_LA_TABLA_MS = 90000;
+
+// Sitio de sobra: no razona y lo que escribe son dos o tres lineas por fila.
+const TECHO_DE_LA_TABLA = 12000;
+
+// El molde sale de las casillas que lleve cada tabla, que son las mismas que
+// los nombres de dentro del documento.
+const moldeDeLaTabla = celdas => ({
+  type: 'object',
+  properties: {
+    filas: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: Object.fromEntries([
+          ['numero', { type: 'integer' }],
+          ...celdas.map(c => [c, { type: 'string' }]),
+        ]),
+        required: ['numero', ...celdas],
+        additionalProperties: false,
+      },
+    },
+  },
+  required: ['filas'],
+  additionalProperties: false,
+});
+
+// LAS REGLAS DE UNA CELDA, y valen para las dos tablas.
+//
+// NO SE MIRA SI ACABA EN PUNTO, a proposito: aqui se pide justo lo contrario
+// -sin punto al final-, asi que lo que en el documento es una frase cortada
+// aqui es lo normal.
+const COMO_ES_UNA_CELDA = `CADA CELDA
+
+Una frase corta, de menos de doce palabras, hablada de tú. Se entiende sola de un vistazo, sin leer el resto de la tabla. Empieza en mayúscula y sin punto al final.
+
+Aquí se resume: no se explica, no se añade nada que no esté abajo y no se cambia lo que dice.
+
+NO SE PUEDE
+
+Nada técnico: ni planetas, ni signos, ni casas, ni nada relacionado con astrología.
+
+Sin metáforas y sin palabras de manual: las de todos los días, las que se dicen hablando.
+
+Español de España, con todas sus tildes y todas sus eñes.`;
+
+// Lo que vuelve, limpio: solo filas que existan, sin repetir y con todas sus
+// celdas escritas. Una celda vacia o con una palabra de relleno deja la fila
+// fuera, y entonces se vuelve a pedir SOLO esa.
+function filasLimpias(salida, celdas, pedidas) {
+  const validas = new Set(pedidas);
+  const filas = [];
+  for (const f of (Array.isArray(salida.filas) ? salida.filas : [])) {
+    const numero = Number(f?.numero);
+    if (!validas.has(numero) || filas.some(x => x.numero === numero)) continue;
+    const fila = { numero };
+    let entera = true;
+    for (const celda of celdas) {
+      const txt = String(f?.[celda] || '').trim();
+      if (!txt || esRelleno(txt)) { entera = false; break; }
+      fila[celda] = txt;
+    }
+    if (entera) filas.push(fila);
+  }
+  return filas;
+}
+
+// UNA TABLA, CON SU SEGUNDA VUELTA.
+//
+// Si alguna fila no vuelve, se pide otra vez SOLO esa: las que ya estan no se
+// repiten. Y si despues de eso sigue faltando alguna, esto lanza: una tabla
+// resumen con un hueco en medio no se entrega.
+async function unaTabla({ que, celdas, encargoDe, mensaje, cosas, arranque }) {
+  const pedidas = cosas.map(c => c.numero);
+
+  const pedir = async (suyas, espera) => filasLimpias(
+    await alModelo({
+      que,
+      modelo: EL_QUE_REMATA,
+      piensa: '',
+      techo: TECHO_DE_LA_TABLA,
+      system: encargoDe(suyas),
+      mensaje,
+      molde: moldeDeLaTabla(celdas),
+      espera: AbortSignal.timeout(espera),
+    }),
+    celdas,
+    suyas.map(c => c.numero),
+  );
+
+  // SI SE CAE, ES COMO SI NO HUBIERA VUELTO NINGUNA FILA: se pide otra vez
+  // ahi abajo, con todas. Asi una caida y una fila que falta se arreglan por
+  // el mismo camino.
+  let filas = [];
+  try {
+    filas = await pedir(cosas, loQueQueda(arranque, ESPERA_DE_LA_TABLA_MS));
+  } catch (err) {
+    console.warn(`[p2] ${que}: se ha caido (${err.message}), se pide otra vez`);
+  }
+
+  const faltan = pedidas.filter(n => !filas.some(f => f.numero === n));
+  if (faltan.length) {
+    const queda = loQueQueda(arranque, ESPERA_DE_LA_TABLA_MS);
+    if (queda >= ESPERA_MINIMA_PARA_REHACER_MS) {
+      console.warn(`[p2] ${que}: faltan las filas ${faltan.join(', ')}, se piden otra vez`);
+      try {
+        filas.push(...await pedir(cosas.filter(c => faltan.includes(c.numero)), queda));
+      } catch (err) {
+        console.warn(`[p2] ${que}: la segunda vuelta se ha caido (${err.message})`);
+      }
+    }
+  }
+
+  const siguenFaltando = pedidas.filter(n => !filas.some(f => f.numero === n));
+  if (siguenFaltando.length) {
+    throw new Error(`${que}: no han salido las filas ${siguenFaltando.join(', ')}, y la tabla no se monta a medias`);
+  }
+
+  return filas.sort((a, b) => a.numero - b.numero);
+}
+
+// ── LA TABLA DE LAS PRUEBAS ─────────────────────────────────
+//
+// Se hace con lo que se DECIDIO de cada prueba -sus tres lineas cortas-, no
+// con lo escrito: es lo mismo dicho en corto, que es justo lo que tiene que
+// caber en una celda.
+const laTablaDeLasPruebas = ({ partes, sexo, arranque }) => unaTabla({
+  que: 'la tabla de las pruebas',
+  celdas: PUNTOS,
+  cosas: partes,
+  arranque,
+  mensaje: 'Escribe la tabla, una fila por cada prueba.',
+  encargoDe: suyas => `Abajo tienes las pruebas de una persona, numeradas. De cada una tienes su título y lo que ya se decidió.
+
+QUÉ HACES
+
+Una fila por cada prueba de abajo, con su número, y tres celdas: "${BLOQUES.tuPrueba}", "${BLOQUES.queHaces}" y "${BLOQUES.dondeTeCaes}". Cada celda resume en una línea lo que ya pone abajo en esa misma casilla.
+
+Ninguna se queda fuera.
+
+${COMO_ES_UNA_CELDA}
+
+LAS PRUEBAS:
+
+${suyas.map(p => `${p.numero}. ${p.titulo}\n` +
+  PUNTOS.map(punto => `   ${BLOQUES[punto]}: ${p[punto]}`).join('\n')).join('\n\n')}
+
+Quien lo va a leer es ${comoSeLeHabla(sexo)}`,
+});
+
+// ── LA TABLA DE LAS CREENCIAS ───────────────────────────────
+//
+// Esta se hace con lo ESCRITO, y no con lo que se saco al principio: la
+// creencia vieja se saco antes, pero la nueva -la que es verdad- nace al
+// escribirla, y la tabla tiene que decir lo mismo que ella.
+const laTablaDeLasCreencias = ({ creencias, sexo, arranque }) => unaTabla({
+  que: 'la tabla de las creencias',
+  celdas: PUNTOS_DE_CREENCIA,
+  cosas: creencias,
+  arranque,
+  mensaje: 'Escribe la tabla, una fila por cada creencia.',
+  encargoDe: suyas => `Abajo tienes las creencias de una persona, numeradas. De cada una tienes lo que cree hoy y lo que es verdad, ya escrito.
+
+QUÉ HACES
+
+Una fila por cada creencia de abajo, con su número, y dos celdas: "${BLOQUES_DE_CREENCIA.loQueCreesHoy}" y "${BLOQUES_DE_CREENCIA.loQueEsVerdad}". Cada celda resume en una línea lo que ya pone abajo en esa misma casilla.
+
+Ninguna se queda fuera.
+
+${COMO_ES_UNA_CELDA}
+
+LAS CREENCIAS:
+
+${suyas.map(c => `${c.numero}. ${c.titulo}\n` +
+  PUNTOS_DE_CREENCIA.map(punto => `   ${BLOQUES_DE_CREENCIA[punto]}: ${c[punto]}`).join('\n')).join('\n\n')}
+
+Quien lo va a leer es ${comoSeLeHabla(sexo)}`,
+});
+
+// LAS DOS, A LA VEZ. Si una se cae, se cae la hoja de ruta entera: media tabla
+// resumen no es un resumen.
+async function lasTablas({ partes, creencias, sexo }) {
+  const arranque = Date.now();
+  const [pruebas, suyas] = await Promise.all([
+    laTablaDeLasPruebas({ partes, sexo, arranque }),
+    laTablaDeLasCreencias({ creencias, sexo, arranque }),
+  ]);
+  console.log(`[p2] la hoja de ruta: ${pruebas.length} pruebas y ${suyas.length} creencias`);
+  return { pruebas, creencias: suyas };
+}
+
+
+// ════════════════════════════════════════════════════════════════
 // LA PAGINA Y SUS PETICIONES
 // ════════════════════════════════════════════════════════════════
 //
@@ -1880,6 +2093,33 @@ export default async function handler(req, res) {
       return res.status(200).json({ creencia: escrita });
     }
 
+    // ── LA HOJA DE RUTA, LO ULTIMO ───────────────────────────
+    //
+    // Se pide cuando ya estan las pruebas y las creencias, porque las resume.
+    // Las dos tablas se escriben a la vez aqui dentro.
+    if (accion === 'tablas') {
+      const { sexo, partes, creencias } = req.body || {};
+      const hayPartes = Array.isArray(partes) && partes.length;
+      const hayCreencias = Array.isArray(creencias) && creencias.length;
+      if (!hayPartes || !hayCreencias) {
+        return res.status(400).json({ error: 'Faltan las pruebas o las creencias y no se puede resumir nada' });
+      }
+      const tablas = await lasTablas({
+        partes: partes.map((p, i) => ({
+          numero: Number(p?.numero) || i + 1,
+          titulo: String(p?.titulo || '').trim(),
+          ...Object.fromEntries(PUNTOS.map(punto => [punto, String(p?.[punto] || '').trim()])),
+        })),
+        creencias: creencias.map((c, i) => ({
+          numero: Number(c?.numero) || i + 1,
+          titulo: String(c?.titulo || '').trim(),
+          ...Object.fromEntries(PUNTOS_DE_CREENCIA.map(punto => [punto, String(c?.[punto] || '').trim()])),
+        })),
+        sexo: String(sexo || ''),
+      });
+      return res.status(200).json({ tablas });
+    }
+
     return res.status(400).json({ error: 'Acción no válida' });
   } catch (err) {
     console.error('[p2-plan/prueba]', err);
@@ -1922,6 +2162,14 @@ const PAGINA = `<!DOCTYPE html>
   .bloque h3 { font-family:system-ui,sans-serif; font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--gold); margin-bottom:.45rem; }
   .bloque p { margin-bottom:.6rem; }
   .bloque p:last-child { margin-bottom:0; }
+  /* Las dos tablas del final, para verlas antes de bajar el PDF. */
+  table.ruta { width:100%; border-collapse:collapse; font-family:system-ui,sans-serif; font-size:.85rem; margin-bottom:1.6rem; }
+  table.ruta:last-child { margin-bottom:0; }
+  table.ruta th { text-align:left; color:var(--gold); text-transform:uppercase; font-size:.68rem; letter-spacing:.1em; padding:.35rem .5rem; border-bottom:1px solid rgba(189,144,72,.4); }
+  table.ruta td { padding:.55rem .5rem; border-bottom:1px solid rgba(14,63,75,.08); vertical-align:top; line-height:1.45; }
+  table.ruta td.casilla { color:var(--gold); width:1.6rem; }
+  table.ruta td.num { color:var(--teal); font-weight:700; width:1.6rem; }
+
   /* EL DESPLEGABLE DE LA PRIMERA LLAMADA. Es de la pagina de pruebas y solo
      sirve para mirar lo que ha elegido; el dia que esto se lance se va con
      la pagina. Se quita borrando este bloque y la funcion pintarLoDecidido. */
@@ -2184,16 +2432,46 @@ ir.addEventListener('click', async () => {
     enteras = laProgramacion.length === cuantasC;
   }
 
-  // EL PDF SOLO SE OFRECE SI ESTA TODO. Con una parte caida -o sin sus
-  // creencias- saldria un documento con un agujero dentro, y eso no se le
-  // ensena a nadie.
+  // 4. Y LA HOJA DE RUTA, QUE ES LO ULTIMO.
+  //
+  // Resume las dos cosas, asi que solo se puede pedir cuando las dos estan
+  // enteras. Si falta alguna, no hay nada que resumir.
+  let hojaDeRuta = null;
   if (completas.length === total && enteras) {
+    aviso.textContent = 'Todo escrito en ' + cuanto() + '. Resumiendo su hoja de ruta…';
+    // Lo que se le manda de cada cosa: su numero, su titulo y sus lineas.
+    const enCorto = (cosa, i, puntos) => {
+      const suyo = { numero: i + 1, titulo: cosa.titulo };
+      puntos.forEach(punto => { suyo[punto] = cosa[punto]; });
+      return suyo;
+    };
+    try {
+      const { tablas } = await llamar({ accion:'tablas', sexo:quienEs.sexo,
+        // LAS PRUEBAS VAN COMO SE DECIDIERON, en corto: es lo mismo que hay
+        // escrito, dicho en una linea, que es lo que cabe en una celda.
+        partes: plan.partes.map((p, i) => enCorto(p, i, PUNTOS)),
+        // Y LAS CREENCIAS, COMO SE ESCRIBIERON: lo que es verdad nace ahi, no
+        // antes, y la tabla tiene que decir lo mismo que ellas.
+        creencias: laProgramacion.map((c, i) => enCorto(c, i, PUNTOS_DE_CREENCIA)) });
+      hojaDeRuta = tablas;
+      salida.insertAdjacentHTML('beforeend', pintarLaHojaDeRuta(tablas));
+    } catch (e) {
+      salida.insertAdjacentHTML('beforeend',
+        '<p class="aviso error">No ha salido su hoja de ruta: ' + escapar(e.message) + '</p>');
+    }
+  }
+
+  // EL PDF SOLO SE OFRECE SI ESTA TODO. Con una parte caida -o sin sus
+  // creencias, o sin su hoja de ruta- saldria un documento con un agujero
+  // dentro, y eso no se le ensena a nadie.
+  if (completas.length === total && enteras && hojaDeRuta) {
     elDocumento = {
       nombre: quienEs.nombre,
       // El numero que le toca a cada parte y los nombres de sus puntos van
       // desde aqui: el que maqueta no tiene que saberselos.
       partes: completas.map((p, i) => ({ ...p, numero: i + 1, nombres: BLOQUES })),
       creencias: laProgramacion.map((c, i) => ({ ...c, numero: i + 1, nombres: BLOQUES_DE_CREENCIA })),
+      tablas: hojaDeRuta,
     };
     pdf.hidden = false;
     aviso.textContent = 'Listo. Ya se puede bajar el PDF.';
@@ -2279,6 +2557,23 @@ function pintarParte(p, n) {
       : '<div class="bloque"><h3>' + escapar(BLOQUES[punto]) + '</h3>' + dentro + '</div>';
   }).join('');
   return '<div class="parte">' + cabeceraDeParte(p, n) + bloques + '</div>';
+}
+
+// Las dos tablas del final, tal y como van a salir en el PDF: su casilla, su
+// numero y las columnas con los mismos nombres que lleva el documento dentro.
+function pintarLaHojaDeRuta(tablas) {
+  const unaTabla = (filas, puntos, nombres) => {
+    if (!Array.isArray(filas) || !filas.length) return '';
+    return '<table class="ruta"><tr><th></th><th></th>' +
+      puntos.map(punto => '<th>' + escapar(nombres[punto]) + '</th>').join('') + '</tr>' +
+      filas.map(f => '<tr><td class="casilla">☐</td><td class="num">' + escapar(f.numero) + '</td>' +
+        puntos.map(punto => '<td>' + escapar(f[punto]) + '</td>').join('') + '</tr>').join('') +
+      '</table>';
+  };
+  return '<div class="parte">' +
+    unaTabla(tablas.pruebas, PUNTOS, BLOQUES) +
+    unaTabla(tablas.creencias, PUNTOS_DE_CREENCIA, BLOQUES_DE_CREENCIA) +
+  '</div>';
 }
 
 // Y cada creencia con sus dos bloques. Va en texto corrido, sin fondo: aqui no

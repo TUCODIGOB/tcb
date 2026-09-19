@@ -76,13 +76,15 @@ const ENTRE_CAJAS = 5;
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
-  const { nombre, partes, creencias } = req.body || {};
+  const { nombre, partes, creencias, tablas } = req.body || {};
   if (!Array.isArray(partes) || !partes.length) {
     return res.status(400).json({ error: 'Falta el documento que hay que maquetar' });
   }
   // El otro tema del documento. Si no viene, el PDF sale con las pruebas y ya:
   // aqui no se monta nada a medias, pero tampoco se rompe por lo que falte.
   const suProgramacion = Array.isArray(creencias) ? creencias : [];
+  // Y su hoja de ruta: las dos tablas resumen del final.
+  const suHojaDeRuta = tablas && typeof tablas === 'object' ? tablas : null;
 
   try {
     const fallos = [];
@@ -266,6 +268,88 @@ export default async function handler(req, res) {
       else y += ENTRE_CAJAS;
     }
 
+    // ── LAS TABLAS DE LA HOJA DE RUTA ─────────────────────────
+    //
+    // El resumen del final: una fila por cada cosa, con su casilla para
+    // marcarla cuando la tenga hecha.
+    //
+    // LA CASILLA VA LA PRIMERA, antes del numero: es lo que va a usar, y lo
+    // primero que mira el ojo al entrar en la fila.
+    //
+    // UNA FILA NO SE PARTE NUNCA entre dos hojas. Si no cabe entera, se va a la
+    // siguiente y alli se vuelve a poner la cabecera: una tabla que sigue en la
+    // otra pagina sin sus nombres de columna no se entiende.
+    const T_CHECK = 9, T_NUMERO = 8;       // lo que ocupan las dos primeras
+    const T_AIRE = 2.5;                    // lo que respira una celda por dentro
+    const T_RENGLON = 4.8;                 // el renglon de dentro de la tabla
+    const T_CUERPO = 9, T_CABECERA = 7.5;
+    const T_CASILLA = 3.6;                 // el lado del cuadrado que se marca
+
+    function pintarTabla(columnas) {
+      const cabecera = () => {
+        doc.setFont('Roboto', 'bold');
+        doc.setFontSize(T_CABECERA);
+        doc.setTextColor(DORADO[0], DORADO[1], DORADO[2]);
+        let x = X + T_CHECK + T_NUMERO;
+        for (const col of columnas) {
+          doc.text(String(col.nombre).toUpperCase(), x + T_AIRE, y);
+          x += col.ancho;
+        }
+        y += 2.5;
+        doc.setDrawColor(DORADO[0], DORADO[1], DORADO[2]);
+        doc.setLineWidth(0.3);
+        doc.line(X, y, X + ANCHO, y);
+        y += T_AIRE + T_RENGLON;
+      };
+
+      const alto = fila => {
+        doc.setFont('Roboto', 'normal');
+        doc.setFontSize(T_CUERPO);
+        let renglones = 1;
+        for (const col of columnas) {
+          renglones = Math.max(renglones, doc.splitTextToSize(t(fila[col.clave]), col.ancho - T_AIRE * 2).length);
+        }
+        return renglones * T_RENGLON + T_AIRE * 2;
+      };
+
+      return filas => {
+        cabecera();
+        for (const fila of filas) {
+          const suyo = alto(fila);
+          if (y - T_RENGLON + suyo > HASTA) { hojaNueva(); cabecera(); }
+          const arriba = y - T_RENGLON;
+
+          // La casilla y el numero, uno al lado del otro.
+          doc.setDrawColor(DORADO[0], DORADO[1], DORADO[2]);
+          doc.setLineWidth(0.3);
+          doc.roundedRect(X + 1, arriba + T_AIRE, T_CASILLA, T_CASILLA, 0.6, 0.6, 'S');
+          doc.setFont('Roboto', 'bold');
+          doc.setFontSize(T_CUERPO);
+          doc.setTextColor(VERDE[0], VERDE[1], VERDE[2]);
+          doc.text(String(fila.numero), X + T_CHECK, y);
+
+          // Y sus celdas, cada una en su columna y sin salirse de ella.
+          doc.setFont('Roboto', 'normal');
+          doc.setTextColor(TINTA[0], TINTA[1], TINTA[2]);
+          let x = X + T_CHECK + T_NUMERO;
+          for (const col of columnas) {
+            let renglon = y;
+            for (const linea of doc.splitTextToSize(t(fila[col.clave]), col.ancho - T_AIRE * 2)) {
+              doc.text(linea, x + T_AIRE, renglon);
+              renglon += T_RENGLON;
+            }
+            x += col.ancho;
+          }
+
+          y = arriba + suyo;
+          doc.setDrawColor(230, 224, 210);
+          doc.setLineWidth(0.2);
+          doc.line(X, y, X + ANCHO, y);
+          y += T_RENGLON;
+        }
+      };
+    }
+
     // El subtitulo de dentro de una parte, igual que los del P1: dorado, en
     // mayusculas, con aire por arriba y pegado a lo que presenta.
     function subtitulo(texto) {
@@ -342,6 +426,34 @@ export default async function handler(req, res) {
           corrido(creencia[punto]);
         }
       }
+    }
+
+    // ── LA HOJA DE RUTA ───────────────────────────────────────
+    //
+    // Las dos tablas del final, cada una en su hoja y sin titulo encima: el de
+    // la seccion va puesto en el fondo, no lo escribe esto.
+    //
+    // LAS COLUMNAS SE LLAMAN COMO EN EL DOCUMENTO. Son los mismos nombres que
+    // ha ido leyendo en cada parte, asi que al llegar aqui ya sabe lo que hay
+    // en cada una sin que nadie se lo explique.
+    if (suHojaDeRuta) {
+      const conFilas = (filas, columnas) => {
+        if (!Array.isArray(filas) || !filas.length) return;
+        hojaNueva();
+        pintarTabla(columnas)(filas);
+      };
+
+      conFilas(suHojaDeRuta.pruebas, [
+        { nombre: 'Tu prueba',           clave: 'tuPrueba',    ancho: 53 },
+        { nombre: 'Qué hacer',           clave: 'queHaces',    ancho: 53 },
+        { nombre: 'Dónde te vas a caer', clave: 'dondeTeCaes', ancho: 52 },
+      ]);
+
+      // Las dos del mismo tamano: aqui ninguna manda sobre la otra.
+      conFilas(suHojaDeRuta.creencias, [
+        { nombre: 'Lo que crees hoy', clave: 'loQueCreesHoy', ancho: 79 },
+        { nombre: 'Lo que es verdad', clave: 'loQueEsVerdad', ancho: 79 },
+      ]);
     }
 
     numeroDePagina();
