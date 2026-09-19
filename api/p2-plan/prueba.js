@@ -905,6 +905,9 @@ async function soloLimpiar({ rasgos }) {
   // quita nada.
   let sequedan = primera.sequedan;
   const sequitan = [...primera.sequitan];
+  // Quien quito cada una: la primera pasada o el repaso. Solo para poder
+  // mirarlo despues en la pagina.
+  const quitaRepaso = [];
   if (sequedan.length >= 3) {
     const queda = loQueQueda(arranque, ESPERA_DE_LIMPIAR_MS);
     if (queda >= ESPERA_MINIMA_PARA_REHACER_MS) {
@@ -921,6 +924,7 @@ async function soloLimpiar({ rasgos }) {
         // Los numeros del repaso son los de la lista que se le paso, no los de
         // la lista original: se traducen.
         const quitaAhora = repaso.sequitan.map(n => sequedan[n - 1]).filter(Boolean);
+        quitaRepaso.push(...quitaAhora);
         sequedan = repaso.sequedan.map(n => sequedan[n - 1]).filter(Boolean);
         sequitan.push(...quitaAhora);
         sequitan.sort((a, b) => a - b);
@@ -958,10 +962,12 @@ async function soloLimpiar({ rasgos }) {
     // Y su area, la que le puso el P1. Va pegada al desafio desde alli, asi
     // que no la elige nadie aqui: solo se arrastra hasta la cabecera del PDF.
     areas: sequedan.map(n => String(desafios[n - 1].area || '').trim()),
-    // Los que se quitan, con su descripcion, para poder mirarlos en la pagina.
+    // Los que se quitan, con su descripcion y con quien los quito, para poder
+    // mirarlos en la pagina.
     quitados: sequitan.map(n => ({
       numero: n,
       descripcion: String(desafios[n - 1].descripcion || '').trim(),
+      de: quitaRepaso.includes(n) ? 'el repaso' : 'la limpieza',
     })),
     // Y los que se quedan, con su descripcion, para lo mismo.
     quedados: sequedan.map(n => ({
@@ -1627,6 +1633,14 @@ async function lasCreencias({ limpia, sexo }) {
   // no se tira: va sin ella.
   let quedan = sequedan.map(n => ({ ...creencias[n - 1], puntuacion: limpiadas.puntuacion.get(n) || 0 }));
 
+  // Lo que quito la limpieza, para poder mirarlo en la pagina.
+  const quitaLimpieza = limpiadas.sequitan.map(n => ({
+    numero: n,
+    titulo: creencias[n - 1].titulo,
+    linea: creencias[n - 1].linea,
+  }));
+  const quitaRepaso = [];
+
   // ── C. Y SE REPASA LO QUE HA QUEDADO ──────────────────────
   if (quedan.length >= 3) {
     const queda = loQueQueda(arranque, ESPERA_DE_CREENCIAS_MS);
@@ -1637,6 +1651,7 @@ async function lasCreencias({ limpia, sexo }) {
         const dejadas = repaso.sequedan.map(n => quedan[n - 1]).filter(Boolean);
         if (dejadas.length) {
           quedan = dejadas;
+          quitaRepaso.push(...fuera.map(c => ({ titulo: c.titulo, linea: c.linea })));
           console.log(`[p2] el repaso de las creencias deja ${quedan.length}` +
             (fuera.length ? `; fuera tambien: ${fuera.map(c => c.titulo).join(' · ')}` : '; no ha quitado ninguna'));
         }
@@ -1649,7 +1664,7 @@ async function lasCreencias({ limpia, sexo }) {
   // PRIMERO LAS QUE MAS LE MANDAN. Para eso se ha puntuado. Las que empaten se
   // quedan en el orden en que salieron.
   const areas = limpia.areas || [];
-  return quedan
+  const listas = quedan
     .map((c, i) => ({ ...c, orden: i }))
     .sort((a, b) => (b.puntuacion - a.puntuacion) || (a.orden - b.orden))
     .map((c, i) => ({
@@ -1662,6 +1677,18 @@ async function lasCreencias({ limpia, sexo }) {
       // pegada desde el P1, asi que no puede descuadrarse con lo escrito.
       area: String(areas[c.deCual - 1] || '').trim(),
     }));
+
+  // Y COMO SE HA LLEGADO A ELLA, para poder mirarlo en la pagina: lo que saco
+  // la primera, lo que quito cada pasada y con que se ha quedado. Esto no lo
+  // ve la clienta y no decide nada.
+  return {
+    creencias: listas,
+    revision: {
+      entraron: creencias.map((c, i) => ({ numero: i + 1, titulo: c.titulo, linea: c.linea, deCual: c.deCual })),
+      quitaLimpieza,
+      quitaRepaso,
+    },
+  };
 }
 
 // ── D. ESCRIBIR UNA CREENCIA ────────────────────────────────
@@ -2149,8 +2176,8 @@ export default async function handler(req, res) {
       if (!limpia || !Array.isArray(limpia.sequedan) || !limpia.lista) {
         return res.status(400).json(conCuaderno({ error: 'Falta la lista limpia y no se pueden sacar sus creencias' }));
       }
-      const creencias = await lasCreencias({ limpia, sexo: String(sexo || '') });
-      return res.status(200).json(conCuaderno({ creencias }));
+      const { creencias, revision } = await lasCreencias({ limpia, sexo: String(sexo || '') });
+      return res.status(200).json(conCuaderno({ creencias, revision }));
     }
 
     if (accion === 'creencia') {
@@ -2394,7 +2421,7 @@ ir.addEventListener('click', async () => {
     // Se lanza y no se espera: se recoge al final. El fallo se guarda dentro en
     // vez de soltarlo, para que no se pierda por el camino mientras nadie mira.
     vanCreencias = llamar({ accion:'creencias', sexo:quienEs.sexo, limpia: uno.limpia })
-      .then(d => ({ ok:true, creencias: d.creencias || [] }))
+      .then(d => ({ ok:true, creencias: d.creencias || [], revision: d.revision || null }))
       .catch(e => ({ ok:false, error: e.message }));
     aviso.textContent = 'Limpiada en ' + cuanto() + '. Decidiendo su plan…';
     const dos = await llamar({ accion:'decidir', nombre:quienEs.nombre, sexo:quienEs.sexo, limpia: uno.limpia });
@@ -2498,6 +2525,10 @@ ir.addEventListener('click', async () => {
   } else {
     const cuantasC = suyas.creencias.length;
     aviso.textContent = 'Han salido ' + cuantasC + ' creencias. Escribiéndolas todas a la vez…';
+
+    // Lo que ha hecho cada llamada de este tema, antes de escribir nada: asi se
+    // puede mirar mientras se escriben.
+    salida.insertAdjacentHTML('beforeend', pintarLasCreencias(suyas.creencias, suyas.revision));
 
     const huecosC = suyas.creencias.map((suya, i) => {
       const hueco = document.createElement('div');
@@ -2636,10 +2667,15 @@ function pintarLoDecidido(partes, limpieza) {
   const fuera = (limpieza && limpieza.quitados) || [];
   const entraron = partes.length + fuera.length;
 
-  const quitadas = fuera.length
-    ? '<p class="quitadas"><b>Se han quitado ' + fuera.length + ':</b> ' +
-      fuera.map(x => '#' + escapar(x.numero) + ' — ' + escapar(x.descripcion)).join(' · ') + '</p>'
-    : '<p class="quitadas">No se ha quitado ninguna.</p>';
+  // Quien quito cada una: la primera pasada o el repaso.
+  const deQuien = quien => {
+    const suyas = fuera.filter(x => (x.de || 'la limpieza') === quien);
+    return suyas.length
+      ? '<p class="quitadas"><b>Quitó ' + quien + ' ' + suyas.length + ':</b> ' +
+        suyas.map(x => '#' + escapar(x.numero) + ' — ' + escapar(x.descripcion)).join(' · ') + '</p>'
+      : '<p class="quitadas"><b>' + quien.charAt(0).toUpperCase() + quien.slice(1) + ' no quitó ninguna.</b></p>';
+  };
+  const quitadas = deQuien('la limpieza') + deQuien('el repaso');
 
   return '<details class="decidido" open><summary>La limpieza — ' +
     entraron + ' entraron, quedan ' + partes.length + '</summary>' + quitadas +
@@ -2664,6 +2700,39 @@ function pintarParte(p, n) {
       : '<div class="bloque"><h3>' + escapar(BLOQUES[punto]) + '</h3>' + dentro + '</div>';
   }).join('');
   return '<div class="parte">' + cabeceraDeParte(p, n) + bloques + '</div>';
+}
+
+// LO QUE HA HECHO EL TEMA DE LAS CREENCIAS, PARA PODER MIRARLO.
+//
+// De la pagina de pruebas y de ningun sitio mas. Se ve de un vistazo cuantas
+// saco la primera llamada, cuales quito la limpieza, cuales quito el repaso y
+// con cuales se ha quedado, con su puntuacion y de que desafio sale cada una.
+function pintarLasCreencias(creencias, revision) {
+  const r = revision || {};
+  const entraron = Array.isArray(r.entraron) ? r.entraron : [];
+  const fuera1 = Array.isArray(r.quitaLimpieza) ? r.quitaLimpieza : [];
+  const fuera2 = Array.isArray(r.quitaRepaso) ? r.quitaRepaso : [];
+
+  const lista = (titulo, cuales) => cuales.length
+    ? '<p class="quitadas"><b>' + titulo + ' ' + cuales.length + ':</b> ' +
+      cuales.map(c => escapar(c.titulo) + ' — ' + escapar(c.linea)).join(' · ') + '</p>'
+    : '<p class="quitadas"><b>' + titulo + ' ninguna.</b></p>';
+
+  const filas = creencias.map(c =>
+    '<tr>' +
+      '<td>' + escapar(c.numero) + '</td>' +
+      '<td>' + escapar(c.puntuacion) + '</td>' +
+      '<td class="verbo">' + escapar(c.titulo) + '</td>' +
+      '<td>' + escapar(c.area) + '</td>' +
+      '<td>' + escapar(c.deCual) + '</td>' +
+      '<td>' + escapar(c.linea) + '</td>' +
+    '</tr>').join('');
+
+  return '<details class="decidido" open><summary>Las creencias — ' +
+    (entraron.length || creencias.length) + ' salieron, quedan ' + creencias.length + '</summary>' +
+    lista('Quitó la limpieza', fuera1) + lista('Quitó el repaso', fuera2) +
+    '<table><tr><th>Nº</th><th>Peso</th><th>Creencia</th><th>Área</th><th>Desafío</th><th>De dónde le viene</th></tr>' +
+    filas + '</table></details>';
 }
 
 // EL CUADERNO, PARA REVISARLO.
