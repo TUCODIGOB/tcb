@@ -1716,13 +1716,16 @@ ${REGLA_DEL_NOMBRE(false)}`;
 // celda dijera algo que no esta en el documento, la tabla dejaria de ser un
 // resumen y seria otro texto que se contradice con el suyo.
 //
+// Y SE RESUME LO ESCRITO, no lo que se decidio antes. Las dos leen el texto
+// que va a leer quien lo compra, palabra por palabra, para que su celda sea el
+// resumen de ESO y no de otra version de lo mismo.
+//
 // LAS DOS VAN A LA VEZ, cada una con su llamada: no se miran entre ellas.
 //
-// Y NO LLEVAN EL TONO ENTERO. El tono son cinco folios sobre escribir
-// parrafos, escenas y ritmo; aqui se escriben frases de una linea. Lo que una
-// celda necesita -de tu, palabras de todos los dias, sin metaforas, nada
-// tecnico y con sus tildes- va escrito aqui abajo y es lo unico que hace
-// falta.
+// Y LAS DOS LLEVAN EL TONO, como todo lo que se escribe en este documento:
+// una celda es media frase, pero es media frase que lee quien ha pagado, y
+// tiene que sonar igual que el resto. Lo unico que se le anade es que aqui una
+// celda es UNA frase y no un parrafo.
 
 const ESPERA_DE_LA_TABLA_MS = 90000;
 
@@ -1751,24 +1754,19 @@ const moldeDeLaTabla = celdas => ({
   additionalProperties: false,
 });
 
-// LAS REGLAS DE UNA CELDA, y valen para las dos tablas.
+// LAS REGLAS DE UNA CELDA, y valen para las dos tablas. Van detras del tono, y
+// mandan sobre el en lo suyo: alli se escriben parrafos y aqui una linea.
 //
 // NO SE MIRA SI ACABA EN PUNTO, a proposito: aqui se pide justo lo contrario
-// -sin punto al final-, asi que lo que en el documento es una frase cortada
+// -sin punto al final-, asi que lo que en el documento seria una frase cortada
 // aqui es lo normal.
 const COMO_ES_UNA_CELDA = `CADA CELDA
 
 Una frase corta, de menos de doce palabras, hablada de tú. Se entiende sola de un vistazo, sin leer el resto de la tabla. Empieza en mayúscula y sin punto al final.
 
-Aquí se resume: no se explica, no se añade nada que no esté abajo y no se cambia lo que dice.
+De todo lo de arriba, aquí manda esto: una celda es UNA frase, no un párrafo.
 
-NO SE PUEDE
-
-Nada técnico: ni planetas, ni signos, ni casas, ni nada relacionado con astrología.
-
-Sin metáforas y sin palabras de manual: las de todos los días, las que se dicen hablando.
-
-Español de España, con todas sus tildes y todas sus eñes.`;
+Y aquí se resume: no se explica, no se añade nada que no esté abajo y no se cambia lo que dice.`;
 
 // Lo que vuelve, limpio: solo filas que existan, sin repetir y con todas sus
 // celdas escritas. Una celda vacia o con una palabra de relleno deja la fila
@@ -1847,20 +1845,22 @@ async function unaTabla({ que, celdas, encargoDe, mensaje, cosas, arranque }) {
 
 // ── LA TABLA DE LAS PRUEBAS ─────────────────────────────────
 //
-// Se hace con lo que se DECIDIO de cada prueba -sus tres lineas cortas-, no
-// con lo escrito: es lo mismo dicho en corto, que es justo lo que tiene que
-// caber en una celda.
+// Lee lo que quien lo compra va a leer: la prueba ya escrita, entera. Su
+// celda tiene que ser el resumen de ESO, no de otra version de lo mismo.
 const laTablaDeLasPruebas = ({ partes, sexo, arranque }) => unaTabla({
   que: 'la tabla de las pruebas',
   celdas: PUNTOS,
   cosas: partes,
   arranque,
   mensaje: 'Escribe la tabla, una fila por cada prueba.',
-  encargoDe: suyas => `Abajo tienes las pruebas de una persona, numeradas. De cada una tienes su título y lo que ya se decidió.
+  encargoDe: suyas => `${REGLAS_COMUNES}
 
-QUÉ HACES
 
-Una fila por cada prueba de abajo, con su número, y tres celdas: "${BLOQUES.tuPrueba}", "${BLOQUES.queHaces}" y "${BLOQUES.dondeTeCaes}". Cada celda resume en una línea lo que ya pone abajo en esa misma casilla.
+AQUÍ SE RESUME, NO SE ESCRIBE
+
+Abajo tienes las pruebas de una persona, numeradas y ya escritas: es lo que acaba de leer.
+
+Una fila por cada prueba de abajo, con su número, y tres celdas: "${BLOQUES.tuPrueba}", "${BLOQUES.queHaces}" y "${BLOQUES.dondeTeCaes}". Cada celda resume en una línea lo que pone abajo en esa misma casilla.
 
 Ninguna se queda fuera.
 
@@ -1868,28 +1868,29 @@ ${COMO_ES_UNA_CELDA}
 
 LAS PRUEBAS:
 
-${suyas.map(p => `${p.numero}. ${p.titulo}\n` +
-  PUNTOS.map(punto => `   ${BLOQUES[punto]}: ${p[punto]}`).join('\n')).join('\n\n')}
+${suyas.map(p => [`${p.numero}. ${p.titulo}`,
+  ...PUNTOS.map(punto => `${BLOQUES[punto]}: ${p[punto]}`)].join('\n\n')).join('\n\n\n')}
 
 Quien lo va a leer es ${comoSeLeHabla(sexo)}`,
 });
 
 // ── LA TABLA DE LAS CREENCIAS ───────────────────────────────
 //
-// Esta se hace con lo ESCRITO, y no con lo que se saco al principio: la
-// creencia vieja se saco antes, pero la nueva -la que es verdad- nace al
-// escribirla, y la tabla tiene que decir lo mismo que ella.
+// Igual que la otra: lee la creencia ya escrita, que es lo que ha leido.
 const laTablaDeLasCreencias = ({ creencias, sexo, arranque }) => unaTabla({
   que: 'la tabla de las creencias',
   celdas: PUNTOS_DE_CREENCIA,
   cosas: creencias,
   arranque,
   mensaje: 'Escribe la tabla, una fila por cada creencia.',
-  encargoDe: suyas => `Abajo tienes las creencias de una persona, numeradas. De cada una tienes lo que cree hoy y lo que es verdad, ya escrito.
+  encargoDe: suyas => `${REGLAS_COMUNES}
 
-QUÉ HACES
 
-Una fila por cada creencia de abajo, con su número, y dos celdas: "${BLOQUES_DE_CREENCIA.loQueCreesHoy}" y "${BLOQUES_DE_CREENCIA.loQueEsVerdad}". Cada celda resume en una línea lo que ya pone abajo en esa misma casilla.
+AQUÍ SE RESUME, NO SE ESCRIBE
+
+Abajo tienes las creencias de una persona, numeradas y ya escritas: es lo que acaba de leer.
+
+Una fila por cada creencia de abajo, con su número, y dos celdas: "${BLOQUES_DE_CREENCIA.loQueCreesHoy}" y "${BLOQUES_DE_CREENCIA.loQueEsVerdad}". Cada celda resume en una línea lo que pone abajo en esa misma casilla.
 
 Ninguna se queda fuera.
 
@@ -1897,8 +1898,8 @@ ${COMO_ES_UNA_CELDA}
 
 LAS CREENCIAS:
 
-${suyas.map(c => `${c.numero}. ${c.titulo}\n` +
-  PUNTOS_DE_CREENCIA.map(punto => `   ${BLOQUES_DE_CREENCIA[punto]}: ${c[punto]}`).join('\n')).join('\n\n')}
+${suyas.map(c => [`${c.numero}. ${c.titulo}`,
+  ...PUNTOS_DE_CREENCIA.map(punto => `${BLOQUES_DE_CREENCIA[punto]}: ${c[punto]}`)].join('\n\n')).join('\n\n\n')}
 
 Quien lo va a leer es ${comoSeLeHabla(sexo)}`,
 });
@@ -2439,19 +2440,17 @@ ir.addEventListener('click', async () => {
   let hojaDeRuta = null;
   if (completas.length === total && enteras) {
     aviso.textContent = 'Todo escrito en ' + cuanto() + '. Resumiendo su hoja de ruta…';
-    // Lo que se le manda de cada cosa: su numero, su titulo y sus lineas.
+    // Lo que se le manda de cada cosa: su numero, su titulo y su texto.
     const enCorto = (cosa, i, puntos) => {
       const suyo = { numero: i + 1, titulo: cosa.titulo };
       puntos.forEach(punto => { suyo[punto] = cosa[punto]; });
       return suyo;
     };
     try {
+      // LAS DOS VAN COMO SE ESCRIBIERON, que es lo que el cliente lee: la
+      // tabla es su resumen, asi que se hace con ese mismo texto.
       const { tablas } = await llamar({ accion:'tablas', sexo:quienEs.sexo,
-        // LAS PRUEBAS VAN COMO SE DECIDIERON, en corto: es lo mismo que hay
-        // escrito, dicho en una linea, que es lo que cabe en una celda.
-        partes: plan.partes.map((p, i) => enCorto(p, i, PUNTOS)),
-        // Y LAS CREENCIAS, COMO SE ESCRIBIERON: lo que es verdad nace ahi, no
-        // antes, y la tabla tiene que decir lo mismo que ellas.
+        partes: completas.map((p, i) => enCorto(p, i, PUNTOS)),
         creencias: laProgramacion.map((c, i) => enCorto(c, i, PUNTOS_DE_CREENCIA)) });
       hojaDeRuta = tablas;
       salida.insertAdjacentHTML('beforeend', pintarLaHojaDeRuta(tablas));
