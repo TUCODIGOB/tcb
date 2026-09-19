@@ -74,6 +74,7 @@
 // ════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
+import { AsyncLocalStorage } from 'async_hooks';
 import { leerLaFicha } from '../../lib/ficha-del-lead.js';
 // ── COMO SE LE HABLA ────────────────────────────────────────
 //
@@ -315,6 +316,49 @@ async function leer(compra) {
 }
 
 // ════════════════════════════════════════════════════════════════
+// EL CUADERNO: QUE HA HECHO CADA LLAMADA, CUANTO HA TARDADO Y CUANTO
+// HA COSTADO
+// ════════════════════════════════════════════════════════════════
+//
+// Igual que el del P1, y para lo mismo: poder mirar despues si alguna se cae,
+// cual se lleva el tiempo y cual se lleva el dinero. NO DECIDE NADA. Si un dia
+// se quita, el P2 funciona igual.
+//
+// CADA PETICION TIENE EL SUYO. Se guarda en el almacen de la peticion -no en
+// una variable de fuera- porque la pagina lanza varias a la vez, y asi lo de
+// una nunca acaba apuntado en la otra.
+
+const ELCUADERNO = new AsyncLocalStorage();
+
+// LO QUE CUESTA CADA MODELO, EN DOLARES POR MILLON DE TOKENS. Son los precios
+// de Anthropic; si los cambian, se cambian aqui. Lo que el modelo piensa se
+// cobra como salida y ya viene sumado en output_tokens, asi que no se cuenta
+// aparte.
+const PRECIOS = {
+  'claude-opus-5':   { entrada: 5, salida: 25 },
+  'claude-sonnet-5': { entrada: 2, salida: 10 },
+};
+
+// Apunta una llamada. Si nadie ha abierto cuaderno, no hace nada.
+function apuntarLaLlamada(apunte) {
+  const cuaderno = ELCUADERNO.getStore();
+  if (cuaderno) cuaderno.push(apunte);
+}
+
+// De lo que devuelve el modelo a tokens y dolares. Un modelo que no este en la
+// tabla de precios apunta sus tokens y se queda en cero: no rompe nada.
+function loQueCuesta(modelo, uso) {
+  const entrada = (uso?.input_tokens || 0)
+    + (uso?.cache_read_input_tokens || 0)
+    + (uso?.cache_creation_input_tokens || 0);
+  const salida = uso?.output_tokens || 0;
+  const precio = PRECIOS[modelo];
+  const dolares = precio ? (entrada * precio.entrada + salida * precio.salida) / 1000000 : 0;
+  return { entrada, salida, dolares };
+}
+
+
+// ════════════════════════════════════════════════════════════════
 // LA UNICA PUERTA AL MODELO
 // ════════════════════════════════════════════════════════════════
 //
@@ -325,7 +369,33 @@ async function leer(compra) {
 // del todo, porque encendido a medias se gasta el presupuesto pensando en vez
 // de escribir y la respuesta llega cortada.
 
-async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, espera }) {
+// ── Y DELANTE DE EL, EL CUADERNO ────────────────────────────
+//
+// Mide lo que tarda, se queda con lo que ha gastado y lo apunta, salga bien o
+// salga mal: los tokens de una respuesta que hay que tirar tambien se pagan.
+async function alModelo(loSuyo) {
+  const arranque = Date.now();
+  const uso = {};
+  const comoFue = mas => apuntarLaLlamada({
+    que: loSuyo.que,
+    modelo: loSuyo.modelo,
+    piensa: loSuyo.piensa || '',
+    segundos: Math.round((Date.now() - arranque) / 100) / 10,
+    ...loQueCuesta(loSuyo.modelo, uso),
+    ...mas,
+  });
+
+  try {
+    const salida = await hablarConElModelo(loSuyo, uso);
+    comoFue({ ok: true });
+    return salida;
+  } catch (err) {
+    comoFue({ ok: false, fallo: String(err.message || '').slice(0, 200) });
+    throw err;
+  }
+}
+
+async function hablarConElModelo({ que, modelo, piensa, techo, system, mensaje, molde, espera }, uso) {
   const cuerpo = {
     model: modelo,
     max_tokens: techo,
@@ -416,6 +486,10 @@ async function alModelo({ que, modelo, piensa, techo, system, mensaje, molde, es
         if (trozo.type === 'message_delta' && trozo.delta?.stop_reason) {
           porQueParo = trozo.delta.stop_reason;
         }
+        // LO QUE GASTA, para el cuaderno. La entrada viene al empezar y la
+        // salida al terminar, cada una en su trozo.
+        if (trozo.type === 'message_start' && trozo.message?.usage) Object.assign(uso, trozo.message.usage);
+        if (trozo.type === 'message_delta' && trozo.usage) Object.assign(uso, trozo.usage);
       }
     }
   } catch (err) {
@@ -1962,6 +2036,13 @@ export default async function handler(req, res) {
 
   const { accion } = req.body || {};
 
+  // EL CUADERNO DE ESTA PETICION. Se abre aqui, lo van llenando las llamadas
+  // que se hagan dentro, y va de vuelta en la respuesta -salga bien o salga
+  // mal-, para poder mirar en la pagina lo que ha tardado y costado cada una.
+  const cuaderno = [];
+  const conCuaderno = datos => ({ ...datos, cuaderno });
+
+  return ELCUADERNO.run(cuaderno, async () => {
   try {
     if (accion === 'lista') {
       const informes = await listar(40);
@@ -1976,7 +2057,7 @@ export default async function handler(req, res) {
           return { ...inf, nombre: '(no se pudo abrir)' };
         }
       }));
-      return res.status(200).json({ informes: conNombre });
+      return res.status(200).json(conCuaderno({ informes: conNombre }));
     }
 
     if (accion === 'limpiar') {
@@ -1987,11 +2068,11 @@ export default async function handler(req, res) {
       // de antes de que se guardaran los rasgos entran por aqui.
       const cuantos = cuantosDesafios(informe?.rasgos);
       if (cuantos < 3) {
-        return res.status(422).json({
+        return res.status(422).json(conCuaderno({
           error: cuantos
             ? `Ese informe solo tiene ${cuantos} cosas que le cuesten, y con eso no sale un plan`
             : 'Ese informe se guardó sin los rasgos, y sin ellos no hay plan',
-        });
+        }));
       }
 
       // Y SIN SU NOMBRE TAMPOCO. Antes, si el informe venia sin nombre, se
@@ -2001,24 +2082,24 @@ export default async function handler(req, res) {
       // nombre. Si falta, se para aqui y se dice.
       const { nombre, sexo } = await susDatos(informe);
       if (!nombre) {
-        return res.status(422).json({
+        return res.status(422).json(conCuaderno({
           error: 'Ese informe se guardó sin el nombre del cliente, y el plan va dirigido a él: no se hace a medias',
-        });
+        }));
       }
 
       const limpia = await soloLimpiar({ rasgos: informe.rasgos });
       // El nombre y el sexo viajan con la limpieza: los pasos siguientes
       // escriben con ellos y asi no hay que volver a abrir el informe.
-      return res.status(200).json({
+      return res.status(200).json(conCuaderno({
         limpia,
         quien: { nombre, sexo },
-      });
+      }));
     }
 
     if (accion === 'decidir') {
       const { nombre, sexo, limpia } = req.body || {};
       if (!String(nombre || '').trim() || !limpia || !Array.isArray(limpia.sequedan) || !limpia.lista) {
-        return res.status(400).json({ error: 'Falta la lista limpia y no se puede decidir el plan' });
+        return res.status(400).json(conCuaderno({ error: 'Falta la lista limpia y no se puede decidir el plan' }));
       }
 
       const plan = await decidirElPlan({
@@ -2030,11 +2111,11 @@ export default async function handler(req, res) {
       // -eso es lo que traia el relleno- pero si vuelve con dos o con ninguna,
       // no hay documento que entregar y es que la llamada ha venido mal.
       if (plan.partes.length < 3) {
-        return res.status(422).json({
+        return res.status(422).json(conCuaderno({
           error: `El plan ha venido con ${plan.partes.length} partes, y con eso no hay documento. Vuelve a darle.`,
-        });
+        }));
       }
-      return res.status(200).json({ plan });
+      return res.status(200).json(conCuaderno({ plan }));
     }
 
     if (accion === 'parte') {
@@ -2043,12 +2124,12 @@ export default async function handler(req, res) {
       // si viniera a medias, el hueco lo rellenaria el modelo por su cuenta y
       // acabaria inventandose algo de su vida.
       if (!String(parte?.titulo || '').trim() || PUNTOS.some(punto => !String(parte?.[punto] || '').trim())) {
-        return res.status(400).json({ error: 'Esa parte llega a medias y no se escribe' });
+        return res.status(400).json(conCuaderno({ error: 'Esa parte llega a medias y no se escribe' }));
       }
       // Y sin nombre no se escribe: lo mismo que en el paso anterior, para que
       // no entre por aqui un relleno que acabaria impreso en el documento.
       if (!String(nombre || '').trim()) {
-        return res.status(400).json({ error: 'Esa parte llega sin el nombre del cliente y no se escribe' });
+        return res.status(400).json(conCuaderno({ error: 'Esa parte llega sin el nombre del cliente y no se escribe' }));
       }
       const escrita = await escribirLaParte({
         parte,
@@ -2056,7 +2137,7 @@ export default async function handler(req, res) {
         sexo: String(sexo || ''),
         puedeElNombre: !!puedeElNombre,
       });
-      return res.status(200).json({ parte: escrita });
+      return res.status(200).json(conCuaderno({ parte: escrita }));
     }
 
     // ── LAS CREENCIAS, QUE VAN POR SU LADO ────────────────────
@@ -2066,10 +2147,10 @@ export default async function handler(req, res) {
     if (accion === 'creencias') {
       const { sexo, limpia } = req.body || {};
       if (!limpia || !Array.isArray(limpia.sequedan) || !limpia.lista) {
-        return res.status(400).json({ error: 'Falta la lista limpia y no se pueden sacar sus creencias' });
+        return res.status(400).json(conCuaderno({ error: 'Falta la lista limpia y no se pueden sacar sus creencias' }));
       }
       const creencias = await lasCreencias({ limpia, sexo: String(sexo || '') });
-      return res.status(200).json({ creencias });
+      return res.status(200).json(conCuaderno({ creencias }));
     }
 
     if (accion === 'creencia') {
@@ -2077,10 +2158,10 @@ export default async function handler(req, res) {
       // Lo que llega del navegador se comprueba antes de meterlo en el encargo:
       // si viniera a medias, el hueco lo rellenaria el modelo por su cuenta.
       if (!String(creencia?.titulo || '').trim() || !String(creencia?.linea || '').trim()) {
-        return res.status(400).json({ error: 'Esa creencia llega a medias y no se escribe' });
+        return res.status(400).json(conCuaderno({ error: 'Esa creencia llega a medias y no se escribe' }));
       }
       if (!String(nombre || '').trim()) {
-        return res.status(400).json({ error: 'Esa creencia llega sin el nombre del cliente y no se escribe' });
+        return res.status(400).json(conCuaderno({ error: 'Esa creencia llega sin el nombre del cliente y no se escribe' }));
       }
       const escrita = await escribirLaCreencia({
         creencia: {
@@ -2091,7 +2172,7 @@ export default async function handler(req, res) {
         nombre: String(nombre).trim(),
         sexo: String(sexo || ''),
       });
-      return res.status(200).json({ creencia: escrita });
+      return res.status(200).json(conCuaderno({ creencia: escrita }));
     }
 
     // ── LA HOJA DE RUTA, LO ULTIMO ───────────────────────────
@@ -2103,7 +2184,7 @@ export default async function handler(req, res) {
       const hayPartes = Array.isArray(partes) && partes.length;
       const hayCreencias = Array.isArray(creencias) && creencias.length;
       if (!hayPartes || !hayCreencias) {
-        return res.status(400).json({ error: 'Faltan las pruebas o las creencias y no se puede resumir nada' });
+        return res.status(400).json(conCuaderno({ error: 'Faltan las pruebas o las creencias y no se puede resumir nada' }));
       }
       const tablas = await lasTablas({
         partes: partes.map((p, i) => ({
@@ -2118,16 +2199,17 @@ export default async function handler(req, res) {
         })),
         sexo: String(sexo || ''),
       });
-      return res.status(200).json({ tablas });
+      return res.status(200).json(conCuaderno({ tablas }));
     }
 
-    return res.status(400).json({ error: 'Acción no válida' });
+    return res.status(400).json(conCuaderno({ error: 'Acción no válida' }));
   } catch (err) {
     console.error('[p2-plan/prueba]', err);
     // Un informe que no da para un plan no es un servidor roto: se dice como
     // lo que es, para no hacer buscar un fallo donde no lo hay.
-    return res.status(err.esDelInforme ? 422 : 500).json({ error: err.message });
+    return res.status(err.esDelInforme ? 422 : 500).json(conCuaderno({ error: err.message }));
   }
+  });
 }
 // La pagina. Los colores y las letras son los de la marca, para leerlo como se
 // va a leer. No carga nada de fuera: ni fuentes, ni librerias, ni imagenes.
@@ -2163,6 +2245,19 @@ const PAGINA = `<!DOCTYPE html>
   .bloque h3 { font-family:system-ui,sans-serif; font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--gold); margin-bottom:.45rem; }
   .bloque p { margin-bottom:.6rem; }
   .bloque p:last-child { margin-bottom:0; }
+  /* EL CUADERNO: lo que ha hecho cada llamada, lo que ha tardado y lo que ha
+     costado. Es de la pagina de pruebas: la clienta nunca ve esto. */
+  .cuaderno { border:1px dashed rgba(14,63,75,.35); border-radius:8px; padding:1rem 1.2rem; margin-top:1.4rem; background:#fff; }
+  .cuaderno summary { font-family:system-ui,sans-serif; font-size:.9rem; font-weight:600; color:var(--teal); cursor:pointer; }
+  .cuaderno table { width:100%; border-collapse:collapse; margin-top:.9rem; font-family:system-ui,sans-serif; font-size:.82rem; }
+  .cuaderno th { text-align:left; color:var(--gold); text-transform:uppercase; font-size:.66rem; letter-spacing:.08em; padding:.35rem .4rem; border-bottom:1px solid rgba(189,144,72,.3); }
+  .cuaderno td { padding:.4rem; border-bottom:1px solid rgba(14,63,75,.08); vertical-align:top; }
+  .cuaderno td.der, .cuaderno th.der { text-align:right; white-space:nowrap; }
+  /* El modelo y el esfuerzo, en una linea: partidos en dos no se leen. */
+  .cuaderno td:nth-child(2), .cuaderno td:nth-child(3) { white-space:nowrap; }
+  .cuaderno tr.mal td { background:#fdf1f0; color:#c0392b; }
+  .cuaderno tr.suma td { font-weight:700; border-top:2px solid rgba(14,63,75,.2); border-bottom:0; }
+
   /* Las dos tablas del final, para verlas antes de bajar el PDF. */
   table.ruta { width:100%; border-collapse:collapse; font-family:system-ui,sans-serif; font-size:.85rem; margin-bottom:1.6rem; }
   table.ruta:last-child { margin-bottom:0; }
@@ -2201,6 +2296,7 @@ const PAGINA = `<!DOCTYPE html>
   <button id="pdf" hidden>Bajar el PDF</button>
 
   <p class="aviso" id="aviso"></p>
+  <div id="cuaderno"></div>
   <div id="salida"></div>
 </div>
 <script>
@@ -2221,12 +2317,22 @@ const escapar = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&
 const parrafos = t => String(t || '').split(/\\n+/).map(p => p.trim()).filter(Boolean)
   .map(p => '<p>' + escapar(p) + '</p>').join('');
 
+// EL CUADERNO DE TODA LA TANDA. Cada peticion devuelve el suyo -lo que ha
+// hecho cada llamada al modelo, cuanto ha tardado y cuanto ha costado- y aqui
+// se van juntando todos, salga bien o salga mal.
+let elCuaderno = [];
+let arrancoLaTanda = 0;
+
 async function llamar(cuerpo) {
   const r = await fetch(location.pathname, {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify(cuerpo),
   });
   const d = await r.json().catch(() => ({ error:'Respuesta ilegible' }));
+  if (Array.isArray(d.cuaderno) && d.cuaderno.length) {
+    elCuaderno = elCuaderno.concat(d.cuaderno);
+    pintarElCuaderno();
+  }
   if (!r.ok) throw new Error(d.error || ('Error ' + r.status));
   return d;
 }
@@ -2258,6 +2364,8 @@ ir.addEventListener('click', async () => {
   ir.disabled = true; quien.disabled = true;
   pdf.hidden = true; elDocumento = null;
   salida.innerHTML = '';
+  elCuaderno = []; arrancoLaTanda = Date.now();
+  document.getElementById('cuaderno').innerHTML = '';
   aviso.className = 'aviso';
   const compra = quien.value;
   let quienEs = null;
@@ -2556,6 +2664,51 @@ function pintarParte(p, n) {
       : '<div class="bloque"><h3>' + escapar(BLOQUES[punto]) + '</h3>' + dentro + '</div>';
   }).join('');
   return '<div class="parte">' + cabeceraDeParte(p, n) + bloques + '</div>';
+}
+
+// EL CUADERNO, PARA REVISARLO.
+//
+// Una fila por cada llamada que se le ha hecho al modelo, en el orden en que
+// han ido volviendo: cual es, con que modelo, cuanto ha razonado, lo que ha
+// tardado, los tokens que ha gastado, lo que ha costado y si ha salido bien.
+// Las que se han caido salen en rojo con su motivo.
+//
+// EL RELOJ DE ABAJO NO ES LA SUMA. Muchas van a la vez, asi que la suma de sus
+// tiempos es mas grande que lo que se ha esperado de verdad: las dos cosas
+// salen, y la que importa para el cliente es el reloj.
+function pintarElCuaderno() {
+  const hueco = document.getElementById('cuaderno');
+  if (!hueco || !elCuaderno.length) return;
+
+  const segundos = elCuaderno.reduce((a, l) => a + (Number(l.segundos) || 0), 0);
+  const dolares = elCuaderno.reduce((a, l) => a + (Number(l.dolares) || 0), 0);
+  const entrada = elCuaderno.reduce((a, l) => a + (Number(l.entrada) || 0), 0);
+  const salidaT = elCuaderno.reduce((a, l) => a + (Number(l.salida) || 0), 0);
+  const caidas = elCuaderno.filter(l => !l.ok).length;
+  const reloj = arrancoLaTanda ? Math.round((Date.now() - arrancoLaTanda) / 100) / 10 : 0;
+
+  const filas = elCuaderno.map(l =>
+    '<tr class="' + (l.ok ? '' : 'mal') + '">' +
+      '<td>' + escapar(l.que) + (l.ok ? '' : ' — ' + escapar(l.fallo || 'se ha caído')) + '</td>' +
+      '<td>' + escapar(String(l.modelo || '').replace('claude-', '')) + '</td>' +
+      '<td>' + escapar(l.piensa || 'sin razonar') + '</td>' +
+      '<td class="der">' + escapar(l.segundos) + ' s</td>' +
+      '<td class="der">' + escapar(l.entrada) + '</td>' +
+      '<td class="der">' + escapar(l.salida) + '</td>' +
+      '<td class="der">' + (Number(l.dolares) || 0).toFixed(4) + ' $</td>' +
+    '</tr>').join('');
+
+  hueco.innerHTML = '<details class="cuaderno" open><summary>Las llamadas — ' +
+    elCuaderno.length + ', ' + reloj + ' s de reloj, ' + dolares.toFixed(3) + ' $' +
+    (caidas ? ' · ' + caidas + ' se han caído' : '') + '</summary>' +
+    '<table><tr><th>Llamada</th><th>Modelo</th><th>Razona</th><th class="der">Tiempo</th>' +
+    '<th class="der">Entrada</th><th class="der">Salida</th><th class="der">Coste</th></tr>' +
+    filas +
+    '<tr class="suma"><td colspan="3">TOTAL · ' + reloj + ' s de reloj</td>' +
+    '<td class="der">' + segundos.toFixed(1) + ' s</td>' +
+    '<td class="der">' + entrada + '</td><td class="der">' + salidaT + '</td>' +
+    '<td class="der">' + dolares.toFixed(4) + ' $</td></tr>' +
+    '</table></details>';
 }
 
 // Las dos tablas del final, tal y como van a salir en el PDF: su casilla, su
