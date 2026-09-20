@@ -1838,22 +1838,57 @@ function filasLimpias(salida, celdas, pedidas) {
   return filas;
 }
 
+// QUE NO EMPIECEN TODAS IGUAL.
+//
+// Una celda en futuro y de doce palabras tiene una salida facil, y el modelo
+// la coge para todas: la columna entera arranca con las mismas dos palabras y
+// leerla cansa. No se le prohibe un comienzo concreto -entonces cogeria otro y
+// haria lo mismo-, se le prohibe repetir: dos celdas no pueden empezar igual.
+//
+// Se miran DOS palabras y no una: hablando de tu, muchas frases distintas
+// empiezan por la misma palabra suelta sin sonar iguales, y pedir que ni eso
+// se repita seria retorcer el texto por una regla.
+const PALABRAS_DEL_COMIENZO = 2;
+
+const elComienzo = txt => comoSeCompara(txt).split(' ').filter(Boolean)
+  .slice(0, PALABRAS_DEL_COMIENZO).join(' ');
+
+// Y EL MISMO COMIENZO TAL Y COMO ESTA ESCRITO, que es el que se le nombra a el:
+// el de arriba va en minuscula y sin tildes para poder compararlos, y ponerselo
+// asi delante seria ensenarle a escribir mal.
+const elComienzoTalCual = txt => String(txt || '').trim().split(/\s+/)
+  .slice(0, PALABRAS_DEL_COMIENZO).join(' ');
+
+// Las que empiezan como otra que ya estaba. La primera se queda: se vuelven a
+// pedir las que llegaron detras.
+function lasQueRepitenElComienzo(filas, celda) {
+  const vistos = new Set();
+  const repiten = [];
+  for (const fila of filas) {
+    const suyo = elComienzo(fila[celda]);
+    if (!suyo) continue;
+    if (vistos.has(suyo)) repiten.push(fila.numero);
+    else vistos.add(suyo);
+  }
+  return repiten;
+}
+
 // UNA TABLA, CON SU SEGUNDA VUELTA.
 //
 // Si alguna fila no vuelve, se pide otra vez SOLO esa: las que ya estan no se
 // repiten. Y si despues de eso sigue faltando alguna, esto lanza: una tabla
 // resumen con un hueco en medio no se entrega.
-async function unaTabla({ que, celdas, encargoDe, mensaje, cosas, arranque }) {
+async function unaTabla({ que, celdas, encargoDe, mensaje, cosas, arranque, sinRepetir = '' }) {
   const pedidas = cosas.map(c => c.numero);
 
-  const pedir = async (suyas, espera) => filasLimpias(
+  const pedir = async (suyas, espera, aviso = '') => filasLimpias(
     await alModelo({
       que,
       modelo: EL_QUE_REMATA,
       piensa: '',
       techo: TECHO_DE_LA_TABLA,
       system: encargoDe(suyas),
-      mensaje,
+      mensaje: mensaje + aviso,
       molde: moldeDeLaTabla(celdas),
       espera: AbortSignal.timeout(espera),
     }),
@@ -1889,7 +1924,40 @@ async function unaTabla({ que, celdas, encargoDe, mensaje, cosas, arranque }) {
     throw new Error(`${que}: no han salido las filas ${siguenFaltando.join(', ')}, y la tabla no se monta a medias`);
   }
 
-  return filas.sort((a, b) => a.numero - b.numero);
+  filas.sort((a, b) => a.numero - b.numero);
+
+  // Y QUE NO EMPIECEN DOS IGUAL, si esta tabla lo pide. Se vuelven a pedir SOLO
+  // las que repiten, con los comienzos ya cogidos delante para que no vuelva a
+  // caer en ellos. Y la nueva solo entra si de verdad arranca por otro sitio:
+  // si no, se queda la que habia. Antes una celda que empieza como otra que una
+  // frase retorcida para cumplir una regla.
+  if (sinRepetir) {
+    const repiten = lasQueRepitenElComienzo(filas, sinRepetir);
+    const queda = loQueQueda(arranque, ESPERA_DE_LA_TABLA_MS);
+    if (repiten.length && queda >= ESPERA_MINIMA_PARA_REHACER_MS) {
+      console.warn(`[p2] ${que}: las filas ${repiten.join(', ')} empiezan como otra, se piden otra vez`);
+      const quedan = filas.filter(f => !repiten.includes(f.numero));
+      const cogidos = quedan.map(f => elComienzo(f[sinRepetir])).filter(Boolean);
+      const comoSuenan = quedan.map(f => elComienzoTalCual(f[sinRepetir])).filter(Boolean);
+      const aviso = `\n\nY OJO: en esa columna no puede haber dos que empiecen igual, y estos comienzos ya están cogidos: ${comoSuenan.map(c => `"${c}"`).join(', ')}. Cada una arranca por su lado, y sigue en futuro.`;
+      try {
+        const otras = await pedir(cosas.filter(c => repiten.includes(c.numero)), queda, aviso);
+        const puestos = new Set(cogidos);
+        for (const nueva of otras) {
+          const suyo = elComienzo(nueva[sinRepetir]);
+          if (!suyo || puestos.has(suyo)) continue;
+          const donde = filas.findIndex(f => f.numero === nueva.numero);
+          if (donde < 0) continue;
+          filas[donde] = nueva;
+          puestos.add(suyo);
+        }
+      } catch (err) {
+        console.warn(`[p2] ${que}: la vuelta de los comienzos se ha caido (${err.message}), se queda lo que habia`);
+      }
+    }
+  }
+
+  return filas;
 }
 
 // ── LA TABLA DE LAS PRUEBAS ─────────────────────────────────
@@ -1902,6 +1970,7 @@ const laTablaDeLasPruebas = ({ partes, sexo, arranque }) => unaTabla({
   cosas: partes,
   arranque,
   mensaje: 'Escribe la tabla, una fila por cada prueba.',
+  sinRepetir: 'dondeTeCaes',
   encargoDe: suyas => `${REGLAS_COMUNES}
 
 
@@ -1912,6 +1981,8 @@ Abajo tienes las pruebas de una persona, numeradas y ya escritas: es lo que acab
 Una fila por cada prueba de abajo, con su número, y tres celdas: "${BLOQUES.tuPrueba}", "${BLOQUES.queHaces}" y "${BLOQUES.dondeTeCaes}". Cada celda resume en una línea lo que pone abajo en esa misma casilla.
 
 La de "${BLOQUES.dondeTeCaes}" va en futuro, como está abajo: eso todavía no ha pasado, va a pasar cuando lo intente.
+
+Y esas no empiezan dos igual: cada una arranca con palabras distintas de las de las demás filas. Todas en futuro, pero cada una entra por su lado.
 
 Ninguna se queda fuera.
 
