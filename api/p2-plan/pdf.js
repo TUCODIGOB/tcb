@@ -180,18 +180,67 @@ export default async function handler(req, res) {
     // encima de la ultima palabra.
     const TAM_TITULO = 17, TAM_AREA = 11, ALTO_TITULO = 8.5;
 
-    function abrirSeccion(numero, titulo, area) {
-      hojaNueva();
-      // DONDE EMPIEZA EL P1, Y POR ESO AQUI TAMBIEN. Los dos documentos se leen
-      // seguidos: si uno arranca mas arriba que el otro, se nota al pasar de uno
-      // al otro. Es el mismo ARRIBA que usa el resto del documento.
-      y = ARRIBA;
+    // ── LO QUE SEPARA UNA DE LA SIGUIENTE ─────────────────────
+    //
+    // ANTES CADA UNA EMPEZABA EN SU HOJA. Con las largas eso dejaba hojas con
+    // tres renglones y el resto en blanco, y el documento parecia mas hueco de
+    // lo que es. Ahora van seguidas, y lo que las separa es esto: una raya
+    // corta con su rombo, en el dorado de la marca, con el mismo hueco arriba
+    // que abajo.
+    const AIRE_DEL_SEPARADOR = 15;
+    // Lo que sube el titulo por encima de su linea de base. Hace falta para
+    // dejar el mismo hueco a los dos lados: debajo del separador lo que se ve
+    // no es la linea del titulo, es donde empiezan sus mayusculas.
+    const ALTO_MAYUSCULA = TAM_TITULO * 0.72 * 25.4 / 72;
 
+    function separador(cy) {
+      const medio = W / 2;
+      doc.setDrawColor(DORADO[0], DORADO[1], DORADO[2]);
+      doc.setLineWidth(0.25);
+      doc.line(medio - 18, cy, medio - 6, cy);
+      doc.line(medio + 6, cy, medio + 18, cy);
+      doc.setFillColor(DORADO[0], DORADO[1], DORADO[2]);
+      doc.triangle(medio, cy - 1.5, medio - 1.5, cy, medio, cy + 1.5, 'F');
+      doc.triangle(medio, cy - 1.5, medio + 1.5, cy, medio, cy + 1.5, 'F');
+      doc.circle(medio - 22, cy, 0.5, 'F');
+      doc.circle(medio + 22, cy, 0.5, 'F');
+    }
+
+    function abrirSeccion(numero, titulo, area, primera) {
       const texto = (numero ? numero + '. ' : '') + t(titulo);
       doc.setFont('Roboto', 'bold');
       doc.setFontSize(TAM_TITULO);
       const lineas = doc.splitTextToSize(texto, ANCHO);
 
+      // LO QUE PIDE EMPEZAR ESTA, medido con su titulo ya partido: el titulo
+      // entero -uno de dos lineas pide mas que uno de una- y detras el primer
+      // subtitulo con los renglones que no quiere dejar solos. Menos que eso al
+      // pie no es un comienzo, es un titulo huerfano.
+      const pide = ALTO_TITULO * lineas.length + 3 + 6 + RENGLON * 5;
+
+      if (primera) {
+        hojaNueva();
+        // DONDE EMPIEZA EL P1, Y POR ESO AQUI TAMBIEN. Los dos documentos se leen
+        // seguidos: si uno arranca mas arriba que el otro, se nota al pasar de uno
+        // al otro. Es el mismo ARRIBA que usa el resto del documento.
+        y = ARRIBA;
+      } else {
+        // El separador, a la misma distancia de la ultima linea de la anterior
+        // que de donde empieza a verse el titulo de esta.
+        const cy = y - RENGLON + AIRE_DEL_SEPARADOR;
+        const arranque = cy + AIRE_DEL_SEPARADOR + ALTO_MAYUSCULA;
+        if (arranque + pide > HASTA) {
+          // No cabe el comienzo: pasa de hoja, y alli no hace falta separador
+          // porque ya separa la hoja.
+          hojaNueva();
+        } else {
+          separador(cy);
+          y = arranque;
+        }
+      }
+
+      doc.setFont('Roboto', 'bold');
+      doc.setFontSize(TAM_TITULO);
       doc.setTextColor(VERDE[0], VERDE[1], VERDE[2]);
       lineas.forEach((linea, i) => {
         doc.text(linea, X, y);
@@ -395,21 +444,22 @@ export default async function handler(req, res) {
     // deja de señalar nada.
     const SOBRE_BEIGE = new Set(['queHaces']);
 
-    for (const parte of partes) {
-      abrirSeccion(parte?.numero, t(parte?.titulo), parte?.area);
+    partes.forEach((parte, i) => {
+      abrirSeccion(parte?.numero, t(parte?.titulo), parte?.area, i === 0);
       for (const punto of PUNTOS) {
         if (!t(parte?.[punto])) continue;
         subtitulo(parte?.nombres?.[punto] || PORDEFECTO[punto]);
         if (SOBRE_BEIGE.has(punto)) caja('', parte[punto]);
         else corrido(parte[punto]);
       }
-    }
+    });
 
     // ── LAS CREENCIAS ─────────────────────────────────────────
     //
-    // El otro tema, igual que las pruebas: cada una en su hoja, con su numero,
-    // su titulo y sus dos bloques en texto corrido. Aqui no hay ninguna orden
-    // que vuelva a buscar, asi que no lleva fondo beige.
+    // El otro tema, igual que las pruebas: seguidas, con su numero, su titulo y
+    // sus dos bloques en texto corrido, y el separador entre una y la siguiente.
+    // Aqui no hay ninguna orden que vuelva a buscar, asi que no lleva fondo
+    // beige.
     //
     // Y SIN AREA. Una creencia sale de varios desafios a la vez, que pueden ser
     // de areas distintas: no es de ninguna.
@@ -424,14 +474,14 @@ export default async function handler(req, res) {
 
     if (suProgramacion.length) {
       hojaNueva();
-      for (const creencia of suProgramacion) {
-        abrirSeccion(creencia?.numero, t(creencia?.titulo));
+      suProgramacion.forEach((creencia, i) => {
+        abrirSeccion(creencia?.numero, t(creencia?.titulo), '', i === 0);
         for (const punto of PUNTOS_DE_CREENCIA) {
           if (!t(creencia?.[punto])) continue;
           subtitulo(creencia?.nombres?.[punto] || PORDEFECTO_DE_CREENCIA[punto]);
           corrido(creencia[punto]);
         }
-      }
+      });
     }
 
     // ── LA HOJA DE RUTA ───────────────────────────────────────
