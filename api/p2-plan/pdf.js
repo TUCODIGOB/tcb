@@ -284,8 +284,8 @@ export default async function handler(req, res) {
     // otra pagina sin sus nombres de columna no se entiende.
     const T_CHECK = 9, T_NUMERO = 8;       // lo que ocupan las dos primeras
     const T_AIRE = 2.5;                    // lo que respira una celda por dentro
-    const T_RENGLON = 4.8;                 // el renglon de dentro de la tabla
-    const T_CUERPO = 9, T_CABECERA = 7.5;
+    const T_RENGLON = 6;                   // el renglon de dentro de la tabla
+    const T_CUERPO = 12, T_CABECERA = 13;
     const T_CASILLA = 3.6;                 // el lado del cuadrado que se marca
 
     function pintarTabla(columnas) {
