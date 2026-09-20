@@ -1702,9 +1702,9 @@ const moldeDeLaTabla = celdas => ({
 // NO SE MIRA SI ACABA EN PUNTO, a proposito: aqui se pide justo lo contrario
 // -sin punto al final-, asi que lo que en el documento seria una frase cortada
 // aqui es lo normal.
-const COMO_ES_UNA_CELDA = `CADA CELDA
+const comoEsUnaCelda = cuanto => `CADA CELDA
 
-Una frase corta, de menos de doce palabras, hablada de tú. Se entiende sola de un vistazo, sin leer el resto de la tabla. Empieza en mayúscula y sin punto al final.
+Una frase corta, ${cuanto}, hablada de tú. Se entiende sola de un vistazo, sin leer el resto de la tabla. Empieza en mayúscula y sin punto al final.
 
 De todo lo de arriba, aquí manda esto: una celda es UNA frase, no un párrafo.
 
@@ -1808,7 +1808,7 @@ La de "${BLOQUES.dondeTeCaes}" va en futuro, como está abajo: eso todavía no h
 
 Ninguna se queda fuera.
 
-${COMO_ES_UNA_CELDA}
+${comoEsUnaCelda('de menos de doce palabras')}
 
 LAS PRUEBAS:
 
@@ -1838,7 +1838,7 @@ Una fila por cada creencia de abajo, con su número, y dos celdas: "${BLOQUES_DE
 
 Ninguna se queda fuera.
 
-${COMO_ES_UNA_CELDA}
+${comoEsUnaCelda('de hasta quince palabras')}
 
 LAS CREENCIAS:
 
