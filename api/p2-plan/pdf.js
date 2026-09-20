@@ -440,9 +440,9 @@ export default async function handler(req, res) {
     // ha ido leyendo en cada parte, asi que al llegar aqui ya sabe lo que hay
     // en cada una sin que nadie se lo explique.
     if (suHojaDeRuta) {
-      // EL AREA VA AL FINAL DE LA PRIMERA CELDA, con la misma letra y el mismo
-      // color que el texto, y escrita como un nombre: (Identidad). La pone el
-      // programa, igual que en la cabecera de cada parte.
+      // EL AREA VA AL FINAL DE LA PRIMERA CELDA, entre parentesis, con la misma
+      // letra y el mismo color que el texto, y con solo la primera en mayuscula.
+      // La pone el programa, igual que en la cabecera de cada parte.
       const comoNombre = a => {
         const suya = t(a);
         return suya ? suya.charAt(0).toUpperCase() + suya.slice(1).toLowerCase() : '';
