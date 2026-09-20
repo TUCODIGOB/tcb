@@ -1339,7 +1339,7 @@ LO QUE NO SE PUEDE ESCRIBIR
 
 No te inventes nada de su vida. No sabes si tiene pareja, trabajo, hijos, casa o familia.
 
-Esto lo trae de nacimiento y no lo adquirió a lo largo de su vida: no le pongas un antes, ni una infancia, ni que lo aprendiera o se lo enseñaran. Ese "de dónde viene" se contesta con cómo funciona por dentro, nunca con un cuándo.
+Esto lo trae de nacimiento: no lo aprendió, no se lo enseñó nadie y no le viene de su infancia ni de su familia.
 
 Nada técnico: ni planetas, ni signos, ni casas, ni nada relacionado con astrología.
 
@@ -1755,7 +1755,7 @@ LO QUE NO SE PUEDE ESCRIBIR
 
 No te inventes nada de su vida. No sabes si tiene pareja, trabajo, hijos, casa o familia.
 
-Esto lo trae de nacimiento y no lo adquirió a lo largo de su vida. Por eso nada de lo que escribas puede situar el origen en un momento suyo: ni que lo aprendiera, ni que se lo enseñaran, ni que le venga de alguien, ni ninguna infancia, ni ningún antes ni ningún cuándo. Sería inventárselo. Lo que sí sabes es cómo funciona por dentro y en qué parcela de su vida se le nota: ese "de dónde viene" se contesta con eso, con lo que trae puesto y cómo funciona, nunca con un cuándo.
+Esto lo trae de nacimiento: no lo aprendió, no se lo enseñó nadie y no le viene de su infancia ni de su familia. Con los años se le habrá marcado más, y eso sí lo puedes decir.
 
 Nada que le valga igual a cualquier persona: este producto es de élite.
 
