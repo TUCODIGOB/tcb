@@ -1174,6 +1174,15 @@ Quien lo va a leer es ${comoSeLeHabla(sexo)}`;
 
 // ── B. LIMPIAR Y PUNTUAR ────────────────────────────────────
 
+// COMO SE PUNTUA, QUE ES COMO PUNTUA EL P1: no se pide una nota a ojo, se
+// piden cuatro notas con su criterio escrito, y la suma la hace el codigo.
+//
+// Antes aqui se pedia "del 1 al 10 segun cuanto le manda". Diez niveles y una
+// frase para explicarlos no los distingue nadie, ni un humano, y lo que salia
+// eran casi todo sietes. El P1 lo tiene resuelto desde el principio: pocos
+// niveles, cada uno con lo que significa, y el que puntua no elige.
+const CRITERIOS_DE_LA_CREENCIA = ['cuanto', 'cuando', 'donde', 'duele'];
+
 const MOLDE_DE_PUNTUAR_CREENCIAS = {
   type: 'object',
   properties: {
@@ -1183,11 +1192,11 @@ const MOLDE_DE_PUNTUAR_CREENCIAS = {
       type: 'array',
       items: {
         type: 'object',
-        properties: {
-          numero: { type: 'integer' },
-          puntuacion: { type: 'integer' },
-        },
-        required: ['numero', 'puntuacion'],
+        properties: Object.fromEntries([
+          ['numero', { type: 'integer' }],
+          ...CRITERIOS_DE_LA_CREENCIA.map(c => [c, { type: 'integer' }]),
+        ]),
+        required: ['numero', ...CRITERIOS_DE_LA_CREENCIA],
         additionalProperties: false,
       },
     },
@@ -1216,15 +1225,29 @@ Pesa más la que sea más concreta y más central para esa persona, no la más g
 
 LA PUNTUACIÓN
 
-A cada una de las que se quedan le pones de 1 a 10 según cuánto le manda: 10 es la que le decide la vida y está debajo de casi todo lo que hace, 1 es la que apenas asoma.
+A cada una de las que se quedan le pones CUATRO notas, del 1 al 5, siempre número entero. 1 es lo más bajo y 5 lo más alto. Usa el 1 y usa el 5 cuando toque: si todo lo puntúas con un 3 o un 4, la nota no distingue nada y no sirve.
 
-No puntúas más alto lo que esté escrito con más palabras: se puntúa lo que pesa, no lo largo que venga.
+Tú mides, no eliges: cuánto pesa cada una lo decide después una suma, no tú.
+
+"cuanto" — CUÁNTO LE CUESTA CREER ESO. 5 es que le quita algo que se puede contar y que es mucho: horas de su vida, dinero, salud, la gente que tiene cerca, su calma. 3 es que le quita algo que se puede contar pero es poco. 1 es que no le quita nada que se pueda nombrar.
+
+"cuando" — CADA CUÁNTO LE MANDA. 5 es casi todos los días, sin que haga falta que pase nada especial. 3 es algunas veces al mes, o cuando se dan ciertas situaciones. 1 es muy de tarde en tarde.
+
+"donde" — EN CUÁNTAS PARTES DE SU VIDA SE LE NOTA. 5 es en casi todo lo que hace, con quien sea y donde sea. 3 es en dos o tres partes suyas, y en el resto no. 1 es en una sola esquina de su vida.
+
+"duele" — CUÁNTO LE VA A COSTAR RECONOCER QUE SE LO CREE. 5 es algo que no ha mirado nunca de frente, o que se cuenta al revés y cree que es una virtud. 3 es algo que sospecha de sí pero no ha llamado por su nombre. 1 es algo que ya sabe.
+
+Ninguna de las cuatro vale más que las otras. Se suman igual.
+
+LO QUE NO PUNTÚAS
+
+Que suene bien o que esté mejor escrita. Eso no es una nota, es un gusto. Y no puntúas más alto lo que esté escrito con más palabras. Lo grave tampoco es lo mismo que lo pesado: algo que suena dramático y le pasa una vez al año saca nota baja en "cuando".
 
 LO QUE DEVUELVES
 
 "sequedan": los números de las que se quedan, en el orden de abajo.
 "sequitan": los números de las que quitas.
-"puntos": una entrada por CADA una de las que se quedan, con su número y su puntuación.
+"puntos": una entrada por CADA una de las que se quedan, con su número y sus cuatro notas.
 
 Cada número tiene que quedar en una sola de las 2 listas, nunca en las 2. Todos los números tienen que aparecer en "sequedan" o en "sequitan", ninguno se queda fuera y ninguno se repite en las dos.
 
@@ -1249,11 +1272,16 @@ ${creencias.map((c, i) => `${i + 1}. ${c.titulo}\n   ${c.linea}`).join('\n\n')}`
   const sequitan = [...new Set((Array.isArray(salida.sequitan) ? salida.sequitan : [])
     .map(Number).filter(n => validos.has(n) && !sequedan.includes(n)))].sort((a, b) => a - b);
 
+  // LA SUMA LA HACE EL CODIGO, no el modelo: el pone las cuatro notas y aqui
+  // se suman. Una nota que no sea un entero del 1 al 5 no vale, y esa creencia
+  // se queda sin puntuar -que cuenta como hueco y se pide otra vez-.
   const puntuacion = new Map();
   for (const p of (Array.isArray(salida.puntos) ? salida.puntos : [])) {
-    const n = Number(p?.numero), cuanto = Number(p?.puntuacion);
-    if (!validos.has(n) || !Number.isFinite(cuanto)) continue;
-    puntuacion.set(n, Math.min(10, Math.max(1, Math.round(cuanto))));
+    const n = Number(p?.numero);
+    if (!validos.has(n)) continue;
+    const notas = CRITERIOS_DE_LA_CREENCIA.map(c => Number(p?.[c]));
+    if (notas.some(x => !Number.isInteger(x) || x < 1 || x > 5)) continue;
+    puntuacion.set(n, notas.reduce((a, b) => a + b, 0));
   }
 
   // LO QUE SE HA DEJADO SIN DECIR ES UN HUECO, y por eso se pide otra vez: una
