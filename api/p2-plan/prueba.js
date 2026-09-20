@@ -1733,9 +1733,9 @@ Cuál es esa creencia, dicha a la cara y desde algo suyo, nunca desde la idea.
 
 Dentro va, entrecomillada y en primera persona, cómo se la dice por dentro: la frase tal cual le suena por dentro, no arreglada.
 
-Y de dónde le viene: qué hay debajo que la sostiene, y que en su momento le sirvió para algo.
+Y cómo funciona por dentro: qué hay debajo que la sostiene.
 
-Unas 110 palabras para hacerte una idea del tamaño.
+Unas 90 palabras para hacerte una idea del tamaño.
 
 "loQueEsVerdad"
 
@@ -1743,7 +1743,7 @@ La creencia nueva, la que ocupa el sitio de la de arriba. Tiene que ser creíble
 
 Y la segunda mitad es qué cambia el día que la vieja deje de mandar: cómo es ahí su vida, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir.
 
-Unas 110 palabras para hacerte una idea del tamaño.
+Unas 90 palabras para hacerte una idea del tamaño.
 
 LAS CIFRAS DE ARRIBA SON UNA GUÍA, no un límite. Cuanto más corto mejor, pero tiene que entenderse a la primera. Y nunca cortes una frase por la mitad para que quepa: si no cabe, quitas algo entero y cierras.
 
@@ -1752,6 +1752,8 @@ LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que h
 LO QUE NO SE PUEDE ESCRIBIR
 
 No te inventes nada de su vida. No sabes si tiene pareja, trabajo, hijos, casa o familia.
+
+Esto lo trae de nacimiento y no lo adquirió a lo largo de su vida. Por eso nada de lo que escribas puede situar el origen en un momento suyo: ni que lo aprendiera, ni que se lo enseñaran, ni que le venga de alguien, ni ninguna infancia, ni ningún antes ni ningún cuándo. Sería inventárselo. Lo que sí sabes es cómo funciona por dentro y en qué parcela de su vida se le nota: ese "de dónde viene" se contesta con eso, con lo que trae puesto y cómo funciona, nunca con un cuándo.
 
 Nada que le valga igual a cualquier persona: este producto es de élite.
 
