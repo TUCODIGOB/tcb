@@ -1878,7 +1878,7 @@ function lasQueRepitenElComienzo(filas, celda) {
 // Si alguna fila no vuelve, se pide otra vez SOLO esa: las que ya estan no se
 // repiten. Y si despues de eso sigue faltando alguna, esto lanza: una tabla
 // resumen con un hueco en medio no se entrega.
-async function unaTabla({ que, celdas, encargoDe, mensaje, cosas, arranque, sinRepetir = '' }) {
+async function unaTabla({ que, celdas, encargoDe, mensaje, cosas, arranque, sinRepetir = null }) {
   const pedidas = cosas.map(c => c.numero);
 
   const pedir = async (suyas, espera, aviso = '') => filasLimpias(
@@ -1932,19 +1932,20 @@ async function unaTabla({ que, celdas, encargoDe, mensaje, cosas, arranque, sinR
   // si no, se queda la que habia. Antes una celda que empieza como otra que una
   // frase retorcida para cumplir una regla.
   if (sinRepetir) {
-    const repiten = lasQueRepitenElComienzo(filas, sinRepetir);
+    const { celda, nombre } = sinRepetir;
+    const repiten = lasQueRepitenElComienzo(filas, celda);
     const queda = loQueQueda(arranque, ESPERA_DE_LA_TABLA_MS);
     if (repiten.length && queda >= ESPERA_MINIMA_PARA_REHACER_MS) {
       console.warn(`[p2] ${que}: las filas ${repiten.join(', ')} empiezan como otra, se piden otra vez`);
       const quedan = filas.filter(f => !repiten.includes(f.numero));
-      const cogidos = quedan.map(f => elComienzo(f[sinRepetir])).filter(Boolean);
-      const comoSuenan = quedan.map(f => elComienzoTalCual(f[sinRepetir])).filter(Boolean);
-      const aviso = `\n\nY OJO: en esa columna no puede haber dos que empiecen igual, y estos comienzos ya están cogidos: ${comoSuenan.map(c => `"${c}"`).join(', ')}. Cada una arranca por su lado, y sigue en futuro.`;
+      const cogidos = quedan.map(f => elComienzo(f[celda])).filter(Boolean);
+      const comoSuenan = quedan.map(f => elComienzoTalCual(f[celda])).filter(Boolean);
+      const aviso = `\n\nY OJO: en "${nombre}" no puede haber dos que empiecen igual, y estos comienzos ya están cogidos por las demás filas: ${comoSuenan.map(c => `"${c}"`).join(', ')}. Las tuyas arrancan cada una por su lado, y siguen en futuro.`;
       try {
         const otras = await pedir(cosas.filter(c => repiten.includes(c.numero)), queda, aviso);
         const puestos = new Set(cogidos);
         for (const nueva of otras) {
-          const suyo = elComienzo(nueva[sinRepetir]);
+          const suyo = elComienzo(nueva[celda]);
           if (!suyo || puestos.has(suyo)) continue;
           const donde = filas.findIndex(f => f.numero === nueva.numero);
           if (donde < 0) continue;
@@ -1970,7 +1971,7 @@ const laTablaDeLasPruebas = ({ partes, sexo, arranque }) => unaTabla({
   cosas: partes,
   arranque,
   mensaje: 'Escribe la tabla, una fila por cada prueba.',
-  sinRepetir: 'dondeTeCaes',
+  sinRepetir: { celda: 'dondeTeCaes', nombre: BLOQUES.dondeTeCaes },
   encargoDe: suyas => `${REGLAS_COMUNES}
 
 
