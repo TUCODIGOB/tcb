@@ -1534,7 +1534,7 @@ const MOLDE_DE_LA_CREENCIA = {
 // CADA UNA VE SOLO LA SUYA. Ni las demas creencias ni las pruebas: aqui se
 // habla de lo que cree, y lo que tiene que hacer esta en otro sitio del
 // documento y lo escribe otro.
-async function escribirLaCreencia({ creencia, nombre, sexo }) {
+async function escribirLaCreencia({ creencia, nombre, sexo, prohibida = '' }) {
   const encargo = `${REGLAS_COMUNES}
 
 
@@ -1542,7 +1542,7 @@ AQUÍ SE HABLA DE LO QUE CREE, NO DE LO QUE TIENE QUE HACER
 
 No le mandes hacer nada: ni un paso, ni un ejercicio, ni algo que probar, ni una señal que vigilar. Eso está en otro sitio del documento, lo escribe otro y no es lo tuyo.
 
-Lo tuyo es lo que da por verdad sin darse cuenta, y lo que pasa el día que deje de mandarle.
+Lo tuyo es lo que da por verdad sin darse cuenta, y cómo le cambia la vida cuando eso deja de mandarle.
 
 LO QUE TE TOCA AHORA
 
@@ -1566,7 +1566,9 @@ Unas 90 palabras para hacerte una idea del tamaño.
 
 La creencia nueva, la que ocupa el sitio de la de arriba. Tiene que ser creíble: no es lo contrario dicho en bonito, ni una frase de ánimo, es algo que pueda leer hoy y reconocer que es verdad.
 
-Y la segunda mitad es qué cambia el día que la vieja deje de mandar: cómo es ahí su vida, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir.
+Y la segunda mitad es cómo es su vida sin esa creencia mandando: en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir.
+
+Esa parte no se anuncia. Se entra por lo que hace o por lo que deja de hacer, no con una fórmula que avise de que ahora viene lo que cambia.
 
 Unas 90 palabras para hacerte una idea del tamaño.
 
@@ -1575,6 +1577,8 @@ LAS CIFRAS DE ARRIBA SON UNA GUÍA, no un límite. Cuanto más corto mejor, pero
 LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que haces tú, y hace falta: sin esa línea todo sale pegado en un bloque y no hay quien lo lea en un móvil.
 
 LO QUE NO SE PUEDE ESCRIBIR
+
+Ni una palabra de este encargo sale en lo que escribes. Aquí le hablas a ella de tú: nunca "quien lo lee", ni "esta persona", ni el nombre de las casillas.
 
 No te inventes nada de su vida. No sabes si tiene pareja, trabajo, hijos, casa o familia.
 
@@ -1596,6 +1600,13 @@ Quien lo va a leer es ${comoSeLeHabla(sexo)}
 Nombre de pila: ${nombre}
 ${REGLA_DEL_NOMBRE(false)}`;
 
+  // UNA FRASE QUE YA ESTA EN OTRA CREENCIA. Quien escribe esta no ve a las
+  // demas, asi que no puede saber que esa frase ya esta puesta: se la dice el
+  // programa, que si las ve todas.
+  const laProhibida = prohibida
+    ? `\n\nY OJO: la frase "${prohibida}" ya está en otra parte del documento. No la uses, ni nada que suene igual: eso mismo se dice de otra manera.`
+    : '';
+
   const salida = await otraVezSiVieneRota({
     que: `la creencia "${creencia.titulo}"`,
     cojo: c => PUNTOS_DE_CREENCIA.some(punto => esRelleno(c[punto]) || acabaColgado(c[punto])),
@@ -1609,7 +1620,7 @@ ${REGLA_DEL_NOMBRE(false)}`;
       piensa: '',
       techo: TECHO_DE_ESCRIBIR,
       system: encargo,
-      mensaje: `Escribe las dos partes de esta creencia, enteras.${recordatorio}`,
+      mensaje: `Escribe las dos partes de esta creencia, enteras.${laProhibida}${recordatorio}`,
       molde: MOLDE_DE_LA_CREENCIA,
       espera: AbortSignal.timeout(cuanto),
     }),
@@ -2028,6 +2039,8 @@ export default async function handler(req, res) {
         },
         nombre: String(nombre).trim(),
         sexo: String(sexo || ''),
+        // La frase que no puede usar, si es que se ha repetido con otra.
+        prohibida: String(req.body?.prohibida || '').trim().slice(0, 200),
       });
       return res.status(200).json(conCuaderno({ creencia: escrita }));
     }
@@ -2378,7 +2391,7 @@ ir.addEventListener('click', async () => {
           const { creencia } = await llamar({ accion:'creencia', nombre:quienEs.nombre,
                                               sexo:quienEs.sexo, creencia: suya });
           escritasC[i] = creencia;
-          huecosC[i].outerHTML = pintarCreencia(creencia, i + 1);
+          huecosC[i].innerHTML = pintarCreencia(creencia, i + 1);
         } catch (err) {
           caidas.push(i);
           huecosC[i].innerHTML = cabecera + (segundaVuelta
@@ -2400,6 +2413,30 @@ ir.addEventListener('click', async () => {
 
     laProgramacion = escritasC.filter(Boolean);
     enteras = laProgramacion.length === cuantasC;
+
+    // ── Y QUE NO SE REPITA NINGUNA FRASE ENTRE ELLAS ──────────
+    //
+    // Una sola vuelta: a la que repite se le dice la frase y la escribe de
+    // otra manera. Si esa vuelta se cae, se queda la que habia, que una frase
+    // repetida no vale perder el documento.
+    if (enteras) {
+      const repiten = frasesRepetidas(escritasC.map(c => PUNTOS_DE_CREENCIA.map(p => c[p]).join(' ')));
+      if (repiten.size) {
+        aviso.textContent = 'Hay ' + repiten.size + ' que repiten una frase, se piden otra vez…';
+        await Promise.all([...repiten].map(async ([i, frase]) => {
+          try {
+            const { creencia } = await llamar({ accion:'creencia', nombre:quienEs.nombre,
+                                                sexo:quienEs.sexo, creencia: suyas.creencias[i],
+                                                prohibida: frase });
+            escritasC[i] = creencia;
+            huecosC[i].innerHTML = pintarCreencia(creencia, i + 1);
+          } catch (err) {
+            console.warn('[p2] la creencia ' + (i + 1) + ' repetía una frase y no se ha podido rehacer: ' + err.message);
+          }
+        }));
+        laProgramacion = escritasC.filter(Boolean);
+      }
+    }
   }
 
   // 4. Y LA HOJA DE RUTA, QUE ES LO ULTIMO.
@@ -2519,6 +2556,48 @@ function pintarParte(p, n) {
   return '<div class="parte">' + cabeceraDeParte(p, n) + bloques + '</div>';
 }
 
+// LAS FRASES QUE SE REPITEN ENTRE CREENCIAS.
+//
+// Cada creencia la escribe una llamada distinta que no ve a las demas, asi que
+// ninguna puede saber que la frase que esta poniendo ya esta puesta en otra. Y
+// pasa: en un documento de verdad, siete de ocho abrieron su segunda mitad con
+// la misma frase, porque el encargo se la dictaba. Se quito del encargo, pero
+// eso no basta -si la instruccion sugiere una forma, todas van hacia ella-.
+//
+// Esto lo mira el codigo, que si las ve todas juntas: busca cualquier carrera
+// de CINCO palabras seguidas que aparezca en dos creencias o mas. La primera
+// se queda con ella; a las demas se les vuelve a pedir su texto diciendoles
+// esa frase, para que la digan de otra manera.
+const PALABRAS_QUE_SE_REPITEN = 5;
+
+function frasesRepetidas(textos) {
+  const carreras = textos.map(t => {
+    const palabras = String(t || '').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9ñ]+/g, ' ').trim().split(' ').filter(Boolean);
+    const suyas = new Set();
+    for (let i = 0; i + PALABRAS_QUE_SE_REPITEN <= palabras.length; i++) {
+      suyas.add(palabras.slice(i, i + PALABRAS_QUE_SE_REPITEN).join(' '));
+    }
+    return suyas;
+  });
+
+  // De cada carrera, quienes la llevan.
+  const dequien = new Map();
+  carreras.forEach((suyas, i) => suyas.forEach(f => {
+    if (!dequien.has(f)) dequien.set(f, []);
+    dequien.get(f).push(i);
+  }));
+
+  // La primera se la queda; las demas la tienen que cambiar.
+  const repiten = new Map();
+  for (const [frase, quienes] of dequien) {
+    if (quienes.length < 2) continue;
+    for (const i of quienes.slice(1)) if (!repiten.has(i)) repiten.set(i, frase);
+  }
+  return repiten;
+}
+
 // LO QUE HA HECHO EL TEMA DE LAS CREENCIAS, PARA PODER MIRARLO.
 //
 // De la pagina de pruebas y de ningun sitio mas. Se ve de un vistazo cuantas
@@ -2620,7 +2699,9 @@ function pintarCreencia(c, n) {
   const bloques = PUNTOS_DE_CREENCIA.map(punto =>
     '<div class="bloque"><h3>' + escapar(BLOQUES_DE_CREENCIA[punto]) + '</h3>' + parrafos(c[punto]) + '</div>'
   ).join('');
-  return '<div class="parte">' + cabeceraDeParte(c, n) + bloques + '</div>';
+  // Va DENTRO del hueco que ya tiene su sitio, no en vez de el: asi se puede
+  // volver a pintar la misma si hay que rehacerla.
+  return cabeceraDeParte(c, n) + bloques;
 }
 </script>
 </body>
