@@ -1578,7 +1578,7 @@ LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que h
 
 LO QUE NO SE PUEDE ESCRIBIR
 
-Ni una palabra de este encargo sale en lo que escribes. Aquí le hablas a ella de tú: nunca "quien lo lee", ni "esta persona", ni el nombre de las casillas.
+Ni una palabra de este encargo sale en lo que escribes. Aquí se habla de tú: nunca "quien lo lee", ni "esta persona", ni el nombre de las casillas.
 
 No te inventes nada de su vida. No sabes si tiene pareja, trabajo, hijos, casa o familia.
 
