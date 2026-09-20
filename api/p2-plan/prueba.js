@@ -1333,11 +1333,13 @@ LO QUE DEVUELVES DE CADA UNA
 
 "titulo" — la creencia dicha en corto, de ${PALABRAS_DEL_TITULO.min} a ${PALABRAS_DEL_TITULO.max} palabras, en primera persona y tal como se la dice por dentro. Empieza en mayúscula y sin punto al final. No es una etiqueta ni el nombre de un concepto: es la frase que se cree.
 
-"linea" — UNA línea: qué es lo que cree exactamente y de dónde le viene.
+"linea" — UNA línea: qué es lo que cree exactamente y cómo funciona por dentro.
 
 LO QUE NO SE PUEDE ESCRIBIR
 
 No te inventes nada de su vida. No sabes si tiene pareja, trabajo, hijos, casa o familia.
+
+Esto lo trae de nacimiento y no lo adquirió a lo largo de su vida: no le pongas un antes, ni una infancia, ni que lo aprendiera o se lo enseñaran. Ese "de dónde viene" se contesta con cómo funciona por dentro, nunca con un cuándo.
 
 Nada técnico: ni planetas, ni signos, ni casas, ni nada relacionado con astrología.
 
