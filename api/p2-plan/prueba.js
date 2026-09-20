@@ -1804,6 +1804,8 @@ Abajo tienes las pruebas de una persona, numeradas y ya escritas: es lo que acab
 
 Una fila por cada prueba de abajo, con su número, y tres celdas: "${BLOQUES.tuPrueba}", "${BLOQUES.queHaces}" y "${BLOQUES.dondeTeCaes}". Cada celda resume en una línea lo que pone abajo en esa misma casilla.
 
+La de "${BLOQUES.dondeTeCaes}" va en futuro, como está abajo: eso todavía no ha pasado, va a pasar cuando lo intente.
+
 Ninguna se queda fuera.
 
 ${COMO_ES_UNA_CELDA}
