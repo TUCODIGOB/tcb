@@ -613,7 +613,7 @@ async function pedirElPlan({ nombre, sexo, limpia, recordatorio = '',
                              espera = ESPERA_DEL_PLAN_MS, modelo = EL_QUE_DECIDE }) {
   const encargo = `AQUÍ NO SE DIAGNOSTICA
 
-No le expliques como es o porque, ni de dónde le viene lo que hace, ni le busques la causa, ni le pongas nombre a lo que le pasa. Eso ya lo tiene.
+No le expliques cómo es o por qué, ni de dónde le viene lo que hace, ni le busques la causa, ni le pongas nombre a lo que le pasa. Eso ya lo tiene.
 
 Ahora lo que necesitamos es: que haría su mejor versión, lo que tiene que cambiar y qué hace para conseguirlo con éxito, siendo humana la persona.
 
@@ -912,9 +912,9 @@ async function escribirLaParte({ parte, nombre, sexo, puedeElNombre }) {
 
 AQUÍ NO SE DIAGNOSTICA
 
-No le expliques como es o porque, ni de dónde le viene lo que hace, ni le busques la causa, ni le pongas nombre a lo que le pasa. Eso ya lo tiene.
+No le expliques cómo es o por qué, ni de dónde le viene lo que hace, ni le busques la causa, ni le pongas nombre a lo que le pasa. Eso ya lo tiene.
 
-Ahora lo que necesitamos es: que haria su mejor version, lo que tiene que cambiar y qué hace para conseguirlo con exito, siendo humana la persona.
+Ahora lo que necesitamos es: que haría su mejor versión, lo que tiene que cambiar y qué hace para conseguirlo con éxito, siendo humana la persona.
 
 Lo que le cuesta no es su defecto, es su prueba: de ahí sale lo que tiene que hacer.
 
@@ -924,7 +924,7 @@ EL TÍTULO DE ESTA PARTE ES: ${parte.titulo}
 
 Va tal cual, sin cambiarlo ni una palabra. Lo devuelves en la casilla "titulo".
 
-TE DAN TRES LÍNEAS YA DECIDIDAS Y ESCRIBES LAS TRES, cada una por su lado. No eliges tú lo que va: eso ya está decidido con todo su plan delante. Lo tuyo es que el humano lo entienda a la primera al leer y de manera facil, y que le sirva al humano, que le aporte valor
+TE DAN TRES LÍNEAS YA DECIDIDAS Y ESCRIBES LAS TRES, cada una por su lado. No eliges tú lo que va: eso ya está decidido con todo su plan delante. Lo tuyo es que el humano lo entienda a la primera al leer y de manera fácil, y que le sirva al humano, que le aporte valor.
 
 NO DECIDES, EXPLICAS. Coges la línea que te dan y la abres: qué es exactamente, cómo se hace, por qué así y no de otra manera, y qué pasa cuando lo hace. Todo lo que escribas tiene que poder rastrearse a la línea que te han dado. Si te falta un dato, no te lo inventas: cuentas mejor lo que ya está.
 
@@ -950,9 +950,9 @@ Cabe explicarla entera: qué hace exactamente, cómo se hace. Tan claro que lo p
 
 "dondeTeCaes"
 
-El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien. lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Unas 60 palabras para hacerte una idea del tamaño.
+El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien. Lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Unas 60 palabras para hacerte una idea del tamaño.
 
-LAS CIFRAS DE ARRIBA SON UNA GUIA, no un límite. Cuanto más corto, mejor, pero debe estar bien explicado, debe entenderse bien. Y nunca cortes una frase por la mitad para que quepa: si no cabe, quitas algo entero y cierras.
+LAS CIFRAS DE ARRIBA SON UNA GUÍA, no un límite. Cuanto más corto, mejor, pero debe estar bien explicado, debe entenderse bien. Y nunca cortes una frase por la mitad para que quepa: si no cabe, quitas algo entero y cierras.
 
 LOS PÁRRAFOS SE SEPARAN CON UNA LÍNEA EN BLANCO. Es lo único de maqueta que haces tú, y hace falta: sin esa línea todo sale pegado en un bloque y no hay quien lo lea en un móvil.
 
