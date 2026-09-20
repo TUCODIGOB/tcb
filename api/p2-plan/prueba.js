@@ -1422,28 +1422,10 @@ ${creencias.map((c, i) => `${i + 1}. ${c.titulo}\n   ${c.linea}`).join('\n\n')}`
   return { sequedan, sequitan };
 }
 
-// EL AREA DE UNA CREENCIA ES LA DE SUS DESAFIOS. Cuando sale de varios y no
-// son todos de la misma area, se queda con la que mas se repite entre ellos, y
-// si empatan, con la del primero. No la elige nadie aqui: viene pegada desde el
-// P1, asi que no puede descuadrarse con lo escrito.
-function elAreaDeLaCreencia(deCuales, areas) {
-  const cuenta = new Map();
-  for (const n of deCuales) {
-    const suya = String(areas[n - 1] || '').trim();
-    if (suya) cuenta.set(suya, (cuenta.get(suya) || 0) + 1);
-  }
-  let elegida = '';
-  let mas = 0;
-  for (const [area, veces] of cuenta) {
-    if (veces > mas) { mas = veces; elegida = area; }
-  }
-  return elegida;
-}
-
 // ── LOS TRES PASOS SEGUIDOS ─────────────────────────────────
 //
 // Sale la lista de creencias lista para escribir: cada una con su titulo, su
-// linea, su area y su numero. Si no sale ninguna, esto LANZA: el documento no
+// linea y su numero. Si no sale ninguna, esto LANZA: el documento no
 // se monta a medias.
 async function lasCreencias({ limpia, sexo }) {
   const arranque = Date.now();
@@ -1599,7 +1581,11 @@ async function lasCreencias({ limpia, sexo }) {
 
   // PRIMERO LAS QUE MAS LE MANDAN. Para eso se ha puntuado. Las que empaten se
   // quedan en el orden en que salieron.
-  const areas = limpia.areas || [];
+  // LA CREENCIA NO LLEVA AREA. Sale de varios desafios a la vez, que pueden ser
+  // de areas distintas, asi que ponerle una seria elegir por sorteo. Y ademas
+  // una creencia no es de un area: se le nota en varias cosas suyas, que es
+  // justo lo que la hace valer. Las pruebas si la llevan: cada una sale de un
+  // desafio concreto.
   const listas = quedan
     .map((c, i) => ({ ...c, orden: i }))
     .sort((a, b) => (b.puntuacion - a.puntuacion) || (a.orden - b.orden))
@@ -1609,7 +1595,6 @@ async function lasCreencias({ limpia, sexo }) {
       linea: c.linea,
       deCuales: c.deCuales,
       puntuacion: c.puntuacion,
-      area: elAreaDeLaCreencia(c.deCuales, areas),
     }));
 
   // Y COMO SE HA LLEGADO A ELLA, para poder mirarlo en la pagina: lo que saco
@@ -1733,7 +1718,7 @@ ${REGLA_DEL_NOMBRE(false)}`;
     }),
   });
 
-  const escrita = { titulo: creencia.titulo, area: creencia.area };
+  const escrita = { titulo: creencia.titulo };
   for (const punto of PUNTOS_DE_CREENCIA) escrita[punto] = String(salida[punto] || '').trim();
 
   // UNA CREENCIA ROTA NO SE ENTREGA, y rota es rota: lo mismo que en las
@@ -2037,13 +2022,14 @@ async function lasTablas({ partes, creencias, sexo }) {
   ]);
 
   // EL AREA NO LA ESCRIBE EL MODELO: se le pega aqui a su fila, sacada de la
-  // misma cosa que resume, y la pone el que maqueta.
+  // misma cosa que resume, y la pone el que maqueta. Solo las pruebas: la
+  // creencia no lleva area.
   const conArea = (filas, cosas) => filas.map(f => {
     const suya = cosas.find(c => c.numero === f.numero);
     return suya && suya.area ? { ...f, area: suya.area } : f;
   });
   console.log(`[p2] la hoja de ruta: ${pruebas.length} pruebas y ${suyas.length} creencias`);
-  return { pruebas: conArea(pruebas, partes), creencias: conArea(suyas, creencias) };
+  return { pruebas: conArea(pruebas, partes), creencias: suyas };
 }
 
 
@@ -2223,7 +2209,6 @@ export default async function handler(req, res) {
         creencia: {
           titulo: String(creencia.titulo).trim(),
           linea: String(creencia.linea).trim(),
-          area: String(creencia.area || '').trim(),
         },
         nombre: String(nombre).trim(),
         sexo: String(sexo || ''),
@@ -2254,7 +2239,6 @@ export default async function handler(req, res) {
         creencias: creencias.map((c, i) => ({
           numero: Number(c?.numero) || i + 1,
           titulo: String(c?.titulo || '').trim(),
-          area: String(c?.area || '').trim(),
           ...Object.fromEntries(PUNTOS_DE_CREENCIA.map(punto => [punto, String(c?.[punto] || '').trim()])),
         })),
         sexo: String(sexo || ''),
@@ -2810,7 +2794,6 @@ function pintarLasCreencias(creencias, revision) {
       '<td>' + escapar(c.numero) + '</td>' +
       '<td>' + escapar(c.puntuacion) + '</td>' +
       '<td class="verbo">' + escapar(c.titulo) + '</td>' +
-      '<td>' + escapar(c.area) + '</td>' +
       '<td>' + escapar((c.deCuales || []).join(', ')) + '</td>' +
       '<td>' + escapar(c.linea) + '</td>' +
     '</tr>').join('');
@@ -2819,7 +2802,7 @@ function pintarLasCreencias(creencias, revision) {
     (entraron.length || creencias.length) + ' salieron, quedan ' + creencias.length + '</summary>' +
     lista('Salían de un solo desafío', fuera0) +
     lista('Quitó la limpieza', fuera1) + lista('Quitó el repaso', fuera2) +
-    '<table><tr><th>Nº</th><th>Peso</th><th>Creencia</th><th>Área</th><th>Desafíos</th><th>De dónde le viene</th></tr>' +
+    '<table><tr><th>Nº</th><th>Peso</th><th>Creencia</th><th>Desafíos</th><th>De dónde le viene</th></tr>' +
     filas + '</table></details>';
 }
 

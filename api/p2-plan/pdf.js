@@ -408,8 +408,11 @@ export default async function handler(req, res) {
     // ── LAS CREENCIAS ─────────────────────────────────────────
     //
     // El otro tema, igual que las pruebas: cada una en su hoja, con su numero,
-    // su titulo y su area, y sus dos bloques en texto corrido. Aqui no hay
-    // ninguna orden que vuelva a buscar, asi que no lleva fondo beige.
+    // su titulo y sus dos bloques en texto corrido. Aqui no hay ninguna orden
+    // que vuelva a buscar, asi que no lleva fondo beige.
+    //
+    // Y SIN AREA. Una creencia sale de varios desafios a la vez, que pueden ser
+    // de areas distintas: no es de ninguna.
     //
     // Y ANTES, UNA HOJA EN BLANCO. Ahi va la explicacion de que es una creencia
     // y como cambia, que es la misma para todos y se pone luego sobre el
@@ -422,7 +425,7 @@ export default async function handler(req, res) {
     if (suProgramacion.length) {
       hojaNueva();
       for (const creencia of suProgramacion) {
-        abrirSeccion(creencia?.numero, t(creencia?.titulo), creencia?.area);
+        abrirSeccion(creencia?.numero, t(creencia?.titulo));
         for (const punto of PUNTOS_DE_CREENCIA) {
           if (!t(creencia?.[punto])) continue;
           subtitulo(creencia?.nombres?.[punto] || PORDEFECTO_DE_CREENCIA[punto]);
@@ -442,7 +445,8 @@ export default async function handler(req, res) {
     if (suHojaDeRuta) {
       // EL AREA VA AL FINAL DE LA PRIMERA CELDA, entre parentesis, con la misma
       // letra y el mismo color que el texto, y con solo la primera en mayuscula.
-      // La pone el programa, igual que en la cabecera de cada parte.
+      // La pone el programa, igual que en la cabecera de cada parte. Solo en la
+      // tabla de las pruebas: la creencia no lleva area.
       const comoNombre = a => {
         const suya = t(a);
         return suya ? suya.charAt(0).toUpperCase() + suya.slice(1).toLowerCase() : '';
@@ -465,7 +469,7 @@ export default async function handler(req, res) {
       ]);
 
       // Las dos del mismo tamano: aqui ninguna manda sobre la otra.
-      conFilas(conSuArea(suHojaDeRuta.creencias, 'loQueCreesHoy'), [
+      conFilas(suHojaDeRuta.creencias, [
         { nombre: 'Lo que crees hoy', clave: 'loQueCreesHoy', ancho: 79 },
         { nombre: 'Lo que es verdad', clave: 'loQueEsVerdad', ancho: 79 },
       ]);
