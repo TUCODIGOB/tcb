@@ -1082,12 +1082,12 @@ const MOLDE_DE_SACAR_CREENCIAS = {
       items: {
         type: 'object',
         properties: {
-          // De que desafio de la lista sale, por su numero.
-          deCual: { type: 'integer' },
+          // De que desafios de la lista sale, por sus numeros.
+          deCuales: { type: 'array', items: { type: 'integer' } },
           titulo: { type: 'string' },
           linea:  { type: 'string' },
         },
-        required: ['deCual', 'titulo', 'linea'],
+        required: ['deCuales', 'titulo', 'linea'],
         additionalProperties: false,
       },
     },
@@ -1096,26 +1096,76 @@ const MOLDE_DE_SACAR_CREENCIAS = {
   additionalProperties: false,
 };
 
+// LAS PALABRAS QUE NO DICEN NADA NO CUENTAN PARA COMPARAR DOS FRASES: que dos
+// lleven "de" o "que" no las hace parecidas.
+const PALABRAS_VACIAS = new Set(['a', 'al', 'algo', 'ante', 'antes', 'aunque', 'como', 'con', 'contra',
+  'cuando', 'cuanto', 'de', 'del', 'desde', 'donde', 'el', 'ella', 'ellas', 'ellos', 'en', 'entre',
+  'era', 'eran', 'eres', 'es', 'esa', 'esas', 'ese', 'eso', 'esos', 'esta', 'estan', 'estar', 'estas',
+  'este', 'esto', 'estos', 'ha', 'han', 'hasta', 'hay', 'la', 'las', 'le', 'les', 'lo', 'los', 'mas',
+  'me', 'mi', 'mis', 'mucho', 'muy', 'nada', 'ni', 'no', 'o', 'otra', 'otras', 'otro', 'otros', 'para',
+  'pero', 'poco', 'por', 'porque', 'que', 'quien', 'se', 'ser', 'si', 'sin', 'sobre', 'solo', 'son',
+  'su', 'sus', 'tan', 'te', 'ti', 'tu', 'tus', 'un', 'una', 'uno', 'unos', 'y', 'ya', 'yo']);
+
+const conQuePalabras = txt =>
+  new Set(comoSeCompara(txt).split(' ').filter(p => p && !PALABRAS_VACIAS.has(p)));
+
+// Y DOS PALABRAS SON LA MISMA AUNQUE CAMBIE EL FINAL. Los desafios estan
+// escritos hablandole de tu y las creencias en primera persona, asi que la
+// misma palabra sale con otra terminacion: comparandolas enteras, la creencia
+// que copia su desafio pasaria por buena. Se comparan por el principio.
+const LA_MISMA_RAIZ = 4;
+
+function esLaMismaPalabra(una, otra) {
+  if (una === otra) return true;
+  const corta = una.length < otra.length ? una : otra;
+  const larga = una.length < otra.length ? otra : una;
+  if (corta.length >= 3 && larga.startsWith(corta)) return true;
+  return corta.length >= LA_MISMA_RAIZ && larga.slice(0, LA_MISMA_RAIZ) === corta.slice(0, LA_MISMA_RAIZ);
+}
+
+// UNA CREENCIA QUE REPITE LAS PALABRAS DE SU DESAFIO ES ESE DESAFIO OTRA VEZ.
+// Se miran solo las palabras con contenido, y hace falta que se repita la
+// mitad de lo que dice la creencia: dos frases distintas coinciden en alguna
+// palabra suelta sin decir lo mismo, y por eso una sola no la marca.
+//
+// Y ESTO NO TIRA NINGUNA CREENCIA: cuenta como hueco, que es pedirla otra vez.
+const REPITE_A_SU_DESAFIO = 0.5;
+
+function copiaElDesafio(titulo, suyos) {
+  const dela = conQuePalabras(titulo);
+  if (!dela.size) return false;
+  return suyos.some(otro => {
+    const otras = [...conQuePalabras(otro)];
+    let iguales = 0;
+    for (const palabra of dela) if (otras.some(suya => esLaMismaPalabra(palabra, suya))) iguales++;
+    return iguales / dela.size >= REPITE_A_SU_DESAFIO;
+  });
+}
+
 // AQUI NO SE FILTRA NADA. Salen todas las que haya, aunque dos digan lo mismo:
 // juntarlas y quitarlas es el trabajo de la siguiente, y pedirle las dos cosas
 // a la vez es lo que ya se aprendio caro en las pruebas.
-async function sacarLasCreencias({ lista, cuantos, sexo, piensa, espera = ESPERA_DE_CREENCIAS_MS,
+async function sacarLasCreencias({ lista, titulos, cuantos, sexo, piensa, espera = ESPERA_DE_CREENCIAS_MS,
                                    modelo = EL_QUE_DECIDE, recordatorio = '' }) {
   const encargo = `Abajo tienes los desafíos interiores de una persona. Cada uno lleva su número, lo que le pasa y por qué le pasa.
 
 QUÉ TIENES QUE SACAR
 
-Debajo de cada desafío hay una creencia: una frase que esa persona da por verdad sobre sí misma, sobre los demás o sobre cómo funciona la vida, y que es lo que hace que se comporte así. Eso es lo que buscas.
+Una creencia es una frase que esa persona da por verdad sin saber que se la cree, sobre sí misma, sobre los demás o sobre cómo funciona la vida. No cuenta lo que hace: es lo que tiene debajo y hace que lo haga.
 
-Sacas TODAS las que haya. Un desafío puede traer más de una, y dos desafíos pueden traer la misma. Aquí no se filtra, no se junta y no se quita nada: eso se hace después. Y no hay un número que tenga que salir.
+NO SACAS UNA POR DESAFÍO. Lees los desafíos todos juntos y buscas lo que está debajo de VARIOS A LA VEZ: la misma frase que explica dos, tres o cuatro de ellos aunque por fuera no se parezcan entre sí. Eso es una creencia suya.
 
-Si una creencia no se puede rastrear a un desafío concreto de los de abajo, no la escribas.
+Si algo solo explica un desafío y ninguno más, no es una creencia: es ese desafío otra vez dicho de otra manera. No lo escribas.
+
+Sacas TODAS las que haya, y no hay un número que tenga que salir. Aquí no se filtra, no se junta y no se quita nada de lo que se repita entre ellas: eso se hace después.
 
 LO QUE DEVUELVES DE CADA UNA
 
-"deCual" — el número del desafío del que sale.
+"deCuales" — los números de los desafíos que esa creencia explica, dos como mínimo. Solo los que de verdad se sostienen con ella: no engordes la lista.
 
 "titulo" — la creencia dicha en corto, de ${PALABRAS_DEL_TITULO.min} a ${PALABRAS_DEL_TITULO.max} palabras, en primera persona y tal como se la dice por dentro. Empieza en mayúscula y sin punto al final. No es una etiqueta ni el nombre de un concepto: es la frase que se cree.
+
+Y no la digas con las palabras de sus desafíos. Si el título se parece al de un desafío, es que has copiado el desafío en vez de sacar lo que tiene debajo.
 
 "linea" — UNA línea: qué es lo que cree exactamente y cómo funciona por dentro.
 
@@ -1148,25 +1198,34 @@ Quien lo va a leer es ${comoSeLeHabla(sexo)}`;
     espera: AbortSignal.timeout(espera),
   });
 
-  // Solo lo que viene entero y apunta a un desafio que existe. Una creencia sin
-  // su linea o sin su numero no se puede escribir ni colocar, asi que no entra.
+  // Solo lo que viene entero y apunta a desafios que existen. Una creencia sin
+  // su linea o sin sus numeros no se puede escribir ni colocar, asi que no entra.
+  const losTitulos = Array.isArray(titulos) ? titulos : [];
   const creencias = [];
   let huecos = 0;
   for (const c of (Array.isArray(salida.creencias) ? salida.creencias : [])) {
-    const deCual = Number(c?.deCual);
+    const deCuales = [...new Set((Array.isArray(c?.deCuales) ? c.deCuales : [])
+      .map(Number)
+      .filter(n => Number.isInteger(n) && n >= 1 && n <= cuantos))]
+      .sort((a, b) => a - b);
     const titulo = String(c?.titulo || '').trim();
     const linea = String(c?.linea || '').trim();
-    if (!Number.isInteger(deCual) || deCual < 1 || deCual > cuantos || !titulo || !linea
-        || esRelleno(titulo) || esRelleno(linea)) {
+    if (!deCuales.length || !titulo || !linea || esRelleno(titulo) || esRelleno(linea)) {
       huecos++;
       continue;
     }
     // UN TITULO FUERA DE MEDIDA CUENTA COMO HUECO, PERO NO SE TIRA. Es un
     // titulo largo, no una creencia que falte: si se tirara, se le quitaria a
-    // la clienta algo suyo por una cuestion de tamano.
+    // quien lo lee algo suyo por una cuestion de tamano.
     const palabras = cuantasPalabras(titulo);
     if (palabras < PALABRAS_DEL_TITULO.min || palabras > PALABRAS_DEL_TITULO.max) huecos++;
-    creencias.push({ deCual, titulo, linea });
+    // Y LO MISMO LA QUE SE APOYA EN UN SOLO DESAFIO O LA QUE LO REPITE CON SUS
+    // PALABRAS: cuentan como hueco para que se vuelva a pedir, pero no se
+    // tiran aqui. Quitarlas es el paso siguiente, y alli se hace con todas a
+    // la vista.
+    if (deCuales.length < 2) huecos++;
+    else if (copiaElDesafio(titulo, deCuales.map(n => losTitulos[n - 1] || ''))) huecos++;
+    creencias.push({ deCuales, titulo, linea });
   }
 
   return { creencias, huecos };
@@ -1363,6 +1422,24 @@ ${creencias.map((c, i) => `${i + 1}. ${c.titulo}\n   ${c.linea}`).join('\n\n')}`
   return { sequedan, sequitan };
 }
 
+// EL AREA DE UNA CREENCIA ES LA DE SUS DESAFIOS. Cuando sale de varios y no
+// son todos de la misma area, se queda con la que mas se repite entre ellos, y
+// si empatan, con la del primero. No la elige nadie aqui: viene pegada desde el
+// P1, asi que no puede descuadrarse con lo escrito.
+function elAreaDeLaCreencia(deCuales, areas) {
+  const cuenta = new Map();
+  for (const n of deCuales) {
+    const suya = String(areas[n - 1] || '').trim();
+    if (suya) cuenta.set(suya, (cuenta.get(suya) || 0) + 1);
+  }
+  let elegida = '';
+  let mas = 0;
+  for (const [area, veces] of cuenta) {
+    if (veces > mas) { mas = veces; elegida = area; }
+  }
+  return elegida;
+}
+
 // ── LOS TRES PASOS SEGUIDOS ─────────────────────────────────
 //
 // Sale la lista de creencias lista para escribir: cada una con su titulo, su
@@ -1375,7 +1452,7 @@ async function lasCreencias({ limpia, sexo }) {
   // ── A. SE SACAN ───────────────────────────────────────────
   let sacadas;
   try {
-    sacadas = await sacarLasCreencias({ lista: limpia.lista, cuantos, sexo, piensa: 'medium' });
+    sacadas = await sacarLasCreencias({ lista: limpia.lista, titulos: limpia.titulos, cuantos, sexo, piensa: 'medium' });
   } catch (err) {
     // Si el que decide no puede, termina el otro: quedarse sin esta llamada es
     // quedarse sin la mitad del documento.
@@ -1383,7 +1460,8 @@ async function lasCreencias({ limpia, sexo }) {
     if (queda < ESPERA_MINIMA_PARA_REHACER_MS) throw err;
     console.warn(`[p2] ${EL_QUE_DECIDE} no ha podido sacar las creencias (${err.message}), lo termina ${EL_QUE_REMATA}`);
     sacadas = await sacarLasCreencias({
-      lista: limpia.lista, cuantos, sexo, piensa: 'medium', espera: queda, modelo: EL_QUE_REMATA,
+      lista: limpia.lista, titulos: limpia.titulos, cuantos, sexo, piensa: 'medium',
+      espera: queda, modelo: EL_QUE_REMATA,
     });
   }
 
@@ -1395,8 +1473,9 @@ async function lasCreencias({ limpia, sexo }) {
       console.warn(`[p2] las creencias han venido ${sacadas.creencias.length ? `con ${sacadas.huecos} hueco(s)` : 'vacias'}, se piden otra vez`);
       try {
         const otra = await sacarLasCreencias({
-          lista: limpia.lista, cuantos, sexo, piensa: 'medium', espera: queda, modelo: EL_QUE_REMATA,
-          recordatorio: '\n\nY OJO: la vez anterior alguna vino sin su número de desafío, sin su línea o con el título fuera de medida. Todas enteras, y el título de cuatro a siete palabras.',
+          lista: limpia.lista, titulos: limpia.titulos, cuantos, sexo, piensa: 'medium',
+          espera: queda, modelo: EL_QUE_REMATA,
+          recordatorio: '\n\nY OJO: la vez anterior alguna vino sin sus números de desafío, sin su línea, con el título fuera de medida, apoyada en un solo desafío o dicha con las palabras de ese desafío. Todas enteras, cada una explicando dos desafíos como mínimo y con sus propias palabras, y el título de cuatro a siete palabras.',
         });
         // Se queda la mejor de las dos: la que traiga menos huecos, o la
         // segunda tal cual si la primera vino sin nada.
@@ -1412,6 +1491,28 @@ async function lasCreencias({ limpia, sexo }) {
     throw new Error('no ha salido ninguna creencia, y sin ellas el documento no se monta');
   }
   console.log(`[p2] han salido ${creencias.length} creencias`);
+
+  // ── Y LA QUE SALE DE UN SOLO DESAFIO, FUERA ───────────────
+  //
+  // Una creencia de fondo explica varias cosas suyas a la vez. La que solo
+  // explica una es ese desafio dicho de otra manera, y eso ya se lo ha leido en
+  // sus pruebas: volver a leerlo no le da nada. Lo hace el codigo con los
+  // numeros, que es lo que no se le puede pedir de palabra al modelo.
+  let quitaFondo = [];
+  const deFondo = creencias.filter(c => c.deCuales.length >= 2);
+  if (deFondo.length < creencias.length) {
+    if (deFondo.length) {
+      quitaFondo = creencias.filter(c => c.deCuales.length < 2)
+        .map(c => ({ titulo: c.titulo, linea: c.linea }));
+      creencias = deFondo;
+      console.log(`[p2] ${quitaFondo.length} creencia(s) salian de un solo desafio: fuera, quedan ${creencias.length}`);
+    } else {
+      // SI NINGUNA SALE DE VARIOS, SE SIGUE CON TODAS. Medio documento en
+      // blanco es peor que unas creencias flojas, y esto no puede dejar sin su
+      // parte a quien ha pagado.
+      console.warn('[p2] ninguna creencia sale de mas de un desafio: se sigue con todas');
+    }
+  }
 
   // ── B. SE LIMPIAN Y SE PUNTUAN ────────────────────────────
   const paraLimpiar = loQueQueda(arranque, ESPERA_DE_CREENCIAS_MS);
@@ -1499,11 +1600,9 @@ async function lasCreencias({ limpia, sexo }) {
       numero: i + 1,
       titulo: c.titulo,
       linea: c.linea,
-      deCual: c.deCual,
+      deCuales: c.deCuales,
       puntuacion: c.puntuacion,
-      // EL AREA ES LA DEL DESAFIO DEL QUE SALE, y la pone el programa: viene
-      // pegada desde el P1, asi que no puede descuadrarse con lo escrito.
-      area: String(areas[c.deCual - 1] || '').trim(),
+      area: elAreaDeLaCreencia(c.deCuales, areas),
     }));
 
   // Y COMO SE HA LLEGADO A ELLA, para poder mirarlo en la pagina: lo que saco
@@ -1512,7 +1611,8 @@ async function lasCreencias({ limpia, sexo }) {
   return {
     creencias: listas,
     revision: {
-      entraron: creencias.map((c, i) => ({ numero: i + 1, titulo: c.titulo, linea: c.linea, deCual: c.deCual })),
+      entraron: creencias.map((c, i) => ({ numero: i + 1, titulo: c.titulo, linea: c.linea, deCuales: c.deCuales })),
+      quitaFondo,
       quitaLimpieza,
       quitaRepaso,
     },
@@ -2617,6 +2717,7 @@ function frasesRepetidas(textos) {
 function pintarLasCreencias(creencias, revision) {
   const r = revision || {};
   const entraron = Array.isArray(r.entraron) ? r.entraron : [];
+  const fuera0 = Array.isArray(r.quitaFondo) ? r.quitaFondo : [];
   const fuera1 = Array.isArray(r.quitaLimpieza) ? r.quitaLimpieza : [];
   const fuera2 = Array.isArray(r.quitaRepaso) ? r.quitaRepaso : [];
 
@@ -2631,14 +2732,15 @@ function pintarLasCreencias(creencias, revision) {
       '<td>' + escapar(c.puntuacion) + '</td>' +
       '<td class="verbo">' + escapar(c.titulo) + '</td>' +
       '<td>' + escapar(c.area) + '</td>' +
-      '<td>' + escapar(c.deCual) + '</td>' +
+      '<td>' + escapar((c.deCuales || []).join(', ')) + '</td>' +
       '<td>' + escapar(c.linea) + '</td>' +
     '</tr>').join('');
 
   return '<details class="decidido" open><summary>Las creencias — ' +
     (entraron.length || creencias.length) + ' salieron, quedan ' + creencias.length + '</summary>' +
+    lista('Salían de un solo desafío', fuera0) +
     lista('Quitó la limpieza', fuera1) + lista('Quitó el repaso', fuera2) +
-    '<table><tr><th>Nº</th><th>Peso</th><th>Creencia</th><th>Área</th><th>Desafío</th><th>De dónde le viene</th></tr>' +
+    '<table><tr><th>Nº</th><th>Peso</th><th>Creencia</th><th>Área</th><th>Desafíos</th><th>De dónde le viene</th></tr>' +
     filas + '</table></details>';
 }
 
