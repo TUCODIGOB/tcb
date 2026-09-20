@@ -1477,9 +1477,16 @@ async function lasCreencias({ limpia, sexo }) {
           espera: queda, modelo: EL_QUE_REMATA,
           recordatorio: '\n\nY OJO: la vez anterior alguna vino sin sus números de desafío, sin su línea, con el título fuera de medida, apoyada en un solo desafío o dicha con las palabras de ese desafío. Todas enteras, cada una explicando dos desafíos como mínimo y con sus propias palabras, y el título de cuatro a siete palabras.',
         });
-        // Se queda la mejor de las dos: la que traiga menos huecos, o la
-        // segunda tal cual si la primera vino sin nada.
-        if (otra.creencias.length && (!sacadas.creencias.length || otra.huecos < sacadas.huecos)) sacadas = otra;
+        // SE QUEDA LA MEJOR DE LAS DOS, Y MEJOR ES LA QUE TRAIGA MAS CREENCIAS
+        // DE FONDO: las que salen de varios desafios, que son las unicas que se
+        // van a escribir. Contando solo huecos, una tanda de tres sin un fallo
+        // le ganaria a otra de ocho buenas con una suelta, y se tirarian cinco
+        // creencias suyas por una cuenta. Los huecos deciden cuando empatan.
+        const cuantasDeFondo = tanda => tanda.creencias.filter(c => c.deCuales.length >= 2).length;
+        const mejora = !sacadas.creencias.length
+          || cuantasDeFondo(otra) > cuantasDeFondo(sacadas)
+          || (cuantasDeFondo(otra) === cuantasDeFondo(sacadas) && otra.huecos < sacadas.huecos);
+        if (otra.creencias.length && mejora) sacadas = otra;
       } catch (err) {
         console.warn(`[p2] el segundo intento de sacar las creencias se ha caido (${err.message}), se sigue con el primero`);
       }
