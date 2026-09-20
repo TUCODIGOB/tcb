@@ -1581,6 +1581,7 @@ async function lasCreencias({ limpia, sexo }) {
 
   // PRIMERO LAS QUE MAS LE MANDAN. Para eso se ha puntuado. Las que empaten se
   // quedan en el orden en que salieron.
+  //
   // LA CREENCIA NO LLEVA AREA. Sale de varios desafios a la vez, que pueden ser
   // de areas distintas, asi que ponerle una seria elegir por sorteo. Y ademas
   // una creencia no es de un area: se le nota en varias cosas suyas, que es
