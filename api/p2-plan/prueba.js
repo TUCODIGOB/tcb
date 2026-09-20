@@ -1211,7 +1211,10 @@ ${REGLA_DEL_NOMBRE(puedeElNombre)}`;
     }),
   });
 
-  const escrita = { titulo: parte.titulo };
+  // EL AREA VIAJA CON LO ESCRITO. La pone el programa y va pegada al desafio
+  // desde el P1; si no se devuelve aqui, se pierde al escribir y la cabecera
+  // del PDF sale sin ella.
+  const escrita = { titulo: parte.titulo, area: parte.area };
   for (const punto of PUNTOS) escrita[punto] = String(salida[punto] || '').trim();
 
   // ── UNA PARTE ROTA NO SE ENTREGA, PERO ROTA ES ROTA ───────

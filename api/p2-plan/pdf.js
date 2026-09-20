@@ -182,7 +182,10 @@ export default async function handler(req, res) {
 
     function abrirSeccion(numero, titulo, area) {
       hojaNueva();
-      y = 42;
+      // DONDE EMPIEZA EL P1, Y POR ESO AQUI TAMBIEN. Los dos documentos se leen
+      // seguidos: si uno arranca mas arriba que el otro, se nota al pasar de uno
+      // al otro. Es el mismo ARRIBA que usa el resto del documento.
+      y = ARRIBA;
 
       const texto = (numero ? numero + '. ' : '') + t(titulo);
       doc.setFont('Roboto', 'bold');
