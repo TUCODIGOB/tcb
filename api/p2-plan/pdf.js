@@ -440,20 +440,32 @@ export default async function handler(req, res) {
     // ha ido leyendo en cada parte, asi que al llegar aqui ya sabe lo que hay
     // en cada una sin que nadie se lo explique.
     if (suHojaDeRuta) {
+      // EL AREA VA AL FINAL DE LA PRIMERA CELDA, con la misma letra y el mismo
+      // color que el texto, y escrita como un nombre: (Identidad). La pone el
+      // programa, igual que en la cabecera de cada parte.
+      const comoNombre = a => {
+        const suya = t(a);
+        return suya ? suya.charAt(0).toUpperCase() + suya.slice(1).toLowerCase() : '';
+      };
+      const conSuArea = (filas, clave) => (Array.isArray(filas) ? filas : []).map(f => {
+        const suya = comoNombre(f?.area);
+        return suya ? { ...f, [clave]: t(f?.[clave]) + ' (' + suya + ')' } : f;
+      });
+
       const conFilas = (filas, columnas) => {
         if (!Array.isArray(filas) || !filas.length) return;
         hojaNueva();
         pintarTabla(columnas)(filas);
       };
 
-      conFilas(suHojaDeRuta.pruebas, [
+      conFilas(conSuArea(suHojaDeRuta.pruebas, 'tuPrueba'), [
         { nombre: 'Tu prueba',           clave: 'tuPrueba',    ancho: 53 },
         { nombre: 'Qué hacer',           clave: 'queHaces',    ancho: 53 },
         { nombre: 'Dónde te vas a caer', clave: 'dondeTeCaes', ancho: 52 },
       ]);
 
       // Las dos del mismo tamano: aqui ninguna manda sobre la otra.
-      conFilas(suHojaDeRuta.creencias, [
+      conFilas(conSuArea(suHojaDeRuta.creencias, 'loQueCreesHoy'), [
         { nombre: 'Lo que crees hoy', clave: 'loQueCreesHoy', ancho: 79 },
         { nombre: 'Lo que es verdad', clave: 'loQueEsVerdad', ancho: 79 },
       ]);

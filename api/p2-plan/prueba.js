@@ -1856,8 +1856,15 @@ async function lasTablas({ partes, creencias, sexo }) {
     laTablaDeLasPruebas({ partes, sexo, arranque }),
     laTablaDeLasCreencias({ creencias, sexo, arranque }),
   ]);
+
+  // EL AREA NO LA ESCRIBE EL MODELO: se le pega aqui a su fila, sacada de la
+  // misma cosa que resume, y la pone el que maqueta.
+  const conArea = (filas, cosas) => filas.map(f => {
+    const suya = cosas.find(c => c.numero === f.numero);
+    return suya && suya.area ? { ...f, area: suya.area } : f;
+  });
   console.log(`[p2] la hoja de ruta: ${pruebas.length} pruebas y ${suyas.length} creencias`);
-  return { pruebas, creencias: suyas };
+  return { pruebas: conArea(pruebas, partes), creencias: conArea(suyas, creencias) };
 }
 
 
@@ -2062,11 +2069,13 @@ export default async function handler(req, res) {
         partes: partes.map((p, i) => ({
           numero: Number(p?.numero) || i + 1,
           titulo: String(p?.titulo || '').trim(),
+          area: String(p?.area || '').trim(),
           ...Object.fromEntries(PUNTOS.map(punto => [punto, String(p?.[punto] || '').trim()])),
         })),
         creencias: creencias.map((c, i) => ({
           numero: Number(c?.numero) || i + 1,
           titulo: String(c?.titulo || '').trim(),
+          area: String(c?.area || '').trim(),
           ...Object.fromEntries(PUNTOS_DE_CREENCIA.map(punto => [punto, String(c?.[punto] || '').trim()])),
         })),
         sexo: String(sexo || ''),
@@ -2450,7 +2459,7 @@ ir.addEventListener('click', async () => {
     aviso.textContent = 'Todo escrito en ' + cuanto() + '. Resumiendo su hoja de ruta…';
     // Lo que se le manda de cada cosa: su numero, su titulo y su texto.
     const enCorto = (cosa, i, puntos) => {
-      const suyo = { numero: i + 1, titulo: cosa.titulo };
+      const suyo = { numero: i + 1, titulo: cosa.titulo, area: cosa.area };
       puntos.forEach(punto => { suyo[punto] = cosa[punto]; });
       return suyo;
     };
