@@ -17,7 +17,7 @@
 //
 //   UNA DECIDE, con todo lo que a esta persona le cuesta, sacado del P1. De
 //   cada cosa saca en corto el titulo y los cuatro puntos. No escribe ni una
-//   linea de lo que ella va a leer.
+//   linea de lo que va a leer.
 //
 //   UNA POR PARTE ESCRIBEN, TODAS A LA VEZ. Cada una recibe solo las cuatro
 //   lineas de su parte, y nada mas. No deciden: abren esas cuatro lineas hasta
@@ -95,7 +95,7 @@ AFIRMA Y VAS DIRECTA. Dices las cosas con verbos, a la cara, y sigues. No las ra
 
 EMPIEZAS POR QUIEN LEE. Lo primero que lee es algo suyo: lo que hace, lo que siente o lo que se dice, nunca una idea ni una explicación. Y cuando le presentes algo por el camino, entras igual, por lo que le pasa y no por el concepto. Eso no quiere decir que todos los párrafos arranquen igual: si dos empiezan con la misma forma, cambias uno.
 
-LE PONES SUS PALABRAS. Lo que se dice por dentro, entrecomillado, en primera persona y tal como suena de verdad, no arreglado. Es lo que le hace levantar la cabeza y decir esto va por mí. Sale de lo que ya está en los datos de abajo, traducido a cómo lo diría ella por dentro: no es un dato nuevo. Una o dos en lo que escribas y no más: en cuanto se repiten en cada párrafo dejan de sonar suyas y se convierten en una muletilla.
+LE PONES SUS PALABRAS. Lo que se dice por dentro, entrecomillado, en primera persona y tal como suena de verdad, no arreglado. Es lo que le hace levantar la cabeza y decir esto va por mí. Sale de lo que ya está en los datos de abajo, traducido a cómo se lo diría por dentro: no es un dato nuevo. Una o dos en lo que escribas y no más: en cuanto se repiten en cada párrafo dejan de sonar suyas y se convierten en una muletilla.
 
 TE PONES A SU LADO. Le hablas desde dentro de lo que le pasa, no desde arriba. Nada de darle una lección, ni de explicarle lo que ya sabe con otras palabras.
 
@@ -511,7 +511,7 @@ const losDesafios = rasgos => (rasgos?.desafios || [])
 // ════════════════════════════════════════════════════════════════
 //
 // De cada cosa que ha quedado saca el titulo y sus cuatro puntos, en corto. No
-// escribe ni una linea de lo que ella va a leer: eso lo hacen las que vienen
+// escribe ni una linea de lo que va a leer: eso lo hacen las que vienen
 // despues.
 //
 // AQUI NO SE COMPARA NADA, y por eso no hace falta que piense mucho. Lo que
@@ -519,7 +519,7 @@ const losDesafios = rasgos => (rasgos?.desafios || [])
 // uno. Eso es criterio, y el criterio lo pone el modelo -Opus-, no el rato que
 // piense. Va a esfuerzo BAJO.
 //
-// Bajo y no apagado porque aqui se decide lo que ella tiene que hacer, que es
+// Bajo y no apagado porque aqui se decide lo que tiene que hacer, que es
 // por lo que ha pagado, y en eso no se ahorra.
 //
 // SALE UNA PARTE POR CADA COSA DE LA LISTA. Ni junta ni quita nada.
@@ -2306,7 +2306,7 @@ const PAGINA = `<!DOCTYPE html>
   .bloque p { margin-bottom:.6rem; }
   .bloque p:last-child { margin-bottom:0; }
   /* EL CUADERNO: lo que ha hecho cada llamada, lo que ha tardado y lo que ha
-     costado. Es de la pagina de pruebas: la clienta nunca ve esto. */
+     costado. Es de la pagina de pruebas: quien compra nunca ve esto. */
   .cuaderno { border:1px dashed rgba(14,63,75,.35); border-radius:8px; padding:1rem 1.2rem; margin-top:1.4rem; background:#fff; }
   .cuaderno summary { font-family:system-ui,sans-serif; font-size:.9rem; font-weight:600; color:var(--teal); cursor:pointer; }
   .cuaderno table { width:100%; border-collapse:collapse; margin-top:.9rem; font-family:system-ui,sans-serif; font-size:.82rem; }
