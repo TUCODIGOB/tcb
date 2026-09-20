@@ -212,11 +212,23 @@ export default async function handler(req, res) {
       doc.setFontSize(TAM_TITULO);
       const lineas = doc.splitTextToSize(texto, ANCHO);
 
+      // Y SI EL AREA NO CABE PEGADA AL FINAL DEL TITULO, baja ella sola a la
+      // linea siguiente. Se mira aqui porque eso es un renglon mas de alto, y
+      // sin contarlo la cuenta de abajo se queda corta.
+      const suArea = t(area) ? '(' + String(area).toUpperCase() + ')' : '';
+      let areaAbajo = false;
+      if (suArea) {
+        const ultima = doc.getTextWidth(lineas[lineas.length - 1] || '');
+        doc.setFontSize(TAM_AREA);
+        areaAbajo = ultima + doc.getTextWidth(' ' + suArea) > ANCHO;
+        doc.setFontSize(TAM_TITULO);
+      }
+
       // LO QUE PIDE EMPEZAR ESTA, medido con su titulo ya partido: el titulo
       // entero -uno de dos lineas pide mas que uno de una- y detras el primer
       // subtitulo con los renglones que no quiere dejar solos. Menos que eso al
       // pie no es un comienzo, es un titulo huerfano.
-      const pide = ALTO_TITULO * lineas.length + 3 + 6 + RENGLON * 5;
+      const pide = ALTO_TITULO * (lineas.length + (areaAbajo ? 1 : 0)) + 3 + 6 + RENGLON * 5;
 
       if (primera) {
         hojaNueva();
@@ -247,19 +259,17 @@ export default async function handler(req, res) {
         if (i < lineas.length - 1) y += ALTO_TITULO;
       });
 
-      const suArea = t(area) ? '(' + String(area).toUpperCase() + ')' : '';
       if (suArea) {
         doc.setFont('Roboto', 'bold');
         doc.setFontSize(TAM_TITULO);
         const ultima = doc.getTextWidth(lineas[lineas.length - 1] || '');
         doc.setFontSize(TAM_AREA);
-        const suyo = doc.getTextWidth(' ' + suArea);
         doc.setTextColor(DORADO[0], DORADO[1], DORADO[2]);
-        if (ultima + suyo <= ANCHO) {
-          doc.text(' ' + suArea, X + ultima, y);
-        } else {
+        if (areaAbajo) {
           y += ALTO_TITULO;
           doc.text(suArea, X, y);
+        } else {
+          doc.text(' ' + suArea, X + ultima, y);
         }
       }
 
