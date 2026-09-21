@@ -466,10 +466,14 @@ export default async function handler(req, res) {
 
     // ── LAS CREENCIAS ─────────────────────────────────────────
     //
-    // El otro tema, igual que las pruebas: seguidas, con su numero, su titulo y
-    // sus dos bloques en texto corrido, y el separador entre una y la siguiente.
-    // Aqui no hay ninguna orden que vuelva a buscar, asi que no lleva fondo
-    // beige.
+    // El otro tema: cada una en su hoja, con su numero, su titulo y sus dos
+    // bloques en texto corrido. Aqui no hay ninguna orden que vuelva a buscar,
+    // asi que no lleva fondo beige.
+    //
+    // Y CADA UNA EN SU HOJA, no seguidas como las pruebas. Ocupan casi la hoja
+    // entera, asi que de seguidas casi nunca cabria la siguiente y el separador
+    // no se llegaria a ver: lo que se veria es una de cada dos empezando abajo
+    // del todo. Con la hoja entera para cada una se leen todas igual.
     //
     // Y SIN AREA. Una creencia sale de varios desafios a la vez, que pueden ser
     // de areas distintas: no es de ninguna.
@@ -484,14 +488,14 @@ export default async function handler(req, res) {
 
     if (suProgramacion.length) {
       hojaNueva();
-      suProgramacion.forEach((creencia, i) => {
-        abrirSeccion(creencia?.numero, t(creencia?.titulo), '', i === 0);
+      for (const creencia of suProgramacion) {
+        abrirSeccion(creencia?.numero, t(creencia?.titulo), '', true);
         for (const punto of PUNTOS_DE_CREENCIA) {
           if (!t(creencia?.[punto])) continue;
           subtitulo(creencia?.nombres?.[punto] || PORDEFECTO_DE_CREENCIA[punto]);
           corrido(creencia[punto]);
         }
-      });
+      }
     }
 
     // ── LA HOJA DE RUTA ───────────────────────────────────────
