@@ -182,7 +182,9 @@ export default async function handler(req, res) {
 
     // ── LO QUE SEPARA UNA DE LA SIGUIENTE ─────────────────────
     //
-    // ANTES CADA UNA EMPEZABA EN SU HOJA. Con las largas eso dejaba hojas con
+    // ESTO ES DE LAS PRUEBAS, no de las creencias, que van cada una en su hoja.
+    //
+    // ANTES CADA PRUEBA EMPEZABA EN SU HOJA. Con las largas eso dejaba hojas con
     // tres renglones y el resto en blanco, y el documento parecia mas hueco de
     // lo que es. Ahora van seguidas, y lo que las separa es esto: una raya
     // corta con su rombo, en el dorado de la marca, con el mismo hueco arriba
