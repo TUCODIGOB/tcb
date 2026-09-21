@@ -472,10 +472,10 @@ export default async function handler(req, res) {
     // bloques en texto corrido. Aqui no hay ninguna orden que vuelva a buscar,
     // asi que no lleva fondo beige.
     //
-    // Y CADA UNA EN SU HOJA, no seguidas como las pruebas. Ocupan casi la hoja
-    // entera, asi que de seguidas casi nunca cabria la siguiente y el separador
-    // no se llegaria a ver: lo que se veria es una de cada dos empezando abajo
-    // del todo. Con la hoja entera para cada una se leen todas igual.
+    // Y NO SEGUIDAS COMO LAS PRUEBAS, aunque se probo asi: ocupan casi la hoja
+    // entera, de manera que casi nunca cabria la siguiente y el separador no se
+    // llegaria a ver. Lo que se veria es una de cada dos empezando abajo del
+    // todo. Con la hoja entera para cada una se leen todas igual.
     //
     // Y SIN AREA. Una creencia sale de varios desafios a la vez, que pueden ser
     // de areas distintas: no es de ninguna.
