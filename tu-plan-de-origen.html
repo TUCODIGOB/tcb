@@ -133,6 +133,14 @@
     }
     .plan-highlight { color: var(--gold-deep); }
 
+    /* EL BOTON DE COMPRAR. Provisional hasta que se escriba el copy. El boton
+       en si es el .btn-cta de siempre; aqui solo se le da su sitio y el mismo
+       ancho que la tarjeta de abajo, para que no se vea uno mas largo que otro. */
+    .plan-comprar {
+      max-width: 460px;
+      margin: 0 auto 38px;
+    }
+
     /* EL SALUDO. Solo sale cuando se llega desde el boton de su PDF y se sabe
        de quien es. Si no, no ocupa sitio y la pagina se lee igual. */
     .plan-saludo {
@@ -374,6 +382,10 @@
         <p class="plan-text">Esa es exactamente la pregunta que responde:<br><span class="plan-product-name">Tu Plan de Origen</span></p>
         <p class="plan-text">Tu Plan de Origen no te dice quién eres, te dice exactamente <strong>qué hace tu mejor versión y qué tienes que hacer para convertirte en ella</strong>.</p>
         <p class="plan-text">Una hoja de ruta personal, basada en los mismos datos de tu informe: las 7 áreas, pero esta vez <strong>con el plan de acción concreto para cada una</strong>.</p>
+        <div class="plan-comprar">
+          <button type="button" class="btn-cta" id="planComprar">Quiero mi plan · 37 €</button>
+        </div>
+
         <p class="plan-status">Está en desarrollo, cuando esté listo te avisamos.</p>
 
         <form id="formPlan" novalidate>
