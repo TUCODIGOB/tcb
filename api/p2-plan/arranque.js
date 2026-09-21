@@ -47,10 +47,15 @@ export default async function handler(req, res) {
   // ── ¿YA LO TIENE? ────────────────────────────────────────────
   //
   // Antes que nada. El aviso del cobro puede repetirse y un reintento puede
-  // llegar tarde: si el plan ya esta guardado, aqui no se vuelve a gastar.
+  // llegar tarde: si el plan ya esta hecho, aqui no se vuelve a gastar.
+  //
+  // HECHO ES ENTERO. Un plan que salio a medias tambien queda guardado -para
+  // poder mirar por donde se torcio-, pero ese no vale: si contara como
+  // hecho, el reloj no podria rehacerlo nunca y esa clienta se quedaria sin
+  // su plan para siempre.
   try {
     const guardado = await leerElPlan(compra);
-    if (guardado) {
+    if (guardado && guardado.documento) {
       return res.status(200).json({ compra, yaEstaba: true, montado: false });
     }
   } catch (err) {
