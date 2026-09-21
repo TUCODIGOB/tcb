@@ -21,6 +21,9 @@ import { leerInforme } from '../../lib/guardar-informe.js';
 
 const REMITENTE = { email: 'hola@origennatal.com', name: 'ORIGEN NATAL' };
 
+// A donde llegan los avisos de lo que no ha salido.
+const LA_TIENDA = 'hola.origennatal@gmail.com';
+
 // Nuestra web, puesta aqui y no sacada de la peticion: esto lo llama nuestro
 // propio servidor y no hay nadie de fuera a quien creerle la direccion.
 const NUESTRA_WEB = 'https://origennatal.com';
@@ -35,6 +38,45 @@ function comoSeLlamaElFichero(nombre) {
   const suyo = String(nombre || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
     .replace(/[^a-zA-Z0-9]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
   return `TuPlanDeOrigen${suyo ? '_' + suyo : ''}.pdf`;
+}
+
+// MANDAR. Los tres correos de aviso pasan por aqui. Ninguno puede cortar
+// nada: si Brevo no contesta, se dice y quien llama decide. El plan es lo que
+// importa, no el correo.
+async function mandar(cuerpo, que) {
+  const BREVO_API_KEY = process.env.BREVO_API_KEY;
+  if (!BREVO_API_KEY) {
+    console.error(`[p2] Sin BREVO_API_KEY: no se manda ${que}`);
+    return false;
+  }
+  const resp = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'content-type': 'application/json',
+      'api-key': BREVO_API_KEY,
+    },
+    signal: AbortSignal.timeout(15000),
+    body: JSON.stringify({ sender: REMITENTE, ...cuerpo }),
+  });
+  if (!resp.ok) {
+    throw new Error(`Brevo ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+  }
+  return true;
+}
+
+// DE QUIEN ES ESTA COMPRA. El nombre y el email salen de su informe del P1,
+// que es de donde sale todo lo suyo en el P2.
+async function deQuienEs(compra) {
+  const informe = await leerInforme({ producto: 'p1', sessionId: compra });
+  const dentro = (informe && informe.cliente) || {};
+  const entero = String(dentro.nombre || '').trim();
+  return {
+    email: String(dentro.email || '').trim(),
+    nombre: entero,
+    // Para saludarla va el de pila: a nadie se le llama por el apellido.
+    deDia: entero.split(' ')[0] || '',
+  };
 }
 
 // El mismo marco que los otros correos, con los colores de la web.
@@ -123,4 +165,81 @@ export async function mandarSuPlan({ compra, documento }) {
     throw new Error(`Brevo ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
   }
   return { email };
+}
+
+// ── P2-1 · LA BIENVENIDA ──────────────────────────────────────
+//
+// Se manda en cuanto entra el dinero, mientras su plan se monta por detras.
+// Dice lo mismo que la pantalla de gracias: que no tiene que hacer nada.
+export async function correoDeBienvenida({ compra }) {
+  const { email, nombre, deDia } = await deQuienEs(compra);
+  // Sin email no hay a donde mandarlo, y esto es solo un aviso: se dice y se
+  // sigue. De que su plan no pueda llegarle ya se queja quien lo entrega.
+  if (!email) {
+    console.error(`[p2] ${compra} no tiene email: no se manda la bienvenida`);
+    return false;
+  }
+
+  return mandar({
+    to: [{ email, name: nombre }],
+    subject: '¡Gracias por tu compra! Estamos preparando Tu Plan de Origen',
+    htmlContent: carta(`
+<p style="margin:0 0 16px;font-family:Georgia,serif;font-size:22px;line-height:1.3;color:#0e3f4b;">¡Ya está! Acabas de dar un paso importante por ti</p>
+<p style="margin:0 0 16px;">Hola${deDia ? ' ' + esc(deDia) : ''},</p>
+<p style="margin:0 0 16px;">Estamos preparando <b style="color:#bd9048;">Tu Plan de Origen</b>. Te llegará directo a este email en unos minutos, con tu PDF adjunto.</p>
+<p style="margin:0 0 16px;">No tienes que hacer nada: cuando esté, te lo mandamos aquí.</p>
+<p style="margin:0;"><b style="color:#bd9048;">Guarda hola@origennatal.com en los contactos de tu email, para que no se vaya a spam.</b></p>`),
+  }, 'la bienvenida del P2');
+}
+
+// ── P2-3 · NO HA SALIDO ───────────────────────────────────────
+//
+// Se manda cuando se han agotado los intentos y su plan sigue sin llegarle.
+// No se le pide nada: se le dice que lo sacamos nosotros y se lo mandamos.
+export async function correoDeQueSeRevisa({ compra }) {
+  const { email, nombre, deDia } = await deQuienEs(compra);
+  // Sin email no hay a donde mandarlo. No se corta por eso: lo que no puede
+  // fallar es el aviso a la tienda, que es el que va detras y el que de verdad
+  // arregla el caso.
+  if (!email) {
+    console.error(`[p2] ${compra} no tiene email: no se le puede avisar`);
+    return false;
+  }
+
+  return mandar({
+    to: [{ email, name: nombre }],
+    subject: 'Tu Plan de Origen está tardando más de lo normal',
+    htmlContent: carta(`
+<p style="margin:0 0 16px;font-family:Georgia,serif;font-size:22px;line-height:1.3;color:#0e3f4b;">Lo estamos revisando</p>
+<p style="margin:0 0 16px;">Hola${deDia ? ' ' + esc(deDia) : ''},</p>
+<p style="margin:0 0 16px;">Tu Plan de Origen no ha terminado de prepararse y estamos mirando qué ha pasado. Lo sacamos nosotros a mano y te lo mandamos a este mismo email.</p>
+<p style="margin:0 0 16px;">No tienes que hacer nada ni volver a pagar. Tu compra está registrada.</p>
+<p style="margin:0;">Si quieres preguntarnos cualquier cosa, escríbenos a <a href="mailto:hola@origennatal.com" style="color:#bd9048;">hola@origennatal.com</a>.</p>`),
+  }, 'el aviso de que se revisa');
+}
+
+// ── EL AVISO A LA TIENDA ──────────────────────────────────────
+//
+// El mismo caso, contado para dentro: con lo que hace falta para sacarle su
+// plan a mano. Su informe del P1 esta guardado, asi que se puede sacar desde
+// la pagina de pruebas con solo su numero de compra.
+export async function correoALaTienda({ compra, intentos, entregas, motivo }) {
+  const { email, nombre } = await deQuienEs(compra).catch(() => ({ email: '', nombre: '' }));
+
+  return mandar({
+    to: [{ email: LA_TIENDA, name: 'Admin' }],
+    subject: `⚠️ URGENTE — Clienta sin su Plan de Origen — ${nombre || 'Clienta'}`,
+    htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${esc([
+      'Esta clienta HA PAGADO el P2 y NO tiene su plan. Hay que sacarselo a mano.',
+      '',
+      `Email:     ${email || '(desconocido)'}`,
+      `Nombre:    ${nombre || '-'}`,
+      `Compra:    ${compra}`,
+      `Intentos:  ${intentos === undefined ? '-' : intentos}`,
+      `Entregas:  ${entregas === undefined ? '-' : entregas}`,
+      `Motivo:    ${motivo || '-'}`,
+      '',
+      `Cuando:    ${new Date().toISOString()}`,
+    ].join('\n'))}</pre>`,
+  }, 'el aviso a la tienda');
 }

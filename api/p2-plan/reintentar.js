@@ -34,7 +34,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import { leerElPlan, losPendientes, guardarElPendiente, quitarElPendiente } from './almacen.js';
-import { mandarSuPlan } from './correo.js';
+import { mandarSuPlan, correoDeQueSeRevisa, correoALaTienda } from './correo.js';
 
 const UN_MINUTO = 60 * 1000;
 const UNA_HORA = 60 * UN_MINUTO;
@@ -46,6 +46,11 @@ const CUANDO = [10 * UN_MINUTO, 3 * UNA_HORA];
 // Veces que se vuelve a intentar SOLO LA ENTREGA, cuando el plan ya esta
 // escrito y guardado y lo unico que fallo fue el correo.
 const MAX_ENTREGAS = 2;
+
+// Cuanto se espera desde el ultimo intento antes de darlo por perdido y
+// avisar. Media hora es de sobra: montar un plan entero, con su PDF y su
+// correo, no pasa de unos minutos.
+const CIERRE_MS = 30 * UN_MINUTO;
 
 const NUESTRA_WEB = 'https://origennatal.com';
 
@@ -121,7 +126,31 @@ export default async function handler(req, res) {
     if (!guardado || !guardado.documento) continue;
 
     const entregas = Number(ficha.entregas || 0);
-    if (entregas >= MAX_ENTREGAS) continue;
+
+    // SE ACABARON LAS ENTREGAS y su correo sigue sin salir. Su plan esta
+    // escrito y guardado, asi que se le dice a ella que lo estamos mirando y
+    // nos lo decimos a nosotros para mandarselo a mano.
+    //
+    // UNA SOLA VEZ. Queda marcada como avisada, y si el aviso no sale no se
+    // marca: se vuelve a intentar en la vuelta siguiente.
+    if (entregas >= MAX_ENTREGAS) {
+      if (ficha.avisado) continue;
+      try {
+        await correoDeQueSeRevisa({ compra: ficha.compra });
+        await correoALaTienda({
+          compra: ficha.compra,
+          intentos: Number(ficha.intentos || 0),
+          entregas,
+          motivo: `Su plan ESTA escrito y guardado; lo que no ha salido es el correo, tras ${entregas} entregas`,
+        });
+        await guardarElPendiente({ ...ficha, avisado: true, avisadoEn: ahora });
+        console.error(`[p2] Escrito y sin poder entregar: ${ficha.compra}`);
+        return res.status(200).json({ mirados: fichas.length, sinEntregar: ficha.compra, avisado: ficha.compra });
+      } catch (err) {
+        console.error(`[p2] No se ha podido avisar de ${ficha.compra}:`, err.message);
+        return res.status(500).json({ error: 'No se ha podido avisar' });
+      }
+    }
 
     // SE APUNTA LA VEZ ANTES DE LANZARLA: si esto fallara, vale mas dejarlo
     // para la vuelta siguiente que mandar sin poder contar las veces.
@@ -140,6 +169,48 @@ export default async function handler(req, res) {
     } catch (err) {
       console.error(`[p2] La entrega ${entregas + 1} no ha salido (${ficha.compra}):`, err.message);
       return res.status(200).json({ mirados: fichas.length, sinEntregar: ficha.compra, entregas: entregas + 1 });
+    }
+  }
+
+  // ── LOS QUE YA NO TIENEN MAS INTENTOS ────────────────────────────
+  //
+  // Se les dio el ultimo hace rato y su plan sigue sin salir. Se mira si al
+  // final salio -puede haber salido despues- y, si no, se le dice a la
+  // clienta que lo estamos revisando y nos lo decimos a nosotros para
+  // sacarselo a mano.
+  //
+  // UNA SOLA VEZ Y UNA POR VUELTA. Si el aviso no sale no se marca: se vuelve
+  // a intentar en la vuelta siguiente.
+  const paraCerrar = [...fichas]
+    .filter(f => f.compra && !f.avisado)
+    .filter(f => Number(f.intentos || 0) >= CUANDO.length)
+    .filter(f => ahora - Number(f.ultimo || f.creado || 0) >= CIERRE_MS)
+    .sort(porAntiguedad);
+
+  if (paraCerrar.length) {
+    const ficha = paraCerrar[0];
+    try {
+      // ¿ACABO SALIENDO? El ultimo intento pudo terminar despues. Si esta
+      // escrito, no es caso perdido: lo lleva la entrega de mas arriba.
+      const guardado = await leerElPlan(ficha.compra);
+      if (guardado && guardado.documento) {
+        console.log(`[p2] ${ficha.compra} esta escrito y sin entregar: lo lleva la entrega`);
+        return res.status(200).json({ mirados: fichas.length, hecho: 0, sinEntregar: ficha.compra });
+      }
+
+      await correoDeQueSeRevisa({ compra: ficha.compra });
+      await correoALaTienda({
+        compra: ficha.compra,
+        intentos: Number(ficha.intentos || 0),
+        entregas: Number(ficha.entregas || 0),
+        motivo: 'Se agotaron los intentos y su plan sigue sin salir',
+      });
+      await guardarElPendiente({ ...ficha, avisado: true, avisadoEn: ahora });
+      console.error(`[p2] Sin plan tras ${Number(ficha.intentos || 0)} intentos, avisados: ${ficha.compra}`);
+      return res.status(200).json({ mirados: fichas.length, hecho: 0, avisado: ficha.compra });
+    } catch (err) {
+      console.error(`[p2] No se ha podido cerrar ${ficha.compra}:`, err.message);
+      return res.status(500).json({ error: 'No se ha podido cerrar' });
     }
   }
 

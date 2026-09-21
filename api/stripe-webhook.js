@@ -9,6 +9,7 @@ import { waitUntil } from '@vercel/functions';
 import { apuntarPendiente } from '../lib/pendientes-p1.js';
 import { guardarContactoEnBrevo, apuntarPendiente as apuntarContactoDeBrevo } from '../lib/brevo-contactos.js';
 import { correoBienvenida } from '../lib/correos-p1.js';
+import { correoDeBienvenida } from './p2-plan/correo.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -219,6 +220,14 @@ function arrancarElPlan(session) {
     })
       .then(r => console.log('Plan arrancado desde el servidor:', compra, r.status))
       .catch(err => console.error('No se ha podido arrancar el plan:', compra, err.message))
+  );
+
+  // Y SE LE DA LA BIENVENIDA (P2-1), mientras su plan se monta por detras. Va
+  // por su lado y detras del arranque: si el correo no sale, su plan llega
+  // igual, que es lo que ha pagado.
+  waitUntil(
+    correoDeBienvenida({ compra })
+      .catch(err => console.error('No se ha podido mandar la bienvenida del plan:', compra, err.message))
   );
 }
 
