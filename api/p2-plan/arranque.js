@@ -35,7 +35,11 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
   if (!laLlaveEsBuena(req)) return res.status(401).json({ error: 'No autorizado' });
 
-  const compra = String(req.body?.compra || '').trim();
+  // Y TIENE QUE SER TEXTO. Si llega otra cosa, convertirla a texto daria un
+  // nombre de pileria -"[object Object]"- que pasaria por bueno y se pondria a
+  // montar un plan de una compra que no existe.
+  const suyo = req.body?.compra;
+  const compra = typeof suyo === 'string' ? suyo.trim() : '';
   if (!compra) return res.status(400).json({ error: 'Falta la compra de la que hay que hacer el plan' });
 
   // ── ¿YA LO TIENE? ────────────────────────────────────────────
