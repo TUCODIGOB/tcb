@@ -36,6 +36,10 @@
       "memory": 1024,
       "maxDuration": 60
     },
+    "api/p2-plan/arranque.js": {
+      "memory": 1024,
+      "maxDuration": 300
+    },
     "api/reintentar-informe.js": {
       "maxDuration": 60
     },
