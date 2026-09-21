@@ -2403,11 +2403,27 @@ async function montarloTodo({ compra }) {
     }
   }
 
+  // ── 7. Y LO DE DENTRO, QUE VA SIEMPRE ─────────────────────
+  //
+  // Salga el documento o no, esto se devuelve igual: de quien es, lo que se
+  // decidio antes de escribir, que quito cada corte y de que desafio sale cada
+  // cosa. Es lo unico con lo que se puede mirar despues por donde se torcio un
+  // plan, y un plan que no ha salido es justo el que hay que mirar.
+  const loDeDentro = {
+    cliente: { nombre, sexo },
+    plan: { partes: plan.partes, limpieza: plan.limpieza || null },
+    creencias: {
+      sacadas: suyas.ok ? suyas.creencias : [],
+      revision: suyas.ok ? (suyas.revision || null) : null,
+    },
+  };
+
   // EL DOCUMENTO SOLO SALE SI ESTA TODO. Con una prueba caida -o sin sus
   // creencias, o sin su hoja de ruta- saldria un documento con un agujero
   // dentro, y eso no se le ensena a nadie.
   if (completas.length === total && enteras && hojaDeRuta) {
     return {
+      ...loDeDentro,
       documento: {
         nombre,
         // El numero que le toca a cada parte y los nombres de sus puntos van
@@ -2424,7 +2440,7 @@ async function montarloTodo({ compra }) {
   if (completas.length !== total) falta.push(`se han quedado sin escribir ${total - completas.length} de sus ${total} pruebas`);
   if (elFalloDeLasCreencias) falta.push(elFalloDeLasCreencias);
   if (elFalloDeLaHoja) falta.push(elFalloDeLaHoja);
-  return { documento: null, falta: falta.join('; ') };
+  return { ...loDeDentro, documento: null, falta: falta.join('; ') };
 }
 
 // LA PUERTA. Abre el cuaderno de la tanda, monta el documento dentro y lo
