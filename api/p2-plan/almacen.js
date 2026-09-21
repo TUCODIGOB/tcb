@@ -61,6 +61,10 @@ const PLANES = 'planes';
 // plan, para que no se monte dos veces a la vez.
 const CERROJOS = 'cerrojos';
 
+// Y los que esperan su plan, en la suya: una ficha por compra desde que paga
+// hasta que su correo sale. Lo que no esta aqui, no esta pendiente de nada.
+const PENDIENTES = 'pendientes';
+
 async function pedir(metodo, ruta, cuerpo, consulta) {
   const cfg = ajustes();
   if (!cfg) throw new Error('Faltan las variables INFORME_P1_CLOUDFLARE_*');
@@ -256,6 +260,107 @@ export async function soltarElCerrojo(compra, nombre) {
   const fuera = await pedir('DELETE', ruta);
   if (!fuera.ok && fuera.status !== 404) {
     throw new Error(`R2 ${fuera.status}: ${(await fuera.text()).slice(0, 200)}`);
+  }
+  return true;
+}
+
+// ── LOS QUE ESPERAN SU PLAN ───────────────────────────────────
+//
+// QUE PROBLEMA RESUELVE. Un plan puede no salir: se cae el modelo, se cae
+// Cloudflare, el correo no sale. Si nadie apunta quien esta esperando, esa
+// clienta ha pagado y no vuelve a saber de nosotros.
+//
+// COMO. En cuanto se pone en marcha su plan queda apuntada aqui, y deja de
+// estarlo cuando su correo sale de verdad. El reloj mira esta lista cada rato
+// y le da otra oportunidad a quien siga esperando.
+//
+// QUE SE APUNTA: su compra, cuando empezo, cuantas veces se ha vuelto a
+// montar y cuantas se ha vuelto a mandar. Nada suyo: el nombre y el email
+// salen de su informe, como todo lo demas del P2.
+
+// APUNTAR A QUIEN EMPIEZA A ESPERAR. Si ya estaba, se respeta lo que llevaba
+// contado: esto se llama tambien en los reintentos y no puede borrar la
+// cuenta de las veces que ya se ha probado.
+export async function apuntarPendiente(compra) {
+  const cual = limpio(compra);
+  if (!cual) throw new Error('Sin el identificador de la compra no se apunta nada');
+
+  const yaEstaba = await leerElPendiente(cual);
+  if (yaEstaba) return yaEstaba;
+
+  const ficha = { compra: cual, creado: Date.now(), intentos: 0, entregas: 0 };
+  await guardarElPendiente(ficha);
+  return ficha;
+}
+
+// GUARDAR LA FICHA ENTERA. Lo usa el reloj para dejar apuntado que ya ha
+// probado una vez mas. Se escribe encima: un pendiente es siempre uno solo.
+export async function guardarElPendiente(ficha) {
+  const cual = limpio(ficha?.compra);
+  if (!cual) throw new Error('Sin el identificador de la compra no se guarda nada');
+  const resp = await pedir('PUT', `${CARPETA}/${PENDIENTES}/${cual}.json`, { ...ficha, compra: cual });
+  if (!resp.ok) throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+  return true;
+}
+
+// LEER UNA. Devuelve null si esa compra no esta esperando nada.
+export async function leerElPendiente(compra) {
+  const cual = limpio(compra);
+  if (!cual) return null;
+  const resp = await pedir('GET', `${CARPETA}/${PENDIENTES}/${cual}.json`);
+  if (resp.status === 404) return null;
+  if (!resp.ok) throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+  return resp.json();
+}
+
+// TODOS LOS QUE ESPERAN. Si una ficha no se puede leer, se deja aviso y se
+// sigue con las demas: una rota no puede dejar sin reintento a las de detras.
+export async function losPendientes() {
+  const prefijo = `${CARPETA}/${PENDIENTES}/`;
+  const nombres = [];
+  let desde = '';
+
+  for (let vuelta = 0; vuelta < 20; vuelta++) {
+    const consulta = { 'list-type': '2', prefix: prefijo, 'max-keys': '200' };
+    if (desde) consulta['continuation-token'] = desde;
+
+    const resp = await pedir('GET', '', null, consulta);
+    if (!resp.ok) throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+    const xml = await resp.text();
+
+    (xml.match(/<Key>([^<]+)<\/Key>/g) || []).forEach(trozo => {
+      const clave = trozo.slice(5, -6);
+      if (clave.startsWith(prefijo) && clave.endsWith('.json')) {
+        nombres.push(clave.slice(prefijo.length, -5));
+      }
+    });
+
+    if (!/<IsTruncated>true<\/IsTruncated>/.test(xml)) break;
+    const sigue = xml.match(/<NextContinuationToken>([^<]+)<\/NextContinuationToken>/);
+    if (!sigue) break;
+    desde = sigue[1];
+  }
+
+  const fichas = [];
+  for (const compra of nombres) {
+    try {
+      const suya = await leerElPendiente(compra);
+      if (suya) fichas.push({ ...suya, compra });
+    } catch (err) {
+      console.error(`[p2] No se ha podido leer el pendiente ${compra}:`, err.message);
+    }
+  }
+  return fichas;
+}
+
+// QUITAR. Se llama cuando su correo ha salido de verdad. Si la ficha ya no
+// estaba, tambien vale: lo que importa es que deje de constar como pendiente.
+export async function quitarElPendiente(compra) {
+  const cual = limpio(compra);
+  if (!cual) return false;
+  const resp = await pedir('DELETE', `${CARPETA}/${PENDIENTES}/${cual}.json`);
+  if (!resp.ok && resp.status !== 404) {
+    throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
   }
   return true;
 }

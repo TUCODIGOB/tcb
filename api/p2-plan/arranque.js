@@ -22,7 +22,8 @@
 // ═════════════════════════════════════════════════════════════════
 
 import { montarElPlan } from './prueba.js';
-import { guardarElPlan, leerElPlan, cogerElCerrojo, soltarElCerrojo } from './almacen.js';
+import { guardarElPlan, leerElPlan, cogerElCerrojo, soltarElCerrojo,
+         apuntarPendiente, quitarElPendiente } from './almacen.js';
 import { mandarSuPlan } from './correo.js';
 
 // QUIEN LLAMA AQUI ES NUESTRO PROPIO SERVIDOR, NO UN NAVEGADOR. La misma
@@ -71,6 +72,18 @@ export default async function handler(req, res) {
     return res.status(409).json({ compra, seEstaHaciendo: true, montado: false });
   }
 
+  // ── QUEDA APUNTADA COMO QUE ESPERA SU PLAN ───────────────────
+  //
+  // Desde este momento consta que esta clienta espera, y deja de constar
+  // cuando su correo salga. Si esto fallara, el plan se monta igual: es el
+  // reloj el que se quedaria sin saber que hay alguien esperando, asi que se
+  // deja dicho y se sigue.
+  try {
+    await apuntarPendiente(compra);
+  } catch (err) {
+    console.error(`[p2-plan/arranque] no se ha podido apuntar que ${compra} espera su plan:`, err.message);
+  }
+
   // ── Y SE MONTA ───────────────────────────────────────────────
   try {
     const { documento, falta, cuaderno, cliente, plan, creencias } = await montarElPlan({ compra });
@@ -97,6 +110,15 @@ export default async function handler(req, res) {
       const { email } = await mandarSuPlan({ compra, documento });
       entregado = true;
       console.log(`[p2-plan/arranque] el plan de ${compra} ha salido hacia ${email}`);
+
+      // YA NO ESPERA NADA. Va detras del correo, que es lo que de verdad
+      // importa: si esto fallara, el reloj lo intentaria otra vez y se
+      // encontraria con que ya esta entregado.
+      try {
+        await quitarElPendiente(compra);
+      } catch (err) {
+        console.error(`[p2-plan/arranque] no se ha podido quitar ${compra} de los que esperan:`, err.message);
+      }
     } catch (err) {
       elFalloDelCorreo = err.message;
       console.error(`[p2-plan/arranque] el plan de ${compra} NO se ha podido mandar:`, err.message);
