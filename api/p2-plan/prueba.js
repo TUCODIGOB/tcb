@@ -1866,10 +1866,9 @@ function lasQueRepitenElComienzo(filas, celda) {
 // que la celda sale siendo el retrato de lo que hace -que ademas ya ha leido en
 // el titulo- en vez de lo que le toca mover.
 //
-// UN INFINITIVO NO PUEDE SER ESE RETRATO. Lo que hace se cuenta hablandole de
-// tu -"calculas", "te pierdes"-, y ninguna de esas formas acaba en -ar, -er o
-// -ir. Asi que mirar como empieza la celda basta para saber si ha resumido lo
-// que toca.
+// UN INFINITIVO NO PUEDE SER ESE RETRATO. Lo que hace se le cuenta hablandole
+// de tu, y ninguna de esas formas acaba en -ar, -er o -ir. Asi que mirar como
+// empieza la celda basta para saber si ha resumido lo que toca.
 //
 // Y EL INFINITIVO PUEDE LLEVAR UN PRONOMBRE PEGADO DETRAS, que se le quita
 // antes de mirar el final.
@@ -1877,7 +1876,10 @@ const PEGADOS_AL_VERBO = ['melo', 'mela', 'selo', 'sela', 'telo', 'tela',
   'me', 'te', 'se', 'lo', 'la', 'le', 'nos', 'los', 'las', 'les'];
 
 function empiezaEnInfinitivo(txt) {
-  let palabra = comoSeCompara(txt).split(' ').filter(Boolean)[0] || '';
+  const palabras = comoSeCompara(txt).split(' ').filter(Boolean);
+  // "No dejarte..." tambien empieza por el verbo: el "no" va delante y no
+  // cuenta. Sin esto se pediria otra vez una celda que ya estaba bien.
+  let palabra = (palabras[0] === 'no' ? palabras[1] : palabras[0]) || '';
   for (const pegado of PEGADOS_AL_VERBO) {
     if (palabra.length > pegado.length + 2 && palabra.endsWith(pegado)) {
       palabra = palabra.slice(0, -pegado.length);
