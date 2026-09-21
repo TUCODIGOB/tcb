@@ -2217,13 +2217,15 @@ function frasesRepetidas(textos) {
 // quedo SIN PDF despues de cuatro minutos.
 const INTENTOS_DE_ESCRITURA = 3;
 
-// Lo que se le manda a la hoja de ruta de cada cosa: su numero, su titulo y
-// su texto tal como se escribio, que es lo que el cliente lee.
-function enCortoParaLaTabla(cosa, i, puntos) {
+// Lo que se le manda a la hoja de ruta de cada cosa: su numero, su titulo y su
+// texto tal como se escribio, que es lo que el cliente lee. EL AREA SOLO LA
+// LLEVAN LAS PRUEBAS: las creencias no tienen, y darles una vacia seria meterle
+// a esa tabla una casilla que no es suya.
+function enCortoParaLaTabla(cosa, i, puntos, conArea) {
   return {
     numero: i + 1,
     titulo: String(cosa?.titulo || '').trim(),
-    area: String(cosa?.area || '').trim(),
+    ...(conArea ? { area: String(cosa?.area || '').trim() } : {}),
     ...Object.fromEntries(puntos.map(punto => [punto, String(cosa?.[punto] || '').trim()])),
   };
 }
@@ -2392,8 +2394,8 @@ async function montarloTodo({ compra }) {
       // LAS DOS VAN COMO SE ESCRIBIERON, que es lo que el cliente lee: la tabla
       // es su resumen, asi que se hace con ese mismo texto.
       hojaDeRuta = await lasTablas({
-        partes: completas.map((p, i) => enCortoParaLaTabla(p, i, PUNTOS)),
-        creencias: laProgramacion.map((c, i) => enCortoParaLaTabla(c, i, PUNTOS_DE_CREENCIA)),
+        partes: completas.map((p, i) => enCortoParaLaTabla(p, i, PUNTOS, true)),
+        creencias: laProgramacion.map((c, i) => enCortoParaLaTabla(c, i, PUNTOS_DE_CREENCIA, false)),
         sexo,
       });
     } catch (err) {
