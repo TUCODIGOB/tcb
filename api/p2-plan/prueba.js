@@ -2025,7 +2025,7 @@ Abajo tienes las pruebas de una persona, numeradas y ya escritas: es lo que acab
 
 Una fila por cada prueba de abajo, con su número, y tres celdas: "${BLOQUES.tuPrueba}", "${BLOQUES.queHaces}" y "${BLOQUES.dondeTeCaes}". Cada celda resume en una línea lo que pone abajo en esa misma casilla.
 
-La de "${BLOQUES.tuPrueba}" dice QUÉ LE TOCA CAMBIAR, y por eso empieza por un verbo en infinitivo. Abajo, esa casilla arranca contando la situación en la que se reconoce y después dice cuál es su prueba: lo que resumes es eso segundo. Lo que hace hoy no va ahí, que ya se lo has contado en el título.
+La de "${BLOQUES.tuPrueba}" dice QUÉ LE TOCA CAMBIAR, y por eso empieza por un verbo en infinitivo, no hablándole de tú como las otras dos. Abajo, esa casilla arranca contando la situación en la que se reconoce y después dice cuál es su prueba: lo que resumes es eso segundo. Lo que hace hoy no va ahí, que ya se lo has contado en el título.
 
 La de "${BLOQUES.dondeTeCaes}" va en futuro, como está abajo: eso todavía no ha pasado, va a pasar cuando lo intente.
 
