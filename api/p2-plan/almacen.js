@@ -57,6 +57,10 @@ const CARPETA = 'p2';
 // otra cosa del P2 al lado sin mezclarse con estos.
 const PLANES = 'planes';
 
+// Y los cerrojos, en la suya: uno por compra mientras se le esta montando el
+// plan, para que no se monte dos veces a la vez.
+const CERROJOS = 'cerrojos';
+
 async function pedir(metodo, ruta, cuerpo, consulta) {
   const cfg = ajustes();
   if (!cfg) throw new Error('Faltan las variables INFORME_P1_CLOUDFLARE_*');
@@ -178,4 +182,80 @@ export async function losPlanes(cuantos = 40) {
   }
   planes.sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)));
   return planes.slice(0, cuantosDeVerdad);
+}
+
+// ── EL CERROJO ────────────────────────────────────────────────
+//
+// QUE PROBLEMA RESUELVE. Montar un plan cuesta dinero y tarda un par de
+// minutos. Si en ese rato entra una segunda peticion por la misma compra -el
+// aviso del cobro que se repite, un reintento que se adelanta, dos pestanas-,
+// se montaria dos veces y se pagaria dos veces.
+//
+// COMO. Quien quiere montarlo deja aqui una senal con su nombre. Si ya hay
+// otra sin caducar, se aparta. Es el mismo trato que usa el P1, y la misma
+// razon de la espera: dos que leen a la vez ven las dos el hueco vacio, asi
+// que despues de escribir se espera un momento y se vuelve a leer. Solo sigue
+// quien encuentra su propio nombre.
+//
+// CADUCA. Si la funcion se muere sin soltarlo, el cerrojo se queda puesto.
+// Pasada la ventana deja de valer, y la siguiente peticion puede montarlo.
+const VENTANA_DEL_CERROJO_MS = 10 * 60 * 1000;
+
+// Lo justo para que se note la escritura de otro que iba a la vez.
+const ESPERA_DEL_CERROJO_MS = 1500;
+
+// Sin dependencias: basta para distinguir dos peticiones simultaneas, que es
+// lo unico para lo que se usa.
+function unNombre() {
+  return Date.now().toString(36) +
+    Math.random().toString(36).slice(2, 10) +
+    Math.random().toString(36).slice(2, 10);
+}
+
+// COGER EL CERROJO. Devuelve el nombre con el que se ha cogido, o null si lo
+// tiene otro. Quien reciba null NO debe montar nada.
+export async function cogerElCerrojo(compra) {
+  const cual = limpio(compra);
+  if (!cual) throw new Error('Sin el identificador de la compra no hay cerrojo');
+  const ruta = `${CARPETA}/${CERROJOS}/${cual}.json`;
+
+  const mirar = async () => {
+    const resp = await pedir('GET', ruta);
+    if (resp.status === 404) return null;
+    if (!resp.ok) throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+    return resp.json();
+  };
+
+  const puesto = await mirar();
+  if (puesto && Date.now() - Number(puesto.desde || 0) < VENTANA_DEL_CERROJO_MS) return null;
+
+  const mio = unNombre();
+  const resp = await pedir('PUT', ruta, { nombre: mio, desde: Date.now() });
+  if (!resp.ok) throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+
+  // Y AHORA SE COMPRUEBA QUE SIGUE SIENDO MIO. Si otro escribio el suyo a la
+  // vez, el ultimo manda y aqui aparecera su nombre en vez del nuestro.
+  await new Promise(r => setTimeout(r, ESPERA_DEL_CERROJO_MS));
+  const ahora = await mirar();
+  return ahora && ahora.nombre === mio ? mio : null;
+}
+
+// SOLTARLO. Solo lo suelta quien lo tiene: si mientras tanto ha caducado y lo
+// ha cogido otro, este no se lo quita.
+export async function soltarElCerrojo(compra, nombre) {
+  const cual = limpio(compra);
+  if (!cual || !nombre) return false;
+  const ruta = `${CARPETA}/${CERROJOS}/${cual}.json`;
+
+  const resp = await pedir('GET', ruta);
+  if (resp.status === 404) return false;
+  if (!resp.ok) throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+  const puesto = await resp.json();
+  if (!puesto || puesto.nombre !== nombre) return false;
+
+  const fuera = await pedir('DELETE', ruta);
+  if (!fuera.ok && fuera.status !== 404) {
+    throw new Error(`R2 ${fuera.status}: ${(await fuera.text()).slice(0, 200)}`);
+  }
+  return true;
 }
