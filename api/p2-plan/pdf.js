@@ -239,18 +239,21 @@ export default async function handler(req, res) {
         // al otro. Es el mismo ARRIBA que usa el resto del documento.
         y = ARRIBA;
       } else {
-        // El separador, a la misma distancia de la ultima linea de la anterior
-        // que de donde empieza a verse el titulo de esta.
-        const cy = y - RENGLON + AIRE_DEL_SEPARADOR;
-        const arranque = cy + AIRE_DEL_SEPARADOR + ALTO_MAYUSCULA;
-        if (arranque + pide > HASTA) {
-          // No cabe el comienzo: pasa de hoja, y alli no hace falta separador
-          // porque ya separa la hoja.
-          hojaNueva();
-        } else {
-          separador(cy);
-          y = arranque;
-        }
+        // EL SEPARADOR CIERRA LA ANTERIOR SIEMPRE, quepa o no esta debajo. Si
+        // solo lo llevaran las que tienen sitio, unas acabarian con raya y otras
+        // no, y esa mezcla se ve peor que no tener ninguna.
+        //
+        // Va a la misma distancia de la ultima linea de la anterior que de donde
+        // empieza a verse el titulo de esta. Si esa distancia se sale de la
+        // hoja, se sube a lo ultimo que queda, y solo se deja de pintar cuando
+        // ni siquiera cabe un renglon por debajo del texto.
+        const suSitio = y - RENGLON + AIRE_DEL_SEPARADOR;
+        const donde = Math.min(suSitio, HASTA);
+        if (donde - (y - RENGLON) >= RENGLON) separador(donde);
+
+        const arranque = suSitio + AIRE_DEL_SEPARADOR + ALTO_MAYUSCULA;
+        if (arranque + pide > HASTA) hojaNueva();
+        else y = arranque;
       }
 
       doc.setFont('Roboto', 'bold');
