@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Planes del P2</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" type="image/webp" href="/images/favicon-origen-natal-oscuro.webp" />
+
+<style>
+@font-face{
+  font-display:swap; font-family:'Open Sans'; font-style:normal; font-weight:400;
+  src:url('/fonts-web/open-sans-v44-latin_latin-ext-regular.woff2') format('woff2');
+}
+@font-face{
+  font-display:swap; font-family:'Open Sans'; font-style:normal; font-weight:600;
+  src:url('/fonts-web/open-sans-v44-latin_latin-ext-600.woff2') format('woff2');
+}
+
+:root{
+  --crema:#FDF9EF; --papel:#FFFFFF; --tinta:#0E3F4B; --texto:#3A3A3A;
+  --suave:#6E7B7F; --oro:#CFB180; --borde:#E3DDD2; --rojo:#B3261E;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0; background:var(--crema); color:var(--texto);
+  font-family:'Open Sans',system-ui,sans-serif; font-size:16px; line-height:1.55;
+  padding:32px 16px 64px;
+}
+.hoja{max-width:900px;margin:0 auto;}
+h1{font-size:1.2rem;color:var(--tinta);margin:0 0 4px;letter-spacing:.02em;}
+.entradilla{margin:0 0 24px;color:var(--suave);font-size:.9rem;}
+
+.mando{
+  background:var(--papel); border:1px solid var(--borde); border-radius:10px;
+  padding:16px; display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+}
+label{font-size:.78rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta);}
+input,select{
+  font-family:inherit; font-size:.95rem; color:var(--texto);
+  background:var(--crema); border:1px solid var(--borde); border-radius:8px;
+  padding:10px 12px; min-width:0;
+}
+select{flex:1 1 320px;}
+input{flex:1 1 200px;}
+button{
+  background:var(--tinta); color:var(--crema); font-family:inherit; font-size:.9rem;
+  font-weight:600; border:none; border-radius:8px; padding:11px 22px; cursor:pointer;
+}
+button:disabled{background:var(--suave);cursor:not-allowed;}
+
+.aviso{margin-top:14px;font-size:.9rem;color:var(--rojo);}
+.aviso:empty{display:none;}
+
+.ficha{
+  margin-top:20px; background:var(--papel); border:1px solid var(--borde);
+  border-radius:10px; padding:18px 20px;
+}
+.ficha:empty{display:none;}
+.ficha h2{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--suave);margin:0 0 12px;font-weight:600;}
+.resumen{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.86rem;color:var(--suave);margin:0 0 16px;}
+.resumen b{color:var(--tinta);}
+
+details{background:var(--crema);border:1px solid var(--borde);border-radius:8px;margin-bottom:8px;}
+summary{cursor:pointer;padding:11px 14px;font-weight:600;font-size:.9rem;color:var(--tinta);}
+summary::-webkit-details-marker{display:none;}
+.dentro{padding:0 14px 14px;font-size:.86rem;}
+table{width:100%;border-collapse:collapse;font-size:.82rem;}
+th,td{text-align:left;padding:5px 6px;border-bottom:1px solid var(--borde);vertical-align:top;}
+th{color:var(--suave);font-weight:600;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;}
+td.num,th.num{text-align:right;white-space:nowrap;}
+.linea{margin:.6rem 0;}
+tr.caida td{color:var(--rojo);}
+.area{color:var(--oro);font-weight:600;font-size:.72rem;letter-spacing:.08em;}
+.bloque{margin:.9rem 0 0;}
+.bloque h3{font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--suave);margin:0 0 .3rem;font-weight:600;}
+.bloque p{margin:0 0 .5rem;}
+.parte{border-top:1px solid var(--borde);padding-top:.9rem;margin-top:.9rem;}
+.parte:first-child{border-top:none;padding-top:0;margin-top:0;}
+.parte h4{font-size:.95rem;color:var(--tinta);margin:0;}
+</style>
+</head>
+<body>
+
+<div class="hoja">
+  <h1>Planes del P2</h1>
+  <p class="entradilla">Cómo ha ido cada plan montado. Solo para revisar; no toca nada.</p>
+
+  <div class="mando">
+    <label for="clave">Llave</label>
+    <input id="clave" type="password" placeholder="la llave" autocomplete="off" />
+    <button type="button" id="entrar">Entrar</button>
+  </div>
+
+  <div class="mando" id="mandoPlan" style="margin-top:10px;display:none">
+    <label for="lista">Plan</label>
+    <select id="lista"></select>
+    <button type="button" id="ver">Ver</button>
+  </div>
+
+  <p class="aviso" id="aviso"></p>
+  <div class="ficha" id="ficha"></div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const esc = t => String(t == null ? '' : t)
+  .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+// Un texto de varios párrafos se pinta con sus párrafos, no en un ladrillo.
+const parrafos = t => String(t || '').split(/\n+/).map(p => p.trim()).filter(Boolean)
+  .map(p => '<p>' + esc(p) + '</p>').join('');
+
+let _clave = '';
+
+function decir(txt){ $('aviso').textContent = txt || ''; }
+
+async function pedir(params){
+  const url = '/api/p2-plan/informes' + (params ? '?' + params : '');
+  const resp = await fetch(url, { headers: { 'x-p2-clave': _clave } });
+  if (resp.status === 401) throw new Error('La llave no vale.');
+  const datos = await resp.json().catch(() => ({}));
+  if (!resp.ok) throw new Error(datos.error || 'No se ha podido leer.');
+  return datos;
+}
+
+$('entrar').addEventListener('click', async () => {
+  _clave = $('clave').value.trim();
+  if (!_clave) return decir('Escribe la llave.');
+  decir('');
+  $('entrar').disabled = true;
+  try {
+    const { planes } = await pedir('');
+    const lista = $('lista');
+    lista.innerHTML = planes.length
+      ? planes.map(p => {
+          // La fecha y la hora, y de quién es. Si de alguno no se sabe, se
+          // enseña su número de compra. Y se avisa del que no salió entero.
+          const cuando = String(p.fecha).replace('T', ' ').slice(0, 16);
+          const quien = p.nombre || p.compra;
+          const medias = p.entero === false ? ' · A MEDIAS' : '';
+          return '<option value="' + esc(p.compra) + '">' + esc(cuando) + ' — ' + esc(quien) + esc(medias) + '</option>';
+        }).join('')
+      : '<option value="">(todavía no hay planes guardados)</option>';
+    $('mandoPlan').style.display = '';
+  } catch (err) {
+    decir(err.message);
+  }
+  $('entrar').disabled = false;
+});
+
+$('ver').addEventListener('click', async () => {
+  const compra = $('lista').value;
+  if (!compra) return decir('No hay ningún plan que ver.');
+  decir('');
+  $('ver').disabled = true;
+  $('ficha').innerHTML = '';
+  try {
+    pintar(await pedir('compra=' + encodeURIComponent(compra)));
+  } catch (err) {
+    decir(err.message);
+  }
+  $('ver').disabled = false;
+});
+
+// Los nombres de los bloques van guardados con cada parte; si un plan viejo no
+// los trajera, se usan estos, que son los que lleva el documento.
+const NOMBRES_DE_PRUEBA = { tuPrueba:'Tu prueba', queHaces:'Qué hacer', dondeTeCaes:'Dónde te vas a caer' };
+const NOMBRES_DE_CREENCIA = { loQueCreesHoy:'Lo que crees hoy', loQueEsVerdad:'Lo que es verdad' };
+
+// ═══════════════════════════════════════════════════════════════
+// TODO LO DEL PLAN, PARA PODER REVISARLO: lo que tardó y costó cada llamada,
+// lo que se decidió antes de escribir, qué quitó cada corte, lo que se le ha
+// escrito y su hoja de ruta.
+// ═══════════════════════════════════════════════════════════════
+function pintar(plan){
+  const cl = plan.cliente || {};
+  const doc = plan.documento || null;
+  const cuaderno = Array.isArray(plan.cuaderno) ? plan.cuaderno : [];
+  const loDecidido = plan.plan || {};
+  const partesDecididas = Array.isArray(loDecidido.partes) ? loDecidido.partes : [];
+  const lasCreencias = plan.creencias || {};
+  const sacadas = Array.isArray(lasCreencias.sacadas) ? lasCreencias.sacadas : [];
+  const revision = lasCreencias.revision || {};
+
+  // ── Las llamadas ──
+  //
+  // EL RELOJ NO ES LA SUMA. Muchas van a la vez, así que la suma de sus
+  // tiempos es más grande que lo que se ha esperado de verdad.
+  const suma = cuaderno.reduce((a,l) => a + (Number(l.segundos) || 0), 0);
+  const coste = cuaderno.reduce((a,l) => a + (Number(l.dolares) || 0), 0);
+  const caidas = cuaderno.filter(l => l.ok === false).length;
+  const filasC = cuaderno.map(l =>
+    '<tr' + (l.ok === false ? ' class="caida"' : '') + '>' +
+      '<td>' + esc(l.que) + '</td>' +
+      '<td>' + esc(l.modelo) + '</td>' +
+      '<td>' + esc(l.piensa || '—') + '</td>' +
+      '<td class="num">' + esc(l.segundos) + ' s</td>' +
+      '<td class="num">' + esc(l.entrada) + '</td>' +
+      '<td class="num">' + esc(l.salida) + '</td>' +
+      '<td class="num">' + (Number(l.dolares) || 0).toFixed(4) + ' $</td>' +
+      '<td>' + (l.ok === false ? esc(l.motivo || 'se cayó') : 'bien') + '</td>' +
+    '</tr>').join('');
+
+  // ── Las pruebas, tal como se decidieron ──
+  //
+  // De qué desafío sale cada una y lo que le manda hacer, que es lo que se le
+  // pasó a quien la escribió.
+  const suDescripcion = new Map((Array.isArray(loDecidido.limpieza && loDecidido.limpieza.quedados)
+    ? loDecidido.limpieza.quedados : []).map(x => [x.numero, x.descripcion]));
+  const filasP = partesDecididas.map(p => {
+    const cual = (p.deCuales || [])[0];
+    return '<tr>' +
+      '<td>' + esc((p.deCuales || []).join(', ')) + '</td>' +
+      '<td>' + esc(suDescripcion.get(cual) || '') + '</td>' +
+      '<td>' + esc(p.titulo || '') + '</td>' +
+      '<td>' + esc(p.queHaces || '') + '</td>' +
+    '</tr>';
+  }).join('');
+
+  // ── Las creencias, y lo que quitó cada corte ──
+  const cuantasEntraron = Array.isArray(revision.entraron) ? revision.entraron.length : sacadas.length;
+  const quitadas = (titulo, cuales) => {
+    const lista = Array.isArray(cuales) ? cuales : [];
+    return lista.length
+      ? '<p class="linea"><b>' + titulo + ' ' + lista.length + ':</b> ' +
+        lista.map(c => esc(c.titulo) + ' — ' + esc(c.linea)).join(' · ') + '</p>'
+      : '<p class="linea"><b>' + titulo + ' ninguna.</b></p>';
+  };
+  const filasCr = sacadas.map(c =>
+    '<tr>' +
+      '<td>' + esc(c.numero) + '</td>' +
+      '<td class="num">' + esc(c.puntuacion) + '</td>' +
+      '<td>' + esc(c.titulo) + '</td>' +
+      '<td>' + esc((c.deCuales || []).join(', ')) + '</td>' +
+      '<td>' + esc(c.linea) + '</td>' +
+    '</tr>').join('');
+
+  // ── Lo que se le ha escrito ──
+  const susPruebas = doc && Array.isArray(doc.partes) ? doc.partes : [];
+  const susCreencias = doc && Array.isArray(doc.creencias) ? doc.creencias : [];
+  const escrito = (cosa, nombres) => Object.keys(nombres)
+    .filter(punto => String(cosa[punto] || '').trim())
+    .map(punto => '<div class="bloque"><h3>' + esc((cosa.nombres && cosa.nombres[punto]) || nombres[punto]) +
+      '</h3>' + parrafos(cosa[punto]) + '</div>').join('');
+  const pintadas = (cosas, nombres) => cosas.map(c =>
+    '<div class="parte"><h4>' + esc(c.numero) + '. ' + esc(c.titulo) +
+    (c.area ? ' <span class="area">(' + esc(String(c.area).toUpperCase()) + ')</span>' : '') +
+    '</h4>' + escrito(c, nombres) + '</div>').join('');
+
+  // ── Su hoja de ruta: las dos tablas ──
+  const tablas = (doc && doc.tablas) || {};
+  const filasTp = (Array.isArray(tablas.pruebas) ? tablas.pruebas : []).map(f =>
+    '<tr><td>' + esc(f.numero) + '</td><td>' + esc(f.area || '') + '</td><td>' + esc(f.tuPrueba) +
+    '</td><td>' + esc(f.queHaces) + '</td><td>' + esc(f.dondeTeCaes) + '</td></tr>').join('');
+  const filasTc = (Array.isArray(tablas.creencias) ? tablas.creencias : []).map(f =>
+    '<tr><td>' + esc(f.numero) + '</td><td>' + esc(f.loQueCreesHoy) + '</td><td>' + esc(f.loQueEsVerdad) +
+    '</td></tr>').join('');
+
+  $('ficha').innerHTML =
+    '<h2>' + esc(cl.nombre || '(sin nombre)') + ' — ' + esc(plan.compra || '') + '</h2>' +
+
+    (doc ? '' : '<p class="aviso" style="margin:0 0 12px">Este plan NO salió entero, así que no se entregó. Lo de abajo es lo que se llegó a hacer.</p>') +
+
+    '<p class="resumen">' +
+      '<span>Pruebas: <b>' + susPruebas.length + '</b></span>' +
+      '<span>Creencias: <b>' + susCreencias.length + '</b></span>' +
+      '<span>Llamadas: <b>' + cuaderno.length + '</b></span>' +
+      (caidas ? '<span>Se cayeron: <b>' + caidas + '</b></span>' : '') +
+      '<span>Suma de tiempos: <b>' + suma.toFixed(1) + ' s</b></span>' +
+      '<span>Coste: <b>' + coste.toFixed(4) + ' $</b></span>' +
+      '<span>Guardado: <b>' + esc(String(plan.generado || '').replace('T',' ').slice(0,16)) + '</b></span>' +
+    '</p>' +
+
+    '<details open><summary>Las llamadas — ' + cuaderno.length +
+      (caidas ? ' · ' + caidas + ' se cayeron' : '') + '</summary><div class="dentro">' +
+    (cuaderno.length
+      ? '<table><tr><th>Llamada</th><th>Modelo</th><th>Razonado</th><th class="num">Tiempo</th>' +
+        '<th class="num">Entrada</th><th class="num">Salida</th><th class="num">Coste</th><th>Cómo fue</th></tr>' +
+        filasC +
+        '<tr><td colspan="3"><b>TOTAL</b></td><td class="num"><b>' + suma.toFixed(1) + ' s</b></td>' +
+        '<td colspan="2"></td><td class="num"><b>' + coste.toFixed(4) + ' $</b></td><td></td></tr></table>' +
+        '<p class="linea">La suma de tiempos es mayor que lo que se esperó de verdad: muchas llamadas van a la vez.</p>'
+      : '<p class="linea">Este plan se guardó sin cuaderno.</p>') +
+    '</div></details>' +
+
+    '<details><summary>Las pruebas — ' + partesDecididas.length + '</summary><div class="dentro">' +
+    (partesDecididas.length
+      ? '<table><tr><th>Desafío</th><th>Descripción</th><th>Título</th><th>Lo que le manda hacer</th></tr>' +
+        filasP + '</table>'
+      : '<p class="linea">No se llegó a decidir ninguna prueba.</p>') +
+    '</div></details>' +
+
+    '<details><summary>Las creencias — ' + cuantasEntraron + ' salieron, quedan ' + sacadas.length +
+    '</summary><div class="dentro">' +
+    quitadas('Salían de un solo desafío', revision.quitaFondo) +
+    quitadas('Quitó la limpieza', revision.quitaLimpieza) +
+    quitadas('Quitó el repaso', revision.quitaRepaso) +
+    (sacadas.length
+      ? '<table><tr><th>Nº</th><th class="num">Peso</th><th>Creencia</th><th>Desafíos</th><th>De dónde le viene</th></tr>' +
+        filasCr + '</table>'
+      : '<p class="linea">No quedó ninguna creencia.</p>') +
+    '</div></details>' +
+
+    '<details><summary>Su hoja de ruta — las dos tablas</summary><div class="dentro">' +
+    (filasTp || filasTc
+      ? '<table><tr><th>Nº</th><th>Área</th><th>Tu prueba</th><th>Qué hacer</th><th>Dónde te vas a caer</th></tr>' +
+        filasTp + '</table>' +
+        '<table style="margin-top:14px"><tr><th>Nº</th><th>Lo que crees hoy</th><th>Lo que es verdad</th></tr>' +
+        filasTc + '</table>'
+      : '<p class="linea">No se llegó a hacer la hoja de ruta.</p>') +
+    '</div></details>' +
+
+    '<details><summary>Lo que se le ha escrito — ' + susPruebas.length + ' pruebas</summary><div class="dentro">' +
+    (susPruebas.length ? pintadas(susPruebas, NOMBRES_DE_PRUEBA) : '<p class="linea">No se llegó a escribir ninguna.</p>') +
+    '</div></details>' +
+
+    '<details><summary>Sus creencias escritas — ' + susCreencias.length + '</summary><div class="dentro">' +
+    (susCreencias.length ? pintadas(susCreencias, NOMBRES_DE_CREENCIA) : '<p class="linea">No se llegó a escribir ninguna.</p>') +
+    '</div></details>';
+}
+</script>
+</body>
+</html>
