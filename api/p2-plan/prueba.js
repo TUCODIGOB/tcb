@@ -2152,6 +2152,288 @@ async function susDatos(informe) {
   return { nombre: '', sexo: '' };
 }
 
+// Cada creencia la escribe una llamada distinta que no ve a las demas, asi que
+// ninguna puede saber que la frase que esta poniendo ya esta puesta en otra. Y
+// pasa: en un documento de verdad, siete de ocho abrieron su segunda mitad con
+// la misma frase, porque el encargo se la dictaba. Se quito del encargo, pero
+// eso no basta -si la instruccion sugiere una forma, todas van hacia ella-.
+//
+// Esto lo mira el codigo, que si las ve todas juntas: busca cualquier carrera
+// de CINCO palabras seguidas que aparezca en dos creencias o mas. La primera
+// se queda con ella; a las demas se les vuelve a pedir su texto diciendoles
+// esa frase, para que la digan de otra manera.
+const PALABRAS_QUE_SE_REPITEN = 5;
+
+function frasesRepetidas(textos) {
+  const carreras = textos.map(t => {
+    const palabras = String(t || '').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9ñ]+/g, ' ').trim().split(' ').filter(Boolean);
+    const suyas = new Set();
+    for (let i = 0; i + PALABRAS_QUE_SE_REPITEN <= palabras.length; i++) {
+      suyas.add(palabras.slice(i, i + PALABRAS_QUE_SE_REPITEN).join(' '));
+    }
+    return suyas;
+  });
+
+  // De cada carrera, quienes la llevan.
+  const dequien = new Map();
+  carreras.forEach((suyas, i) => suyas.forEach(f => {
+    if (!dequien.has(f)) dequien.set(f, []);
+    dequien.get(f).push(i);
+  }));
+
+  // La primera se la queda; las demas la tienen que cambiar.
+  const repiten = new Map();
+  for (const [frase, quienes] of dequien) {
+    if (quienes.length < 2) continue;
+    for (const i of quienes.slice(1)) if (!repiten.has(i)) repiten.set(i, frase);
+  }
+  return repiten;
+}
+
+// ═════════════════════════════════════════════════════════════════
+// EL DOCUMENTO ENTERO, DE UNA VEZ Y DESDE AQUI
+//
+// Hasta ahora el orden lo llevaba la pagina: pedia el informe, luego el plan,
+// luego cada parte, luego las creencias y al final la hoja de ruta. El
+// servidor solo contestaba a cada peticion suelta. Eso vale para mirarlo
+// mientras se hace, pero no para entregarselo a nadie: si quien mira cierra
+// la pestana, el documento se queda a medias y nadie se entera.
+//
+// Aqui esta esa misma secuencia, con el mismo orden, los mismos reintentos y
+// las mismas cosas yendo a la vez. Lo unico que cambia es quien manda.
+// ═════════════════════════════════════════════════════════════════
+
+// SE INSISTE HASTA TRES VECES CON LA QUE SE CAIGA.
+//
+// Una parte que no vuelve deja el documento con un agujero, y entonces no se
+// puede entregar. Como cada una es corta e independiente, insistir con la que
+// ha fallado no le quita tiempo a las demas -ya han terminado- y casi siempre
+// entra a la segunda: lo que se cae aqui es la linea, no el texto.
+//
+// TRES. Se bajo a dos para ahorrar tiempo y fue un error: en un plan de
+// verdad se cayeron tres partes, se acabaron las vueltas y la clienta se
+// quedo SIN PDF despues de cuatro minutos.
+const INTENTOS_DE_ESCRITURA = 3;
+
+// Lo que se le manda a la hoja de ruta de cada cosa: su numero, su titulo y
+// su texto tal como se escribio, que es lo que el cliente lee.
+function enCortoParaLaTabla(cosa, i, puntos) {
+  return {
+    numero: i + 1,
+    titulo: String(cosa?.titulo || '').trim(),
+    area: String(cosa?.area || '').trim(),
+    ...Object.fromEntries(puntos.map(punto => [punto, String(cosa?.[punto] || '').trim()])),
+  };
+}
+
+// UN FALLO DEL INFORME DE PARTIDA NO ES UN SERVIDOR ROTO. Se marca para poder
+// distinguirlo, igual que ya se distinguia al contestar a la pagina: con este
+// informe no hay plan por mucho que se vuelva a intentar.
+function fallaElInforme(mensaje) {
+  const err = new Error(mensaje);
+  err.esDelInforme = true;
+  return err;
+}
+
+async function montarloTodo({ compra }) {
+  // ── 1. SU INFORME DEL P1 ──────────────────────────────────
+  const informe = await leer(compra);
+
+  // SIN LO QUE LE CUESTA NO HAY PLAN. Es lo unico que se le manda al modelo,
+  // asi que con la lista vacia se lo inventaria todo. Los informes de antes de
+  // que se guardaran los rasgos entran por aqui.
+  const cuantos = cuantosDesafios(informe?.rasgos);
+  if (cuantos < 3) {
+    throw fallaElInforme(cuantos
+      ? `Ese informe solo tiene ${cuantos} cosas que le cuesten, y con eso no sale un plan`
+      : 'Ese informe se guardó sin los rasgos, y sin ellos no hay plan');
+  }
+
+  // Y SIN SU NOMBRE TAMPOCO. Un documento que se entrega a alguien no lleva un
+  // relleno donde va su nombre: si falta, se para aqui y se dice.
+  const { nombre, sexo } = await susDatos(informe);
+  if (!nombre) {
+    throw fallaElInforme('Ese informe se guardó sin el nombre del cliente, y el plan va dirigido a él: no se hace a medias');
+  }
+
+  const limpia = laListaDelP1({ rasgos: informe.rasgos });
+
+  // ── 2. LAS CREENCIAS, QUE VAN POR SU LADO Y A LA VEZ ──────
+  //
+  // Es el otro tema del documento y no depende de las pruebas: en cuanto la
+  // lista esta limpia se piden, y mientras se decide el plan y se escriben las
+  // partes ellas van saliendo. El fallo se guarda dentro en vez de soltarlo,
+  // para que no se pierda por el camino mientras nadie mira.
+  const vanCreencias = lasCreencias({ limpia, sexo })
+    .then(d => ({ ok: true, creencias: d.creencias || [], revision: d.revision || null }))
+    .catch(e => ({ ok: false, error: e.message }));
+
+  // ── 3. EL PLAN ────────────────────────────────────────────
+  const plan = await decidirElPlan({ nombre, sexo, limpia });
+
+  // SIN PARTES NO HAY PLAN. No se le pone numero a lo que tiene que salir,
+  // pero si vuelve con dos o con ninguna no hay documento que entregar.
+  if (plan.partes.length < 3) {
+    throw fallaElInforme(`El plan ha venido con ${plan.partes.length} partes, y con eso no hay documento. Vuelve a darle.`);
+  }
+
+  // ── 4. LAS PARTES, TODAS A LA VEZ ─────────────────────────
+  const total = plan.partes.length;
+
+  // DONDE PUEDE LLAMARLA POR SU NOMBRE. Ninguna de las que escriben ve lo que
+  // han puesto las otras, asi que si se deja a su criterio el documento acaba
+  // con el nombre repetido en cada parte. Lo reparte el codigo: la primera y
+  // una de en medio. Dos veces en todo el documento.
+  const conNombre = new Set([0, Math.floor(total / 2)]);
+
+  const escritas = [];
+  let caidas = plan.partes.map((_, i) => i);
+  for (let vuelta = 1; vuelta <= INTENTOS_DE_ESCRITURA && caidas.length; vuelta++) {
+    const seCaen = [];
+    await Promise.all(caidas.map(async i => {
+      const suya = plan.partes[i];
+      try {
+        // Lo decidido se comprueba antes de meterlo en el encargo: si viniera a
+        // medias, el hueco lo rellenaria el modelo por su cuenta y acabaria
+        // inventandose algo de su vida.
+        if (!String(suya?.titulo || '').trim() || PUNTOS.some(punto => !String(suya?.[punto] || '').trim())) {
+          throw new Error('llega a medias y no se escribe');
+        }
+        escritas[i] = await escribirLaParte({
+          parte: suya, nombre, sexo, puedeElNombre: conNombre.has(i),
+        });
+      } catch (err) {
+        seCaen.push(i);
+        console.warn(`[p2] la prueba ${i + 1} se ha caído: ${err.message}`);
+      }
+    }));
+    caidas = seCaen;
+  }
+  const completas = escritas.filter(Boolean);
+
+  // ── 5. Y LAS CREENCIAS, QUE LLEVAN TODO ESTE RATO SALIENDO ─
+  //
+  // Se pidieron a la vez que el plan, asi que a estas alturas lo normal es que
+  // ya esten: aqui solo se recogen y se escriben, igual que las partes.
+  const suyas = await vanCreencias;
+
+  let laProgramacion = [];
+  let enteras = false;
+  let elFalloDeLasCreencias = '';
+
+  if (!suyas.ok) {
+    elFalloDeLasCreencias = 'no han salido sus creencias: ' + suyas.error;
+  } else if (!suyas.creencias.length) {
+    elFalloDeLasCreencias = 'no ha salido ninguna creencia';
+  } else {
+    const cuantasC = suyas.creencias.length;
+    const escritasC = [];
+    let caidasC = suyas.creencias.map((_, i) => i);
+    for (let vuelta = 1; vuelta <= INTENTOS_DE_ESCRITURA && caidasC.length; vuelta++) {
+      const seCaen = [];
+      await Promise.all(caidasC.map(async i => {
+        const suya = suyas.creencias[i];
+        try {
+          if (!String(suya?.titulo || '').trim() || !String(suya?.linea || '').trim()) {
+            throw new Error('llega a medias y no se escribe');
+          }
+          escritasC[i] = await escribirLaCreencia({
+            creencia: { titulo: String(suya.titulo).trim(), linea: String(suya.linea).trim() },
+            nombre, sexo,
+          });
+        } catch (err) {
+          seCaen.push(i);
+          console.warn(`[p2] la creencia ${i + 1} se ha caído: ${err.message}`);
+        }
+      }));
+      caidasC = seCaen;
+    }
+
+    laProgramacion = escritasC.filter(Boolean);
+    enteras = laProgramacion.length === cuantasC;
+
+    // ── Y QUE NO SE REPITA NINGUNA FRASE ENTRE ELLAS ──────────
+    //
+    // Una sola vuelta: a la que repite se le dice la frase y la escribe de otra
+    // manera. Si esa vuelta se cae, se queda la que habia, que una frase
+    // repetida no vale perder el documento.
+    if (enteras) {
+      const repiten = frasesRepetidas(escritasC.map(c => PUNTOS_DE_CREENCIA.map(p => c[p]).join(' ')));
+      if (repiten.size) {
+        await Promise.all([...repiten].map(async ([i, frase]) => {
+          const suya = suyas.creencias[i];
+          try {
+            escritasC[i] = await escribirLaCreencia({
+              creencia: { titulo: String(suya.titulo).trim(), linea: String(suya.linea).trim() },
+              nombre, sexo,
+              prohibida: String(frase || '').trim().slice(0, 200),
+            });
+          } catch (err) {
+            console.warn(`[p2] la creencia ${i + 1} repetía una frase y no se ha podido rehacer: ${err.message}`);
+          }
+        }));
+        laProgramacion = escritasC.filter(Boolean);
+      }
+    } else {
+      elFalloDeLasCreencias = `se han quedado sin escribir ${cuantasC - laProgramacion.length} de sus ${cuantasC} creencias`;
+    }
+  }
+
+  // ── 6. Y LA HOJA DE RUTA, QUE ES LO ULTIMO ────────────────
+  //
+  // Resume las dos cosas, asi que solo se puede pedir cuando las dos estan
+  // enteras. Si falta alguna, no hay nada que resumir.
+  let hojaDeRuta = null;
+  let elFalloDeLaHoja = '';
+  if (completas.length === total && enteras) {
+    try {
+      // LAS DOS VAN COMO SE ESCRIBIERON, que es lo que el cliente lee: la tabla
+      // es su resumen, asi que se hace con ese mismo texto.
+      hojaDeRuta = await lasTablas({
+        partes: completas.map((p, i) => enCortoParaLaTabla(p, i, PUNTOS)),
+        creencias: laProgramacion.map((c, i) => enCortoParaLaTabla(c, i, PUNTOS_DE_CREENCIA)),
+        sexo,
+      });
+    } catch (err) {
+      elFalloDeLaHoja = 'no ha salido su hoja de ruta: ' + err.message;
+    }
+  }
+
+  // EL DOCUMENTO SOLO SALE SI ESTA TODO. Con una prueba caida -o sin sus
+  // creencias, o sin su hoja de ruta- saldria un documento con un agujero
+  // dentro, y eso no se le ensena a nadie.
+  if (completas.length === total && enteras && hojaDeRuta) {
+    return {
+      documento: {
+        nombre,
+        // El numero que le toca a cada parte y los nombres de sus puntos van
+        // desde aqui: el que maqueta no tiene que saberselos.
+        partes: completas.map((p, i) => ({ ...p, numero: i + 1, nombres: BLOQUES })),
+        creencias: laProgramacion.map((c, i) => ({ ...c, numero: i + 1, nombres: BLOQUES_DE_CREENCIA })),
+        tablas: hojaDeRuta,
+      },
+      falta: '',
+    };
+  }
+
+  const falta = [];
+  if (completas.length !== total) falta.push(`se han quedado sin escribir ${total - completas.length} de sus ${total} pruebas`);
+  if (elFalloDeLasCreencias) falta.push(elFalloDeLasCreencias);
+  if (elFalloDeLaHoja) falta.push(elFalloDeLaHoja);
+  return { documento: null, falta: falta.join('; ') };
+}
+
+// LA PUERTA. Abre el cuaderno de la tanda, monta el documento dentro y lo
+// devuelve todo junto: lo escrito, lo que falte si ha faltado algo, y lo que
+// ha tardado y costado cada llamada.
+export async function montarElPlan({ compra }) {
+  const cuaderno = [];
+  const salida = await ELCUADERNO.run(cuaderno, () => montarloTodo({ compra }));
+  return { ...salida, cuaderno };
+}
+
 export default async function handler(req, res) {
   if (req.method === 'GET') {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -2815,45 +3097,9 @@ function pintarParte(p, n) {
 
 // LAS FRASES QUE SE REPITEN ENTRE CREENCIAS.
 //
-// Cada creencia la escribe una llamada distinta que no ve a las demas, asi que
-// ninguna puede saber que la frase que esta poniendo ya esta puesta en otra. Y
-// pasa: en un documento de verdad, siete de ocho abrieron su segunda mitad con
-// la misma frase, porque el encargo se la dictaba. Se quito del encargo, pero
-// eso no basta -si la instruccion sugiere una forma, todas van hacia ella-.
-//
-// Esto lo mira el codigo, que si las ve todas juntas: busca cualquier carrera
-// de CINCO palabras seguidas que aparezca en dos creencias o mas. La primera
-// se queda con ella; a las demas se les vuelve a pedir su texto diciendoles
-// esa frase, para que la digan de otra manera.
-const PALABRAS_QUE_SE_REPITEN = 5;
+const PALABRAS_QUE_SE_REPITEN = ${PALABRAS_QUE_SE_REPITEN};
 
-function frasesRepetidas(textos) {
-  const carreras = textos.map(t => {
-    const palabras = String(t || '').toLowerCase()
-      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-      .replace(/[^a-z0-9ñ]+/g, ' ').trim().split(' ').filter(Boolean);
-    const suyas = new Set();
-    for (let i = 0; i + PALABRAS_QUE_SE_REPITEN <= palabras.length; i++) {
-      suyas.add(palabras.slice(i, i + PALABRAS_QUE_SE_REPITEN).join(' '));
-    }
-    return suyas;
-  });
-
-  // De cada carrera, quienes la llevan.
-  const dequien = new Map();
-  carreras.forEach((suyas, i) => suyas.forEach(f => {
-    if (!dequien.has(f)) dequien.set(f, []);
-    dequien.get(f).push(i);
-  }));
-
-  // La primera se la queda; las demas la tienen que cambiar.
-  const repiten = new Map();
-  for (const [frase, quienes] of dequien) {
-    if (quienes.length < 2) continue;
-    for (const i of quienes.slice(1)) if (!repiten.has(i)) repiten.set(i, frase);
-  }
-  return repiten;
-}
+${frasesRepetidas}
 
 // LO QUE HA HECHO EL TEMA DE LAS CREENCIAS, PARA PODER MIRARLO.
 //
