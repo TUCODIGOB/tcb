@@ -132,6 +132,20 @@
       margin-bottom: 45px;
     }
     .plan-highlight { color: var(--gold-deep); }
+
+    /* EL SALUDO. Solo sale cuando se llega desde el boton de su PDF y se sabe
+       de quien es. Si no, no ocupa sitio y la pagina se lee igual. */
+    .plan-saludo {
+      display: none;
+      font-family: var(--font-display);
+      color: var(--gold-deep);
+      font-size: 28px;
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 0 0 22px;
+    }
+    .plan-saludo.se-ve { display: block; }
+    @media (max-width: 600px) { .plan-saludo { font-size: 22px; } }
     .plan-product-name { font-family: var(--font-display); color: var(--gold-deep); font-size: 26px; font-weight: 700; display: inline-block; margin-bottom: 15px; }
     .plan-text {
       font-size: 1.05rem;
@@ -351,6 +365,8 @@
   <section class="plan">
     <div class="container">
       <div class="plan-inner">
+        <p class="plan-saludo" id="planSaludo"></p>
+
         <h1 class="plan-title">Ya conoces quién eres...<br>Ahora viene <span class="plan-highlight">lo que haces con ello</span></h1>
 
         <p class="plan-text">Cuando terminas tu Diseño de Origen, aparece una pregunta inevitable:</p>
@@ -412,6 +428,35 @@
   </footer>
 
   <script>
+  // ── EL SALUDO ───────────────────────────────────────────────
+  //
+  // Al boton de su PDF del P1 va pegado el numero de su compra. Con el se le
+  // pregunta al servidor de quien es, y se le saluda por su nombre.
+  //
+  // SI NO SE SABE, NO SE SALUDA. Sin enlace, o si el servidor no lo sabe o no
+  // contesta, el saludo no sale y la pagina se lee igual que siempre. Nunca se
+  // pone un nombre que no sea el suyo.
+  (async function elSaludo(){
+    try {
+      const suyo = new URLSearchParams(location.search).get('p1');
+      if (!suyo) return;
+      const resp = await fetch('/api/p2-plan/quien', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ p1: suyo }),
+      });
+      if (!resp.ok) return;
+      const datos = await resp.json();
+      const nombre = String(datos && datos.nombre || '').trim();
+      if (!nombre) return;
+      const hueco = document.getElementById('planSaludo');
+      if (!hueco) return;
+      hueco.textContent = nombre + ', tu Plan de Origen está listo para hacerse.';
+      hueco.classList.add('se-ve');
+    } catch (err) {
+      // Un fallo aqui no puede romper la pagina: se queda sin saludo y ya.
+    }
+  })();
     // EL NAV AL BAJAR. A los 50px se quita el logo y se queda solo el boton.
     // Es el mismo que lleva el index.
     (function(){
