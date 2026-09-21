@@ -189,11 +189,14 @@ export default async function handler(req, res) {
     // lo que es. Ahora van seguidas, y lo que las separa es esto: una raya
     // corta con su rombo, en el dorado de la marca, con el mismo hueco arriba
     // que abajo.
-    const AIRE_DEL_SEPARADOR = 15;
-    // Lo que sube el titulo por encima de su linea de base. Hace falta para
-    // dejar el mismo hueco a los dos lados: debajo del separador lo que se ve
-    // no es la linea del titulo, es donde empiezan sus mayusculas.
-    const ALTO_MAYUSCULA = TAM_TITULO * 0.72 * 25.4 / 72;
+    const AIRE_DEL_SEPARADOR = 20;         // el hueco que se ve, arriba y abajo
+    // LO QUE SUBE UNA MAYUSCULA Y LO QUE BAJA UNA COLA, medidos en la fuente.
+    // Hacen falta para que el hueco sea de verdad el mismo a los dos lados: la
+    // raya se coloca contando desde la linea de base del texto, pero lo que se
+    // ve por arriba es hasta donde baja una "p" o una "j", y lo que se ve por
+    // abajo es desde donde empiezan las mayusculas del titulo.
+    const ALTO_MAYUSCULA = TAM_TITULO * 0.712 * 25.4 / 72;
+    const ALTO_COLA = CUERPO * 0.198 * 25.4 / 72;
 
     function separador(cy) {
       const medio = W / 2;
@@ -248,7 +251,7 @@ export default async function handler(req, res) {
         // que esa distancia ya no cabe en la hoja, la raya se pasa con el titulo
         // a la siguiente y va delante de el, con el mismo aire por debajo: sigue
         // estando entre las dos y el titulo no se mueve de donde empieza siempre.
-        const suSitio = y - RENGLON + AIRE_DEL_SEPARADOR;
+        const suSitio = y - RENGLON + ALTO_COLA + AIRE_DEL_SEPARADOR;
         const cabeLaRaya = suSitio <= HASTA;
         if (cabeLaRaya) separador(suSitio);
 
