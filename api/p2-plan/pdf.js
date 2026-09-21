@@ -352,9 +352,21 @@ export default async function handler(req, res) {
     // siguiente y alli se vuelve a poner la cabecera: una tabla que sigue en la
     // otra pagina sin sus nombres de columna no se entiende.
     const T_CHECK = 9, T_NUMERO = 8;       // lo que ocupan las dos primeras
-    const T_AIRE = 2.5;                    // lo que respira una celda por dentro
+    const T_AIRE = 2.5;                    // lo que respira una celda por los lados
     const T_RENGLON = 6;                   // el renglon de dentro de la tabla
     const T_CUERPO = 12, T_CABECERA = 13;
+
+    // EL MISMO HUECO ENCIMA DE LA RAYA QUE DEBAJO. Antes la fila se media desde
+    // la linea de base de su texto, y lo que se veia era el texto pegado a la
+    // raya de abajo y suelto de la de arriba.
+    //
+    // Y SON DOS MEDIDAS Y NO UNA PORQUE LAS LETRAS CUELGAN. Una "p" o una "j"
+    // bajan por debajo de su linea, asi que para dejar el mismo hueco a la
+    // vista hace falta un poco mas desde la linea de base que hasta donde
+    // empieza el texto de la fila siguiente.
+    const T_ALTO = 5.5;                    // de la raya a lo alto del texto de abajo
+    const T_COLA = 6.4;                    // y de la ultima linea de texto a la raya
+    const T_CAP = T_CUERPO * 0.72 * 25.4 / 72;   // lo que sube una mayuscula
     const T_CASILLA = 3.6;                 // el lado del cuadrado que se marca
 
     function pintarTabla(columnas) {
@@ -371,7 +383,6 @@ export default async function handler(req, res) {
         doc.setDrawColor(DORADO[0], DORADO[1], DORADO[2]);
         doc.setLineWidth(0.3);
         doc.line(X, y, X + ANCHO, y);
-        y += T_AIRE + T_RENGLON;
       };
 
       const alto = fila => {
@@ -381,20 +392,23 @@ export default async function handler(req, res) {
         for (const col of columnas) {
           renglones = Math.max(renglones, doc.splitTextToSize(t(fila[col.clave]), col.ancho - T_AIRE * 2).length);
         }
-        return renglones * T_RENGLON + T_AIRE * 2;
+        return (renglones - 1) * T_RENGLON + T_CAP + T_ALTO + T_COLA;
       };
 
       return filas => {
         cabecera();
+        // ARRIBA ES EL BORDE DE LA FILA, que es la raya de la de antes -o la de
+        // la cabecera-, y de ahi se cuelga todo lo demas.
+        let arriba = y;
         for (const fila of filas) {
           const suyo = alto(fila);
-          if (y - T_RENGLON + suyo > HASTA) { hojaNueva(); cabecera(); }
-          const arriba = y - T_RENGLON;
+          if (arriba + suyo > HASTA) { hojaNueva(); cabecera(); arriba = y; }
+          y = arriba + T_ALTO + T_CAP;
 
           // La casilla y el numero, uno al lado del otro.
           doc.setDrawColor(DORADO[0], DORADO[1], DORADO[2]);
           doc.setLineWidth(0.3);
-          doc.roundedRect(X + 1, arriba + T_AIRE, T_CASILLA, T_CASILLA, 0.6, 0.6, 'S');
+          doc.roundedRect(X + 1, y - (T_CAP + T_CASILLA) / 2, T_CASILLA, T_CASILLA, 0.6, 0.6, 'S');
           doc.setFont('Roboto', 'bold');
           doc.setFontSize(T_CUERPO);
           doc.setTextColor(VERDE[0], VERDE[1], VERDE[2]);
@@ -413,11 +427,12 @@ export default async function handler(req, res) {
             x += col.ancho;
           }
 
-          y = arriba + suyo;
+          const abajo = arriba + suyo;
           doc.setDrawColor(230, 224, 210);
           doc.setLineWidth(0.2);
-          doc.line(X, y, X + ANCHO, y);
-          y += T_RENGLON;
+          doc.line(X, abajo, X + ANCHO, abajo);
+          arriba = abajo;
+          y = abajo;
         }
       };
     }
