@@ -23,6 +23,7 @@
 
 import { montarElPlan } from './prueba.js';
 import { guardarElPlan, leerElPlan, cogerElCerrojo, soltarElCerrojo } from './almacen.js';
+import { mandarSuPlan } from './correo.js';
 
 // QUIEN LLAMA AQUI ES NUESTRO PROPIO SERVIDOR, NO UN NAVEGADOR. La misma
 // llave que el P1: la conoce el aviso del cobro y nadie mas.
@@ -84,9 +85,28 @@ export default async function handler(req, res) {
     }
 
     console.log(`[p2-plan/arranque] el plan de ${compra}: ${documento.partes.length} pruebas y ${documento.creencias.length} creencias`);
-    return res.status(200).json({
+
+    // ── Y SE LO MANDAMOS ─────────────────────────────────────
+    //
+    // El plan ya esta guardado, asi que si el correo no sale no se pierde
+    // nada: se dice aqui y se puede volver a mandar. Lo que no se hace es dar
+    // por bueno un plan que no ha llegado a su dueña.
+    let entregado = false;
+    let elFalloDelCorreo = '';
+    try {
+      const { email } = await mandarSuPlan({ compra, documento });
+      entregado = true;
+      console.log(`[p2-plan/arranque] el plan de ${compra} ha salido hacia ${email}`);
+    } catch (err) {
+      elFalloDelCorreo = err.message;
+      console.error(`[p2-plan/arranque] el plan de ${compra} NO se ha podido mandar:`, err.message);
+    }
+
+    return res.status(entregado ? 200 : 500).json({
       compra,
       montado: true,
+      entregado,
+      ...(entregado ? {} : { falta: 'no se ha podido mandar el correo: ' + elFalloDelCorreo }),
       pruebas: documento.partes.length,
       creencias: documento.creencias.length,
     });
