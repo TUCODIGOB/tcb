@@ -31,12 +31,18 @@ import { leerLaFicha } from '../../lib/ficha-del-lead.js';
 // llevar barras ni nada raro.
 const limpio = txt => String(txt || '').replace(/[^A-Za-z0-9_-]/g, '');
 
+// Y TIENE QUE PARECER UN NOMBRE. Letras, y como mucho un guion o un apostrofe
+// de los que llevan algunos nombres. Lo que no lo parezca no se saluda: mas
+// vale no saludar que abrir la pagina con algo que no es su nombre.
+const PARECE_UN_NOMBRE = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ'’-]{1,29}$/;
+
 // SOLO EL NOMBRE DE PILA. Si en su ficha esta el nombre entero, para el saludo
 // va la primera palabra: a nadie se le llama por el apellido.
 function elDePila(entero) {
   const limpiado = String(entero || '').trim().replace(/\s+/g, ' ');
   if (!limpiado) return '';
-  return limpiado.split(' ')[0];
+  const primera = limpiado.split(' ')[0];
+  return PARECE_UN_NOMBRE.test(primera) ? primera : '';
 }
 
 export default async function handler(req, res) {
