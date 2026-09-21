@@ -190,12 +190,12 @@ export default async function handler(req, res) {
     // corta con su rombo, en el dorado de la marca, con el mismo hueco arriba
     // que abajo.
     const AIRE_DEL_SEPARADOR = 20;         // el hueco que se ve, arriba y abajo
-    // LO QUE SUBE UNA MAYUSCULA Y LO QUE BAJA UNA COLA, medidos en la fuente.
-    // Hacen falta para que el hueco sea de verdad el mismo a los dos lados: la
-    // raya se coloca contando desde la linea de base del texto, pero lo que se
-    // ve por arriba es hasta donde baja una "p" o una "j", y lo que se ve por
-    // abajo es desde donde empiezan las mayusculas del titulo.
-    const ALTO_MAYUSCULA = TAM_TITULO * 0.712 * 25.4 / 72;
+    // Lo que sube el titulo por encima de su linea de base. Hace falta para
+    // dejar el mismo hueco a los dos lados: debajo del separador lo que se ve
+    // no es la linea del titulo, es donde empiezan sus mayusculas.
+    const ALTO_MAYUSCULA = TAM_TITULO * 0.72 * 25.4 / 72;
+    // Y por arriba pasa lo mismo al reves: lo ultimo que se ve no es la linea
+    // de base del texto, es hasta donde baja una "p" o una "j".
     const ALTO_COLA = CUERPO * 0.198 * 25.4 / 72;
 
     function separador(cy) {
