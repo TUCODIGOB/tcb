@@ -244,16 +244,21 @@ export default async function handler(req, res) {
         // no, y esa mezcla se ve peor que no tener ninguna.
         //
         // Va a la misma distancia de la ultima linea de la anterior que de donde
-        // empieza a verse el titulo de esta. Si esa distancia se sale de la
-        // hoja, se sube a lo ultimo que queda, y solo se deja de pintar cuando
-        // ni siquiera cabe un renglon por debajo del texto.
+        // empieza a verse el titulo de esta. Y cuando el texto llega tan abajo
+        // que esa distancia ya no cabe en la hoja, la raya se pasa con el titulo
+        // a la siguiente y va delante de el, con el mismo aire por debajo: sigue
+        // estando entre las dos y el titulo no se mueve de donde empieza siempre.
         const suSitio = y - RENGLON + AIRE_DEL_SEPARADOR;
-        const donde = Math.min(suSitio, HASTA);
-        if (donde - (y - RENGLON) >= RENGLON) separador(donde);
+        const cabeLaRaya = suSitio <= HASTA;
+        if (cabeLaRaya) separador(suSitio);
 
         const arranque = suSitio + AIRE_DEL_SEPARADOR + ALTO_MAYUSCULA;
-        if (arranque + pide > HASTA) hojaNueva();
-        else y = arranque;
+        if (cabeLaRaya && arranque + pide <= HASTA) {
+          y = arranque;
+        } else {
+          hojaNueva();
+          if (!cabeLaRaya) separador(ARRIBA - AIRE_DEL_SEPARADOR - ALTO_MAYUSCULA);
+        }
       }
 
       doc.setFont('Roboto', 'bold');
