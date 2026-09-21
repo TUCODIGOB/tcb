@@ -30,11 +30,18 @@
 // CERRADA CON LLAVE. Solo entra quien traiga CRON_SECRET, que es lo que manda
 // el reloj. Igual que el reintento del P1 y el del regalo.
 //
+// Y DE PASO, LAS LISTAS DE BREVO. Si al comprar no se pudo meterla en la suya
+// o sacarla de la del P1, quedo apuntado y aqui se vuelve a intentar. Cuesta
+// una llamada y no gasta ningun reintento del plan, asi que va aparte y no le
+// quita el turno a nadie.
+//
 // SOLO DEL P2. No mira ni toca nada del P1 ni del regalo.
 // ═════════════════════════════════════════════════════════════════
 
-import { leerElPlan, losPendientes, guardarElPendiente, quitarElPendiente } from './almacen.js';
+import { leerElPlan, losPendientes, guardarElPendiente, quitarElPendiente,
+         loDeBrevoQueFalta } from './almacen.js';
 import { mandarSuPlan, correoDeQueSeRevisa, correoALaTienda } from './correo.js';
+import { marcarLaCompraDelP2, MAX_VECES } from './brevo.js';
 
 const UN_MINUTO = 60 * 1000;
 const UNA_HORA = 60 * UN_MINUTO;
@@ -94,6 +101,28 @@ export default async function handler(req, res) {
   if (!process.env.STRIPE_WEBHOOK_SECRET) {
     console.error('[p2] Sin STRIPE_WEBHOOK_SECRET: no se puede arrancar ningun plan');
     return res.status(500).json({ error: 'Sin llave interna' });
+  }
+
+  // ── LAS LISTAS DE BREVO QUE QUEDARON A MEDIAS ────────────────────
+  //
+  // Una por vuelta y la que lleva mas tiempo. Va antes y por su lado: no
+  // devuelve, asi que lo del plan sigue igual detras de esto. Si esto fallara
+  // entero, tampoco puede dejar sin reintento a quien espera su plan.
+  try {
+    const aMedias = (await loDeBrevoQueFalta())
+      .filter(f => f.compra && !f.rendido && Number(f.intentos || 0) < MAX_VECES)
+      .sort((a, b) => Number(a.creado || 0) - Number(b.creado || 0));
+    if (aMedias.length) {
+      const suya = aMedias[0];
+      const bien = await marcarLaCompraDelP2({
+        compra: suya.compra,
+        intentos: Number(suya.intentos || 0),
+        creado: Number(suya.creado || 0),
+      });
+      console.log(`[p2] Las listas de ${suya.compra}: ${bien ? 'ya están bien' : 'siguen sin quedar'}`);
+    }
+  } catch (err) {
+    console.error('[p2] No se han podido mirar las listas a medias:', err.message);
   }
 
   let fichas;

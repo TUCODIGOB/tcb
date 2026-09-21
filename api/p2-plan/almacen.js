@@ -65,6 +65,10 @@ const CERROJOS = 'cerrojos';
 // hasta que su correo sale. Lo que no esta aqui, no esta pendiente de nada.
 const PENDIENTES = 'pendientes';
 
+// Y las que tienen sus listas de Brevo a medias, en la suya: una ficha por
+// compra desde que algo falla hasta que quedan como tienen que quedar.
+const LISTAS = 'listas';
+
 async function pedir(metodo, ruta, cuerpo, consulta) {
   const cfg = ajustes();
   if (!cfg) throw new Error('Faltan las variables INFORME_P1_CLOUDFLARE_*');
@@ -359,6 +363,88 @@ export async function quitarElPendiente(compra) {
   const cual = limpio(compra);
   if (!cual) return false;
   const resp = await pedir('DELETE', `${CARPETA}/${PENDIENTES}/${cual}.json`);
+  if (!resp.ok && resp.status !== 404) {
+    throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+  }
+  return true;
+}
+
+// ── LAS QUE TIENEN SUS LISTAS DE BREVO A MEDIAS ───────────────
+//
+// QUE PROBLEMA RESUELVE. Al comprar el P2 hay que meterla en su lista y
+// sacarla de la del P1. Si Brevo no contesta en ese momento, o coge una cosa
+// y no la otra, esa clienta se queda en la lista que no le toca y nadie
+// vuelve a mirarlo.
+//
+// COMO. Se apunta aqui, y deja de estar apuntada cuando las dos cosas han
+// salido bien. El reloj del P2 mira esta lista cada vuelta.
+//
+// QUE SE APUNTA: su compra, cuando empezo y cuantas veces se ha probado. Nada
+// suyo: el email sale de su informe, como todo lo demas del P2.
+export async function apuntarLoDeBrevo(ficha) {
+  const cual = limpio(ficha?.compra);
+  if (!cual) throw new Error('Sin el identificador de la compra no se apunta nada');
+  const resp = await pedir('PUT', `${CARPETA}/${LISTAS}/${cual}.json`, { ...ficha, compra: cual });
+  if (!resp.ok) throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+  return true;
+}
+
+// LEER UNA. Devuelve null si esa compra tiene sus listas en orden.
+export async function leerLoDeBrevo(compra) {
+  const cual = limpio(compra);
+  if (!cual) return null;
+  const resp = await pedir('GET', `${CARPETA}/${LISTAS}/${cual}.json`);
+  if (resp.status === 404) return null;
+  if (!resp.ok) throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+  return resp.json();
+}
+
+// TODAS LAS QUE ESTAN A MEDIAS. Si una ficha no se puede leer, se deja aviso
+// y se sigue con las demas: una rota no puede dejar sin arreglo a las otras.
+export async function loDeBrevoQueFalta() {
+  const prefijo = `${CARPETA}/${LISTAS}/`;
+  const nombres = [];
+  let desde = '';
+
+  for (let vuelta = 0; vuelta < 20; vuelta++) {
+    const consulta = { 'list-type': '2', prefix: prefijo, 'max-keys': '200' };
+    if (desde) consulta['continuation-token'] = desde;
+
+    const resp = await pedir('GET', '', null, consulta);
+    if (!resp.ok) throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
+    const xml = await resp.text();
+
+    (xml.match(/<Key>([^<]+)<\/Key>/g) || []).forEach(trozo => {
+      const clave = trozo.slice(5, -6);
+      if (clave.startsWith(prefijo) && clave.endsWith('.json')) {
+        nombres.push(clave.slice(prefijo.length, -5));
+      }
+    });
+
+    if (!/<IsTruncated>true<\/IsTruncated>/.test(xml)) break;
+    const sigue = xml.match(/<NextContinuationToken>([^<]+)<\/NextContinuationToken>/);
+    if (!sigue) break;
+    desde = sigue[1];
+  }
+
+  const fichas = [];
+  for (const compra of nombres) {
+    try {
+      const suya = await leerLoDeBrevo(compra);
+      if (suya) fichas.push({ ...suya, compra });
+    } catch (err) {
+      console.error(`[p2] No se ha podido leer lo de Brevo de ${compra}:`, err.message);
+    }
+  }
+  return fichas;
+}
+
+// QUITAR. Se llama cuando sus listas han quedado como tienen que quedar. Si
+// la ficha ya no estaba, tambien vale: lo que importa es que deje de constar.
+export async function quitarLoDeBrevo(compra) {
+  const cual = limpio(compra);
+  if (!cual) return false;
+  const resp = await pedir('DELETE', `${CARPETA}/${LISTAS}/${cual}.json`);
   if (!resp.ok && resp.status !== 404) {
     throw new Error(`R2 ${resp.status}: ${(await resp.text()).slice(0, 200)}`);
   }
