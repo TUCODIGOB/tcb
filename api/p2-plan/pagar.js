@@ -34,6 +34,11 @@ const PRICE_ID = 'price_1UI4FB0TJvLtDGUGVNnSqN7w';
 // se entrega, y es lo que distingue esta venta de las del P1 y del P0.
 const PRODUCTO = 'p2';
 
+// A DONDE VUELVE DESPUES DE PAGAR. Puesto aqui y no sacado de la peticion:
+// quien llama puede decir que viene de donde quiera, y con eso mandaria a la
+// clienta a otra web -con su numero de compra encima- despues de cobrarle.
+const NUESTRA_WEB = 'https://origennatal.com';
+
 // El numero de compra forma parte de la ruta que se va a buscar: no puede
 // llevar barras ni nada raro.
 const limpio = txt => String(txt || '').replace(/[^A-Za-z0-9_-]/g, '');
@@ -54,7 +59,6 @@ export default async function handler(req, res) {
     }
 
     const email = String(informe.cliente?.email || '').trim();
-    const origin = req.headers.origin || 'https://origennatal.com';
 
     const sesion = await stripe.checkout.sessions.create({
       mode: 'payment',
@@ -68,8 +72,8 @@ export default async function handler(req, res) {
         // De que informe sale su plan. Es lo que se lee al cobrar.
         p1: compra,
       },
-      success_url: `${origin}/tu-plan-de-origen/gracias?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/tu-plan-de-origen?p1=${encodeURIComponent(compra)}`,
+      success_url: `${NUESTRA_WEB}/tu-plan-de-origen/gracias?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${NUESTRA_WEB}/tu-plan-de-origen?p1=${encodeURIComponent(compra)}`,
     });
 
     return res.status(200).json({ url: sesion.url });
