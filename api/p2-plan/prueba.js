@@ -940,7 +940,9 @@ Cuál es la prueba que le pone delante la vida aquí, qué debe cambiar y en qui
 
 Se abre siempre con una frase que le explique de qué se trata: la situación concreta que le pasa a quien lee, para que al leerla se reconozca enseguida, nunca por la idea. Y se cuenta como lo que tiene delante y le toca aprender, no como algo propio que está mal. Sin anunciarlo: nada de abrir diciéndole que esto es una prueba que la vida le pone, que suena a libro. Que sea una prueba se nota en cómo está contado.
 
-Y la segunda mitad es lo que gana: cómo es ahí su vida el día que ya lo ha superado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir. Unas 80 palabras para hacerte una idea del tamaño.
+Y la segunda mitad es lo que gana: su vida ahí con eso ya cambiado, en concreto y en presente, con lo que va a estar pasando y no con lo que va a sentir.
+
+Esa parte no se anuncia. Se entra por lo que hace o por lo que deja de hacer, no con una fórmula que avise de que ahora viene lo que gana. Unas 80 palabras para hacerte una idea del tamaño.
 
 "queHaces"
 
@@ -950,7 +952,9 @@ Cabe explicarla entera: qué hace exactamente, cómo se hace. Tan claro que lo p
 
 "dondeTeCaes"
 
-El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien. Lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre y es señal de que va bien, no de que se esté equivocando. Unas 60 palabras para hacerte una idea del tamaño.
+El autosabotaje que aparecerá cuando intente cambiarlo a mejor, qué puede pasarle cuando le salga el autosabotaje, lo que le impedirá cambiarlo a bien. Lo que va a aparecer para frenarle o lo que va a hacer mal creyendo que así va más deprisa. Y que eso llega siempre, y que verlo aparecer no es ir mal.
+
+Eso tampoco se cierra con una fórmula. Lo dices con tus palabras, y de otra manera cada vez. Unas 60 palabras para hacerte una idea del tamaño.
 
 LAS CIFRAS DE ARRIBA SON UNA GUÍA, no un límite. Cuanto más corto, mejor, pero debe estar bien explicado, debe entenderse bien. Y nunca cortes una frase por la mitad para que quepa: si no cabe, quitas algo entero y cierras.
 
