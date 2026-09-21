@@ -1859,12 +1859,41 @@ function lasQueRepitenElComienzo(filas, celda) {
   return repiten;
 }
 
+// QUE LA CELDA DIGA QUE LE TOCA CAMBIAR, NO LO QUE HACE.
+//
+// El texto de "Tu prueba" arranca contando la situacion en la que se reconoce y
+// despues dice cual es la prueba. Al resumir, el modelo coge lo primero, asi
+// que la celda sale siendo el retrato de lo que hace -que ademas ya ha leido en
+// el titulo- en vez de lo que le toca mover.
+//
+// UN INFINITIVO NO PUEDE SER ESE RETRATO. Lo que hace se cuenta hablandole de
+// tu -"calculas", "te pierdes"-, y ninguna de esas formas acaba en -ar, -er o
+// -ir. Asi que mirar como empieza la celda basta para saber si ha resumido lo
+// que toca.
+//
+// Y EL INFINITIVO PUEDE LLEVAR UN PRONOMBRE PEGADO DETRAS, que se le quita
+// antes de mirar el final.
+const PEGADOS_AL_VERBO = ['melo', 'mela', 'selo', 'sela', 'telo', 'tela',
+  'me', 'te', 'se', 'lo', 'la', 'le', 'nos', 'los', 'las', 'les'];
+
+function empiezaEnInfinitivo(txt) {
+  let palabra = comoSeCompara(txt).split(' ').filter(Boolean)[0] || '';
+  for (const pegado of PEGADOS_AL_VERBO) {
+    if (palabra.length > pegado.length + 2 && palabra.endsWith(pegado)) {
+      palabra = palabra.slice(0, -pegado.length);
+      break;
+    }
+  }
+  return palabra.length >= 2 && /(ar|er|ir)$/.test(palabra);
+}
+
 // UNA TABLA, CON SU SEGUNDA VUELTA.
 //
 // Si alguna fila no vuelve, se pide otra vez SOLO esa: las que ya estan no se
 // repiten. Y si despues de eso sigue faltando alguna, esto lanza: una tabla
 // resumen con un hueco en medio no se entrega.
-async function unaTabla({ que, celdas, encargoDe, mensaje, cosas, arranque, sinRepetir = null }) {
+async function unaTabla({ que, celdas, encargoDe, mensaje, cosas, arranque,
+                          enInfinitivo = null, sinRepetir = null }) {
   const pedidas = cosas.map(c => c.numero);
 
   const pedir = async (suyas, espera, aviso = '') => filasLimpias(
@@ -1912,6 +1941,32 @@ async function unaTabla({ que, celdas, encargoDe, mensaje, cosas, arranque, sinR
 
   filas.sort((a, b) => a.numero - b.numero);
 
+  // ── LO QUE LE TOCA CAMBIAR, SI ESTA TABLA LO PIDE ─────────
+  //
+  // Va antes de lo de los comienzos: una fila que se vuelve a pedir trae todas
+  // sus celdas nuevas, asi que si se hiciera despues podria estropear lo otro.
+  //
+  // Y la nueva solo entra si de verdad lo arregla; si no, se queda la que
+  // habia, que al menos es un resumen suyo.
+  if (enInfinitivo) {
+    const flojas = filas.filter(f => !empiezaEnInfinitivo(f[enInfinitivo.celda])).map(f => f.numero);
+    const queda = loQueQueda(arranque, ESPERA_DE_LA_TABLA_MS);
+    if (flojas.length && queda >= ESPERA_MINIMA_PARA_REHACER_MS) {
+      console.warn(`[p2] ${que}: las filas ${flojas.join(', ')} cuentan lo que hace en vez de lo que le toca cambiar, se piden otra vez`);
+      const aviso = `\n\nY OJO: en "${enInfinitivo.nombre}" la celda dice lo que le toca cambiar, y por eso empieza por un verbo en infinitivo. Las filas que te doy ahora no lo hacen: están contando lo que hace hoy, que es justo lo que no va ahí.`;
+      try {
+        const otras = await pedir(cosas.filter(c => flojas.includes(c.numero)), queda, aviso);
+        for (const nueva of otras) {
+          if (!empiezaEnInfinitivo(nueva[enInfinitivo.celda])) continue;
+          const donde = filas.findIndex(f => f.numero === nueva.numero);
+          if (donde >= 0) filas[donde] = nueva;
+        }
+      } catch (err) {
+        console.warn(`[p2] ${que}: la vuelta de los infinitivos se ha caido (${err.message}), se queda lo que habia`);
+      }
+    }
+  }
+
   // Y QUE NO EMPIECEN DOS IGUAL, si esta tabla lo pide. Se vuelven a pedir SOLO
   // las que repiten, con los comienzos ya cogidos delante para que no vuelva a
   // caer en ellos. Y la nueva solo entra si de verdad arranca por otro sitio:
@@ -1957,6 +2012,7 @@ const laTablaDeLasPruebas = ({ partes, sexo, arranque }) => unaTabla({
   cosas: partes,
   arranque,
   mensaje: 'Escribe la tabla, una fila por cada prueba.',
+  enInfinitivo: { celda: 'tuPrueba', nombre: BLOQUES.tuPrueba },
   sinRepetir: { celda: 'dondeTeCaes', nombre: BLOQUES.dondeTeCaes },
   encargoDe: suyas => `${REGLAS_COMUNES}
 
@@ -1966,6 +2022,8 @@ AQUÍ SE RESUME, NO SE ESCRIBE
 Abajo tienes las pruebas de una persona, numeradas y ya escritas: es lo que acaba de leer.
 
 Una fila por cada prueba de abajo, con su número, y tres celdas: "${BLOQUES.tuPrueba}", "${BLOQUES.queHaces}" y "${BLOQUES.dondeTeCaes}". Cada celda resume en una línea lo que pone abajo en esa misma casilla.
+
+La de "${BLOQUES.tuPrueba}" dice QUÉ LE TOCA CAMBIAR, y por eso empieza por un verbo en infinitivo. Abajo, esa casilla arranca contando la situación en la que se reconoce y después dice cuál es su prueba: lo que resumes es eso segundo. Lo que hace hoy no va ahí, que ya se lo has contado en el título.
 
 La de "${BLOQUES.dondeTeCaes}" va en futuro, como está abajo: eso todavía no ha pasado, va a pasar cuando lo intente.
 
