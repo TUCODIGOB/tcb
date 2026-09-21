@@ -140,6 +140,13 @@
       max-width: 460px;
       margin: 0 auto 38px;
     }
+    /* Lo que se le dice si el pago no se puede abrir. Vacio no ocupa sitio. */
+    .plan-aviso {
+      font-size: 15px;
+      color: var(--teal-deep);
+      margin: 14px 0 0;
+    }
+    .plan-aviso:empty { display: none; }
 
     /* EL SALUDO. Solo sale cuando se llega desde el boton de su PDF y se sabe
        de quien es. Si no, no ocupa sitio y la pagina se lee igual. */
@@ -283,6 +290,7 @@
         <p class="plan-text">Una hoja de ruta personal, basada en los mismos datos de tu informe: las 7 áreas, pero esta vez <strong>con el plan de acción concreto para cada una</strong>.</p>
         <div class="plan-comprar">
           <button type="button" class="btn-cta" id="planComprar">Quiero mi plan · 37 €</button>
+          <p class="plan-aviso" id="planAviso"></p>
         </div>
 
       </div>
@@ -339,6 +347,46 @@
     } catch (err) {
       // Un fallo aqui no puede romper la pagina: se queda sin saludo y ya.
     }
+  })();
+
+  // ── EL BOTON DE COMPRAR ─────────────────────────────────────
+  //
+  // Abre el cobro del P2 llevando dentro el numero de su compra del P1, que es
+  // lo que despues dice de que informe sacar su plan.
+  //
+  // SIN ESE NUMERO NO SE PUEDE COMPRAR: no habria informe del que sacarlo. Se
+  // le dice, en vez de dejar el boton haciendo nada.
+  (function elBotonDeComprar(){
+    const boton = document.getElementById('planComprar');
+    const aviso = document.getElementById('planAviso');
+    if (!boton) return;
+    const decir = txt => { if (aviso) aviso.textContent = txt || ''; };
+
+    boton.addEventListener('click', async () => {
+      const suyo = new URLSearchParams(location.search).get('p1');
+      if (!suyo) {
+        return decir('Tu plan se hace con tu informe. Entra desde el botón de tu PDF para pedirlo.');
+      }
+      decir('');
+      boton.disabled = true;
+      try {
+        const resp = await fetch('/api/p2-plan/pagar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ p1: suyo }),
+        });
+        const datos = await resp.json().catch(() => ({}));
+        if (!resp.ok || !datos.url) {
+          boton.disabled = false;
+          return decir(datos.error || 'No se ha podido abrir el pago. Inténtalo de nuevo.');
+        }
+        // Y a pagar. El boton se queda apagado: ya nos vamos de aqui.
+        location.href = datos.url;
+      } catch (err) {
+        boton.disabled = false;
+        decir('No se ha podido abrir el pago. Inténtalo de nuevo.');
+      }
+    });
   })();
     // EL NAV AL BAJAR. A los 50px se quita el logo y se queda solo el boton.
     // Es el mismo que lleva el index.
