@@ -64,6 +64,17 @@ export default async function handler(req, res) {
     // Las compras hechas antes de que se empezara a marcar el producto no
     // llevan marca, y solo pueden ser del P1: era el unico que existia.
     const producto = metadata.producto || 'p1';
+
+    // ── LA VENTA DEL P2 ARRANCA SU PLAN Y SE VA ────────────────
+    //
+    // El P2 no entra en nada de lo del P1: ni en su lista, ni en su marca de
+    // comprado, ni en su carrito. Lo unico que hace su venta es poner en
+    // marcha el plan, que es lo que ha pagado.
+    if (producto === 'p2') {
+      arrancarElPlan(session);
+      return res.status(200).json({ received: true });
+    }
+
     if (producto !== 'p1') {
       console.log(`Venta de "${producto}": no es del P1, aqui no se guarda nada suyo (${session.id})`);
       return res.status(200).json({ received: true });
@@ -167,6 +178,47 @@ function arrancarElInforme(sessionId) {
     })
       .then(r => console.log('Informe arrancado desde el servidor:', sessionId, r.status))
       .catch(err => console.error('No se ha podido arrancar el informe:', sessionId, err.message))
+  );
+}
+
+// ════════════════════════════════════════════════════════════════
+// ARRANCAR EL PLAN DEL P2 DESDE AQUI
+//
+// Igual que el informe del P1 y por lo mismo: lo pone en marcha este aviso,
+// que lo manda Stripe a nuestro servidor y no depende de la cobertura de
+// quien compra. Si cierra el movil nada mas pagar, su plan se hace igual.
+//
+// DE QUE INFORME SALE. En la compra viaja el numero de su P1, que es lo que
+// se le puso al abrir el cobro. Sin el no hay de donde sacar el plan, asi que
+// se deja dicho en el registro y no se intenta nada: es mejor eso que ponerse
+// a montar un documento de nadie.
+//
+// SIN HACER ESPERAR A STRIPE. Stripe corta si no se le contesta en unos
+// segundos y el plan tarda minutos, asi que se le contesta primero y el
+// trabajo sigue por detras. Eso es lo que hace waitUntil.
+//
+// Y NO PUEDEN SALIR DOS. Si este aviso llegara repetido, el primero coge el
+// cerrojo del plan y al segundo se le dice que ya se esta haciendo.
+// ════════════════════════════════════════════════════════════════
+function arrancarElPlan(session) {
+  const clave = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!clave) {
+    console.error('No se arranca el plan: falta STRIPE_WEBHOOK_SECRET');
+    return;
+  }
+  const compra = String(session.metadata?.p1 || '').trim();
+  if (!compra) {
+    console.error('No se arranca el plan: la venta del P2 no trae el numero de su informe', session.id);
+    return;
+  }
+  waitUntil(
+    fetch('https://origennatal.com/api/p2-plan/arranque', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-origen-interno': clave },
+      body: JSON.stringify({ compra }),
+    })
+      .then(r => console.log('Plan arrancado desde el servidor:', compra, r.status))
+      .catch(err => console.error('No se ha podido arrancar el plan:', compra, err.message))
   );
 }
 
