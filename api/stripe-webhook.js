@@ -10,6 +10,7 @@ import { apuntarPendiente } from '../lib/pendientes-p1.js';
 import { guardarContactoEnBrevo, apuntarPendiente as apuntarContactoDeBrevo } from '../lib/brevo-contactos.js';
 import { correoBienvenida } from '../lib/correos-p1.js';
 import { correoDeBienvenida } from './p2-plan/correo.js';
+import { marcarLaCompraDelP2 } from './p2-plan/brevo.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -228,6 +229,14 @@ function arrancarElPlan(session) {
   waitUntil(
     correoDeBienvenida({ compra })
       .catch(err => console.error('No se ha podido mandar la bienvenida del plan:', compra, err.message))
+  );
+
+  // Y QUEDA DICHO EN BREVO que ha comprado el P2: a su lista, con su atributo,
+  // y fuera de la del P1. Por detras y por su lado: esto es la copia para el
+  // marketing y no puede cortar ni el plan ni su correo.
+  waitUntil(
+    marcarLaCompraDelP2({ compra })
+      .catch(err => console.error('No se ha podido marcar la compra del P2:', compra, err.message))
   );
 }
 
