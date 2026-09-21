@@ -1985,10 +1985,17 @@ Quien lo va a leer es ${comoSeLeHabla(sexo)}`,
 
 // ── LA TABLA DE LAS CREENCIAS ───────────────────────────────
 //
-// Igual que la otra: lee la creencia ya escrita, que es lo que ha leido.
-const laTablaDeLasCreencias = ({ creencias, sexo, arranque }) => unaTabla({
+// Igual que la otra: lee la creencia ya escrita, que es lo que ha leido. Pero
+// aqui solo se le pide UNA celda.
+//
+// "LO QUE CREES HOY" ES EL TITULO DE LA CREENCIA, TAL CUAL. El titulo ya es la
+// frase que se cree, dicha en corto: pedirle al modelo otra version de eso es
+// que se invente una distinta de la que ha leido. La pone el programa.
+const CELDAS_DE_LA_TABLA_DE_CREENCIAS = ['loQueEsVerdad'];
+
+const pedirLaTablaDeLasCreencias = ({ creencias, sexo, arranque }) => unaTabla({
   que: 'la tabla de las creencias',
-  celdas: PUNTOS_DE_CREENCIA,
+  celdas: CELDAS_DE_LA_TABLA_DE_CREENCIAS,
   cosas: creencias,
   arranque,
   mensaje: 'Escribe la tabla, una fila por cada creencia.',
@@ -1999,7 +2006,9 @@ AQUÍ SE RESUME, NO SE ESCRIBE
 
 Abajo tienes las creencias de una persona, numeradas y ya escritas: es lo que acaba de leer.
 
-Una fila por cada creencia de abajo, con su número, y dos celdas: "${BLOQUES_DE_CREENCIA.loQueCreesHoy}" y "${BLOQUES_DE_CREENCIA.loQueEsVerdad}". Cada celda resume en una línea lo que pone abajo en esa misma casilla.
+Una fila por cada creencia de abajo, con su número, y UNA celda: "${BLOQUES_DE_CREENCIA.loQueEsVerdad}". Resume en una línea lo que pone abajo en esa misma casilla.
+
+La otra columna de esa tabla, "${BLOQUES_DE_CREENCIA.loQueCreesHoy}", la pone el programa con el título de la creencia: tú no la escribes.
 
 Ninguna se queda fuera.
 
@@ -2012,6 +2021,15 @@ ${suyas.map(c => [`${c.numero}. ${c.titulo}`,
 
 Quien lo va a leer es ${comoSeLeHabla(sexo)}`,
 });
+
+async function laTablaDeLasCreencias({ creencias, sexo, arranque }) {
+  const filas = await pedirLaTablaDeLasCreencias({ creencias, sexo, arranque });
+  // Y SU TITULO EN LA PRIMERA CELDA, sacado de la misma creencia que resume.
+  return filas.map(fila => {
+    const suya = creencias.find(c => c.numero === fila.numero);
+    return { ...fila, loQueCreesHoy: String(suya?.titulo || '').trim() };
+  });
+}
 
 // LAS DOS, A LA VEZ. Si una se cae, se cae la hoja de ruta entera: media tabla
 // resumen no es un resumen.
