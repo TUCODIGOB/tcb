@@ -257,6 +257,15 @@
       .plan-question { font-size: 24px; }
     }
   </style>
+
+<!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJSDFDFZ3G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-EJSDFDFZ3G');
+  </script>
 </head>
 <body>
 
@@ -362,6 +371,17 @@
     if (!boton) return;
     const decir = txt => { if (aviso) aviso.textContent = txt || ''; };
 
+    // QUIEN ES ESTA VISITA PARA GOOGLE. Analytics le pone un numero a cada
+    // visitante y lo deja en su propia galleta. Se lee de ahi y viaja con el
+    // cobro, para que la venta que despues apunta el servidor quede pegada a
+    // esta visita y no suelta. Si no lo encuentra, se manda vacio.
+    const deQuienEsLaVisita = () => {
+      const galleta = document.cookie.match(/(?:^|;\s*)_ga=([^;]+)/);
+      if (!galleta) return '';
+      const partes = galleta[1].split('.');
+      return partes.length >= 4 ? partes[2] + '.' + partes[3] : '';
+    };
+
     boton.addEventListener('click', async () => {
       const suyo = new URLSearchParams(location.search).get('p1');
       if (!suyo) {
@@ -373,7 +393,7 @@
         const resp = await fetch('/api/p2-plan/pagar', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ p1: suyo }),
+          body: JSON.stringify({ p1: suyo, visita: deQuienEsLaVisita() }),
         });
         const datos = await resp.json().catch(() => ({}));
         if (!resp.ok || !datos.url) {

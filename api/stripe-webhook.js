@@ -11,6 +11,7 @@ import { guardarContactoEnBrevo, apuntarPendiente as apuntarContactoDeBrevo } fr
 import { correoBienvenida } from '../lib/correos-p1.js';
 import { correoDeBienvenida } from './p2-plan/correo.js';
 import { marcarLaCompraDelP2 } from './p2-plan/brevo.js';
+import { apuntarLaVenta } from './p2-plan/analitica.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -74,6 +75,14 @@ export default async function handler(req, res) {
     // marcha el plan, que es lo que ha pagado.
     if (producto === 'p2') {
       arrancarElPlan(session);
+
+      // Y QUEDA CONTADA LA VENTA EN ANALYTICS. Por detras y por su lado: una
+      // anotacion no puede retrasar a Stripe ni cortar su plan.
+      waitUntil(
+        apuntarLaVenta(session)
+          .catch(err => console.error('No se ha podido apuntar la venta del P2:', session.id, err.message))
+      );
+
       return res.status(200).json({ received: true });
     }
 

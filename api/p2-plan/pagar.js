@@ -43,6 +43,11 @@ const NUESTRA_WEB = 'https://origennatal.com';
 // llevar barras ni nada raro.
 const limpio = txt => String(txt || '').replace(/[^A-Za-z0-9_-]/g, '');
 
+// COMO ES EL NUMERO DE UNA VISITA EN ANALYTICS: dos numeros con un punto en
+// medio. Lo que no sea asi no se manda, para no meter en la compra texto de
+// fuera sin mirar.
+const LA_VISITA = /^\d{1,20}\.\d{1,20}$/;
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
 
@@ -51,6 +56,13 @@ export default async function handler(req, res) {
   if (!compra) {
     return res.status(400).json({ error: 'Para hacer tu plan hace falta tu informe. Entra desde el botón de tu PDF.' });
   }
+
+  // DE QUE VISITA SALE ESTA COMPRA. El numero que Analytics le pone a cada
+  // visitante, para que la venta quede pegada a la visita que la trajo. Si no
+  // viene, o viene algo raro, se manda vacio: esto no puede impedir un cobro.
+  const deLaVisita = req.body?.visita;
+  const visita = typeof deLaVisita === 'string' && LA_VISITA.test(deLaVisita.trim())
+    ? deLaVisita.trim() : '';
 
   try {
     const informe = await leerInforme({ producto: 'p1', sessionId: compra });
@@ -71,6 +83,8 @@ export default async function handler(req, res) {
         producto: PRODUCTO,
         // De que informe sale su plan. Es lo que se lee al cobrar.
         p1: compra,
+        // Y de que visita sale la venta, para poder contarla en Analytics.
+        visita,
       },
       success_url: `${NUESTRA_WEB}/tu-plan-de-origen/gracias?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${NUESTRA_WEB}/tu-plan-de-origen?p1=${encodeURIComponent(compra)}`,
