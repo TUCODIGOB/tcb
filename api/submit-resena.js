@@ -3,6 +3,12 @@
 // Dos acciones:
 // 1. get-signature: genera URL prefirmada para subida directa a Cloudflare R2
 // 2. save: recibe URL del vídeo ya subido, guarda en Brevo y email
+//
+// Y SI LA RESEÑA VIENE DEL PLAN DE ORIGEN (P2), el vídeo es lo que paga: al
+// guardarla se pone en marcha su plan, igual que si hubiera pagado. Eso pasa
+// SOLO cuando la reseña trae el número de su compra del P1, que es lo que
+// lleva el enlace de la landing del P2. Una reseña normal, sin ese número, se
+// guarda como siempre y no arranca nada.
 // ═════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
@@ -56,7 +62,18 @@ export default async function handler(req, res) {
       await actualizarBrevo(email, nombre, fecha, texto_consentimiento, videoUrl);
       await enviarEmailAdmin(nombre, email, fecha, videoUrl, objectKey || 'video');
 
-      return res.status(200).json({ ok: true });
+      // ── ¿VIENE DEL PLAN DE ORIGEN? ──────────────────────────
+      //
+      // Su vídeo ya está subido y su reseña guardada, así que ya se ha ganado
+      // su plan: se pone en marcha. Va lo último y no puede tumbar nada: si
+      // fallara, su reseña sigue guardada y se le puede sacar el plan a mano.
+      const deSuPlan = laCompraDelP1(body.p1);
+      let suPlan = false;
+      if (deSuPlan) {
+        suPlan = await arrancarSuPlan(deSuPlan);
+      }
+
+      return res.status(200).json({ ok: true, suPlan });
     }
 
     return res.status(400).json({ error: 'Acción no válida' });
@@ -176,4 +193,55 @@ function getSigningKey(secretKey, datestamp, region, service) {
   const kRegion = crypto.createHmac('sha256', kDate).update(region).digest();
   const kService = crypto.createHmac('sha256', kRegion).update(service).digest();
   return crypto.createHmac('sha256', kService).update('aws4_request').digest();
+}
+
+// ═══════════════════════════════════════
+// EL PLAN DE ORIGEN, CUANDO LA RESEÑA LO PAGA
+// ═══════════════════════════════════════
+
+// EL NUMERO DE SU COMPRA DEL P1. Es lo unico que dice de que informe sacar su
+// plan. Viene del navegador, asi que se mira: tiene que ser texto y con la
+// pinta de un numero de compra de Stripe. Lo que no lo sea, se ignora y no se
+// arranca nada.
+const PARECE_UNA_COMPRA = /^[A-Za-z0-9_-]{8,120}$/;
+
+function laCompraDelP1(suyo) {
+  const limpio = typeof suyo === 'string' ? suyo.trim() : '';
+  return PARECE_UNA_COMPRA.test(limpio) ? limpio : '';
+}
+
+// Y SE PONE EN MARCHA. Es la misma llamada que hace el aviso del cobro cuando
+// alguien paga el P2: al otro lado se comprueba que ese informe existe, que no
+// tiene ya su plan, y se monta.
+//
+// NO SE ESPERA A QUE TERMINE: tarda minutos y aqui hay alguien mirando la
+// pantalla. Basta con que la peticion salga.
+async function arrancarSuPlan(compra) {
+  const clave = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!clave) {
+    console.error('[submit-resena] Sin STRIPE_WEBHOOK_SECRET: no se arranca el plan de', compra);
+    return false;
+  }
+
+  try {
+    await fetch('https://origennatal.com/api/p2-plan/arranque', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-origen-interno': clave },
+      body: JSON.stringify({ compra }),
+      // Cinco segundos para entregar la peticion. Lo que tarde el plan en
+      // montarse ya no es cosa de aqui, asi que cortar la espera no lo para.
+      signal: AbortSignal.timeout(5000),
+    });
+    console.log('[submit-resena] Plan arrancado por su resena:', compra);
+    return true;
+  } catch (err) {
+    // Un corte por tiempo es lo normal y lo esperado: significa que la
+    // peticion llego y el plan se esta montando.
+    if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+      console.log('[submit-resena] Plan arrancado por su resena:', compra);
+      return true;
+    }
+    console.error('[submit-resena] No se ha podido arrancar el plan de', compra, err.message);
+    return false;
+  }
 }
