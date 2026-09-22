@@ -228,9 +228,11 @@ async function arrancarSuPlan(compra) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-origen-interno': clave },
       body: JSON.stringify({ compra }),
-      // Cinco segundos para entregar la peticion. Lo que tarde el plan en
-      // montarse ya no es cosa de aqui, asi que cortar la espera no lo para.
-      signal: AbortSignal.timeout(5000),
+      // DOS SEGUNDOS Y MEDIO, no mas. La peticion sale igual -lo que tarde
+      // el plan en montarse ya no es cosa de aqui-, y una pega vuelve mucho
+      // antes de eso. Se corta pronto a proposito: delante de esto van dos
+      // llamadas a Brevo, y esta puerta tiene su limite de tiempo.
+      signal: AbortSignal.timeout(2500),
     });
 
     // SI CONTESTA TAN RAPIDO ES QUE NO LO HA COGIDO. Montar un plan tarda
@@ -243,6 +245,17 @@ async function arrancarSuPlan(compra) {
     if (!resp.ok && resp.status !== 409) {
       console.error(`[submit-resena] El plan de ${compra} no ha arrancado (${resp.status}): ${(await resp.text()).slice(0, 200)}`);
       return false;
+    }
+
+    // Y SI YA LO TENIA HECHO, tampoco: ese plan ya se le entrego en su dia y
+    // no se le vuelve a mandar, asi que decirle que le llega en unos minutos
+    // seria dejarla esperando un correo que no va a venir.
+    if (resp.ok) {
+      const dice = await resp.json().catch(() => ({}));
+      if (dice && dice.yaEstaba) {
+        console.log('[submit-resena] ' + compra + ' ya tenia su plan: no se le promete nada');
+        return false;
+      }
     }
 
     console.log('[submit-resena] Plan arrancado por su resena:', compra);
