@@ -91,6 +91,8 @@
       '<a href="/politica-de-cookies" style="color:#cfb180;text-decoration:underline;">Política de Cookies</a>.' +
       "</p>" +
       '<div style="display:flex;gap:.6rem;flex:0 0 auto;">' +
+      '<button id="cookie-config" style="background:transparent;color:#fffbef;border:1px solid rgba(255,251,239,.4);' +
+      'border-radius:6px;padding:.6rem 1.1rem;font-size:.9rem;cursor:pointer;">Configurar</button>' +
       '<button id="cookie-reject" style="background:transparent;color:#fffbef;border:1px solid rgba(255,251,239,.4);' +
       'border-radius:6px;padding:.6rem 1.1rem;font-size:.9rem;cursor:pointer;">Rechazar</button>' +
       '<button id="cookie-accept" style="background:linear-gradient(135deg,#bd9048,#cfb180);color:#fff;border:none;' +
@@ -99,6 +101,10 @@
       "</div>";
 
     document.body.appendChild(banner);
+
+    document.getElementById("cookie-config").addEventListener("click", function () {
+      showPanel(banner);
+    });
 
     document.getElementById("cookie-accept").addEventListener("click", function () {
       setConsent("accepted");
@@ -109,6 +115,78 @@
     document.getElementById("cookie-reject").addEventListener("click", function () {
       setConsent("rejected");
       banner.remove();
+    });
+  }
+
+
+  // ── EL PANEL DE AJUSTES ────────────────────────────────────────
+  //
+  // Lo que sale al pulsar "Configurar": una linea por cada tipo de cookie de
+  // los que hay de verdad en la web, con su interruptor y explicado en
+  // castellano llano. Las necesarias no se pueden quitar, porque sin ellas no
+  // se puede ni pagar.
+
+  function unaFila(id, titulo, texto, fija) {
+    return '<div style="padding:1rem 0;border-bottom:1px solid #e3ddd2;">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;">' +
+      '<strong style="font-size:1rem;color:#0e3f4b;">' + titulo + '</strong>' +
+      (fija
+        ? '<span style="font-size:.85rem;color:#6e7b7f;white-space:nowrap;">Siempre activas</span>'
+        : '<input type="checkbox" id="' + id + '" checked style="width:20px;height:20px;accent-color:#bd9048;cursor:pointer;">') +
+      '</div>' +
+      '<p style="margin:.4rem 0 0;font-size:.88rem;color:#3a3a3a;line-height:1.5;">' + texto + '</p>' +
+      '</div>';
+  }
+
+  function showPanel(banner) {
+    // Si ya estuviera abierto, no se abre otro encima.
+    if (document.getElementById("cookie-consent-panel")) return;
+
+    var fondo = document.createElement("div");
+    fondo.id = "cookie-consent-panel";
+    fondo.setAttribute("role", "dialog");
+    fondo.setAttribute("aria-label", "Ajustes de cookies");
+    fondo.style.cssText =
+      "position:fixed;inset:0;z-index:10000;background:rgba(14,63,75,.55);" +
+      "display:flex;align-items:center;justify-content:center;padding:1rem;" +
+      "font-family:'Open Sans',sans-serif;";
+    fondo.innerHTML =
+      '<div style="background:#fffbef;border-radius:12px;max-width:520px;width:100%;' +
+      'max-height:90vh;overflow:auto;padding:1.6rem;box-shadow:0 20px 60px rgba(0,0,0,.3);">' +
+      '<h2 style="margin:0 0 .4rem;font-family:Georgia,serif;font-size:1.4rem;color:#0e3f4b;">Ajustes de cookies</h2>' +
+      '<p style="margin:0 0 .6rem;font-size:.9rem;color:#3a3a3a;line-height:1.5;">Elige qué quieres permitir. Puedes cambiarlo cuando quieras.</p>' +
+      unaFila("cookie-necesarias", "Necesarias",
+        "Hacen que la web funcione: el pago, tu sesión y estos mismos ajustes. Sin ellas no se puede navegar.", true) +
+      unaFila("cookie-analiticas", "Analíticas",
+        "Nos dicen cuánta gente entra y qué páginas mira, para poder mejorarlas. No se usan para anuncios.", false) +
+      unaFila("cookie-publicidad", "Publicidad",
+        "Permiten medir si nuestros anuncios funcionan y mostrarte contenido que encaje contigo.", false) +
+      '<div style="display:flex;gap:.6rem;justify-content:flex-end;margin-top:1.2rem;flex-wrap:wrap;">' +
+      '<button id="cookie-cancelar" style="background:transparent;color:#0e3f4b;border:1px solid #c9c1b4;' +
+      'border-radius:6px;padding:.6rem 1.1rem;font-size:.9rem;cursor:pointer;">Cancelar</button>' +
+      '<button id="cookie-guardar" style="background:linear-gradient(135deg,#bd9048,#cfb180);color:#fff;border:none;' +
+      'border-radius:6px;padding:.6rem 1.3rem;font-size:.9rem;font-weight:600;cursor:pointer;">Guardar ajustes</button>' +
+      '</div></div>';
+
+    document.body.appendChild(fondo);
+
+    // CANCELAR no decide nada: se cierra el panel y la barra sigue ahi.
+    document.getElementById("cookie-cancelar").addEventListener("click", function () {
+      fondo.remove();
+    });
+
+    document.getElementById("cookie-guardar").addEventListener("click", function () {
+      var analiticas = document.getElementById("cookie-analiticas").checked;
+      var publicidad = document.getElementById("cookie-publicidad").checked;
+
+      // Si no deja ninguna, es lo mismo que rechazar.
+      setConsent(analiticas || publicidad ? "accepted" : "rejected");
+
+      fondo.remove();
+      banner.remove();
+
+      if (analiticas) { loadClarity(); loadGA4(); }
+      if (publicidad) { loadMetaPixel(); }
     });
   }
 
