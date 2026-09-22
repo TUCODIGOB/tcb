@@ -2,9 +2,9 @@
 // /api/p2-plan/almacen.js
 // Donde vive lo que se le ha escrito a cada clienta en el P2.
 //
-// POR QUE HACE FALTA. Hasta ahora el P2 se montaba, se miraba en la pagina y
-// se perdia. Si nadie lo guarda no se puede entregar mas tarde, ni volver a
-// bajar el PDF, ni mirar como salio cuando algo chirrie.
+// POR QUE HACE FALTA. Un plan que no se guarda no se puede entregar mas tarde
+// si el correo no sale, ni volver a bajar en PDF, ni mirar como salio cuando
+// algo chirrie.
 //
 // POR QUE ESTA AQUI Y NO EN lib/. Lo de lib/ lo comparte el P1 y no se toca.
 // Esto es solo del P2 y vive en su carpeta, igual que el resto del producto.

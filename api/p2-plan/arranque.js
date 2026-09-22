@@ -5,10 +5,10 @@
 // QUE HACE. Monta el documento entero desde el servidor y lo guarda. Nada
 // mas: ni correo, ni reintentos, ni PDF. Eso va por su lado.
 //
-// POR QUE HACE FALTA. Hasta ahora el P2 solo salia si alguien abria la pagina
-// de pruebas y le daba a un boton. Asi no se le puede entregar a nadie: quien
-// paga no va a darle a ningun boton, y si quien mira cierra la pestana el
-// documento se queda a medias.
+// POR QUE HACE FALTA. Quien paga no va a darle a ningun boton ni esperar
+// mirando una pantalla. Su plan tarda un par de minutos, asi que se pone en
+// marcha aqui, en el servidor, y sigue su camino aunque ella cierre el movil
+// nada mas pagar.
 //
 // QUIEN PUEDE LLAMAR. Solo nuestro propio servidor. Montar un plan cuesta
 // dinero, asi que se exige la misma llave interna que ya usa el P1: sin ella,

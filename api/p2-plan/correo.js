@@ -221,8 +221,8 @@ export async function correoDeQueSeRevisa({ compra }) {
 // ── EL AVISO A LA TIENDA ──────────────────────────────────────
 //
 // El mismo caso, contado para dentro: con lo que hace falta para sacarle su
-// plan a mano. Su informe del P1 esta guardado, asi que se puede sacar desde
-// la pagina de pruebas con solo su numero de compra.
+// plan a mano. Su informe del P1 y lo que se le haya escrito siguen guardados,
+// asi que con su numero de compra no se pierde nada.
 export async function correoALaTienda({ compra, intentos, entregas, motivo }) {
   const { email, nombre } = await deQuienEs(compra).catch(() => ({ email: '', nombre: '' }));
 
