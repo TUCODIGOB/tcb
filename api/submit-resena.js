@@ -12,6 +12,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
+import { correoDeResenaRecibida } from './p2-plan/correo.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -71,6 +72,18 @@ export default async function handler(req, res) {
       let suPlan = false;
       if (deSuPlan) {
         suPlan = await arrancarSuPlan(deSuPlan);
+
+        // Y SE LE ACUSA RECIBO DE SU VIDEO (P2-4), solo si su plan va de
+        // verdad: si no, le estariamos prometiendo algo que no va a llegarle.
+        // Va lo ultimo y no puede tumbar nada: su plan ya esta en marcha y su
+        // resena guardada.
+        if (suPlan) {
+          try {
+            await correoDeResenaRecibida({ compra: deSuPlan });
+          } catch (err) {
+            console.error('[submit-resena] No se ha podido acusar recibo de la resena de', deSuPlan, err.message);
+          }
+        }
       }
 
       return res.status(200).json({ ok: true, suPlan });

@@ -248,3 +248,33 @@ export async function correoALaTienda({ compra, intentos, entregas, motivo }) {
     ].join('\n'))}</pre>`,
   }, 'el aviso a la tienda');
 }
+
+// ── P2-4 · SU RESEÑA HA LLEGADO ───────────────────────────────
+//
+// Se manda cuando su video paga su plan: en cuanto la resena queda guardada y
+// su plan se ha puesto en marcha. Es el acuse de recibo de su video y, de
+// paso, le dice lo mismo que la pantalla en la que acaba de caer.
+//
+// SOLO SI SU PLAN VA DE VERDAD. Si no hubiera arrancado, este correo le
+// estaria prometiendo algo que no va a llegarle.
+export async function correoDeResenaRecibida({ compra }) {
+  const { email, nombre, deDia } = await deQuienEs(compra);
+  // Sin email no hay a donde mandarlo, y esto es solo un acuse: se dice y se
+  // sigue. Su plan no depende de este correo.
+  if (!email) {
+    console.error(`[p2] ${compra} no tiene email: no se le acusa recibo de su reseña`);
+    return false;
+  }
+
+  return mandar({
+    to: [{ email, name: nombre }],
+    subject: 'Hemos recibido tu vídeo · Tu Plan de Origen está en camino',
+    htmlContent: carta(`
+<p style="margin:0 0 16px;font-family:Georgia,serif;font-size:22px;line-height:1.3;color:#0e3f4b;">Gracias por dar la cara</p>
+<p style="margin:0 0 16px;">Hola${deDia ? ' ' + esc(deDia) : ''},</p>
+<p style="margin:0 0 16px;">Hemos recibido tu vídeo. Contar tu experiencia en voz alta no lo hace cualquiera, y para nosotras vale muchísimo: es lo que ayuda a decidirse a quien está donde tú estabas.</p>
+<p style="margin:0 0 16px;">Ya estamos preparando <b style="color:#bd9048;">Tu Plan de Origen</b>. Te llegará directo a este email en unos minutos, con tu PDF adjunto.</p>
+<p style="margin:0 0 16px;">No tienes que hacer nada más.</p>
+<p style="margin:0;"><b style="color:#bd9048;">Guarda hola@origennatal.com en los contactos de tu email, para que no se vaya a spam.</b></p>`),
+  }, 'el acuse de su reseña');
+}
