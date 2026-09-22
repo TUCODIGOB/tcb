@@ -372,6 +372,10 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
               texto_consentimiento: 'He leído y acepto la Política de Privacidad y autorizo a Origen Natal a usar mi imagen, voz y testimonio en su web, redes sociales y demás canales de comunicación de la marca para mostrar experiencias reales del producto, y recibir las promociones.',
               videoUrl: publicUrl,
               objectKey,
+              // DE QUE COMPRA VIENE, si ha llegado desde el Plan de Origen.
+              // Es lo que dira de que informe sacar su plan. Quien llegue por
+              // su cuenta no lo trae, y la resena se guarda igual.
+              p1: new URLSearchParams(location.search).get('p1') || '',
             }),
           });
 

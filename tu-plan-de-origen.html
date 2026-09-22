@@ -148,6 +148,26 @@
     }
     .plan-aviso:empty { display: none; }
 
+    /* EL OTRO CAMINO: dejar una resena en video y llevarse el plan. Va debajo
+       del de comprar y en discreto, porque el que manda es el de comprar. */
+    .plan-resena {
+      max-width: 460px;
+      margin: -22px auto 38px;
+      text-align: center;
+    }
+    .plan-resena a {
+      display: inline-block;
+      font-size: 16px;
+      color: var(--teal-deep);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+      padding: 8px 4px;
+    }
+    .plan-resena a:hover { color: var(--gold); }
+    /* Sin su numero de compra no se puede: no se ensena en vez de llevarla a
+       una pagina donde no podria terminar. */
+    .plan-resena[hidden] { display: none; }
+
     /* EL SALUDO. Solo sale cuando se llega desde el boton de su PDF y se sabe
        de quien es. Si no, no ocupa sitio y la pagina se lee igual. */
     .plan-saludo {
@@ -302,6 +322,10 @@
           <p class="plan-aviso" id="planAviso"></p>
         </div>
 
+        <div class="plan-resena" id="planResena" hidden>
+          <a id="planResenaEnlace" href="/resena">O cuéntanos tu experiencia en vídeo y te lo regalamos</a>
+        </div>
+
       </div>
     </div>
   </section>
@@ -356,6 +380,26 @@
     } catch (err) {
       // Un fallo aqui no puede romper la pagina: se queda sin saludo y ya.
     }
+  })();
+
+  // ── EL OTRO CAMINO: LA RESENA ───────────────────────────────
+  //
+  // Lleva a la pagina de la resena con su numero de compra dentro, que es lo
+  // que despues dice de que informe sacar su plan. Es el mismo numero que
+  // lleva el boton de pagar.
+  //
+  // SIN ESE NUMERO NO SE ENSENA. Quien llega sin el no podria terminar, asi
+  // que vale mas no ofrecerselo que dejarle a medias.
+  (function elCaminoDeLaResena(){
+    const hueco = document.getElementById('planResena');
+    const enlace = document.getElementById('planResenaEnlace');
+    if (!hueco || !enlace) return;
+
+    const suyo = new URLSearchParams(location.search).get('p1');
+    if (!suyo) return;
+
+    enlace.href = '/resena?p1=' + encodeURIComponent(suyo);
+    hueco.hidden = false;
   })();
 
   // ── EL BOTON DE COMPRAR ─────────────────────────────────────
