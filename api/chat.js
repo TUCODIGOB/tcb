@@ -2167,7 +2167,7 @@ async function enviarEmailAdmin({ asunto, mensaje }) {
   if (!BREVO_API_KEY) return;
 
   const body = {
-    sender: { email: 'hola@origennatal.com', name: '[C] NATAL — Alertas' },
+    sender: { email: 'hola@origennatal.com', name: 'ORIGEN NATAL — Alertas' },
     to: [{ email: 'hola.origennatal@gmail.com', name: 'Admin' }],
     subject: asunto,
     htmlContent: `<pre style="font-family:monospace;background:#fff5f4;padding:16px;border-radius:8px;">${mensaje}</pre>`,
