@@ -28,6 +28,11 @@ const PRICE_ID = 'price_1TPikI0TJvLtDGUGREUg7kkc';
 // tenga que distinguirlos.
 const PRODUCTO = 'p1';
 
+// A DONDE VUELVE DESPUES DE PAGAR. Puesta aqui y no sacada de la peticion:
+// quien llama puede decir que viene de donde quiera, y con eso mandaria al
+// cliente a otra web -con su numero de compra encima- despues de cobrarle.
+const NUESTRA_WEB = 'https://origennatal.com';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
@@ -40,9 +45,6 @@ export default async function handler(req, res) {
     if (!datos.nombre || !datos.email || !datos.fecha || !datos.hora) {
       return res.status(400).json({ error: 'Faltan datos obligatorios' });
     }
-
-    // Construir origen dinámico (para redirecciones)
-    const origin = req.headers.origin || 'https://origennatal.com';
 
     // Crear sesión de Stripe Checkout
     const session = await stripe.checkout.sessions.create({
@@ -71,8 +73,8 @@ export default async function handler(req, res) {
         edad: String(datos.edadCalculada || ''),
         gaClientId: (datos.gaClientId || '').substring(0, 50),
       },
-      success_url: `${origin}/tu-diseno-de-origen/gracias?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/tu-diseno-de-origen`,
+      success_url: `${NUESTRA_WEB}/tu-diseno-de-origen/gracias?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${NUESTRA_WEB}/tu-diseno-de-origen`,
     });
 
     // Devolver la URL de Stripe para que el navegador redirija
