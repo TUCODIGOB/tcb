@@ -33,7 +33,7 @@ import { escribirElRegalo } from './llamadas.js';
 import { cobrarElVale, soltarElVale, quemarElVale,
          leerVeces, apuntarUnaVez, sonLosMismos, MAX_VECES } from './vale.js';
 import { leer, borrar } from './almacen.js';
-import { apuntarElFallo, marcarEnBrevo, quitarPendiente } from './pendientes.js';
+import { apuntarElFallo, marcarEnBrevo, quitarPendiente, guardarPendiente } from './pendientes.js';
 import { crearEnlace } from './mio.js';
 import { correoListo } from './avisos.js';
 
@@ -104,11 +104,6 @@ export async function guardarLoEscrito({ datos, carta, texto, rasgos, cuaderno, 
       // email saque diseños sin parar, y lo que permite saber si vuelve con
       // los mismos datos o con otros.
       await apuntarUnaVez(huella, datos);
-      // Y SE BORRA LO QUE HUBIERA PENDIENTE SUYO: ya tiene su diseño, asi que
-      // no hay nada que reintentar. Si mañana corrige sus datos y aquello
-      // falla, se apunta de cero y le vuelve a llegar todo como la primera
-      // vez; con el apunte viejo ahi, no le llegaria nada.
-      await quitarPendiente(huella);
       // Y LO QUE SE GUARDO APARTE MIENTRAS SE ESCRIBIA YA NO HACE FALTA: su
       // diseño nuevo acaba de sustituir al anterior, entero y de una vez.
       try {
@@ -123,7 +118,21 @@ export async function guardarLoEscrito({ datos, carta, texto, rasgos, cuaderno, 
       //
       // Va aqui y no antes a proposito: el enlace no puede salir hasta que lo
       // guardado este de verdad guardado.
-      if (avisar) await mandarleSuEnlace(huella, datos);
+      //
+      // Y DEJA DE ESTAR PENDIENTE CUANDO SU CORREO SALE, no antes. Si se le
+      // quitara aqui y el correo no saliera, su diseño se quedaria guardado y
+      // ella sin su enlace, sin que nadie lo volviera a intentar.
+      if (avisar) {
+        if (await mandarleSuEnlace(huella, datos)) {
+          await quitarPendiente(huella);
+        } else {
+          await queElRelojSeLoMande(huella, datos, carta);
+        }
+      } else {
+        // Sin correo que mandar desde aqui -esto viene del reloj-, que es
+        // quien se lo manda y quien la quita de la lista justo despues.
+        await quitarPendiente(huella);
+      }
     } else {
       console.warn(`[prueba-regalo] El area no se ha guardado: ${guardado.motivo}`);
     }
@@ -135,17 +144,40 @@ export async function guardarLoEscrito({ datos, carta, texto, rasgos, cuaderno, 
 // SU ENLACE Y SU CORREO. Envuelto: el diseño ya esta escrito y guardado, asi
 // que un fallo aqui no le quita nada. La carta no viaja al enlace, que ahi
 // solo hacen falta sus datos.
+//
+// Dice si ha salido, que es lo que decide si deja de estar pendiente.
 async function mandarleSuEnlace(huella, datos) {
   try {
     const { carta: laCarta, ...susDatos } = datos;
     const codigo = await crearEnlace({ huella, datos: susDatos });
-    await correoListo({
+    return await correoListo({
       email: susDatos.email,
       nombre: susDatos.nombre,
       enlace: `${LA_WEB}/tu-diseno-de-origen/tu-diseno?d=${encodeURIComponent(codigo)}`,
     });
   } catch (err) {
     console.error('[prueba-regalo] No se ha podido mandarle su enlace:', err.message);
+    return false;
+  }
+}
+
+// SU DISEÑO ESTA ESCRITO Y SU CORREO NO HA SALIDO. Se la deja apuntada con
+// los datos de AHORA -no con los de un fallo viejo-, para que el reloj se lo
+// encuentre escrito y solo se lo mande, sin volver a escribirlo ni cobrarnos
+// otra vez. Y si tampoco lo consigue, te avisa, que eso ya lo hace el reloj.
+async function queElRelojSeLoMande(huella, datos, carta) {
+  try {
+    await guardarPendiente(huella, {
+      creado: Date.now(),
+      intentos: 0,
+      acabado: false,
+      datos,
+      carta,
+      motivo: 'su diseño está escrito; lo que no ha salido es el correo con su enlace',
+    });
+    console.error(`[prueba-regalo] Escrito y sin enlace: ${huella}, se lo manda el reloj`);
+  } catch (err) {
+    console.error('[prueba-regalo] Y tampoco se ha podido dejar apuntado:', err.message);
   }
 }
 

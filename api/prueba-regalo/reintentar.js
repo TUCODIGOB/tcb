@@ -56,11 +56,19 @@ function fechaBonita(iso) {
 async function entregarlo(ficha) {
   const cuenta = await leerVeces(ficha.huella);
   const codigo = await crearEnlace({ huella: ficha.huella, datos: ficha.datos });
-  await correoListo({
+
+  // SI EL CORREO NO SALE, NO ESTA ENTREGADO. Brevo no se queja lanzando, solo
+  // dice que no, asi que hay que mirarlo: sin esto se la quitaba de la lista
+  // igual y se quedaba sin su enlace para siempre. Al lanzar, quien llama lo
+  // cuenta como una entrega fallada y lo vuelve a intentar en la siguiente
+  // vuelta.
+  const haSalido = await correoListo({
     email: ficha.datos.email,
     nombre: ficha.datos.nombre,
     enlace: `${LA_WEB}/tu-diseno-de-origen/tu-diseno?d=${encodeURIComponent(codigo)}`,
   });
+  if (!haSalido) throw new Error('el correo con su enlace no ha salido');
+
   await marcarEnBrevo({ email: ficha.datos.email, estado: 'entregado',
                         intentos: Number(ficha.intentos || 0), veces: cuenta.veces });
   await quitarPendiente(ficha.huella);
