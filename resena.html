@@ -112,12 +112,7 @@
     .success-msg { display: none; text-align: center; padding: 3.5rem 2rem; background: var(--white); border: 1px solid rgba(189,144,72,.2); border-radius: var(--r-md); box-shadow: 0 4px 24px rgba(0,0,0,.05); }
     .check-icon { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, var(--gold-deep), var(--gold-light)); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; color: var(--white); font-size: 2rem; font-weight: 700; box-shadow: 0 8px 24px rgba(189,144,72,.3); }
     .success-msg h2 { font-family: var(--font-display); font-size: 1.8rem; color: var(--teal-deep); }
-    /* Lo que se le dice cuando su resena paga su Plan de Origen. Solo sale en
-       ese caso: quien deja una resena normal no espera ningun plan. */
-    .success-plan { margin-top: 1.2rem; }
-    .success-plan p { font-size: 1.05rem; color: #444; line-height: 1.6; margin-top: .6rem; max-width: 460px; margin-inline: auto; }
-    .success-plan strong { color: var(--gold-deep); }
-    .success-plan[hidden] { display: none; }
+
     .footer {
       background: var(--teal-deep);
       color: rgba(255,251,239,.6);
@@ -271,10 +266,6 @@
     <div class="success-msg" id="successMsg">
       <div class="check-icon">&#10003;</div>
       <h2>&#161;Gracias por compartir tu experiencia!</h2>
-      <div class="success-plan" id="successPlan" hidden>
-        <p>Ya estamos preparando <strong>Tu Plan de Origen</strong>. Te llegará a tu email en unos minutos, con tu PDF adjunto.</p>
-        <p>No tienes que hacer nada más.</p>
-      </div>
     </div>
   </main>
 
@@ -390,10 +381,13 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
           });
 
           // SU PLAN SE HA PUESTO EN MARCHA. Lo dice el servidor, que es quien
-          // lo sabe. Si no lo dice, la pantalla de gracias sale como siempre.
+          // lo sabe. Entonces esto ya no es una resena mas: es su compra, asi
+          // que va a la pantalla de gracias del Plan de Origen, la misma que
+          // ve quien paga. Si no lo dice, se queda aqui como siempre.
           const dice = await guardada.json().catch(() => ({}));
           if (dice && dice.suPlan) {
-            document.getElementById('successPlan').hidden = false;
+            location.href = '/tu-plan-de-origen/gracias';
+            return;
           }
 
           progressFill.style.width = '100%';
