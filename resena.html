@@ -386,6 +386,9 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
           // ve quien paga. Si no lo dice, se queda aqui como siempre.
           const dice = await guardada.json().catch(() => ({}));
           if (dice && dice.suPlan) {
+            // La barra se deja llena antes de saltar: si no, se queda a medias
+            // el rato que tarde en cargar la otra pantalla.
+            progressFill.style.width = '100%';
             location.href = '/tu-plan-de-origen/gracias';
             return;
           }
