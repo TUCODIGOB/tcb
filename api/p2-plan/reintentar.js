@@ -41,7 +41,7 @@
 import { leerElPlan, losPendientes, guardarElPendiente, quitarElPendiente,
          loDeBrevoQueFalta } from './almacen.js';
 import { mandarSuPlan, correoDeQueSeRevisa, correoALaTienda } from './correo.js';
-import { marcarLaCompraDelP2, MAX_VECES } from './brevo.js';
+import { marcarLaCompraDelP2, marcarLaResenaDelP2, MAX_VECES } from './brevo.js';
 
 const UN_MINUTO = 60 * 1000;
 const UNA_HORA = 60 * UN_MINUTO;
@@ -114,7 +114,10 @@ export default async function handler(req, res) {
       .sort((a, b) => Number(a.creado || 0) - Number(b.creado || 0));
     if (aMedias.length) {
       const suya = aMedias[0];
-      const bien = await marcarLaCompraDelP2({
+      // EN LA LISTA QUE LE TOQUE. El apunte dice como consiguio su plan; los
+      // apuntes de antes no lo dicen, y esos solo pueden ser de una compra.
+      const marcar = suya.por === 'resena' ? marcarLaResenaDelP2 : marcarLaCompraDelP2;
+      const bien = await marcar({
         compra: suya.compra,
         intentos: Number(suya.intentos || 0),
         creado: Number(suya.creado || 0),

@@ -12,7 +12,9 @@
 // ═════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
+import { waitUntil } from '@vercel/functions';
 import { correoDeResenaRecibida } from './p2-plan/correo.js';
+import { marcarLaResenaDelP2 } from './p2-plan/brevo.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -73,16 +75,30 @@ export default async function handler(req, res) {
       if (deSuPlan) {
         suPlan = await arrancarSuPlan(deSuPlan);
 
-        // Y SE LE ACUSA RECIBO DE SU VIDEO (P2-4), solo si su plan va de
-        // verdad: si no, le estariamos prometiendo algo que no va a llegarle.
-        // Va lo ultimo y no puede tumbar nada: su plan ya esta en marcha y su
-        // resena guardada.
+        // ── Y LO QUE VA POR DETRAS ────────────────────────────
+        //
+        // Las dos cosas siguientes no las espera nadie mirando la pantalla, y
+        // delante ya hay dos llamadas a Brevo: si se hicieran aqui, entre
+        // unas y otras se le irian los segundos que tiene esta puerta y se
+        // cortaria entera. Asi que se le contesta y siguen por detras.
+        //
+        // SOLO SI SU PLAN VA DE VERDAD: si no hubiera arrancado, le
+        // estariamos prometiendo algo que no va a llegarle.
         if (suPlan) {
-          try {
-            await correoDeResenaRecibida({ compra: deSuPlan });
-          } catch (err) {
-            console.error('[submit-resena] No se ha podido acusar recibo de la resena de', deSuPlan, err.message);
-          }
+          // EL ACUSE DE SU VIDEO (P2-4).
+          waitUntil(
+            correoDeResenaRecibida({ compra: deSuPlan })
+              .catch(err => console.error('[submit-resena] No se ha podido acusar recibo de la resena de', deSuPlan, err.message))
+          );
+
+          // Y QUEDA DICHO EN BREVO que tiene su plan por haber dejado resena:
+          // a la lista 15, con su atributo, y fuera de la del P1. Igual que
+          // con una compra, pero en su lista. Si Brevo fallara, queda apuntado
+          // y el reloj del P2 lo reintenta.
+          waitUntil(
+            marcarLaResenaDelP2({ compra: deSuPlan })
+              .catch(err => console.error('[submit-resena] No se han podido marcar las listas de', deSuPlan, err.message))
+          );
         }
       }
 
