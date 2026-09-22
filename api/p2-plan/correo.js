@@ -98,9 +98,14 @@ ${cuerpo}
 // Se monta con el documento que se acaba de guardar, sin volver a pedirle
 // nada al modelo: es exactamente lo que se ha escrito para ella.
 async function maquetarSuPDF(documento) {
+  // LA LLAVE INTERNA. Esa puerta no la abre nadie de fuera, asi que hay que
+  // ensenarla. Es la misma que ya usa el arranque.
+  const clave = process.env.STRIPE_WEBHOOK_SECRET;
+  if (!clave) throw new Error('Sin STRIPE_WEBHOOK_SECRET no se puede montar el PDF');
+
   const resp = await fetch(`${NUESTRA_WEB}/api/p2-plan/pdf`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'x-origen-interno': clave },
     body: JSON.stringify(documento),
     signal: AbortSignal.timeout(60000),
   });

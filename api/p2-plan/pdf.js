@@ -15,6 +15,11 @@
 //
 // CADA SECCION EMPIEZA EN HOJA NUEVA: cada parte en la suya, y ninguna se pega
 // a la anterior.
+//
+// QUIEN PUEDE LLAMAR. Solo nuestro propio servidor, con la misma llave interna
+// que ya usa el P1. Aqui no hay nada de ninguna clienta -el documento llega
+// dentro de la peticion-, pero montar un PDF ocupa el servidor, y esta puerta
+// no la abre nadie de fuera.
 // ════════════════════════════════════════════════════════════════
 
 import { createRequire } from 'module';
@@ -22,6 +27,13 @@ const require = createRequire(import.meta.url);
 const { jsPDF } = require('jspdf');
 
 const BASE_URL = 'https://origennatal.com';
+
+// QUIEN LLAMA AQUI ES NUESTRO PROPIO SERVIDOR, NO UN NAVEGADOR. La misma llave
+// que el P1: la conoce el aviso del cobro y nadie mas.
+function laLlaveEsBuena(req) {
+  const clave = process.env.STRIPE_WEBHOOK_SECRET || '';
+  return Boolean(clave) && req.headers['x-origen-interno'] === clave;
+}
 
 // Las fuentes y la base son iguales para todos, asi que se guardan la primera
 // vez y se reaprovechan mientras el contenedor siga vivo. Un fallo no se
@@ -75,6 +87,7 @@ const ENTRE_CAJAS = 5;
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
+  if (!laLlaveEsBuena(req)) return res.status(401).json({ error: 'No autorizado' });
 
   const { nombre, partes, creencias, tablas } = req.body || {};
   if (!Array.isArray(partes) || !partes.length) {
