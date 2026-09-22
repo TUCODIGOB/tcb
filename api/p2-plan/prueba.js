@@ -3,11 +3,11 @@
 //
 // TU PLAN DE ORIGEN (P2), ENTERO Y EN UN SOLO FICHERO.
 //
-// VA JUNTO A PROPOSITO. Todo el P2 esta aqui dentro: como se le habla, sus
-// partes, como se lee el informe del P1 que ya quedo guardado, como se
-// decide el plan, como se escribe y la pagina para leerlo. Lo unico que vive
-// fuera de este fichero es el que lo maqueta en PDF, que esta al lado, en
-// pdf.js. Si algun dia hay que borrarlo, se borra esta carpeta y no se cae
+// VA JUNTO A PROPOSITO. Todo lo que escribe el P2 esta aqui dentro: como se
+// le habla, sus partes, como se lee el informe del P1 que ya quedo guardado,
+// como se decide el plan y como se escribe. Lo demas del P2 -cobrar,
+// arrancar, guardar, maquetar el PDF y mandarlo- vive al lado, en esta misma
+// carpeta. Si algun dia hay que borrarlo, se borra esta carpeta y no se cae
 // nada: no hay un solo trozo de esto repartido por los ficheros del P1.
 //
 // LO UNICO QUE COGE DE FUERA es el informe del P1, y SOLO PARA LEERLO. No
@@ -41,22 +41,16 @@
 //
 // ── COMO SE USA ─────────────────────────────────────────────
 //
-// Se abre /api/p2-plan/prueba en el navegador, sale la lista de los ultimos
-// informes guardados, se pincha uno y el plan va apareciendo.
+// No es una puerta: no se abre desde el navegador ni contesta a nadie. Es el
+// motor, y lo llama el arranque del P2 -arranque.js- cuando una compra pide
+// su plan. Se le da el numero de su compra del P1 y devuelve el documento
+// entero, lo que falte si ha faltado algo, y lo que ha tardado y costado cada
+// llamada.
 //
 // NO SE LE PREGUNTA NADA A LA CLIENTA. Todo el plan sale de sus rasgos del P1.
 // Se probo a preguntarle por su vida y se quito: el plan tiene que salir
 // entero del origen, que es lo que ha comprado, y lo que decide cada parte no
 // es donde vive sino que hace, y eso ya esta en sus rasgos.
-//
-// CADA PASO ES UNA PETICION SUYA. Asi ninguna se acerca al tiempo maximo que
-// aguanta el servidor, y se ve llegar el documento a trozos en vez de esperar
-// tres minutos a una pantalla en blanco.
-//
-// NO LLEVA CLAVE, a proposito: el producto no esta lanzado y aqui solo entra
-// quien lo esta montando. Pero por aqui pasan informes de clientas reales con
-// su nombre, y cada pulsacion gasta dinero del modelo, asi que EL DIA QUE ESTO
-// SE LANCE, esta pagina se borra o se le pone una puerta. No se queda abierta.
 // ════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
@@ -181,8 +175,8 @@ function comoSeLeHabla(sexo) {
 // nombre repetido quince o veinte veces. Eso no suena cercano, suena a carta
 // de publicidad.
 //
-// Asi que lo reparte el codigo, desde la pagina: la primera parte y una de en
-// medio. Dos veces en todo el documento, y da igual cuantas partes tenga.
+// Asi que lo reparte el codigo: la primera parte y una de en medio. Dos veces
+// en todo el documento, y da igual cuantas partes tenga.
 const REGLA_DEL_NOMBRE = puede => puede
   ? 'Puedes llamar por su nombre a quien lo lee UNA vez en lo que escribas, donde caiga natural. Nunca en la última frase.'
   : 'Y NO LLAMES POR SU NOMBRE a quien lo lee en lo que escribas: ya se lo dicen en otro sitio, y repetido cansa.';
@@ -252,38 +246,6 @@ async function pedir(cfg, ruta, consulta = {}) {
   });
 }
 
-// Los informes guardados, del mas nuevo al mas viejo.
-//
-// R2 los devuelve en XML y ordenados por nombre, no por fecha, asi que se
-// ordenan aqui por la fecha que trae cada uno.
-//
-// Solo saca el nombre y la fecha: para elegir en una lista no hace falta
-// bajarse los informes enteros, que son decenas de KB cada uno.
-async function listar(cuantos = 40) {
-  const cfg = ajustes();
-  if (!cfg) throw new Error('Faltan las variables INFORME_P1_CLOUDFLARE_*');
-
-  const resp = await pedir(cfg, `/${cfg.bucket}`, {
-    'list-type': '2',
-    'prefix': 'p1/',
-    'max-keys': String(Math.min(Math.max(cuantos, 1), 1000)),
-  });
-  if (!resp.ok) {
-    throw new Error(`R2 no deja listar (${resp.status}): ${(await resp.text()).slice(0, 200)}`);
-  }
-
-  const xml = await resp.text();
-  const informes = [];
-  for (const trozo of xml.split('<Contents>').slice(1)) {
-    const clave = (trozo.match(/<Key>([^<]+)<\/Key>/) || [])[1];
-    const fecha = (trozo.match(/<LastModified>([^<]+)<\/LastModified>/) || [])[1];
-    if (!clave || !clave.endsWith('.json')) continue;
-    informes.push({ compra: clave.slice('p1/'.length, -'.json'.length), fecha: fecha || '' });
-  }
-  informes.sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)));
-  return informes.slice(0, cuantos);
-}
-
 // Un informe entero. Devuelve lo mismo que se guardo: cliente, carta, las
 // areas y los rasgos.
 async function leer(compra) {
@@ -310,8 +272,8 @@ async function leer(compra) {
 // cual se lleva el tiempo y cual se lleva el dinero. NO DECIDE NADA. Si un dia
 // se quita, el P2 funciona igual.
 //
-// CADA PETICION TIENE EL SUYO. Se guarda en el almacen de la peticion -no en
-// una variable de fuera- porque la pagina lanza varias a la vez, y asi lo de
+// CADA TANDA TIENE EL SUYO. Se guarda en el almacen de la tanda -no en una
+// variable de fuera- porque las partes se escriben todas a la vez, y asi lo de
 // una nunca acaba apuntado en la otra.
 
 const ELCUADERNO = new AsyncLocalStorage();
@@ -555,8 +517,8 @@ const ESPERA_DEL_SEGUNDO_PLAN_MS = 90000;
 const TECHO_DEL_PLAN = 32000;
 
 // LO QUE AGUANTA LA PETICION, MENOS UN MARGEN PARA CONTESTAR. El servidor corta
-// a los 300 segundos, y si corta el, la clienta ve una pagina rota en vez de un
-// aviso. Aqui se corta antes y con un mensaje.
+// a los 300 segundos, y si corta el, se pierde sin decir por donde iba. Aqui se
+// corta antes y con un mensaje.
 const MARGEN_DEL_SERVIDOR_MS = 285000;
 
 // Y POR DEBAJO DE ESTO NO SE VUELVE A PEDIR. Un segundo intento sin tiempo por
@@ -669,8 +631,8 @@ Nombre de pila: ${nombre}`;
     const crudos = (Array.isArray(p?.deCuales) ? p.deCuales : [])
       .map(Number).filter(n => Number.isInteger(n) && n >= 1 && n <= limpia.sequedan.length);
     const suyo = {
-      // Se traducen a los de la lista original, que es lo que se mira en la
-      // pagina para saber de que desafio de verdad sale cada parte.
+      // Se traducen a los de la lista original, que es lo que hay que mirar
+      // para saber de que desafio de verdad sale cada parte.
       deCuales: crudos.map(n => limpia.deCuales[n - 1]).filter(Boolean),
       // EL TITULO ES EL DEL DESAFIO, y lo pone el programa: lo tiene tal cual
       // lo escribio el P1, asi que no hace falta que nadie lo copie.
@@ -753,7 +715,7 @@ function laListaDelP1({ rasgos }) {
     // Y su area, la que le puso el P1. Va pegada al desafio desde alli, asi
     // que no la elige nadie aqui: solo se arrastra hasta la cabecera del PDF.
     areas: desafios.map(r => String(r.area || '').trim()),
-    // Con su descripcion, para poder mirarlos en la pagina.
+    // Con su descripcion, para poder mirarlos despues en lo guardado.
     quedados: desafios.map((r, i) => ({
       numero: i + 1,
       descripcion: String(r.descripcion || '').trim(),
@@ -1555,7 +1517,7 @@ async function lasCreencias({ limpia, sexo }) {
   // no se tira: va sin ella.
   let quedan = sequedan.map(n => ({ ...creencias[n - 1], puntuacion: limpiadas.puntuacion.get(n) || 0 }));
 
-  // Lo que quito la limpieza, para poder mirarlo en la pagina.
+  // Lo que quito la limpieza, para poder mirarlo despues en lo guardado.
   const quitaLimpieza = limpiadas.sequitan.map(n => ({
     numero: n,
     titulo: creencias[n - 1].titulo,
@@ -1602,9 +1564,9 @@ async function lasCreencias({ limpia, sexo }) {
       puntuacion: c.puntuacion,
     }));
 
-  // Y COMO SE HA LLEGADO A ELLA, para poder mirarlo en la pagina: lo que saco
-  // la primera, lo que quito cada pasada y con que se ha quedado. Esto no lo
-  // ve la clienta y no decide nada.
+  // Y COMO SE HA LLEGADO A ELLA, para poder mirarlo despues en lo guardado: lo
+  // que saco la primera, lo que quito cada pasada y con que se ha quedado. Esto
+  // no lo ve la clienta y no decide nada.
   return {
     creencias: listas,
     revision: {
@@ -2117,12 +2079,8 @@ async function lasTablas({ partes, creencias, sexo }) {
 
 
 // ════════════════════════════════════════════════════════════════
-// LA PAGINA Y SUS PETICIONES
+// Y CON TODO ESO, EL DOCUMENTO
 // ════════════════════════════════════════════════════════════════
-//
-// Cada paso es una peticion suya: la lista, el plan y cada parte.
-// Asi ninguna se acerca al tiempo maximo que aguanta el servidor, y el
-// documento se ve llegar a trozos en vez de esperar a una pantalla en blanco.
 
 // ── QUIEN ES ─────────────────────────────────────────────────────
 //
@@ -2195,14 +2153,14 @@ function frasesRepetidas(textos) {
 // ═════════════════════════════════════════════════════════════════
 // EL DOCUMENTO ENTERO, DE UNA VEZ Y DESDE AQUI
 //
-// Hasta ahora el orden lo llevaba la pagina: pedia el informe, luego el plan,
-// luego cada parte, luego las creencias y al final la hoja de ruta. El
-// servidor solo contestaba a cada peticion suelta. Eso vale para mirarlo
-// mientras se hace, pero no para entregarselo a nadie: si quien mira cierra
-// la pestana, el documento se queda a medias y nadie se entera.
+// El orden entero en un solo sitio: su informe, luego el plan, luego cada
+// parte, luego las creencias y al final la hoja de ruta. Se llama una vez y
+// vuelve el documento hecho.
 //
-// Aqui esta esa misma secuencia, con el mismo orden, los mismos reintentos y
-// las mismas cosas yendo a la vez. Lo unico que cambia es quien manda.
+// POR QUE DE UNA VEZ. Nadie esta mirando una pantalla mientras esto pasa:
+// quien lo pide es el servidor, cuando alguien paga. Si el orden dependiera
+// de que alguien fuera pidiendo los pasos, bastaria con que cerrara la
+// pestana para que el documento se quedara a medias y nadie se enterara.
 // ═════════════════════════════════════════════════════════════════
 
 // SE INSISTE HASTA TRES VECES CON LA QUE SE CAIGA.
@@ -2231,8 +2189,8 @@ function enCortoParaLaTabla(cosa, i, puntos, conArea) {
 }
 
 // UN FALLO DEL INFORME DE PARTIDA NO ES UN SERVIDOR ROTO. Se marca para poder
-// distinguirlo, igual que ya se distinguia al contestar a la pagina: con este
-// informe no hay plan por mucho que se vuelva a intentar.
+// distinguirlo: con este informe no hay plan por mucho que se vuelva a
+// intentar.
 function fallaElInforme(mensaje) {
   const err = new Error(mensaje);
   err.esDelInforme = true;
@@ -2451,780 +2409,3 @@ export async function montarElPlan({ compra }) {
   const salida = await ELCUADERNO.run(cuaderno, () => montarloTodo({ compra }));
   return { ...salida, cuaderno };
 }
-
-export default async function handler(req, res) {
-  if (req.method === 'GET') {
-    res.setHeader('Content-Type', 'text/html; charset=utf-8');
-    return res.status(200).send(PAGINA);
-  }
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
-
-  const { accion } = req.body || {};
-
-  // EL CUADERNO DE ESTA PETICION. Se abre aqui, lo van llenando las llamadas
-  // que se hagan dentro, y va de vuelta en la respuesta -salga bien o salga
-  // mal-, para poder mirar en la pagina lo que ha tardado y costado cada una.
-  const cuaderno = [];
-  const conCuaderno = datos => ({ ...datos, cuaderno });
-
-  return ELCUADERNO.run(cuaderno, async () => {
-  try {
-    if (accion === 'lista') {
-      const informes = await listar(40);
-      // El nombre no esta en la lista de R2, hay que abrir cada informe. Se
-      // abren los diez ultimos, que es lo que se va a elegir de verdad.
-      const conNombre = await Promise.all(informes.map(async (inf, i) => {
-        if (i >= 10) return { ...inf, nombre: inf.compra };
-        try {
-          const datos = await leer(inf.compra);
-          return { ...inf, nombre: (await susDatos(datos)).nombre || inf.compra };
-        } catch {
-          return { ...inf, nombre: '(no se pudo abrir)' };
-        }
-      }));
-      return res.status(200).json(conCuaderno({ informes: conNombre }));
-    }
-
-    if (accion === 'informe') {
-      const { compra } = req.body || {};
-      const informe = await leer(compra);
-      // SIN LO QUE LE CUESTA NO HAY PLAN. Es lo unico que se le manda al
-      // modelo, asi que con la lista vacia se lo inventaria todo. Los informes
-      // de antes de que se guardaran los rasgos entran por aqui.
-      const cuantos = cuantosDesafios(informe?.rasgos);
-      if (cuantos < 3) {
-        return res.status(422).json(conCuaderno({
-          error: cuantos
-            ? `Ese informe solo tiene ${cuantos} cosas que le cuesten, y con eso no sale un plan`
-            : 'Ese informe se guardó sin los rasgos, y sin ellos no hay plan',
-        }));
-      }
-
-      // Y SIN SU NOMBRE TAMPOCO. Antes, si el informe venia sin nombre, se
-      // seguia adelante poniendo "esta persona": el modelo escribia con eso y
-      // acababa impreso en la portada del documento y dentro del texto. Un
-      // documento que se entrega a alguien no lleva un relleno donde va su
-      // nombre. Si falta, se para aqui y se dice.
-      const { nombre, sexo } = await susDatos(informe);
-      if (!nombre) {
-        return res.status(422).json(conCuaderno({
-          error: 'Ese informe se guardó sin el nombre del cliente, y el plan va dirigido a él: no se hace a medias',
-        }));
-      }
-
-      const limpia = laListaDelP1({ rasgos: informe.rasgos });
-      // El nombre y el sexo viajan con la lista: los pasos siguientes
-      // escriben con ellos y asi no hay que volver a abrir el informe.
-      return res.status(200).json(conCuaderno({
-        limpia,
-        quien: { nombre, sexo },
-      }));
-    }
-
-    if (accion === 'decidir') {
-      const { nombre, sexo, limpia } = req.body || {};
-      if (!String(nombre || '').trim() || !limpia || !Array.isArray(limpia.sequedan) || !limpia.lista) {
-        return res.status(400).json(conCuaderno({ error: 'Falta la lista limpia y no se puede decidir el plan' }));
-      }
-
-      const plan = await decidirElPlan({
-        nombre: String(nombre).trim(),
-        sexo: String(sexo || ''),
-        limpia,
-      });
-      // SIN PARTES NO HAY PLAN. No se le pone numero a lo que tiene que salir
-      // -eso es lo que traia el relleno- pero si vuelve con dos o con ninguna,
-      // no hay documento que entregar y es que la llamada ha venido mal.
-      if (plan.partes.length < 3) {
-        return res.status(422).json(conCuaderno({
-          error: `El plan ha venido con ${plan.partes.length} partes, y con eso no hay documento. Vuelve a darle.`,
-        }));
-      }
-      return res.status(200).json(conCuaderno({ plan }));
-    }
-
-    if (accion === 'parte') {
-      const { nombre, sexo, parte, puedeElNombre } = req.body || {};
-      // Lo que llega del navegador se comprueba antes de meterlo en el encargo:
-      // si viniera a medias, el hueco lo rellenaria el modelo por su cuenta y
-      // acabaria inventandose algo de su vida.
-      if (!String(parte?.titulo || '').trim() || PUNTOS.some(punto => !String(parte?.[punto] || '').trim())) {
-        return res.status(400).json(conCuaderno({ error: 'Esa parte llega a medias y no se escribe' }));
-      }
-      // Y sin nombre no se escribe: lo mismo que en el paso anterior, para que
-      // no entre por aqui un relleno que acabaria impreso en el documento.
-      if (!String(nombre || '').trim()) {
-        return res.status(400).json(conCuaderno({ error: 'Esa parte llega sin el nombre del cliente y no se escribe' }));
-      }
-      const escrita = await escribirLaParte({
-        parte,
-        nombre: String(nombre).trim(),
-        sexo: String(sexo || ''),
-        puedeElNombre: !!puedeElNombre,
-      });
-      return res.status(200).json(conCuaderno({ parte: escrita }));
-    }
-
-    // ── LAS CREENCIAS, QUE VAN POR SU LADO ────────────────────
-    //
-    // Su propia peticion, y por eso puede ir A LA VEZ que la que decide las
-    // pruebas: cada una tiene el tiempo del servidor entero para ella.
-    if (accion === 'creencias') {
-      const { sexo, limpia } = req.body || {};
-      if (!limpia || !Array.isArray(limpia.sequedan) || !limpia.lista) {
-        return res.status(400).json(conCuaderno({ error: 'Falta la lista limpia y no se pueden sacar sus creencias' }));
-      }
-      const { creencias, revision } = await lasCreencias({ limpia, sexo: String(sexo || '') });
-      return res.status(200).json(conCuaderno({ creencias, revision }));
-    }
-
-    if (accion === 'creencia') {
-      const { nombre, sexo, creencia } = req.body || {};
-      // Lo que llega del navegador se comprueba antes de meterlo en el encargo:
-      // si viniera a medias, el hueco lo rellenaria el modelo por su cuenta.
-      if (!String(creencia?.titulo || '').trim() || !String(creencia?.linea || '').trim()) {
-        return res.status(400).json(conCuaderno({ error: 'Esa creencia llega a medias y no se escribe' }));
-      }
-      if (!String(nombre || '').trim()) {
-        return res.status(400).json(conCuaderno({ error: 'Esa creencia llega sin el nombre del cliente y no se escribe' }));
-      }
-      const escrita = await escribirLaCreencia({
-        creencia: {
-          titulo: String(creencia.titulo).trim(),
-          linea: String(creencia.linea).trim(),
-        },
-        nombre: String(nombre).trim(),
-        sexo: String(sexo || ''),
-        // La frase que no puede usar, si es que se ha repetido con otra.
-        prohibida: String(req.body?.prohibida || '').trim().slice(0, 200),
-      });
-      return res.status(200).json(conCuaderno({ creencia: escrita }));
-    }
-
-    // ── LA HOJA DE RUTA, LO ULTIMO ───────────────────────────
-    //
-    // Se pide cuando ya estan las pruebas y las creencias, porque las resume.
-    // Las dos tablas se escriben a la vez aqui dentro.
-    if (accion === 'tablas') {
-      const { sexo, partes, creencias } = req.body || {};
-      const hayPartes = Array.isArray(partes) && partes.length;
-      const hayCreencias = Array.isArray(creencias) && creencias.length;
-      if (!hayPartes || !hayCreencias) {
-        return res.status(400).json(conCuaderno({ error: 'Faltan las pruebas o las creencias y no se puede resumir nada' }));
-      }
-      const tablas = await lasTablas({
-        partes: partes.map((p, i) => ({
-          numero: Number(p?.numero) || i + 1,
-          titulo: String(p?.titulo || '').trim(),
-          area: String(p?.area || '').trim(),
-          ...Object.fromEntries(PUNTOS.map(punto => [punto, String(p?.[punto] || '').trim()])),
-        })),
-        creencias: creencias.map((c, i) => ({
-          numero: Number(c?.numero) || i + 1,
-          titulo: String(c?.titulo || '').trim(),
-          ...Object.fromEntries(PUNTOS_DE_CREENCIA.map(punto => [punto, String(c?.[punto] || '').trim()])),
-        })),
-        sexo: String(sexo || ''),
-      });
-      return res.status(200).json(conCuaderno({ tablas }));
-    }
-
-    return res.status(400).json(conCuaderno({ error: 'Acción no válida' }));
-  } catch (err) {
-    console.error('[p2-plan/prueba]', err);
-    // Un informe que no da para un plan no es un servidor roto: se dice como
-    // lo que es, para no hacer buscar un fallo donde no lo hay.
-    return res.status(err.esDelInforme ? 422 : 500).json(conCuaderno({ error: err.message }));
-  }
-  });
-}
-// La pagina. Los colores y las letras son los de la marca, para leerlo como se
-// va a leer. No carga nada de fuera: ni fuentes, ni librerias, ni imagenes.
-const PAGINA = `<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>P2 — prueba</title>
-<style>
-  :root { --teal:#0e3f4b; --gold:#bd9048; --crema:#fffbef; --tinta:#0c0c0c; }
-  * { box-sizing:border-box; margin:0; padding:0; }
-  body { background:var(--crema); color:var(--tinta); font:16px/1.7 Georgia, 'Times New Roman', serif; padding:2rem 1rem 5rem; }
-  .caja { max-width:760px; margin-inline:auto; }
-  h1 { font-size:1.5rem; color:var(--teal); margin-bottom:.3rem; }
-  .sub { color:#6b6b6b; font-size:.85rem; margin-bottom:2rem; font-family:system-ui,sans-serif; }
-  select, button { font:inherit; font-family:system-ui,sans-serif; font-size:.95rem; }
-  select { width:100%; padding:.7rem; border:1px solid rgba(14,63,75,.3); border-radius:6px; background:#fff; margin-bottom:1.4rem; }
-  button { background:var(--gold); color:#fff; border:0; border-radius:6px; padding:.8rem 1.6rem; cursor:pointer; font-weight:600; letter-spacing:.03em; }
-  button:disabled { opacity:.45; cursor:default; }
-  #pdf { margin-left:.6rem; background:var(--teal); }
-  .aviso { font-family:system-ui,sans-serif; font-size:.9rem; color:#6b6b6b; margin:1.2rem 0; }
-  .error { color:#c0392b; }
-  .parte { background:#fff; border:1px solid rgba(189,144,72,.25); border-left:4px solid var(--gold); border-radius:8px; padding:1.6rem 1.8rem; margin-top:1.6rem; }
-  .parte h2 .area { font-size:.62em; font-weight:700; letter-spacing:.06em; color:var(--gold); }
-  .parte h2 { font-size:1.25rem; color:var(--teal); margin-bottom:.9rem; line-height:1.35; }
-  .bloque { margin-bottom:1.3rem; }
-  .bloque:last-child { margin-bottom:0; }
-  /* Las ordenes -lo que hace y por que senal- van sobre beige, igual que en el
-     PDF: son las que vuelve a buscar y tiene que encontrar sin leer. */
-  .bloque.beige > .caja-texto { background:#faf5ea; border-radius:6px; padding:.9rem 1.1rem; }
-  .bloque h3 { font-family:system-ui,sans-serif; font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.1em; color:var(--gold); margin-bottom:.45rem; }
-  .bloque p { margin-bottom:.6rem; }
-  .bloque p:last-child { margin-bottom:0; }
-  /* EL CUADERNO: lo que ha hecho cada llamada, lo que ha tardado y lo que ha
-     costado. Es de la pagina de pruebas: quien compra nunca ve esto. */
-  .cuaderno { border:1px dashed rgba(14,63,75,.35); border-radius:8px; padding:1rem 1.2rem; margin-top:1.4rem; background:#fff; }
-  .cuaderno summary { font-family:system-ui,sans-serif; font-size:.9rem; font-weight:600; color:var(--teal); cursor:pointer; }
-  .cuaderno table { width:100%; border-collapse:collapse; margin-top:.9rem; font-family:system-ui,sans-serif; font-size:.82rem; }
-  .cuaderno th { text-align:left; color:var(--gold); text-transform:uppercase; font-size:.66rem; letter-spacing:.08em; padding:.35rem .4rem; border-bottom:1px solid rgba(189,144,72,.3); }
-  .cuaderno td { padding:.4rem; border-bottom:1px solid rgba(14,63,75,.08); vertical-align:top; }
-  .cuaderno td.der, .cuaderno th.der { text-align:right; white-space:nowrap; }
-  /* El modelo y el esfuerzo, en una linea: partidos en dos no se leen. */
-  .cuaderno td:nth-child(2), .cuaderno td:nth-child(3) { white-space:nowrap; }
-  .cuaderno tr.mal td { background:#fdf1f0; color:#c0392b; }
-  .cuaderno tr.suma td { font-weight:700; border-top:2px solid rgba(14,63,75,.2); border-bottom:0; }
-
-  /* Las dos tablas del final, para verlas antes de bajar el PDF. */
-  table.ruta { width:100%; border-collapse:collapse; font-family:system-ui,sans-serif; font-size:.85rem; margin-bottom:1.6rem; }
-  table.ruta:last-child { margin-bottom:0; }
-  table.ruta th { text-align:left; color:var(--gold); text-transform:uppercase; font-size:.68rem; letter-spacing:.1em; padding:.35rem .5rem; border-bottom:1px solid rgba(189,144,72,.4); }
-  table.ruta td { padding:.55rem .5rem; border-bottom:1px solid rgba(14,63,75,.08); vertical-align:top; line-height:1.45; }
-  table.ruta td.casilla { color:var(--gold); width:1.6rem; }
-  table.ruta td.num { color:var(--teal); font-weight:700; width:1.6rem; }
-
-  /* EL DESPLEGABLE DE LA PRIMERA LLAMADA. Es de la pagina de pruebas y solo
-     sirve para mirar lo que ha elegido; el dia que esto se lance se va con
-     la pagina. Se quita borrando este bloque y la funcion pintarLoDecidido. */
-  .decidido { border:1px dashed rgba(14,63,75,.35); border-radius:8px; padding:1rem 1.2rem; margin-top:1.4rem; background:#fff; }
-  .decidido summary { font-family:system-ui,sans-serif; font-size:.9rem; font-weight:600; color:var(--teal); cursor:pointer; }
-  .decidido .quitadas { font-family:system-ui,sans-serif; font-size:.85rem; margin:.6rem 0; line-height:1.5; }
-  .decidido table { width:100%; border-collapse:collapse; margin-top:.9rem; font-family:system-ui,sans-serif; font-size:.85rem; }
-  .decidido th { text-align:left; color:var(--gold); text-transform:uppercase; font-size:.68rem; letter-spacing:.1em; padding:.35rem .5rem; border-bottom:1px solid rgba(189,144,72,.3); }
-  .decidido td { padding:.5rem; border-bottom:1px solid rgba(14,63,75,.08); vertical-align:top; }
-  .decidido td.verbo { font-weight:600; color:var(--teal); }
-  /* Al imprimir solo sale el texto. Sin esto, el aviso de la pantalla se
-     colaba arriba del todo en el PDF. */
-  @media print {
-    h1, .sub, select, button, .aviso { display:none !important; }
-    body { padding:0; }
-    .parte { border:0; box-shadow:none; padding:0 0 1.5rem; page-break-inside:avoid; }
-  }
-</style>
-</head>
-<body>
-<div class="caja">
-  <h1>Tu Plan de Origen — prueba</h1>
-  <p class="sub">Solo para ver cómo sale. No manda nada a nadie.</p>
-
-  <select id="quien"><option>Cargando informes…</option></select>
-
-  <button id="ir" disabled>Escribir su plan</button>
-  <button id="pdf" hidden>Bajar el PDF</button>
-
-  <p class="aviso" id="aviso"></p>
-  <div id="cuaderno"></div>
-  <div id="salida"></div>
-</div>
-<script>
-const BLOQUES = ${JSON.stringify(BLOQUES)};
-const PUNTOS = ${JSON.stringify(PUNTOS)};
-const BLOQUES_DE_CREENCIA = ${JSON.stringify(BLOQUES_DE_CREENCIA)};
-const PUNTOS_DE_CREENCIA = ${JSON.stringify(PUNTOS_DE_CREENCIA)};
-// El que va sobre beige, aqui y en el PDF: es la orden.
-const SOBRE_BEIGE = ['queHaces'];
-const quien = document.getElementById('quien');
-const ir = document.getElementById('ir');
-const pdf = document.getElementById('pdf');
-const aviso = document.getElementById('aviso');
-const salida = document.getElementById('salida');
-
-const escapar = t => String(t == null ? '' : t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-// Un texto de varios parrafos se pinta con sus parrafos, no en un ladrillo.
-const parrafos = t => String(t || '').split(/\\n+/).map(p => p.trim()).filter(Boolean)
-  .map(p => '<p>' + escapar(p) + '</p>').join('');
-
-// EL CUADERNO DE TODA LA TANDA. Cada peticion devuelve el suyo -lo que ha
-// hecho cada llamada al modelo, cuanto ha tardado y cuanto ha costado- y aqui
-// se van juntando todos, salga bien o salga mal.
-let elCuaderno = [];
-let arrancoLaTanda = 0;
-
-async function llamar(cuerpo) {
-  const r = await fetch(location.pathname, {
-    method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify(cuerpo),
-  });
-  const d = await r.json().catch(() => ({ error:'Respuesta ilegible' }));
-  if (Array.isArray(d.cuaderno) && d.cuaderno.length) {
-    elCuaderno = elCuaderno.concat(d.cuaderno);
-    pintarElCuaderno();
-  }
-  if (!r.ok) throw new Error(d.error || ('Error ' + r.status));
-  return d;
-}
-
-(async function cargarLista() {
-  try {
-    const { informes } = await llamar({ accion:'lista' });
-    if (!informes.length) {
-      quien.innerHTML = '<option>No hay ningún informe guardado todavía</option>';
-      aviso.textContent = 'El guardado es reciente: solo están los informes hechos desde que se puso.';
-      return;
-    }
-    quien.innerHTML = informes.map(i =>
-      '<option value="' + escapar(i.compra) + '">' + escapar(i.nombre) + ' — ' + escapar((i.fecha||'').slice(0,10)) + '</option>'
-    ).join('');
-    ir.disabled = false;
-  } catch (e) {
-    quien.innerHTML = '<option>No se pudo cargar la lista</option>';
-    aviso.className = 'aviso error';
-    aviso.textContent = e.message;
-  }
-})();
-
-// Lo que se va escribiendo se guarda tal cual: el PDF se monta con esto
-// mismo, sin volver a pedirle nada al modelo.
-let elDocumento = null;
-
-ir.addEventListener('click', async () => {
-  ir.disabled = true; quien.disabled = true;
-  pdf.hidden = true; elDocumento = null;
-  salida.innerHTML = '';
-  elCuaderno = []; arrancoLaTanda = Date.now();
-  document.getElementById('cuaderno').innerHTML = '';
-  aviso.className = 'aviso';
-  const compra = quien.value;
-  let quienEs = null;
-
-  // 1. La que limpia la lista, y despues la que decide el documento entero.
-  let plan;
-  let marca = Date.now();
-  const cuanto = () => {
-    const va = Math.round((Date.now() - marca) / 1000) + 's';
-    marca = Date.now();
-    return va;
-  };
-  // LAS CREENCIAS VAN POR SU LADO Y A LA VEZ. Es el otro tema del documento y
-  // no depende de las pruebas: en cuanto la lista esta limpia, se pide, y
-  // mientras se decide el plan y se escriben las partes, ellas van saliendo.
-  let vanCreencias = null;
-
-  aviso.textContent = 'Leyendo su informe…';
-  try {
-    const uno = await llamar({ accion:'informe', compra });
-    quienEs = uno.quien;
-    // El servidor no deja pasar un informe sin nombre, asi que esto no
-    // deberia saltar nunca. Pero si saltara, es mejor pararse aqui que
-    // escribir las partes dirigidas a "undefined".
-    if (!quienEs || !quienEs.nombre) throw new Error('El informe ha venido sin el nombre del cliente');
-    // Se lanza y no se espera: se recoge al final. El fallo se guarda dentro en
-    // vez de soltarlo, para que no se pierda por el camino mientras nadie mira.
-    vanCreencias = llamar({ accion:'creencias', sexo:quienEs.sexo, limpia: uno.limpia })
-      .then(d => ({ ok:true, creencias: d.creencias || [], revision: d.revision || null }))
-      .catch(e => ({ ok:false, error: e.message }));
-    aviso.textContent = 'Leído en ' + cuanto() + '. Decidiendo su plan…';
-    const dos = await llamar({ accion:'decidir', nombre:quienEs.nombre, sexo:quienEs.sexo, limpia: uno.limpia });
-    plan = dos.plan;
-  } catch (e) {
-    aviso.className = 'aviso error';
-    aviso.textContent = 'No se ha podido decidir el plan: ' + e.message;
-    ir.disabled = false; quien.disabled = false;
-    return;
-  }
-
-  // 2. Las partes, TODAS A LA VEZ.
-  //
-  // Cada una es su propia peticion, asi que lanzarlas juntas no acerca a
-  // ninguna al tiempo maximo del servidor. De una en una esto tardaba lo que
-  // tardan todas sumadas; asi tarda lo que tarde la mas lenta.
-  //
-  // Se pintan en su hueco, en el orden del documento, y no segun van llegando:
-  // el sitio se reserva antes y cada una cae en el suyo.
-  // Lo decidido, arriba del todo y antes de escribir nada: asi se puede mirar
-  // mientras se escriben.
-  salida.insertAdjacentHTML('beforeend', pintarLoDecidido(plan.partes, plan.limpieza));
-
-  const total = plan.partes.length;
-  aviso.textContent = 'Plan decidido en ' + cuanto() + '. Escribiendo las ' + total + ' partes a la vez…';
-  const huecos = plan.partes.map((suya, i) => {
-    const hueco = document.createElement('div');
-    hueco.className = 'parte';
-    hueco.innerHTML = cabeceraDeParte(suya, i + 1) + '<p class="aviso">Escribiéndose…</p>';
-    salida.appendChild(hueco);
-    return hueco;
-  });
-
-  // DONDE PUEDE LLAMARLA POR SU NOMBRE. Ninguna de las que escriben ve lo que
-  // han puesto las otras, asi que si se deja a su criterio el documento acaba
-  // con el nombre repetido en cada parte. Lo reparte el codigo: la primera y
-  // una de en medio. Dos veces en todo el documento.
-  const conNombre = new Set([0, Math.floor(total / 2)]);
-
-  const escritas = [];
-
-  const pasada = async (cuales, segundaVuelta) => {
-    const caidas = [];
-    await Promise.all(cuales.map(async i => {
-      const suya = plan.partes[i];
-      const cabecera = cabeceraDeParte(suya, i + 1);
-      try {
-        const { parte } = await llamar({ accion:'parte', nombre:quienEs.nombre, sexo:quienEs.sexo,
-                                         parte: suya, puedeElNombre: conNombre.has(i) });
-        escritas[i] = parte;
-        huecos[i].outerHTML = pintarParte(parte, i+1);
-      } catch (err) {
-        caidas.push(i);
-        huecos[i].innerHTML = cabecera + (segundaVuelta
-          ? '<p class="error">' + escapar(err.message) + '</p>'
-          : '<p class="aviso">Se ha caído, se vuelve a pedir…</p>');
-      }
-    }));
-    return caidas;
-  };
-
-  // Y SE INSISTE HASTA TRES VECES CON LA QUE SE CAIGA.
-  //
-  // Una parte que no vuelve deja el documento con un agujero, y entonces no se
-  // puede entregar. Como cada parte es su propia peticion y es corta, insistir
-  // con la que ha fallado no le quita tiempo a las demas -ya han terminado- y
-  // casi siempre entra a la segunda: lo que se cae aqui es la linea, no el
-  // texto.
-  //
-  // TRES. Se bajo a dos para ahorrar tiempo y fue un error: en un plan de
-  // verdad se cayeron tres partes, se acabaron las vueltas y la clienta se
-  // quedo SIN PDF despues de cuatro minutos.
-  //
-  // Y una vuelta de mas no cuesta lo que parece: solo se vuelven a pedir las
-  // que se han caido, no todas, y las demas ya han terminado. Si no se cae
-  // ninguna -que es lo normal- estas vueltas no existen y no cuestan nada.
-  const INTENTOS = 3;
-  let caidas = plan.partes.map((_, i) => i);
-  for (let vuelta = 1; vuelta <= INTENTOS && caidas.length; vuelta++) {
-    if (vuelta > 1) aviso.textContent = 'Se han caído ' + caidas.length + ', se piden otra vez…';
-    caidas = await pasada(caidas, vuelta === INTENTOS);
-  }
-
-  const completas = escritas.filter(Boolean);
-
-  // 3. Y LAS CREENCIAS, QUE LLEVAN TODO ESTE RATO SALIENDO POR SU LADO.
-  //
-  // Se pidieron a la vez que el plan, asi que a estas alturas lo normal es que
-  // ya esten: aqui solo se recogen y se escriben, igual que las partes.
-  aviso.textContent = 'Las pruebas, en ' + cuanto() + '. Ahora sus creencias…';
-  const suyas = await vanCreencias;
-
-  let laProgramacion = [];
-  let enteras = false;
-
-  if (!suyas.ok) {
-    salida.insertAdjacentHTML('beforeend',
-      '<p class="aviso error">No han salido sus creencias: ' + escapar(suyas.error) + '</p>');
-  } else if (!suyas.creencias.length) {
-    salida.insertAdjacentHTML('beforeend', '<p class="aviso error">No ha salido ninguna creencia.</p>');
-  } else {
-    const cuantasC = suyas.creencias.length;
-    aviso.textContent = 'Han salido ' + cuantasC + ' creencias. Escribiéndolas todas a la vez…';
-
-    // Lo que ha hecho cada llamada de este tema, antes de escribir nada: asi se
-    // puede mirar mientras se escriben.
-    salida.insertAdjacentHTML('beforeend', pintarLasCreencias(suyas.creencias, suyas.revision));
-
-    const huecosC = suyas.creencias.map((suya, i) => {
-      const hueco = document.createElement('div');
-      hueco.className = 'parte';
-      hueco.innerHTML = cabeceraDeParte(suya, i + 1) + '<p class="aviso">Escribiéndose…</p>';
-      salida.appendChild(hueco);
-      return hueco;
-    });
-
-    const escritasC = [];
-    const pasadaDeCreencias = async (cuales, segundaVuelta) => {
-      const caidas = [];
-      await Promise.all(cuales.map(async i => {
-        const suya = suyas.creencias[i];
-        const cabecera = cabeceraDeParte(suya, i + 1);
-        try {
-          const { creencia } = await llamar({ accion:'creencia', nombre:quienEs.nombre,
-                                              sexo:quienEs.sexo, creencia: suya });
-          escritasC[i] = creencia;
-          huecosC[i].innerHTML = pintarCreencia(creencia, i + 1);
-        } catch (err) {
-          caidas.push(i);
-          huecosC[i].innerHTML = cabecera + (segundaVuelta
-            ? '<p class="error">' + escapar(err.message) + '</p>'
-            : '<p class="aviso">Se ha caído, se vuelve a pedir…</p>');
-        }
-      }));
-      return caidas;
-    };
-
-    // Y SE INSISTE HASTA TRES VECES CON LA QUE SE CAIGA, por lo mismo que en
-    // las partes: solo se vuelve a pedir la que ha fallado, y casi siempre
-    // entra a la segunda.
-    let caidasC = suyas.creencias.map((_, i) => i);
-    for (let vuelta = 1; vuelta <= INTENTOS && caidasC.length; vuelta++) {
-      if (vuelta > 1) aviso.textContent = 'Se han caído ' + caidasC.length + ' creencias, se piden otra vez…';
-      caidasC = await pasadaDeCreencias(caidasC, vuelta === INTENTOS);
-    }
-
-    laProgramacion = escritasC.filter(Boolean);
-    enteras = laProgramacion.length === cuantasC;
-
-    // ── Y QUE NO SE REPITA NINGUNA FRASE ENTRE ELLAS ──────────
-    //
-    // Una sola vuelta: a la que repite se le dice la frase y la escribe de
-    // otra manera. Si esa vuelta se cae, se queda la que habia, que una frase
-    // repetida no vale perder el documento.
-    if (enteras) {
-      const repiten = frasesRepetidas(escritasC.map(c => PUNTOS_DE_CREENCIA.map(p => c[p]).join(' ')));
-      if (repiten.size) {
-        aviso.textContent = 'Hay ' + repiten.size + ' que repiten una frase, se piden otra vez…';
-        await Promise.all([...repiten].map(async ([i, frase]) => {
-          try {
-            const { creencia } = await llamar({ accion:'creencia', nombre:quienEs.nombre,
-                                                sexo:quienEs.sexo, creencia: suyas.creencias[i],
-                                                prohibida: frase });
-            escritasC[i] = creencia;
-            huecosC[i].innerHTML = pintarCreencia(creencia, i + 1);
-          } catch (err) {
-            console.warn('[p2] la creencia ' + (i + 1) + ' repetía una frase y no se ha podido rehacer: ' + err.message);
-          }
-        }));
-        laProgramacion = escritasC.filter(Boolean);
-      }
-    }
-  }
-
-  // 4. Y LA HOJA DE RUTA, QUE ES LO ULTIMO.
-  //
-  // Resume las dos cosas, asi que solo se puede pedir cuando las dos estan
-  // enteras. Si falta alguna, no hay nada que resumir.
-  let hojaDeRuta = null;
-  if (completas.length === total && enteras) {
-    aviso.textContent = 'Todo escrito en ' + cuanto() + '. Resumiendo su hoja de ruta…';
-    // Lo que se le manda de cada cosa: su numero, su titulo y su texto.
-    const enCorto = (cosa, i, puntos) => {
-      const suyo = { numero: i + 1, titulo: cosa.titulo, area: cosa.area };
-      puntos.forEach(punto => { suyo[punto] = cosa[punto]; });
-      return suyo;
-    };
-    try {
-      // LAS DOS VAN COMO SE ESCRIBIERON, que es lo que el cliente lee: la
-      // tabla es su resumen, asi que se hace con ese mismo texto.
-      const { tablas } = await llamar({ accion:'tablas', sexo:quienEs.sexo,
-        partes: completas.map((p, i) => enCorto(p, i, PUNTOS)),
-        creencias: laProgramacion.map((c, i) => enCorto(c, i, PUNTOS_DE_CREENCIA)) });
-      hojaDeRuta = tablas;
-      salida.insertAdjacentHTML('beforeend', pintarLaHojaDeRuta(tablas));
-    } catch (e) {
-      salida.insertAdjacentHTML('beforeend',
-        '<p class="aviso error">No ha salido su hoja de ruta: ' + escapar(e.message) + '</p>');
-    }
-  }
-
-  // EL PDF SOLO SE OFRECE SI ESTA TODO. Con una parte caida -o sin sus
-  // creencias, o sin su hoja de ruta- saldria un documento con un agujero
-  // dentro, y eso no se le ensena a nadie.
-  if (completas.length === total && enteras && hojaDeRuta) {
-    elDocumento = {
-      nombre: quienEs.nombre,
-      // El numero que le toca a cada parte y los nombres de sus puntos van
-      // desde aqui: el que maqueta no tiene que saberselos.
-      partes: completas.map((p, i) => ({ ...p, numero: i + 1, nombres: BLOQUES })),
-      creencias: laProgramacion.map((c, i) => ({ ...c, numero: i + 1, nombres: BLOQUES_DE_CREENCIA })),
-      tablas: hojaDeRuta,
-    };
-    pdf.hidden = false;
-    aviso.textContent = 'Listo. Ya se puede bajar el PDF.';
-  } else {
-    aviso.textContent = 'Listo, pero falta alguna pieza: el PDF no se monta a medias.';
-  }
-  ir.disabled = false; quien.disabled = false;
-});
-
-pdf.addEventListener('click', async () => {
-  if (!elDocumento) return;
-  pdf.disabled = true;
-  const antes = aviso.textContent;
-  aviso.className = 'aviso';
-  aviso.textContent = 'Montando el PDF…';
-  try {
-    const r = await fetch('/api/p2-plan/pdf', {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify(elDocumento),
-    });
-    const d = await r.json().catch(() => ({ error:'Respuesta ilegible' }));
-    if (!r.ok) throw new Error(d.error || ('Error ' + r.status));
-    const a = document.createElement('a');
-    a.href = d.pdfBase64;
-    a.download = 'TuPlanDeOrigen_' + String(elDocumento.nombre || 'plan').replace(/[^A-Za-z0-9]/g,'_') + '.pdf';
-    a.click();
-    aviso.textContent = d.fallos ? ('PDF bajado, pero no cargó: ' + d.fallos.join(', ')) : antes;
-  } catch (e) {
-    aviso.className = 'aviso error';
-    aviso.textContent = 'No se ha podido montar el PDF: ' + e.message;
-  }
-  pdf.disabled = false;
-});
-
-// LO QUE HA DECIDIDO LA LLAMADA DEL PLAN, PARA PODER MIRARLO.
-//
-// De la pagina de pruebas y de ningun sitio mas: la clienta nunca ve esto. Es
-// para ver de un vistazo cuantas partes han salido, de que desafios sale cada
-// una y que le pide hacer, que es lo unico que hay que mirar para saber si esa
-// llamada lo ha hecho bien o esta repitiendo.
-function pintarLoDecidido(partes, limpieza) {
-  // La descripcion de cada desafio que se quedo, por su numero.
-  const suDescripcion = new Map(((limpieza && limpieza.quedados) || []).map(x => [x.numero, x.descripcion]));
-  // De que desafio de la lista sale cada parte.
-  const filas = partes.map(p => {
-    const cual = (p.deCuales || [])[0];
-    return '<tr>' +
-      '<td>' + escapar((p.deCuales || []).join(', ')) + '</td>' +
-      '<td>' + escapar(suDescripcion.get(cual) || '') + '</td>' +
-      '<td>' + escapar(p.titulo || '') + '</td>' +
-      '<td>' + escapar(p.queHaces || '') + '</td>' +
-    '</tr>';
-  }).join('');
-
-  return '<details class="decidido" open><summary>Las pruebas — ' + partes.length +
-    '</summary>' +
-    '<table><tr><th>Desafío</th><th>Descripción</th><th>Título</th><th>Lo que le manda hacer</th></tr>' +
-    filas + '</table></details>';
-}
-
-// La cabecera de una parte: su numero, el titulo del desafio y, al lado, el
-// area de la que sale. La misma que lleva el PDF.
-function cabeceraDeParte(p, n) {
-  const elArea = p.area ? ' <span class="area">(' + escapar(String(p.area).toUpperCase()) + ')</span>' : '';
-  return '<h2>' + n + '. ' + escapar(p.titulo) + elArea + '</h2>';
-}
-
-// Cada parte con sus puntos, cada uno con su nombre para saber de que habla y
-// para poder volver a buscarlo.
-function pintarParte(p, n) {
-  const bloques = PUNTOS.map(punto => {
-    const dentro = parrafos(p[punto]);
-    return SOBRE_BEIGE.includes(punto)
-      ? '<div class="bloque beige"><h3>' + escapar(BLOQUES[punto]) + '</h3><div class="caja-texto">' + dentro + '</div></div>'
-      : '<div class="bloque"><h3>' + escapar(BLOQUES[punto]) + '</h3>' + dentro + '</div>';
-  }).join('');
-  return '<div class="parte">' + cabeceraDeParte(p, n) + bloques + '</div>';
-}
-
-// LAS FRASES QUE SE REPITEN ENTRE CREENCIAS.
-//
-const PALABRAS_QUE_SE_REPITEN = ${PALABRAS_QUE_SE_REPITEN};
-
-${frasesRepetidas}
-
-// LO QUE HA HECHO EL TEMA DE LAS CREENCIAS, PARA PODER MIRARLO.
-//
-// De la pagina de pruebas y de ningun sitio mas. Se ve de un vistazo cuantas
-// saco la primera llamada, cuales quito la limpieza, cuales quito el repaso y
-// con cuales se ha quedado, con su puntuacion y de que desafio sale cada una.
-function pintarLasCreencias(creencias, revision) {
-  const r = revision || {};
-  const entraron = Array.isArray(r.entraron) ? r.entraron : [];
-  const fuera0 = Array.isArray(r.quitaFondo) ? r.quitaFondo : [];
-  const fuera1 = Array.isArray(r.quitaLimpieza) ? r.quitaLimpieza : [];
-  const fuera2 = Array.isArray(r.quitaRepaso) ? r.quitaRepaso : [];
-
-  const lista = (titulo, cuales) => cuales.length
-    ? '<p class="quitadas"><b>' + titulo + ' ' + cuales.length + ':</b> ' +
-      cuales.map(c => escapar(c.titulo) + ' — ' + escapar(c.linea)).join(' · ') + '</p>'
-    : '<p class="quitadas"><b>' + titulo + ' ninguna.</b></p>';
-
-  const filas = creencias.map(c =>
-    '<tr>' +
-      '<td>' + escapar(c.numero) + '</td>' +
-      '<td>' + escapar(c.puntuacion) + '</td>' +
-      '<td class="verbo">' + escapar(c.titulo) + '</td>' +
-      '<td>' + escapar((c.deCuales || []).join(', ')) + '</td>' +
-      '<td>' + escapar(c.linea) + '</td>' +
-    '</tr>').join('');
-
-  return '<details class="decidido" open><summary>Las creencias — ' +
-    (entraron.length || creencias.length) + ' salieron, quedan ' + creencias.length + '</summary>' +
-    lista('Salían de un solo desafío', fuera0) +
-    lista('Quitó la limpieza', fuera1) + lista('Quitó el repaso', fuera2) +
-    '<table><tr><th>Nº</th><th>Peso</th><th>Creencia</th><th>Desafíos</th><th>De dónde le viene</th></tr>' +
-    filas + '</table></details>';
-}
-
-// EL CUADERNO, PARA REVISARLO.
-//
-// Una fila por cada llamada que se le ha hecho al modelo, en el orden en que
-// han ido volviendo: cual es, con que modelo, cuanto ha razonado, lo que ha
-// tardado, los tokens que ha gastado, lo que ha costado y si ha salido bien.
-// Las que se han caido salen en rojo con su motivo.
-//
-// EL RELOJ DE ABAJO NO ES LA SUMA. Muchas van a la vez, asi que la suma de sus
-// tiempos es mas grande que lo que se ha esperado de verdad: las dos cosas
-// salen, y la que importa para el cliente es el reloj.
-function pintarElCuaderno() {
-  const hueco = document.getElementById('cuaderno');
-  if (!hueco || !elCuaderno.length) return;
-
-  const segundos = elCuaderno.reduce((a, l) => a + (Number(l.segundos) || 0), 0);
-  const dolares = elCuaderno.reduce((a, l) => a + (Number(l.dolares) || 0), 0);
-  const entrada = elCuaderno.reduce((a, l) => a + (Number(l.entrada) || 0), 0);
-  const salidaT = elCuaderno.reduce((a, l) => a + (Number(l.salida) || 0), 0);
-  const caidas = elCuaderno.filter(l => !l.ok).length;
-  const reloj = arrancoLaTanda ? Math.round((Date.now() - arrancoLaTanda) / 100) / 10 : 0;
-
-  const filas = elCuaderno.map(l =>
-    '<tr class="' + (l.ok ? '' : 'mal') + '">' +
-      '<td>' + escapar(l.que) + (l.ok ? '' : ' — ' + escapar(l.fallo || 'se ha caído')) + '</td>' +
-      '<td>' + escapar(String(l.modelo || '').replace('claude-', '')) + '</td>' +
-      '<td>' + escapar(l.piensa || 'sin razonar') + '</td>' +
-      '<td class="der">' + escapar(l.segundos) + ' s</td>' +
-      '<td class="der">' + escapar(l.entrada) + '</td>' +
-      '<td class="der">' + escapar(l.salida) + '</td>' +
-      '<td class="der">' + (Number(l.dolares) || 0).toFixed(4) + ' $</td>' +
-    '</tr>').join('');
-
-  hueco.innerHTML = '<details class="cuaderno" open><summary>Las llamadas — ' +
-    elCuaderno.length + ', ' + reloj + ' s de reloj, ' + dolares.toFixed(3) + ' $' +
-    (caidas ? ' · ' + caidas + ' se han caído' : '') + '</summary>' +
-    '<table><tr><th>Llamada</th><th>Modelo</th><th>Razona</th><th class="der">Tiempo</th>' +
-    '<th class="der">Entrada</th><th class="der">Salida</th><th class="der">Coste</th></tr>' +
-    filas +
-    '<tr class="suma"><td colspan="3">TOTAL · ' + reloj + ' s de reloj</td>' +
-    '<td class="der">' + segundos.toFixed(1) + ' s</td>' +
-    '<td class="der">' + entrada + '</td><td class="der">' + salidaT + '</td>' +
-    '<td class="der">' + dolares.toFixed(4) + ' $</td></tr>' +
-    '</table></details>';
-}
-
-// Las dos tablas del final, tal y como van a salir en el PDF: su casilla, su
-// numero y las columnas con los mismos nombres que lleva el documento dentro.
-function pintarLaHojaDeRuta(tablas) {
-  const unaTabla = (filas, puntos, nombres) => {
-    if (!Array.isArray(filas) || !filas.length) return '';
-    return '<table class="ruta"><tr><th></th><th></th>' +
-      puntos.map(punto => '<th>' + escapar(nombres[punto]) + '</th>').join('') + '</tr>' +
-      filas.map(f => '<tr><td class="casilla">☐</td><td class="num">' + escapar(f.numero) + '</td>' +
-        puntos.map(punto => '<td>' + escapar(f[punto]) + '</td>').join('') + '</tr>').join('') +
-      '</table>';
-  };
-  return '<div class="parte">' +
-    unaTabla(tablas.pruebas, PUNTOS, BLOQUES) +
-    unaTabla(tablas.creencias, PUNTOS_DE_CREENCIA, BLOQUES_DE_CREENCIA) +
-  '</div>';
-}
-
-// Y cada creencia con sus dos bloques. Va en texto corrido, sin fondo: aqui no
-// hay ninguna orden que vuelva a buscar, solo lo que cree y lo que es verdad.
-function pintarCreencia(c, n) {
-  const bloques = PUNTOS_DE_CREENCIA.map(punto =>
-    '<div class="bloque"><h3>' + escapar(BLOQUES_DE_CREENCIA[punto]) + '</h3>' + parrafos(c[punto]) + '</div>'
-  ).join('');
-  // Va DENTRO del hueco que ya tiene su sitio, no en vez de el: asi se puede
-  // volver a pintar la misma si hay que rehacerla.
-  return cabeceraDeParte(c, n) + bloques;
-}
-</script>
-</body>
-</html>`;
