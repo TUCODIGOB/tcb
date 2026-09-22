@@ -224,7 +224,7 @@ async function arrancarSuPlan(compra) {
   }
 
   try {
-    await fetch('https://origennatal.com/api/p2-plan/arranque', {
+    const resp = await fetch('https://origennatal.com/api/p2-plan/arranque', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-origen-interno': clave },
       body: JSON.stringify({ compra }),
@@ -232,6 +232,19 @@ async function arrancarSuPlan(compra) {
       // montarse ya no es cosa de aqui, asi que cortar la espera no lo para.
       signal: AbortSignal.timeout(5000),
     });
+
+    // SI CONTESTA TAN RAPIDO ES QUE NO LO HA COGIDO. Montar un plan tarda
+    // minutos: lo que vuelve en segundos es una pega -la llave mal, ese
+    // informe no da para un plan, no existe-. En ese caso no se le puede
+    // decir que su plan viene, porque no viene.
+    //
+    // El 409 es la excepcion: significa que ya se le esta montando, que es
+    // justo lo que queriamos.
+    if (!resp.ok && resp.status !== 409) {
+      console.error(`[submit-resena] El plan de ${compra} no ha arrancado (${resp.status}): ${(await resp.text()).slice(0, 200)}`);
+      return false;
+    }
+
     console.log('[submit-resena] Plan arrancado por su resena:', compra);
     return true;
   } catch (err) {
