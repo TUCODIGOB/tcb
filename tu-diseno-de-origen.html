@@ -1205,58 +1205,43 @@ text-align: center;
     }
 
     /* ══════════════════════════════════════════════
-       FAQ
+       LO QUE ESTÁS PENSANDO AHORA MISMO (bloque 9)
     ══════════════════════════════════════════════ */
-    .faq { background: #f5efdf; }
-    .faq h2 { color: var(--teal-deep); margin-bottom: 3rem; }
-    .faq-list {
-      text-align: left;
-      max-width: 780px;
-      margin-inline: auto;
-      display: flex; flex-direction: column; gap: .75rem;
+    .b9 { background: var(--white); padding: 88px 0 96px; text-align: center; }
+    .b9-in { width: min(860px, 92vw); margin-inline: auto; }
+    .b9-h { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.3;
+            color: var(--teal-deep); margin: 0 0 52px; }
+    .b9-h em { font-style: italic; font-weight: 400; color: var(--gold-deep); }
+    .b9-br { display: none; }
+    .b9-list { text-align: left; border-top: 1px solid #e7e1d4; }
+    .b9-list details { border-bottom: 1px solid #e7e1d4; }
+    .b9-list summary { list-style: none; cursor: pointer; display: flex; align-items: flex-start;
+                       justify-content: space-between; gap: 24px; padding: 26px 4px;
+                       font-family: var(--font-display); font-weight: 700; font-size: .98rem; line-height: 1.35;
+                       color: var(--teal-deep); transition: color .2s ease; }
+    .b9-list summary::-webkit-details-marker { display: none; }
+    .b9-list summary:hover { color: var(--gold-deep); }
+    .b9-list summary::after { content: "+"; flex: 0 0 auto; font-family: var(--font-body); font-weight: 400;
+                              font-size: 26px; line-height: 1; color: var(--gold-deep); margin-top: 2px; }
+    .b9-list details[open] summary::after { content: "\2013"; }
+    .b9-body { padding: 0 4px 28px; max-width: 700px; }
+    .b9-body p { font-family: var(--font-body); font-size: .93rem; line-height: 1.75; color: #4a4538; margin: 0 0 16px; }
+    .b9-body p:last-child { margin-bottom: 0; }
+    .b9-body a { color: var(--gold-deep); text-decoration: underline; }
+    .b9-body a:hover { color: var(--teal-deep); }
+    @media (max-width: 1024px) { .b9 { padding: 72px 0 80px; } .b9-h { font-size: 31px; margin-bottom: 44px; } }
+    @media (max-width: 860px) {
+      .b9-list summary { font-size: 20px; }
+      .b9-body p { font-size: 16px; }
     }
-    details {
-      background: var(--white);
-      border: 1px solid rgba(189,144,72,.2);
-      border-radius: var(--r-md);
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,.04);
+    @media (max-width: 767px) {
+      .b9 { padding: 54px 0 62px; }
+      .b9-h { font-size: 27px; margin-bottom: 34px; }
+      .b9-list summary { padding: 22px 2px; gap: 18px; }
+      .b9-list summary::after { font-size: 24px; }
+      .b9-body { padding: 0 2px 24px; }
     }
-    details[open] { border-color: rgba(189,144,72,.5); }
-    summary {
-      cursor: pointer;
-      padding: 1.1rem 1.4rem;
-      font-weight: 600;
-      font-size: .98rem;
-      color: var(--teal-deep);
-      list-style: none;
-      display: flex; justify-content: space-between; align-items: center;
-      gap: 1rem;
-      user-select: none;
-      transition: background .15s;
-    }
-    summary::-webkit-details-marker { display: none; }
-    summary:hover { background: rgba(189,144,72,.05); }
-    .faq-arrow {
-      flex-shrink: 0;
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: rgba(189,144,72,.15);
-      display: flex; align-items: center; justify-content: center;
-      color: var(--gold-deep);
-      font-size: .9rem;
-      transition: transform .25s;
-    }
-    details[open] .faq-arrow { transform: rotate(45deg); }
-    .faq-body {
-      padding: 0 1.4rem 1.2rem;
-      font-size: .93rem;
-      color: #444;
-      border-top: 1px solid rgba(189,144,72,.1);
-      padding-top: 1rem;
-    }
-    .faq-body a { color: var(--gold-deep); text-decoration: underline; }
-    .faq-body a:hover { color: var(--teal-deep); }
+    @media (max-width: 620px) { .b9-br { display: inline; } }
 
     /* ══════════════════════════════════════════════
        FOOTER
@@ -1306,8 +1291,6 @@ text-align: center;
     @media (max-width: 860px) {
       .break-mobile { display: block; }
       .break-desktop { display: none; }
-      summary { font-size: 20px; }
-      .faq-body { font-size: 16px; }
       .garantia p { font-size: 20px; }
       .value-compare { font-size: 20px; }
       .price-wrap { justify-content: center; margin: 0 0 14px; }
@@ -1689,41 +1672,55 @@ text-align: center;
   </section>
 
   <!-- ════════════ 7. TUS PREGUNTAS ════════════ -->
-  <section class="faq">
-    <div class="container-home text-center">
+  <section class="b9">
+    <div class="b9-in">
+      <h2 class="b9-h">Lo que estás pensando<br class="b9-br"> <em>ahora mismo</em></h2>
+      <div class="b9-list">
 
-      <h2 class="reveal">Tus preguntas</h2>
-
-      <div class="faq-list">
-
-        <details class="reveal" name="faq">
-          <summary>¿Tengo que creer en esto? <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">No tienes que creer en nada, <strong>solo reconocerte</strong>.</div>
+        <details class="reveal" name="b9">
+          <summary>En 2 minutos, ¿eso puede ser serio?</summary>
+          <div class="b9-body">
+            <p>La duda es razonable y la respuesta es sencilla: tarda 2 minutos porque el sistema es automático, igual que un análisis clínico. Pero este sistema tardó años en construirse.</p>
+            <p>Y lo que vas a leer no se ha escrito ahora: está en ti desde el día que naciste, en tu carta natal.</p>
+          </div>
         </details>
 
-        <details class="reveal reveal-delay-1" name="faq">
-          <summary>¿En 2 minutos puede ser serio? <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">La rapidez es tecnología, no superficialidad. El informe tiene <strong>de 23 a 30 páginas</strong>.</div>
+        <details class="reveal reveal-delay-1" name="b9">
+          <summary>No sé si creo en esto</summary>
+          <div class="b9-body">
+            <p>No hace falta creer en nada, esto no es un invento ni una interpretación bonita: sale de tu carta natal real, calculada con los datos exactos del día en que naciste. Lo demás son años de trabajo para traducir eso a algo que puedas leer y reconocer. Léelo y lo sabrás.</p>
+          </div>
         </details>
 
-        <details class="reveal reveal-delay-2" name="faq">
-          <summary>Ya vi mi carta natal una vez y no entendí nada. <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">Esto no tiene tecnicismos, <strong>ninguno</strong>, está escrito para que cualquier persona lo entienda.</div>
+        <details class="reveal reveal-delay-2" name="b9">
+          <summary>¿Y si no me identifico con lo que dice?</summary>
+          <div class="b9-body">
+            <p>Lo sabrás en dos minutos y no te habrá costado nada. Pero es raro que pase: no está escrito sobre un tipo de persona, está escrito sobre ti, con tu programación interna y no hay dos iguales.</p>
+            <p>Lo que suele pasar es lo contrario: entiendes el porqué de muchas cosas y encuentras respuestas que llevabas años buscando sobre ti y sobre tu vida.</p>
+          </div>
         </details>
 
-        <details class="reveal reveal-delay-3" name="faq">
-          <summary>¿Es lo mismo para todo el mundo? <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">No. Necesita tu fecha, hora y lugar exactos de nacimiento, <strong>no hay dos iguales</strong>.</div>
+        <details class="reveal reveal-delay-3" name="b9">
+          <summary>¿Esto es lo mismo que una carta natal?</summary>
+          <div class="b9-body">
+            <p>Se calcula con tu carta natal real, con los datos exactos del día que naciste, pero no es una de esas cartas llenas de símbolos y tecnicismos que no hay quien entienda.</p>
+            <p>Está traducido al lenguaje humano de la psicología y habla de ti: tus patrones, tus miedos, tu forma de querer, tu relación con el dinero… Sin cuentos.</p>
+          </div>
         </details>
 
-        <details class="reveal reveal-delay-4" name="faq">
-          <summary>¿Y si no sé mi hora de nacimiento? <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">En España puedes obtener <strong>tu certificado de nacimiento online de forma gratuita</strong> en el <a href="https://sede.mjusticia.gob.es/tramites/certificado-nacimiento" target="_blank" rel="noopener">Registro Civil</a> en minutos. En otros países hay equivalentes similares.</div>
+        <details class="reveal reveal-delay-4" name="b9">
+          <summary>No sé mi hora de nacimiento</summary>
+          <div class="b9-body">
+            <p>Se soluciona en minutos. En España pides tu certificado de nacimiento online y gratis en el <a href="https://sede.mjusticia.gob.es/tramites/certificado-nacimiento" target="_blank" rel="noopener">Registro Civil</a>, ahí viene tu hora exacta. Fuera de España, el Registro Civil de tu país puede tener el mismo trámite. Y muchas veces está en el libro de familia.</p>
+            <p>Cuanto más exacta sea tu hora de nacimiento, más preciso es tu estudio.</p>
+          </div>
         </details>
 
-        <details class="reveal reveal-delay-5" name="faq">
-          <summary>Una sesión con un especialista cuesta mucho más. <span class="faq-arrow">+</span></summary>
-          <div class="faq-body">Una sesión cuesta entre 80€ y 400€, con cita previa. Un informe similar cuesta desde 150€. <strong>Tu Diseño de Origen lo recibes en minutos, a 47€.</strong></div>
+        <details class="reveal reveal-delay-5" name="b9">
+          <summary>¿Qué hacéis con mis datos?</summary>
+          <div class="b9-body">
+            <p>Tus datos de nacimiento se usan solo para generar tu estudio. No los compartimos, no se venden y no se usan para nada más.</p>
+          </div>
         </details>
 
       </div>
