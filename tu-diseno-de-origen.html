@@ -1015,6 +1015,55 @@ display: block;
       margin-bottom: 1rem;
     }
     /* ══════════════════════════════════════════════
+       PROBLEMA — bloque 2: frases de la lectora y giro
+    ══════════════════════════════════════════════ */
+    .p2 { position: relative; background-color: var(--white); padding: 78px 0 150px; text-align: center; overflow: hidden; }
+    .p2-orbita { position: absolute; color: var(--gold-light); opacity: .32; z-index: 0; pointer-events: none; }
+    .p2-orbita.o1 { top: -220px; left: -230px; width: 620px; }
+    .p2-orbita.o2 { bottom: -170px; right: -250px; width: 680px; }
+
+    .p2-inner { width: min(980px, 92vw); margin-inline: auto; position: relative; z-index: 1; }
+    .p2-title { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 14px; }
+    .p2-title em { font-style: italic; color: var(--gold-deep); }
+    .p2-sub { font-size: 18px; line-height: 1.7; color: #4a4538; margin: 0 0 30px; }
+    .p2-punto { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px; text-transform: uppercase; color: var(--teal-deep); margin: 0 0 52px; }
+
+    .p2-quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
+    .p2-quote { background: var(--cream); border: 1px solid #efe0c6; border-radius: var(--r-lg); padding: 24px 26px; display: flex; align-items: center; }
+    .p2-quote p { margin: 0; font-family: var(--font-display); font-style: italic; font-size: 19px; line-height: 1.55; color: #3d3a33; }
+
+    .p2-giro { margin: 62px auto 0; max-width: 700px; }
+    .p2-c1 { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1.3; color: var(--teal-deep); margin: 0; }
+    .p2-c2 { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1.3; color: var(--teal-deep); margin: 4px 0 20px; }
+    .p2-c2 em { font-style: italic; color: var(--gold-deep); }
+    .p2-c3 { font-size: 17px; line-height: 1.6; color: #4a4538; margin: 0; }
+    .p2-flecha { margin-top: 30px; }
+
+    .p2-luna { position: absolute; left: 0; right: 0; bottom: -1px; line-height: 0; z-index: 2; }
+    .p2-luna svg { display: block; width: 100%; height: 110px; }
+
+    @media (max-width: 1024px) {
+      .p2 { padding: 64px 0 130px; }
+      .p2-title { font-size: 36px; }
+      .p2-orbita.o1 { width: 440px; top: -170px; left: -180px; }
+      .p2-orbita.o2 { width: 470px; right: -190px; bottom: -130px; }
+    }
+    @media (max-width: 860px) {
+      .p2 { padding: 48px 0 100px; }
+      .p2-title { font-size: 31px; }
+      .p2-punto { font-size: 15px; letter-spacing: 2px; margin-bottom: 42px; }
+      .p2-quotes { grid-template-columns: 1fr; gap: 13px; }
+      .p2-quote { padding: 20px 20px; }
+      .p2-quote p { font-size: 18px; }
+      .p2-giro { margin-top: 48px; }
+      .p2-c1, .p2-c2 { font-size: 25px; }
+      .p2-c3 { font-size: 16px; }
+      .p2-luna svg { height: 66px; }
+      .p2-orbita.o1 { width: 300px; top: -120px; left: -130px; }
+      .p2-orbita.o2 { width: 320px; right: -140px; bottom: -80px; }
+    }
+
+    /* ══════════════════════════════════════════════
        PROBLEMA — bloque 1: foto + texto + tarjeta a caballo
     ══════════════════════════════════════════════ */
     .problema {
@@ -1635,47 +1684,50 @@ display: block;
         </div>
       </div>
     </div>
-  </section>
 
   <!-- ════════════ 1. EL PROBLEMA QUE VIVES ════════════ -->
-  <section class="problema">
-    <div class="b1-inner container-home">
-      <div class="b1-row">
-        <div class="b1-photo">
-          <!-- FOTO PENDIENTE -->
-        </div>
-        <h2 class="b1-title reveal">Lo has intentado <em>todo</em>…</h2>
-        <div class="b1-textcol">
-          <p class="b1-line reveal">Terapia, cursos, libros, cambios de trabajo, propósitos de año nuevo…</p>
-          <p class="b1-line reveal"><span class="b1-turn-point">Y siempre acabas volviendo<br class="break-mobile"> al mismo punto:</span></p>
-          <p class="b1-line reveal b1-line-tight">Las mismas <strong class="b1-plain-bold">dudas</strong>,<br class="break-mobile"> los mismos <strong class="b1-plain-bold">miedos</strong>,</p>
-          <p class="b1-line reveal b1-line-tight">los mismos patrones en el <strong class="b1-plain-bold">amor</strong>,</p>
-          <p class="b1-line reveal b1-line-tight">el <strong class="b1-plain-bold">dinero</strong> que nunca termina de fluir...</p>
-          <p class="b1-line reveal b1-line-voice"><strong class="b1-inner-voice">esa voz que te critica<br class="break-mobile"> por dentro.</strong></p>
-        </div>
-      </div>
-    </div>
-
-    <div class="b1-wave" aria-hidden="true">
-      <svg viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,0 C300,90 900,90 1200,0 L1200,90 L0,90 Z" fill="#f7ecd9"/>
+  <section class="p2">
+      <svg class="p2-orbita o1" viewBox="0 0 200 200" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="100" cy="100" r="97" stroke="currentColor" stroke-width="0.5"/>
+        <circle cx="100" cy="100" r="66" stroke="currentColor" stroke-width="0.5"/>
+        <circle cx="168.6" cy="31.4" r="1.8" fill="currentColor"/>
       </svg>
+      <svg class="p2-orbita o2" viewBox="0 0 200 200" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="100" cy="100" r="97" stroke="currentColor" stroke-width="0.5"/>
+        <circle cx="100" cy="100" r="66" stroke="currentColor" stroke-width="0.5"/>
+        <circle cx="168.6" cy="31.4" r="1.8" fill="currentColor"/>
+      </svg>
+    <div class="p2-inner">
+      <h2 class="p2-title">Lo has intentado <em>todo</em>…</h2>
+      <p class="p2-sub">Terapia, cursos, libros, propósitos de año nuevo…</p>
+      <p class="p2-punto">Y siempre acabas volviendo al mismo punto</p>
+
+      <div class="p2-quotes">
+        <div class="p2-quote"><p>«Empiezo todo con mucha energía, pero siempre termino dejándolo a medias»</p></div>
+        <div class="p2-quote"><p>«Mis relaciones siempre fallan y no entiendo por qué»</p></div>
+        <div class="p2-quote"><p>«Me cuesta mucho tomar decisiones, siempre dudo»</p></div>
+        <div class="p2-quote"><p>«Desde fuera mi vida parece estar bien… pero me siento vacía o fuera de lugar»</p></div>
+        <div class="p2-quote"><p>«No entiendo por qué a todo el mundo le sale… y a mí no»</p></div>
+        <div class="p2-quote"><p>«Sé que algo no está bien en mí, pero no sé qué es»</p></div>
+      </div>
+
+      <div class="p2-giro">
+        <p class="p2-c1">No te falta esfuerzo…</p>
+        <p class="p2-c2">Te falta <em>información sobre ti</em></p>
+        <p class="p2-c3">Llevas años intentando cambiar algo<br class="break-mobile"> que nadie te ha explicado nunca</p>
+        <div class="p2-flecha" aria-hidden="true">
+          <svg width="24" height="42" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="8" y1="0" x2="8" y2="18" stroke="#bd9048" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M2 14L8 20L14 14" stroke="#bd9048" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
     </div>
 
-    <div class="b1-card">
-      <p class="b1-card-intro reveal">Y <span class="b1-intro-accent">piensas</span><span class="b1-intro-dots">...</span></p>
-      <p class="b1-card-q reveal">¿Por qué a todo el mundo le sale… <strong><em>y a mí no?</em></strong></p>
-      <div class="b1-card-rule" aria-hidden="true"></div>
-      <p class="b1-card-q reveal">¿Hay algo <strong><em>malo en mí?</em></strong></p>
-      <div class="b1-card-rule" aria-hidden="true"></div>
-      <p class="b1-card-q reveal">¿Por qué <strong><em>soy así?</em></strong></p>
-      <p class="b1-card-final reveal">No te falta esfuerzo,<br class="break-mobile"> no es mala suerte,<br><span class="b1-final-line2">no es culpa tuya...</span></p>
-      <div class="b1-card-arrow reveal" aria-hidden="true">
-        <svg width="24" height="42" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <line x1="8" y1="0" x2="8" y2="18" stroke="#bd9048" stroke-width="1.5" stroke-linecap="round"/>
-          <path d="M2 14L8 20L14 14" stroke="#bd9048" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
+    <div class="p2-luna" aria-hidden="true">
+      <svg viewBox="0 0 1200 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,110 C300,0 900,0 1200,110 Z" fill="#0e3f4b"/>
+      </svg>
     </div>
   </section>
 
