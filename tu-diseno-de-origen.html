@@ -811,6 +811,101 @@ text-align: center;
     .hero-home .btn-cta { box-shadow: 0 4px 12px rgba(189,144,72,.25); }
     .hero-home .btn-cta:hover { box-shadow: 0 6px 18px rgba(189,144,72,.35); }
 
+
+    /* ─── MAQUETA: hero a dos columnas ─── */
+    .hero-2col { text-align: left; padding-block: 72px 72px; }
+    .hero-2col .container-home { display: block; width: min(1180px, 92vw); }
+    .hero-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: stretch; }
+    .hero-texto { display: flex; flex-direction: column; justify-content: center; }
+
+    .h1-bloque {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 44px;
+      line-height: 1.18;
+      color: var(--teal-deep);
+      text-transform: uppercase;
+      margin: 0 0 22px;
+    }
+    .hero-segunda {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 29px;
+      line-height: 1.3;
+      color: var(--teal-deep);
+      margin: 0 0 36px;
+    }
+    .hero-2col .hero-sub {
+      max-width: 500px; margin: 0 0 34px; text-align: left;
+      font-size: 18px; line-height: 1.66; color: #0c0c0c;
+    }
+
+    .palabra-oro { color: var(--gold-deep); font-style: italic; }
+    .hero-sub .promesa { font-weight: 700; font-style: italic; color: var(--teal-deep); }
+    .hero-sub .oro { color: var(--gold-deep); font-weight: 700; }
+
+
+    .br-movil { display: none; }
+    .hero-oferta {
+      font-family: var(--font-body);
+      font-size: 19px;
+      font-weight: 600;
+      color: var(--gold-deep);
+      margin: 0 0 34px;
+    }
+    .hero-oferta strong { font-weight: 700; }
+    @media (max-width: 1024px) { .hero-oferta { font-size: 20px; } }
+    @media (max-width: 600px)  { .hero-oferta { font-size: 19px; margin-bottom: 40px; } .br-movil { display: inline; } }
+    .hero-accion { display: inline-block; align-self: flex-start; }
+    /* boton: primera letra mayuscula, flecha visible y centrada */
+    .btn-hero {
+      display: flex; align-items: center; justify-content: center; gap: .5em;
+      min-width: 0;
+      padding: 16px 30px;
+      line-height: 1.2;
+    }
+    .btn-hero .flecha { font-size: 1.25em; font-weight: 700; line-height: 1; }
+    .hero-2col .hero-trust-note { margin-top: 14px; text-align: center; font-size: 18px; opacity: .85; }
+
+    .hero-foto {
+      border: 2px dashed var(--gold-light);
+      border-radius: var(--r-lg);
+      background: rgba(255,255,255,.45);
+      display: flex; align-items: center; justify-content: center;
+      min-height: 500px;
+    }
+    .hero-foto span { font-family: var(--font-body); font-size: 15px; letter-spacing: 4px; color: var(--gold-deep); }
+
+    .br-tab { display: none; }
+
+    /* ── Tablet ── */
+    @media (max-width: 1024px) {
+      .hero-2col { text-align: center; padding-block: 60px 60px; }
+      .hero-cols { grid-template-columns: 1fr; gap: 46px; }
+      .hero-texto { align-items: center; }
+      .br-pc { display: none; }
+      .br-tab { display: inline; }
+      .h1-bloque { font-size: 40px; margin-bottom: 24px; }
+      .hero-segunda { font-size: 28px; margin-bottom: 34px; }
+      .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 19px; }
+      .hero-accion { align-self: center; }
+      .hero-foto { width: 100%; max-width: 600px; margin-inline: auto; min-height: 0; aspect-ratio: 16 / 10; }
+    }
+
+    /* ── Movil ── */
+    @media (max-width: 600px) {
+      .hero-2col { padding-block: 40px 44px; }
+      .br-pc { display: inline; }
+      .br-tab { display: none; }
+      .h1-bloque { font-size: 30px; line-height: 1.24; margin-bottom: 16px; }
+      .hero-segunda { font-size: 23px; margin-bottom: 34px; }
+      .hero-2col .hero-sub { font-size: 20px; margin-bottom: 40px; }
+      .hero-accion { display: block; width: 100%; }
+      .hero-2col .btn-hero { width: 100%; font-size: 18px; padding: 17px 4px; }
+      .hero-2col .hero-trust-note { font-size: 18px; }
+      .hero-cols { gap: 60px; }
+    }
     .hero-trust-note {
       font-size: 15px;
       color: #0c0c0c;
@@ -1642,42 +1737,30 @@ display: block;
   </nav>
 
   <!-- HERO -->
-  <section class="hero-home">
+  <section class="hero-home hero-2col">
     <div class="container-home">
-      <h1>¿Y si el problema <br class="break-mobile"><span class="hero-script"><span style="color: var(--gold-deep);"><span class="underline-curve">nunc</span>a</span> fuiste tú</span>?</h1>
+      <div class="hero-cols">
 
-      <p class="hero-sub">Hay <span style="font-style: italic; font-weight: 700; color: var(--gold-deep);">algo</span> que se formó en ti <br class="break-mobile">el día que naciste<br>
-y <span style="font-weight: 700; color: #0c0c0c;">dirige tu vida entera</span>…<br class="break-mobile"> <span style="font-weight: 700;">sin que lo sepas</span></p>
-      <p class="hero-statement"><span style="color: #0c0c0c; font-weight: 400;">Y hasta que no lo descubras,</span> <br class="break-mobile"><span style="font-style: italic;">nada cambiará de verdad</span></p>
+        <div class="hero-texto">
+          <h1 class="h1-bloque">Hay una razón<span class="br-pc"><br></span> detrás de<span class="br-tab"><br></span> <em class="palabra-oro">todo</em><span class="br-pc"><br></span> lo que te pasa</h1>
+          <p class="hero-segunda">Y por fin vas a entender cuál es</p>
 
-      <div class="hero-purchase">
-        <div class="hero-video">
-          <!-- Cuando el vídeo esté listo: eliminar el botón de play e insertar
-               <iframe class="hero-video-embed" src="..." frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Tu Diseño de Origen"></iframe> -->
-          <button type="button" class="hero-video-play" aria-label="Reproducir vídeo de presentación">
-            <span></span>
-          </button>
-        </div>
+          <p class="hero-sub"><strong class="oro">Tu Diseño de Origen:</strong> el estudio 100% personalizado que te explica <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong>, a partir de tus datos de nacimiento y calculando tu carta natal.</p>
 
-        <div class="hero-purchase-box">
-          <p class="hero-kicker">Tu Diseño de Origen</p>
-          <img class="hero-deco" src="images/deco-1.webp" alt="" width="317" height="82" />
+          <p class="hero-oferta">¡Obtén tu prueba gratis<span class="br-movil"><br></span> en <strong>SOLO 2 MINUTOS</strong>!</p>
 
-          <p class="hero-offer">El estudio <strong style="text-decoration: underline;">100% personalizado</strong><br class="break-mobile"> que te explica, por fin,<br>
-<strong style="color:#bd9048">por qué eres como eres</strong> y<br class="break-mobile"> <strong style="color:#bd9048">por qué te pasa lo que te pasa</strong></p>
-
-          <div class="price-wrap">
-            <div class="price-old-hero"><s>67</s><span class="currency">€</span></div>
-            <div class="price-tag-hero">47<span class="currency">€</span></div>
+          <div class="hero-accion">
+            <a href="#formulario" class="btn-cta btn-hero">Quiero descubrirlo gratis<span class="flecha">→</span></a>
           </div>
-
-          <a href="#formulario" class="btn-cta">Quiero descubrirlo&nbsp;→</a>
-          <p class="hero-trust-note">Lo recibes en minutos, sin cita, sin espera</p>
         </div>
+
+        <div class="hero-foto"><span>FOTO</span></div>
+
       </div>
     </div>
+  </section>
 
-    <div class="hero-ribbon" aria-hidden="true">
+  <div class="hero-ribbon" aria-hidden="true">
       <div class="hero-ribbon-track">
         <div class="hero-ribbon-group">
           <span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Me siento liberada, totalmente&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Cati</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;He sentido más claridad que en todo este tiempo junto&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Irene</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Me habéis hecho ver cosas de mí que no sabía&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Samuel</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Descubres tanto, es descubrir la verdad sobre ti&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Mónica</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;Ahora entiendo por qué me cuesta soltar ciertas cosas&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Salma</span>&nbsp;·&nbsp;</span><span>TU DISEÑO DE ORIGEN&nbsp;·&nbsp;</span><span>&quot;No sabéis la paz que he sentido&quot;&nbsp;—&nbsp;<span class="hero-ribbon-name">Claudia</span>&nbsp;·&nbsp;</span>
