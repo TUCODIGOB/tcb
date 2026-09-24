@@ -826,6 +826,44 @@ text-align: center;
       to   { transform: translateX(-50%); }
     }
     /* ══════════════════════════════════════════════
+       QUÉ ES (bloque 4) — presentación y mockup
+    ══════════════════════════════════════════════ */
+    .b4 { background: var(--white); padding: 96px 0 100px; text-align: center; }
+    .b4-in { width: min(900px, 92vw); margin-inline: auto; }
+    .b4-h { font-family: var(--font-display); font-weight: 700; font-size: 42px; line-height: 1.25;
+            color: var(--teal-deep); margin: 0 0 30px; }
+    .b4-h em { font-style: italic; color: var(--gold-deep); }
+    .b4-sub { font-family: var(--font-body); font-size: 16.8px; line-height: 1.7; color: #4a4538;
+              max-width: 720px; margin: 0 auto 26px; }
+    .b4-sub strong { font-weight: 700; color: var(--teal-deep); }
+    .b4-golpes { display: flex; justify-content: center; align-items: center; gap: 14px;
+                 font-family: var(--font-body); font-weight: 700; font-size: 16.8px; line-height: 1.7;
+                 color: var(--teal-deep); margin: 0 0 14px; }
+    .b4-golpes .pt { color: var(--gold-deep); font-size: 14px; }
+    .b4-min { font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 26px;
+              line-height: 1.4; color: var(--gold-deep); margin: 0; }
+    .b4-mock { margin-top: 52px; width: 100%; max-width: 860px; margin-inline: auto;
+               aspect-ratio: 16 / 10; border: 2px dashed var(--gold-light); background: var(--cream);
+               display: flex; align-items: center; justify-content: center; border-radius: var(--r-lg);
+               box-shadow: 0 18px 40px rgba(14,63,75,.10); }
+    .b4-mock span { font-family: var(--font-body); font-size: 15px; letter-spacing: 4px; color: var(--gold-deep); }
+
+    @media (max-width: 1024px) {
+      .b4 { padding: 78px 0 82px; }
+      .b4-h { font-size: 36px; }
+      .b4-mock { margin-top: 44px; }
+    }
+    @media (max-width: 860px) {
+      .b4 { padding: 56px 0 64px; }
+      .b4-h { font-size: 29px; margin-bottom: 24px; }
+      .b4-sub { font-size: 20px; line-height: 1.7; margin-bottom: 26px; }
+      .b4-golpes { flex-direction: column; gap: 10px; font-size: 20px; margin-bottom: 20px; }
+      .b4-golpes .pt { display: none; }
+      .b4-min { font-size: 22px; }
+      .b4-mock { margin-top: 36px; aspect-ratio: 4 / 3; }
+    }
+
+    /* ══════════════════════════════════════════════
        AREAS SECTION
     ══════════════════════════════════════════════ */
     .areas {
@@ -1577,7 +1615,18 @@ display: block;
     </div>
   </section>
 
-  <!-- ════════════ 3. QUÉ ES TU DISEÑO DE ORIGEN + LAS 7 ÁREAS ════════════ -->
+  <!-- ════════════ 3. QUÉ ES TU DISEÑO DE ORIGEN ════════════ -->
+  <section class="b4">
+    <div class="b4-in">
+      <h2 class="b4-h">Tu Diseño de Origen son <em>las respuestas</em><br class="break-desktop"> que llevas <em>toda la vida buscando</em></h2>
+      <p class="b4-sub">Más de <strong>40 páginas</strong> que descifran tu <strong>programación interior</strong>, escritas solo para ti a partir de tu <strong>carta natal</strong>, calculada con tus datos exactos de nacimiento</p>
+      <p class="b4-golpes"><span>100% personalizado</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin tecnicismos</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin citas, sin esperas</span></p>
+      <p class="b4-min">¡Y lo tienes en minutos!</p>
+      <div class="b4-mock"><span>MOCKUP INFORME</span></div>
+    </div>
+  </section>
+
+  <!-- ════════════ 4. LAS 7 ÁREAS ════════════ -->
   <section class="areas">
     <div class="container-home text-center">
       <h2 class="b3-title">¿Qué es <em style="color: var(--gold-light); font-style: italic;">Tu Diseño de Origen</em>?</h2>
