@@ -987,18 +987,16 @@ display: block;
 /* ══════════════════════════════════════════════
        BRIDGE (cierre emocional antes del precio)
     ══════════════════════════════════════════════ */
-    .problema, .causa, .garantia {
+    .causa, .garantia {
       padding-block: 4.5rem;
       text-align: center;
     }
     .causa { background: #f5efdf; }
-    /* El h2 de .problema es siempre .b1-title, que define sus propios
-       márgenes y relleno; no se agrupa aquí para no pisarlo. */
     .causa h2, .garantia h2 {
       color: var(--teal-deep);
       margin-bottom: 1.8rem;
     }
-    .problema p, .causa p {
+    .causa p {
       max-width: 680px;
       margin-inline: auto;
       font-size: 16.8px;
@@ -1066,126 +1064,6 @@ display: block;
     /* ══════════════════════════════════════════════
        PROBLEMA — bloque 1: foto + texto + tarjeta a caballo
     ══════════════════════════════════════════════ */
-    .problema {
-      position: relative;
-      background: #ffffff;
-      padding-top: 30px;
-      /* Reserva el hueco de la tarjeta que sobresale. El valor de
-         escritorio vive aquí, no en una media query, para que no quede
-         ningún ancho sin cubrir entre 860 y 861 px. */
-      padding-bottom: 330px;
-      text-align: left;
-    }
-    .b1-inner { position: relative; }
-    .b1-row { display: flex; align-items: stretch; }
-    .b1-photo {
-      flex: 0 0 46%;
-      margin: 60px 0 20px 30px;
-      min-height: 400px;
-      background: #e3d3b5;
-    }
-    .b1-textcol { flex: 1; padding: 180px 56px 40px 46px; }
-    .b1-textcol .b1-line { font-size: 16.8px; line-height: 1.7; color: #4a4538; margin: 0 0 12px; }
-    .b1-textcol .b1-line strong { color: var(--teal-deep); }
-    .b1-textcol .b1-line span.b1-turn-point {
-      font-family: 'Italianno', cursive;
-      font-style: normal;
-      color: var(--gold-deep);
-      font-size: 40px;
-      line-height: 33px;
-      display: inline-block;
-      margin-top: 20px;
-      margin-bottom: 20px;
-    }
-    .b1-textcol .b1-line strong.b1-inner-voice {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-style: italic;
-      color: #729790;
-      font-size: 20px;
-      line-height: 32px;
-    }
-    .b1-textcol .b1-line strong.b1-plain-bold { color: #4a4538; font-style: italic; }
-    .b1-textcol .b1-line.b1-line-voice { margin-top: 20px; }
-    .b1-textcol .b1-line.b1-line-tight { margin: 0; }
-    .b1-title {
-      position: absolute;
-      top: 70px;
-      left: 34%;
-      width: 54%;
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 40px;
-      line-height: 1.25;
-      color: var(--teal-deep);
-      padding-top: 10px;
-      margin: 0 0 1.8rem;
-      z-index: 3;
-    }
-    .b1-title em { font-style: italic; color: var(--gold-deep); }
-    .b1-wave { position: absolute; left: 0; right: 0; bottom: 0; line-height: 0; }
-    .b1-wave svg { display: block; width: 100%; height: 90px; }
-    .b1-card {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      /* Posición de escritorio en la regla base para que no quede ningún
-         ancho sin cubrir entre 860 y 861 px; móvil la sobrescribe. */
-      transform: translate(-50%, calc(50% + -30px));
-      width: min(600px, calc(100% - 40px));
-      background: var(--cream);
-      padding: 40px 20px 20px;
-      text-align: center;
-      z-index: 4;
-    }
-    /* La tarjeta no hereda el ancho máximo que .problema p impone al
-       texto de la columna de la izquierda. */
-    .b1-card p { max-width: none; }
-    .b1-card .b1-card-intro {
-      font-family: 'Italianno', cursive;
-      font-style: normal;
-      color: var(--gold-deep);
-      font-size: 60px;
-      font-weight: 400;
-      line-height: 1.2;
-      margin: 0 0 40px;
-      text-transform: none;
-    }
-    .b1-intro-dots { color: var(--gold-deep); }
-    .b1-card .b1-card-q {
-      font-size: 18px;
-      color: #3d3a33;
-      margin: 0 0 10px;
-      text-align: center;
-    }
-    .b1-card .b1-card-q strong { color: var(--ink); }
-    .b1-card .b1-card-q strong em { font-style: normal; }
-    .b1-card-rule {
-      width: 32px;
-      height: 1px;
-      background: var(--gold-deep);
-      margin: 15px auto;
-    }
-    .b1-final-line2 { display: inline-block; color: var(--gold-deep); }
-    .b1-card .b1-card-final {
-      font-family: 'Italianno', cursive;
-      font-weight: 400;
-      color: var(--gold-deep);
-      font-style: normal;
-      font-size: 40px;
-      line-height: 25px;
-      margin-top: 40px;
-      margin-bottom: 0;
-    }
-    .b1-card-arrow {
-      margin-top: 24px;
-      display: flex;
-      justify-content: center;
-      animation: b1ArrowBounce 0.8s ease-in-out infinite;
-    }
-    @keyframes b1ArrowBounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(14px); }
-    }
     /* ══════════════════════════════════════════════
        CAUSA (bloque 2) — texto sobre fondo teal
     ══════════════════════════════════════════════ */
@@ -1415,7 +1293,6 @@ display: block;
     @media (max-width: 860px) {
       .break-mobile { display: block; }
       .break-desktop { display: none; }
-      .problema p { font-size: 20px; }
       .causa p { font-size: 20px; }
       summary { font-size: 20px; }
       .faq-body { font-size: 16px; }
@@ -1424,15 +1301,6 @@ display: block;
       .price-wrap { justify-content: center; margin: 0 0 14px; }
       .hero-home h1, .hero-sub { text-align: center; }
       .steps { grid-template-columns: 1fr; }
-      .problema { padding-top: 40px; padding-bottom: 470px; }
-      .b1-row { flex-direction: column; }
-      .b1-photo { flex-basis: auto; min-height: 240px; margin: 60px 0 30px 0; }
-      .b1-textcol { padding: 30px 0px 20px; text-align: center; }
-      .b1-title { position: static; width: auto; font-size: 40px; margin: -70px 10px 1.8rem; text-align: center; }
-      .b1-card { padding: 50px 15px 40px; transform: translate(-50%, calc(50% + -90px)); }
-      .b1-card .b1-card-intro { font-size: 40px; margin: 0 0 50px; }
-      .b1-card .b1-card-final { margin-top: 50px; font-size: 48px; line-height: 40px; }
-      .b1-card-arrow svg { width: 32px; height: 56px; }
       .causa.b2 { padding: 320px 24px 90px; }
       .b2-rings { display: none; }
     }
@@ -1443,8 +1311,6 @@ display: block;
       .field label { font-size: 12px; }
       .field input, .field select { font-size: 14px; padding: 10px; }
       .btn-pay { padding: 10px; }
-      .b1-card .b1-card-q { margin: 0 0 0px; }
-      .b1-final-line2 { margin-top: 10px; }
     }
 
     /* ══════════════════════════════════════════════
@@ -1570,11 +1436,7 @@ display: block;
       .hero-trust-note { font-size: 15px; }
       .price-wrap { margin-top: 6px; }
 
-      /* Bloque 1 y bloque 2 */
-      .b1-textcol .b1-line { font-size: 20px; }
-      .b1-textcol .b1-line span.b1-turn-point { font-size: 48px; line-height: 40px; }
-      .b1-textcol .b1-line strong.b1-inner-voice { font-size: 25px; }
-      .b1-card .b1-card-q { font-size: 22px; }
+      /* Bloque 2 */
       .b2-inner .b2-line { font-size: 20px; }
 
       /* Áreas, pasos y reseñas */
@@ -1706,7 +1568,7 @@ display: block;
         <div class="p2-quote"><p>«Empiezo todo con mucha energía, pero siempre termino dejándolo a medias»</p></div>
         <div class="p2-quote"><p>«Mis relaciones siempre fallan y no entiendo por qué»</p></div>
         <div class="p2-quote"><p>«Dudo de todo lo que decido y luego me arrepiento»</p></div>
-        <div class="p2-quote"><p>«Desde fuera mi vida parece estar bien… pero me siento vacía o fuera de lugar»</p></div>
+        <div class="p2-quote"><p>«Desde fuera mi vida parece estar bien, pero me siento vacía o fuera de lugar»</p></div>
       </div>
 
       <div class="p2-giro">
