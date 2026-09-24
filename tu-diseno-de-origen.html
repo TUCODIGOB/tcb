@@ -679,49 +679,12 @@ text-align: center;
       align-items: center;
     }
 
-    .hero-sub,
-    .hero-statement {
+    .hero-sub {
       width: 100%;
       max-width: 640px;
     }
 
-    .hero-kicker {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-weight: 500;
-      font-size: 28px;
-      color: var(--teal-deep);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-    .hero-deco {
-      display: block;
-      width: 120px;
-      height: auto;
-      margin: 1px auto 22px;
-    }
-
     .hero-home h1 { width: 100%; max-width: 700px; color: var(--teal-deep); margin-bottom: 1.5rem; line-height: 1.25; }
-    .hero-home h1 .hero-script {
-      display: inline-block;
-      font-family: 'Italianno', cursive;
-      font-weight: 400;
-      font-size: 2em;
-      line-height: 1;
-      color: var(--gold-deep);
-      padding-inline: .06em;
-    }
-
-    .underline-curve { position: relative; display: inline-block; }
-    .underline-curve::after {
-      content: "";
-      position: absolute;
-      left: -3%; right: -3%; bottom: -0.04em;
-      height: 0.32em;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M3,13 Q52,2 97,4' stroke='%230e3f4b' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-size: 100% 100%;
-      pointer-events: none;
-    }
 
     .hero-sub {
       font-family: var(--font-body);
@@ -731,82 +694,6 @@ text-align: center;
       margin-bottom: 1.1rem;
     }
     .hero-sub strong { font-weight: 700; color: #0c0c0c; }
-
-    .hero-statement {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-weight: 700;
-      color: var(--gold-deep);
-      font-size: 22px;
-      margin-bottom: 40px;
-    }
-
-    .hero-purchase {
-      position: relative;
-      width: 100%;
-    }
-    .hero-video {
-      position: relative;
-      z-index: 2;
-      width: calc(100% - 120px);
-      margin-inline: auto;
-      height: 300px;
-      border-radius: 3px;
-      background: linear-gradient(135deg, #0e3f4b, #14525f);
-      display: flex; align-items: center; justify-content: center;
-      overflow: hidden;
-    }
-    .hero-video-embed { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
-    .hero-video-play {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      background: var(--gold-deep);
-      border: none;
-      display: flex; align-items: center; justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 8px 24px rgba(0,0,0,.25);
-      transition: transform .2s;
-    }
-    .hero-video-play:hover { transform: scale(1.06); }
-    .hero-video-play span {
-      width: 0; height: 0;
-      margin-left: 4px;
-      border-style: solid;
-      border-width: 11px 0 11px 17px;
-      border-color: transparent transparent transparent #fff;
-    }
-
-    .hero-purchase-box {
-      position: relative;
-      z-index: 1;
-      width: calc(100% - 36px);
-      margin-inline: auto;
-      margin-top: -48px;
-      margin-bottom: 70px;
-      background: #ffffff;
-      border-radius: 3px;
-      box-shadow: 0 6px 16px rgba(14,63,75,.10);
-      padding: 90px 32px 50px;
-    }
-
-    .hero-offer {
-      font-family: var(--font-body);
-      font-weight: 400;
-      color: #0c0c0c;
-      font-size: 18px;
-      margin-bottom: 1.4rem;
-      width: 100%;
-      max-width: 640px;
-      margin-inline: auto;
-    }
-    .hero-offer strong { font-weight: 700; }
-
-    .hero-home .price-wrap { justify-content: center; margin-bottom: 1.2rem; }
-    .hero-home .price-old-hero,
-    .hero-home .price-tag-hero {
-      font-family: 'Playfair Display', Georgia, serif;
-      font-weight: 700;
-    }
-    .hero-home .price-old-hero { opacity: .32; }
 
     .hero-home .btn-cta { box-shadow: 0 4px 12px rgba(189,144,72,.25); }
     .hero-home .btn-cta:hover { box-shadow: 0 6px 18px rgba(189,144,72,.35); }
@@ -1348,19 +1235,6 @@ display: block;
   gap: 1rem;
   margin-bottom: 1rem;
 }
-/* La familia tipográfica de estos dos la fija .hero-home .price-*, que es
-   el único sitio donde se usan y gana en especificidad. */
-.price-old-hero {
-  font-size: 30px;
-  color: #bd9048;
-  opacity: .4;
-}
-.price-tag-hero {
-  font-size: 36px;
-  font-weight: 500;
-  color: #bd9048;
-  line-height: 1;
-}
 .currency {
   font-size: .65em;
   font-weight: 600;
@@ -1512,7 +1386,6 @@ display: block;
       .b1-card-arrow svg { width: 32px; height: 56px; }
       .causa.b2 { padding: 320px 24px 90px; }
       .b2-rings { display: none; }
-      .hero-purchase-box { padding: 100px 10px 60px; }
     }
     @media (min-width: 861px) {
       .b2-inner .b2-final { max-width: 760px; width: calc(100% + 240px); margin-left: -120px; margin-right: -120px; }
@@ -1644,16 +1517,8 @@ display: block;
       .hero-home h1 { font-size: 38px; margin-bottom: 2.5rem; line-height: 1.40; }
       .hero-home .container-home { width: calc(100% - 20px); }
       .hero-sub { margin-bottom: 2rem; font-size: 20px; }
-      .hero-statement { font-size: 24px; margin-bottom: 50px; }
-      .hero-offer { font-size: 20px; }
-      .hero-kicker { font-size: 25px; }
-      .hero-deco { width: 130px; }
       .hero-ribbon-track span { font-size: 18px; }
-      .hero-video { width: calc(100% - 48px); }
-      .hero-purchase-box { width: calc(100% - 20px); margin-bottom: 80px; }
       .hero-trust-note { font-size: 15px; }
-      .price-old-hero { font-size: 38px; }
-      .price-tag-hero { font-size: 48px; }
       .price-wrap { margin-top: 6px; }
 
       /* Bloque 1 y bloque 2 */
