@@ -1026,24 +1026,53 @@ text-align: center;
       .reviews-grid { gap: 3rem; }
     }
 /* ══════════════════════════════════════════════
+       NO ES UN HORÓSCOPO (bloque 6)
+    ══════════════════════════════════════════════ */
+    .b6 { background: var(--teal-deep); padding: 92px 0 100px; text-align: center; }
+    .b6-in { width: min(1000px, 92vw); margin-inline: auto; }
+    .b6-et { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 3.2px;
+             text-transform: uppercase; color: var(--gold-light); margin: 0 0 16px; }
+    .b6-h { font-family: var(--font-display); font-weight: 700; font-size: 42px; line-height: 1.25;
+            color: var(--cream); margin: 0 0 52px; }
+    .b6-h em { font-style: italic; font-weight: 400; color: var(--gold-light); }
+    .b6-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; text-align: left; align-items: stretch; }
+    .b6-card { border-radius: var(--r-md); padding: 30px 30px 32px; }
+    .b6-no { background: rgba(255,251,239,.09); border: 1px solid rgba(255,251,239,.16);
+             box-shadow: 0 8px 22px rgba(0,0,0,.14); }
+    .b6-si { background: var(--cream); box-shadow: 0 10px 28px rgba(0,0,0,.20); }
+    .b6-lab { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px;
+              text-transform: uppercase; margin: 0 0 20px; }
+    .b6-no .b6-lab { color: #ffffff; }
+    .b6-si .b6-lab { color: var(--gold-deep); }
+    .b6-card ul { list-style: none; margin: 0; padding: 0; }
+    .b6-card li { display: flex; gap: 13px; align-items: flex-start; padding: 10px 0;
+                  font-family: var(--font-body); font-size: 19px; line-height: 1.7; }
+    .b6-no li { color: #ffffff; }
+    .b6-si li { color: #3a3f3d; }
+    .b6-card li .mk { flex: 0 0 auto; width: 23px; text-align: center; line-height: 1.55; font-weight: 700; }
+    .b6-no li .mk::before { content: "\2715"; font-size: 21px; color: #ffffff; }
+    .b6-si li .mk::before { content: "\2713"; font-size: 26px; color: var(--gold-light); }
+    .b6-si li strong { font-weight: 700; color: var(--teal-deep); }
+    @media (max-width: 860px) {
+      .b6 { padding: 54px 0 62px; }
+      .b6-et { font-size: 18px; }
+      .b6-h { font-size: 29px; margin-bottom: 30px; }
+      .b6-lab { font-size: 18px; }
+      .b6-cols { grid-template-columns: 1fr; gap: 28px; }
+      .b6-card { padding: 24px 22px 26px; }
+      .b6-card li { font-size: 20px; padding: 10px 0; }
+    }
+
+/* ══════════════════════════════════════════════
        BRIDGE (cierre emocional antes del precio)
     ══════════════════════════════════════════════ */
-    .causa, .garantia {
+    .garantia {
       padding-block: 4.5rem;
       text-align: center;
     }
-    .causa { background: #f5efdf; }
-    .causa h2, .garantia h2 {
+    .garantia h2 {
       color: var(--teal-deep);
       margin-bottom: 1.8rem;
-    }
-    .causa p {
-      max-width: 680px;
-      margin-inline: auto;
-      font-size: 16.8px;
-      line-height: 1.7;
-      color: #0c0c0c;
-      margin-bottom: 1rem;
     }
     .garantia p {
       max-width: 680px;
@@ -1311,7 +1340,6 @@ text-align: center;
     @media (max-width: 860px) {
       .break-mobile { display: block; }
       .break-desktop { display: none; }
-      .causa p { font-size: 20px; }
       summary { font-size: 20px; }
       .faq-body { font-size: 16px; }
       .garantia p { font-size: 20px; }
@@ -1628,14 +1656,32 @@ text-align: center;
   </section>
 
   <!-- ════════════ 4. NO ES UN HORÓSCOPO ════════════ -->
-  <section class="causa">
-    <div class="container-home">
-      <h2 class="reveal">No es un horóscopo</h2>
-      <p class="reveal">No es una predicción.<br>
-      No es algo genérico que le vale a cualquiera.<br>
-      No tiene nada que ver con tu signo del zodiaco.</p>
-      <p class="reveal"><strong>Es un análisis profundo, solo sobre ti.</strong><br>
-      Basado en las coordenadas exactas del momento en que naciste.</p>
+  <section class="b6">
+    <div class="b6-in">
+      <p class="b6-et">Sé lo que estás pensando…</p>
+      <h2 class="b6-h">No, <em>no es un horóscopo</em></h2>
+      <div class="b6-cols">
+        <div class="b6-card b6-no">
+          <p class="b6-lab">Lo que no es</p>
+          <ul>
+            <li><span class="mk" aria-hidden="true"></span><span>No tiene nada que ver con tu signo del zodiaco</span></li>
+            <li><span class="mk" aria-hidden="true"></span><span>No es un diagrama con símbolos o palabras que no entiendes</span></li>
+            <li><span class="mk" aria-hidden="true"></span><span>No es un test de personalidad ni un libro de autoayuda</span></li>
+            <li><span class="mk" aria-hidden="true"></span><span>No es terapia, ni meses para llegar al porqué</span></li>
+            <li><span class="mk" aria-hidden="true"></span><span>No es algo genérico que le vale a cualquiera</span></li>
+          </ul>
+        </div>
+        <div class="b6-card b6-si">
+          <p class="b6-lab">Lo que sí es</p>
+          <ul>
+            <li><span class="mk" aria-hidden="true"></span><span>Un estudio profundo y <strong>100% personalizado</strong>, solo sobre ti</span></li>
+            <li><span class="mk" aria-hidden="true"></span><span><strong>Más de 40 páginas</strong> en PDF, tuyo para siempre</span></li>
+            <li><span class="mk" aria-hidden="true"></span><span>Traducido a <strong>lenguaje humano</strong>: lo entiendes a la primera</span></li>
+            <li><span class="mk" aria-hidden="true"></span><span><strong>Sin citas ni esperas</strong>: lo tienes ahora, en 2 minutos</span></li>
+            <li><span class="mk" aria-hidden="true"></span><span>Se calcula con tus datos de nacimiento: <strong>tu carta natal completa</strong></span></li>
+          </ul>
+        </div>
+      </div>
     </div>
   </section>
 
