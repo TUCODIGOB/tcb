@@ -1062,66 +1062,44 @@ display: block;
     }
 
     /* ══════════════════════════════════════════════
-       PROBLEMA — bloque 1: foto + texto + tarjeta a caballo
+       CAUSA (bloque 3) — foto y explicación sobre verde
     ══════════════════════════════════════════════ */
-    /* ══════════════════════════════════════════════
-       CAUSA (bloque 2) — texto sobre fondo teal
-    ══════════════════════════════════════════════ */
-    .causa.b2 {
-      background: #f7ecd9;
-      padding: 270px 24px 90px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
+    .b3v { position: relative; background: var(--teal-deep); padding: 96px 0; }
+    .b3v-in { width: min(1180px, 92vw); margin-inline: auto;
+              display: grid; grid-template-columns: 32% 1fr; gap: 56px; align-items: center; }
+    .b3v-foto { border: 2px dashed var(--gold-light); aspect-ratio: 3 / 4;
+                display: flex; align-items: center; justify-content: center; text-align: center; }
+    .b3v-foto span { font-family: var(--font-body); font-size: 15px; letter-spacing: 4px; color: var(--gold-light); }
+    .b3v-txt { text-align: left; }
+    .b3v-tel { font-family: var(--font-display); font-style: italic; font-weight: 700;
+               font-size: 22px; line-height: 1; color: #fffbef; margin: 0 0 24px; }
+    .b3v-h { font-family: var(--font-display); font-weight: 700; font-size: 48px; line-height: 1.22;
+             color: #fffbef; margin: 0 0 34px; }
+    .b3v-h .oro { color: var(--gold-light); }
+    .b3v-l { font-family: var(--font-body); font-size: 19px; line-height: 1.85; color: rgba(255,251,239,.84); margin: 0 0 22px; }
+    .b3v-l strong { font-weight: 700; color: var(--gold-light); }
+    .b3v-l em { font-style: italic; color: #fffbef; }
+    .b3v-fin { font-family: var(--font-body); font-weight: 700; font-style: italic; font-size: 24px;
+               line-height: 1.5; color: #fffbef; margin: 40px 0 0;
+               border-left: 3px solid var(--gold-light); padding-left: 24px; }
+    .b3v-fin .oro { color: var(--gold-light); }
+
+    @media (max-width: 1024px) {
+      .b3v { padding: 76px 0; }
+      .b3v-in { grid-template-columns: 1fr; gap: 42px; }
+      .b3v-txt { text-align: center; }
+      .b3v-h { font-size: 40px; }
+      .b3v-foto { width: 100%; max-width: 380px; margin-inline: auto; }
+      .b3v-fin { text-align: left; font-size: 20px; width: max-content; max-width: 100%; margin-inline: auto; }
     }
-    .b2-inner { max-width: 520px; margin: 0 auto; position: relative; z-index: 2; }
-    .b2-rings {
-      position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 680px; height: 680px;
-      border-radius: 50%;
-      border: 1px solid rgba(207,177,128,.12);
-    }
-    .b2-rings::before, .b2-rings::after {
-      content: ''; position: absolute; border-radius: 50%;
-      border: 1px solid rgba(207,177,128,.12);
-    }
-    .b2-rings::before { inset: 80px; }
-    .b2-rings::after { inset: 170px; }
-    .b2-inner .b2-q {
-      font-family: var(--font-display);
-      font-size: 35px;
-      font-weight: 700;
-      color: var(--teal-deep);
-      margin: 0 0 2px;
-      line-height: 1.25;
-    }
-    .b2-inner .b2-cursive {
-      font-family: 'Italianno', cursive;
-      font-weight: 400;
-      font-size: 50px;
-      color: #729790;
-      line-height: 1;
-      margin: 0 0 40px;
-      margin-top: 20px;
-    }
-    .b2-inner .b2-line {
-      font-size: 16.8px;
-      line-height: 1.7;
-      color: var(--ink);
-      margin: 0 0 25px;
-    }
-    .b2-inner .b2-line strong { color: var(--gold-deep); }
-    .b2-rule { width: 44px; height: 2px; background: var(--gold-deep); margin: 22px auto 16px; }
-    .b2-inner .b2-final {
-      font-family: var(--font-display);
-      font-weight: 700;
-      font-size: 26px;
-      font-style: italic;
-      color: #729790;
-      line-height: 1.5;
-      margin: 0;
-      margin-top: 40px;
+    @media (max-width: 860px) {
+      .b3v { padding: 56px 0 64px; }
+      .b3v-tel { font-size: 22px; margin-bottom: 20px; }
+      .b3v-h { font-size: 30px; margin-bottom: 26px; }
+      .b3v-l { font-size: 20px; line-height: 1.7; margin-bottom: 22px; }
+      .b3v-fin { font-size: 22px; margin-top: 32px; padding-left: 18px; width: auto; }
+      .b3v-fin br { display: none; }
+      .b3v-foto { max-width: 290px; }
     }
     /* ══════════════════════════════════════════════
        PRICE & FINAL CTA
@@ -1301,11 +1279,8 @@ display: block;
       .price-wrap { justify-content: center; margin: 0 0 14px; }
       .hero-home h1, .hero-sub { text-align: center; }
       .steps { grid-template-columns: 1fr; }
-      .causa.b2 { padding: 320px 24px 90px; }
-      .b2-rings { display: none; }
     }
     @media (min-width: 861px) {
-      .b2-inner .b2-final { max-width: 760px; width: calc(100% + 240px); margin-left: -120px; margin-right: -120px; }
       .price-wrap { margin: 0; }
       .btn-cta { padding: 10px 40px; min-width: 400px; }
       .field label { font-size: 12px; }
@@ -1435,9 +1410,6 @@ display: block;
       .hero-ribbon-track span { font-size: 18px; }
       .hero-trust-note { font-size: 15px; }
       .price-wrap { margin-top: 6px; }
-
-      /* Bloque 2 */
-      .b2-inner .b2-line { font-size: 20px; }
 
       /* Áreas, pasos y reseñas */
       .areas-grid { grid-template-columns: 1fr; }
@@ -1592,16 +1564,16 @@ display: block;
   </section>
 
   <!-- ════════════ 2. POR QUÉ PASA ESTO ════════════ -->
-  <section class="causa b2">
-    <div class="b2-rings" aria-hidden="true"></div>
-    <div class="b2-inner">
-      <p class="b2-q reveal">Entonces,<br class="break-mobile"> <em style="color: var(--gold-deep);">¿qué está pasando?</em></p>
-      <p class="b2-cursive reveal">Te lo explico</p>
-      <p class="b2-line reveal">Antes de tomar tu primera respiración,<br class="break-desktop"> ya se había formado <strong>algo</strong> en ti:</p>
-      <p class="b2-line reveal">Una <strong>programación única</strong> que decide <strong><em style="color: var(--ink);">cómo piensas, cómo sientes, cómo te vinculas con todo lo que te rodea</em></strong>...</p>
-      <p class="b2-line reveal">Y <strong style="color: var(--gold-deep);">DIRIGE TU VIDA ENTERA</strong> (<strong><em style="color: var(--ink);">tus decisiones, tus relaciones, tu dinero, tus miedos</em></strong>…)</p>
-      <p class="b2-line reveal">todos los días, <strong style="color: var(--gold-deep);">SIN QUE TE DES CUENTA</strong>.</p>
-      <p class="b2-final reveal">Y seguirá siendo así, año tras año, mientras sigas intentando cambiar <strong style="text-decoration: underline;">sin saber desde dónde funciona todo</strong></p>
+  <section class="b3v">
+    <div class="b3v-in">
+      <div class="b3v-foto"><span>FOTO CHICA<br>+ ESTUDIO</span></div>
+      <div class="b3v-txt">
+        <p class="b3v-tel">Te lo explico:</p>
+        <h2 class="b3v-h">Antes de tu primera respiración,<br class="break-desktop"> <span class="oro">ya se había formado algo en ti</span></h2>
+        <p class="b3v-l">Una <strong>programación interior</strong> que decide <em>cómo piensas, cómo sientes y cómo te vinculas con todo lo que te rodea</em>: Tus decisiones, tus relaciones, tu dinero, tus miedos…</p>
+        <p class="b3v-fin">Y lleva dirigiendo tu vida entera sin que te des cuenta<br>
+<span class="oro">y hasta que no la descubras nada cambiará de verdad</span></p>
+      </div>
     </div>
   </section>
 
