@@ -864,59 +864,62 @@ text-align: center;
     }
 
     /* ══════════════════════════════════════════════
-       AREAS SECTION
+       LAS 7 ÁREAS (bloque 5)
     ══════════════════════════════════════════════ */
-    .areas {
-      background: var(--teal-deep);
-      color: var(--cream);
-      position: relative;
-      overflow: hidden;
+    .b5 { background: var(--white); padding: 80px 0 100px; text-align: center; }
+    .b5-in { width: min(900px, 92vw); margin-inline: auto; }
+    .b5-orn { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 0 0 26px; }
+    .b5-orn i { display: block; width: 64px; height: 1px; background: var(--gold-deep); }
+    .b5-orn b { width: 7px; height: 7px; border-radius: 50%; background: var(--gold-deep); display: block; }
+    .b5-h { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.3;
+            color: var(--teal-deep); margin: 0 0 72px; }
+    .b5-h em { font-style: italic; color: var(--gold-deep); }
+
+    .b5-lista { text-align: left; }
+    .b5-item { padding: 28px 0; border-top: 1px solid #e8d9bd; }
+    .b5-item:first-child { border-top: 0; padding-top: 0; }
+    .b5-item h3 { font-family: var(--font-display); font-weight: 700; font-size: 25px; line-height: 1.2;
+                  color: var(--teal-deep); margin: 0 0 10px; }
+    .b5-item h3 .n { color: var(--gold-deep); font-weight: 400; font-size: 32px; margin-right: 12px; }
+    .b5-item p { font-family: var(--font-body); font-size: 16.8px; line-height: 1.75; color: #4a4538; margin: 0; }
+
+    .b5-mas { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px;
+              text-transform: uppercase; color: var(--gold-deep); margin: 56px 0 26px; }
+    .b5-extras { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; text-align: left; }
+    .b5-extra { background: var(--cream); border-radius: var(--r-lg); padding: 28px 30px; }
+    .b5-extra h3 { font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 22px;
+                   line-height: 1.25; color: var(--teal-deep); margin: 0 0 12px; }
+    .b5-extra p { font-family: var(--font-body); font-size: 16.8px; line-height: 1.7; color: #4a4538; margin: 0; }
+
+    .b5-siempre { margin: 56px auto 0; max-width: 700px; }
+    .b5-siempre .et { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px;
+                      text-transform: uppercase; color: var(--gold-deep); margin: 0 0 12px; }
+    .b5-siempre p.tx { font-family: var(--font-body); font-size: 16.8px; line-height: 1.7; color: #4a4538; margin: 0; }
+
+    .b5-cta { margin-top: 48px; }
+    .b5-oferta { font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 26px;
+                 line-height: 1.4; color: var(--gold-deep); margin: 0 0 22px; }
+    .b5-cta .btn-cta { display: inline-flex; align-items: center; justify-content: center; gap: .5em; }
+
+    @media (max-width: 1024px) {
+      .b5 { padding: 66px 0 82px; }
+      .b5-h { font-size: 31px; margin-bottom: 60px; }
     }
-    .areas::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 60% 80% at 95% 20%, rgba(207,177,128,.12) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .areas h2 { color: var(--cream); font-size: 40px; }
-    .areas-subtitle {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--gold-light);
-      margin-top: 1.8rem;
-      margin-bottom: 3rem;
-    }
-    .areas-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
-      max-width: 620px;
-      margin-inline: auto;
-    }
-    .area-card {
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(207,177,128,.2);
-      border-radius: var(--r-md);
-      padding: 1.5rem 1.6rem;
-display: block;
-      transition: background .25s, border-color .25s;
-    }
-.area-title {
-      font-family: var(--font-display);
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--gold-light);
-      margin-bottom: .5rem;
-    }
-    
-    .area-card:hover {
-      background: rgba(207,177,128,.1);
-      border-color: rgba(207,177,128,.5);
-    }
-    
-    .area-card p {
-      font-size: .9rem;
-      color: rgba(255,251,239,.75);
+    @media (max-width: 860px) {
+      .b5 { padding: 48px 0 64px; }
+      .b5-h { font-size: 27px; margin-bottom: 46px; }
+      .b5-orn i { width: 44px; }
+      .b5-item { padding: 24px 0; }
+      .b5-item h3 { font-size: 23px; }
+      .b5-item h3 .n { font-size: 29px; }
+      .b5-item p { font-size: 18px; }
+      .b5-mas { font-size: 15px; margin: 42px 0 20px; }
+      .b5-extras { grid-template-columns: 1fr; gap: 16px; }
+      .b5-extra { padding: 24px 22px; }
+      .b5-extra p, .b5-siempre p.tx { font-size: 18px; }
+      .b5-siempre .et { font-size: 15px; }
+      .b5-oferta { font-size: 22px; }
+      .b5-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
     }
 
     /* ══════════════════════════════════════════════
@@ -1291,7 +1294,6 @@ display: block;
     .reveal-delay-4 { transition-delay: .4s; }
     .reveal-delay-5 { transition-delay: .5s; }
     .reveal-delay-6 { transition-delay: .6s; }
-    .reveal-delay-7 { transition-delay: .7s; }
 
     .value-compare {
       position: relative;
@@ -1332,35 +1334,6 @@ display: block;
 
     /* Ancla del formulario (compensa el nav sticky) */
     #formulario { scroll-margin-top: 80px; }
-
-    /* ─── QUÉ ES + LAS 7 ÁREAS (fondo teal corporativo) ─── */
-    .areas p {
-      max-width: 680px;
-      margin-inline: auto;
-      color: rgba(255,251,239,.85);
-      font-size: 1.05rem;
-      line-height: 1.7;
-      position: relative;
-    }
-    .areas .areas-lead {
-      font-size: 17px;
-      font-weight: 400;
-      color: var(--white);
-      margin-bottom: 1.2rem;
-    }
-    /* No es redundante con .areas-subtitle: hace falta ganarle a
-       .areas p, que tiene más especificidad y otro color. */
-    .areas .areas-subtitle { color: var(--gold-light); }
-    .areas .areas-lead strong { color: var(--gold-light); }
-    .areas p strong { color: var(--cream); }
-    .mockup-placeholder {
-  width: 240px;
-  height: 300px;
-  margin: 40px auto;
-  background: #e3d3b5;
-  border-radius: 8px;
-}
-    .areas h2 { position: relative; margin-bottom: 1.8rem; }
 
     /* ─── PRECIO — stack de valor ─── */
     .price-cta h2 { position: relative; }
@@ -1449,13 +1422,7 @@ display: block;
       .hero-trust-note { font-size: 15px; }
       .price-wrap { margin-top: 6px; }
 
-      /* Áreas, pasos y reseñas */
-      .areas-grid { grid-template-columns: 1fr; }
-      .area-title { font-size: 1.5rem; }
-      .area-card p { font-size: 20px; }
-      .areas-subtitle { font-size: 24px; }
-      .areas .areas-lead { font-size: 20px; }
-      .areas p { font-size: 20px; }
+      /* Pasos y reseñas */
       .step p { font-size: 20px; }
       .step-num { font-size: 2rem; }
       .reviews-grid { grid-template-columns: 1fr 1fr; }
@@ -1627,50 +1594,35 @@ display: block;
   </section>
 
   <!-- ════════════ 4. LAS 7 ÁREAS ════════════ -->
-  <section class="areas">
-    <div class="container-home text-center">
-      <h2 class="b3-title">¿Qué es <em style="color: var(--gold-light); font-style: italic;">Tu Diseño de Origen</em>?</h2>
+  <section class="b5">
+    <div class="b5-in">
+      <div class="b5-orn" aria-hidden="true"><i></i><b></b><i></i></div>
+      <h2 class="b5-h">Las 7 áreas que <em>lo explican todo</em></h2>
 
-      <p class="reveal areas-lead">Un estudio <strong>100% personalizado y único</strong>, de <strong>23 a 30 páginas</strong>,<br>
-que descifra tu <strong>programación interior</strong> a partir de tus datos de nacimiento (tu fecha, tu hora y tu lugar exacto)<br>
-y te muestra las 7 áreas que están dirigiendo tu vida.</p>
+      <div class="b5-lista">
+        <div class="b5-item"><h3><span class="n">01</span>Tu Identidad</h3><p>Cómo funcionas por dentro: lo que se te da bien de verdad y los puntos ciegos que llevas toda la vida sin ver. Qué muestras, qué escondes y en qué te contradices sin darte cuenta</p></div>
+        <div class="b5-item"><h3><span class="n">02</span>Tus Patrones</h3><p>Por qué siempre te pasa lo mismo y qué repites sin poder parar. Cuáles son tus patrones y qué los enciende. Y lo más incómodo: qué ganas tú con ellos sin saberlo</p></div>
+        <div class="b5-item"><h3><span class="n">03</span>Tus Miedos</h3><p>Lo que gobierna tu vida sin que lo sepas. Los miedos que dirigen tus decisiones: qué los dispara, cómo reaccionas, qué estás evitando por su culpa y lo que ya te ha costado</p></div>
+        <div class="b5-item"><h3><span class="n">04</span>Tu Herida</h3><p>Lo que hoy sigue bloqueándote en silencio. Cuál es tu herida y qué la reabre sin que la veas venir. Cómo te proteges, qué estás perdiendo y qué necesitas para dejar de hacerlo</p></div>
+        <div class="b5-item"><h3><span class="n">05</span>Tú y el Amor</h3><p>Por qué amas como amas y atraes siempre a quien atraes. Qué necesitas para sentirte querida y por qué siempre falla en el mismo punto</p></div>
+        <div class="b5-item"><h3><span class="n">06</span>Tus Relaciones</h3><p>Cómo te vinculas con los demás y qué rol ocupas sin haberlo decidido. Qué pasa entre lo que das y lo que recibes, y en qué relaciones acabas metiéndote sin verlo venir</p></div>
+        <div class="b5-item"><h3><span class="n">07</span>Tú y el Dinero</h3><p>Por qué el dinero no termina de llegar a tu vida. Qué significa para ti de verdad, qué haces con él, y qué te está bloqueando para ganar más, que casi nunca es lo que crees</p></div>
+      </div>
 
-<p class="reveal">Sin tecnicismos, sin palabras raras, escrito para que lo entiendas a la primera.</p>
+      <p class="b5-mas">Y además, incluido</p>
+      <div class="b5-extras">
+        <div class="b5-extra"><h3>Tus fortalezas y tus desafíos</h3><p>Lo que se te da bien, pero nunca te has parado a valorar. Y lo que la vida te pone delante una y otra vez hasta que lo aprendas: lo que te cuesta, y qué tienes que cambiar para superarlo</p></div>
+        <div class="b5-extra"><h3>Tu mapa de origen</h3><p>El dibujo con tus posiciones exactas en el momento de nacer. Toda tu programación interior en una sola imagen, única y solo tuya</p></div>
+      </div>
 
-<p class="reveal">Y lo tienes <strong>en minutos</strong>.</p>
-<div class="mockup-placeholder reveal"></div>
+      <div class="b5-siempre">
+        <p class="et">Tuyo para siempre</p>
+        <p class="tx">En PDF. Puedes guardarlo, imprimirlo y volver a él cada vez que lo necesites. No caduca ni se pierde</p>
+      </div>
 
-      <p class="reveal areas-subtitle">Analiza 7 áreas clave que dirigen tu vida sin que lo sepas:</p>
-
-      <div class="areas-grid">
-        <div class="area-card reveal reveal-delay-1">
-          <h3 class="area-title"><span class="area-num">1</span> Identidad</h3>
-          <p>Por qué eres como eres y por qué tu vida es como es</p>
-        </div>
-        <div class="area-card reveal reveal-delay-2">
-          <h3 class="area-title"><span class="area-num">2</span> Patrones</h3>
-          <p>Por qué siempre te pasa lo mismo y qué repites sin poder parar</p>
-        </div>
-        <div class="area-card reveal reveal-delay-3">
-          <h3 class="area-title"><span class="area-num">3</span> Miedos</h3>
-          <p>Lo que gobierna tu vida sin que lo sepas</p>
-        </div>
-        <div class="area-card reveal reveal-delay-4">
-          <h3 class="area-title"><span class="area-num">4</span> Herida</h3>
-          <p>Lo que hoy sigue bloqueándote en silencio</p>
-        </div>
-        <div class="area-card reveal reveal-delay-5">
-          <h3 class="area-title"><span class="area-num">5</span> Amor</h3>
-          <p>Por qué amas como amas y por qué atraes a quien atraes</p>
-        </div>
-        <div class="area-card reveal reveal-delay-6">
-          <h3 class="area-title"><span class="area-num">6</span> Relaciones</h3>
-          <p>Cómo te vinculas con los demás y qué rol ocupas sin darte cuenta</p>
-        </div>
-        <div class="area-card reveal reveal-delay-7">
-          <h3 class="area-title"><span class="area-num">7</span> Dinero</h3>
-          <p>Por qué el dinero no termina de fluir en tu vida</p>
-        </div>
+      <div class="b5-cta">
+        <p class="b5-oferta">¡Obtén tu prueba en SOLO 2 MINUTOS!</p>
+        <a href="#formulario" class="btn-cta">Quiero descubrirlo gratis&nbsp;→</a>
       </div>
     </div>
   </section>
