@@ -728,6 +728,8 @@ text-align: center;
 
 
     .br-movil { display: none; }
+    .br-esc { display: none; }
+    @media (min-width: 1025px) { .br-esc { display: inline; } }
     .hero-oferta {
       font-family: var(--font-body);
       font-size: 18px;
@@ -1143,7 +1145,7 @@ text-align: center;
     .b9-list summary::after { content: "+"; flex: 0 0 auto; font-family: var(--font-body); font-weight: 400;
                               font-size: 26px; line-height: 1; color: var(--gold-deep); margin-top: 2px; }
     .b9-list details[open] summary::after { content: "\2013"; }
-    .b9-body { padding: 0 4px 28px; max-width: 700px; }
+    .b9-body { padding: 0 4px 28px; max-width: 780px; }
     .b9-body p { font-family: var(--font-body); font-size: 16px; line-height: 1.75; color: #4a4538; margin: 0 0 16px; }
     .b9-body p:last-child { margin-bottom: 0; }
     .b9-body a { color: var(--gold-deep); text-decoration: underline; }
@@ -1172,7 +1174,7 @@ text-align: center;
     .b10-of { font-family: var(--font-body); font-weight: 700; font-size: 18px;
               line-height: 1.5; color: var(--gold-light); margin: 0 0 46px; text-align: center; }
     .b10-form .form-progress { flex-direction: row; justify-content: center; gap: 12px; }
-    .b10-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 56px; align-items: center; }
+    .b10-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 56px; align-items: center; }
     .b10-form .container { width: 100%; }
     .b10-form .form-card { margin: 0; border: 0; box-shadow: 0 18px 44px rgba(0,0,0,.28); }
     .b10-br, .b10-br2 { display: none; }
@@ -1293,6 +1295,15 @@ text-align: center;
       .hero-sub { margin-bottom: 2rem; font-size: 20px; }
       .hero-ribbon-track span { font-size: 18px; }
       .hero-trust-note { font-size: 15px; }
+    }
+
+    /* En ordenador el texto de los botones mide 16px. El del nav va aparte. */
+    @media (min-width: 1025px) {
+      .btn-cta { font-size: 16px; }
+      .btn-pay { font-size: 16px; }
+      .form-step-nav .btn-next { font-size: 16px; }
+      .form-step-nav .btn-back { font-size: 16px; }
+      .compruebalo .corregir { font-size: 16px; }
     }
 
 </style>
@@ -1472,7 +1483,7 @@ text-align: center;
 
       <div class="b5-siempre">
         <p class="et">Tuyo para siempre</p>
-        <p class="tx">En PDF. Puedes guardarlo, imprimirlo y volver a él cada vez que lo necesites. No caduca ni se pierde</p>
+        <p class="tx">En PDF. Puedes guardarlo, imprimirlo y volver a él cada vez que lo necesites.<br class="br-esc"> No caduca ni se pierde</p>
       </div>
 
       <div class="b5-cta">
