@@ -1557,9 +1557,9 @@ text-align: center;
     <div class="b8-in">
       <h2 class="b8-h">Lo que pasa cuando<br class="b8-br"> <em>por fin te entiendes</em></h2>
       <div class="b8-videos">
-        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1193154304?h=7a128794c9&autopause=0&badge=0&title=0&byline=0&portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio — Tu Diseño de Origen"></iframe></div>
-        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1193157757?badge=0&autopause=0&app_id=58479&title=0&byline=0&portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Nacho — Tu Diseño de Origen"></iframe></div>
-        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1193156594?badge=0&autopause=0&app_id=58479&title=0&byline=0&portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Sara — Tu Diseño de Origen"></iframe></div>
+        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230268085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Ona — Tu Diseño de Origen"></iframe></div>
+        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230269127?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Nacho — Tu Diseño de Origen"></iframe></div>
+        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230266221?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Sara — Tu Diseño de Origen"></iframe></div>
       </div>
       <div class="b8-sep" aria-hidden="true"><i></i><b></b><i></i></div>
       <div class="b8-res">
@@ -2665,5 +2665,30 @@ text-align: center;
     <button type="button" class="corregir" id="compruebaloNo">Corregir</button>
   </div>
 </div>
+
+<!-- LOS VIDEOS DE LAS RESENAS. Solo puede sonar uno a la vez, y al terminar
+     cada uno vuelve a su primer fotograma, parado, para que no salga la
+     pantalla final de Vimeo con otros videos. -->
+<script src="https://player.vimeo.com/api/player.js"></script>
+<script>
+  (function () {
+    if (!window.Vimeo) return;
+    var marcos = document.querySelectorAll('.b8-video iframe');
+    if (!marcos.length) return;
+    var videos = Array.prototype.map.call(marcos, function (marco) {
+      return new Vimeo.Player(marco);
+    });
+    videos.forEach(function (video) {
+      // Si uno arranca, los demas se paran.
+      video.on('play', function () {
+        videos.forEach(function (otro) { if (otro !== video) otro.pause(); });
+      });
+      // Al acabar, vuelve al principio y se queda parado.
+      video.on('ended', function () {
+        video.setCurrentTime(0).then(function () { video.pause(); });
+      });
+    });
+  })();
+</script>
 </body>
 </html>
