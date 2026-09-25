@@ -130,33 +130,7 @@
     }
     .nav-cta:hover { background: var(--gold-light); }
 
-    /* ─── HERO ─── */
-    .hero {
-      text-align: center;
-      padding-block: 3rem 0.5rem;
-    }
-    .hero h1 {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 5vw, 2.8rem);
-      font-weight: 700;
-      color: var(--teal-deep);
-      line-height: 1.2;
-      margin-bottom: 1rem;
-    }
-    .form-title { font-size: 2.5rem; color: var(--teal-deep); }
-    .break-mobile-form { display: none; }
-    .hero p {
-      font-size: 1rem;
-      color: #3a3a3a;
-      max-width: 560px;
-      margin-inline: auto;
-    }
-
     /* ─── FORM CARD ─── */
-    .form-wrap {
-      padding-bottom: 4rem;
-      padding-top: 2rem;
-    }
     .form-card {
       background: var(--white);
       border: 1px solid rgba(189,144,72,.2);
@@ -577,7 +551,7 @@
 
     /* ─── FOOTER ─── */
     .footer {
-      background: var(--teal-deep);
+      background: var(--ink);
       color: rgba(255,251,239,.6);
       padding-block: 2.5rem;
       font-size: .82rem;
@@ -620,7 +594,6 @@
 
     /* ─── UTILITIES ──────────────────────────────── */
     .container-home { width: min(1100px, 92vw); margin-inline: auto; }
-    .text-center { text-align: center; }
     .sr-only { position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0); }
 
     /* ─── TYPOGRAPHY ─────────────────────────────── */
@@ -1141,68 +1114,7 @@ text-align: center;
     /* ══════════════════════════════════════════════
        PRICE & FINAL CTA
     ══════════════════════════════════════════════ */
-    .price-cta {
-      background: var(--teal-deep);
-      color: var(--cream);
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .price-cta::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse 70% 60% at 50% 0%, rgba(207,177,128,.15) 0%, transparent 60%);
-      pointer-events: none;
-    }
-    .price-cta h2 {
-      color: var(--cream);
-      font-style: italic;
-      margin-bottom: 3rem;
-    }
-
-    .price-card {
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(207,177,128,.3);
-      border-radius: var(--r-lg);
-      max-width: 520px;
-      margin-inline: auto;
-      margin-top: 1.5rem;
-      padding: 2.5rem 2.5rem 2rem;
-      position: relative;
-    }
-.price-wrap {
-  display: flex;
-  align-items: baseline;
-  justify-content: flex-start;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-.currency {
-  font-size: .65em;
-  font-weight: 600;
-  vertical-align: .15em;
-  margin-left: .05em;
-}
 .break-mobile { display: none; }
-    .features-list {
-      list-style: none;
-      text-align: left;
-      margin-bottom: 2rem;
-    }
-    .features-list li {
-      display: flex; align-items: flex-start; gap: .75rem;
-      padding-block: .55rem;
-      border-bottom: 1px solid rgba(255,255,255,.07);
-      font-size: .95rem;
-      color: rgba(255,251,239,.88);
-    }
-    .features-list li:last-child { border-bottom: none; }
-    .features-list .check {
-      color: var(--gold-deep);
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      margin-top: .05rem;
-    }
 
     /* ══════════════════════════════════════════════
        LO QUE ESTÁS PENSANDO AHORA MISMO (bloque 9)
@@ -1243,6 +1155,51 @@ text-align: center;
     @media (max-width: 620px) { .b9-br { display: inline; } }
 
     /* ══════════════════════════════════════════════
+       O PUEDES SABERLO HOY (bloque 10)
+    ══════════════════════════════════════════════ */
+    .b10 { background: var(--teal-deep); padding: 92px 0 100px; }
+    .b10-in { width: min(1120px, 92vw); margin-inline: auto; }
+    .b10-h { font-family: var(--font-display); font-weight: 700; font-size: 36px; line-height: 1.28;
+             color: var(--cream); margin: 0 0 14px; text-align: center; }
+    .b10-h em { font-style: italic; font-weight: 400; color: var(--gold-light); }
+    .b10-of { font-family: var(--font-body); font-weight: 700; font-size: 19px;
+              line-height: 1.5; color: var(--gold-light); margin: 0 0 46px; text-align: center; }
+    .b10-form .form-progress { flex-direction: row; justify-content: center; gap: 12px; }
+    .b10-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 56px; align-items: center; }
+    .b10-form .container { width: 100%; }
+    .b10-form .form-card { margin: 0; border: 0; box-shadow: 0 18px 44px rgba(0,0,0,.28); }
+    .b10-br, .b10-br2 { display: none; }
+    .b10-cita { text-align: left; margin: 0; }
+    .b10-cita .com { display: block; font-family: var(--font-display); font-weight: 700; font-size: 54px;
+                     line-height: .6; color: var(--gold-light); opacity: .55; margin: 0 0 20px; }
+    .b10-cita p { font-family: var(--font-display); font-style: italic; font-size: 24px; line-height: 1.6;
+                  color: rgba(255,251,239,.92); margin: 0 0 14px; }
+    .b10-cita .quien { display: flex; align-items: center; gap: 14px; margin: 22px 0 0;
+                       font-family: var(--font-display); font-style: italic; font-size: 21px;
+                       color: var(--gold-light); }
+    .b10-cita .quien img { width: 80px; height: auto; display: block; flex: 0 0 auto; }
+    @media (max-width: 1024px) {
+      .b10 { padding: 72px 0 80px; }
+      .b10-h { font-size: 32px; }
+      .b10-of { margin-bottom: 40px; }
+      .b10-grid { grid-template-columns: 1fr; gap: 44px; }
+      .b10-cita { text-align: center; max-width: 620px; margin-inline: auto; }
+      .b10-cita .quien { justify-content: center; }
+    }
+    @media (max-width: 767px) {
+      .b10 { padding: 54px 0 62px; }
+      .b10-h { font-size: 29px; margin-bottom: 12px; }
+      .b10-of { font-size: 19px; margin-bottom: 32px; }
+      .b10-grid { gap: 34px; }
+      .b10-cita p { font-size: 21px; }
+      .b10-cita .com { font-size: 46px; margin-bottom: 14px; }
+      .b10-cita .quien { font-size: 19px; gap: 12px; }
+      .b10-cita .quien img { width: 72px; }
+    }
+
+    @media (max-width: 620px) { .b10-br, .b10-br2 { display: inline; } }
+
+    /* ══════════════════════════════════════════════
        FOOTER
     ══════════════════════════════════════════════ */
     .footer-inner {
@@ -1274,16 +1231,6 @@ text-align: center;
     .reveal-delay-4 { transition-delay: .4s; }
     .reveal-delay-5 { transition-delay: .5s; }
 
-    .value-compare {
-      position: relative;
-      max-width: 640px;
-      margin: 2.2rem auto 0;
-      font-size: .95rem;
-      line-height: 1.65;
-      color: rgba(255,251,239,.75);
-      font-style: italic;
-    }
-
     /* ══════════════════════════════════════════════
        RESPONSIVE
     ══════════════════════════════════════════════ */
@@ -1291,12 +1238,9 @@ text-align: center;
       .break-mobile { display: block; }
       .break-desktop { display: none; }
       .garantia p { font-size: 20px; }
-      .value-compare { font-size: 20px; }
-      .price-wrap { justify-content: center; margin: 0 0 14px; }
       .hero-home h1, .hero-sub { text-align: center; }
     }
     @media (min-width: 861px) {
-      .price-wrap { margin: 0; }
       .btn-cta { padding: 10px 40px; min-width: 400px; }
       .field label { font-size: 12px; }
       .field input, .field select { font-size: 14px; padding: 10px; }
@@ -1309,36 +1253,6 @@ text-align: center;
 
     /* Ancla del formulario (compensa el nav sticky) */
     #formulario { scroll-margin-top: 80px; }
-
-    /* ─── PRECIO — stack de valor ─── */
-    .price-cta h2 { position: relative; }
-    .features-list li { line-height: 1.55; }
-    .features-list li strong { color: var(--cream); font-weight: 600; }
-    .feat-val {
-      display: block;
-      font-style: normal;
-      font-size: .78rem;
-      font-weight: 600;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      color: var(--gold-light);
-      opacity: .8;
-      margin-top: .2rem;
-    }
-    .price-old {
-      font-family: var(--font-display);
-      font-size: 35px;
-      color: var(--gold-light);
-      opacity: .45;
-    }
-    .price-tag {
-      font-family: var(--font-display);
-      font-size: 54px;
-      font-weight: 700;
-      color: var(--gold-light);
-      line-height: 1;
-    }
-    .price-card .price-wrap { justify-content: center; margin-bottom: 1.8rem; }
 
     /* ─── GARANTÍA (fondo claro, tarjeta) ─── */
     .garantia { background: var(--cream); }
@@ -1369,13 +1283,11 @@ text-align: center;
 
     @media (max-width: 600px) {
       /* Nav, hero de formulario y campos */
-      .break-mobile-form { display: block; }
       .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
       .nav-cta { width: 100%; text-align: center; font-size: 19px; padding: .6rem; }
       .nav-logo img { height: 34px; width: auto; }
       .nav.scrolled .nav-inner { padding-block: .4rem; }
       .nav.scrolled .nav-logo { display: none; }
-      .hero { padding-block: 2rem 1.5rem; }
       .form-card { padding: 1.5rem 1.2rem; }
       .field-row { grid-template-columns: 1fr; gap: 0; }
       .phone-group { grid-template-columns: 110px 1fr; }
@@ -1395,14 +1307,8 @@ text-align: center;
       .hero-sub { margin-bottom: 2rem; font-size: 20px; }
       .hero-ribbon-track span { font-size: 18px; }
       .hero-trust-note { font-size: 15px; }
-      .price-wrap { margin-top: 6px; }
 
       /* Precio, garantía y FAQ */
-      .price-card { padding: 1.8rem 1.4rem; }
-      .price-old { font-size: 45px; }
-      .price-tag { font-size: 60px; }
-      .features-list li { font-size: 20px; }
-      .feat-val { font-size: 17px; }
       .garantia-card { padding: 1.5rem 1.3rem; }
       .garantia-card p { font-size: 20px; }
     }
@@ -1739,46 +1645,15 @@ text-align: center;
   </section>
 
   <!-- ════════════ 9. CTA DE CIERRE (con precio y stack de valor) ════════════ -->
-  <section class="price-cta" id="precio">
-    <div class="container-home text-center">
-
-      <h2 class="reveal">Ya llevas suficiente tiempo preguntándote por qué</h2>
-
-      <div class="price-card reveal">
-
-        <ul class="features-list">
-          <li><span class="check">✦</span> <span><strong>Tu informe Tu Diseño de Origen</strong> — de 23 a 30 páginas, las 7 áreas clave, 100% personalizado <em class="feat-val">valor 150-400€</em></span></li>        
-          <li><span class="check">✦</span> <span><strong>Tu diagrama de nacimiento visual</strong> — el mapa personalizado con todas tus posiciones <em class="feat-val">incluido</em></span></li>
-          <li><span class="check">✦</span> <span><strong>Entrega en menos de 2 minutos</strong> — sin cita, sin espera, descarga inmediata</span></li>
-        </ul>
-
-        <div class="price-wrap">
-          <div class="price-old"><s>67</s><span class="currency">€</span></div>
-          <div class="price-tag">47<span class="currency">€</span></div>
-        </div>
-
-        <a href="#formulario" class="btn-cta" style="width:100%; text-align:center; display:block;">
-          Descubre<br class="break-mobile"> tu Diseño de Origen
-        </a>
-      </div>
-
-      <p class="value-compare reveal">Una sesión de astrología psicológica cuesta entre 80€ y 400€, tarda días en concertarse y una hora en desarrollarse. Un informe similar cuesta desde 150€. Tu Diseño de Origen lo tienes en 2 minutos, por 47€.</p>
-    </div>
-  </section>
-
-  <div id="formulario"></div>
-
-
-  <section class="hero">
-    <div class="container">
-      <h2 class="form-title">Completa<br class="break-mobile-form"> tus datos</h2>
-      
-    </div>
-  </section>
-
-  <!-- FORM -->
-  <section class="form-wrap">
-    <div class="container">
+  <!-- ════════════ 9. O PUEDES SABERLO HOY ════════════ -->
+  <section class="b10">
+    <div class="b10-in">
+      <h2 class="b10-h">Puedes seguir<br class="b10-br"> preguntándote por qué…<br> <em>o puedes saberlo hoy</em></h2>
+      <p class="b10-of">¡Obtén tu prueba GRATIS<br class="b10-br2"> en SOLO 2 MINUTOS!</p>
+      <div id="formulario"></div>
+      <div class="b10-grid">
+        <div class="b10-form">
+<div class="container">
       <div class="form-card">
         
 
@@ -1972,7 +1847,7 @@ text-align: center;
 
           <div class="form-step-nav form-step-nav-final">
             <button type="button" class="btn-back" data-back="2">Atrás</button>
-            <button type="submit" class="btn-pay" id="btnPay">QUIERO MI DISEÑO</button>
+            <button type="submit" class="btn-pay" id="btnPay">QUIERO DESCUBRIRLO GRATIS&nbsp;→</button>
           </div>
 
           </div>
@@ -1980,6 +1855,15 @@ text-align: center;
           <div class="error-banner" id="errorBanner"></div>
 
         </form>
+      </div>
+    </div>
+
+        </div>
+        <figure class="b10-cita">
+          <span class="com" aria-hidden="true">&ldquo;</span>
+          <p>De verdad que no sé cómo lo hacéis, llevo años en terapia, leyendo, haciendo cursos, intentando entenderme, y con mi diseño he sentido más claridad que en todo este tiempo junto. ¡Increíble!</p>
+          <figcaption class="quien"><img src="images/R1-irene-resena-origen-natal-tu-diseno-de-origen.webp" alt="Irene, clienta de Tu Diseño de Origen" width="384" height="394" loading="lazy" /><span>&mdash; Irene</span></figcaption>
+        </figure>
       </div>
     </div>
   </section>
