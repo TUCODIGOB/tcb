@@ -687,7 +687,16 @@ text-align: center;
     .hero-2col { text-align: left; padding-block: 72px 72px; }
     .hero-2col .container-home { display: block; width: min(1100px, 92vw); }
     .hero-cols { display: grid; grid-template-columns: 60% 1fr; gap: 56px; align-items: stretch; }
-    .hero-texto { display: flex; flex-direction: column; justify-content: center; }
+    .hero-texto { display: flex; flex-direction: column; justify-content: space-between; }
+    /* La frase de la oferta y el boton van juntos, pegados al final. */
+    .hero-cierre { display: flex; flex-direction: column; align-items: flex-start; width: 100%; }
+    @media (min-width: 1025px) {
+      .hero-2col .hero-oferta { margin-bottom: 14px; }
+      /* El boton mide lo mismo que la frase que lleva encima. */
+      .hero-cierre { align-items: stretch; width: max-content; max-width: 100%; }
+      .hero-cierre .hero-accion { align-self: stretch; display: block; }
+      .hero-cierre .btn-hero { width: 100%; min-width: 0; }
+    }
 
     .h1-bloque {
       font-family: var(--font-display);
@@ -741,12 +750,13 @@ text-align: center;
     .hero-2col .hero-trust-note { margin-top: 14px; text-align: center; font-size: 18px; opacity: .85; }
 
     .hero-foto {
+      position: relative;
       border-radius: var(--r-lg);
       overflow: hidden;
-      min-height: 500px;
       box-shadow: 0 18px 44px rgba(14,63,75,.14);
     }
-    .hero-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    /* La foto se recorta a la altura del texto, no al reves. */
+    .hero-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .br-pc { display: none; }
     .br-tab { display: inline; }
@@ -759,6 +769,7 @@ text-align: center;
       .h1-bloque { font-size: 40px; margin-bottom: 24px; }
       .hero-segunda { font-size: 28px; margin-bottom: 34px; }
       .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 19px; }
+      .hero-cierre { align-items: center; }
       .hero-accion { align-self: center; }
       .hero-foto { width: 100%; max-width: 440px; margin-inline: auto; min-height: 0; aspect-ratio: 4 / 5; }
     }
@@ -1337,10 +1348,12 @@ text-align: center;
 
           <p class="hero-sub"><strong class="oro">Tu Diseño de Origen:</strong> el estudio 100% personalizado que te explica <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong>, a partir de tus datos de nacimiento</p>
 
-          <p class="hero-oferta">¡Obtén tu prueba gratis<span class="br-movil"><br></span> en <strong>SOLO 2 MINUTOS</strong>!</p>
+          <div class="hero-cierre">
+            <p class="hero-oferta">¡Obtén tu prueba gratis<span class="br-movil"><br></span> en <strong>SOLO 2 MINUTOS</strong>!</p>
 
-          <div class="hero-accion">
-            <a href="#formulario" class="btn-cta btn-hero">Quiero descubrirlo gratis<span class="flecha">→</span></a>
+            <div class="hero-accion">
+              <a href="#formulario" class="btn-cta btn-hero">Quiero descubrirlo gratis<span class="flecha">→</span></a>
+            </div>
           </div>
         </div>
 
@@ -2531,12 +2544,15 @@ text-align: center;
           setTimeout(() => el.classList.add('visible'), 80);
         });
 
-        // Los botones se agitan la primera vez que se ven.
+        // Los botones se agitan cada vez que vuelven a aparecer en pantalla.
         const ioBotones = new IntersectionObserver((entries) => {
           entries.forEach(e => {
             if (e.isIntersecting) {
+              e.target.classList.remove('saluda');
+              void e.target.offsetWidth; // reinicia la animacion
               e.target.classList.add('saluda');
-              ioBotones.unobserve(e.target);
+            } else {
+              e.target.classList.remove('saluda');
             }
           });
         }, { threshold: 0.9 });
