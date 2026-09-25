@@ -729,13 +729,12 @@ text-align: center;
     .hero-2col .hero-trust-note { margin-top: 14px; text-align: center; font-size: 18px; opacity: .85; }
 
     .hero-foto {
-      border: 2px dashed var(--gold-light);
       border-radius: var(--r-lg);
-      background: rgba(255,255,255,.45);
-      display: flex; align-items: center; justify-content: center;
+      overflow: hidden;
       min-height: 500px;
+      box-shadow: 0 18px 44px rgba(14,63,75,.14);
     }
-    .hero-foto span { font-family: var(--font-body); font-size: 15px; letter-spacing: 4px; color: var(--gold-deep); }
+    .hero-foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .br-tab { display: none; }
 
@@ -750,7 +749,7 @@ text-align: center;
       .hero-segunda { font-size: 28px; margin-bottom: 34px; }
       .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 19px; }
       .hero-accion { align-self: center; }
-      .hero-foto { width: 100%; max-width: 600px; margin-inline: auto; min-height: 0; aspect-ratio: 16 / 10; }
+      .hero-foto { width: 100%; max-width: 440px; margin-inline: auto; min-height: 0; aspect-ratio: 4 / 5; }
     }
 
     /* ── Movil ── */
@@ -1003,25 +1002,6 @@ text-align: center;
       .b6-card li { font-size: 20px; padding: 10px 0; }
     }
 
-/* ══════════════════════════════════════════════
-       BRIDGE (cierre emocional antes del precio)
-    ══════════════════════════════════════════════ */
-    .garantia {
-      padding-block: 4.5rem;
-      text-align: center;
-    }
-    .garantia h2 {
-      color: var(--teal-deep);
-      margin-bottom: 1.8rem;
-    }
-    .garantia p {
-      max-width: 680px;
-      margin-inline: auto;
-      font-size: 1.15rem;
-      line-height: 1.7;
-      color: #0c0c0c;
-      margin-bottom: 1rem;
-    }
     /* ══════════════════════════════════════════════
        PROBLEMA — bloque 2: frases de la lectora y giro
     ══════════════════════════════════════════════ */
@@ -1237,7 +1217,6 @@ text-align: center;
     @media (max-width: 860px) {
       .break-mobile { display: block; }
       .break-desktop { display: none; }
-      .garantia p { font-size: 20px; }
       .hero-home h1, .hero-sub { text-align: center; }
     }
     @media (min-width: 861px) {
@@ -1253,29 +1232,6 @@ text-align: center;
 
     /* Ancla del formulario (compensa el nav sticky) */
     #formulario { scroll-margin-top: 80px; }
-
-    /* ─── GARANTÍA (fondo claro, tarjeta) ─── */
-    .garantia { background: var(--cream); }
-    .garantia-card {
-      max-width: 680px;
-      margin-inline: auto;
-      background: var(--white);
-      border: 1px solid #cfb180;
-      border-left: 4px solid var(--gold-deep);
-      border-radius: var(--r-md);
-      padding: 2rem 2.2rem;
-      text-align: center;
-      box-shadow: 0 4px 20px rgba(0,0,0,.05);
-    }
-    .garantia-card p {
-      color: var(--ink);
-      font-size: 15px;
-      margin-bottom: .8rem;
-      max-width: none;
-    }
-    .garantia-card p:last-child { margin-bottom: 0; }
-    .garantia-card a { color: var(--gold-deep); text-decoration: underline; }
-    .garantia-card a:hover { color: var(--teal-deep); }
 
     /* ─── RESPONSIVE MÓVIL ───────────────────────────
        Único bloque de 600px de la hoja. Lo que ya cubre
@@ -1307,10 +1263,6 @@ text-align: center;
       .hero-sub { margin-bottom: 2rem; font-size: 20px; }
       .hero-ribbon-track span { font-size: 18px; }
       .hero-trust-note { font-size: 15px; }
-
-      /* Precio, garantía y FAQ */
-      .garantia-card { padding: 1.5rem 1.3rem; }
-      .garantia-card p { font-size: 20px; }
     }
 
 </style>
@@ -1378,7 +1330,7 @@ text-align: center;
           </div>
         </div>
 
-        <div class="hero-foto"><span>FOTO</span></div>
+        <div class="hero-foto"><img src="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" alt="Mujer descubriendo su Diseño de Origen a partir de su carta natal" width="750" height="1000" fetchpriority="high" /></div>
 
       </div>
     </div>
@@ -1498,7 +1450,7 @@ text-align: center;
     </div>
   </section>
 
-  <!-- ════════════ 4. NO ES UN HORÓSCOPO ════════════ -->
+  <!-- ════════════ 5. NO ES UN HORÓSCOPO ════════════ -->
   <section class="b6">
     <div class="b6-in">
       <p class="b6-et">Sé lo que estás pensando…</p>
@@ -1528,7 +1480,7 @@ text-align: center;
     </div>
   </section>
 
-  <!-- ════════════ 5. CÓMO LO RECIBES ════════════ -->
+  <!-- ════════════ 6. CÓMO LO RECIBES ════════════ -->
   <section class="b7">
     <div class="b7-in">
       <h2 class="b7-h">Tres pasos y <em>lo estás leyendo</em></h2>
@@ -1555,7 +1507,7 @@ text-align: center;
     </div>
   </section>
 
-  <!-- ════════════ 6. LO QUE DICEN QUIENES YA LO TIENEN ════════════ -->
+  <!-- ════════════ 7. LO QUE DICEN QUIENES YA LO TIENEN ════════════ -->
   <section class="b8">
     <div class="b8-in">
       <h2 class="b8-h">Lo que pasa cuando<br class="b8-br"> <em>por fin te entiendes</em></h2>
@@ -1576,7 +1528,7 @@ text-align: center;
     </div>
   </section>
 
-  <!-- ════════════ 7. TUS PREGUNTAS ════════════ -->
+  <!-- ════════════ 8. TUS PREGUNTAS ════════════ -->
   <section class="b9">
     <div class="b9-in">
       <h2 class="b9-h">Lo que estás pensando<br class="b9-br"> <em>ahora mismo</em></h2>
@@ -1632,19 +1584,6 @@ text-align: center;
     </div>
   </section>
 
-  <!-- ════════════ 8. GARANTÍA ════════════ -->
-  <section class="garantia">
-    <div class="container-home">
-      <h2 class="reveal">Garantía</h2>
-      <div class="garantia-card reveal">
-        <p>Tu Diseño de Origen es un producto personalizado y automático, por eso no hay devolución estándar.</p>
-        <p>Pero si hay algún error técnico en tu informe en las primeras 24 horas, <strong>lo resolvemos.</strong></p>
-        <p>Escríbenos a <a href="mailto:hola@origennatal.com">hola@origennatal.com</a>.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ════════════ 9. CTA DE CIERRE (con precio y stack de valor) ════════════ -->
   <!-- ════════════ 9. O PUEDES SABERLO HOY ════════════ -->
   <section class="b10">
     <div class="b10-in">
