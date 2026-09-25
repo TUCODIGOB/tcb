@@ -622,8 +622,18 @@ text-align: center;
       box-shadow: 0 6px 28px rgba(189,144,72,.35);
       transition: transform .2s, box-shadow .2s;
     }
-    .btn-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(189,144,72,.5); }
-    .btn-cta:active { transform: translateY(0); }
+    @keyframes btnAgita {
+      0%   { transform: translateX(0); }
+      15%  { transform: translateX(-8px); }
+      30%  { transform: translateX(8px); }
+      45%  { transform: translateX(-6px); }
+      60%  { transform: translateX(6px); }
+      75%  { transform: translateX(-3px); }
+      100% { transform: translateX(0); }
+    }
+    .btn-cta.saluda { animation: btnAgita .7s ease; }
+    .btn-cta:hover  { animation: btnAgita .7s ease; box-shadow: 0 10px 36px rgba(189,144,72,.5); }
+    .btn-cta:active { animation: btnAgita .7s ease; box-shadow: 0 10px 36px rgba(189,144,72,.5); }
 
     /* ─── SECTION SPACING ────────────────────────── */
     section { padding-block: 5rem; }
@@ -2521,6 +2531,17 @@ text-align: center;
         document.querySelectorAll('.hero-home .reveal').forEach(el => {
           setTimeout(() => el.classList.add('visible'), 80);
         });
+
+        // Los botones se agitan la primera vez que se ven.
+        const ioBotones = new IntersectionObserver((entries) => {
+          entries.forEach(e => {
+            if (e.isIntersecting) {
+              e.target.classList.add('saluda');
+              ioBotones.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.9 });
+        document.querySelectorAll('.btn-cta').forEach(el => ioBotones.observe(el));
       }
     } catch (err) {
       mostrarTodo();
