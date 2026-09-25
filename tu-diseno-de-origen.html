@@ -1234,6 +1234,9 @@ text-align: center;
     /* Ancla del formulario (compensa el nav sticky) */
     #formulario { scroll-margin-top: 80px; }
 
+    /* En pantallas muy estrechas el texto del boton no cabe con el espaciado normal */
+    @media (max-width: 360px) { .nav-cta { letter-spacing: 0; } }
+
     /* ─── RESPONSIVE MÓVIL ───────────────────────────
        Único bloque de 600px de la hoja. Lo que ya cubre
        @media (max-width: 860px) no se repite aquí.       */
@@ -1310,7 +1313,7 @@ text-align: center;
           ORIGEN NATAL
         </span>
       </a>
-      <a href="#formulario" class="nav-cta">Quiero descubrirlo</a>
+      <a href="#formulario" class="nav-cta">Quiero descubrirlo gratis</a>
     </div>
   </nav>
 
