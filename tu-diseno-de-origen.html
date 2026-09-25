@@ -691,7 +691,7 @@ text-align: center;
     /* La frase de la oferta y el boton van juntos, pegados al final. */
     .hero-cierre { display: flex; flex-direction: column; align-items: flex-start; width: 100%; }
     @media (min-width: 1025px) {
-      .hero-2col .hero-oferta { margin-bottom: 14px; }
+      .hero-2col .hero-oferta { margin-bottom: 20px; }
       /* El boton mide lo mismo que la frase que lleva encima. */
       .hero-cierre { align-items: stretch; width: max-content; max-width: 100%; }
       .hero-cierre .hero-accion { align-self: stretch; display: block; }
@@ -701,7 +701,7 @@ text-align: center;
     .h1-bloque {
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 44px;
+      font-size: 40px;
       line-height: 1.18;
       color: var(--teal-deep);
       text-transform: uppercase;
@@ -710,7 +710,7 @@ text-align: center;
     .hero-segunda {
       font-family: var(--font-display);
       font-style: italic;
-      font-weight: 500;
+      font-weight: 600;
       font-size: 29px;
       line-height: 1.3;
       color: var(--teal-deep);
@@ -718,7 +718,7 @@ text-align: center;
     }
     .hero-2col .hero-sub {
       max-width: 500px; margin: 0 0 34px; text-align: left;
-      font-size: 18px; line-height: 1.66; color: #0c0c0c;
+      font-size: 16px; line-height: 1.66; color: #0c0c0c;
     }
 
     .palabra-oro { color: var(--gold-deep); font-style: italic; }
@@ -767,8 +767,8 @@ text-align: center;
       .hero-cols { grid-template-columns: 1fr; gap: 46px; }
       .hero-texto { align-items: center; }
       .h1-bloque { font-size: 40px; margin-bottom: 24px; }
-      .hero-segunda { font-size: 28px; margin-bottom: 34px; }
-      .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 19px; }
+      .hero-segunda { font-size: 35px; margin-bottom: 34px; }
+      .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 18px; }
       .hero-cierre { align-items: center; }
       .hero-accion { align-self: center; }
       .hero-foto { width: 100%; max-width: 440px; margin-inline: auto; min-height: 0; aspect-ratio: 4 / 5; }
@@ -780,7 +780,7 @@ text-align: center;
       .br-pc { display: inline; }
       .br-tab { display: none; }
       .h1-bloque { font-size: 30px; line-height: 1.24; margin-bottom: 16px; }
-      .hero-segunda { font-size: 23px; margin-bottom: 34px; }
+      .hero-segunda { font-size: 30px; margin-bottom: 34px; }
       .hero-2col .hero-sub { font-size: 20px; margin-bottom: 40px; }
       .hero-accion { display: block; width: 100%; }
       .hero-2col .btn-hero { width: 100%; font-size: 18px; padding: 17px 4px; }
@@ -822,9 +822,9 @@ text-align: center;
     /* ══════════════════════════════════════════════
        QUÉ ES (bloque 4) — presentación y mockup
     ══════════════════════════════════════════════ */
-    .b4 { background: var(--white); padding: 96px 0 100px; text-align: center; }
+    .b4 { background: var(--white); padding: 96px 0 0px; text-align: center; }
     .b4-in { width: min(900px, 92vw); margin-inline: auto; }
-    .b4-h { font-family: var(--font-display); font-weight: 700; font-size: 42px; line-height: 1.25;
+    .b4-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25;
             color: var(--teal-deep); margin: 0 0 30px; }
     .b4-h em { font-style: italic; color: var(--gold-deep); }
     .b4-sub { font-family: var(--font-body); font-size: 16.8px; line-height: 1.7; color: #4a4538;
@@ -845,22 +845,22 @@ text-align: center;
     @media (max-width: 1024px) {
       .b4 { padding: 78px 0 82px; }
       .b4-h { font-size: 36px; }
-      .b4-mock { margin-top: 44px; }
+      .b4-mock { margin-top: 40px; }
     }
     @media (max-width: 860px) {
-      .b4 { padding: 56px 0 64px; }
-      .b4-h { font-size: 29px; margin-bottom: 24px; }
+      .b4 { padding: 80px 0 0px; }
+      .b4-h { font-size: 38px; margin-bottom: 24px; }
       .b4-sub { font-size: 20px; line-height: 1.7; margin-bottom: 26px; }
-      .b4-golpes { flex-direction: column; gap: 10px; font-size: 20px; margin-bottom: 20px; }
+      .b4-golpes { flex-direction: column; gap: 10px; font-size: 22px; margin-bottom: 20px; }
       .b4-golpes .pt { display: none; }
-      .b4-min { font-size: 22px; }
-      .b4-mock { margin-top: 36px; aspect-ratio: 4 / 3; }
+      .b4-min { font-size: 28px; }
+      .b4-mock { margin-top: 50px; aspect-ratio: 4 / 3; }
     }
 
     /* ══════════════════════════════════════════════
        LAS 7 ÁREAS (bloque 5)
     ══════════════════════════════════════════════ */
-    .b5 { background: var(--white); padding: 80px 0 100px; text-align: center; }
+    .b5 { background: var(--white); padding: 70px 0 100px; text-align: center; }
     .b5-in { width: min(900px, 92vw); margin-inline: auto; }
     .b5-orn { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 0 0 26px; }
     .b5-orn i { display: block; width: 64px; height: 1px; background: var(--gold-deep); }
@@ -870,12 +870,12 @@ text-align: center;
     .b5-h em { font-style: italic; color: var(--gold-deep); }
 
     .b5-lista { text-align: left; }
-    .b5-item { padding: 28px 0; border-top: 1px solid #e8d9bd; }
+    .b5-item { padding: 35px 0; border-top: 1px solid #e8d9bd; }
     .b5-item:first-child { border-top: 0; padding-top: 0; }
-    .b5-item h3 { font-family: var(--font-display); font-weight: 700; font-size: 25px; line-height: 1.2;
+    .b5-item h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.2;
                   color: var(--teal-deep); margin: 0 0 10px; }
     .b5-item h3 .n { color: var(--gold-deep); font-weight: 400; font-size: 32px; margin-right: 12px; }
-    .b5-item p { font-family: var(--font-body); font-size: 16.8px; line-height: 1.75; color: #4a4538; margin: 0; }
+    .b5-item p { font-family: var(--font-body); font-size: 16px; line-height: 1.75; color: #4a4538; margin: 0; }
 
     .b5-mas { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px;
               text-transform: uppercase; color: var(--gold-deep); margin: 56px 0 26px; }
@@ -883,12 +883,12 @@ text-align: center;
     .b5-extra { background: var(--cream); border-radius: var(--r-lg); padding: 28px 30px; }
     .b5-extra h3 { font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 22px;
                    line-height: 1.25; color: var(--teal-deep); margin: 0 0 12px; }
-    .b5-extra p { font-family: var(--font-body); font-size: 16.8px; line-height: 1.7; color: #4a4538; margin: 0; }
+    .b5-extra p { font-family: var(--font-body); font-size: 16px; line-height: 1.7; color: #4a4538; margin: 0; }
 
     .b5-siempre { margin: 56px auto 0; max-width: 700px; }
     .b5-siempre .et { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px;
                       text-transform: uppercase; color: var(--gold-deep); margin: 0 0 12px; }
-    .b5-siempre p.tx { font-family: var(--font-body); font-size: 16.8px; line-height: 1.7; color: #4a4538; margin: 0; }
+    .b5-siempre p.tx { font-family: var(--font-body); font-size: 16px; font-weight: 700; line-height: 1.7; color: #4a4538; margin: 0; }
 
     .b5-cta { margin-top: 48px; }
     .b5-oferta { font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 26px;
@@ -900,19 +900,20 @@ text-align: center;
       .b5-h { font-size: 31px; margin-bottom: 60px; }
     }
     @media (max-width: 860px) {
-      .b5 { padding: 48px 0 64px; }
-      .b5-h { font-size: 27px; margin-bottom: 46px; }
+      .b5 { padding: 60px 0 95px; }
+      .b5-h { font-size: 35px; margin-bottom: 70px; }
       .b5-orn i { width: 44px; }
-      .b5-item { padding: 24px 0; }
-      .b5-item h3 { font-size: 23px; }
-      .b5-item h3 .n { font-size: 29px; }
+      .b5-item { padding: 35px 0; }
+      .b5-item h3 { font-size: 28px; }
+      .b5-item h3 .n { font-size: 40px; }
       .b5-item p { font-size: 18px; }
-      .b5-mas { font-size: 15px; margin: 42px 0 20px; }
-      .b5-extras { grid-template-columns: 1fr; gap: 16px; }
+      .b5-mas { font-size: 24px; margin: 30px 0 30px; }
+      .b5-extras { grid-template-columns: 1fr; gap: 35px; }
       .b5-extra { padding: 24px 22px; }
-      .b5-extra p, .b5-siempre p.tx { font-size: 18px; }
-      .b5-siempre .et { font-size: 15px; }
-      .b5-oferta { font-size: 22px; }
+      .b5-extra p, .b5-siempre p.tx { font-size: 20px; }
+      .b5-siempre .et { font-size: 24px; }
+      .b5-oferta { font-size: 30px; }
+      .b5-oferta { margin: 0 0 35px; }
       .b5-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
     }
 
@@ -921,7 +922,7 @@ text-align: center;
     ══════════════════════════════════════════════ */
     .b7 { background: var(--white); padding: 88px 0 96px; text-align: center; }
     .b7-in { width: min(1100px, 92vw); margin-inline: auto; }
-    .b7-h { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.3;
+    .b7-h { font-family: var(--font-display); font-weight: 700; font-size: 35px; line-height: 1.3;
             color: var(--teal-deep); margin: 0 0 60px; }
     .b7-h em { font-style: italic; font-weight: 400; color: var(--gold-deep); }
     .b7-pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; position: relative; }
@@ -932,57 +933,58 @@ text-align: center;
             border: 1px solid #dcc394; display: flex; align-items: center; justify-content: center;
             margin: 0 auto 22px; position: relative; z-index: 1;
             font-family: var(--font-display); font-weight: 700; font-size: 25px; color: var(--gold-deep); }
-    .b7-paso h3 { font-family: var(--font-display); font-weight: 700; font-size: 25px; line-height: 1.25;
+    .b7-paso h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.25;
                   color: var(--teal-deep); margin: 0 0 12px; }
-    .b7-paso p { font-family: var(--font-body); font-size: 19px; line-height: 1.7; color: #4a4538; margin: 0; }
+    .b7-paso p { font-family: var(--font-body); font-size: 16px; line-height: 1.7; color: #4a4538; margin: 0; }
     .b7-cta { margin-top: 56px; }
     .b7-cta .btn-cta { display: inline-flex; align-items: center; justify-content: center; gap: .5em; }
     @media (max-width: 1024px) { .b7 { padding: 72px 0 80px; } .b7-h { font-size: 31px; margin-bottom: 48px; } }
     @media (max-width: 860px) {
-      .b7 { padding: 54px 0 62px; }
-      .b7-h { font-size: 27px; margin-bottom: 36px; }
+      .b7 { padding: 70px 0 90px; }
+      .b7-h { font-size: 40px; margin-bottom: 50px; }
       .b7-pasos { grid-template-columns: 1fr; gap: 38px; }
       .b7-pasos::before { display: none; }
       .b7-paso { padding: 0; }
       .b7-n { margin-bottom: 16px; }
-      .b7-paso h3 { font-size: 23px; }
-      .b7-paso p { font-size: 20px; }
-      .b7-cta { margin-top: 40px; }
+      .b7-n { font-size: 36px; }
+      .b7-paso h3 { font-size: 28px; }
+      .b7-paso p { font-size: 18px; }
+      .b7-cta { margin-top: 50px; }
       .b7-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
     }
 
 /* ══════════════════════════════════════════════
        LO QUE PASA CUANDO POR FIN TE ENTIENDES (bloque 8)
     ══════════════════════════════════════════════ */
-    .b8 { background: var(--cream); padding: 88px 0 96px; text-align: center; }
+    .b8 { background: var(--cream); padding: 60px 0 96px; text-align: center; }
     .b8-in { width: min(1100px, 92vw); margin-inline: auto; }
     .b8-h { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.3;
-            color: var(--teal-deep); margin: 0 0 52px; }
+            color: var(--teal-deep); margin: 0 0 70px; }
     .b8-h em { font-style: italic; font-weight: 400; color: var(--gold-deep); }
     .b8-br { display: none; }
-    .b8-videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 34px; margin: 0 0 64px; }
+    .b8-videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; margin: 0 0 64px; }
     .b8-video { position: relative; padding-bottom: 177.78%; height: 0; overflow: hidden;
                 border-radius: var(--r-md); box-shadow: 0 12px 30px rgba(14,63,75,.12); background: var(--teal-deep); }
     .b8-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
     .b8-sep { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 0 0 44px; }
     .b8-sep i { display: block; width: 64px; height: 1px; background: var(--gold-deep); opacity: .5; }
     .b8-sep b { width: 6px; height: 6px; border-radius: 50%; background: var(--gold-deep); opacity: .5; display: block; }
-    .b8-res { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; align-items: start; }
+    .b8-res { display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; align-items: start; }
     .b8-res img { width: 100%; height: auto; display: block; background: var(--white);
                   border-radius: var(--r-md); border: 1px solid #ecdfc6; box-shadow: 0 8px 24px rgba(14,63,75,.07); }
     @media (max-width: 1024px) {
       .b8 { padding: 72px 0 80px; }
-      .b8-h { font-size: 31px; margin-bottom: 44px; }
-      .b8-videos { gap: 24px; margin-bottom: 60px; }
-      .b8-res { grid-template-columns: 1fr 1fr; gap: 30px; }
+      .b8-h { font-size: 38px; margin-bottom: 44px; }
+      .b8-videos { gap: 40px; margin-bottom: 60px; }
+      .b8-res { grid-template-columns: 1fr 1fr; gap: 40px; }
     }
     @media (max-width: 767px) {
-      .b8 { padding: 54px 0 62px; }
-      .b8-h { font-size: 27px; margin-bottom: 34px; }
+      .b8 { padding: 54px 0 80px; }
+      .b8-h { font-size: 27px; margin-bottom: 70px; }
       .b8-videos { grid-template-columns: 1fr; gap: 40px; margin-bottom: 64px; width: 86%; margin-inline: auto; }
       .b8-sep { margin: 0 0 56px; }
       .b8-sep i { width: 44px; }
-      .b8-res { grid-template-columns: 1fr; gap: 34px; }
+      .b8-res { grid-template-columns: 1fr; gap: 40px; }
     }
     @media (max-width: 620px) { .b8-br { display: inline; } }
 
@@ -993,10 +995,10 @@ text-align: center;
     .b6-in { width: min(1100px, 92vw); margin-inline: auto; }
     .b6-et { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 3.2px;
              text-transform: uppercase; color: var(--gold-light); margin: 0 0 16px; }
-    .b6-h { font-family: var(--font-display); font-weight: 700; font-size: 42px; line-height: 1.25;
-            color: var(--cream); margin: 0 0 52px; }
+    .b6-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25;
+            color: var(--cream); margin: 0 0 70px; }
     .b6-h em { font-style: italic; font-weight: 400; color: var(--gold-light); }
-    .b6-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; text-align: left; align-items: stretch; }
+    .b6-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; text-align: left; align-items: stretch; }
     .b6-card { border-radius: var(--r-md); padding: 30px 30px 32px; }
     .b6-no { background: rgba(255,251,239,.09); border: 1px solid rgba(255,251,239,.16);
              box-shadow: 0 8px 22px rgba(0,0,0,.14); }
@@ -1007,7 +1009,7 @@ text-align: center;
     .b6-si .b6-lab { color: var(--gold-deep); }
     .b6-card ul { list-style: none; margin: 0; padding: 0; }
     .b6-card li { display: flex; gap: 13px; align-items: flex-start; padding: 10px 0;
-                  font-family: var(--font-body); font-size: 19px; line-height: 1.7; }
+                  font-family: var(--font-body); font-size: 16px; line-height: 1.7; }
     .b6-no li { color: #ffffff; }
     .b6-si li { color: #3a3f3d; }
     .b6-card li .mk { flex: 0 0 auto; width: 23px; text-align: center; line-height: 1.55; font-weight: 700; }
@@ -1015,11 +1017,11 @@ text-align: center;
     .b6-si li .mk::before { content: "\2713"; font-size: 26px; color: var(--gold-light); }
     .b6-si li strong { font-weight: 700; color: var(--teal-deep); }
     @media (max-width: 860px) {
-      .b6 { padding: 54px 0 62px; }
-      .b6-et { font-size: 18px; }
-      .b6-h { font-size: 29px; margin-bottom: 30px; }
-      .b6-lab { font-size: 18px; }
-      .b6-cols { grid-template-columns: 1fr; gap: 28px; }
+      .b6 { padding: 85px 0 100px; }
+      .b6-et { font-size: 20px; }
+      .b6-h { font-size: 40px; margin-bottom: 70px; }
+      .b6-lab { font-size: 22px; }
+      .b6-cols { grid-template-columns: 1fr; gap: 70px; }
       .b6-card { padding: 24px 22px 26px; }
       .b6-card li { font-size: 20px; padding: 10px 0; }
     }
@@ -1027,7 +1029,7 @@ text-align: center;
     /* ══════════════════════════════════════════════
        PROBLEMA — bloque 2: frases de la lectora y giro
     ══════════════════════════════════════════════ */
-    .p2 { position: relative; background-color: var(--white); padding: 78px 0 150px; text-align: center; overflow: hidden; }
+    .p2 { position: relative; background-color: var(--white); padding: 78px 0 100px; text-align: center; overflow: hidden; }
     .p2-orbita { position: absolute; color: #e6d3ad; opacity: .32; z-index: 0; pointer-events: none; }
     .p2-orbita.o1 { top: -220px; left: -230px; width: 620px; }
     .p2-orbita.o2 { bottom: -170px; right: -250px; width: 680px; }
@@ -1036,11 +1038,11 @@ text-align: center;
     .p2-title { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 14px; }
     .p2-title em { font-style: italic; color: var(--gold-deep); }
     .p2-sub { font-size: 18px; line-height: 1.7; color: #4a4538; margin: 0 0 30px; }
-    .p2-punto { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px; text-transform: uppercase; color: var(--teal-deep); margin: 0 0 52px; }
+    .p2-punto { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px; text-transform: uppercase; color: var(--teal-deep); margin: 0 0 60px; }
 
-    .p2-quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; text-align: left; }
+    .p2-quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; text-align: left; }
     .p2-quote { background: var(--cream); border: 1px solid #efe0c6; border-radius: var(--r-lg); padding: 24px 26px; display: flex; align-items: center; }
-    .p2-quote p { margin: 0; font-family: var(--font-display); font-style: italic; font-size: 19px; line-height: 1.55; color: #3d3a33; }
+    .p2-quote p { margin: 0; font-family: var(--font-display); font-style: italic; font-size: 16px; line-height: 1.55; color: #3d3a33; }
 
     .p2-giro { margin: 62px auto 0; max-width: 700px; }
     .p2-c1 { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1.3; color: var(--teal-deep); margin: 0; }
@@ -1054,20 +1056,21 @@ text-align: center;
 
     @media (max-width: 1024px) {
       .p2 { padding: 64px 0 130px; }
-      .p2-title { font-size: 36px; }
+      .p2-title { font-size: 40px; }
       .p2-orbita.o1 { width: 440px; top: -170px; left: -180px; }
       .p2-orbita.o2 { width: 470px; right: -190px; bottom: -130px; }
     }
     @media (max-width: 860px) {
-      .p2 { padding: 48px 0 100px; }
-      .p2-title { font-size: 31px; }
-      .p2-punto { font-size: 15px; letter-spacing: 2px; margin-bottom: 42px; }
-      .p2-quotes { grid-template-columns: 1fr; gap: 13px; }
+      .p2 { padding: 60px 0 80px; }
+      .p2-title { font-size: 40px; }
+      .p2-sub { font-size: 20px; }
+      .p2-punto { font-size: 19px; letter-spacing: 2px; margin-bottom: 60px; }
+      .p2-quotes { grid-template-columns: 1fr; gap: 40px; }
       .p2-quote { padding: 20px 20px; }
       .p2-quote p { font-size: 18px; }
       .p2-giro { margin-top: 48px; }
-      .p2-c1, .p2-c2 { font-size: 25px; }
-      .p2-c3 { font-size: 16px; }
+      .p2-c1, .p2-c2 { font-size: 35px; }
+      .p2-c3 { font-size: 20px; }
       .p2-luna svg { height: 66px; }
       .p2-orbita.o1 { width: 430px; top: -170px; left: -175px; }
       .p2-orbita.o2 { width: 470px; right: -195px; bottom: -110px; }
@@ -1076,7 +1079,7 @@ text-align: center;
     /* ══════════════════════════════════════════════
        CAUSA (bloque 3) — foto y explicación sobre verde
     ══════════════════════════════════════════════ */
-    .b3v { position: relative; background: var(--teal-deep); padding: 96px 0; }
+    .b3v { position: relative; background: var(--teal-deep); padding: 0px 0; }
     .b3v-in { width: min(1100px, 92vw); margin-inline: auto;
               display: grid; grid-template-columns: 32% 1fr; gap: 56px; align-items: center; }
     .b3v-foto { border: 2px dashed var(--gold-light); aspect-ratio: 3 / 4;
@@ -1085,19 +1088,20 @@ text-align: center;
     .b3v-txt { text-align: left; }
     .b3v-tel { font-family: var(--font-display); font-style: italic; font-weight: 700;
                font-size: 22px; line-height: 1; color: #fffbef; margin: 0 0 24px; }
-    .b3v-h { font-family: var(--font-display); font-weight: 700; font-size: 48px; line-height: 1.22;
+    .b3v-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.22;
              color: #fffbef; margin: 0 0 34px; }
     .b3v-h .oro { color: var(--gold-light); }
-    .b3v-l { font-family: var(--font-body); font-size: 19px; line-height: 1.85; color: rgba(255,251,239,.84); margin: 0 0 22px; }
+    .b3v-l { font-family: var(--font-body); font-size: 16px; line-height: 1.85; color: rgba(255,251,239,.84); margin: 0 0 22px; }
     .b3v-l strong { font-weight: 700; color: var(--gold-light); }
     .b3v-l em { font-style: italic; color: #fffbef; }
-    .b3v-fin { font-family: var(--font-body); font-weight: 700; font-style: italic; font-size: 24px;
+    .b3v-fin { font-family: var(--font-body); font-weight: 700; font-style: italic; font-size: 20px;
                line-height: 1.5; color: #fffbef; margin: 40px 0 0;
                border-left: 3px solid var(--gold-light); padding-left: 24px; }
     .b3v-fin .oro { color: var(--gold-light); }
 
     @media (max-width: 1024px) {
       .b3v { padding: 76px 0; }
+      .b3v-tel { font-size: 25px; margin-bottom: 20px; }
       .b3v-in { grid-template-columns: 1fr; gap: 42px; }
       .b3v-txt { text-align: center; }
       .b3v-h { font-size: 40px; }
@@ -1105,10 +1109,11 @@ text-align: center;
       .b3v-fin { text-align: left; font-size: 20px; width: max-content; max-width: 100%; margin-inline: auto; }
     }
     @media (max-width: 860px) {
-      .b3v { padding: 56px 0 64px; }
-      .b3v-tel { font-size: 22px; margin-bottom: 20px; }
-      .b3v-h { font-size: 30px; margin-bottom: 26px; }
-      .b3v-l { font-size: 20px; line-height: 1.7; margin-bottom: 22px; }
+      .b3v { padding: 60px 0 80px; }
+      .b3v-tel { font-size: 30px; margin-bottom: 20px; }
+      .b3v-in { grid-template-columns: 1fr; gap: 60px; }
+      .b3v-h { font-size: 40px; margin-bottom: 60px; }
+      .b3v-l { font-size: 18px; line-height: 1.7; margin-bottom: 22px; }
       .b3v-fin { font-size: 22px; margin-top: 32px; padding-left: 18px; width: auto; }
       .b3v-fin br { display: none; }
       .b3v-foto { max-width: 290px; }
@@ -1121,7 +1126,7 @@ text-align: center;
     /* ══════════════════════════════════════════════
        LO QUE ESTÁS PENSANDO AHORA MISMO (bloque 9)
     ══════════════════════════════════════════════ */
-    .b9 { background: var(--white); padding: 88px 0 96px; text-align: center; }
+    .b9 { background: var(--white); padding: 60px 0 96px; text-align: center; }
     .b9-in { width: min(860px, 92vw); margin-inline: auto; }
     .b9-h { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.3;
             color: var(--teal-deep); margin: 0 0 52px; }
@@ -1131,7 +1136,7 @@ text-align: center;
     .b9-list details { border-bottom: 1px solid #e7e1d4; }
     .b9-list summary { list-style: none; cursor: pointer; display: flex; align-items: flex-start;
                        justify-content: space-between; gap: 24px; padding: 26px 4px;
-                       font-family: var(--font-body); font-weight: 600; font-size: 20px; line-height: 1.35;
+                       font-family: var(--font-body); font-weight: 600; font-size: 18px; line-height: 1.35;
                        color: var(--teal-deep); transition: color .2s ease; }
     .b9-list summary::-webkit-details-marker { display: none; }
     .b9-list summary:hover { color: var(--gold-deep); }
@@ -1149,7 +1154,7 @@ text-align: center;
     }
     @media (max-width: 767px) {
       .b9 { padding: 54px 0 62px; }
-      .b9-h { font-size: 27px; margin-bottom: 34px; }
+      .b9-h { font-size:36px; margin-bottom: 34px; }
       .b9-list summary { padding: 22px 2px; gap: 18px; }
       .b9-list summary::after { font-size: 24px; }
       .b9-body { padding: 0 2px 24px; }
@@ -1159,12 +1164,12 @@ text-align: center;
     /* ══════════════════════════════════════════════
        O PUEDES SABERLO HOY (bloque 10)
     ══════════════════════════════════════════════ */
-    .b10 { background: var(--teal-deep); padding: 92px 0 100px; }
+    .b10 { background: var(--teal-deep); padding: 60px 0 100px; }
     .b10-in { width: min(1100px, 92vw); margin-inline: auto; }
     .b10-h { font-family: var(--font-display); font-weight: 700; font-size: 36px; line-height: 1.28;
              color: var(--cream); margin: 0 0 14px; text-align: center; }
     .b10-h em { font-style: italic; font-weight: 400; color: var(--gold-light); }
-    .b10-of { font-family: var(--font-body); font-weight: 700; font-size: 19px;
+    .b10-of { font-family: var(--font-body); font-weight: 700; font-size: 18px;
               line-height: 1.5; color: var(--gold-light); margin: 0 0 46px; text-align: center; }
     .b10-form .form-progress { flex-direction: row; justify-content: center; gap: 12px; }
     .b10-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 56px; align-items: center; }
@@ -1174,7 +1179,7 @@ text-align: center;
     .b10-cita { text-align: left; margin: 0; }
     .b10-cita .com { display: block; font-family: var(--font-display); font-weight: 700; font-size: 54px;
                      line-height: .6; color: var(--gold-light); opacity: .55; margin: 0 0 20px; }
-    .b10-cita p { font-family: var(--font-display); font-style: italic; font-size: 24px; line-height: 1.6;
+    .b10-cita p { font-family: var(--font-display); font-style: italic; font-size: 18px; line-height: 1.6;
                   color: rgba(255,251,239,.92); margin: 0 0 14px; }
     .b10-cita .quien { display: flex; align-items: center; gap: 14px; margin: 22px 0 0;
                        font-family: var(--font-display); font-style: italic; font-size: 21px;
@@ -1182,18 +1187,18 @@ text-align: center;
     .b10-cita .quien img { width: 80px; height: auto; display: block; flex: 0 0 auto; }
     @media (max-width: 1024px) {
       .b10 { padding: 72px 0 80px; }
-      .b10-h { font-size: 32px; }
-      .b10-of { margin-bottom: 40px; }
+      .b10-h { font-size: 36px; }
+      .b10-of { margin-bottom: 50px; }
       .b10-grid { grid-template-columns: 1fr; gap: 44px; }
       .b10-cita { text-align: center; max-width: 620px; margin-inline: auto; }
       .b10-cita .quien { justify-content: center; }
     }
     @media (max-width: 767px) {
-      .b10 { padding: 54px 0 62px; }
-      .b10-h { font-size: 29px; margin-bottom: 12px; }
-      .b10-of { font-size: 19px; margin-bottom: 32px; }
+      .b10 { padding: 60px 0 62px; }
+      .b10-h { font-size: 35px; margin-bottom: 12px; }
+      .b10-of { font-size: 22px; margin-bottom: 50px; }
       .b10-grid { gap: 34px; }
-      .b10-cita p { font-size: 21px; }
+      .b10-cita p { font-size: 20px; }
       .b10-cita .com { font-size: 46px; margin-bottom: 14px; }
       .b10-cita .quien { font-size: 19px; gap: 12px; }
       .b10-cita .quien img { width: 72px; }
@@ -1284,7 +1289,7 @@ text-align: center;
       /* Hero */
       .hero-home { background-image: linear-gradient(to bottom, #fffbef 0, rgba(255,251,239,0) 140px),
                                      url('images/fondo-hear-origen-natal-carta-movil-4.webp'); }
-      .hero-home h1 { font-size: 38px; margin-bottom: 2.5rem; line-height: 1.40; }
+      .hero-home h1 { font-size: 36px; margin-bottom: 2.5rem; line-height: 1.40; }
       .hero-sub { margin-bottom: 2rem; font-size: 20px; }
       .hero-ribbon-track span { font-size: 18px; }
       .hero-trust-note { font-size: 15px; }
@@ -1459,7 +1464,7 @@ text-align: center;
         <div class="b5-item"><h3><span class="n">07</span>Tú y el Dinero</h3><p>Por qué el dinero no termina de llegar a tu vida. Qué significa para ti de verdad, qué haces con él, y qué te está bloqueando para ganar más, que casi nunca es lo que crees</p></div>
       </div>
 
-      <p class="b5-mas">Y además, incluido</p>
+      <p class="b5-mas">Y además, incluido:</p>
       <div class="b5-extras">
         <div class="b5-extra"><h3>Tus fortalezas y tus desafíos</h3><p>Lo que se te da bien, pero nunca te has parado a valorar. Y lo que la vida te pone delante una y otra vez hasta que lo aprendas: lo que te cuesta, y qué tienes que cambiar para superarlo</p></div>
         <div class="b5-extra"><h3>Tu mapa de origen</h3><p>El dibujo con tus posiciones exactas en el momento de nacer. Toda tu programación interior en una sola imagen, única y solo tuya</p></div>
