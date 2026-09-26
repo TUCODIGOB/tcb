@@ -763,9 +763,10 @@ text-align: center;
     .hero-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .br-pc { display: none; }
+    .p2-foto { display: none; }
     .hero-deco { display: none; width: 130px; height: auto; }
-    .hero-kicker { display: none; font-family: var(--font-display); font-weight: 500; font-size: 25px;
-                   color: var(--teal-deep); letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+    .hero-kicker { display: none; font-family: var(--font-display); font-weight: 700; font-size: 25px;
+                   color: var(--gold-deep); letter-spacing: 1px; text-transform: uppercase; margin: 0; }
     .br-tab { display: inline; }
 
     /* ── Tablet ── */
@@ -1307,13 +1308,15 @@ text-align: center;
       .hero-texto { display: contents; }
       .h1-bloque { order: 1; }
       .hero-segunda { order: 2; }
-      .hero-kicker { display: block; order: 4; margin: 0 0 6px; }
+      .hero-kicker { display: block; order: 4; margin: 0 0 2px; }
       .hero-deco { display: block; order: 5; margin: 0 auto 30px; }
       .hero-sub { order: 6; }
       .hero-cierre { order: 7; }
-      .hero-sub { order: 5; }
-      .hero-cierre { order: 6; }
       .p2-c1, .p2-c2 { font-size: 32px; }
+      .p2-quotes { grid-template-columns: 120px 1fr; gap: 16px 14px; }
+      .p2-quote { grid-column: 2; }
+      .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 4; border-radius: var(--r-lg); overflow: hidden; }
+      .p2-foto img { width: 100%; height: 148%; object-fit: cover; object-position: top center; display: block; }
       .p2-punto { margin-bottom: 50px; }
       .b4-h .break-mobile { display: none; }
       .b3v-fin { width: auto; font-size: 22px; margin-top: 60px; }
@@ -1462,6 +1465,7 @@ text-align: center;
       <p class="p2-punto">Y siempre acabas volviendo al mismo punto:</p>
 
       <div class="p2-quotes">
+        <div class="p2-foto"><img src="images/bloque-2-tu-diseno-de-origen-natal-carta.webp" alt="Mujer pensativa antes de descubrir su Diseño de Origen" /></div>
         <div class="p2-quote"><p>«Empiezo todo con mucha energía, pero siempre termino dejándolo a medias»</p></div>
         <div class="p2-quote"><p>«Mis relaciones siempre fallan y no entiendo por qué»</p></div>
         <div class="p2-quote"><p>«Por más que trabaje, mi situación económica no mejora»</p></div>
