@@ -734,15 +734,14 @@ text-align: center;
     @media (min-width: 1025px) { .br-esc { display: inline; } }
     .hero-oferta {
       font-family: var(--font-display);
-      font-style: italic;
       font-size: 20px;
       font-weight: 600;
       color: var(--gold-deep);
       margin: 0 0 20px;
     }
     .hero-oferta strong { font-weight: 700; }
-    @media (max-width: 1024px) { .hero-oferta { font-size: 25px; } }
-    @media (max-width: 600px)  { .hero-oferta { font-size: 25px; margin-bottom: 20px; } .br-movil { display: inline; } }
+    @media (max-width: 1024px) { .hero-oferta { font-size: 22px; } }
+    @media (max-width: 600px)  { .hero-oferta { font-size: 25px; margin-bottom: 20px; line-height: 1.2; } .br-movil { display: inline; } }
     .hero-accion { display: inline-block; align-self: flex-start; }
     /* boton: texto y flecha centrados en la misma linea */
     .btn-hero {
@@ -912,14 +911,15 @@ text-align: center;
       .b5-item h3 .n { font-size: 40px; }
       .b5-item p { font-size: 18px; }
       .b5-extra h3 { font-size: 25px; }
-      .b5-mas { font-size: 22px; margin: 10px 0 30px; }
+      .b5-mas { font-size: 20px; margin: 10px 0 30px; }
+      .p2-flecha { margin-top: 20px; }
       .b5-extras { grid-template-columns: 1fr; gap: 35px; }
       .b5-extra { padding: 24px 22px; }
       .b5-extra p, .b5-siempre p.tx { font-size: 18px; }
       .b5-siempre p.tx { font-size: 18px; }
-      .b5-siempre .et { font-size: 22px; }
-      .b5-oferta { font-size: 25px; }
-      .b5-oferta { margin: 0 0 35px; }
+      .b5-siempre .et { font-size: 20px; }
+      .b5-oferta { font-size: 22px; }
+      .b5-oferta { margin: 0 0 20px; }
       .b5-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
     }
 
@@ -953,9 +953,9 @@ text-align: center;
       .b7-paso { padding: 0; }
       .b7-n { margin-bottom: 16px; }
       .b7-n { font-size: 36px; }
-      .b7-paso h3 { font-size: 28px; }
+      .b7-paso h3 { font-size: 25px; }
       .b7-paso p { font-size: 18px; }
-      .b7-cta { margin-top: 50px; }
+      .b7-cta { margin-top: 60px; }
       .b7-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
     }
 
@@ -1176,7 +1176,7 @@ text-align: center;
              color: var(--cream); margin: 0 0 25px; text-align: center; }
     .b10-h em { font-style: italic; font-weight: 400; color: var(--gold-light); }
     .b10-of { font-family: var(--font-body); font-weight: 700; font-size: 18px;
-              line-height: 1.5; color: var(--gold-light); margin: 0 0 60px; text-align: center; }
+              line-height: 1.5; color: var(--gold-light); margin: 0 0 20px; text-align: center; }
     .b10-form .form-progress { flex-direction: row; justify-content: center; gap: 12px; }
     .b10-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 56px; align-items: center; }
     .b10-form .container { width: 100%; }
@@ -1202,8 +1202,9 @@ text-align: center;
     }
     @media (max-width: 767px) {
       .b10 { padding: 60px 0 62px; }
-      .b10-h { font-size: 35px; margin-bottom: 22px; }
-      .b10-of { font-size: 20px; margin-bottom: 50px; }
+      .b10-h { font-size: 35px; margin-bottom: 30px; }
+      .b10-of { font-size: 20px; margin-bottom: 20px; }
+      .b10-flecha { margin: 0 0 20px; }
       .b10-grid { gap: 34px; }
       .b10-cita p { font-size: 18px; }
       .b10-cita .com { font-size: 80px; margin-bottom: 0px; }
@@ -1277,8 +1278,12 @@ text-align: center;
     @media (max-width: 600px) {
       /* Nav, hero de formulario y campos */
       .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
+      .b10-flecha { margin: 0 0 30px; }
+      .b5-mas { font-size: 22px; }
+      .b5-siempre .et { font-size: 22px; }
+      .p2-flecha { margin-top: 30px; }
       .b10-h { font-size: 38px; margin-bottom: 30px; }
-      .b10-of { font-size: 25px; margin-bottom: 50px; }
+      .b10-of { font-size: 25px; margin-bottom: 20px; }
       .b9-list summary { font-size: 20px; }
       .b7-cta { margin-top: 60px; }
       .b5-mas { margin: 20px 0 30px; }
