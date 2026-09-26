@@ -834,8 +834,8 @@ text-align: center;
     .b4-sub { font-family: var(--font-body); font-size: 16.8px; line-height: 1.7; color: #4a4538;
               max-width: 720px; margin: 0 auto 26px; }
     .b4-sub strong { font-weight: 700; color: var(--teal-deep); }
-    .b4-golpes { display: flex; justify-content: center; align-items: center; gap: 14px;
-                 font-family: var(--font-body); font-weight: 700; font-size: 16.8px; line-height: 1.7;
+    .b4-golpes { display: flex; justify-content: center; align-items: center; gap: 20px;
+                 font-family: var(--font-body); font-weight: 700; font-size: 18px; line-height: 1.7;
                  color: var(--teal-deep); margin: 0 0 14px; }
     .b4-golpes .pt { color: var(--gold-deep); font-size: 14px; }
     .b4-min { font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 26px;
@@ -852,10 +852,10 @@ text-align: center;
       .b4-mock { margin-top: 40px; }
     }
     @media (max-width: 860px) {
-      .b4 { padding: 80px 0 0px; }
+      .b4 { padding: 60px 0 0px; }
       .b4-h { font-size: 38px; margin-bottom: 24px; }
       .b4-sub { font-size: 18px; line-height: 1.7; margin-bottom: 26px; }
-      .b4-min { font-size: 28px; }
+      .b4-min { font-size: 25px; }
       .b4-mock { margin-top: 50px; aspect-ratio: 4 / 3; }
     }
 
@@ -910,7 +910,7 @@ text-align: center;
       .b5-item h3 .n { font-size: 40px; }
       .b5-item p { font-size: 18px; }
       .b5-extra h3 { font-size: 25px; }
-      .b5-mas { font-size: 24px; margin: 30px 0 30px; }
+      .b5-mas { font-size: 24px; margin: 10px 0 30px; }
       .b5-extras { grid-template-columns: 1fr; gap: 35px; }
       .b5-extra { padding: 24px 22px; }
       .b5-extra p, .b5-siempre p.tx { font-size: 18px; }
@@ -984,7 +984,7 @@ text-align: center;
     }
     @media (max-width: 767px) {
       .b8 { padding: 54px 0 80px; }
-      .b8-h { font-size: 38px; margin-bottom: 70px; }
+      .b8-h { font-size: 38px; margin-bottom: 50px; }
       .b8-sep { margin: 0 0 56px; }
       .b8-sep i { width: 44px; }
      }
@@ -1060,16 +1060,17 @@ text-align: center;
 
     @media (max-width: 1024px) {
       .p2 { padding: 64px 0 130px; }
+      .p2-tel { font-size: 28px; }
       .p2-title { font-size: 40px; }
       .p2-orbita.o1 { width: 440px; top: -170px; left: -180px; }
       .p2-orbita.o2 { width: 470px; right: -190px; bottom: -130px; }
     }
     @media (max-width: 860px) {
-      .p2 { padding: 60px 0 80px; }
+      .p2 { padding: 70px 0 80px; }
       .p2-title { font-size: 40px; }
       .p2-sub { font-size: 20px; }
       .p2-punto { font-size: 19px; letter-spacing: 2px; margin-bottom: 60px; }
-      .p2-quotes { grid-template-columns: 1fr; gap: 40px; }
+      .p2-quotes { grid-template-columns: 1fr; gap: 30px; }
       .p2-quote { padding: 20px 20px; }
       .p2-quote p { font-size: 18px; }
       .p2-giro { margin-top: 48px; }
@@ -1114,11 +1115,11 @@ text-align: center;
     }
     @media (max-width: 860px) {
       .b3v { padding: 60px 0 80px; }
-      .b3v-tel { font-size: 30px; margin-bottom: 20px; }
+      .b3v-tel { font-size: 28px; margin-bottom: 30px; }
       .b3v-in { grid-template-columns: 1fr; gap: 60px; }
       .b3v-h { font-size: 40px; margin-bottom: 60px; }
       .b3v-l { font-size: 18px; line-height: 1.7; margin-bottom: 22px; }
-      .b3v-fin { font-size: 20px; margin-top: 45px; padding-left: 18px; width: auto; }
+      .b3v-fin { font-size: 20px; margin-top: 45px; padding-left: 18px; width: max-content; max-width: 100%; margin-inline: auto; }
       .b3v-foto { max-width: 290px; }
     }
     /* ══════════════════════════════════════════════
@@ -1158,7 +1159,7 @@ text-align: center;
     @media (max-width: 767px) {
       .b9 { padding: 54px 0 62px; }
       .b9-h { font-size:38px; margin-bottom: 60px; }
-      .b9-list summary { padding: 22px 2px; gap: 18px; }
+      .b9-list summary { padding: 28px 2px; gap: 18px; }
       .b9-list summary::after { font-size: 24px; }
       .b9-body { padding: 0 2px 24px; }
     }
@@ -1273,6 +1274,9 @@ text-align: center;
     @media (max-width: 600px) {
       /* Nav, hero de formulario y campos */
       .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
+      .b4-h .break-mobile { display: none; }
+      .b3v-fin { width: auto; }
+      .p2-tel { font-size: 24px; }
       .b4-golpes { flex-direction: column; gap: 10px; font-size: 20px; margin-bottom: 20px; }
       .b4-golpes .pt { display: none; }
       .b8-videos { grid-template-columns: 1fr; gap: 40px; margin-bottom: 64px; width: 86%; margin-inline: auto; }
@@ -1460,7 +1464,7 @@ text-align: center;
   <!-- ════════════ 3. QUÉ ES TU DISEÑO DE ORIGEN ════════════ -->
   <section class="b4">
     <div class="b4-in">
-      <h2 class="b4-h">Tu Diseño de Origen te da <em>las respuestas</em><br class="break-desktop"> que llevas <em>toda la vida buscando</em></h2>
+      <h2 class="b4-h">Tu Diseño de Origen te da<br class="break-mobile"> <em>las respuestas</em><br class="break-desktop"> que llevas<br class="break-mobile"> <em>toda la vida buscando</em></h2>
       <p class="b4-sub">Más de <strong>40 páginas</strong> que revelan tu <strong>programación interior</strong>, para que entiendas por fin <strong><em>por qué eres como eres y por qué te pasa lo que te pasa</em></strong></p>
       <p class="b4-golpes"><span>100% personalizado</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin tecnicismos</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin citas, sin esperas</span></p>
       <p class="b4-min">¡Y lo tienes en minutos!</p>
