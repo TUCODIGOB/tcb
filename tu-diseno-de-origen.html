@@ -770,7 +770,7 @@ text-align: center;
       .hero-2col { text-align: center; padding-block: 60px 60px; }
       .hero-cols { grid-template-columns: 1fr; gap: 46px; }
       .hero-texto { align-items: center; }
-      .h1-bloque { font-size: 35px; margin-bottom: 24px; }
+      .h1-bloque { font-size: 38px; margin-bottom: 24px; }
       .hero-segunda { font-size: 28px; margin-bottom: 34px; }
       .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 18px; }
       .hero-cierre { align-items: center; }
@@ -854,9 +854,7 @@ text-align: center;
     @media (max-width: 860px) {
       .b4 { padding: 80px 0 0px; }
       .b4-h { font-size: 38px; margin-bottom: 24px; }
-      .b4-sub { font-size: 20px; line-height: 1.7; margin-bottom: 26px; }
-      .b4-golpes { flex-direction: column; gap: 10px; font-size: 22px; margin-bottom: 20px; }
-      .b4-golpes .pt { display: none; }
+      .b4-sub { font-size: 18px; line-height: 1.7; margin-bottom: 26px; }
       .b4-min { font-size: 28px; }
       .b4-mock { margin-top: 50px; aspect-ratio: 4 / 3; }
     }
@@ -908,15 +906,17 @@ text-align: center;
       .b5-h { font-size: 35px; margin-bottom: 70px; }
       .b5-orn i { width: 44px; }
       .b5-item { padding: 35px 0; }
-      .b5-item h3 { font-size: 28px; }
+      .b5-item h3 { font-size: 25px; }
       .b5-item h3 .n { font-size: 40px; }
       .b5-item p { font-size: 18px; }
+      .b5-extra h3 { font-size: 25px; }
       .b5-mas { font-size: 24px; margin: 30px 0 30px; }
       .b5-extras { grid-template-columns: 1fr; gap: 35px; }
       .b5-extra { padding: 24px 22px; }
-      .b5-extra p, .b5-siempre p.tx { font-size: 20px; }
+      .b5-extra p, .b5-siempre p.tx { font-size: 18px; }
+      .b5-siempre p.tx { font-size: 18px; }
       .b5-siempre .et { font-size: 24px; }
-      .b5-oferta { font-size: 30px; }
+      .b5-oferta { font-size: 25px; }
       .b5-oferta { margin: 0 0 35px; }
       .b5-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
     }
@@ -984,13 +984,11 @@ text-align: center;
     }
     @media (max-width: 767px) {
       .b8 { padding: 54px 0 80px; }
-      .b8-h { font-size: 27px; margin-bottom: 70px; }
-      .b8-videos { grid-template-columns: 1fr; gap: 40px; margin-bottom: 64px; width: 86%; margin-inline: auto; }
+      .b8-h { font-size: 38px; margin-bottom: 70px; }
       .b8-sep { margin: 0 0 56px; }
       .b8-sep i { width: 44px; }
-      .b8-res { grid-template-columns: 1fr; gap: 40px; }
-    }
-    @media (max-width: 620px) { .b8-br { display: inline; } }
+     }
+    @media (max-width: 1024px) { .b8-br { display: inline; } }
 
 /* ══════════════════════════════════════════════
        NO ES UN HORÓSCOPO (bloque 6)
@@ -1021,13 +1019,13 @@ text-align: center;
     .b6-si li .mk::before { content: "\2713"; font-size: 26px; color: var(--gold-light); }
     .b6-si li strong { font-weight: 700; color: var(--teal-deep); }
     @media (max-width: 860px) {
-      .b6 { padding: 85px 0 100px; }
+      .b6 { padding: 70px 0 100px; }
       .b6-et { font-size: 20px; }
       .b6-h { font-size: 40px; margin-bottom: 70px; }
-      .b6-lab { font-size: 22px; }
+      .b6-lab { font-size: 20px; }
       .b6-cols { grid-template-columns: 1fr; gap: 70px; }
       .b6-card { padding: 24px 22px 26px; }
-      .b6-card li { font-size: 20px; padding: 10px 0; }
+      .b6-card li { font-size: 18px; padding: 10px 0; }
     }
 
     /* ══════════════════════════════════════════════
@@ -1040,7 +1038,7 @@ text-align: center;
 
     .p2-inner { width: min(1100px, 92vw); margin-inline: auto; position: relative; z-index: 1; }
     .p2-tel { font-family: var(--font-display); font-style: italic; font-weight: 700;
-              font-size: 22px; line-height: 1; color: var(--gold-deep); margin: 0 0 14px; }
+              font-size: 24px; line-height: 1; color: var(--gold-deep); margin: 0 0 14px; }
     .p2-title { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 14px; }
     .p2-title em { font-style: italic; color: var(--gold-deep); }
     .p2-sub { font-size: 18px; line-height: 1.7; color: #4a4538; margin: 0 0 30px; }
@@ -1093,7 +1091,7 @@ text-align: center;
     .b3v-foto span { font-family: var(--font-body); font-size: 15px; letter-spacing: 4px; color: var(--gold-light); }
     .b3v-txt { text-align: left; }
     .b3v-tel { font-family: var(--font-display); font-style: italic; font-weight: 700;
-               font-size: 22px; line-height: 1; color: #fffbef; margin: 0 0 24px; }
+               font-size: 24px; line-height: 1; color: #fffbef; margin: 0 0 24px; }
     .b3v-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.22;
              color: #fffbef; margin: 0 0 34px; }
     .b3v-h .oro { color: var(--gold-light); }
@@ -1107,7 +1105,7 @@ text-align: center;
 
     @media (max-width: 1024px) {
       .b3v { padding: 76px 0; }
-      .b3v-tel { font-size: 25px; margin-bottom: 20px; }
+      .b3v-tel { font-size: 24px; margin-bottom: 20px; }
       .b3v-in { grid-template-columns: 1fr; gap: 42px; }
       .b3v-txt { text-align: center; }
       .b3v-h { font-size: 40px; }
@@ -1120,8 +1118,7 @@ text-align: center;
       .b3v-in { grid-template-columns: 1fr; gap: 60px; }
       .b3v-h { font-size: 40px; margin-bottom: 60px; }
       .b3v-l { font-size: 18px; line-height: 1.7; margin-bottom: 22px; }
-      .b3v-fin { font-size: 22px; margin-top: 32px; padding-left: 18px; width: auto; }
-      .b3v-fin br { display: none; }
+      .b3v-fin { font-size: 20px; margin-top: 45px; padding-left: 18px; width: auto; }
       .b3v-foto { max-width: 290px; }
     }
     /* ══════════════════════════════════════════════
@@ -1160,7 +1157,7 @@ text-align: center;
     }
     @media (max-width: 767px) {
       .b9 { padding: 54px 0 62px; }
-      .b9-h { font-size:36px; margin-bottom: 34px; }
+      .b9-h { font-size:38px; margin-bottom: 60px; }
       .b9-list summary { padding: 22px 2px; gap: 18px; }
       .b9-list summary::after { font-size: 24px; }
       .b9-body { padding: 0 2px 24px; }
@@ -1201,11 +1198,11 @@ text-align: center;
     }
     @media (max-width: 767px) {
       .b10 { padding: 60px 0 62px; }
-      .b10-h { font-size: 35px; margin-bottom: 12px; }
-      .b10-of { font-size: 22px; margin-bottom: 50px; }
+      .b10-h { font-size: 35px; margin-bottom: 22px; }
+      .b10-of { font-size: 20px; margin-bottom: 50px; }
       .b10-grid { gap: 34px; }
-      .b10-cita p { font-size: 20px; }
-      .b10-cita .com { font-size: 46px; margin-bottom: 14px; }
+      .b10-cita p { font-size: 18px; }
+      .b10-cita .com { font-size: 80px; margin-bottom: 0px; }
       .b10-cita .quien { font-size: 19px; gap: 12px; }
       .b10-cita .quien img { width: 72px; }
     }
@@ -1276,6 +1273,12 @@ text-align: center;
     @media (max-width: 600px) {
       /* Nav, hero de formulario y campos */
       .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
+      .b4-golpes { flex-direction: column; gap: 10px; font-size: 20px; margin-bottom: 20px; }
+      .b4-golpes .pt { display: none; }
+      .b8-videos { grid-template-columns: 1fr; gap: 40px; margin-bottom: 64px; width: 86%; margin-inline: auto; }
+      .b8-res { grid-template-columns: 1fr; gap: 40px; }
+      .b5-siempre p.tx { font-size: 20px; }
+      .b3v-fin br { display: none; }
       .nav-cta { width: 100%; text-align: center; font-size: 19px; padding: .6rem; }
       .nav-logo img { height: 34px; width: auto; }
       .nav.scrolled .nav-inner { padding-block: .4rem; }
