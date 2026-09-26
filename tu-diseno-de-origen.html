@@ -741,7 +741,7 @@ text-align: center;
     }
     .hero-oferta strong { font-weight: 700; }
     @media (max-width: 1024px) { .hero-oferta { font-size: 20px; } }
-    @media (max-width: 600px)  { .hero-oferta { font-size: 19px; margin-bottom: 40px; } .br-movil { display: inline; } }
+    @media (max-width: 600px)  { .hero-oferta { font-size: 20px; margin-bottom: 20px; } .br-movil { display: inline; } }
     .hero-accion { display: inline-block; align-self: flex-start; }
     /* boton: texto y flecha centrados en la misma linea */
     .btn-hero {
@@ -775,7 +775,7 @@ text-align: center;
       .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 18px; }
       .hero-cierre { align-items: center; }
       .hero-accion { align-self: center; }
-      .hero-foto { width: 100%; max-width: 440px; margin-inline: auto; min-height: 0; aspect-ratio: 4 / 5; }
+      .hero-foto { width: 100%; max-width: 395px; margin-inline: auto; min-height: 0; aspect-ratio: 4 / 5; }
     }
 
     /* ── Movil ── */
@@ -784,7 +784,7 @@ text-align: center;
       .br-pc { display: inline; }
       .br-tab { display: none; }
       .h1-bloque { font-size: 30px; line-height: 1.24; margin-bottom: 16px; }
-      .hero-segunda { font-size: 30px; margin-bottom: 34px; }
+      .hero-segunda { font-size: 30px; margin-bottom: 50px; }
       .hero-2col .hero-sub { font-size: 20px; margin-bottom: 40px; }
       .hero-accion { display: block; width: 100%; }
       .hero-2col .btn-hero { width: 100%; font-size: 18px; padding: 17px 4px; }
@@ -904,7 +904,7 @@ text-align: center;
     }
     @media (max-width: 860px) {
       .b5 { padding: 60px 0 95px; }
-      .b5-h { font-size: 35px; margin-bottom: 70px; }
+      .b5-h { font-size: 32px; margin-bottom: 70px; }
       .b5-orn i { width: 44px; }
       .b5-item { padding: 35px 0; }
       .b5-item h3 { font-size: 25px; }
@@ -1181,6 +1181,7 @@ text-align: center;
     .b10-form .container { width: 100%; }
     .b10-form .form-card { margin: 0; border: 0; box-shadow: 0 18px 44px rgba(0,0,0,.28); }
     .b10-br, .b10-br2 { display: none; }
+    .b10-flecha { text-align: center; margin: 0 0 30px; }
     .b10-cita { text-align: left; margin: 0; }
     .b10-cita .com { display: block; font-family: var(--font-display); font-weight: 700; font-size: 80px;
                      line-height: .6; color: var(--gold-light); opacity: .55; margin: 0 0 20px; }
@@ -1275,10 +1276,22 @@ text-align: center;
     @media (max-width: 600px) {
       /* Nav, hero de formulario y campos */
       .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
+      .b10-h { font-size: 38px; margin-bottom: 30px; }
+      .b10-of { font-size: 25px; margin-bottom: 50px; }
+      .b9-list summary { font-size: 20px; }
+      .b7-cta { margin-top: 60px; }
+      .b5-mas { margin: 20px 0 30px; }
+      .b5-oferta { margin: 0 0 20px; font-size: 30px; }
+      .b4-sub { font-size: 20px; }
+      .b4-min { font-size: 30px; }
+      .b3v-h { font-size: 38px; }
+      .p2-c3 .break-mobile { display: none; }
+      .hero-foto { max-width: 440px; }
+      .p2-c1, .p2-c2 { font-size: 32px; }
       .b4-h .break-mobile { display: none; }
-      .b3v-fin { width: auto; }
-      .p2-tel { font-size: 24px; }
-      .b4-golpes { flex-direction: column; gap: 10px; font-size: 20px; margin-bottom: 20px; }
+      .b3v-fin { width: max-content; max-width: 100%; margin-inline: auto; font-size: 22px; margin-top: 60px; }
+      .p2-tel { font-size: 28px; }
+      .b4-golpes { flex-direction: column; gap: 10px; font-size: 22px; margin-bottom: 20px; }
       .b4-golpes .pt { display: none; }
       .b8-videos { grid-template-columns: 1fr; gap: 40px; margin-bottom: 64px; width: 86%; margin-inline: auto; }
       .b8-res { grid-template-columns: 1fr; gap: 40px; }
@@ -1303,7 +1316,7 @@ text-align: center;
       /* Hero */
       .hero-home { background-image: linear-gradient(to bottom, #fffbef 0, rgba(255,251,239,0) 140px),
                                      url('images/fondo-hear-origen-natal-carta-movil-4.webp'); }
-      .hero-home h1 { font-size: 36px; margin-bottom: 2.5rem; line-height: 1.40; }
+      .hero-home h1 { font-size: 36px; margin-bottom: 20px; line-height: 1.40; }
       .hero-sub { margin-bottom: 2rem; font-size: 20px; }
       .hero-ribbon-track span { font-size: 18px; }
       .hero-trust-note { font-size: 15px; }
@@ -1430,7 +1443,7 @@ text-align: center;
       <div class="p2-giro">
         <p class="p2-c1">No te falta esfuerzo…</p>
         <p class="p2-c2">Te falta <em>información sobre ti</em></p>
-        <p class="p2-c3">Llevas años intentando cambiar algo<br class="break-mobile"> que nadie te ha explicado nunca</p>
+        <p class="p2-c3">Llevas años intentando<br class="br-movil"> cambiar algo<br class="break-mobile"> que nadie<br class="br-movil"> te ha explicado nunca</p>
         <div class="p2-flecha" aria-hidden="true">
           <svg width="24" height="42" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <line x1="8" y1="0" x2="8" y2="18" stroke="#bd9048" stroke-width="1.5" stroke-linecap="round"/>
@@ -1465,7 +1478,7 @@ text-align: center;
   <!-- ════════════ 3. QUÉ ES TU DISEÑO DE ORIGEN ════════════ -->
   <section class="b4">
     <div class="b4-in">
-      <h2 class="b4-h">Tu Diseño de Origen te da<br class="break-mobile"> <em>las respuestas</em><br class="break-desktop"> que llevas<br class="break-mobile"> <em>toda la vida buscando</em></h2>
+      <h2 class="b4-h">Tu Diseño de Origen te da<br class="break-mobile"><br class="br-movil"> <em>las respuestas</em><br class="break-desktop"><br class="br-movil"> que llevas<br class="break-mobile"> <em>toda<br class="br-movil"> la vida buscando</em></h2>
       <p class="b4-sub">Más de <strong>40 páginas</strong> que revelan tu <strong>programación interior</strong>, para que entiendas por fin<br class="br-esc"> <strong><em>por qué eres como eres y por qué te pasa lo que te pasa</em></strong></p>
       <p class="b4-golpes"><span>100% personalizado</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin tecnicismos</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin citas, sin esperas</span></p>
       <p class="b4-min">¡Y lo tienes en minutos!</p>
@@ -1644,8 +1657,14 @@ text-align: center;
   <!-- ════════════ 9. O PUEDES SABERLO HOY ════════════ -->
   <section class="b10">
     <div class="b10-in">
-      <h2 class="b10-h">Puedes seguir<br class="b10-br"> preguntándote<br class="br-mov"> por qué…<br> <em>o puedes saberlo hoy</em></h2>
+      <h2 class="b10-h">Puedes seguir<br class="b10-br"> preguntándote<br class="br-mov"> por qué…<br> <em>o puedes saberlo<br class="br-movil"> hoy</em></h2>
       <p class="b10-of">¡Obtén tu prueba GRATIS<br class="b10-br2"> en SOLO 2 MINUTOS!</p>
+      <div class="b10-flecha" aria-hidden="true">
+        <svg width="24" height="42" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="8" y1="0" x2="8" y2="18" stroke="#cfb180" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M2 14L8 20L14 14" stroke="#cfb180" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
       <div id="formulario"></div>
       <div class="b10-grid">
         <div class="b10-form">
@@ -1857,7 +1876,7 @@ text-align: center;
         </div>
         <figure class="b10-cita">
           <span class="com" aria-hidden="true">&ldquo;</span>
-          <p>De verdad que no sé cómo lo hacéis, llevo años en terapia, leyendo, haciendo cursos, intentando entenderme, y con mi diseño he sentido más claridad que en todo este tiempo junto. ¡Increíble!</p>
+          <p>De verdad que no sé cómo lo hacéis, llevo años en terapia, leyendo, haciendo cursos, intentando entenderme y con mi diseño he sentido más claridad que en todo este tiempo junto. ¡Increíble!</p>
           <figcaption class="quien"><img src="images/R1-irene-resena-origen-natal-tu-diseno-de-origen.webp" alt="Irene, clienta de Tu Diseño de Origen" width="384" height="394" loading="lazy" /><span>&mdash; Irene</span></figcaption>
         </figure>
       </div>
