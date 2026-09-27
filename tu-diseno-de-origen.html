@@ -960,9 +960,10 @@ text-align: center;
     .b3v-l strong { font-weight: 700; color: var(--gold-light); }
     .b3v-l em { font-style: italic; color: #fffbef; }
     .b3v-fin { font-family: var(--font-body); font-weight: 700; font-style: italic; font-size: 19px;
-               line-height: 1.5; color: #fffbef; margin: 40px 0 0;
-               border-left: 3px solid var(--gold-light); padding-left: 24px; }
-    .b3v-fin .oro { color: var(--gold-light); }
+               line-height: 1.5; color: #fffbef; margin: 0; }
+    .b3v-clave { border-left: 3px solid var(--gold-light); padding-left: 24px; margin-top: 30px; }
+    .b3v-clave .b3v-l { margin-bottom: 12px; }
+    .b3v-clave .b3v-fin { color: var(--gold-light); }
 
     /* ══════════════════════════════════════════════
        PRICE & FINAL CTA
@@ -1137,7 +1138,6 @@ text-align: center;
       .p2-orbita.o2 { width: 470px; right: -195px; bottom: -110px; }
       .b3v-txt { text-align: center; }
       .b3v-foto { width: 100%; order: 4; margin: 10px auto 60px; }
-      .b3v-fin { text-align: left; }
       .b3v { padding: 60px 0 80px; }
       .b3v-tel { font-size: 28px; margin-bottom: 30px; }
       .b3v-in { display: flex; flex-direction: column; gap: 0; }
@@ -1145,11 +1145,12 @@ text-align: center;
       .b3v-tel { order: 1; }
       .b3v-h { order: 2; }
       .b3v-txt p.b3v-l:nth-of-type(2) { order: 3; }
-      .b3v-txt p.b3v-l:nth-of-type(3) { order: 5; }
-      .b3v-fin { order: 6; }
+      .b3v-txt > .b3v-fin { order: 3; margin-bottom: 40px; }
+      .b3v-clave { order: 5; }
       .b3v-h { font-size: 40px; margin-bottom: 60px; }
       .b3v-l { font-size: 18px; line-height: 1.7; margin-bottom: 22px; }
-      .b3v-fin { font-size: 20px; margin-top: 45px; padding-left: 18px; width: max-content; max-width: 100%; margin-inline: auto; }
+      .b3v-fin { font-size: 20px; }
+      .b3v-clave { padding-left: 18px; margin: 0 auto; max-width: 560px; text-align: left; }
       .b9 { padding: 72px 0 80px; } 
       .b9-h { font-size: 31px; margin-bottom: 44px; }
       .b9-body p { font-size: 18px; }
@@ -1221,10 +1222,9 @@ text-align: center;
       .b3v { padding: 10px 0 30px; }
       .b3v-h { font-size: 38px; margin-bottom: 50px; }
       .b3v-l { font-size: 16px; }
-      .b3v-txt p.b3v-l:nth-of-type(2) { margin-bottom: 40px; }
+      .b3v-txt p.b3v-l:nth-of-type(2) { margin-bottom: 20px; }
       .b3v-foto { margin: 10px auto 30px; }
-      .b3v-txt p.b3v-l:nth-of-type(3) { margin-top: 20px; margin-bottom: 30px; }
-      .b3v-fin { margin-top: 20px; }
+      .b3v-clave { margin-top: 20px; }
       .b4 { padding: 100px 0 70px; }
       .b6 { padding: 70px 0 80px; }
       .b7 { padding: 60px 0 60px; }
@@ -1279,7 +1279,9 @@ text-align: center;
       .b5-extras { grid-template-columns: 1fr; gap: 35px; }
       .b5-item { padding: 24px 22px; margin-bottom: 35px; }
       .b5-item:last-child { margin-bottom: 0; }
-      .b3v-l { margin-bottom: 40px; }
+      .b3v-l { margin-bottom: 30px; }
+      .b3v-clave .b3v-l { margin-bottom: 20px; }
+      .b3v-clave { max-width: 330px; }
       .b10-flecha { margin: 0 0 20px; }
       .b5-mas { font-size: 22px; }
       .b5-siempre .et { font-size: 22px; }
@@ -1313,13 +1315,12 @@ text-align: center;
       .p2-foto img { width: 100%; height: 148%; object-fit: cover; object-position: 65% top; display: block; }
       .p2-punto { margin-bottom: 50px; }
       .b4-h .break-mobile { display: none; }
-      .b3v-fin { width: auto; font-size: 22px; margin-top: 10px; }
+      .b3v-fin { font-size: 22px; }
       .b4-golpes { flex-direction: column; gap: 10px; font-size: 22px; margin-bottom: 30px; }
       .b4-golpes .pt { display: none; }
       .b8-videos { grid-template-columns: 1fr; margin-bottom: 64px; width: 86%; margin-inline: auto; }
       .b8-res { grid-template-columns: 1fr; }
       .b5-siempre p.tx { font-size: 18px; }
-      .b3v-fin br { display: none; }
       .nav-cta { width: 100%; text-align: center; font-size: 19px; padding: .6rem; }
       .nav-logo img { height: 34px; width: auto; }
       .nav.scrolled .nav-inner { padding-block: .4rem; }
@@ -1355,7 +1356,7 @@ text-align: center;
       .b3v { padding: 20px 0; }
       .b3v-in { align-items: stretch; }
       .b3v-foto { aspect-ratio: auto; position: relative; }
-      .b3v-foto img { position: absolute; inset: 0; transform: none; }
+      .b3v-foto img { position: absolute; inset: 0; transform: scale(1.45); transform-origin: 50% 8%; }
       .b4-mock { max-width: 600px; }
       .b4-golpes { font-size: 16px; margin: 0 0 30px; }
       .b4-cta { margin-top: 20px; }
@@ -1493,7 +1494,7 @@ text-align: center;
         <circle cx="168.6" cy="31.4" r="1.8" fill="currentColor"/>
       </svg>
     <div class="p2-inner">
-      <p class="p2-tel">Hablemos claro...</p>
+      <p class="p2-tel">¿Te suena esto?</p>
       <h2 class="p2-title">Lo has intentado <em>todo</em></h2>
       <p class="p2-sub">Terapia, cursos, libros, propósitos de año nuevo…</p>
       <p class="p2-punto">Y siempre acabas volviendo al mismo punto:</p>
@@ -1508,7 +1509,7 @@ text-align: center;
 
       <div class="p2-giro">
         <p class="p2-c1">No es falta de esfuerzo…</p>
-        <p class="p2-c2">Te falta <em>información sobre ti</em></p>
+        <p class="p2-c2">Es falta de <em>información sobre ti</em></p>
         <p class="p2-c3">Llevas años intentando<br class="br-movil"> cambiar algo<br class="break-mobile"> que nadie<br class="br-movil"> te ha explicado nunca</p>
         <div class="p2-flecha" aria-hidden="true">
           <svg width="24" height="42" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1531,12 +1532,14 @@ text-align: center;
     <div class="b3v-in">
       <div class="b3v-foto"><img src="images/bloque-3-tu-diseno-de-origen-programacion-interior.webp" alt="Mujer descubriendo su programación interior" /></div>
       <div class="b3v-txt">
-        <p class="b3v-tel">Te lo explico:</p>
+        <p class="b3v-tel">Te lo explicamos</p>
         <h2 class="b3v-h">Antes de tu primera respiración,<br> <span class="oro">ya se había formado algo en ti</span></h2>
         <p class="b3v-l">Una <strong>programación interior</strong> que decide <em>cómo piensas, cómo sientes y cómo te vinculas con todo lo que te rodea</em>: Tus decisiones, tus relaciones, tu dinero, tus miedos…</p>
-        <p class="b3v-l">La clave está en el momento exacto en el que naciste, ese instante dibujó un mapa único de ti, <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong>, descifra tu diseño.</p>
-        <p class="b3v-fin">Y está dirigiendo tu vida entera sin que te des cuenta,<br>
-<span class="oro">y hasta que no la descubras nada cambiará de verdad.</span></p>
+        <p class="b3v-fin">Y está dirigiendo tu vida entera sin que te des cuenta.</p>
+        <div class="b3v-clave">
+          <p class="b3v-l">La clave está en el momento exacto en el que naciste, ese instante dibujó un mapa único de ti, <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong>, descifra tu programación.</p>
+          <p class="b3v-fin">Y hasta que no la descubras nada cambiará de verdad.</p>
+        </div>
       </div>
     </div>
   </section>
