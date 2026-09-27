@@ -793,7 +793,7 @@ text-align: center;
     /* ══════════════════════════════════════════════
        QUÉ ES (bloque 4) — presentación y mockup
     ══════════════════════════════════════════════ */
-    .b4 { position: relative; background: var(--white) url('images/fondo-que-incluye-tu-diseno-de-origen-carta-natal.jpg') center / cover no-repeat; padding: 170px 0 70px; text-align: center; }
+    .b4 { position: relative; background: var(--white) url('images/fondo-que-incluye-tu-diseno-de-origen-carta-natal.jpg') center / cover no-repeat; padding: 150px 0 0; text-align: center; }
     .b4-in { width: min(900px, 92vw); margin-inline: auto; }
     .b4-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25;
             color: var(--teal-deep); margin: 0 0 30px; }
@@ -836,16 +836,13 @@ text-align: center;
                   color: var(--teal-deep); margin: 0 0 10px; }
     .b5-item h3 .n { color: var(--gold-deep); font-weight: 400; font-size: 32px; margin-right: 12px; }
     .b5-item p { font-family: var(--font-body); font-size: 16px; line-height: 1.75; color: #4a4538; margin: 0; }
-
-    .b5-foto { display: none; align-items: center; justify-content: center; aspect-ratio: 4 / 3;
-               margin: 40px 0 0; border: 2px dashed var(--gold-light); background: var(--cream);
-               border-radius: var(--r-lg); }
-    .b5-foto span { font-family: var(--font-body); font-size: 15px; letter-spacing: 4px; color: var(--gold-deep); }
+    .b5-foto { aspect-ratio: 2 / 1; margin: 50px 0 0; overflow: hidden; border-radius: var(--r-lg); }
+    .b5-foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 70% center; }
     .b5-mas { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px;
               text-transform: uppercase; color: var(--gold-deep); margin: 50px 0 26px; }
     .b5-extras { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; text-align: left; }
     .b5-extra { background: var(--cream); border-radius: var(--r-lg); padding: 28px 30px; }
-    .b5-extra h3 { font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 22px;
+    .b5-extra h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px;
                    line-height: 1.25; color: var(--teal-deep); margin: 0 0 12px; }
     .b5-extra p { font-family: var(--font-body); font-size: 16px; line-height: 1.7; color: #4a4538; margin: 0; }
 
@@ -1170,8 +1167,8 @@ text-align: center;
       .p2-giro { margin-top: 48px; }
       .p2-c1, .p2-c2 { font-size: 35px; }
       .p2-c3 { font-size: 20px; }
-      .p2-luna svg { height: 66px; }
       .b4-luna svg { height: 66px; }
+      .b5-foto { aspect-ratio: 4 / 3; }
       .p2-orbita.o1 { width: 430px; top: -170px; left: -175px; }
       .p2-orbita.o2 { width: 470px; right: -195px; bottom: -110px; }
       .b3v-txt { text-align: center; }
@@ -1275,7 +1272,6 @@ text-align: center;
       .p2-c3 .break-mobile { display: none; }
       .hero-foto { max-width: 300px; }
       .p2-c1, .p2-c2 { font-size: 32px; }
-      .b5-foto { display: flex; }
       .b3v-in { display: flex; flex-direction: column; gap: 0; }
       .b3v-txt { display: contents; }
       .b3v-tel { order: 1; }
@@ -1337,6 +1333,13 @@ text-align: center;
       .b3v-in { align-items: stretch; }
       .b3v-foto { aspect-ratio: auto; position: relative; }
       .b3v-foto img { position: absolute; inset: 0; }
+      .b4-mock { max-width: 600px; }
+      .b4-golpes { font-size: 16px; margin: 0 0 30px; }
+      .b4-cta { margin-top: 20px; }
+      .b5-orn { margin: 0 0 30px; }
+      .b5-h { margin: 0 0 50px; }
+      .b5-mas { font-size: 20px; }
+      .b5-siempre .et { font-size: 20px; }
       /* El boton mide lo mismo que la frase que lleva encima. */
       .hero-cierre { align-items: stretch; width: max-content; max-width: 100%; }
       .hero-cierre .hero-accion { align-self: stretch; display: block; }
@@ -1555,7 +1558,7 @@ text-align: center;
         <p class="b5-oferta">¡Obtén tu prueba<br class="br-mov"> en SOLO 2 MINUTOS!</p>
         <a href="#formulario" class="btn-cta">Quiero descubrirlo gratis&nbsp;→</a>
       </div>
-      <div class="b5-foto"><span>MUJER LEYENDO</span></div>
+      <div class="b5-foto"><img src="images/bloque-4-tu-diseno-de-origen-natal-pdf.webp" alt="Mujer leyendo su Diseño de Origen en PDF" width="1000" height="485" loading="lazy" /></div>
     </div>
   </section>
 
