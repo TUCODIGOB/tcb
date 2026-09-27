@@ -1022,7 +1022,7 @@ text-align: center;
              color: var(--cream); margin: 0 0 25px; text-align: center; }
     .b10-h em { font-style: italic; font-weight: 400; color: var(--gold-light); }
     .b10-of { font-family: var(--font-display); font-weight: 700; font-size: 18px;
-              line-height: 1.5; color: var(--gold-light); margin: 0 0 20px; text-align: center; }
+              line-height: 1.5; color: var(--teal-deep); margin: 0 0 20px; text-align: center; }
     .b10-form .form-progress { flex-direction: row; justify-content: center; gap: 12px; margin: 24px 0 0; }
     .b10-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 56px; align-items: center; }
     .b10-form .container { width: 100%; }
@@ -1330,12 +1330,13 @@ text-align: center;
       .b3v { padding: 20px 0; }
       .b3v-in { align-items: stretch; }
       .b3v-foto { aspect-ratio: auto; position: relative; }
-      .b3v-foto img { position: absolute; inset: 0; }
+      .b3v-foto img { position: absolute; inset: 0; transform: none; }
       .b4-mock { max-width: 600px; }
       .b4-golpes { font-size: 16px; margin: 0 0 30px; }
       .b4-cta { margin-top: 20px; }
       .b10-flecha { display: none; }
       .b10-h { margin-bottom: 60px; }
+      .b10-of { font-size: 20px; margin: 0 0 25px; }
       .b5-h { margin: 0 0 50px; }
       .b5-mas { font-size: 20px; }
       .b5-siempre .et { font-size: 20px; }
@@ -1362,6 +1363,7 @@ text-align: center;
       .b3v-h { font-size: 35px; }
       .b4-h { font-size: 36px; }
       .b5-h { font-size: 30px; }
+      .b10-br2 { display: inline; }
     }
     /* ── Solo ordenador (1024px y mas) ── */
     @media (min-width: 1024px) {
@@ -1434,7 +1436,7 @@ text-align: center;
           </div>
         </div>
 
-        <div class="hero-foto"><img src="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" alt="Mujer descubriendo su Diseño de Origen a partir de su carta natal" width="750" height="1000" fetchpriority="high" /></div>
+        <div class="hero-foto"><picture><source media="(min-width: 851px)" srcset="images/mujer-descubre-su-diseno-de-origen-carta-natal-pc.webp" /><img src="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" alt="Mujer descubriendo su Diseño de Origen a partir de su carta natal" width="750" height="1000" fetchpriority="high" /></picture></div>
         <p class="hero-kicker">Tu Diseño de Origen</p>
         <img class="hero-deco" src="images/deco-1.webp" alt="" width="317" height="82" />
       </div>
