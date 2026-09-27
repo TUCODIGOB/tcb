@@ -793,7 +793,7 @@ text-align: center;
     /* ══════════════════════════════════════════════
        QUÉ ES (bloque 4) — presentación y mockup
     ══════════════════════════════════════════════ */
-    .b4 { background: var(--white) url('images/fondo-que-incluye-tu-diseno-de-origen-carta-natal.jpg') center / cover no-repeat; padding: 60px 0 70px; text-align: center; }
+    .b4 { position: relative; background: var(--white) url('images/fondo-que-incluye-tu-diseno-de-origen-carta-natal.jpg') center / cover no-repeat; padding: 170px 0 70px; text-align: center; }
     .b4-in { width: min(900px, 92vw); margin-inline: auto; }
     .b4-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25;
             color: var(--teal-deep); margin: 0 0 30px; }
@@ -960,7 +960,8 @@ text-align: center;
 
     .p2-luna { position: absolute; left: 0; right: 0; bottom: -1px; line-height: 0; z-index: 2; }
     .p2-luna svg { display: block; width: 100%; height: 110px; }
-
+    .b4-luna { position: absolute; left: 0; right: 0; top: -1px; line-height: 0; z-index: 2; }
+    .b4-luna svg { display: block; width: 100%; height: 110px; }
 
     /* ══════════════════════════════════════════════
        CAUSA (bloque 3) — foto y explicación sobre verde
@@ -1113,7 +1114,7 @@ text-align: center;
       .hero-cierre { align-items: center; }
       .hero-accion { align-self: center; }
       .hero-foto { width: 100%; max-width: 300px; margin-inline: auto; min-height: 0; aspect-ratio: 4 / 5; }
-      .b4 { padding: 60px 0 70px; }
+      .b4 { padding: 126px 0 70px; }
       .b4-h { font-size: 38px; margin-bottom: 40px; }
       .b4-sub { font-size: 18px; line-height: 1.7; margin-bottom: 26px; }
       .b4-golpes { margin: 0 0 20px; }
@@ -1170,6 +1171,7 @@ text-align: center;
       .p2-c1, .p2-c2 { font-size: 35px; }
       .p2-c3 { font-size: 20px; }
       .p2-luna svg { height: 66px; }
+      .b4-luna svg { height: 66px; }
       .p2-orbita.o1 { width: 430px; top: -170px; left: -175px; }
       .p2-orbita.o2 { width: 470px; right: -195px; bottom: -110px; }
       .b3v-txt { text-align: center; }
@@ -1514,6 +1516,11 @@ text-align: center;
 
   <!-- ════════════ 3. QUÉ ES TU DISEÑO DE ORIGEN ════════════ -->
   <section class="b4">
+    <div class="b4-luna" aria-hidden="true">
+      <svg viewBox="0 0 1200 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 C300,110 900,110 1200,0 Z" fill="#0e3f4b"/>
+      </svg>
+    </div>
     <div class="b4-in">
       <h2 class="b4-h">Tu Diseño de Origen te da<br class="break-mobile"><br class="br-movil"> <em>las respuestas</em><br class="break-desktop"><br class="br-movil"> que llevas<br class="break-mobile"> <em>toda<br class="br-movil"> la vida buscando</em></h2>
       <p class="b4-sub">Más de <strong>40 páginas</strong> que revelan tu <strong>programación interior</strong>, para que entiendas por fin<br class="br-esc"> <strong><em>por qué eres como eres y por qué te pasa lo que te pasa</em></strong></p>
