@@ -1112,7 +1112,7 @@ text-align: center;
       .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 18px; }
       .hero-cierre { align-items: center; }
       .hero-accion { align-self: center; }
-      .hero-foto { width: 100%; max-width: 395px; margin-inline: auto; min-height: 0; aspect-ratio: 4 / 5; }
+      .hero-foto { width: 100%; max-width: 300px; margin-inline: auto; min-height: 0; aspect-ratio: 4 / 5; }
       .b4 { padding: 60px 0 70px; }
       .b4-h { font-size: 38px; margin-bottom: 40px; }
       .b4-sub { font-size: 18px; line-height: 1.7; margin-bottom: 26px; }
@@ -1193,10 +1193,23 @@ text-align: center;
       .break-mobile { display: block; }
       .break-desktop { display: none; }
       .hero-home h1, .hero-sub { text-align: center; }
+      .tx-pc { display: none; }
+      .tx-movil { display: inline; }
+      .hero-cols { display: flex; flex-direction: column; gap: 0; }
+      .hero-texto { display: contents; }
+      .h1-bloque { order: 1; }
+      .hero-segunda { order: 2; }
+      .hero-foto { margin-bottom: 30px; order: 3; }
+      .hero-kicker { display: block; order: 4; margin: 20px 0 2px; }
+      .hero-deco { display: block; order: 5; margin: 0 auto 30px; }
+      .hero-sub { order: 6; }
+      .hero-cierre { order: 7; }
     }
 
     /* ── Solo tablet vertical (681px a 850px) ── */
     @media (min-width: 681px) and (max-width: 850px) {
+      .hero-home .br-mov, .hero-home .br-movil, .br-pc { display: inline; }
+      .br-tab { display: none; }
       .p2-quotes { grid-template-columns: 180px 1fr 1fr; }
       .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 2; position: relative; border-radius: var(--r-lg); overflow: hidden; }
       .p2-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 65% top; display: block; }
@@ -1265,15 +1278,7 @@ text-align: center;
       .b4-cta { order: 6; }
       .b3v-h { font-size: 38px; }
       .p2-c3 .break-mobile { display: none; }
-      .hero-foto { max-width: 300px; margin-bottom: 30px; order: 3; }
-      .hero-cols { display: flex; flex-direction: column; gap: 0; }
-      .hero-texto { display: contents; }
-      .h1-bloque { order: 1; }
-      .hero-segunda { order: 2; }
-      .hero-kicker { display: block; order: 4; margin: 20px 0 2px; }
-      .hero-deco { display: block; order: 5; margin: 0 auto 30px; }
-      .hero-sub { order: 6; }
-      .hero-cierre { order: 7; }
+      .hero-foto { max-width: 300px; }
       .p2-c1, .p2-c2 { font-size: 32px; }
       .b5-foto { display: flex; }
       .b3v-in { display: flex; flex-direction: column; gap: 0; }
@@ -1287,8 +1292,6 @@ text-align: center;
       .b3v-txt p.b3v-l:nth-of-type(3) { order: 5; }
       .b3v-fin { order: 6; }
       .p2-title { margin: 0 0 25px; }
-      .tx-pc { display: none; }
-      .tx-movil { display: inline; }
       .p2-quotes { grid-template-columns: 120px 1fr; gap: 16px 14px; }
       .p2-quote { grid-column: 2; }
       .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 4; border-radius: var(--r-lg); overflow: hidden; }
@@ -1334,7 +1337,7 @@ text-align: center;
     /* ── Tablet horizontal y ordenador (851px y mas) ── */
     @media (min-width: 851px) {
       .hero-2col .hero-oferta { margin-bottom: 20px; }
-      .hero-sub .oro { text-transform: uppercase; }
+      .hero-sub .oro { font-family: var(--font-display); font-style: italic; }
       /* El boton mide lo mismo que la frase que lleva encima. */
       .hero-cierre { align-items: stretch; width: max-content; max-width: 100%; }
       .hero-cierre .hero-accion { align-self: stretch; display: block; }
