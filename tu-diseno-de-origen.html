@@ -947,9 +947,7 @@ text-align: center;
     .p2-sub { font-size: 18px; line-height: 1.7; color: #4a4538; margin: 0 0 30px; }
     .p2-punto { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px; text-transform: uppercase; color: var(--teal-deep); margin: 0 0 60px; }
 
-    .p2-quotes { display: grid; grid-template-columns: 180px 1fr 1fr; gap: 30px; text-align: left; }
-    .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 2; position: relative; border-radius: var(--r-lg); overflow: hidden; }
-    .p2-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 65% top; display: block; }
+    .p2-quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; text-align: left; }
     .p2-quote { background: var(--cream); border: 1px solid #efe0c6; border-radius: var(--r-lg); padding: 24px 26px; display: flex; align-items: center; }
     .p2-quote p { margin: 0; font-family: var(--font-display); font-style: italic; font-size: 16px; line-height: 1.55; color: #3d3a33; }
 
@@ -1199,6 +1197,9 @@ text-align: center;
 
     /* ── Solo tablet vertical (681px a 850px) ── */
     @media (min-width: 681px) and (max-width: 850px) {
+      .p2-quotes { grid-template-columns: 180px 1fr 1fr; }
+      .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 2; position: relative; border-radius: var(--r-lg); overflow: hidden; }
+      .p2-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 65% top; display: block; }
     }
     /* ── Solo movil (680px y menos) ── */
     @media (max-width: 680px) {
@@ -1291,7 +1292,7 @@ text-align: center;
       .p2-quotes { grid-template-columns: 120px 1fr; gap: 16px 14px; }
       .p2-quote { grid-column: 2; }
       .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 4; border-radius: var(--r-lg); overflow: hidden; }
-      .p2-foto img { position: static; width: 100%; height: 148%; object-fit: cover; object-position: 65% top; display: block; }
+      .p2-foto img { width: 100%; height: 148%; object-fit: cover; object-position: 65% top; display: block; }
       .p2-punto { margin-bottom: 50px; }
       .b4-h .break-mobile { display: none; }
       .b3v-fin { width: auto; font-size: 22px; margin-top: 10px; }
