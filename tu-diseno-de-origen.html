@@ -516,10 +516,6 @@
       transition: background .2s;
     }
     .compruebalo .corregir:hover { background: #f7efdd; }
-    @media (max-width: 600px) {
-      .compruebalo-caja { padding: 2rem 1.4rem; }
-      .compruebalo p { font-size: 20px; }
-    }
 
     .titulo-paso {
       font-family: var(--font-display);
@@ -576,8 +572,8 @@
     .footer-links .sep { opacity: .35; }
     .footer-copy { color: rgba(255,251,239,.4); font-size: .8rem; }
 
-    /* Lo responsive de esta página está unificado en el bloque
-       @media (max-width: 600px) del final de la hoja. */
+    /* Lo responsive de esta pagina esta al final de la hoja,
+       en los bloques de medidas de pantalla. */
 
     /* ── BLOQUES COPIADOS DE INDEX.HTML ── */
     /* Los tokens de color y tipografía viven en el :root único de arriba. */
@@ -690,14 +686,6 @@ text-align: center;
     .hero-texto { display: flex; flex-direction: column; justify-content: space-between; }
     /* La frase de la oferta y el boton van juntos, pegados al final. */
     .hero-cierre { display: flex; flex-direction: column; align-items: flex-start; width: 100%; }
-    @media (min-width: 1025px) {
-      .hero-2col .hero-oferta { margin-bottom: 20px; }
-      .hero-sub .oro { text-transform: uppercase; }
-      /* El boton mide lo mismo que la frase que lleva encima. */
-      .hero-cierre { align-items: stretch; width: max-content; max-width: 100%; }
-      .hero-cierre .hero-accion { align-self: stretch; display: block; }
-      .hero-cierre .btn-hero { width: 100%; min-width: 0; }
-    }
 
     .h1-bloque {
       font-family: var(--font-display);
@@ -730,9 +718,7 @@ text-align: center;
 
     .br-movil { display: none; }
     .br-mov { display: none; }
-    @media (max-width: 620px) { .br-mov { display: inline; } }
     .br-esc { display: none; }
-    @media (min-width: 1025px) { .br-esc { display: inline; } }
     .hero-oferta {
       font-family: var(--font-display);
       font-size: 20px;
@@ -741,8 +727,6 @@ text-align: center;
       margin: 0 0 20px;
     }
     .hero-oferta strong { font-weight: 700; }
-    @media (max-width: 1024px) { .hero-oferta { font-size: 22px; } }
-    @media (max-width: 600px)  { .hero-oferta { font-size: 25px; margin-bottom: 20px; line-height: 1.4; } .br-movil { display: inline; } }
     .hero-accion { display: inline-block; align-self: flex-start; }
     /* boton: texto y flecha centrados en la misma linea */
     .btn-hero {
@@ -772,31 +756,8 @@ text-align: center;
     .br-tab { display: inline; }
 
     /* ── Tablet ── */
-    @media (max-width: 1024px) {
-      .hero-2col { text-align: center; padding-block: 60px 60px; }
-      .hero-cols { grid-template-columns: 1fr; gap: 46px; }
-      .hero-texto { align-items: center; }
-      .h1-bloque { font-size: 38px; margin-bottom: 24px; }
-      .hero-segunda { font-size: 28px; margin-bottom: 34px; }
-      .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 18px; }
-      .hero-cierre { align-items: center; }
-      .hero-accion { align-self: center; }
-      .hero-foto { width: 100%; max-width: 395px; margin-inline: auto; min-height: 0; aspect-ratio: 4 / 5; }
-    }
 
     /* ── Movil ── */
-    @media (max-width: 600px) {
-      .hero-2col { padding-block: 40px 60px; }
-      .br-pc { display: inline; }
-      .br-tab { display: none; }
-      .h1-bloque { font-size: 30px; line-height: 1.24; margin-bottom: 16px; }
-      .hero-segunda { font-size: 30px; margin-bottom: 50px; }
-      .hero-2col .hero-sub { font-size: 20px; margin-bottom: 40px; }
-      .hero-accion { display: block; width: 100%; }
-      .hero-2col .btn-hero { width: 100%; font-size: 18px; padding: 17px 4px; }
-      .hero-2col .hero-trust-note { font-size: 18px; }
-      .hero-cols { gap: 60px; }
-    }
     .hero-trust-note {
       font-size: 15px;
       color: #0c0c0c;
@@ -853,19 +814,6 @@ text-align: center;
     .b4-mock span { font-family: var(--font-body); font-size: 15px; letter-spacing: 4px; color: var(--gold-deep); }
     .b4-cta { margin-top: 48px; text-align: center; }
 
-    @media (max-width: 1024px) {
-      .b4 { padding: 78px 0 82px; }
-      .b4-h { font-size: 36px; }
-      .b4-mock { margin-top: 40px; }
-    }
-    @media (max-width: 860px) {
-      .b4 { padding: 60px 0 70px; }
-      .b4-h { font-size: 38px; margin-bottom: 40px; }
-      .b4-sub { font-size: 18px; line-height: 1.7; margin-bottom: 26px; }
-      .b4-golpes { margin: 0 0 20px; }
-      .b4-min { font-size: 25px; }
-      .b4-mock { margin-top: 50px; aspect-ratio: 4 / 3; }
-    }
 
     /* ══════════════════════════════════════════════
        LAS 7 ÁREAS (bloque 5)
@@ -911,31 +859,6 @@ text-align: center;
                  line-height: 1.4; color: var(--gold-deep); margin: 0 0 22px; }
     .b5-cta .btn-cta, .b4-cta .btn-cta { display: inline-flex; align-items: center; justify-content: center; gap: .5em; }
 
-    @media (max-width: 1024px) {
-      .b5 { padding: 66px 0 82px; }
-      .b5-et { font-size: 20px; }
-      .b5-h { font-size: 31px; margin-bottom: 60px; }
-    }
-    @media (max-width: 860px) {
-      .b5 { padding: 60px 0 95px; }
-      .b5-h { font-size: 32px; margin-bottom: 70px; }
-      .b5-orn i { width: 44px; }
-      .b5-item { padding: 35px 0; }
-      .b5-item h3 { font-size: 25px; }
-      .b5-item h3 .n { font-size: 40px; }
-      .b5-item p { font-size: 18px; }
-      .b5-extra h3 { font-size: 25px; }
-      .b5-mas { font-size: 20px; margin: 50px 0 30px; }
-      .p2-flecha { margin-top: 20px; }
-      .b5-extras { grid-template-columns: 1fr; gap: 35px; }
-      .b5-extra { padding: 24px 22px; }
-      .b5-extra p, .b5-siempre p.tx { font-size: 18px; }
-      .b5-siempre p.tx { font-size: 18px; }
-      .b5-siempre .et { font-size: 20px; }
-      .b5-oferta { font-size: 22px; }
-      .b5-oferta { margin: 0 0 20px; }
-      .b5-cta .btn-cta, .b4-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
-    }
 
     /* ══════════════════════════════════════════════
        CÓMO LO RECIBES (bloque 7)
@@ -958,20 +881,6 @@ text-align: center;
     .b7-paso p { font-family: var(--font-body); font-size: 16px; line-height: 1.7; color: #4a4538; margin: 0; }
     .b7-cta { margin-top: 56px; }
     .b7-cta .btn-cta { display: inline-flex; align-items: center; justify-content: center; gap: .5em; }
-    @media (max-width: 1024px) { .b7 { padding: 72px 0 80px; } .b7-h { font-size: 31px; margin-bottom: 48px; } }
-    @media (max-width: 860px) {
-      .b7 { padding: 70px 0 90px; }
-      .b7-h { font-size: 40px; margin-bottom: 50px; }
-      .b7-pasos { grid-template-columns: 1fr; gap: 50px; }
-      .b7-pasos::before { display: none; }
-      .b7-paso { padding: 0; }
-      .b7-n { margin-bottom: 16px; }
-      .b7-n { font-size: 36px; }
-      .b7-paso h3 { font-size: 25px; }
-      .b7-paso p { font-size: 18px; }
-      .b7-cta { margin-top: 60px; }
-      .b7-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
-    }
 
 /* ══════════════════════════════════════════════
        LO QUE PASA CUANDO POR FIN TE ENTIENDES (bloque 8)
@@ -992,19 +901,6 @@ text-align: center;
     .b8-res { display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; align-items: start; }
     .b8-res img { width: 100%; height: auto; display: block; background: var(--white);
                   border-radius: var(--r-md); border: 1px solid #ecdfc6; box-shadow: 0 8px 24px rgba(14,63,75,.07); }
-    @media (max-width: 1024px) {
-      .b8 { padding: 72px 0 80px; }
-      .b8-h { font-size: 38px; margin-bottom: 44px; }
-      .b8-videos { gap: 40px; margin-bottom: 60px; }
-      .b8-res { grid-template-columns: 1fr 1fr; gap: 40px; }
-    }
-    @media (max-width: 767px) {
-      .b8 { padding: 54px 0 80px; }
-      .b8-h { font-size: 38px; margin-bottom: 50px; }
-      .b8-sep { margin: 0 0 56px; }
-      .b8-sep i { width: 44px; }
-     }
-    @media (max-width: 1024px) { .b8-br { display: inline; } }
 
 /* ══════════════════════════════════════════════
        NO ES UN HORÓSCOPO (bloque 6)
@@ -1034,15 +930,6 @@ text-align: center;
     .b6-no li .mk::before { content: "\2715"; font-size: 21px; color: #ffffff; }
     .b6-si li .mk::before { content: "\2713"; font-size: 26px; color: var(--gold-light); }
     .b6-si li strong { font-weight: 700; color: var(--teal-deep); }
-    @media (max-width: 860px) {
-      .b6 { padding: 70px 0 100px; }
-      .b6-et { font-size: 20px; }
-      .b6-h { font-size: 40px; margin-bottom: 70px; }
-      .b6-lab { font-size: 20px; }
-      .b6-cols { grid-template-columns: 1fr; gap: 70px; }
-      .b6-card { padding: 24px 22px 26px; }
-      .b6-card li { font-size: 18px; padding: 10px 0; }
-    }
 
     /* ══════════════════════════════════════════════
        PROBLEMA — bloque 2: frases de la lectora y giro
@@ -1074,28 +961,6 @@ text-align: center;
     .p2-luna { position: absolute; left: 0; right: 0; bottom: -1px; line-height: 0; z-index: 2; }
     .p2-luna svg { display: block; width: 100%; height: 110px; }
 
-    @media (max-width: 1024px) {
-      .p2 { padding: 64px 0 130px; }
-      .p2-tel { font-size: 28px; }
-      .p2-title { font-size: 40px; }
-      .p2-orbita.o1 { width: 440px; top: -170px; left: -180px; }
-      .p2-orbita.o2 { width: 470px; right: -190px; bottom: -130px; }
-    }
-    @media (max-width: 860px) {
-      .p2 { padding: 70px 0 80px; }
-      .p2-title { font-size: 40px; }
-      .p2-sub { font-size: 20px; }
-      .p2-punto { font-size: 19px; letter-spacing: 2px; margin-bottom: 60px; }
-      .p2-quotes { grid-template-columns: 1fr; gap: 30px; }
-      .p2-quote { padding: 20px 20px; }
-      .p2-quote p { font-size: 18px; }
-      .p2-giro { margin-top: 48px; }
-      .p2-c1, .p2-c2 { font-size: 35px; }
-      .p2-c3 { font-size: 20px; }
-      .p2-luna svg { height: 66px; }
-      .p2-orbita.o1 { width: 430px; top: -170px; left: -175px; }
-      .p2-orbita.o2 { width: 470px; right: -195px; bottom: -110px; }
-    }
 
     /* ══════════════════════════════════════════════
        CAUSA (bloque 3) — foto y explicación sobre verde
@@ -1121,24 +986,6 @@ text-align: center;
                border-left: 3px solid var(--gold-light); padding-left: 24px; }
     .b3v-fin .oro { color: var(--gold-light); }
 
-    @media (max-width: 1024px) {
-      .b3v { padding: 76px 0; }
-      .b3v-tel { font-size: 24px; margin-bottom: 20px; }
-      .b3v-in { grid-template-columns: 1fr; gap: 42px; }
-      .b3v-txt { text-align: center; }
-      .b3v-h { font-size: 40px; }
-      .b3v-foto { width: 100%; max-width: 380px; margin-inline: auto; }
-      .b3v-fin { text-align: left; font-size: 20px; width: max-content; max-width: 100%; margin-inline: auto; }
-    }
-    @media (max-width: 860px) {
-      .b3v { padding: 60px 0 80px; }
-      .b3v-tel { font-size: 28px; margin-bottom: 30px; }
-      .b3v-in { grid-template-columns: 1fr; gap: 60px; }
-      .b3v-h { font-size: 40px; margin-bottom: 60px; }
-      .b3v-l { font-size: 18px; line-height: 1.7; margin-bottom: 22px; }
-      .b3v-fin { font-size: 20px; margin-top: 45px; padding-left: 18px; width: max-content; max-width: 100%; margin-inline: auto; }
-      .b3v-foto { max-width: 290px; }
-    }
     /* ══════════════════════════════════════════════
        PRICE & FINAL CTA
     ══════════════════════════════════════════════ */
@@ -1169,18 +1016,6 @@ text-align: center;
     .b9-body p:last-child { margin-bottom: 0; }
     .b9-body a { color: var(--gold-deep); text-decoration: underline; }
     .b9-body a:hover { color: var(--teal-deep); }
-    @media (max-width: 1024px) { .b9 { padding: 72px 0 80px; } .b9-h { font-size: 31px; margin-bottom: 44px; } }
-    @media (max-width: 860px) {
-      .b9-body p { font-size: 18px; }
-    }
-    @media (max-width: 767px) {
-      .b9 { padding: 54px 0 62px; }
-      .b9-h { font-size:38px; margin-bottom: 60px; }
-      .b9-list summary { padding: 28px 2px; gap: 18px; }
-      .b9-list summary::after { font-size: 24px; }
-      .b9-body { padding: 0 2px 24px; }
-    }
-    @media (max-width: 620px) { .b9-br { display: inline; } }
 
     /* ══════════════════════════════════════════════
        O PUEDES SABERLO HOY (bloque 10)
@@ -1207,27 +1042,7 @@ text-align: center;
                        font-family: var(--font-display); font-style: italic; font-size: 21px;
                        color: var(--gold-light); }
     .b10-cita .quien img { width: 80px; height: auto; display: block; flex: 0 0 auto; }
-    @media (max-width: 1024px) {
-      .b10 { padding: 72px 0 80px; }
-      .b10-h { font-size: 36px; }
-      .b10-of { margin-bottom: 50px; }
-      .b10-grid { grid-template-columns: 1fr; gap: 44px; }
-      .b10-cita { text-align: center; max-width: 620px; margin-inline: auto; }
-      .b10-cita .quien { justify-content: center; }
-    }
-    @media (max-width: 767px) {
-      .b10 { padding: 60px 0 62px; }
-      .b10-h { font-size: 35px; margin-bottom: 30px; }
-      .b10-of { font-size: 20px; margin-bottom: 20px; }
-      .b10-flecha { margin: 0 0 20px; }
-      .b10-grid { gap: 34px; }
-      .b10-cita p { font-size: 18px; }
-      .b10-cita .com { font-size: 80px; margin-bottom: 0px; }
-      .b10-cita .quien { font-size: 19px; gap: 12px; }
-      .b10-cita .quien img { width: 72px; }
-    }
 
-    @media (max-width: 620px) { .b10-br, .b10-br2 { display: inline; } }
 
     /* ══════════════════════════════════════════════
        FOOTER
@@ -1264,17 +1079,6 @@ text-align: center;
     /* ══════════════════════════════════════════════
        RESPONSIVE
     ══════════════════════════════════════════════ */
-    @media (max-width: 860px) {
-      .break-mobile { display: block; }
-      .break-desktop { display: none; }
-      .hero-home h1, .hero-sub { text-align: center; }
-    }
-    @media (min-width: 861px) {
-      .btn-cta { padding: 10px 40px; min-width: 400px; }
-      .field label { font-size: 12px; }
-      .field input, .field select { font-size: 14px; padding: 10px; }
-      .btn-pay { padding: 10px; }
-    }
 
     /* ══════════════════════════════════════════════
        AJUSTES LANDING P1 — estructura y estilo ANEXO-02 / Fase 3
@@ -1283,14 +1087,148 @@ text-align: center;
     /* Ancla del formulario (compensa el nav sticky) */
     #formulario { scroll-margin-top: 80px; }
 
-    /* En pantallas muy estrechas el texto del boton no cabe con el espaciado normal */
-    @media (max-width: 360px) { .nav-cta { letter-spacing: 0; } }
 
-    /* ─── RESPONSIVE MÓVIL ───────────────────────────
-       Único bloque de 600px de la hoja. Lo que ya cubre
-       @media (max-width: 860px) no se repite aquí.       */
 
-    @media (max-width: 600px) {
+    /* En ordenador el texto de los botones mide 16px. El del nav va aparte. */
+
+
+    /* ══════════════════════════════════════════════
+       MEDIDAS DE PANTALLA
+       Movil .......  hasta 767px
+       Tablet ......  de 768px a 1023px
+       Ordenador ...  desde 1024px
+       Los cortes son 767 y 1024. La unica salvedad es un
+       ajuste del boton del nav en moviles de 360px o menos.
+    ══════════════════════════════════════════════ */
+
+    /* ── Tablet y movil (1023px y menos) ── */
+    @media (max-width: 1023px) {
+      .hero-oferta { font-size: 22px; }
+      .hero-2col { text-align: center; padding-block: 60px 60px; }
+      .hero-cols { grid-template-columns: 1fr; gap: 46px; }
+      .hero-texto { align-items: center; }
+      .h1-bloque { font-size: 38px; margin-bottom: 24px; }
+      .hero-segunda { font-size: 28px; margin-bottom: 34px; }
+      .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 18px; }
+      .hero-cierre { align-items: center; }
+      .hero-accion { align-self: center; }
+      .hero-foto { width: 100%; max-width: 395px; margin-inline: auto; min-height: 0; aspect-ratio: 4 / 5; }
+      .b4 { padding: 60px 0 70px; }
+      .b4-h { font-size: 38px; margin-bottom: 40px; }
+      .b4-sub { font-size: 18px; line-height: 1.7; margin-bottom: 26px; }
+      .b4-golpes { margin: 0 0 20px; }
+      .b4-min { font-size: 25px; }
+      .b4-mock { margin-top: 50px; aspect-ratio: 4 / 3; }
+      .b5-et { font-size: 20px; }
+      .b5 { padding: 60px 0 95px; }
+      .b5-h { font-size: 32px; margin-bottom: 70px; }
+      .b5-orn i { width: 44px; }
+      .b5-item { padding: 35px 0; }
+      .b5-item h3 { font-size: 25px; }
+      .b5-item h3 .n { font-size: 40px; }
+      .b5-item p { font-size: 18px; }
+      .b5-extra h3 { font-size: 25px; }
+      .b5-mas { font-size: 20px; margin: 50px 0 30px; }
+      .b5-extras { grid-template-columns: 1fr; gap: 35px; }
+      .b5-extra { padding: 24px 22px; }
+      .b5-extra p, .b5-siempre p.tx { font-size: 18px; }
+      .b5-siempre p.tx { font-size: 18px; }
+      .b5-siempre .et { font-size: 20px; }
+      .b5-oferta { font-size: 22px; }
+      .b5-oferta { margin: 0 0 20px; }
+      .b5-cta .btn-cta, .b4-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
+      .b7 { padding: 70px 0 90px; }
+      .b7-h { font-size: 40px; margin-bottom: 50px; }
+      .b7-pasos { grid-template-columns: 1fr; gap: 50px; }
+      .b7-pasos::before { display: none; }
+      .b7-paso { padding: 0; }
+      .b7-n { margin-bottom: 16px; }
+      .b7-n { font-size: 36px; }
+      .b7-paso h3 { font-size: 25px; }
+      .b7-paso p { font-size: 18px; }
+      .b7-cta { margin-top: 60px; }
+      .b7-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
+      .b8 { padding: 72px 0 80px; }
+      .b8-h { font-size: 38px; margin-bottom: 44px; }
+      .b8-videos { gap: 40px; margin-bottom: 60px; }
+      .b8-res { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .b8-br { display: inline; }
+      .b6 { padding: 70px 0 100px; }
+      .b6-et { font-size: 20px; }
+      .b6-h { font-size: 40px; margin-bottom: 70px; }
+      .b6-lab { font-size: 20px; }
+      .b6-cols { grid-template-columns: 1fr; gap: 70px; }
+      .b6-card { padding: 24px 22px 26px; }
+      .b6-card li { font-size: 18px; padding: 10px 0; }
+      .p2-tel { font-size: 28px; }
+      .p2 { padding: 70px 0 80px; }
+      .p2-title { font-size: 40px; }
+      .p2-sub { font-size: 20px; }
+      .p2-punto { font-size: 19px; letter-spacing: 2px; margin-bottom: 60px; }
+      .p2-quotes { grid-template-columns: 1fr; gap: 30px; }
+      .p2-quote { padding: 20px 20px; }
+      .p2-quote p { font-size: 18px; }
+      .p2-giro { margin-top: 48px; }
+      .p2-c1, .p2-c2 { font-size: 35px; }
+      .p2-c3 { font-size: 20px; }
+      .p2-luna svg { height: 66px; }
+      .p2-orbita.o1 { width: 430px; top: -170px; left: -175px; }
+      .p2-orbita.o2 { width: 470px; right: -195px; bottom: -110px; }
+      .b3v-txt { text-align: center; }
+      .b3v-foto { width: 100%; margin-inline: auto; }
+      .b3v-fin { text-align: left; }
+      .b3v { padding: 60px 0 80px; }
+      .b3v-tel { font-size: 28px; margin-bottom: 30px; }
+      .b3v-in { grid-template-columns: 1fr; gap: 60px; }
+      .b3v-h { font-size: 40px; margin-bottom: 60px; }
+      .b3v-l { font-size: 18px; line-height: 1.7; margin-bottom: 22px; }
+      .b3v-fin { font-size: 20px; margin-top: 45px; padding-left: 18px; width: max-content; max-width: 100%; margin-inline: auto; }
+      .b3v-foto { max-width: 290px; }
+      .b9 { padding: 72px 0 80px; } .b9-h { font-size: 31px; margin-bottom: 44px; }
+      .b9-body p { font-size: 18px; }
+      .b10 { padding: 72px 0 80px; }
+      .b10-h { font-size: 36px; }
+      .b10-of { margin-bottom: 50px; }
+      .b10-grid { grid-template-columns: 1fr; gap: 44px; }
+      .b10-cita { text-align: center; max-width: 620px; margin-inline: auto; }
+      .b10-cita .quien { justify-content: center; }
+      .break-mobile { display: block; }
+      .break-desktop { display: none; }
+      .hero-home h1, .hero-sub { text-align: center; }
+    }
+
+    /* ── Solo movil (767px y menos) ── */
+    @media (max-width: 767px) {
+      .compruebalo-caja { padding: 2rem 1.4rem; }
+      .compruebalo p { font-size: 20px; }
+      .br-mov { display: inline; }
+      .hero-oferta { font-size: 25px; margin-bottom: 20px; line-height: 1.4; } .br-movil { display: inline; }
+      .hero-2col { padding-block: 40px 60px; }
+      .br-pc { display: inline; }
+      .br-tab { display: none; }
+      .h1-bloque { font-size: 30px; line-height: 1.24; margin-bottom: 16px; }
+      .hero-segunda { font-size: 30px; margin-bottom: 50px; }
+      .hero-2col .hero-sub { font-size: 20px; margin-bottom: 40px; }
+      .hero-accion { display: block; width: 100%; }
+      .hero-2col .btn-hero { width: 100%; font-size: 18px; padding: 17px 4px; }
+      .hero-2col .hero-trust-note { font-size: 18px; }
+      .b8 { padding: 54px 0 80px; }
+      .b8-h { font-size: 38px; margin-bottom: 50px; }
+      .b8-sep { margin: 0 0 56px; }
+      .b8-sep i { width: 44px; }
+      .b9 { padding: 54px 0 62px; }
+      .b9-h { font-size:38px; margin-bottom: 60px; }
+      .b9-list summary { padding: 28px 2px; gap: 18px; }
+      .b9-list summary::after { font-size: 24px; }
+      .b9-body { padding: 0 2px 24px; }
+      .b9-br { display: inline; }
+      .b10 { padding: 60px 0 62px; }
+      .b10-grid { gap: 34px; }
+      .b10-cita p { font-size: 18px; }
+      .b10-cita .com { font-size: 80px; margin-bottom: 0px; }
+      .b10-cita .quien { font-size: 19px; gap: 12px; }
+      .b10-cita .quien img { width: 72px; }
+      .b10-br, .b10-br2 { display: inline; }
       /* Nav, hero de formulario y campos */
       .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
       .b5-h { margin-bottom: 60px; }
@@ -1371,23 +1309,38 @@ text-align: center;
       .help-icon .tooltip { width: 240px; }
       .checkbox-field label { font-size: 11px; }
       .field label { font-size: 15px; }
-
       /* Ritmo general y tipografía */
       section { padding-block: 3.5rem; }
       h2 { font-size: 2.5rem; }
       .btn-cta { width: 100%; font-size: 20px; padding: 12px 1rem; }
-
       /* Hero */
       .hero-home { background-image: linear-gradient(to bottom, #fffbef 0, rgba(255,251,239,0) 140px),
-                                     url('images/fondo-hear-origen-natal-carta-movil-4.webp'); }
+      url('images/fondo-hear-origen-natal-carta-movil-4.webp'); }
       .hero-home h1 { font-size: 36px; margin-bottom: 20px; line-height: 1.40; }
       .hero-sub { margin-bottom: 2rem; font-size: 20px; }
       .hero-ribbon-track span { font-size: 18px; }
       .hero-trust-note { font-size: 15px; }
     }
 
-    /* En ordenador el texto de los botones mide 16px. El del nav va aparte. */
-    @media (min-width: 1025px) {
+    /* ── Excepcion: moviles muy pequenos ──
+       Sin esto el texto del boton del nav no cabe a 360px. */
+    @media (max-width: 360px) {
+      .nav-cta { letter-spacing: 0; }
+    }
+
+    /* ── Solo ordenador (1024px y mas) ── */
+    @media (min-width: 1024px) {
+      .hero-2col .hero-oferta { margin-bottom: 20px; }
+      .hero-sub .oro { text-transform: uppercase; }
+      /* El boton mide lo mismo que la frase que lleva encima. */
+      .hero-cierre { align-items: stretch; width: max-content; max-width: 100%; }
+      .hero-cierre .hero-accion { align-self: stretch; display: block; }
+      .hero-cierre .btn-hero { width: 100%; min-width: 0; }
+      .br-esc { display: inline; }
+      .btn-cta { padding: 10px 40px; min-width: 400px; }
+      .field label { font-size: 12px; }
+      .field input, .field select { font-size: 14px; padding: 10px; }
+      .btn-pay { padding: 10px; }
       .btn-cta { font-size: 16px; }
       .btn-pay { font-size: 16px; }
       .form-step-nav .btn-next { font-size: 16px; }
