@@ -1167,20 +1167,27 @@ text-align: center;
       .p2-c3 { font-size: 20px; }
       .p2-luna svg { height: 66px; }
       .b4-luna svg { height: 66px; }
-      .b5-foto { aspect-ratio: 4 / 3; }
+      .b5-foto { aspect-ratio: 5 / 2; }
+      .b5-foto img { object-position: center 60%; }
       .p2-orbita.o1 { width: 430px; top: -170px; left: -175px; }
       .p2-orbita.o2 { width: 470px; right: -195px; bottom: -110px; }
       .b3v-txt { text-align: center; }
-      .b3v-foto { width: 100%; margin-inline: auto; }
+      .b3v-foto { width: 100%; order: 4; margin: 10px auto 60px; }
       .b3v-fin { text-align: left; }
       .b3v { padding: 60px 0 80px; }
       .b3v-tel { font-size: 28px; margin-bottom: 30px; }
-      .b3v-in { grid-template-columns: 1fr; gap: 60px; }
+      .b3v-in { display: flex; flex-direction: column; gap: 0; }
+      .b3v-txt { display: contents; }
+      .b3v-tel { order: 1; }
+      .b3v-h { order: 2; }
+      .b3v-txt p.b3v-l:nth-of-type(2) { order: 3; }
+      .b3v-txt p.b3v-l:nth-of-type(3) { order: 5; }
+      .b3v-fin { order: 6; }
       .b3v-h { font-size: 40px; margin-bottom: 60px; }
       .b3v-l { font-size: 18px; line-height: 1.7; margin-bottom: 22px; }
       .b3v-fin { font-size: 20px; margin-top: 45px; padding-left: 18px; width: max-content; max-width: 100%; margin-inline: auto; }
-      .b3v-foto { max-width: 290px; }
-      .b9 { padding: 72px 0 80px; } .b9-h { font-size: 31px; margin-bottom: 44px; }
+      .b9 { padding: 72px 0 80px; } 
+      .b9-h { font-size: 31px; margin-bottom: 44px; }
       .b9-body p { font-size: 18px; }
       .b10 { padding: 72px 0 80px; }
       .b10-h { font-size: 36px; }
@@ -1206,10 +1213,55 @@ text-align: center;
 
     /* ── Solo tablet vertical (681px a 850px) ── */
     @media (min-width: 681px) and (max-width: 850px) {
-      .hero-home .br-mov, .hero-home .br-movil, .br-pc { display: inline; }
-      .br-tab { display: none; }
-      .p2-quotes { grid-template-columns: 180px 1fr 1fr; }
-      .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 2; position: relative; border-radius: var(--r-lg); overflow: hidden; }
+      .h1-bloque .br-pc:first-child { display: inline; }
+      .hero-kicker { margin: 10px 0 2px; }
+      .hero-deco { margin: 0 auto 10px; }
+      .p2-title { font-size: 38px; }
+      .p2-sub { font-size: 18px; }
+      .p2-punto { font-size: 17px; }
+      .p2-c1, .p2-c2 { font-size: 32px; }
+      .p2-c3 { font-size: 18px; }
+      .p2-flecha { margin-top: 10px; }
+      .b4-mock { width: 60%; margin: 0 auto 60px; }
+      .b4-sub { font-size: 17px; }
+      .b4-golpes { font-size: 17px; margin: 0 0 30px; }
+      .b4-cta { margin-top: 20px; }
+      .btn-hero, .b4-cta .btn-cta, .b5-cta .btn-cta, .b7-cta .btn-cta { font-size: 16px; padding: 10px 40px; }
+      .b4-cta .btn-cta, .b5-cta .btn-cta, .b7-cta .btn-cta { display: inline-flex; width: auto; min-width: 400px; }
+      .b5 { padding: 0 0 95px; }
+      .b5-et { font-size: 18px; }
+      .b5-h { margin-bottom: 50px; }
+      .b5-item h3 { font-size: 22px; }
+      .b5-item h3 .n { font-size: 32px; }
+      .b5-item p { font-size: 16px; }
+      .b5-extra h3 { font-size: 22px; }
+      .b5-extra p, .b5-siempre p.tx { font-size: 16px; }
+      .b5-siempre .br-esc { display: inline; }
+      .b3v-foto { max-width: 480px; aspect-ratio: 16 / 10; }
+      .b3v-foto img { object-position: center 15%; }
+      .b6-et { font-size: 18px; }
+      .b6-h { font-size: 38px; margin-bottom: 60px; }
+      .b6-cols { gap: 60px; }
+      .b6-lab { font-size: 18px; }
+      .b6-card li { font-size: 16px; }
+      .b7-h { font-size: 35px; }
+      .b7-paso h3 { font-size: 22px; }
+      .b7-paso p { font-size: 16px; }
+      .b8 { padding: 50px 0 80px; }
+      .b9 { padding: 60px 0 80px; }
+      .b9-h { font-size: 32px; margin-bottom: 50px; }
+      .b9-body p { font-size: 16px; }
+      .b10-h { font-size: 32px; margin: 0 0 20px; }
+      .b10-flecha { margin: 0 0 10px; }
+      .b10-of { font-size: 22px; margin-bottom: 40px; }
+      .hero-home h1 { margin-inline: auto; }
+      .hero-foto { max-width: 480px; aspect-ratio: 16 / 10; }
+      .hero-foto img { object-position: center 35%; }
+      .p2 { padding: 70px 0 60px; }
+      .p2-quotes { grid-template-columns: 200px 1fr; }
+      .p2-quote { grid-column: 2; }
+      .p2-quote p { font-size: 16px; }
+      .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 4; position: relative; border-radius: var(--r-lg); overflow: hidden; }
       .p2-foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 65% top; display: block; }
     }
     /* ── Solo movil (680px y menos) ── */
@@ -1268,18 +1320,13 @@ text-align: center;
       .b4 { padding-bottom: 60px; }
       .b3v-h { font-size: 38px; }
       .p2-c3 .break-mobile { display: none; }
-      .hero-foto { max-width: 300px; }
+      .hero-foto { max-width: 100%; aspect-ratio: 1 / 1; }
+      .hero-foto img { object-position: 40% center; }
+      .b5-foto { aspect-ratio: 1 / 1; }
+      .b5-foto img { object-position: 52% 60%; }
       .p2-c1, .p2-c2 { font-size: 32px; }
-      .b3v-in { display: flex; flex-direction: column; gap: 0; }
-      .b3v-txt { display: contents; }
-      .b3v-tel { order: 1; }
-      .b3v-h { order: 2; }
-      .b3v-txt p.b3v-l:nth-of-type(2) { order: 3; }
-      .b3v-foto { order: 4; margin: 10px auto 60px; max-width: 340px; border: 0; aspect-ratio: 10 / 9; overflow: hidden; border-radius: var(--r-lg); }
-      .b3v-foto span { display: none; }
-      .b3v-foto img { display: block; width: 100%; height: 100%; object-fit: cover; transform: none; }
-      .b3v-txt p.b3v-l:nth-of-type(3) { order: 5; }
-      .b3v-fin { order: 6; }
+      .b3v-foto { aspect-ratio: 4 / 3; }
+      .b3v-foto img { transform: none; }
       .p2-title { margin: 0 0 25px; }
       .p2-quotes { grid-template-columns: 120px 1fr; gap: 16px 14px; }
       .p2-quote { grid-column: 2; }
@@ -1358,11 +1405,12 @@ text-align: center;
 
     /* ── Solo tablet horizontal (851px a 1023px) ── */
     @media (min-width: 851px) and (max-width: 1023px) {
-      .h1-bloque { font-size: 38px; }
+      .h1-bloque { font-size: 36px; }
       .hero-segunda { font-size: 28px; }
       .b3v-h { font-size: 35px; }
       .b4-h { font-size: 36px; }
       .b5-h { font-size: 30px; }
+      .hero-cols { grid-template-columns: 1fr 27%; gap: 32px; }
       .b10-br2 { display: inline; }
     }
     /* ── Solo ordenador (1024px y mas) ── */
@@ -1436,7 +1484,7 @@ text-align: center;
           </div>
         </div>
 
-        <div class="hero-foto"><picture><source media="(min-width: 851px)" srcset="images/mujer-descubre-su-diseno-de-origen-carta-natal-pc.webp" /><img src="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" alt="Mujer descubriendo su Diseño de Origen a partir de su carta natal" width="750" height="1000" fetchpriority="high" /></picture></div>
+        <div class="hero-foto"><picture><source media="(min-width: 851px)" srcset="images/mujer-descubre-su-diseno-de-origen-carta-natal-pc.webp" /><img src="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" alt="Mujer descubriendo su Diseño de Origen a partir de su carta natal" width="898" height="667" fetchpriority="high" /></picture></div>
         <p class="hero-kicker">Tu Diseño de Origen</p>
         <img class="hero-deco" src="images/deco-1.webp" alt="" width="317" height="82" />
       </div>
