@@ -692,6 +692,7 @@ text-align: center;
     .hero-cierre { display: flex; flex-direction: column; align-items: flex-start; width: 100%; }
     @media (min-width: 1025px) {
       .hero-2col .hero-oferta { margin-bottom: 20px; }
+      .hero-sub .oro { text-transform: uppercase; }
       /* El boton mide lo mismo que la frase que lleva encima. */
       .hero-cierre { align-items: stretch; width: max-content; max-width: 100%; }
       .hero-cierre .hero-accion { align-self: stretch; display: block; }
@@ -924,7 +925,7 @@ text-align: center;
       .b5-item h3 .n { font-size: 40px; }
       .b5-item p { font-size: 18px; }
       .b5-extra h3 { font-size: 25px; }
-      .b5-mas { font-size: 20px; margin: 10px 0 30px; }
+      .b5-mas { font-size: 20px; margin: 50px 0 30px; }
       .p2-flecha { margin-top: 20px; }
       .b5-extras { grid-template-columns: 1fr; gap: 35px; }
       .b5-extra { padding: 24px 22px; }
@@ -1102,10 +1103,10 @@ text-align: center;
     .b3v { position: relative; background: var(--teal-deep); padding: 60px 0; }
     .b3v-in { width: min(1100px, 92vw); margin-inline: auto;
               display: grid; grid-template-columns: 32% 1fr; gap: 56px; align-items: center; }
-    .b3v-foto { border: 2px dashed var(--gold-light); aspect-ratio: 3 / 4;
+    .b3v-foto { border: 0; aspect-ratio: 3 / 4; overflow: hidden; border-radius: var(--r-lg);
                 display: flex; align-items: center; justify-content: center; text-align: center; }
-    .b3v-foto span { font-family: var(--font-body); font-size: 15px; letter-spacing: 4px; color: var(--gold-light); }
-    .b3v-foto img { display: none; }
+    .b3v-foto span { display: none; }
+    .b3v-foto img { display: block; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
     .b3v-txt { text-align: left; }
     .b3v-tel { font-family: var(--font-display); font-style: italic; font-weight: 700;
                font-size: 28px; line-height: 1; color: #fffbef; margin: 0 0 24px; }
@@ -1340,7 +1341,7 @@ text-align: center;
       .b3v-txt p.b3v-l:nth-of-type(2) { order: 3; }
       .b3v-foto { order: 4; margin: 10px auto 60px; max-width: 340px; border: 0; aspect-ratio: 10 / 9; overflow: hidden; border-radius: var(--r-lg); }
       .b3v-foto span { display: none; }
-      .b3v-foto img { display: block; width: 100%; height: 100%; object-fit: cover; }
+      .b3v-foto img { display: block; width: 100%; height: 100%; object-fit: cover; transform: none; }
       .b3v-txt p.b3v-l:nth-of-type(3) { order: 5; }
       .b3v-fin { order: 6; }
       .p2-title { margin: 0 0 25px; }
@@ -1533,7 +1534,7 @@ text-align: center;
         <p class="b3v-tel">Te lo explico:</p>
         <h2 class="b3v-h">Antes de tu primera respiración,<br> <span class="oro">ya se había formado algo en ti</span></h2>
         <p class="b3v-l">Una <strong>programación interior</strong> que decide <em>cómo piensas, cómo sientes y cómo te vinculas con todo lo que te rodea</em>: Tus decisiones, tus relaciones, tu dinero, tus miedos…</p>
-        <p class="b3v-l">La clave está en el momento exacto en que naciste, ese instante dibujó un mapa único, <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong>, descifra tu programación</p>
+        <p class="b3v-l">La clave está en el momento exacto en el que naciste, ese instante dibujó un mapa único de ti, <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong>, descifra tu diseño.</p>
         <p class="b3v-fin">Y está dirigiendo tu vida entera sin que te des cuenta,<br>
 <span class="oro">y hasta que no la descubras nada cambiará de verdad</span></p>
       </div>
