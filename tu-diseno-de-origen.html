@@ -1096,15 +1096,15 @@ text-align: center;
 
     /* ══════════════════════════════════════════════
        MEDIDAS DE PANTALLA
-       Movil .......  hasta 767px
-       Tablet ......  de 768px a 1023px
-       Ordenador ...  desde 1024px
-       Los cortes son 767 y 1024. La unica salvedad es un
-       ajuste del boton del nav en moviles de 360px o menos.
+       Movil ..............  hasta 680px
+       Tablet vertical ....  de 681px a 850px   (colocacion de movil)
+       Tablet horizontal ..  de 851px a 1023px  (colocacion de ordenador)
+       Ordenador ..........  desde 1024px
+       Mas un ajuste del boton del nav en moviles de 360px o menos.
     ══════════════════════════════════════════════ */
 
-    /* ── Tablet y movil (1023px y menos) ── */
-    @media (max-width: 1023px) {
+    /* ── Tablet vertical y movil (850px y menos) ── */
+    @media (max-width: 850px) {
       .hero-oferta { font-size: 22px; }
       .hero-2col { text-align: center; padding-block: 60px 60px; }
       .hero-cols { grid-template-columns: 1fr; gap: 46px; }
@@ -1197,8 +1197,11 @@ text-align: center;
       .hero-home h1, .hero-sub { text-align: center; }
     }
 
-    /* ── Solo movil (767px y menos) ── */
-    @media (max-width: 767px) {
+    /* ── Solo tablet vertical (681px a 850px) ── */
+    @media (min-width: 681px) and (max-width: 850px) {
+    }
+    /* ── Solo movil (680px y menos) ── */
+    @media (max-width: 680px) {
       .compruebalo-caja { padding: 2rem 1.4rem; }
       .compruebalo p { font-size: 20px; }
       .br-mov { display: inline; }
@@ -1327,8 +1330,8 @@ text-align: center;
       .nav-cta { letter-spacing: 0; }
     }
 
-    /* ── Solo ordenador (1024px y mas) ── */
-    @media (min-width: 1024px) {
+    /* ── Tablet horizontal y ordenador (851px y mas) ── */
+    @media (min-width: 851px) {
       .hero-2col .hero-oferta { margin-bottom: 20px; }
       .hero-sub .oro { text-transform: uppercase; }
       /* El boton mide lo mismo que la frase que lleva encima. */
@@ -1345,6 +1348,14 @@ text-align: center;
       .form-step-nav .btn-next { font-size: 16px; }
       .form-step-nav .btn-back { font-size: 16px; }
       .compruebalo .corregir { font-size: 16px; }
+    }
+
+    /* ── Solo tablet horizontal (851px a 1023px) ── */
+    @media (min-width: 851px) and (max-width: 1023px) {
+    }
+
+    /* ── Solo ordenador (1024px y mas) ── */
+    @media (min-width: 1024px) {
     }
 
 </style>
