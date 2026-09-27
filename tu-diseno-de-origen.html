@@ -807,7 +807,7 @@ text-align: center;
     .b4-golpes .pt { color: var(--gold-deep); font-size: 14px; }
     .b4-min { font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 26px;
               line-height: 1.4; color: var(--gold-deep); margin: 0; }
-    .b4-mock { margin-top: 52px; width: 100%; max-width: 860px; margin-inline: auto;
+    .b4-mock { margin: 0 auto 40px; width: 100%; max-width: 860px;
                aspect-ratio: 16 / 10; border: 2px dashed var(--gold-light); background: var(--cream);
                display: flex; align-items: center; justify-content: center; border-radius: var(--r-lg);
                box-shadow: 0 18px 40px rgba(14,63,75,.10); }
@@ -1119,7 +1119,7 @@ text-align: center;
       .b4-sub { font-size: 18px; line-height: 1.7; margin-bottom: 26px; }
       .b4-golpes { margin: 0 0 20px; }
       .b4-min { font-size: 25px; }
-      .b4-mock { margin-top: 50px; aspect-ratio: 4 / 3; }
+      .b4-mock { aspect-ratio: 4 / 3; }
       .b5-et { font-size: 20px; }
       .b5 { padding: 60px 0 95px; }
       .b5-h { font-size: 32px; margin-bottom: 70px; }
@@ -1270,14 +1270,7 @@ text-align: center;
       .b5-oferta { font-size: 27px; }
       .b4-sub { font-size: 20px; }
       .b4-min { font-size: 28px; }
-      .b4-in { display: flex; flex-direction: column; }
-      .b4-h { order: 1; }
-      .b4-mock { order: 2; margin-top: 0; margin-bottom: 40px; }
-      .b4-sub { order: 3; }
-      .b4-golpes { order: 4; }
-      .b4-min { order: 5; }
       .b4 { padding-bottom: 60px; }
-      .b4-cta { order: 6; }
       .b3v-h { font-size: 38px; }
       .p2-c3 .break-mobile { display: none; }
       .hero-foto { max-width: 300px; }
@@ -1362,8 +1355,8 @@ text-align: center;
 
     /* ── Solo tablet horizontal (851px a 1023px) ── */
     @media (min-width: 851px) and (max-width: 1023px) {
+      .b3v-h { font-size: 35px; }
     }
-
     /* ── Solo ordenador (1024px y mas) ── */
     @media (min-width: 1024px) {
     }
@@ -1523,10 +1516,10 @@ text-align: center;
     </div>
     <div class="b4-in">
       <h2 class="b4-h">Tu Diseño de Origen te da<br class="break-mobile"><br class="br-movil"> <em>las respuestas</em><br class="break-desktop"><br class="br-movil"> que llevas<br class="break-mobile"> <em>toda<br class="br-movil"> la vida buscando</em></h2>
+<div class="b4-mock"><span>MOCKUP INFORME</span></div>
       <p class="b4-sub">Más de <strong>40 páginas</strong> que revelan tu <strong>programación interior</strong>, para que entiendas por fin<br class="br-esc"> <strong><em>por qué eres como eres y por qué te pasa lo que te pasa</em></strong></p>
       <p class="b4-golpes"><span>100% personalizado</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin tecnicismos</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin citas, sin esperas</span></p>
       <p class="b4-min">¡Y lo tienes en minutos!</p>
-      <div class="b4-mock"><span>MOCKUP INFORME</span></div>
       <div class="b4-cta"><a href="#formulario" class="btn-cta">Quiero descubrirlo gratis&nbsp;&rarr;</a></div>
     </div>
   </section>
