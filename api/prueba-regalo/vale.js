@@ -37,6 +37,13 @@ export const MAX_VECES = 2;
 // Un dia de sobra para lo que tarda esto. Un vale mas viejo no se usa.
 const CADUCA_MS = 24 * 60 * 60 * 1000;
 
+// Y aqui, por cada email, el vale del diseño que se le esta haciendo.
+const EN_MARCHA = 'marcha';
+
+// Lo mas que puede durar un intento: los 5 minutos de Vercel, y uno de
+// margen. Un intento que lleva mas, es que el servidor se corto a medias.
+const VIVO_MS = 6 * 60 * 1000;
+
 function nuevoCodigo() {
   return crypto.randomBytes(24).toString('base64url');
 }
@@ -217,6 +224,29 @@ export async function dejarPendiente(codigo) {
   }
 }
 
+// ¿SE LE ESTA HACIENDO YA UNO CON ESTOS MISMOS DATOS? Si vuelve a mandar el
+// formulario mientras tanto, se le lleva al que ya esta en marcha en vez de
+// empezar otro. Devuelve su vale, o '' si no hay ninguno vivo.
+async function elQueEstaEnMarcha(huella, datos) {
+  try {
+    const marcha = await leer(EN_MARCHA, huella);
+    if (!marcha || !marcha.vale) return '';
+    const guardado = await leer(VALES, marcha.vale);
+    // Ya salio, o ya esta apuntado para mandarselo: no hay nada en marcha.
+    if (!guardado || !guardado.datos) return '';
+    if (Date.now() - Number(guardado.creado || 0) > CADUCA_MS) return '';
+    if (!sonLosMismos(guardado.datos, datos)) return '';
+    // Esperando el boton de volver a intentarlo: sigue siendo el suyo.
+    if (guardado.fallo && !guardado.cogidoPor) return marcha.vale;
+    // Haciendose, o a punto de empezar: vivo si no pasa del tope.
+    const desde = guardado.cogidoPor ? Number(guardado.cogidoEn || 0) : Number(guardado.creado || 0);
+    return Date.now() - desde < VIVO_MS ? marcha.vale : '';
+  } catch (err) {
+    console.error('[regalo] No se ha podido mirar si ya tenia uno en marcha:', err.message);
+    return '';
+  }
+}
+
 // ── COMO VA ────────────────────────────────────────────────────
 //
 // Lo unico que puede pedir la pagina con su codigo. No escribe nada ni cuesta
@@ -293,8 +323,21 @@ export default async function handler(req, res) {
       // Datos distintos y le queda su correccion: se le escribe de nuevo.
     }
 
+    // SI YA SE LE ESTA HACIENDO UNO CON ESTOS DATOS, se le lleva a ese. Con
+    // datos distintos no: eso es su correccion, y se le escribe de nuevo.
+    const enMarcha = await elQueEstaEnMarcha(huella, datos);
+    if (enMarcha) return res.status(200).json({ vale: enMarcha });
+
     const codigo = nuevoCodigo();
     await escribir(VALES, codigo, { creado: Date.now(), datos });
+
+    // Se apunta que este es el que se le esta haciendo. Si falla, se sigue:
+    // como mucho, un segundo envio empezaria otro, como antes.
+    try {
+      await escribir(EN_MARCHA, huella, { vale: codigo });
+    } catch (err) {
+      console.error('[regalo] No se ha podido apuntar el que esta en marcha:', err.message);
+    }
 
     // SUS DATOS A BREVO, DESDE AQUI. Se le va a escribir un diseño con estos
     // datos, asi que en Brevo tienen que estar estos mismos y no otros: es lo
