@@ -236,10 +236,12 @@ async function elQueEstaEnMarcha(huella) {
     // Ya salio, o ya esta apuntado para mandarselo: no hay nada en marcha.
     if (!guardado || !guardado.datos) return '';
     if (Date.now() - Number(guardado.creado || 0) > CADUCA_MS) return '';
-    // Esperando el boton de volver a intentarlo: sigue siendo el suyo.
-    if (guardado.fallo && !guardado.cogidoPor) return marcha.vale;
-    // Haciendose, o a punto de empezar: vivo si no pasa del tope.
-    const desde = guardado.cogidoPor ? Number(guardado.cogidoEn || 0) : Number(guardado.creado || 0);
+    // Haciendose, esperando el boton de volver a intentarlo, o a punto de
+    // empezar: vivo si no pasa del tope desde lo ultimo que hizo. Un fallo
+    // que nadie ha vuelto a intentar no le deja atascada: pasado el tope, el
+    // formulario funciona normal.
+    const desde = guardado.cogidoPor ? Number(guardado.cogidoEn || 0)
+      : Number(guardado.fallo || guardado.creado || 0);
     return Date.now() - desde < VIVO_MS ? marcha.vale : '';
   } catch (err) {
     console.error('[regalo] No se ha podido mirar si ya tenia uno en marcha:', err.message);
