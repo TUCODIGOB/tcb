@@ -224,6 +224,8 @@
   @media (max-width: 600px) and (max-height: 700px) {
     #screenError.active, #screenSinDatos.active { padding-top: 8vh; }
   }
+  /* LA PANTALLA DE VAYA: arriba, con 100px, en todos los dispositivos. */
+  #screenError.active { align-items: flex-start; padding-top: 100px; }
   .salto-movil { display: none; }
   @media (max-width: 600px) {
     .salto-movil { display: inline; }
@@ -494,9 +496,9 @@ function pantallaReintento(alPulsar) {
 // PANTALLA DE FALLO, SIN BOTON. Se acabaron los intentos. Sin boton a
 // proposito: pulsarlo no generaria nada y le dejaria dandole en balde.
 function pantallaSinIntentos() {
-  document.getElementById('errorTitulo').textContent = 'Ahora mismo el servidor va saturado';
+  document.getElementById('errorTitulo').textContent = 'Ups… ahora mismo hay mucha gente pidiendo el suyo';
   document.getElementById('errorMsg').innerHTML =
-    'Tus datos ya están guardados, no se pierde nada.<br> En cuanto se libere, te preparamos tu Diseño de Origen y <strong style="color:#bd9048;">te lo mandamos directo a tu email</strong>.';
+    'No te preocupes, tus datos están guardados<br> <strong style="color:#bd9048;">Te avisamos por email en cuanto esté listo</strong>';
   const caja = document.querySelector('#screenError .error-box');
   if (caja) caja.style.display = 'none';
   const btn = document.getElementById('errorBtn');
