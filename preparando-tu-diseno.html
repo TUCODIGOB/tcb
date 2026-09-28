@@ -185,6 +185,10 @@
     #screenGenerate .nota-esperar { font-size: 22px; }
     #screenGenerate .nota-email { font-size: 18px; }
     #screenGenerate .pbar { margin-top: 40px; }
+    /* Cada frase junta, y las dos separadas entre si. */
+    #screenGenerate .nota-esperar, #screenGenerate .nota-email { display: block; line-height: 1.3; }
+    #screenGenerate .nota-email { margin-top: 12px; }
+    .br-pc { display: none; }
   }
 
   /* LA PANTALLA DE FALLO. Centrada en el alto, y en el movil un poco por
@@ -362,7 +366,7 @@
       <div class="spin"></div>
       <h2><span id="suNombre"></span><span id="elSaludo">Estamos</span> preparando<br> <em>Tu Diseño de Origen</em></h2>
       <p class="listo">Estará listo en unos <strong>2 <span class="min-largo">minutos</span><span class="min-corto">min.</span></strong></p>
-      <p class="small-note"><span class="nota-esperar">Puedes esperar aquí<br class="br-movil"> o cerrar esta pantalla</span><br><span class="nota-email">Te avisamos por email<br class="br-movil"> en cuanto esté listo</span></p>
+      <p class="small-note"><span class="nota-esperar">Puedes esperar aquí<br class="br-movil"> o cerrar esta pantalla</span><br class="br-pc"><span class="nota-email">Te avisamos por email<br class="br-movil"> en cuanto esté listo</span></p>
       <div class="pbar"><div class="pfill"></div></div>
     </div>
   </div>
