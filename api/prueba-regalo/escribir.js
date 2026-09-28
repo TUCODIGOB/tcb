@@ -234,6 +234,16 @@ async function dejarLaRed(huella, datos, carta) {
   }
 }
 
+// Solo la red de aqui: si lo apuntado es de otro fallo, no se toca.
+async function quitarLaRed(huella) {
+  try {
+    const apuntada = await leerPendiente(huella);
+    if (apuntada && apuntada.red) await quitarPendiente(huella);
+  } catch (err) {
+    console.error('[prueba-regalo] No se ha podido quitar la red:', err.message);
+  }
+}
+
 async function unIntento(codigo, reloj) {
   // ── EL VALE ────────────────────────────────────────────────
   //
@@ -310,20 +320,17 @@ async function unIntento(codigo, reloj) {
     // Y SI ERA EL ULTIMO, se apunta para seguir intentandolo por detras y se
     // le avisa por correo. La red de aqui arriba se quita antes, o el aviso no
     // saldria. Y el vale lo dice, para que la pagina no se quede esperando.
-    try {
-      const apuntada = await leerPendiente(huella);
-      if (apuntada && apuntada.red) await quitarPendiente(huella);
-    } catch (e) {
-      console.error('[prueba-regalo] No se ha podido mirar la red:', e.message);
-    }
+    await quitarLaRed(huella);
     await apuntarElFallo({ datos: delVale, carta, motivo: err.message });
     await dejarPendiente(codigo);
     return;
   }
 
   // YA ESTA ESCRITO. Desde aqui nada vuelve a escribirlo: cada paso va
-  // envuelto y lo que falle se queda en los registros.
-  await quitarPendiente(huella);
+  // envuelto y lo que falle se queda en los registros. La red ya no hace
+  // falta; lo demas de la lista lo sigue llevando guardarLoEscrito, como
+  // siempre.
+  await quitarLaRed(huella);
 
   // Lo que enseña la pagina si sigue abierta. Con este ya van vecesAntes + 1:
   // si aun no ha llegado al tope, le queda la correccion.
