@@ -11,9 +11,9 @@
 // sigue aunque la pagina se cierre o se quede sin cobertura. Los datos de
 // nacimiento con los que se escribe salen de aqui, no de lo que mande nadie.
 //
-// Con ese codigo la pagina solo puede preguntar como va. Cuando esta escrito,
-// el vale guarda lo que se le enseña y sus datos se quitan, asi que no sirve
-// para escribir otro.
+// Con ese codigo la pagina solo puede preguntar como va y, si no sale, pedir
+// el segundo intento con el boton. Cuando esta escrito, el vale guarda lo que
+// se le enseña y sus datos se quitan, asi que no sirve para escribir otro.
 // ═════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
@@ -178,17 +178,27 @@ export async function cobrarElVale(codigo) {
   return { datos: guardado.datos, marca, ultimo: intentos >= MAX_INTENTOS };
 }
 
-// SE SUELTA CUANDO NO HA SALIDO. Asi el segundo intento puede usarlo en el
-// acto, sin esperar a nada. El intento ya esta contado, asi que soltarlo no
-// regala escrituras.
-export async function soltarElVale(codigo, marca) {
+// SE SUELTA EN FALLO CUANDO NO HA SALIDO. Es lo que hace salir el boton de
+// volver a intentarlo, que puede usarlo en el acto, sin esperar a nada. El
+// intento ya esta contado, asi que soltarlo no regala escrituras.
+export async function dejarEnFallo(codigo, marca) {
   try {
     const guardado = await leer(VALES, codigo);
     if (!guardado || guardado.cogidoPor !== marca) return;
-    await escribir(VALES, codigo, { ...guardado, cogidoPor: '', cogidoEn: 0 });
+    await escribir(VALES, codigo, { ...guardado, cogidoPor: '', cogidoEn: 0, fallo: Date.now() });
   } catch (err) {
     console.error('[regalo] No se ha podido soltar el vale:', err.message);
   }
+}
+
+// EL BOTON. Solo vale si el vale esta en fallo esperando que lo pulsen: le
+// quita el fallo y dice que se puede lanzar el siguiente intento.
+export async function volverAIntentarlo(codigo) {
+  const guardado = await leer(VALES, codigo);
+  if (!guardado || !guardado.datos || !guardado.fallo || guardado.cogidoPor) return false;
+  if (Date.now() - Number(guardado.creado || 0) > CADUCA_MS) return false;
+  await escribir(VALES, codigo, { ...guardado, fallo: 0 });
+  return true;
 }
 
 // YA HA SALIDO: el vale se queda solo con lo que enseña la pagina. Sin sus
@@ -228,6 +238,9 @@ async function comoVa(req, res) {
     }
     if (guardado.estado === 'pendiente') {
       return res.status(200).json({ estado: 'pendiente' });
+    }
+    if (guardado.fallo && !guardado.cogidoPor) {
+      return res.status(200).json({ estado: 'fallo' });
     }
     return res.status(200).json({ estado: 'preparando' });
   } catch (err) {

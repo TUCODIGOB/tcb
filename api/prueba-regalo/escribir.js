@@ -7,9 +7,10 @@
 // llamadas.js y en tono.js, que no se tocan. Esto solo monta lo que hace
 // falta para llamarlas y deja lo que sale.
 //
-// TODO PASA EN EL SERVIDOR. Lo lanza /api/prueba-regalo/vale nada mas dar el
-// vale, y sigue por detras aunque la pagina se cierre o se quede sin
-// cobertura. La pagina solo pregunta como va.
+// TODO PASA EN EL SERVIDOR. El primer intento lo lanza /api/prueba-regalo/vale
+// nada mas dar el vale; el segundo, esta puerta, cuando se pulsa el boton de
+// volver a intentarlo. Los dos siguen por detras aunque la pagina se cierre o
+// se quede sin cobertura. La pagina solo pregunta como va.
 //
 // QUE DEJA: el area escrita y los cinco rasgos, en el vale, para que la
 // pagina los enseñe si sigue abierta. Nada mas: el cuaderno -que llamada ha
@@ -27,10 +28,11 @@
 // ═════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
+import { waitUntil } from '@vercel/functions';
 import { montarCartaTexto, montarCasasTexto } from '../../lib/carta-texto.js';
 import { guardarInforme } from '../../lib/guardar-informe.js';
-import { escribirElRegalo } from './llamadas.js';
-import { cobrarElVale, soltarElVale, dejarListo, dejarPendiente,
+import { escribirElRegalo, crearReloj } from './llamadas.js';
+import { cobrarElVale, dejarEnFallo, volverAIntentarlo, dejarListo, dejarPendiente,
          leerVeces, apuntarUnaVez, sonLosMismos, MAX_VECES } from './vale.js';
 import { calcularLaCarta } from './carta.js';
 import { leer, borrar } from './almacen.js';
@@ -203,22 +205,36 @@ export function loQueVaAlModelo(datos, carta) {
 
 // ── PREPARARLO EN EL SERVIDOR ──────────────────────────────────
 //
-// Lo lanza la puerta del vale y sigue por detras. NUNCA LANZA: pase lo que
-// pase, o queda escrito, o queda apuntado para el reintento de por detras.
-//
-// Dos intentos, los mismos que daba antes el boton de volver a intentarlo: el
-// segundo solo si el primero falla y queda tiempo para escribirlo entero.
+// Un intento. Sigue por detras y NUNCA LANZA: pase lo que pase, o queda
+// escrito, o queda en fallo esperando el boton, o queda apuntado para el
+// reintento de por detras.
 export async function prepararEnElServidor(codigo, reloj) {
   try {
-    if (await unIntento(codigo, reloj) === 'otra') {
-      await unIntento(codigo, reloj);
-    }
+    await unIntento(codigo, reloj);
   } catch (err) {
     console.error('[prueba-regalo] No se ha podido preparar:', err.message);
   }
 }
 
-// Devuelve 'otra' si ha fallado y cabe otro intento; si no, 'fin'.
+// POR SI CIERRA LA PAGINA ANTES DE TERMINAR: se deja apuntada, sin avisarle,
+// para que el reintento de por detras la encuentre. Si ya estaba apuntada, no
+// se toca. Si sale, se quita.
+async function dejarLaRed(huella, datos, carta) {
+  try {
+    if (await leer(PENDIENTES, huella)) return;
+    await guardarPendiente(huella, {
+      creado: Date.now(),
+      intentos: 0,
+      acabado: false,
+      datos,
+      carta,
+      motivo: 'se ha quedado a medias',
+    });
+  } catch (err) {
+    console.error('[prueba-regalo] No se ha podido dejar apuntada por si acaso:', err.message);
+  }
+}
+
 async function unIntento(codigo, reloj) {
   // ── EL VALE ────────────────────────────────────────────────
   //
@@ -226,7 +242,7 @@ async function unIntento(codigo, reloj) {
   // vale que hayamos dado nosotros y que no este gastado. SUS DATOS SALEN DEL
   // VALE: asi nadie puede pedir un regalo de una persona que se invente.
   const cobrado = await cobrarElVale(codigo);
-  if (!cobrado) return 'fin';
+  if (!cobrado) return;
   const delVale = cobrado.datos;
   const huella = huellaDelEmail(delVale.email);
 
@@ -256,7 +272,7 @@ async function unIntento(codigo, reloj) {
           rasgos: yaLoTiene.rasgos || {},
           puedeCorregir: Boolean(cuenta.datos) && losMismos && cuenta.veces < MAX_VECES,
         });
-        return 'fin';
+        return;
       }
     }
   } catch (err) {
@@ -266,7 +282,6 @@ async function unIntento(codigo, reloj) {
   }
 
   let carta = null;
-  let puseElPendiente = false;
   let salida;
   try {
     const calculada = await calcularLaCarta(delVale);
@@ -278,47 +293,34 @@ async function unIntento(codigo, reloj) {
       throw new Error('Falta la carta natal');
     }
 
-    // POR SI ESTO SE CORTA A MEDIAS sin poder apuntar nada: se deja apuntada
-    // antes de gastar, sin avisarle, para que el reintento de por detras la
-    // encuentre. Si ya estaba apuntada, no se toca.
-    try {
-      if (!(await leer(PENDIENTES, huella))) {
-        await guardarPendiente(huella, {
-          creado: Date.now(),
-          intentos: 0,
-          acabado: false,
-          datos: delVale,
-          carta,
-          motivo: 'se corto mientras se escribia',
-        });
-        puseElPendiente = true;
-      }
-    } catch (err) {
-      console.error('[prueba-regalo] No se ha podido dejar apuntada por si acaso:', err.message);
-    }
-
+    await dejarLaRed(huella, delVale, carta);
     salida = await escribirElRegalo(loQueVaAlModelo(delVale, carta), reloj);
 
   } catch (err) {
     console.error('[prueba-regalo] No ha salido el area:', err.message);
-    // NO HA SALIDO: se suelta el vale para el siguiente intento. El intento
-    // ya esta contado.
-    await soltarElVale(codigo, cobrado.marca);
-    if (puseElPendiente) await quitarPendiente(huella);
 
-    if (!cobrado.ultimo && reloj.hayTiempoPara(150)) return 'otra';
+    // NO HA SALIDO Y QUEDA OTRO INTENTO: el vale queda en fallo, que es lo que
+    // hace salir el boton de volver a intentarlo. Y apuntada, por si cierra la
+    // pagina sin pulsarlo.
+    if (!cobrado.ultimo) {
+      await dejarLaRed(huella, delVale, carta);
+      await dejarEnFallo(codigo, cobrado.marca);
+      return;
+    }
 
-    // Y SI NO QUEDA OTRO, se apunta para seguir intentandolo por detras y se
-    // le avisa por correo. Y el vale lo dice, para que la pagina, si sigue
-    // abierta, no se quede esperando.
+    // Y SI ERA EL ULTIMO, se apunta para seguir intentandolo por detras y se
+    // le avisa por correo. Lo que quedara apuntado por si acaso se quita
+    // antes, o el aviso no saldria. Y el vale lo dice, para que la pagina no
+    // se quede esperando.
+    await quitarPendiente(huella);
     await apuntarElFallo({ datos: delVale, carta, motivo: err.message });
     await dejarPendiente(codigo);
-    return 'fin';
+    return;
   }
 
   // YA ESTA ESCRITO. Desde aqui nada vuelve a escribirlo: cada paso va
   // envuelto y lo que falle se queda en los registros.
-  if (puseElPendiente) await quitarPendiente(huella);
+  await quitarPendiente(huella);
 
   // Lo que enseña la pagina si sigue abierta. Con este ya van vecesAntes + 1:
   // si aun no ha llegado al tope, le queda la correccion.
@@ -340,5 +342,34 @@ async function unIntento(codigo, reloj) {
   // Se guarda y se le manda su enlace por correo, la haya visto o no.
   await guardarLoEscrito({ datos: delVale, carta, texto: salida.texto, rasgos: salida.rasgos,
                            cuaderno: salida.cuaderno, avisar: true });
-  return 'fin';
+}
+
+// ── LA PUERTA: EL BOTON DE VOLVER A INTENTARLO ─────────────────
+//
+// Solo pone en marcha el segundo intento, en el servidor, y contesta ya. La
+// pagina sigue preguntando como va.
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Método no permitido' });
+  }
+
+  const codigo = String((req.body || {}).vale || '').trim();
+  if (!codigo || !/^[A-Za-z0-9_-]{16,64}$/.test(codigo)) {
+    return res.status(400).json({ error: 'Falta el permiso' });
+  }
+
+  const reloj = crearReloj();
+
+  try {
+    // Solo si el vale esta en fallo esperando el boton. Si no, no se lanza
+    // nada: o ya se esta haciendo, o ya esta, o no vale.
+    const puede = await volverAIntentarlo(codigo);
+    if (!puede) return res.status(403).json({ error: 'Este permiso no vale' });
+  } catch (err) {
+    console.error('[prueba-regalo] No se ha podido leer el vale:', err.message);
+    return res.status(500).json({ error: 'No se ha podido comprobar el permiso' });
+  }
+
+  waitUntil(prepararEnElServidor(codigo, reloj));
+  return res.status(200).json({ ok: true });
 }
