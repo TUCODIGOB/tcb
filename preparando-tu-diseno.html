@@ -205,6 +205,25 @@
   /* LA PANTALLA DE FALLO: titular y texto. */
   #screenError h2, #screenSinDatos h2 { font-size: 35px; line-height: 1.4; }
   #screenError p, #screenSinDatos p { line-height: 1.4; }
+  /* Las dos frases de la pantalla de saturado: cada una aparte y con su medida. */
+  #errorMsg .sat-guardados, #errorMsg .sat-email { display: block; }
+  #errorMsg .sat-email { color: var(--gold-deep); font-weight: 700; margin-top: 12px; }
+  #errorMsg .sat-guardados { font-size: 18px; }
+  #errorMsg .sat-email { font-size: 18px; }
+  @media (min-width: 851px) and (max-width: 1023px) {
+    #errorMsg .sat-guardados { font-size: 18px; }
+    #errorMsg .sat-email { font-size: 18px; }
+  }
+  @media (min-width: 681px) and (max-width: 850px) {
+    #errorMsg .sat-guardados { font-size: 18px; }
+    #errorMsg .sat-email { font-size: 18px; }
+  }
+  @media (max-width: 680px) {
+    #errorMsg .sat-guardados { font-size: 20px; }
+    #errorMsg .sat-email { font-size: 20px; }
+  }
+  /* Como en la cabecera de la landing. */
+  #screenSinDatos .oro { font-family: var(--font-display); font-weight: 700; color: var(--gold-deep); }
   @media (min-width: 681px) and (max-width: 1023px) {
     #screenError h2, #screenSinDatos h2 { font-size: 32px; }
   }
@@ -409,9 +428,8 @@
   <div class="container">
     <div class="screen-inner">
       <h2>Te falta un paso<br class="salto-movil"> antes de esto...</h2>
-      <p>Para ver tu Diseño de Origen, primero necesitamos tus datos</p>
-      <a href="/tu-diseno-de-origen#formulario" class="btn-download">Ir al formulario</a>
-    </div>
+      <p>Para descubrir tu <strong class="oro">Diseño de Origen</strong>, primero necesitamos tus datos</p>
+      <a href="/tu-diseno-de-origen#formulario" class="btn-download">Quiero descubrirlo gratis&nbsp;→</a>    </div>
   </div>
 </section>
 
@@ -495,9 +513,10 @@ function pantallaReintento(alPulsar) {
 // PANTALLA DE FALLO, SIN BOTON. Se acabaron los intentos. Sin boton a
 // proposito: pulsarlo no generaria nada y le dejaria dandole en balde.
 function pantallaSinIntentos() {
-  document.getElementById('errorTitulo').textContent = 'Ups… ahora mismo hay mucha gente pidiendo el suyo';
+  document.getElementById('errorTitulo').innerHTML =
+    'Ups… ahora mismo<br class="br-movil"> hay mucha gente<br> pidiendo el suyo';
   document.getElementById('errorMsg').innerHTML =
-    'No te preocupes, tus datos están guardados<br> <strong style="color:#bd9048;">Te avisamos por email en cuanto esté listo</strong>';
+    '<span class="sat-guardados">No te preocupes, tus datos están guardados</span><span class="sat-email">Te avisamos por email en cuanto esté listo</span>';
   const caja = document.querySelector('#screenError .error-box');
   if (caja) caja.style.display = 'none';
   const btn = document.getElementById('errorBtn');
