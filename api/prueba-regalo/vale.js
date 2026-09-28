@@ -204,7 +204,8 @@ export async function volverAIntentarlo(codigo) {
   const guardado = await leer(VALES, codigo);
   if (!guardado || !guardado.datos || !guardado.fallo || guardado.cogidoPor) return false;
   if (Date.now() - Number(guardado.creado || 0) > CADUCA_MS) return false;
-  await escribir(VALES, codigo, { ...guardado, fallo: 0 });
+  // Y cuenta como vivo desde ya, sin esperar a que lo coja el intento.
+  await escribir(VALES, codigo, { ...guardado, fallo: 0, cogidoEn: Date.now() });
   return true;
 }
 
@@ -240,8 +241,8 @@ async function elQueEstaEnMarcha(huella) {
     // empezar: vivo si no pasa del tope desde lo ultimo que hizo. Un fallo
     // que nadie ha vuelto a intentar no le deja atascada: pasado el tope, el
     // formulario funciona normal.
-    const desde = guardado.cogidoPor ? Number(guardado.cogidoEn || 0)
-      : Number(guardado.fallo || guardado.creado || 0);
+    const desde = Math.max(Number(guardado.creado || 0), Number(guardado.cogidoEn || 0),
+                           Number(guardado.fallo || 0));
     return Date.now() - desde < VIVO_MS ? marcha.vale : '';
   } catch (err) {
     console.error('[regalo] No se ha podido mirar si ya tenia uno en marcha:', err.message);
