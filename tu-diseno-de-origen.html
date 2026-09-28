@@ -2798,5 +2798,12 @@ text-align: center;
     });
   })();
 </script>
+<script>
+  // SOLO RAMA DE PRUEBA (no se fusiona): abre la ventana de comprobar datos al entrar.
+  window.addEventListener('load', () => {
+    document.getElementById('formulario').scrollIntoView();
+    comprobarSusDatos({fecha:'1988-03-14',hora:'16:30',municipio:'Valencia',provincia:'Valencia',pais:'España'});
+  });
+</script>
 </body>
 </html>

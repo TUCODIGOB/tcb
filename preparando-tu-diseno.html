@@ -623,14 +623,15 @@ async function prepararlo() {
 }
 
 // ── AL ABRIR LA PAGINA ─────────────────────────────────────────
-(function arrancar() {
-  _pedido = loSuyo();
-  if (!_pedido || !EL_VALE) { showScreen('screenSinDatos'); return; }
-  // Su nombre delante del titulo. Como texto, nunca como HTML.
-  document.getElementById('suNombre').textContent = String(_pedido.nombre).trim() + ', ';
-  document.getElementById('elSaludo').textContent = 'estamos';
-  prepararlo();
-})();
+// SOLO RAMA DE PRUEBA (no se fusiona): ensena la pantalla de espera con un
+// nombre de ejemplo, sin pedir nada al servidor.
+document.getElementById('suNombre').textContent = 'María Pilar, ';
+document.getElementById('elSaludo').textContent = 'estamos';
+const _ver = new URLSearchParams(location.search).get('ver');
+if (_ver === 'reintentar') pantallaReintento(() => {});
+else if (_ver === 'saturado') pantallaSinIntentos();
+else if (_ver === 'sindatos') showScreen('screenSinDatos');
+else showScreen('screenGenerate');
 </script>
 
 <script src="/cookie-consent.js"></script>
