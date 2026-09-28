@@ -224,10 +224,11 @@ export async function dejarPendiente(codigo) {
   }
 }
 
-// ¿SE LE ESTA HACIENDO YA UNO CON ESTOS MISMOS DATOS? Si vuelve a mandar el
-// formulario mientras tanto, se le lleva al que ya esta en marcha en vez de
-// empezar otro. Devuelve su vale, o '' si no hay ninguno vivo.
-async function elQueEstaEnMarcha(huella, datos) {
+// ¿SE LE ESTA HACIENDO YA UNO? Si vuelve a mandar el formulario mientras
+// tanto, con los mismos datos o con otros, se le lleva al que ya esta en
+// marcha en vez de empezar otro. Cuando termine, puede corregir como siempre.
+// Devuelve su vale, o '' si no hay ninguno vivo.
+async function elQueEstaEnMarcha(huella) {
   try {
     const marcha = await leer(EN_MARCHA, huella);
     if (!marcha || !marcha.vale) return '';
@@ -235,7 +236,6 @@ async function elQueEstaEnMarcha(huella, datos) {
     // Ya salio, o ya esta apuntado para mandarselo: no hay nada en marcha.
     if (!guardado || !guardado.datos) return '';
     if (Date.now() - Number(guardado.creado || 0) > CADUCA_MS) return '';
-    if (!sonLosMismos(guardado.datos, datos)) return '';
     // Esperando el boton de volver a intentarlo: sigue siendo el suyo.
     if (guardado.fallo && !guardado.cogidoPor) return marcha.vale;
     // Haciendose, o a punto de empezar: vivo si no pasa del tope.
@@ -323,9 +323,8 @@ export default async function handler(req, res) {
       // Datos distintos y le queda su correccion: se le escribe de nuevo.
     }
 
-    // SI YA SE LE ESTA HACIENDO UNO CON ESTOS DATOS, se le lleva a ese. Con
-    // datos distintos no: eso es su correccion, y se le escribe de nuevo.
-    const enMarcha = await elQueEstaEnMarcha(huella, datos);
+    // SI YA SE LE ESTA HACIENDO UNO, se le lleva a ese: nunca dos a la vez.
+    const enMarcha = await elQueEstaEnMarcha(huella);
     if (enMarcha) return res.status(200).json({ vale: enMarcha });
 
     const codigo = nuevoCodigo();
