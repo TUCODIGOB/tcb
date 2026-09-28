@@ -117,6 +117,10 @@ export async function losPendientes() {
   return fichas;
 }
 
+export async function leerPendiente(huella) {
+  return leer(PENDIENTES, huella);
+}
+
 export async function guardarPendiente(huella, ficha) {
   const { huella: fuera, ...limpia } = ficha;
   return escribir(PENDIENTES, huella, limpia);

@@ -23,8 +23,8 @@
 // regalo y decirle exactamente lo mismo, no otra cosa.
 //
 // EL TIEMPO: las cuatro llamadas se dan a si mismas 4 minutos y 45 segundos
-// desde que entro el formulario, los mismos que el P1, y la puerta del vale
-// tiene 5 minutos en vercel.json.
+// desde que entra la peticion que las lanza, los mismos que el P1, y las dos
+// puertas que las lanzan -la del vale y esta- tienen 5 minutos en vercel.json.
 // ═════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
@@ -36,7 +36,7 @@ import { cobrarElVale, dejarEnFallo, volverAIntentarlo, dejarListo, dejarPendien
          leerVeces, apuntarUnaVez, sonLosMismos, MAX_VECES } from './vale.js';
 import { calcularLaCarta } from './carta.js';
 import { leer, borrar } from './almacen.js';
-import { apuntarElFallo, marcarEnBrevo, quitarPendiente, guardarPendiente } from './pendientes.js';
+import { apuntarElFallo, marcarEnBrevo, quitarPendiente, guardarPendiente, leerPendiente } from './pendientes.js';
 import { crearEnlace } from './mio.js';
 import { correoListo } from './avisos.js';
 
@@ -48,9 +48,6 @@ const LA_WEB = 'https://origennatal.com';
 
 // La carpeta donde la carta deja lo suyo mientras se escribe el diseño.
 const EN_PROCESO = 'enproceso';
-
-// La misma carpeta de la lista de pendientes.js.
-const PENDIENTES = 'pendientes';
 
 function calcularEdad(fechaISO) {
   const nacimiento = new Date(fechaISO);
@@ -188,7 +185,8 @@ async function queElRelojSeLoMande(huella, datos, carta) {
 }
 
 // LO QUE SE LE DA AL MODELO. Esta aqui suelto porque lo usan dos sitios: lo
-// de aqui abajo y el reintento de por detras. Los dos tienen que mandarle lo mismo.
+// de aqui abajo y el reintento de por detras. Los dos tienen que mandarle lo
+// mismo.
 export function loQueVaAlModelo(datos, carta) {
   const [anio, mes, dia] = String(datos.fecha || '').split('-').map(Number);
   return {
@@ -218,10 +216,10 @@ export async function prepararEnElServidor(codigo, reloj) {
 
 // POR SI CIERRA LA PAGINA ANTES DE TERMINAR: se deja apuntada, sin avisarle,
 // para que el reintento de por detras la encuentre. Si ya estaba apuntada, no
-// se toca. Si sale, se quita.
+// se toca. Si sale, se quita. Va marcada como red para saber que es esta.
 async function dejarLaRed(huella, datos, carta) {
   try {
-    if (await leer(PENDIENTES, huella)) return;
+    if (await leerPendiente(huella)) return;
     await guardarPendiente(huella, {
       creado: Date.now(),
       intentos: 0,
@@ -229,6 +227,7 @@ async function dejarLaRed(huella, datos, carta) {
       datos,
       carta,
       motivo: 'se ha quedado a medias',
+      red: true,
     });
   } catch (err) {
     console.error('[prueba-regalo] No se ha podido dejar apuntada por si acaso:', err.message);
@@ -309,10 +308,14 @@ async function unIntento(codigo, reloj) {
     }
 
     // Y SI ERA EL ULTIMO, se apunta para seguir intentandolo por detras y se
-    // le avisa por correo. Lo que quedara apuntado por si acaso se quita
-    // antes, o el aviso no saldria. Y el vale lo dice, para que la pagina no
-    // se quede esperando.
-    await quitarPendiente(huella);
+    // le avisa por correo. La red de aqui arriba se quita antes, o el aviso no
+    // saldria. Y el vale lo dice, para que la pagina no se quede esperando.
+    try {
+      const apuntada = await leerPendiente(huella);
+      if (apuntada && apuntada.red) await quitarPendiente(huella);
+    } catch (e) {
+      console.error('[prueba-regalo] No se ha podido mirar la red:', e.message);
+    }
     await apuntarElFallo({ datos: delVale, carta, motivo: err.message });
     await dejarPendiente(codigo);
     return;
