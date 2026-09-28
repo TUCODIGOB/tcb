@@ -6,16 +6,22 @@
 // bastaba con pedirselo al servidor para que lo escribiera. Cualquiera podia
 // pedirlo las veces que quisiera, con los datos que quisiera.
 //
-// COMO. Al mandar el formulario se guardan aqui sus datos y se le devuelve un
-// codigo. Ese codigo es lo unico que viaja despues: los datos de nacimiento
-// con los que se escribe el regalo salen de aqui, no de lo que mande nadie.
+// COMO. Al mandar el formulario se guardan aqui sus datos, se le devuelve un
+// codigo y, desde aqui mismo, se empieza a preparar su regalo en el servidor:
+// sigue aunque la pagina se cierre o se quede sin cobertura. Los datos de
+// nacimiento con los que se escribe salen de aqui, no de lo que mande nadie.
 //
-// El codigo se quema al usarlo, asi que no sirve dos veces.
+// Con ese codigo la pagina solo puede preguntar como va. Cuando esta escrito,
+// el vale guarda lo que se le enseña y sus datos se quitan, asi que no sirve
+// para escribir otro.
 // ═════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
-import { leer, escribir, borrar } from './almacen.js';
+import { waitUntil } from '@vercel/functions';
+import { leer, escribir } from './almacen.js';
 import { registrarLead } from '../captar-lead.js';
+import { crearReloj } from './llamadas.js';
+import { prepararEnElServidor } from './escribir.js';
 
 // Los vales viven aqui dentro, aparte de los regalos ya escritos.
 const VALES = 'vales';
@@ -172,9 +178,9 @@ export async function cobrarElVale(codigo) {
   return { datos: guardado.datos, marca, ultimo: intentos >= MAX_INTENTOS };
 }
 
-// SE SUELTA CUANDO NO HA SALIDO. Asi el boton de volver a intentarlo puede
-// usarlo otra vez en el acto, sin esperar a nada. El intento ya esta contado,
-// asi que soltarlo no regala escrituras.
+// SE SUELTA CUANDO NO HA SALIDO. Asi el segundo intento puede usarlo en el
+// acto, sin esperar a nada. El intento ya esta contado, asi que soltarlo no
+// regala escrituras.
 export async function soltarElVale(codigo, marca) {
   try {
     const guardado = await leer(VALES, codigo);
@@ -185,20 +191,61 @@ export async function soltarElVale(codigo, marca) {
   }
 }
 
-// SE QUEMA CUANDO YA HA SALIDO. A partir de aqui ese codigo no sirve de nada.
-export async function quemarElVale(codigo) {
+// YA HA SALIDO: el vale se queda solo con lo que enseña la pagina. Sin sus
+// datos no se puede volver a cobrar, asi que no sirve para escribir otro.
+export async function dejarListo(codigo, salida) {
+  await escribir(VALES, codigo, { creado: Date.now(), estado: 'listo', salida });
+}
+
+// NO HA SALIDO Y SE SIGUE POR DETRAS: el vale lo dice, para que la pagina no
+// se quede esperando. Tampoco sirve para escribir otro.
+export async function dejarPendiente(codigo) {
   try {
-    await borrar(VALES, codigo);
+    await escribir(VALES, codigo, { creado: Date.now(), estado: 'pendiente' });
   } catch (err) {
-    console.error('[regalo] No se ha podido quemar el vale:', err.message);
+    console.error('[regalo] No se ha podido dejar pendiente el vale:', err.message);
   }
 }
 
-// ── LA PUERTA: DAR UN VALE ─────────────────────────────────────
+// ── COMO VA ────────────────────────────────────────────────────
+//
+// Lo unico que puede pedir la pagina con su codigo. No escribe nada ni cuesta
+// dinero: solo lee.
+async function comoVa(req, res) {
+  const codigo = String((req.query && req.query.v) || '').trim();
+  // Un codigo nuestro solo lleva estas letras. Cualquier otra cosa se para
+  // aqui, sin llegar a pedirle nada al almacen.
+  if (!codigo || !/^[A-Za-z0-9_-]{16,64}$/.test(codigo)) {
+    return res.status(400).json({ estado: 'no' });
+  }
+  try {
+    const guardado = await leer(VALES, codigo);
+    if (!guardado || Date.now() - Number(guardado.creado || 0) > CADUCA_MS) {
+      return res.status(404).json({ estado: 'no' });
+    }
+    if (guardado.estado === 'listo') {
+      return res.status(200).json({ estado: 'listo', salida: guardado.salida });
+    }
+    if (guardado.estado === 'pendiente') {
+      return res.status(200).json({ estado: 'pendiente' });
+    }
+    return res.status(200).json({ estado: 'preparando' });
+  } catch (err) {
+    console.error('[regalo] No se ha podido mirar el vale:', err.message);
+    return res.status(500).json({ error: 'No se ha podido mirar' });
+  }
+}
+
+// ── LA PUERTA: DAR UN VALE Y EMPEZAR ───────────────────────────
 export default async function handler(req, res) {
+  if (req.method === 'GET') return comoVa(req, res);
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Método no permitido' });
   }
+
+  // EL RELOJ ARRANCA AQUI, al entrar el formulario: es cuando empieza a
+  // contar el tope de Vercel para todo lo que viene detras.
+  const reloj = crearReloj();
 
   const datos = loQueGuarda(req.body || {});
   if (!estaCompleto(datos)) {
@@ -263,6 +310,10 @@ export default async function handler(req, res) {
     } catch (err) {
       console.error('[regalo] No se ha podido registrar el lead en Brevo:', err.message);
     }
+
+    // SU REGALO SE EMPIEZA A PREPARAR AQUI, en el servidor. Sigue por detras
+    // despues de contestar, este o no la pagina abierta.
+    waitUntil(prepararEnElServidor(codigo, reloj));
 
     return res.status(200).json({ vale: codigo });
 

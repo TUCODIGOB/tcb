@@ -12,14 +12,14 @@
 // OJO SI UN DIA SE TOCA EL CALCULO DEL P1: hay que tocarlo aqui tambien. Son
 // dos copias a proposito, para no meter la mano en el producto que vende.
 //
-// TODO PASA EN EL SERVIDOR. La pagina manda el lugar escrito y aqui se busca
-// en el mapa, se saca la zona horaria y se calcula la carta. El navegador de
-// quien lo prueba no hace ni una cuenta.
+// TODO PASA EN EL SERVIDOR. Lo pide quien prepara el regalo, con los datos
+// guardados en su vale: aqui se busca el lugar en el mapa, se saca la zona
+// horaria y se calcula la carta. El navegador de quien lo prueba no hace ni
+// una cuenta ni pide nada.
 // ═════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
 import tzlookup from 'tz-lookup';
-import { waitUntil } from '@vercel/functions';
 import { escribir } from './almacen.js';
 
 // ─── EL LUGAR ────────────────────────────────────────────────────────────────
@@ -864,66 +864,44 @@ async function guardarLoSuyo({ datos, carta }) {
   }
 }
 
-// ─── LA PETICION ─────────────────────────────────────────────────────────────
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
-  }
-
-  const datos = req.body || {};
-  const { fecha, hora, municipio, provincia, pais } = datos;
+// ─── CALCULAR SU CARTA ───────────────────────────────────────────────────────
+//
+// Devuelve { ok: true, carta } o { ok: false, error }. Nunca lanza por un dato
+// que falte o un lugar que no cuadre: eso lo dice con ok: false, y quien la
+// pide decide que hacer.
+export async function calcularLaCarta(datos) {
+  const { fecha, hora, municipio, provincia, pais } = datos || {};
 
   const [year, month, day] = String(fecha || '').split('-').map(Number);
   const [localHour, localMin] = String(hora || '').split(':').map(Number);
 
   if (!year || !month || !day || !Number.isFinite(localHour) || !Number.isFinite(localMin)) {
-    return res.status(400).json({ error: 'Falta la fecha o la hora de nacimiento' });
+    return { ok: false, error: 'Falta la fecha o la hora de nacimiento' };
   }
   if (!municipio || !provincia || !pais) {
-    return res.status(400).json({ error: 'Falta el lugar de nacimiento' });
+    return { ok: false, error: 'Falta el lugar de nacimiento' };
   }
 
-  try {
-    const lugar = await validarLugar(String(municipio).trim(), String(provincia).trim(), String(pais).trim());
-
-    if (!lugar.ok) {
-      // Igual que en el P1: si el mapa no contesta no es culpa de nadie y no se
-      // marca ningun campo; si contesta y no cuadra, se dicen cuales fallan.
-      return res.status(422).json({
-        error: lugar.motivo === 'sin_respuesta'
-          ? 'El servicio de mapas no contesta. Prueba otra vez en un minuto.'
-          : 'No hemos encontrado ese lugar de nacimiento. Revisa lo marcado en rojo.',
-        motivo: lugar.motivo,
-        campos: lugar.campos || [],
-      });
-    }
-
-    const zona = tzlookup(lugar.lat, lugar.lon);
-    const tzOffset = offsetHistorico(zona, year, month, day, localHour, localMin);
-    if (!Number.isFinite(tzOffset)) {
-      return res.status(500).json({ error: 'No se ha podido calcular el desfase horario' });
-    }
-
-    const carta = calcularCartaNatal(year, month, day, localHour, localMin, lugar.lat, lugar.lon, tzOffset);
-
-    // Se guarda por detras, sin hacer esperar a nadie: la carta se contesta ya
-    // y el guardado sigue su camino aunque la respuesta haya salido. Va
-    // envuelto porque el guardado nunca puede dejar sin carta a nadie.
-    try {
-      waitUntil(guardarLoSuyo({ datos, carta }));
-    } catch (err) {
-      console.error('[prueba-regalo] No se ha podido lanzar el guardado:', err.message);
-    }
-
-    return res.status(200).json({
-      carta,
-      lugar: { lat: lugar.lat, lon: lugar.lon },
-      zona,
-      tzOffset,
-    });
-
-  } catch (err) {
-    console.error('Error calculando la carta de la prueba:', err.message);
-    return res.status(500).json({ error: 'Error en el cálculo' });
+  const lugar = await validarLugar(String(municipio).trim(), String(provincia).trim(), String(pais).trim());
+  if (!lugar.ok) {
+    return {
+      ok: false,
+      error: lugar.motivo === 'sin_respuesta'
+        ? 'El servicio de mapas no contesta'
+        : 'No se ha encontrado ese lugar de nacimiento',
+    };
   }
+
+  const zona = tzlookup(lugar.lat, lugar.lon);
+  const tzOffset = offsetHistorico(zona, year, month, day, localHour, localMin);
+  if (!Number.isFinite(tzOffset)) {
+    return { ok: false, error: 'No se ha podido calcular el desfase horario' };
+  }
+
+  const carta = calcularCartaNatal(year, month, day, localHour, localMin, lugar.lat, lugar.lon, tzOffset);
+
+  // Envuelto por dentro: el guardado nunca puede dejar sin carta a nadie.
+  await guardarLoSuyo({ datos, carta });
+
+  return { ok: true, carta };
 }

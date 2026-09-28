@@ -138,7 +138,7 @@ export async function listar(cual) {
   return nombres;
 }
 
-// BORRAR. Se usa para quemar un vale cuando ya se ha gastado.
+// BORRAR. Se usa para quitar lo que ya no hace falta.
 export async function borrar(cual, nombre) {
   const resp = await pedir('DELETE', donde(cual, nombre));
   if (!resp.ok && resp.status !== 404) {

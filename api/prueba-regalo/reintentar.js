@@ -24,6 +24,7 @@
 import { leer } from './almacen.js';
 import { escribirElRegalo } from './llamadas.js';
 import { loQueVaAlModelo, guardarLoEscrito } from './escribir.js';
+import { calcularLaCarta } from './carta.js';
 import { losPendientes, guardarPendiente, quitarPendiente, marcarEnBrevo } from './pendientes.js';
 import { leerVeces, sonLosMismos } from './vale.js';
 import { crearEnlace } from './mio.js';
@@ -160,10 +161,19 @@ export default async function handler(req, res) {
       return res.status(200).json({ mirados: fichas.length, hecho: 1, yaLoTenia: true });
     }
 
-    const salida = await escribirElRegalo(loQueVaAlModelo(ficha.datos, ficha.carta));
+    // SU CARTA, LA QUE YA SE CALCULO. Solo si no se llego a calcular -porque
+    // fallo justo eso- se calcula aqui.
+    let carta = ficha.carta;
+    if (!carta) {
+      const calculada = await calcularLaCarta(ficha.datos);
+      if (!calculada.ok) throw new Error(calculada.error);
+      carta = calculada.carta;
+    }
+
+    const salida = await escribirElRegalo(loQueVaAlModelo(ficha.datos, carta));
     await guardarLoEscrito({
       datos: ficha.datos,
-      carta: ficha.carta,
+      carta,
       texto: salida.texto,
       rasgos: salida.rasgos,
       cuaderno: salida.cuaderno,

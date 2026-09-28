@@ -1,37 +1,38 @@
 // ═════════════════════════════════════════════════════════════════
 // /api/prueba-regalo/escribir.js
-// El enchufe: recibe la carta y los datos, y llama a las cuatro llamadas
-// que escriben el area 1 del regalo.
+// El enchufe: con los datos de un vale, calcula su carta y llama a las
+// cuatro llamadas que escriben el area 1 del regalo.
 //
 // AQUI NO SE DECIDE NADA NI SE ESCRIBE NINGUN ENCARGO. Todo eso vive en
 // llamadas.js y en tono.js, que no se tocan. Esto solo monta lo que hace
-// falta para llamarlas y devuelve lo que sale.
+// falta para llamarlas y deja lo que sale.
 //
-// QUE RECIBE: los datos del formulario y la carta que ya calculo
-// /api/prueba-regalo/carta. La carta no se vuelve a calcular: seria pedirle
-// otra vez el lugar al mapa y podria salir un punto distinto del que se
-// entrego.
+// TODO PASA EN EL SERVIDOR. Lo lanza /api/prueba-regalo/vale nada mas dar el
+// vale, y sigue por detras aunque la pagina se cierre o se quede sin
+// cobertura. La pagina solo pregunta como va.
 //
-// QUE DEVUELVE: el area escrita y los cinco rasgos con todos sus datos. Nada
-// mas: el cuaderno -que llamada ha hecho que, cuanto ha tardado y que quito
-// la limpieza- se guarda pero no viaja al navegador, que no lo necesita.
+// QUE DEJA: el area escrita y los cinco rasgos, en el vale, para que la
+// pagina los enseñe si sigue abierta. Nada mas: el cuaderno -que llamada ha
+// hecho que, cuanto ha tardado y que quito la limpieza- se guarda pero no
+// viaja al navegador, que no lo necesita.
 //
 // Y QUE GUARDA: lo mismo que ya guardaba la carta -sus datos y la carta
 // entera- mas los cinco rasgos y el area escrita. El dia de mañana, cuando
 // esa persona pague, el P1 tiene que poder empezar por donde lo dejo el
 // regalo y decirle exactamente lo mismo, no otra cosa.
 //
-// EL TIEMPO: las cuatro llamadas se dan a si mismas 4 minutos y 45 segundos,
-// los mismos que el P1, y la funcion tiene 5 minutos en vercel.json.
+// EL TIEMPO: las cuatro llamadas se dan a si mismas 4 minutos y 45 segundos
+// desde que entro el formulario, los mismos que el P1, y la puerta del vale
+// tiene 5 minutos en vercel.json.
 // ═════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
-import { waitUntil } from '@vercel/functions';
 import { montarCartaTexto, montarCasasTexto } from '../../lib/carta-texto.js';
 import { guardarInforme } from '../../lib/guardar-informe.js';
 import { escribirElRegalo } from './llamadas.js';
-import { cobrarElVale, soltarElVale, quemarElVale,
+import { cobrarElVale, soltarElVale, dejarListo, dejarPendiente,
          leerVeces, apuntarUnaVez, sonLosMismos, MAX_VECES } from './vale.js';
+import { calcularLaCarta } from './carta.js';
 import { leer, borrar } from './almacen.js';
 import { apuntarElFallo, marcarEnBrevo, quitarPendiente, guardarPendiente } from './pendientes.js';
 import { crearEnlace } from './mio.js';
@@ -45,6 +46,9 @@ const LA_WEB = 'https://origennatal.com';
 
 // La carpeta donde la carta deja lo suyo mientras se escribe el diseño.
 const EN_PROCESO = 'enproceso';
+
+// La misma carpeta de la lista de pendientes.js.
+const PENDIENTES = 'pendientes';
 
 function calcularEdad(fechaISO) {
   const nacimiento = new Date(fechaISO);
@@ -181,8 +185,8 @@ async function queElRelojSeLoMande(huella, datos, carta) {
   }
 }
 
-// LO QUE SE LE DA AL MODELO. Esta aqui suelto porque lo usan dos sitios: esta
-// puerta y el reintento de por detras. Los dos tienen que mandarle lo mismo.
+// LO QUE SE LE DA AL MODELO. Esta aqui suelto porque lo usan dos sitios: lo
+// de aqui abajo y el reintento de por detras. Los dos tienen que mandarle lo mismo.
 export function loQueVaAlModelo(datos, carta) {
   const [anio, mes, dia] = String(datos.fecha || '').split('-').map(Number);
   return {
@@ -197,63 +201,62 @@ export function loQueVaAlModelo(datos, carta) {
   };
 }
 
-export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Método no permitido' });
+// ── PREPARARLO EN EL SERVIDOR ──────────────────────────────────
+//
+// Lo lanza la puerta del vale y sigue por detras. NUNCA LANZA: pase lo que
+// pase, o queda escrito, o queda apuntado para el reintento de por detras.
+//
+// Dos intentos, los mismos que daba antes el boton de volver a intentarlo: el
+// segundo solo si el primero falla y queda tiempo para escribirlo entero.
+export async function prepararEnElServidor(codigo, reloj) {
+  try {
+    if (await unIntento(codigo, reloj) === 'otra') {
+      await unIntento(codigo, reloj);
+    }
+  } catch (err) {
+    console.error('[prueba-regalo] No se ha podido preparar:', err.message);
   }
+}
 
+// Devuelve 'otra' si ha fallado y cabe otro intento; si no, 'fin'.
+async function unIntento(codigo, reloj) {
   // ── EL VALE ────────────────────────────────────────────────
   //
   // Escribir un regalo cuesta dinero, asi que no se escribe ninguno sin un
   // vale que hayamos dado nosotros y que no este gastado. SUS DATOS SALEN DEL
-  // VALE, no de lo que llegue en la peticion: asi nadie puede pedir un regalo
-  // de una persona que se invente.
-  const codigo = String((req.body || {}).vale || '').trim();
-  if (!codigo) {
-    return res.status(400).json({ error: 'Falta el permiso' });
-  }
-
-  let cobrado;
-  try {
-    cobrado = await cobrarElVale(codigo);
-  } catch (err) {
-    console.error('[prueba-regalo] No se ha podido leer el vale:', err.message);
-    return res.status(500).json({ error: 'No se ha podido comprobar el permiso' });
-  }
-  if (!cobrado) {
-    return res.status(403).json({ error: 'Este permiso no vale' });
-  }
+  // VALE: asi nadie puede pedir un regalo de una persona que se invente.
+  const cobrado = await cobrarElVale(codigo);
+  if (!cobrado) return 'fin';
   const delVale = cobrado.datos;
+  const huella = huellaDelEmail(delVale.email);
 
   // ── LO QUE SE LE ESCRIBE A UN MISMO EMAIL ──────────────────
   //
   // El suyo, y una correccion si se equivoco al escribir sus datos. Si vuelve
   // con los mismos datos, o si ya gasto su correccion, no se escribe nada
-  // nuevo: se le devuelve el que ya tenia. El modelo no elige los mismos
-  // rasgos dos veces, asi que escribir otro le daria una persona distinta de
-  // la que ya leyo.
+  // nuevo: se le deja el que ya tenia. El modelo no elige los mismos rasgos
+  // dos veces, asi que escribir otro le daria una persona distinta de la que
+  // ya leyo.
   //
   // La misma cuenta que lleva la puerta del vale, comprobada otra vez aqui:
-  // esta es la que cuesta dinero.
+  // esto es lo que cuesta dinero.
   let vecesAntes = 0;
   try {
-    const huella = huellaDelEmail(delVale.email);
     const cuenta = await leerVeces(huella);
     vecesAntes = cuenta.veces;
     const yaLoTiene = await leer('', huella);
 
     if (yaLoTiene && yaLoTiene.areas && yaLoTiene.areas.length) {
       // Sin la cuenta no se sabe con que datos se le escribio: no se le
-      // escribe otro, se le devuelve el suyo.
+      // escribe otro, se le deja el suyo.
       const losMismos = !cuenta.datos || sonLosMismos(cuenta.datos, delVale);
       if (losMismos || cuenta.veces >= MAX_VECES) {
-        await quemarElVale(codigo);
-        return res.status(200).json({
-          yaLoTenia: true,
+        await dejarListo(codigo, {
           texto: yaLoTiene.areas[0],
           rasgos: yaLoTiene.rasgos || {},
           puedeCorregir: Boolean(cuenta.datos) && losMismos && cuenta.veces < MAX_VECES,
         });
+        return 'fin';
       }
     }
   } catch (err) {
@@ -262,77 +265,80 @@ export default async function handler(req, res) {
     console.error('[prueba-regalo] No se ha podido mirar si ya lo tenia:', err.message);
   }
 
-  const datos = { ...delVale, carta: (req.body || {}).carta };
-  const { nombre, sexo, fecha, hora, municipio, provincia, pais, carta } = datos;
-
-  // SI ALGO NO CUADRA, EL VALE SE SUELTA: no se ha escrito nada, asi que no
-  // tiene por que perder el intento por un fallo que no es suyo.
-  const noVale = async (mensaje) => {
-    await soltarElVale(codigo, cobrado.marca);
-    return res.status(400).json({ error: mensaje });
-  };
-
-  if (!nombre || !sexo) return noVale('Faltan el nombre o el sexo');
-
-  const [anio, mes, dia] = String(fecha || '').split('-').map(Number);
-  if (!anio || !mes || !dia || mes < 1 || mes > 12 || !hora) {
-    return noVale('Falta la fecha o la hora de nacimiento');
-  }
-  if (!municipio || !provincia || !pais) return noVale('Falta el lugar de nacimiento');
-
-  // Sin carta no hay nada que leer: el modelo se inventaria la persona entera.
-  if (!carta || typeof carta !== 'object' || !carta.sol || !carta.ascendente || !carta.casas) {
-    return noVale('Falta la carta natal');
-  }
-
+  let carta = null;
+  let puseElPendiente = false;
+  let salida;
   try {
-    const salida = await escribirElRegalo(loQueVaAlModelo(datos, carta));
+    const calculada = await calcularLaCarta(delVale);
+    if (!calculada.ok) throw new Error(calculada.error);
+    carta = calculada.carta;
 
-    // Se guarda por detras, sin hacer esperar a nadie, y envuelto: el area ya
-    // esta escrita y se entrega pase lo que pase con el guardado.
+    // Sin carta no hay nada que leer: el modelo se inventaria la persona entera.
+    if (!carta || typeof carta !== 'object' || !carta.sol || !carta.ascendente || !carta.casas) {
+      throw new Error('Falta la carta natal');
+    }
+
+    // POR SI ESTO SE CORTA A MEDIAS sin poder apuntar nada: se deja apuntada
+    // antes de gastar, sin avisarle, para que el reintento de por detras la
+    // encuentre. Si ya estaba apuntada, no se toca.
     try {
-      waitUntil(guardarLoEscrito({ datos, carta, texto: salida.texto, rasgos: salida.rasgos, cuaderno: salida.cuaderno, avisar: true }));
+      if (!(await leer(PENDIENTES, huella))) {
+        await guardarPendiente(huella, {
+          creado: Date.now(),
+          intentos: 0,
+          acabado: false,
+          datos: delVale,
+          carta,
+          motivo: 'se corto mientras se escribia',
+        });
+        puseElPendiente = true;
+      }
     } catch (err) {
-      console.error('[prueba-regalo] No se ha podido lanzar el guardado del area:', err.message);
+      console.error('[prueba-regalo] No se ha podido dejar apuntada por si acaso:', err.message);
     }
 
-    // YA ESTA ESCRITO: el vale se quema y no sirve nunca mas.
-    await quemarElVale(codigo);
-
-    // Y SE MARCA EN BREVO COMO ENTREGADO. Es lo que distingue a quien tiene
-    // su diseño de quien se quedo por el camino. Va por detras y envuelto:
-    // el diseño ya esta escrito y se entrega pase lo que pase con la marca.
-    try {
-      waitUntil(marcarEnBrevo({ email: delVale.email, estado: 'entregado', intentos: 0,
-                                veces: vecesAntes + 1 }));
-    } catch (e) {
-      console.error('[prueba-regalo] No se ha podido marcar el entregado:', e.message);
-    }
-
-    return res.status(200).json({
-      texto: salida.texto,
-      rasgos: salida.rasgos,
-      // Con este ya van vecesAntes + 1. Si aun no ha llegado al tope, le
-      // queda la correccion y su pagina se lo puede ofrecer.
-      puedeCorregir: (vecesAntes + 1) < MAX_VECES,
-    });
+    salida = await escribirElRegalo(loQueVaAlModelo(delVale, carta), reloj);
 
   } catch (err) {
     console.error('[prueba-regalo] No ha salido el area:', err.message);
-    // NO HA SALIDO: se suelta el vale para que el boton de volver a
-    // intentarlo pueda usarlo en el acto. El intento ya esta contado.
+    // NO HA SALIDO: se suelta el vale para el siguiente intento. El intento
+    // ya esta contado.
     await soltarElVale(codigo, cobrado.marca);
+    if (puseElPendiente) await quitarPendiente(huella);
 
-    // Y SI ERA EL ULTIMO INTENTO, esa persona se queda sin nada delante. Se
-    // apunta para seguir intentandolo por detras y se le avisa por correo.
-    // Va por detras y envuelto: la respuesta no espera por esto ni se rompe.
-    if (cobrado.ultimo) {
-      try {
-        waitUntil(apuntarElFallo({ datos: delVale, carta, motivo: err.message }));
-      } catch (e) {
-        console.error('[prueba-regalo] No se ha podido apuntar el fallo:', e.message);
-      }
-    }
-    return res.status(500).json({ error: err.message || 'No ha salido el área' });
+    if (!cobrado.ultimo && reloj.hayTiempoPara(150)) return 'otra';
+
+    // Y SI NO QUEDA OTRO, se apunta para seguir intentandolo por detras y se
+    // le avisa por correo. Y el vale lo dice, para que la pagina, si sigue
+    // abierta, no se quede esperando.
+    await apuntarElFallo({ datos: delVale, carta, motivo: err.message });
+    await dejarPendiente(codigo);
+    return 'fin';
   }
+
+  // YA ESTA ESCRITO. Desde aqui nada vuelve a escribirlo: cada paso va
+  // envuelto y lo que falle se queda en los registros.
+  if (puseElPendiente) await quitarPendiente(huella);
+
+  // Lo que enseña la pagina si sigue abierta. Con este ya van vecesAntes + 1:
+  // si aun no ha llegado al tope, le queda la correccion.
+  try {
+    await dejarListo(codigo, {
+      texto: salida.texto,
+      rasgos: salida.rasgos,
+      puedeCorregir: (vecesAntes + 1) < MAX_VECES,
+    });
+  } catch (err) {
+    console.error('[prueba-regalo] No se ha podido dejar listo el vale:', err.message);
+  }
+
+  // Y SE MARCA EN BREVO COMO ENTREGADO. Es lo que distingue a quien tiene su
+  // diseño de quien se quedo por el camino.
+  await marcarEnBrevo({ email: delVale.email, estado: 'entregado', intentos: 0,
+                        veces: vecesAntes + 1 });
+
+  // Se guarda y se le manda su enlace por correo, la haya visto o no.
+  await guardarLoEscrito({ datos: delVale, carta, texto: salida.texto, rasgos: salida.rasgos,
+                           cuaderno: salida.cuaderno, avisar: true });
+  return 'fin';
 }
