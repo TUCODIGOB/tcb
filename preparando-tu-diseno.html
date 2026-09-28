@@ -208,18 +208,18 @@
   /* Las dos frases de la pantalla de saturado: cada una aparte y con su medida. */
   #errorMsg .sat-guardados, #errorMsg .sat-email { display: block; }
   #errorMsg .sat-email { color: var(--gold-deep); font-weight: 700; margin-top: 12px; }
-  #errorMsg .sat-guardados { font-size: 18px; }
+  #errorMsg .sat-guardados { font-size: 20px; }
   #errorMsg .sat-email { font-size: 18px; }
   @media (min-width: 851px) and (max-width: 1023px) {
-    #errorMsg .sat-guardados { font-size: 18px; }
+    #errorMsg .sat-guardados { font-size: 20px; }
     #errorMsg .sat-email { font-size: 18px; }
   }
   @media (min-width: 681px) and (max-width: 850px) {
-    #errorMsg .sat-guardados { font-size: 18px; }
+    #errorMsg .sat-guardados { font-size: 20px; }
     #errorMsg .sat-email { font-size: 18px; }
   }
   @media (max-width: 680px) {
-    #errorMsg .sat-guardados { font-size: 20px; }
+    #errorMsg .sat-guardados { font-size: 22px; }
     #errorMsg .sat-email { font-size: 20px; }
   }
   /* Como en la cabecera de la landing. */
@@ -245,6 +245,12 @@
   }
   /* LA PANTALLA DE VAYA: arriba, con 100px, en todos los dispositivos. */
   #screenError.active { align-items: flex-start; padding-top: 100px; }
+  /* LA PANTALLA 3: arriba con 100px, y su texto con su medida. */
+  #screenSinDatos.active { align-items: flex-start; padding-top: 100px; }
+  #screenSinDatos p { font-size: 20px; max-width: none; }
+  .br-tabv { display: none; }
+  @media (min-width: 681px) and (max-width: 850px) { .br-tabv { display: inline; } }
+  @media (max-width: 680px) { #screenSinDatos p { font-size: 22px; } }
   .salto-movil { display: none; }
   @media (max-width: 600px) {
     .salto-movil { display: inline; }
@@ -428,7 +434,7 @@
   <div class="container">
     <div class="screen-inner">
       <h2>Te falta un paso<br class="salto-movil"> antes de esto...</h2>
-      <p>Para descubrir tu <strong class="oro">Diseño de Origen</strong>, primero necesitamos tus datos</p>
+      <p>Para descubrir tu <strong class="oro">Diseño de Origen</strong>,<br class="br-tabv"> primero necesitamos tus datos</p>
       <a href="/tu-diseno-de-origen#formulario" class="btn-download">Quiero descubrirlo gratis&nbsp;→</a>    </div>
   </div>
 </section>
