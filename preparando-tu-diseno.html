@@ -521,8 +521,7 @@ function pantallaReintento(alPulsar) {
 function pantallaSinIntentos() {
   document.getElementById('errorTitulo').innerHTML =
     'Ups… ahora mismo<br class="br-movil"> hay mucha gente<br> pidiendo el suyo';
-  document.getElementById('errorMsg').innerHTML =
-    '<span class="sat-guardados">No te preocupes, tus datos están guardados</span><span class="sat-email">Te avisamos por email en cuanto esté listo</span>';
+    '<span class="sat-guardados">No te preocupes,<br class="br-movil"> tus datos están guardados</span><span class="sat-email">Te avisamos por email<br class="br-movil"> en cuanto esté listo</span>';
   const caja = document.querySelector('#screenError .error-box');
   if (caja) caja.style.display = 'none';
   const btn = document.getElementById('errorBtn');
