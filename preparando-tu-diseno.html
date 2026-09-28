@@ -163,15 +163,28 @@
     margin-top: 20px;
     margin-bottom: 1.5rem;
   }
-  #screenGenerate .pbar { margin-top: 3.5rem; }
-  .br-listo { display: none; }
+  #screenGenerate .pbar { margin-top: 30px; }
+  .br-movil { display: none; }
+  .min-corto { display: none; }
+  /* Las dos frases de debajo, cada una con su medida por dispositivo. */
+  #screenGenerate .nota-esperar { font-style: normal; font-size: 20px; }
+  #screenGenerate .nota-email { color: var(--teal-deep); font-style: italic; font-size: 16px; }
   @media (max-width: 1023px) { #screenGenerate p { font-size: 20px; } }
-  @media (min-width: 681px) and (max-width: 850px) { #screenGenerate h2 { font-size: 32px; } }
+  @media (min-width: 681px) and (max-width: 850px) {
+    #screenGenerate h2 { font-size: 32px; }
+    #screenGenerate .nota-esperar { font-size: 18px; }
+  }
   @media (max-width: 680px) {
     #suNombre { display: block; }
-    .br-listo { display: inline; }
+    .br-movil { display: inline; }
+    .min-largo { display: none; }
+    .min-corto { display: inline; }
     #screenGenerate h2 { margin-bottom: 40px; }
+    #screenGenerate p.listo { font-size: 22px; }
     #screenGenerate p.small-note { font-size: 22px; }
+    #screenGenerate .nota-esperar { font-size: 22px; }
+    #screenGenerate .nota-email { font-size: 18px; }
+    #screenGenerate .pbar { margin-top: 40px; }
   }
 
   /* LA PANTALLA DE FALLO. Centrada en el alto, y en el movil un poco por
@@ -348,8 +361,8 @@
     <div class="screen-inner">
       <div class="spin"></div>
       <h2><span id="suNombre"></span><span id="elSaludo">Estamos</span> preparando<br> <em>Tu Diseño de Origen</em></h2>
-      <p>Estará listo en<br class="br-listo"> unos <strong>2 minutos</strong></p>
-      <p class="small-note"><strong>No cierres esta pestaña<br class="salto-movil"> hasta que termine</strong></p>
+      <p class="listo">Estará listo en unos <strong>2 <span class="min-largo">minutos</span><span class="min-corto">min.</span></strong></p>
+      <p class="small-note"><span class="nota-esperar">Puedes esperar aquí<br class="br-movil"> o cerrar esta pantalla</span><br><span class="nota-email">Te avisamos por email<br class="br-movil"> en cuanto esté listo</span></p>
       <div class="pbar"><div class="pfill"></div></div>
     </div>
   </div>
