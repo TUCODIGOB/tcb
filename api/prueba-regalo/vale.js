@@ -297,6 +297,12 @@ export default async function handler(req, res) {
 
   try {
     const huella = huellaDelEmail(datos.email);
+
+    // SI YA SE LE ESTA HACIENDO UNO, se le lleva a ese: nunca dos a la vez. Va
+    // lo primero: mientras se hace su correccion, lo guardado es el anterior.
+    const enMarcha = await elQueEstaEnMarcha(huella);
+    if (enMarcha) return res.status(200).json({ vale: enMarcha });
+
     const yaLoTiene = await leer('', huella);
     const tieneDiseno = Boolean(yaLoTiene && yaLoTiene.areas && yaLoTiene.areas.length);
 
@@ -322,10 +328,6 @@ export default async function handler(req, res) {
       }
       // Datos distintos y le queda su correccion: se le escribe de nuevo.
     }
-
-    // SI YA SE LE ESTA HACIENDO UNO, se le lleva a ese: nunca dos a la vez.
-    const enMarcha = await elQueEstaEnMarcha(huella);
-    if (enMarcha) return res.status(200).json({ vale: enMarcha });
 
     const codigo = nuevoCodigo();
     await escribir(VALES, codigo, { creado: Date.now(), datos });
