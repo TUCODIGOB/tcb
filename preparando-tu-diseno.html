@@ -202,6 +202,17 @@
   #screenError .btn-download, #screenSinDatos .btn-download { margin-top: 0; }
   /* El boton de esta pantalla es un enlace, no un boton: sin subrayado. */
   a.btn-download { text-decoration: none; }
+  /* LA PANTALLA DE FALLO: titular y texto. */
+  #screenError h2 { font-size: 35px; line-height: 1.4; }
+  #screenError p { line-height: 1.4; }
+  @media (min-width: 681px) and (max-width: 1023px) {
+    #screenError h2 { font-size: 32px; }
+  }
+  /* En el movil, el boton igual que los de la landing. */
+  @media (max-width: 680px) {
+    #screenError h2 { font-size: 32px; }
+    #errorBtn { width: 100%; font-size: 18px; padding: 17px 4px; }
+  }
   @media (max-width: 600px) {
     #screenError p, #screenSinDatos p { font-size: 20px; }
     #screenError.active, #screenSinDatos.active { align-items: flex-start; padding-top: 22vh; }
@@ -377,7 +388,8 @@
 <section id="screenError" class="screen">
   <div class="container">
     <div class="screen-inner">
-      <h2 id="errorTitulo">Vaya, no hemos podido<br class="salto-movil"> terminar tu diseño</h2>
+      <h2 id="errorTitulo">Vaya, algo ha fallado…</h2>
+      <p id="errorMsg">Tu Diseño de Origen está casi listo, pulsa el botón para terminarlo</p>
       <p id="errorMsg">No pasa nada, dale al botón y lo terminamos</p>
       <button type="button" id="errorBtn" class="btn-download">Terminar mi diseño</button>
       <div class="error-box">
@@ -463,7 +475,7 @@ function pantallaReintento(alPulsar) {
   // solo se ve en el movil. Es una frase fija nuestra, aqui no entra nada de
   // lo que haya escrito nadie.
   document.getElementById('errorTitulo').innerHTML =
-    'Vaya, no hemos podido<br class="salto-movil"> terminar tu diseño';
+    'Tu Diseño de Origen está casi listo, pulsa el botón para terminarlo';
   document.getElementById('errorMsg').textContent =
     'No pasa nada, dale al botón y lo terminamos';
   // El cajon rojo no sale aqui: todavia puede arreglarlo el solo con el boton.
