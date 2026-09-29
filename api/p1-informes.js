@@ -20,6 +20,7 @@
 
 import crypto from 'crypto';
 import { leerLaFicha } from '../lib/ficha-del-lead.js';
+import { nombreCompleto } from '../lib/nombre.js';
 
 function ajustes() {
   const cuenta = process.env.INFORME_P1_CLOUDFLARE_ACCOUNT_ID;
@@ -97,12 +98,11 @@ async function deQuienEs(compra) {
   const informe = await resp.json();
   const dentro = informe.cliente || {};
   const email = dentro.email || '';
-  const entero = c => [c.nombre, c.apellidos].map(s => String(s || '').trim()).filter(Boolean).join(' ');
-  if (dentro.nombre) return { nombre: entero(dentro), email };
+  if (dentro.nombre) return { nombre: nombreCompleto(dentro.nombre, dentro.apellidos), email };
   if (!email) return { email: '' };
   const ficha = await leerLaFicha(email);
   const suyo = (ficha && ficha.cliente) || {};
-  return { nombre: entero(suyo), email };
+  return { nombre: nombreCompleto(suyo.nombre, suyo.apellidos), email };
 }
 
 // LA LISTA. Se piden los nombres y la fecha de cada fichero de p1/, sin bajar

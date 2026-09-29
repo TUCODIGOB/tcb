@@ -21,6 +21,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import crypto from 'crypto';
+import { nombreCompleto } from '../lib/nombre.js';
 
 function ajustes() {
   const cuenta = process.env.INFORME_P1_CLOUDFLARE_ACCOUNT_ID;
@@ -98,8 +99,7 @@ async function deQuienEs(compra) {
   if (!resp.ok) return {};
   const guardado = await resp.json();
   const dentro = guardado.cliente || {};
-  const nombre = [dentro.nombre, dentro.apellidos].map(s => String(s || '').trim()).filter(Boolean).join(' ');
-  return { nombre, email: dentro.email || '' };
+  return { nombre: nombreCompleto(dentro.nombre, dentro.apellidos), email: dentro.email || '' };
 }
 
 // LA LISTA. Se piden los nombres y la fecha de cada fichero de p0/, sin bajar

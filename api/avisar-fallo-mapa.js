@@ -7,6 +7,8 @@
 // email), asi que con esto se le puede escribir y no perder la venta.
 // ═════════════════════════════════════════════════════════════════
 
+import { nombreCompleto } from '../lib/nombre.js';
+
 const RECORTE = 200; // ni un dato del formulario necesita mas
 
 export default async function handler(req, res) {
@@ -31,7 +33,7 @@ export default async function handler(req, res) {
       'Si el corte es puntual, con reintentarlo en unos minutos basta. Si se',
       'repite, hay un problema con el servicio y conviene mirarlo.',
       '',
-      `Cliente:   ${campo([datos.nombre, datos.apellidos].filter(Boolean).join(' '))}`,
+      `Cliente:   ${campo(nombreCompleto(datos.nombre, datos.apellidos))}`,
       `Email:     ${campo(datos.email)}`,
       `Municipio: ${campo(datos.municipio)}`,
       `Provincia: ${campo(datos.provincia)}`,

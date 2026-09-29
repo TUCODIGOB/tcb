@@ -23,6 +23,7 @@
 // ═════════════════════════════════════════════════════════════════
 
 import { leerElPlan, losPlanes } from './almacen.js';
+import { nombreCompleto } from '../../lib/nombre.js';
 
 // Lo que llega de fuera no puede llevar barras ni nada raro: es lo que forma
 // el nombre del fichero que se va a buscar.
@@ -42,8 +43,7 @@ async function laLista() {
   await Promise.all(planes.slice(0, CON_NOMBRE).map(async plan => {
     try {
       const suyo = await leerElPlan(plan.compra);
-      plan.nombre = [suyo?.cliente?.nombre, suyo?.cliente?.apellidos]
-        .map(s => String(s || '').trim()).filter(Boolean).join(' ');
+      plan.nombre = nombreCompleto(suyo?.cliente?.nombre, suyo?.cliente?.apellidos);
       // Si no salio entero, que se vea en la lista sin tener que abrirlo.
       plan.entero = Boolean(suyo?.documento);
     } catch (err) {
