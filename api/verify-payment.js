@@ -6,6 +6,7 @@
 
 import Stripe from 'stripe';
 import { estado, compraValida, esDelProducto } from '../lib/reserva.js';
+import { nombreCompleto } from '../lib/nombre.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -46,13 +47,13 @@ export default async function handler(req, res) {
         try {
           const m = session.metadata || {};
           await enviarEmailAdmin({
-            asunto: `⚠️ Cliente sin datos de nacimiento — ${m.nombre || 'Cliente'}`,
+            asunto: `⚠️ Cliente sin datos de nacimiento — ${nombreCompleto(m.nombre, m.apellidos) || 'Cliente'}`,
             mensaje: [
               `Este cliente HA PAGADO y la pagina no ha encontrado sus datos de nacimiento.`,
               `No puede generar el informe. Hay que generarselo a mano.`,
               ``,
               `Email:    ${email || '(desconocido)'}`,
-              `Nombre:   ${m.nombre || '-'}`,
+              `Nombre:   ${nombreCompleto(m.nombre, m.apellidos) || '-'}`,
               `Telefono: ${m.telefono || '-'}`,
               `Sexo:     ${m.sexo || '-'}`,
               `Nacio:    ${m.fecha || '-'} a las ${m.hora || '-'}`,

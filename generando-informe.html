@@ -543,6 +543,7 @@ function prepararBotonReintentar() {
     if (m.nombre && m.fecha && m.hora) {
       pedido = {
         nombre: m.nombre,
+        apellidos: m.apellidos || '',
         sexo: m.sexo,
         fecha: m.fecha,
         hora: m.hora,
@@ -672,22 +673,22 @@ const { cartaTexto, casasTexto, ...carta } = await cartaResp.json();
   const lugarCompleto = [pedido.municipio, pedido.provincia, pedido.pais].filter(Boolean).join(', ');
 
   // Generar diagnóstico con Claude
-  await generarDiagnosticoSilencioso(pedido.nombre, pedido.sexo, fechaNice, pedido.hora, lugarCompleto, edad, carta, cartaTexto, casasTexto);
+  await generarDiagnosticoSilencioso(pedido.nombre, pedido.apellidos || '', pedido.sexo, fechaNice, pedido.hora, lugarCompleto, edad, carta, cartaTexto, casasTexto);
 
   // Cuando termina, mostrar pantalla "listo"
-  document.getElementById('readyNombre').textContent = pedido.nombre;
+  document.getElementById('readyNombre').textContent = [pedido.nombre, pedido.apellidos].filter(Boolean).join(' ');
   showScreen('screenReady');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Versión "silenciosa" de generarDiagnostico (no muestra el informe en pantalla)
-async function generarDiagnosticoSilencioso(nombre, sexo, fechaNice, hora, lugar, edad, carta, cartaTexto, casasTexto) {
-  _G = { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas: [] };
+async function generarDiagnosticoSilencioso(nombre, apellidos, sexo, fechaNice, hora, lugar, edad, carta, cartaTexto, casasTexto) {
+  _G = { nombre, apellidos, sexo, fechaNice, hora, lugar, edad, carta, areas: [] };
 
   const response = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ session_id: new URLSearchParams(window.location.search).get('session_id'), nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto, casasTexto })
+    body: JSON.stringify({ session_id: new URLSearchParams(window.location.search).get('session_id'), nombre, apellidos, sexo, fechaNice, hora, lugar, edad, cartaTexto, casasTexto })
   });
 
   if (!response.ok) {
@@ -723,6 +724,7 @@ fetch('/api/generar-pdf', {
       session_id: new URLSearchParams(window.location.search).get('session_id'),
       token: _G.token,
       nombre: _G.nombre,
+      apellidos: _G.apellidos,
       sexo: _G.sexo,
       fechaNice: _G.fechaNice,
       hora: _G.hora,
@@ -748,6 +750,7 @@ fetch('/api/generar-pdf', {
         token: _G.token,
         pdfBase64: pdfData.pdfBase64,
         nombre: _G.nombre,
+        apellidos: _G.apellidos || '',
         sexo: _G.sexo || '',
         fecha: _G.fechaNice || '',
         hora: _G.hora || '',
@@ -925,7 +928,7 @@ function pintarCuaderno(c) {
 }
 
 function descargarPDF() {
-  var fileName = 'TuDisenoDeOrigen_' + (_G.nombre || '').replace(/\s+/g, '_') + '.pdf';
+  var fileName = 'TuDisenoDeOrigen_' + [_G.nombre, _G.apellidos].filter(Boolean).join(' ').replace(/\s+/g, '_') + '.pdf';
   var link = document.createElement('a');
   link.href = _G.pdfBase64;
   link.download = fileName;

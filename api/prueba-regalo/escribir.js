@@ -84,6 +84,7 @@ export async function guardarLoEscrito({ datos, carta, texto, rasgos, cuaderno, 
       sessionId: huella,
       cliente: {
         nombre: datos.nombre || '',
+        apellidos: datos.apellidos || '',
         sexo: datos.sexo || '',
         email: String(datos.email || '').trim().toLowerCase(),
         fecha: dia + ' de ' + MESES[mes - 1] + ' de ' + anio,
@@ -191,6 +192,7 @@ export function loQueVaAlModelo(datos, carta) {
   const [anio, mes, dia] = String(datos.fecha || '').split('-').map(Number);
   return {
     nombre: datos.nombre,
+    apellidos: datos.apellidos || '',
     sexo: datos.sexo,
     fechaNice: dia + ' de ' + MESES[mes - 1] + ' de ' + anio,
     hora: datos.hora,

@@ -20,6 +20,7 @@ import crypto from 'crypto';
 import { waitUntil } from '@vercel/functions';
 import { leer, escribir } from './almacen.js';
 import { registrarLead } from '../captar-lead.js';
+import { nombreCompleto } from '../../lib/nombre.js';
 import { crearReloj } from './llamadas.js';
 import { prepararEnElServidor } from './escribir.js';
 
@@ -88,12 +89,17 @@ export async function apuntarUnaVez(huella, datos) {
 
 // ¿SON LOS MISMOS DATOS? Solo se miran los que cambian lo que se escribe. El
 // telefono no: cambiarlo no cambia ni una palabra de su diseño.
+//
+// EL NOMBRE SE MIRA ENTERO, nombre y apellidos juntos: lo guardado antes venia
+// en una sola casilla, y quien vuelve con los mismos datos separados en dos
+// sigue siendo la misma persona.
 const igual = (a, b) => String(a || '').trim().toLowerCase() === String(b || '').trim().toLowerCase();
 
 export function sonLosMismos(a, b) {
   if (!a || !b) return false;
-  return ['nombre', 'sexo', 'fecha', 'hora', 'municipio', 'provincia', 'pais']
-    .every(campo => igual(a[campo], b[campo]));
+  return igual(nombreCompleto(a.nombre, a.apellidos), nombreCompleto(b.nombre, b.apellidos))
+    && ['sexo', 'fecha', 'hora', 'municipio', 'provincia', 'pais']
+      .every(campo => igual(a[campo], b[campo]));
 }
 
 // Los años que tiene hoy quien nacio ese dia.
@@ -115,6 +121,7 @@ function comoLosPideLaPagina(datos) {
   const edad = laEdad(datos.fecha);
   return {
     nombre: datos.nombre || '',
+    apellidos: datos.apellidos || '',
     sexo: datos.sexo || '',
     email: datos.email || '',
     telefonoCompleto: datos.telefono || '',
@@ -131,6 +138,7 @@ function comoLosPideLaPagina(datos) {
 function loQueGuarda(datos) {
   return {
     nombre: String(datos.nombre || '').trim(),
+    apellidos: String(datos.apellidos || '').trim(),
     sexo: String(datos.sexo || '').trim(),
     email: String(datos.email || '').trim().toLowerCase(),
     telefono: String(datos.telefonoCompleto || datos.telefono || '').trim(),
@@ -357,6 +365,7 @@ export default async function handler(req, res) {
     try {
       await registrarLead({
         nombre: datos.nombre,
+        apellidos: datos.apellidos,
         email: datos.email,
         telefono: datos.telefono,
         sexo: datos.sexo,

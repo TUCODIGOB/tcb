@@ -98,7 +98,8 @@ async function deQuienEs(compra) {
   if (!resp.ok) return {};
   const guardado = await resp.json();
   const dentro = guardado.cliente || {};
-  return { nombre: String(dentro.nombre || '').trim(), email: dentro.email || '' };
+  const nombre = [dentro.nombre, dentro.apellidos].map(s => String(s || '').trim()).filter(Boolean).join(' ');
+  return { nombre, email: dentro.email || '' };
 }
 
 // LA LISTA. Se piden los nombres y la fecha de cada fichero de p0/, sin bajar

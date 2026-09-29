@@ -841,10 +841,11 @@ async function guardarLoSuyo({ datos, carta }) {
       producto: 'p0',
       compra: huella,
       generado: new Date().toISOString(),
-      // LOS MISMOS SIETE DATOS QUE GUARDA EL P1, NI UNO MAS. Las coordenadas
-      // del lugar no van aqui porque ya viajan dentro de la carta.
+      // LOS MISMOS DATOS QUE GUARDA EL P1, NI UNO MAS. Las coordenadas del
+      // lugar no van aqui porque ya viajan dentro de la carta.
       cliente: {
         nombre: datos.nombre || '',
+        apellidos: datos.apellidos || '',
         sexo: datos.sexo || '',
         email: String(datos.email || '').trim().toLowerCase(),
         fecha: fechaNice,

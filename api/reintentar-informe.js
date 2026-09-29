@@ -38,6 +38,7 @@ import { losPendientes, guardarPendiente, quitarPendiente, marcarEnBrevo } from 
 import { correoRevisando, correoALaTienda } from '../lib/correos-p1.js';
 import { leerInforme } from '../lib/guardar-informe.js';
 import { leerLaFicha } from '../lib/ficha-del-lead.js';
+import { nombreCompleto } from '../lib/nombre.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -133,6 +134,7 @@ async function volverAMandarlo(ficha) {
     body: JSON.stringify({
       session_id: ficha.compra,
       nombre: cliente.nombre,
+      apellidos: cliente.apellidos || '',
       sexo: cliente.sexo || '',
       fechaNice: cliente.fecha || '',
       hora: cliente.hora || '',
@@ -241,7 +243,7 @@ export default async function handler(req, res) {
         await correoALaTienda({
           compra: ficha.compra,
           email: ficha.email,
-          nombre: ficha.nombre,
+          nombre: nombreCompleto(ficha.nombre, ficha.apellidos),
           ...comoNacio(st.datos),
           intentos: Number(ficha.intentos || 0),
           motivo: `Su informe ESTA escrito y guardado; lo que no ha salido es el correo, tras ${entregas} entregas`,
@@ -292,7 +294,7 @@ export default async function handler(req, res) {
       await correoALaTienda({
         compra: ficha.compra,
         email: ficha.email,
-        nombre: ficha.nombre,
+        nombre: nombreCompleto(ficha.nombre, ficha.apellidos),
         ...comoNacio(st.datos),
         intentos: Number(ficha.intentos || 0),
         motivo: 'Se agotaron los intentos y el informe sigue sin entregarse',

@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { compraValida, esDelProducto, MAX_INTENTOS, estado, reservar, liberar } from '../lib/reserva.js';
 import { leerLaFicha } from '../lib/ficha-del-lead.js';
+import { nombreCompleto, nombreDePila } from '../lib/nombre.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -235,12 +236,12 @@ export default async function handler(req, res) {
           const m = session.metadata || {};
           const emailCliente = session.customer_email || session.customer_details?.email || '(desconocido)';
           await enviarEmailAdmin({
-            asunto: `⚠️ URGENTE — Cliente sin informe tras ${MAX_INTENTOS} intentos — ${m.nombre || 'Cliente'}`,
+            asunto: `⚠️ URGENTE — Cliente sin informe tras ${MAX_INTENTOS} intentos — ${nombreCompleto(m.nombre, m.apellidos) || 'Cliente'}`,
             mensaje: [
               `Este cliente HA PAGADO y NO tiene su informe. Hay que generarselo a mano.`,
               ``,
               `Email:    ${emailCliente}`,
-              `Nombre:   ${m.nombre || '-'}`,
+              `Nombre:   ${nombreCompleto(m.nombre, m.apellidos) || '-'}`,
               `Telefono: ${m.telefono || '-'}`,
               `Sexo:     ${m.sexo || '-'}`,
               `Nacio:    ${m.fecha || '-'} a las ${m.hora || '-'}`,
@@ -271,17 +272,16 @@ export default async function handler(req, res) {
     return res.status(403).json({ error: 'Pago no verificado. No se puede generar el informe.' });
   }
 
-  const { nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto, casasTexto } = req.body;
+  const { nombre, apellidos, sexo, fechaNice, hora, lugar, edad, cartaTexto, casasTexto } = req.body;
 
   if (!nombre || !cartaTexto) {
     return res.status(400).json({ error: 'Faltan parámetros' });
   }
 
-  // El cliente escribe nombre y apellidos en la misma casilla ("Juan Jose Mayo
-  // Perez"), asi que aqui se separa la primera palabra y se le pasa al modelo
-  // aparte, para que no llame a la persona por su apellido ni por el nombre
-  // entero. El nombre completo se sigue mandando por si el de pila es compuesto.
-  const nombrePila = String(nombre).trim().split(/\s+/)[0] || String(nombre).trim();
+  // El de pila se le pasa al modelo aparte, para que no llame a la persona por
+  // sus apellidos ni por el nombre entero: es la casilla del nombre entera, tal
+  // cual la escribio. El nombre completo va tambien, con los apellidos.
+  const nombrePila = nombreDePila(nombre, apellidos);
 
   const SYSTEM_PROMPT = `Eres una experta en psicología y neurociencia. Generas diagnósticos de autoconocimiento muy personalizados a partir de los rasgos que se le han sacado a la persona. 
 
@@ -315,7 +315,7 @@ OBJETIVO: Que la persona lea y piense que eso es exactamente quien es, que por f
 
 SU NOMBRE, AL MENOS DOS VECES EN CADA ÁREA (OBLIGATORIO):
 En cada área le llamas por su nombre DOS veces como mínimo, y separadas: una en la primera mitad y otra en la segunda. Si terminas un área y no lo has usado al menos dos veces, esa área no está terminada y la repasas antes de entregarla. Va donde caiga natural dentro de una frase, igual que cuando alguien que te conoce te llama por tu nombre justo en el momento en que te está diciendo algo que te toca. Nunca para empezar el área, nunca para abrir un párrafo, nunca dos veces seguidas.
-El nombre que usas es el de pila, el que tienes en "Nombre de pila". Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación. Si al mirar el nombre entero ves claro que el de pila es compuesto, puedes usar las dos palabras. Ante la duda, la primera palabra sola.
+El nombre que usas es el de pila, el que tienes en "Nombre de pila", entero y tal cual viene. Nunca los apellidos y nunca el nombre completo: a nadie le llaman por el apellido en una conversación.
 
 [B] REAL OBLIGATORIA:
 
@@ -622,7 +622,7 @@ TU PARTE NO ESTÁ TERMINADA SI LE FALTA UNA SOLA DE ESTAS CINCO COSAS:
   // antes, al buscarlos, y volver a ponerla delante solo le da a cada area la
   // ocasion de irse por su cuenta a otro sitio.
   const contextoPersona = `Persona:
-Nombre completo: ${nombre}
+Nombre completo: ${nombreCompleto(nombre, apellidos)}
 Nombre de pila: ${nombrePila}
 Sexo: ${sexo}
 Fecha de nacimiento: ${fechaNice}

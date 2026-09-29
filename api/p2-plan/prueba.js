@@ -56,6 +56,7 @@
 import crypto from 'crypto';
 import { AsyncLocalStorage } from 'async_hooks';
 import { leerLaFicha } from '../../lib/ficha-del-lead.js';
+import { nombreCompleto, nombreDePila } from '../../lib/nombre.js';
 // ── COMO SE LE HABLA ────────────────────────────────────────
 //
 // Esto no es del P2: es de la marca. Es lo que ya se aprendio escribiendo el
@@ -2084,9 +2085,9 @@ async function lasTablas({ partes, creencias, sexo }) {
 
 // ── QUIEN ES ─────────────────────────────────────────────────────
 //
-// Sus datos -su nombre y su sexo- viven en el fichero de su email, que es uno
-// solo: da igual que lo escribiera el regalo o el informe, o los dos. De ahi
-// se sacan.
+// Sus datos -su nombre, sus apellidos y su sexo- viven en el fichero de su
+// email, que es uno solo: da igual que lo escribiera el regalo o el informe, o
+// los dos. De ahi se sacan.
 //
 // LOS INFORMES DE ANTES LOS LLEVABAN DENTRO, y esos se usan tal cual sin
 // abrir nada mas: es lo que se le entrego aquel dia.
@@ -2096,18 +2097,18 @@ async function lasTablas({ partes, creencias, sexo }) {
 async function susDatos(informe) {
   const dentro = (informe && informe.cliente) || {};
   if (dentro.nombre) {
-    return { nombre: String(dentro.nombre).trim(), sexo: dentro.sexo || '' };
+    return { nombre: String(dentro.nombre).trim(), apellidos: String(dentro.apellidos || '').trim(), sexo: dentro.sexo || '' };
   }
   try {
     const ficha = await leerLaFicha(dentro.email || '');
     const suyo = (ficha && ficha.cliente) || null;
     if (suyo && suyo.nombre) {
-      return { nombre: String(suyo.nombre).trim(), sexo: suyo.sexo || '' };
+      return { nombre: String(suyo.nombre).trim(), apellidos: String(suyo.apellidos || '').trim(), sexo: suyo.sexo || '' };
     }
   } catch (err) {
     console.error('[p2] No se ha podido leer la ficha del cliente:', err.message);
   }
-  return { nombre: '', sexo: '' };
+  return { nombre: '', apellidos: '', sexo: '' };
 }
 
 // Cada creencia la escribe una llamada distinta que no ve a las demas, asi que
@@ -2213,7 +2214,11 @@ async function montarloTodo({ compra }) {
 
   // Y SIN SU NOMBRE TAMPOCO. Un documento que se entrega a alguien no lleva un
   // relleno donde va su nombre: si falta, se para aqui y se dice.
-  const { nombre, sexo } = await susDatos(informe);
+  // AL MODELO VA EL DE PILA, que es con el que se le llama. El nombre entero,
+  // con los apellidos, es el de la portada.
+  const suyo = await susDatos(informe);
+  const { sexo } = suyo;
+  const nombre = nombreDePila(suyo.nombre, suyo.apellidos);
   if (!nombre) {
     throw fallaElInforme('Ese informe se guardó sin el nombre del cliente, y el plan va dirigido a él: no se hace a medias');
   }
@@ -2368,7 +2373,7 @@ async function montarloTodo({ compra }) {
   // cosa. Es lo unico con lo que se puede mirar despues por donde se torcio un
   // plan, y un plan que no ha salido es justo el que hay que mirar.
   const loDeDentro = {
-    cliente: { nombre, sexo },
+    cliente: { nombre: suyo.nombre, apellidos: suyo.apellidos, sexo },
     plan: { partes: plan.partes, limpieza: plan.limpieza || null },
     creencias: {
       sacadas: suyas.ok ? suyas.creencias : [],
@@ -2383,7 +2388,7 @@ async function montarloTodo({ compra }) {
     return {
       ...loDeDentro,
       documento: {
-        nombre,
+        nombre: nombreCompleto(suyo.nombre, suyo.apellidos),
         // El numero que le toca a cada parte y los nombres de sus puntos van
         // desde aqui: el que maqueta no tiene que saberselos.
         partes: completas.map((p, i) => ({ ...p, numero: i + 1, nombres: BLOQUES })),

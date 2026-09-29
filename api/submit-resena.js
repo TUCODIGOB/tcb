@@ -15,6 +15,7 @@ import crypto from 'crypto';
 import { waitUntil } from '@vercel/functions';
 import { correoDeResenaRecibida } from './p2-plan/correo.js';
 import { marcarLaResenaDelP2 } from './p2-plan/brevo.js';
+import { nombreCompleto } from '../lib/nombre.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -23,7 +24,7 @@ export default async function handler(req, res) {
 
   try {
     const body = req.body;
-    const { action, nombre, email, consentimiento, fecha, texto_consentimiento } = body;
+    const { action, nombre, apellidos, email, consentimiento, fecha, texto_consentimiento } = body;
 
     if (!nombre || !email || !consentimiento) {
       return res.status(400).json({ error: 'Faltan datos obligatorios' });
@@ -39,7 +40,7 @@ export default async function handler(req, res) {
       const bucketName = process.env.RESENA_CLOUDFLARE_BUCKET_NAME;
 
       const timestamp = Math.floor(Date.now() / 1000);
-      const nombreSeguro = nombre.replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g, '').trim().replace(/\s+/g, '_');
+      const nombreSeguro = nombreCompleto(nombre, apellidos).replace(/[^a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s]/g, '').trim().replace(/\s+/g, '_');
       const emailSeguro = email.replace(/[^a-zA-Z0-9@._-]/g, '').replace('@', '_at_');
       const objectKey = `resenas/Resena_${nombreSeguro}_${emailSeguro}_${timestamp}.mp4`;
 
@@ -62,8 +63,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Falta la URL del vídeo' });
       }
 
-      await actualizarBrevo(email, nombre, fecha, texto_consentimiento, videoUrl);
-      await enviarEmailAdmin(nombre, email, fecha, videoUrl, objectKey || 'video');
+      await actualizarBrevo(email, nombre, apellidos, fecha, texto_consentimiento, videoUrl);
+      await enviarEmailAdmin(nombreCompleto(nombre, apellidos), email, fecha, videoUrl, objectKey || 'video');
 
       // ── ¿VIENE DEL PLAN DE ORIGEN? ──────────────────────────
       //
@@ -116,7 +117,7 @@ export default async function handler(req, res) {
 // ═══════════════════════════════════════
 // ACTUALIZAR BREVO
 // ═══════════════════════════════════════
-async function actualizarBrevo(email, nombre, fecha, textoConsentimiento, videoUrl) {
+async function actualizarBrevo(email, nombre, apellidos, fecha, textoConsentimiento, videoUrl) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) return;
 
@@ -127,6 +128,7 @@ async function actualizarBrevo(email, nombre, fecha, textoConsentimiento, videoU
     RESENA_CONSENTIMIENTO: textoConsentimiento || 'Autorizado',
     RESENA_DRIVE_ID: videoUrl || '',
   };
+  if (apellidos) attributes.APELLIDOS = apellidos;
 
   const resp = await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
     method: 'PUT',

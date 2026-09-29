@@ -96,7 +96,7 @@ export default async function handler(req, res) {
     // esto fallara, el informe se genera igual: por eso no se espera por ello
     // ni se corta nada.
     waitUntil(
-      apuntarPendiente({ sessionId: session.id, email, nombre: metadata.nombre || '' })
+      apuntarPendiente({ sessionId: session.id, email, nombre: metadata.nombre || '', apellidos: metadata.apellidos || '' })
         .catch(err => console.error('No se ha podido apuntar el pendiente:', session.id, err.message))
     );
 
@@ -117,6 +117,7 @@ export default async function handler(req, res) {
       await guardarContactoBrevo({
         email,
         nombre: metadata.nombre || '',
+        apellidos: metadata.apellidos || '',
         sexo: metadata.sexo || '',
         fecha: metadata.fecha || '',
         hora: metadata.hora || '',
@@ -299,10 +300,12 @@ async function guardarContactoBrevo(datos) {
   if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
   if (!datos.email) throw new Error('Email vacío');
 
-  // Separar nombre completo en nombre + apellidos (simplificado)
+  // El nombre y los apellidos llegan por separado. Las compras de antes los
+  // traian juntos en el nombre, y ahi se sigue separando la primera palabra.
+  const conApellidos = Boolean(String(datos.apellidos || '').trim());
   const partes = (datos.nombre || '').trim().split(/\s+/);
-  const firstName = partes[0] || '';
-  const lastName = partes.slice(1).join(' ') || '';
+  const firstName = conApellidos ? (datos.nombre || '').trim() : (partes[0] || '');
+  const lastName = conApellidos ? String(datos.apellidos).trim() : (partes.slice(1).join(' ') || '');
 
   // Atributos personalizados que guardamos en Brevo. El telefono se anade
   // aparte, mas abajo, solo si es un numero de verdad.
@@ -320,6 +323,7 @@ async function guardarContactoBrevo(datos) {
     IMPORTE_PAGADO: datos.importe || '',
     ESTADO_INFORME: 'pendiente',
     NOMBRE: datos.nombre || '',
+    ...(conApellidos ? { APELLIDOS: String(datos.apellidos).trim() } : {}),
     FECHA_NAC: datos.fecha || '',
     HORA_NAC: datos.hora || '',
     LUGAR_NAC: [datos.municipio, datos.provincia, datos.pais].filter(Boolean).join(', '),

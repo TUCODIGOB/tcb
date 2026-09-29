@@ -13,6 +13,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { TONO, SYSTEM_PROMPT } from './tono.js';
+import { nombreDePila } from '../../lib/nombre.js';
 
 // ═══════════════════════════════════════════════════════════════
 // LO QUE SE BUSCA, Y CUANTO
@@ -1068,11 +1069,10 @@ async function generarElArea(contextoPersona, rasgos, reloj) {
 // aqui en vez de entregar algo a medias.
 // ═══════════════════════════════════════════════════════════════
 
-export async function escribirElRegalo({ nombre, sexo, fechaNice, hora, lugar, edad, cartaTexto, casasTexto }, reloj = crearReloj()) {
-  // El cliente escribe nombre y apellidos en la misma casilla, asi que aqui se
-  // separa la primera palabra: al modelo se le habla de ella por su nombre de
-  // pila, nunca por el apellido ni por el nombre entero.
-  const nombrePila = String(nombre).trim().split(/\s+/)[0] || String(nombre).trim();
+export async function escribirElRegalo({ nombre, apellidos, sexo, fechaNice, hora, lugar, edad, cartaTexto, casasTexto }, reloj = crearReloj()) {
+  // Al modelo se le habla de ella por su nombre de pila, nunca por los
+  // apellidos: es la casilla del nombre entera, tal cual la escribio.
+  const nombrePila = nombreDePila(nombre, apellidos);
 
   const contextoPersona = [
     `Nombre de pila: ${nombrePila}`,

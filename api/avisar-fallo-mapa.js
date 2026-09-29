@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       'Si el corte es puntual, con reintentarlo en unos minutos basta. Si se',
       'repite, hay un problema con el servicio y conviene mirarlo.',
       '',
-      `Cliente:   ${campo(datos.nombre)}`,
+      `Cliente:   ${campo([datos.nombre, datos.apellidos].filter(Boolean).join(' '))}`,
       `Email:     ${campo(datos.email)}`,
       `Municipio: ${campo(datos.municipio)}`,
       `Provincia: ${campo(datos.provincia)}`,

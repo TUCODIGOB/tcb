@@ -63,6 +63,7 @@ export default async function handler(req, res) {
       metadata: {
         producto: PRODUCTO,
         nombre: (datos.nombre || '').substring(0, 500),
+        apellidos: (datos.apellidos || '').substring(0, 500),
         sexo: (datos.sexo || '').substring(0, 20),
         fecha: (datos.fecha || '').substring(0, 20),
         hora: (datos.hora || '').substring(0, 10),

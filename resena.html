@@ -224,9 +224,14 @@
     <div class="form-card" id="formCard">
       <form id="resenaForm" novalidate>
         <div class="form-group">
-          <label for="nombre">Nombre y apellidos *</label>
-          <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" required />
+          <label for="nombre">Nombre *</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" autocomplete="given-name" required />
           <span class="error-msg" id="errorNombre">Por favor, introduce tu nombre.</span>
+        </div>
+        <div class="form-group">
+          <label for="apellidos">Apellidos *</label>
+          <input type="text" id="apellidos" name="apellidos" placeholder="Tus apellidos" autocomplete="family-name" required />
+          <span class="error-msg" id="errorApellidos">Por favor, introduce tus apellidos.</span>
         </div>
         <div class="form-group">
           <label for="email">Email *</label>
@@ -305,12 +310,14 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
   document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
 
   const nombre = document.getElementById('nombre').value.trim();
+  const apellidos = document.getElementById('apellidos').value.trim();
   const email = document.getElementById('email').value.trim();
   const video = document.getElementById('video').files[0];
   const consent = document.getElementById('consentimiento').checked;
   let valid = true;
 
   if (!nombre) { document.getElementById('errorNombre').style.display = 'block'; valid = false; }
+  if (!apellidos) { document.getElementById('errorApellidos').style.display = 'block'; valid = false; }
   if (!email || !email.includes('@')) { document.getElementById('errorEmail').style.display = 'block'; valid = false; }
   if (!video) { document.getElementById('errorVideo').style.display = 'block'; valid = false; }
   if (!consent) { document.getElementById('errorConsentimiento').style.display = 'block'; valid = false; }
@@ -333,6 +340,7 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
       body: JSON.stringify({
         action: 'get-signature',
         nombre,
+        apellidos,
         email,
         consentimiento: 'si',
         fecha: new Date().toISOString(),
@@ -366,6 +374,7 @@ document.getElementById('resenaForm').addEventListener('submit', async function(
             body: JSON.stringify({
               action: 'save',
               nombre,
+              apellidos,
               email,
               consentimiento: 'si',
               fecha: new Date().toISOString(),

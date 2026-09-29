@@ -1775,9 +1775,15 @@ text-align: center;
           <div class="form-step" data-form-step="1">
 
           <div class="field">
-            <label for="nombre">¿Cómo te llamas? *</label>
-            <input type="text" id="nombre" name="nombre" placeholder="Tu nombre completo" autocomplete="name" required>
-            <div class="field-error" id="err-nombre">Por favor, introduce tu nombre completo.</div>
+            <label for="nombre">Nombre *</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" autocomplete="given-name" required>
+            <div class="field-error" id="err-nombre">Por favor, introduce tu nombre.</div>
+          </div>
+
+          <div class="field">
+            <label for="apellidos">Apellidos *</label>
+            <input type="text" id="apellidos" name="apellidos" placeholder="Tus apellidos" autocomplete="family-name" required>
+            <div class="field-error" id="err-apellidos">Por favor, introduce tus apellidos.</div>
           </div>
 
           <div class="field">
@@ -2080,7 +2086,7 @@ text-align: center;
     }
 
     function clearAllErrors() {
-      ['nombre','sexo','fecha','hora','municipio','provincia','pais','email','email2','telefono']
+      ['nombre','apellidos','sexo','fecha','hora','municipio','provincia','pais','email','email2','telefono']
         .forEach(clearError);
       document.getElementById('politicaField').classList.remove('error');
       document.getElementById('errorBanner').classList.remove('show');
@@ -2172,6 +2178,7 @@ text-align: center;
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nombre: datos.nombre,
+          apellidos: datos.apellidos,
           email: datos.email,
           municipio: datos.municipio,
           provincia: datos.provincia,
@@ -2266,6 +2273,7 @@ text-align: center;
         // Y avisamos a la tienda, porque si no esto no se nota desde fuera.
         avisarFalloDelMapa({
           nombre: document.getElementById('nombre').value.trim(),
+          apellidos: document.getElementById('apellidos').value.trim(),
           email: document.getElementById('email').value.trim(),
           municipio, provincia, pais,
         });
@@ -2352,6 +2360,7 @@ text-align: center;
 
       const datos = {
         nombre: document.getElementById('nombre').value.trim(),
+        apellidos: document.getElementById('apellidos').value.trim(),
         sexo: document.getElementById('sexo').value,
         fecha: document.getElementById('fecha').value,
         hora: document.getElementById('hora').value,
@@ -2367,7 +2376,8 @@ text-align: center;
 
       let valido = true;
 
-      if (!datos.nombre || datos.nombre.length < 3) { showError('nombre'); valido = false; }
+      if (!datos.nombre || datos.nombre.length < 2) { showError('nombre'); valido = false; }
+      if (!datos.apellidos || datos.apellidos.length < 2) { showError('apellidos'); valido = false; }
       if (!datos.sexo) { showError('sexo'); valido = false; }
       if (!datos.fecha) { showError('fecha'); valido = false; }
       else {
@@ -2526,7 +2536,7 @@ text-align: center;
     }
 
     // Limpiar error individual al escribir
-    ['nombre','sexo','fecha','hora','municipio','provincia','pais','email','email2','telefono'].forEach(id => {
+    ['nombre','apellidos','sexo','fecha','hora','municipio','provincia','pais','email','email2','telefono'].forEach(id => {
       const input = document.getElementById(id);
       if (input) {
         input.addEventListener('input', () => { clearError(id); quitarElAviso(); });
@@ -2579,7 +2589,9 @@ text-align: center;
 
       if (paso === '1') {
         const nombre = document.getElementById('nombre').value.trim();
-        if (!nombre || nombre.length < 3) mal('nombre'); else clearError('nombre');
+        if (!nombre || nombre.length < 2) mal('nombre'); else clearError('nombre');
+        const apellidos = document.getElementById('apellidos').value.trim();
+        if (!apellidos || apellidos.length < 2) mal('apellidos'); else clearError('apellidos');
         if (!document.getElementById('sexo').value) mal('sexo'); else clearError('sexo');
       }
 
@@ -2713,6 +2725,7 @@ text-align: center;
       };
 
       poner('nombre', suyo.nombre);
+      poner('apellidos', suyo.apellidos);
       poner('sexo', suyo.sexo);
 
       const [anio, mes, dia] = String(suyo.fecha || '').split('-');

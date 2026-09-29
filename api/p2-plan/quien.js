@@ -36,13 +36,15 @@ const limpio = txt => String(txt || '').replace(/[^A-Za-z0-9_-]/g, '');
 // vale no saludar que abrir la pagina con algo que no es su nombre.
 const PARECE_UN_NOMBRE = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ'’-]{1,29}$/;
 
-// SOLO EL NOMBRE DE PILA. Si en su ficha esta el nombre entero, para el saludo
-// va la primera palabra: a nadie se le llama por el apellido.
-function elDePila(entero) {
-  const limpiado = String(entero || '').trim().replace(/\s+/g, ' ');
+// SOLO EL NOMBRE DE PILA: a nadie se le llama por el apellido. Con los
+// apellidos aparte, es la casilla del nombre entera, tal cual la escribio. Si
+// en su ficha esta el nombre entero en una sola casilla, como antes, va la
+// primera palabra.
+function elDePila(nombre, apellidos) {
+  const limpiado = String(nombre || '').trim().replace(/\s+/g, ' ');
   if (!limpiado) return '';
-  const primera = limpiado.split(' ')[0];
-  return PARECE_UN_NOMBRE.test(primera) ? primera : '';
+  const pila = String(apellidos || '').trim() ? limpiado : limpiado.split(' ')[0];
+  return pila.split(' ').every(palabra => PARECE_UN_NOMBRE.test(palabra)) ? pila : '';
 }
 
 export default async function handler(req, res) {
@@ -59,13 +61,13 @@ export default async function handler(req, res) {
     }
 
     const dentro = informe.cliente || {};
-    let nombre = elDePila(dentro.nombre);
+    let nombre = elDePila(dentro.nombre, dentro.apellidos);
 
     // En los informes de antes el nombre no venia dentro: esta en la ficha de
     // su email, que es donde lo busca tambien el P2 al escribir.
     if (!nombre && dentro.email) {
       const ficha = await leerLaFicha(dentro.email);
-      nombre = elDePila(ficha?.cliente?.nombre);
+      nombre = elDePila(ficha?.cliente?.nombre, ficha?.cliente?.apellidos);
     }
 
     return res.status(200).json({ nombre });

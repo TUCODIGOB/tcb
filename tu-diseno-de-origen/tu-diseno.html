@@ -586,7 +586,7 @@ function pintarElResultado(datos, salida) {
   return ''
     + '<div class="folio portada">'
     +   '<h1>Tu Diseño de Origen</h1>'
-    +   '<p class="suya">' + comoTexto(datos.nombre) + '</p>'
+    +   '<p class="suya">' + comoTexto([datos.nombre, datos.apellidos].filter(Boolean).join(' ')) + '</p>'
     +   '<hr class="filete">'
     +   '<p class="datos-nac">' + comoTexto(fechaNice + ' · ' + laHoraEnDos(datos.hora)) + '<br>' + comoTexto(lugar) + '</p>'
     +   (salida.puedeCorregir

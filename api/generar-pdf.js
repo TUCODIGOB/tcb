@@ -5,6 +5,7 @@ import Stripe from 'stripe';
 import { compraValida, esDelProducto, estado, liberar, completar, marcarEmailEnviado } from '../lib/reserva.js';
 import { guardarInforme } from '../lib/guardar-informe.js';
 import { marcarEnBrevo } from '../lib/pendientes-p1.js';
+import { nombreCompleto } from '../lib/nombre.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -85,7 +86,7 @@ export default async function handler(req, res) {
     }
   }
 
-  const { nombre, sexo, fechaNice, hora, lugar, edad, carta, areas, rasgos, cuaderno, session_id, token } = req.body;
+  const { nombre, apellidos, sexo, fechaNice, hora, lugar, edad, carta, areas, rasgos, cuaderno, session_id, token } = req.body;
 
   if (!nombre || !areas || !session_id) {
     return res.status(400).json({ error: 'Faltan parámetros' });
@@ -600,7 +601,7 @@ export default async function handler(req, res) {
     // ── PAG 1 PORTADA ────────────────────────────────────────────────────────
     doc.addImage(img_portada,'JPEG',0,0,W,H);
     doc.setFont('Roboto','bold'); doc.setFontSize(16); doc.setTextColor(14,63,75);
-    doc.text(fx(nombre.toUpperCase()),W/2,250,{align:'center'});
+    doc.text(fx(nombreCompleto(nombre, apellidos).toUpperCase()),W/2,250,{align:'center'});
     doc.setFont('Roboto','normal'); doc.setFontSize(11); doc.setTextColor(14,63,75);
     doc.text(fx(fechaNice+' a las '+laHoraEnDos(hora)),W/2,260,{align:'center'});
     var lugarFmt = lugar.split(',').map(p=>p.trim().charAt(0).toUpperCase()+p.trim().slice(1).toLowerCase()).join(', ');
@@ -1016,7 +1017,7 @@ export default async function handler(req, res) {
       console.error('PDF generado con ficheros que fallaron:', fallosCarga.join(', '));
       try {
         await enviarAvisoFalloPDF({
-          nombre,
+          nombre: nombreCompleto(nombre, apellidos),
           email: sessionEmail,
           sessionId: session_id,
           fallos: fallosCarga,
@@ -1067,7 +1068,7 @@ export default async function handler(req, res) {
           sessionId: session_id,
           email: sessionEmail,
           pdfBase64,
-          cliente: { nombre, sexo, fechaNice, hora, lugar, edad },
+          cliente: { nombre, apellidos, sexo, fechaNice, hora, lugar, edad },
         });
         console.log(`[generar-pdf] Email de entrega enviado a ${sessionEmail}`);
         // Y queda marcado como entregado en su ficha de Brevo. Es para mirar:
@@ -1086,7 +1087,7 @@ export default async function handler(req, res) {
         console.error('[generar-pdf] Fallo enviando el email de entrega:', err.message);
         try {
           await enviarAvisoEntregaFallida({
-            nombre,
+            nombre: nombreCompleto(nombre, apellidos),
             email: sessionEmail,
             sessionId: session_id,
             motivo: err.message,
@@ -1144,7 +1145,7 @@ export default async function handler(req, res) {
     // Y avisar. Sin esto el cliente se queda sin informe y sin correo, y aqui
     // no se entera nadie: el navegador solo escribia el fallo en su consola.
     try {
-      await enviarAvisoPDFNoGenerado({ nombre, email: sessionEmail, sessionId: session_id, motivo: err.message });
+      await enviarAvisoPDFNoGenerado({ nombre: nombreCompleto(nombre, apellidos), email: sessionEmail, sessionId: session_id, motivo: err.message });
     } catch (avisoErr) {
       console.error('Tampoco se pudo avisar de que el PDF no salio:', avisoErr.message);
     }
@@ -1249,6 +1250,8 @@ async function entregarInformePorEmail({ stripe, sessionId, email, pdfBase64, cl
   if (!email) throw new Error('La compra no tiene email al que enviar el informe');
 
   const nombreCliente = (cliente.nombre || 'Cliente').toString();
+  // El nombre entero, para el fichero. El correo saluda solo con el nombre.
+  const completoCliente = nombreCompleto(nombreCliente, cliente.apellidos);
 
   // doc.output('datauristring') devuelve "data:application/pdf;...;base64,XXXX".
   // Brevo quiere solo el base64, sin la cabecera y sin espacios ni saltos.
@@ -1261,7 +1264,7 @@ async function entregarInformePorEmail({ stripe, sessionId, email, pdfBase64, cl
   if (!base64Limpio) throw new Error('El PDF llego vacio al envio');
 
   // Mismo nombre de fichero que usaba save-pdf: solo caracteres seguros.
-  const nombreArchivo = `TuDisenoDeOrigen_${nombreCliente.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+  const nombreArchivo = `TuDisenoDeOrigen_${completoCliente.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
 
   await enviarEmailEntrega({
     email,
@@ -1320,7 +1323,7 @@ async function enviarEmailEntrega({ email, nombre, pdfContent, nombreArchivo }) 
 }
 
 // Deja el contacto marcado como entregado, con sus datos de nacimiento.
-async function actualizarContactoBrevo(email, { nombre, sexo, fechaNice, hora, lugar, edad } = {}) {
+async function actualizarContactoBrevo(email, { nombre, apellidos, sexo, fechaNice, hora, lugar, edad } = {}) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
 
@@ -1332,6 +1335,7 @@ async function actualizarContactoBrevo(email, { nombre, sexo, fechaNice, hora, l
     LUGAR_NAC: lugar || '',
   };
 
+  if (apellidos) attributes.APELLIDOS = apellidos;
   if (edad) attributes.EDAD = parseInt(edad);
 
   if (fechaNice) {

@@ -29,6 +29,7 @@ import { losPendientes, guardarPendiente, quitarPendiente, marcarEnBrevo } from 
 import { leerVeces, sonLosMismos } from './vale.js';
 import { crearEnlace } from './mio.js';
 import { correoListo, correoRevisando, correoALaTienda } from './avisos.js';
+import { nombreCompleto } from '../../lib/nombre.js';
 
 // Cuanto hay que esperar desde el fallo para cada reintento.
 const UNA_HORA = 60 * 60 * 1000;
@@ -102,7 +103,7 @@ async function noHaSalido(ficha, motivo) {
   // Tres veces y nada. Se le dice, y nos lo decimos.
   await correoRevisando({ email: ficha.datos.email, nombre: ficha.datos.nombre });
   await correoALaTienda({
-    nombre: ficha.datos.nombre,
+    nombre: nombreCompleto(ficha.datos.nombre, ficha.datos.apellidos),
     email: ficha.datos.email,
     telefono: ficha.datos.telefono,
     nacimiento: `${fechaBonita(ficha.datos.fecha)} · ${ficha.datos.hora} · ${[ficha.datos.municipio, ficha.datos.provincia, ficha.datos.pais].filter(Boolean).join(', ')}`,
@@ -204,7 +205,7 @@ export default async function handler(req, res) {
         // su diseño esta hecho y hay que mandarselo a mano.
         await guardarPendiente(ficha.huella, { ...ficha, entregas, acabado: true, ultimoEn: Date.now() });
         await correoALaTienda({
-          nombre: ficha.datos.nombre,
+          nombre: nombreCompleto(ficha.datos.nombre, ficha.datos.apellidos),
           email: ficha.datos.email,
           telefono: ficha.datos.telefono,
           nacimiento: `${fechaBonita(ficha.datos.fecha)} · ${ficha.datos.hora} · ${[ficha.datos.municipio, ficha.datos.provincia, ficha.datos.pais].filter(Boolean).join(', ')}`,

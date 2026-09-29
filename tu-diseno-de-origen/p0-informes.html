@@ -202,7 +202,7 @@ function pintar(informe){
                 + ((informe.rasgos && informe.rasgos.desafios) || []).length;
 
   $('ficha').innerHTML =
-    '<h2>' + esc(cl.nombre || cl.email || '(sin nombre)') + ' — ' + esc(cl.email || '') + '</h2>' +
+    '<h2>' + esc([cl.nombre, cl.apellidos].filter(Boolean).join(' ') || cl.email || '(sin nombre)') + ' — ' + esc(cl.email || '') + '</h2>' +
 
     '<p class="resumen">' +
       '<span>Total: <b>' + total.toFixed(1) + ' s</b></span>' +

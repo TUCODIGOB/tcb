@@ -6,6 +6,7 @@
 import Stripe from 'stripe';
 import { estado, marcarEmailEnviado, compraValida, esDelProducto } from '../lib/reserva.js';
 import { quitarPendiente, marcarEnBrevo } from '../lib/pendientes-p1.js';
+import { nombreCompleto } from '../lib/nombre.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -21,7 +22,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { session_id, token, pdfBase64, nombre, sexo, fecha, hora, lugar, edad } = req.body;
+    const { session_id, token, pdfBase64, nombre, apellidos, sexo, fecha, hora, lugar, edad } = req.body;
 
     if (!session_id || !pdfBase64) {
       return res.status(400).json({ error: 'Faltan datos' });
@@ -48,6 +49,10 @@ export default async function handler(req, res) {
 
     const email = session.customer_email;
     const nombreCliente = (nombre || session.metadata?.nombre || 'Cliente').toString();
+    const apellidosCliente = (apellidos || session.metadata?.apellidos || '').toString();
+    // El nombre entero, para el fichero y los avisos. El correo saluda solo
+    // con el nombre.
+    const completoCliente = nombreCompleto(nombreCliente, apellidosCliente);
     const sexoCliente = (sexo || session.metadata?.sexo || '').toString();
     const fechaCliente = (fecha || session.metadata?.fecha || '').toString();
     const horaCliente = (hora || session.metadata?.hora || '').toString();
@@ -63,7 +68,7 @@ export default async function handler(req, res) {
     base64Limpio = base64Limpio.replace(/[\r\n\t\s]/g, '');
 
     // Nombre del archivo adjunto (solo caracteres seguros)
-    const nombreArchivo = `TuDisenoDeOrigen_${nombreCliente.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+    const nombreArchivo = `TuDisenoDeOrigen_${completoCliente.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
 
     // 4. Enviar email al cliente con el PDF adjunto
     try {
@@ -77,8 +82,8 @@ export default async function handler(req, res) {
     } catch (err) {
       console.error('[save-pdf] ❌ Error enviando email:', err.message);
       await enviarEmailAdmin({
-        asunto: `⚠️ URGENTE — Fallo enviando email de entrega — ${nombreCliente}`,
-        mensaje: `Cliente: ${email}\nNombre: ${nombreCliente}\nSession: ${session_id}\nError: ${err.message}\n\nRevisa y envíalo manualmente.`,
+        asunto: `⚠️ URGENTE — Fallo enviando email de entrega — ${completoCliente}`,
+        mensaje: `Cliente: ${email}\nNombre: ${completoCliente}\nSession: ${session_id}\nError: ${err.message}\n\nRevisa y envíalo manualmente.`,
       }).catch(e => console.error('Tampoco se pudo avisar admin:', e));
       return res.status(500).json({ error: 'No se pudo enviar el email', detalle: err.message });
     }
@@ -104,7 +109,7 @@ export default async function handler(req, res) {
 
     // 5. Actualizar contacto en Brevo
     try {
-      await actualizarContactoBrevo(email, { nombreCliente, fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente });
+      await actualizarContactoBrevo(email, { nombreCliente, apellidosCliente, fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente });
     } catch (err) {
       console.error('[save-pdf] Error actualizando Brevo:', err.message);
     }
@@ -120,7 +125,7 @@ export default async function handler(req, res) {
 // ═════════════════════════════════════════════════════════════════
 // ACTUALIZAR CONTACTO EN BREVO
 // ═════════════════════════════════════════════════════════════════
-async function actualizarContactoBrevo(email, { nombreCliente, fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente } = {}) {
+async function actualizarContactoBrevo(email, { nombreCliente, apellidosCliente, fechaCliente, horaCliente, lugarCliente, edadCliente, sexoCliente } = {}) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
 
@@ -132,6 +137,7 @@ async function actualizarContactoBrevo(email, { nombreCliente, fechaCliente, hor
   LUGAR_NAC: lugarCliente || '',
 };
 
+if (apellidosCliente) attributes.APELLIDOS = apellidosCliente;
 if (edadCliente) attributes.EDAD = parseInt(edadCliente);
 
 if (fechaCliente) {

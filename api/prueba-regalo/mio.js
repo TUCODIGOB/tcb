@@ -81,6 +81,7 @@ export default async function handler(req, res) {
     return res.status(200).json({
       datos: {
         nombre: datos.nombre || '',
+        apellidos: datos.apellidos || '',
         sexo: datos.sexo || '',
         email: datos.email || '',
         telefonoCompleto: datos.telefono || '',

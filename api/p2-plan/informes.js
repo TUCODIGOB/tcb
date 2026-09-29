@@ -42,7 +42,8 @@ async function laLista() {
   await Promise.all(planes.slice(0, CON_NOMBRE).map(async plan => {
     try {
       const suyo = await leerElPlan(plan.compra);
-      plan.nombre = String(suyo?.cliente?.nombre || '').trim();
+      plan.nombre = [suyo?.cliente?.nombre, suyo?.cliente?.apellidos]
+        .map(s => String(s || '').trim()).filter(Boolean).join(' ');
       // Si no salio entero, que se vea en la lista sin tener que abrirlo.
       plan.entero = Boolean(suyo?.documento);
     } catch (err) {

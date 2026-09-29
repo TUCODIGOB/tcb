@@ -38,11 +38,12 @@ function telefonoValido(telefono) {
 // SI BREVO FALLA, SE AVISA HACIA ARRIBA -no se traga aqui- para que quien
 // llame lo deje escrito en los registros. Nunca corta nada: quien llama lo
 // recoge y sigue.
-export async function registrarLead({ nombre, email, telefono, sexo, fecha, hora, municipio, provincia, pais, edad }) {
+export async function registrarLead({ nombre, apellidos, email, telefono, sexo, fecha, hora, municipio, provincia, pais, edad }) {
   const BREVO_API_KEY = process.env.BREVO_API_KEY;
   if (!BREVO_API_KEY) throw new Error('BREVO_API_KEY no configurada');
 
   const attributes = { NOMBRE: nombre || '' };
+  if (apellidos) attributes.APELLIDOS = apellidos;
   if (telefonoValido(telefono)) attributes.SMS = telefonoLimpio(telefono);
   if (sexo) attributes.SEXO = sexo;
   if (fecha) attributes.FECHA_NAC = fecha;
@@ -76,14 +77,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Método no permitido' });
   }
 
-  const { nombre, email, telefono, sexo, fecha, hora, municipio, provincia, pais, edad } = req.body || {};
+  const { nombre, apellidos, email, telefono, sexo, fecha, hora, municipio, provincia, pais, edad } = req.body || {};
 
   if (!email || !validarEmail(email)) {
     return res.status(400).json({ error: 'Email inválido' });
   }
 
   try {
-    await registrarLead({ nombre, email, telefono, sexo, fecha, hora, municipio, provincia, pais, edad });
+    await registrarLead({ nombre, apellidos, email, telefono, sexo, fecha, hora, municipio, provincia, pais, edad });
   } catch (err) {
     console.error('❌ Error captando lead en Brevo:', err.message);
   }

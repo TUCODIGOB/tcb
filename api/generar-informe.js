@@ -144,6 +144,7 @@ export default async function handler(req, res) {
   const suyo = await loSuyoGuardado(suEmail);
 
   const nombre    = suyo ? suyo.cliente.nombre : m.nombre;
+  const apellidos = suyo ? (suyo.cliente.apellidos || '') : (m.apellidos || '');
   const sexo      = suyo ? (suyo.cliente.sexo || '') : (m.sexo || '');
   const hora      = suyo ? suyo.cliente.hora : m.hora;
   const fechaNice = suyo ? suyo.cliente.fecha : day + ' de ' + MESES[month - 1] + ' de ' + year;
@@ -198,7 +199,7 @@ export default async function handler(req, res) {
       waitUntil(
         asegurarLaFicha({
           email: suEmail,
-          cliente: { nombre, sexo, fecha: fechaNice, hora, lugar, edad },
+          cliente: { nombre, apellidos, sexo, fecha: fechaNice, hora, lugar, edad },
           carta,
         })
           .then(ficha => { if (ficha.creada) console.log('generar-informe: ficha creada (' + ficha.ruta + ')'); })
@@ -208,7 +209,7 @@ export default async function handler(req, res) {
 
     // 4. EL INFORME. Es el paso largo, y lleva su propio reloj dentro.
     const escrito = await pedir('/api/chat', {
-      session_id, nombre, sexo, fechaNice, hora,
+      session_id, nombre, apellidos, sexo, fechaNice, hora,
       lugar, edad, cartaTexto, casasTexto,
     }, 300);
     if (!escrito.texto) throw new Error('el informe ha vuelto vacio');
@@ -217,7 +218,7 @@ export default async function handler(req, res) {
 
     // 5. EL PDF.
     const pdf = await pedir('/api/generar-pdf', {
-      session_id, token: escrito.token, nombre, sexo,
+      session_id, token: escrito.token, nombre, apellidos, sexo,
       fechaNice, hora, lugar, edad, carta, areas, rasgos: escrito.rasgos || null,
       // El cuaderno de como ha ido: viaja hasta el guardado y ahi se queda.
       cuaderno: escrito.cuaderno || null,
@@ -227,7 +228,7 @@ export default async function handler(req, res) {
     // 6. EL CORREO CON EL PDF.
     await pedir('/api/save-pdf', {
       session_id, token: escrito.token, pdfBase64: pdf.pdfBase64,
-      nombre, sexo, fecha: fechaNice,
+      nombre, apellidos, sexo, fecha: fechaNice,
       hora: hora || '', lugar, edad,
     }, 120);
 

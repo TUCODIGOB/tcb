@@ -257,7 +257,7 @@ function pintar(plan){
     '</td></tr>').join('');
 
   $('ficha').innerHTML =
-    '<h2>' + esc(cl.nombre || '(sin nombre)') + ' — ' + esc(plan.compra || '') + '</h2>' +
+    '<h2>' + esc([cl.nombre, cl.apellidos].filter(Boolean).join(' ') || '(sin nombre)') + ' — ' + esc(plan.compra || '') + '</h2>' +
 
     (doc ? '' : '<p class="aviso" style="margin:0 0 12px">Este plan NO salió entero, así que no se entregó. Lo de abajo es lo que se llegó a hacer.</p>') +
 
