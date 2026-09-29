@@ -949,8 +949,8 @@ text-align: center;
                 border-radius: var(--r-md); box-shadow: 0 12px 30px rgba(14,63,75,.12); background: var(--teal-deep); }
     .b8-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
     /* Videos mas bajos: se recorta arriba y abajo, con el nombre encima */
-    .b8 .b8-video { padding-bottom: 0; height: auto; aspect-ratio: 2 / 3; }
-    .b8 .b8-video iframe { inset: auto; top: 0; left: 0; width: 100%; height: auto; aspect-ratio: 9 / 16; transform: translateY(-8%); }
+    .b8 .b8-video { padding-bottom: 0; height: auto; aspect-ratio: 2 / 2.9; }
+    .b8 .b8-video iframe { inset: auto; top: 0; left: 0; width: 100%; height: auto; aspect-ratio: 9 / 16; transform: translateY(-9.5%); }
     .b8-sep { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 0 0 44px; }
     .b8-sep i { display: block; width: 64px; height: 1px; background: var(--gold-deep); opacity: .5; }
     .b8-sep b { width: 6px; height: 6px; border-radius: 50%; background: var(--gold-deep); opacity: .5; display: block; }
@@ -1020,30 +1020,30 @@ text-align: center;
     /* PC */
     @media (min-width: 1024px) {
       .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 60px; }
+      .p2-title .p2-l1 { font-size: 40px; }
       .p2-title em { font-size: 60px; }
     }
     /* Tablet horizontal */
     @media (min-width: 851px) and (max-width: 1023px) {
       .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 60px; }
+      .p2-title .p2-l1 { font-size: 40px; }
       .p2-title em { font-size: 60px; }
     }
     /* Tablet vertical */
     @media (min-width: 681px) and (max-width: 850px) {
       .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 60px; }
+      .p2-title .p2-l1 { font-size: 38px; }
       .p2-title em { font-size: 60px; }
     }
     /* Movil */
     @media (max-width: 680px) {
       .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 60px; }
+      .p2-title .p2-l1 { font-size: 40px; }
       .p2-title em { font-size: 60px; }
     }
     .p2-sub { font-size: 18px; line-height: 1.7; color: #4a4538; margin: 0 0 30px; }
     .p2-punto { font-family: var(--font-display); font-weight: 700; font-style: normal; font-size: 16px; letter-spacing: 0; text-transform: none; color: var(--teal-deep); margin: 0 0 60px; }
-
+    .p2 .p2-punto { font-size: 25px; }
     .p2-quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; text-align: left; }
     .p2-quote { background: var(--cream); border: 1px solid #efe0c6; border-radius: var(--r-lg); padding: 24px 26px; display: flex; align-items: center; }
     .p2-quote p { margin: 0; font-family: var(--font-display); font-style: italic; font-size: 16px; line-height: 1.55; color: #3d3a33; }
@@ -1886,7 +1886,7 @@ text-align: center;
       <h2 class="b8-h"><span class="b8-txt"><span class="b8-l1">Ellos ya han descubierto su</span> <em>Diseño de Origen</em></span></h2>
       <div class="b8-videos">
         <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230268085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Ona — Tu Diseño de Origen"></iframe></div>
-        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230269127?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Nacho — Tu Diseño de Origen"></iframe</div>
+        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230269127?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Nacho — Tu Diseño de Origen"></iframe></div>
         <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230266221?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Sara — Tu Diseño de Origen"></iframe></div>
       </div>
       <div class="b8-sep" aria-hidden="true"><i></i><b></b><i></i></div>
