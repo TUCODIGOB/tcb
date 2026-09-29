@@ -18,6 +18,8 @@
 // ═════════════════════════════════════════════════════════════════
 
 import { leerInforme } from '../../lib/guardar-informe.js';
+import { leerLaFicha } from '../../lib/ficha-del-lead.js';
+import { nombreCompleto, nombreDePila } from '../../lib/nombre.js';
 
 const REMITENTE = { email: 'hola@origennatal.com', name: 'ORIGEN NATAL' };
 
@@ -65,17 +67,31 @@ async function mandar(cuerpo, que) {
   return true;
 }
 
-// DE QUIEN ES ESTA COMPRA. El nombre y el email salen de su informe del P1,
-// que es de donde sale todo lo suyo en el P2.
+// SU NOMBRE. Sale de su informe del P1 y, si no esta dentro, de la ficha de
+// su email, que es donde lo busca tambien el P2 al escribir. El entero, con
+// los apellidos, para el fichero y los avisos. Para saludarla, el de pila: su
+// casilla del nombre entera, nunca los apellidos.
+async function susNombres(informe) {
+  const dentro = (informe && informe.cliente) || {};
+  let suyo = dentro;
+  if (!dentro.nombre && dentro.email) {
+    const ficha = await leerLaFicha(dentro.email).catch(() => null);
+    suyo = (ficha && ficha.cliente) || {};
+  }
+  return {
+    nombre: nombreCompleto(suyo.nombre, suyo.apellidos),
+    deDia: nombreDePila(suyo.nombre, suyo.apellidos),
+  };
+}
+
+// DE QUIEN ES ESTA COMPRA. El email sale de su informe del P1, que es de
+// donde sale todo lo suyo en el P2.
 async function deQuienEs(compra) {
   const informe = await leerInforme({ producto: 'p1', sessionId: compra });
   const dentro = (informe && informe.cliente) || {};
-  const entero = String(dentro.nombre || '').trim();
   return {
     email: String(dentro.email || '').trim(),
-    nombre: entero,
-    // Para saludarla va el de pila: a nadie se le llama por el apellido.
-    deDia: entero.split(' ')[0] || '',
+    ...(await susNombres(informe)),
   };
 }
 
@@ -140,7 +156,7 @@ export async function mandarSuPlan({ compra, documento }) {
   if (!email) throw new Error('Ese informe no tiene email al que mandarlo');
 
   const nombre = String(documento.nombre || '').trim();
-  const deDia = nombre.split(' ')[0] || '';
+  const { deDia } = await susNombres(informe);
 
   const pdf = await maquetarSuPDF(documento);
 
