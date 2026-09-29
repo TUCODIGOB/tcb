@@ -48,6 +48,13 @@
 }
 @font-face {
   font-display: swap;
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('fonts-web/open-sans-v44-latin-700.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
   font-family: 'Playfair Display';
   font-style: normal;
   font-weight: 500;
@@ -781,13 +788,30 @@ text-align: center;
     .b4-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25;
             color: var(--teal-deep); margin: 0 0 30px; }
     .b4-h em { font-style: italic; color: var(--gold-deep); }
+    .b4-h { font-weight: 500; }
+    .b4-h .b4-marca, .b4-h em { font-weight: 700; }
+    .b4-h::after { content: ""; display: block; width: 60px; height: 1px; background: var(--gold-deep); margin: 24px auto 0; }
     .b4-sub { font-family: var(--font-body); font-size: 16.8px; line-height: 1.7; color: #4a4538;
               max-width: 720px; margin: 0 auto 26px; }
-    .b4-sub strong { font-weight: 700; color: var(--teal-deep); }
+    .b4-sub strong em { color: var(--gold-deep); font-style: italic; }
     .b4-golpes { display: flex; justify-content: center; align-items: center; gap: 20px;
                  font-family: var(--font-body); font-weight: 700; font-size: 18px; line-height: 1.7;
                  color: var(--teal-deep); margin: 0 0 14px; }
     .b4-golpes .pt { color: var(--gold-deep); font-size: 14px; }
+    /* Los 3 puntos con icono */
+    .b4 .b4-golpes { gap: 0; align-items: stretch; margin: 30px 0 50px; }
+    .b4-golpes .b4-g { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 0 34px; position: relative; }
+    .b4-golpes .b4-g + .b4-g::before { content: ""; position: absolute; left: 0; top: 6%; bottom: 6%; width: 1px; background: var(--gold-deep); }
+    .b4-golpes .b4-ico { width: 54px; height: 54px; border: 2px solid var(--gold-deep); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gold-deep); }
+    .b4-golpes .b4-ico svg { width: 26px; height: 26px; }
+    .br-b4m { display: none; }
+    @media (max-width: 680px) {
+      .b4 .b4-golpes { flex-direction: row; }
+      .b4-golpes .b4-g { flex: 1; padding: 0 6px; font-size: 15px; line-height: 1.35; text-align: center; }
+      .b4-golpes .b4-ico { width: 46px; height: 46px; }
+      .b4-golpes .b4-ico svg { width: 22px; height: 22px; }
+      .br-b4m { display: inline; }
+    }
     .b4-min { font-family: var(--font-display); font-weight: 700; font-style: italic; font-size: 26px;
               line-height: 1.4; color: var(--gold-deep); margin: 0; }
     .b4-mock { margin: 0 auto 40px; width: 100%; max-width: 860px;
@@ -809,7 +833,9 @@ text-align: center;
     .b5-h { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.3;
             color: var(--teal-deep); margin: 0 0 72px; }
     .b5-h em { font-style: italic; color: var(--gold-deep); }
-
+    .b5-h { font-weight: 500; }
+    .b5-h em, .b5-h .b5-siete { font-weight: 700; }
+    .b5-h .b5-siete { color: var(--gold-deep); }
     .b5-lista { text-align: left; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     .b5-item { background: #fff; border-radius: var(--r-lg); padding: 26px 30px; box-shadow: 0 4px 18px rgba(14,63,75,.08); }
     .b5-item:nth-child(7) { grid-column: 1 / -1; }
@@ -817,15 +843,29 @@ text-align: center;
                   color: var(--teal-deep); margin: 0 0 10px; }
     .b5-item h3 .n { color: var(--gold-deep); font-weight: 400; font-size: 32px; margin-right: 12px; }
     .b5-item p { font-family: var(--font-body); font-size: 16px; line-height: 1.75; color: #4a4538; margin: 0; }
-    .b5-foto { aspect-ratio: 5 / 2; margin: 50px 0 0; overflow: hidden; border-radius: var(--r-lg); }
-    .b5-foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 60%; }
+    .b5-foto { aspect-ratio: 16 / 5; margin: 56px 0 0; overflow: hidden; border-radius: var(--r-lg); }
+    .b5-foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+    @media (min-width: 851px) and (max-width: 1023px) { .b5-foto { aspect-ratio: 4 / 1; } .b5-foto img { object-position: center 45%; } }
+    @media (max-width: 680px) { .b5-foto img { transform: scale(1.2); transform-origin: 40% 60%; } }
     .b5-mas { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px;
               text-transform: uppercase; color: var(--gold-deep); margin: 50px 0 26px; }
     .b5-extras { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; text-align: left; }
     .b5-extra { background: var(--cream); border-radius: var(--r-lg); padding: 28px 30px; box-shadow: 0 4px 18px rgba(14,63,75,.08); }
     .b5-extra h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px;
                    line-height: 1.25; color: var(--teal-deep); margin: 0 0 12px; }
-    .b5-extra p { font-family: var(--font-body); font-size: 16px; line-height: 1.7; color: #4a4538; margin: 0; }
+    /* Iconos de las 2 extras */
+    .b5-extra h3 { display: flex; align-items: center; }
+    .b5-extra h3 .b5-ic { flex: none; display: inline-flex; margin-right: 12px; color: var(--gold-deep); }
+    .b5-extra h3 .b5-ic svg { width: 1.15em; height: 1.15em; }
+    /* Movil: areas y extras como desplegables */
+    @media (max-width: 680px) {
+      .b5 .b5-extras { grid-template-columns: minmax(0, 1fr); }
+      .b5-lista .b5-item, .b5-extras .b5-extra { position: relative; padding-right: 52px; cursor: pointer; }
+      .b5-item p, .b5-extra p { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .b5-item.abierto p, .b5-extra.abierto p { white-space: normal; }
+      .b5-item::after, .b5-extra::after { content: "+"; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-family: var(--font-body); font-weight: 400; font-size: 28px; line-height: 1; color: var(--gold-deep); }
+      .b5-item.abierto::after, .b5-extra.abierto::after { content: "\2212"; }
+    }
 
     .b5-siempre { margin: 56px auto 0; max-width: 700px; }
     .b5-siempre .et { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px;
@@ -859,6 +899,19 @@ text-align: center;
     .b7-paso p { font-family: var(--font-body); font-size: 16px; line-height: 1.7; color: #4a4538; margin: 0; }
     .b7-cta { margin-top: 56px; }
     .b7-cta .btn-cta { display: inline-flex; align-items: center; justify-content: center; gap: .5em; }
+    /* Bloque 6: titulo y pasos en vertical en tablet vertical y movil */
+    .b7-h { font-weight: 500; }
+    .b7-h em { font-weight: 700; }
+    @media (max-width: 850px) {
+      .b7 .b7-pasos { gap: 34px; }
+      .b7 .b7-paso { display: grid; grid-template-columns: 54px 1fr; column-gap: 16px; text-align: left; }
+      .b7 .b7-n { grid-row: 1 / span 2; margin: 0; }
+      .b7 .b7-paso h3 { align-self: center; }
+      .b7 .b7-paso:not(:last-child)::after { content: ""; position: absolute; left: 27px; top: 54px; bottom: -34px; width: 1px; background: #e0cba6; }
+    }
+    @media (min-width: 681px) and (max-width: 850px) {
+      .b7 .b7-pasos { max-width: 560px; margin-inline: auto; }
+    }
 
 /* ══════════════════════════════════════════════
        LO QUE PASA CUANDO POR FIN TE ENTIENDES (bloque 8)
@@ -869,10 +922,50 @@ text-align: center;
             color: var(--teal-deep); margin: 0 0 70px; }
     .b8-h em { font-style: italic; font-weight: 400; color: var(--gold-deep); }
     .b8-br { display: none; }
+    /* Titulo de testimonios: dos lineas con tamaño propio y rayitas */
+    .b8 .b8-h { font-weight: 500; }
+    .b8-h .b8-l1, .b8-h em { display: block; }
+    .b8-h em { font-weight: 700; }
+    /* PC */
+    @media (min-width: 1024px) {
+      .b8-h { line-height: 1.3; }
+      .b8-h .b8-l1 { font-size: 34px; }
+      .b8-h em { font-size: 34px; }
+    }
+    /* Tablet horizontal */
+    @media (min-width: 851px) and (max-width: 1023px) {
+      .b8-h { line-height: 1.3; }
+      .b8-h .b8-l1 { font-size: 34px; }
+      .b8-h em { font-size: 34px; }
+    }
+    /* Tablet vertical */
+    @media (min-width: 681px) and (max-width: 850px) {
+      .b8-h { line-height: 1.3; }
+      .b8-h .b8-l1 { font-size: 38px; }
+      .b8-h em { font-size: 38px; }
+    }
+    /* Movil */
+    @media (max-width: 680px) {
+      .b8-h { line-height: 1.3; }
+      .b8-h .b8-l1 { font-size: 38px; }
+      .b8-h em { font-size: 38px; }
+      .b8-h::after { content: ""; display: block; width: 60px; height: 1px; background: var(--gold-deep); margin: 24px auto 0; }
+    }
+    /* Rayitas a los lados en PC y tablets */
+    @media (min-width: 681px) {
+      .b8 .b8-h { display: flex; align-items: center; justify-content: center; gap: 28px; }
+      .b8-h::before, .b8-h::after { content: ""; flex: 0 0 70px; height: 1px; background: var(--gold-deep); }
+    }
     .b8-videos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 50px; margin: 0 0 64px; }
     .b8-video { position: relative; padding-bottom: 177.78%; height: 0; overflow: hidden;
                 border-radius: var(--r-md); box-shadow: 0 12px 30px rgba(14,63,75,.12); background: var(--teal-deep); }
     .b8-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    /* Videos mas bajos: se recorta arriba y abajo, con el nombre encima */
+    .b8 .b8-video { padding-bottom: 0; height: auto; aspect-ratio: 1 / 1.05; }
+    .b8 .b8-video iframe { inset: auto; top: 50%; left: 0; width: 100%; height: auto; aspect-ratio: 9 / 16; transform: translateY(-50%); }
+    .b8-nom { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 1; pointer-events: none;
+              background: var(--teal-deep); color: #fffbef; font-family: var(--font-body); font-weight: 600; font-size: 15px;
+              padding: 6px 30px; border-radius: var(--r-sm); white-space: nowrap; }
     .b8-sep { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 0 0 44px; }
     .b8-sep i { display: block; width: 64px; height: 1px; background: var(--gold-deep); opacity: .5; }
     .b8-sep b { width: 6px; height: 6px; border-radius: 50%; background: var(--gold-deep); opacity: .5; display: block; }
@@ -908,6 +1001,21 @@ text-align: center;
     .b6-no li .mk::before { content: "\2715"; font-size: 21px; color: #ffffff; }
     .b6-si li .mk::before { content: "\2713"; font-size: 26px; color: var(--gold-light); }
     .b6-si li strong { font-weight: 700; color: var(--teal-deep); }
+    /* Bloque 5: rayita, pestañas, circulos y separadores */
+    .b6-et::after { content: ""; display: block; width: 60px; height: 1px; background: var(--gold-light); margin: 16px auto 0; }
+    .b6 .b6-card { position: relative; padding-top: 44px; }
+    .b6 .b6-lab { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); margin: 0; white-space: nowrap; padding: 12px 30px; border-radius: var(--r-md);
+                  font-family: var(--font-display); font-weight: 700; letter-spacing: 0; text-transform: none; }
+    .b6 .b6-lab em { font-style: italic; color: var(--gold-light); }
+    .b6-no .b6-lab { background: var(--teal-deep); border: 1px solid var(--gold-light); }
+    .b6-si .b6-lab { background: #f3e4c6; color: var(--teal-deep); }
+    .b6-si .b6-lab em { color: var(--gold-deep); }
+    .b6-card li .mk { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1; margin-top: 1px; border: 1.5px solid var(--gold-light); }
+    .b6-no li .mk::before { color: var(--gold-light); font-size: 19px; }
+    .b6-si li .mk { background: var(--gold-light); }
+    .b6-si li .mk::before { color: var(--teal-deep); font-size: 22px; }
+    .b6-card li + li { border-top: 1px solid rgba(207,177,128,.18); }
+    .b6-si li + li { border-top-color: rgba(189,144,72,.20); }
 
     /* ══════════════════════════════════════════════
        PROBLEMA — bloque 2: frases de la lectora y giro
@@ -922,12 +1030,40 @@ text-align: center;
               font-size: 28px; line-height: 1; color: var(--gold-deep); margin: 0 0 14px; }
     .p2-title { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 14px; }
     .p2-title em { font-style: italic; color: var(--gold-deep); }
+    /* Titulo del bloque 2 en dos lineas: tamaño de cada linea y espacio entre ellas, por dispositivo */
+    .p2-title .p2-l1, .p2-title em { display: block; }
+    /* PC */
+    @media (min-width: 1024px) {
+      .p2-title { line-height: 1.25; }
+      .p2-title .p2-l1 { font-size: 40px; }
+      .p2-title em { font-size: 40px; }
+    }
+    /* Tablet horizontal */
+    @media (min-width: 851px) and (max-width: 1023px) {
+      .p2-title { line-height: 1.25; }
+      .p2-title .p2-l1 { font-size: 40px; }
+      .p2-title em { font-size: 40px; }
+    }
+    /* Tablet vertical */
+    @media (min-width: 681px) and (max-width: 850px) {
+      .p2-title { line-height: 1.25; }
+      .p2-title .p2-l1 { font-size: 38px; }
+      .p2-title em { font-size: 38px; }
+    }
+    /* Movil */
+    @media (max-width: 680px) {
+      .p2-title { line-height: 1.25; }
+      .p2-title .p2-l1 { font-size: 40px; }
+      .p2-title em { font-size: 40px; }
+    }
     .p2-sub { font-size: 18px; line-height: 1.7; color: #4a4538; margin: 0 0 30px; }
-    .p2-punto { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px; text-transform: uppercase; color: var(--teal-deep); margin: 0 0 60px; }
+    .p2-punto { font-family: var(--font-display); font-weight: 700; font-style: normal; font-size: 16px; letter-spacing: 2.6px; text-transform: uppercase; color: var(--teal-deep); margin: 0 0 60px; }
 
     .p2-quotes { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; text-align: left; }
     .p2-quote { background: var(--cream); border: 1px solid #efe0c6; border-radius: var(--r-lg); padding: 24px 26px; display: flex; align-items: center; }
     .p2-quote p { margin: 0; font-family: var(--font-display); font-style: italic; font-size: 16px; line-height: 1.55; color: #3d3a33; }
+    .p2-quote p { border-left: 2px solid var(--gold-deep); padding-left: 14px; align-self: stretch; display: flex; align-items: center; }
+    @media (min-width: 851px) { .p2-quotes { width: calc(min(900px, 92vw) - 80px); margin-inline: auto; } }
 
     .p2-giro { margin: 62px auto 0; max-width: 700px; }
     .p2-c1 { font-family: var(--font-display); font-weight: 700; font-size: 30px; line-height: 1.3; color: var(--teal-deep); margin: 0; }
@@ -955,15 +1091,48 @@ text-align: center;
                font-size: 28px; line-height: 1; color: #fffbef; margin: 0 0 24px; }
     .b3v-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.22;
              color: #fffbef; margin: 0 0 34px; }
-    .b3v-h .oro { color: var(--gold-light); }
-    .b3v-l { font-family: var(--font-body); font-size: 16px; line-height: 1.85; color: rgba(255,251,239,.84); margin: 0 0 22px; }
+    .b3v-h .oro { color: #fffbef; font-weight: 500; }
+    .b3v-h .oro .b3v-algo { color: var(--gold-light); font-weight: 700; }
+    /* Titulo del bloque 3: saltos, tamaño de "algo en ti", espacio entre lineas y rayita, por dispositivo */
+    .b3v-h .b3v-algo { display: inline-block; }
+    .br-b3m { display: none; }
+    .b3v-h::after { content: ""; display: block; width: 60px; height: 1px; background: var(--gold-light); margin: 24px 0 0; }
+    /* PC */
+    @media (min-width: 1024px) {
+      .b3v-h { line-height: 1.22; }
+      .b3v-h .b3v-algo { font-size: 40px; }
+    }
+    /* Tablet horizontal */
+    @media (min-width: 851px) and (max-width: 1023px) {
+      .b3v-h { line-height: 1.22; }
+      .b3v-h .b3v-algo { font-size: 35px; }
+    }
+    /* Tablet vertical */
+    @media (min-width: 681px) and (max-width: 850px) {
+      .b3v-h { line-height: 1.22; }
+      .b3v-h .b3v-algo { font-size: 38px; }
+      .b3v-h::after { margin: 24px auto 0; }
+      .b3v-txt > p.b3v-l:nth-of-type(2) { max-width: 560px; margin-inline: auto; }
+    }
+    /* Movil */
+    @media (max-width: 680px) {
+      .br-b3m { display: inline; }
+      .b3v-h { line-height: 1.22; }
+      .b3v-h .b3v-algo { font-size: 38px; }
+      .b3v-h::after { margin: 24px auto 0; }
+    }
+    .b3v-l { font-family: var(--font-body); font-size: 16px; line-height: 1.85; color: #fffbef; margin: 0 0 22px; }
     .b3v-l strong { font-weight: 700; color: var(--gold-light); }
-    .b3v-l em { font-style: italic; color: #fffbef; }
-    .b3v-fin { font-family: var(--font-body); font-weight: 700; font-style: italic; font-size: 19px;
+    .b3v-l em { font-style: italic; font-weight: 700; color: #fffbef; }
+    .b3v-l .b3v-resalta { font-weight: 700; color: #fffbef; }
+    .b3v-clave .b3v-l strong { color: #fffbef; }
+    .b3v-fin { font-family: var(--font-display); font-weight: 700; font-style: normal; font-size: 21px;
                line-height: 1.5; color: #fffbef; margin: 0; }
-    .b3v-clave { border-left: 3px solid var(--gold-light); padding-left: 24px; margin-top: 30px; }
+    .b3v-clave { margin-top: 30px; }
+    .b3v-clave .b3v-l { border-left: 3px solid var(--gold-light); padding-left: 24px; }
     .b3v-clave .b3v-l { margin-bottom: 12px; }
-    .b3v-clave .b3v-fin { color: var(--gold-light); }
+    .b3v-clave .b3v-fin { color: #fffbef; text-align: center; background: rgba(255,251,239,.07); border: 1px solid rgba(255,251,239,.10); border-radius: var(--r-lg); padding: 18px 24px; margin-top: 30px; }
+    .b3v-fin .b3v-fin-oro { color: var(--gold-light); font-style: italic; }
 
     /* ══════════════════════════════════════════════
        PRICE & FINAL CTA
@@ -977,7 +1146,9 @@ text-align: center;
     .b9-in { width: min(860px, 92vw); margin-inline: auto; }
     .b9-h { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.3;
             color: var(--teal-deep); margin: 0 0 52px; }
-    .b9-h em { font-style: italic; font-weight: 400; color: var(--gold-deep); }
+    .b9-h { font-weight: 500; }
+    .b9-h::before { content: ""; display: block; width: 60px; height: 1px; background: var(--gold-deep); margin: 0 auto 24px; }
+    .b9-h em { font-style: italic; font-weight: 700; color: var(--gold-deep); }
     .b9-br { display: none; }
     .b9-list { text-align: left; border-top: 1px solid #e7e1d4; }
     .b9-list details { border-bottom: 1px solid #e7e1d4; }
@@ -1021,6 +1192,21 @@ text-align: center;
                        font-family: var(--font-display); font-style: italic; font-size: 21px;
                        color: var(--gold-light); }
     .b10-cita .quien img { width: 80px; height: auto; display: block; flex: 0 0 auto; }
+    /* Bloque final: titulo encima de la reseña, 50/50, todo en negrita */
+    .b10-h em { font-weight: 700; }
+    .b10-brpc { display: none; }
+    @media (min-width: 851px) {
+      .b10 .b10-grid { grid-template-columns: 1fr 1fr; align-items: stretch; }
+      .b10-der { display: flex; flex-direction: column; justify-content: space-between; }
+      .b10 .b10-h { text-align: left; margin: 0; }
+      .b10-brpc { display: inline; }
+      .b10 .b10-cita .com { margin: 0 0 -14px; }
+    }
+    @media (max-width: 850px) {
+      .b10-der { display: contents; }
+      .b10 .b10-h { order: -1; }
+      .b10 .b10-flecha { display: none; }
+    }
 
 
 
@@ -1076,7 +1262,8 @@ text-align: center;
       .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 18px; }
       .hero-cierre { align-items: center; }
       .hero-accion { align-self: center; }
-      .hero-foto { width: 100%; margin-inline: auto; min-height: 0; }
+      .hero-foto { width: 100vw; margin-inline: calc(50% - 50vw); min-height: 0; border-radius: 0; box-shadow: none;
+                    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%); }
       .b4 { padding: 126px 0 70px; }
       .b4-h { font-size: 38px; margin-bottom: 40px; }
       .b4-sub { font-size: 18px; line-height: 1.7; margin-bottom: 26px; }
@@ -1149,8 +1336,9 @@ text-align: center;
       .b3v-clave { order: 5; }
       .b3v-h { font-size: 40px; margin-bottom: 60px; }
       .b3v-l { font-size: 18px; line-height: 1.7; margin-bottom: 22px; }
-      .b3v-fin { font-size: 20px; }
-      .b3v-clave { padding-left: 18px; margin: 0 auto; max-width: 560px; text-align: left; }
+      .b3v-fin { font-size: 22px; }
+      .b3v-clave { margin: 0 auto; max-width: 560px; text-align: left; }
+      .b3v-clave .b3v-l { padding-left: 18px; }
       .b9 { padding: 72px 0 80px; } 
       .b9-h { font-size: 31px; margin-bottom: 44px; }
       .b9-body p { font-size: 18px; }
@@ -1230,8 +1418,8 @@ text-align: center;
       .b7 { padding: 60px 0 60px; }
       .b10 { padding: 60px 0 70px; }
       .hero-home h1 { margin-inline: auto; }
-      .hero-foto { max-width: 480px; aspect-ratio: 16 / 10; }
-      .hero-foto img { object-position: center 35%; }
+      .hero-foto { aspect-ratio: 5 / 2; }
+      .hero-foto img { object-position: center 12%; }
       .p2 { padding: 70px 0 60px; }
       .p2-quotes { grid-template-columns: 200px 1fr; }
       .p2-quote { grid-column: 2; }
@@ -1296,8 +1484,8 @@ text-align: center;
       .b4 { padding: 100px 0 70px; }
       .b3v-h { font-size: 38px; }
       .p2-c3 .break-mobile { display: none; }
-      .hero-foto { max-width: 100%; aspect-ratio: 1 / 1; }
-      .hero-foto img { object-position: 40% center; }
+      .hero-foto { aspect-ratio: 4 / 5; }
+      .hero-foto img { object-position: 45% top; transform: scale(1.1); transform-origin: 42% 0%; }
       .b5-foto { aspect-ratio: 1 / 1; }
       .b5-foto img { object-position: 52% 60%; }
       .p2-c1, .p2-c2 { font-size: 32px; }
@@ -1309,13 +1497,15 @@ text-align: center;
       .b5-et { font-size: 18px; }
       .b7 { padding: 70px 0 70px; }
       .p2-title { margin: 0 0 25px; }
-      .p2-quotes { grid-template-columns: 120px 1fr; gap: 16px 14px; }
+      .p2-quotes { grid-template-columns: 95px 1fr; gap: 16px 14px; }
+      .p2-quote { grid-column: 2; }
+      .p2-quote p { padding-left: 10px; }
       .p2-quote { grid-column: 2; }
       .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 4; border-radius: var(--r-lg); overflow: hidden; }
-      .p2-foto img { width: 100%; height: 148%; object-fit: cover; object-position: 65% top; display: block; }
+      .p2-foto img { width: 100%; height: 148%; object-fit: cover; object-position: 57% top; display: block; }
       .p2-punto { margin-bottom: 50px; }
       .b4-h .break-mobile { display: none; }
-      .b3v-fin { font-size: 22px; }
+      .b3v-fin { font-size: 24px; }
       .b4-golpes { flex-direction: column; gap: 10px; font-size: 22px; margin-bottom: 30px; }
       .b4-golpes .pt { display: none; }
       .b8-videos { grid-template-columns: 1fr; margin-bottom: 64px; width: 86%; margin-inline: auto; }
@@ -1380,6 +1570,21 @@ text-align: center;
       .form-step-nav .btn-next { font-size: 16px; }
       .form-step-nav .btn-back { font-size: 16px; }
       .compruebalo .corregir { font-size: 16px; }
+      /* Hero: foto a la derecha fundida con el crema */
+      .hero-home { background-image: none; }
+      .hero-home .container-home, .hero-cols { position: static; }
+      .hero-texto { position: relative; z-index: 2; }
+      .hero-foto {
+        position: absolute; top: 0; bottom: 0; right: -5vw; width: min(62vw, 900px); z-index: 1;
+        border-radius: 0; box-shadow: none;
+        -webkit-mask-image: linear-gradient(to right, transparent 2%, rgba(0,0,0,.05) 6%, rgba(0,0,0,.2) 12%, rgba(0,0,0,.45) 18%, rgba(0,0,0,.7) 24%, rgba(0,0,0,.9) 30%, #000 36%),
+                            linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.25) 6%, rgba(0,0,0,.6) 12%, rgba(0,0,0,.9) 18%, #000 24%);
+        -webkit-mask-composite: source-in;
+        mask-image: linear-gradient(to right, transparent 2%, rgba(0,0,0,.05) 6%, rgba(0,0,0,.2) 12%, rgba(0,0,0,.45) 18%, rgba(0,0,0,.7) 24%, rgba(0,0,0,.9) 30%, #000 36%),
+                    linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.25) 6%, rgba(0,0,0,.6) 12%, rgba(0,0,0,.9) 18%, #000 24%);
+        mask-composite: intersect;
+      }
+      .hero-foto img { object-position: 50% 5%; }
     }
 
     /* ── Solo tablet horizontal (851px a 1023px) ── */
@@ -1390,6 +1595,7 @@ text-align: center;
       .b4-h { font-size: 36px; }
       .b5-h { font-size: 30px; }
       .hero-cols { grid-template-columns: 1fr 27%; gap: 32px; }
+      .hero-foto { right: -18vw; }
       .b10-br2 { display: inline; }
     }
     /* ── Solo ordenador (1024px y mas) ── */
@@ -1449,10 +1655,10 @@ text-align: center;
       <div class="hero-cols">
 
         <div class="hero-texto">
-          <h1 class="h1-bloque">Hay una razón<span class="br-pc"><br></span> detrás de<span class="br-tab"><br></span> <em class="palabra-oro">todo</em><span class="br-pc"><br></span> lo que te pasa</h1>
-          <p class="hero-segunda">Y por fin<br class="br-mov"> vas a saber cuál es</p>
+          <h1 class="h1-bloque">Hay una razón<span class="br-pc"><br></span> detrás<span class="br-tab"><br></span> de <em class="palabra-oro">todo</em><span class="br-pc"><br></span> lo que te pasa</h1>
+          <p class="hero-segunda">Y por fin<br class="br-mov"> vas a entender cuál es</p>
 
-          <p class="hero-sub"><strong class="oro tx-pc">Tu Diseño de Origen: </strong><span class="tx-movil">El</span><span class="tx-pc">el</span> estudio <span style="text-decoration: underline;">100% personalizado</span> con el que entenderás <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong>, a partir de tus datos de nacimiento.</p>
+          <p class="hero-sub"><strong class="oro tx-pc">Tu Diseño de Origen: </strong><span class="tx-movil">El</span><span class="tx-pc">el</span> estudio <span style="text-decoration: underline;">100% personalizado</span> con el que descubrirás <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong>, a partir de tus datos de nacimiento.</p>
 
           <div class="hero-cierre">
             <p class="hero-oferta">¡Obtén tu prueba<span class="br-movil"><br></span> en <strong>SOLO 2 MINUTOS</strong>!</p>
@@ -1463,7 +1669,7 @@ text-align: center;
           </div>
         </div>
 
-        <div class="hero-foto"><picture><source media="(min-width: 851px)" srcset="images/mujer-descubre-su-diseno-de-origen-carta-natal-pc.webp" /><img src="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" alt="Mujer descubriendo su Diseño de Origen a partir de su carta natal" width="898" height="667" fetchpriority="high" /></picture></div>
+        <div class="hero-foto"><picture><source media="(min-width: 851px)" srcset="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" /><img src="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" alt="Mujer descubriendo su Diseño de Origen a partir de su carta natal" width="898" height="667" fetchpriority="high" /></picture></div>
         <p class="hero-kicker">Tu Diseño de Origen</p>
         <img class="hero-deco" src="images/deco-1.webp" alt="" width="317" height="82" />
       </div>
@@ -1495,7 +1701,7 @@ text-align: center;
       </svg>
     <div class="p2-inner">
       <p class="p2-tel">Hablemos de ti…</p>
-      <h2 class="p2-title">Lo has intentado <em>todo</em></h2>
+      <h2 class="p2-title"><span class="p2-l1">Lo has intentado</span> <em>todo</em></h2>
       <p class="p2-sub">Libros, cursos, terapia, propósitos de año nuevo…</p>
       <p class="p2-punto">Y siempre acabas volviendo al mismo punto:</p>
 
@@ -1533,12 +1739,12 @@ text-align: center;
       <div class="b3v-foto"><img src="images/bloque-3-tu-diseno-de-origen-programacion-interior.webp" alt="Mujer descubriendo su programación interior" /></div>
       <div class="b3v-txt">
         <p class="b3v-tel">Te lo explicamos:</p>
-        <h2 class="b3v-h">Antes de tu primera respiración,<br> <span class="oro">ya se había formado algo en ti</span></h2>
-        <p class="b3v-l">Una <strong>programación interior</strong> que decide <em>cómo piensas, cómo sientes y cómo te vinculas con todo lo que te rodea</em>: Tus decisiones, tus relaciones, tu dinero, tus miedos…</p>
-        <p class="b3v-fin">Y está dirigiendo tu vida entera sin que te des cuenta.</p>
+<h2 class="b3v-h">Antes de tu<br class="br-b3m"> primera<br> respiración,<br> <span class="oro">ya se había formado<br> <span class="b3v-algo">algo en ti</span></span></h2>
+        <p class="b3v-l">Una <strong>programación interior</strong> que decide <em>cómo piensas, cómo sientes y cómo te vinculas</em> <span class="b3v-resalta">con todo lo que te rodea</span>: Tus decisiones, tus relaciones, tu dinero, tus miedos…</p>
+        <p class="b3v-fin">Y está dirigiendo tu vida entera <span class="b3v-fin-oro">sin que te des cuenta</span></p>
         <div class="b3v-clave">
           <p class="b3v-l">La clave está en el momento exacto en el que naciste, ese instante dibujó un mapa único de ti, <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong>, descifra tu programación.</p>
-          <p class="b3v-fin">Y hasta que no la descubras nada cambiará de verdad.</p>
+          <p class="b3v-fin">Y hasta que no la descubras <span class="b3v-fin-oro">nada cambiará de verdad</span></p>
         </div>
       </div>
     </div>
@@ -1552,10 +1758,10 @@ text-align: center;
       </svg>
     </div>
     <div class="b4-in">
-      <h2 class="b4-h">Tu Diseño de Origen te da<br class="break-mobile"><br class="br-movil"> <em>las respuestas</em><br class="break-desktop"><br class="br-movil"> que llevas<br class="break-mobile"> <em>toda<br class="br-movil"> la vida buscando</em></h2>
+      <h2 class="b4-h"><span class="b4-marca">Tu Diseño de Origen</span> te da<br class="break-mobile"><br class="br-movil"> <em>las respuestas</em><br class="break-desktop"><br class="br-movil"> que llevas<br class="break-mobile"> <em>toda<br class="br-movil"> la vida buscando</em></h2>
 <div class="b4-mock"><span>MOCKUP INFORME</span></div>
       <p class="b4-sub">Más de <strong>40 páginas</strong> que revelan tu <strong>programación interior</strong>, para que entiendas por fin<br class="br-esc"> <strong><em>por qué eres como eres y por qué te pasa lo que te pasa</em></strong></p>
-      <p class="b4-golpes"><span>100% personalizado</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin tecnicismos</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin citas, sin esperas</span></p>
+<p class="b4-golpes"><span class="b4-g"><span class="b4-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4"/><path d="M14 13.12c0 2.38 0 6.38-1 8.88"/><path d="M17.29 21.02c.12-.6.43-2.3.5-3.02"/><path d="M2 12a10 10 0 0 1 18-6"/><path d="M2 16h.01"/><path d="M21.8 16c.2-2 .131-5.354 0-6"/><path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2"/><path d="M8.65 22c.21-.66.45-1.32.57-2"/><path d="M9 6.8a6 6 0 0 1 9 5.2v2"/></svg></span>100% personalizado</span><span class="b4-g"><span class="b4-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8"/><path d="M8 13h5"/></svg></span>Sin tecnicismos</span><span class="b4-g"><span class="b4-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></span>Sin citas,<br class="br-b4m"> sin esperas</span></p>
       <p class="b4-min">¡Y lo tienes en minutos!</p>
       <div class="b4-cta"><a href="#formulario" class="btn-cta">Quiero descubrirlo gratis&nbsp;&rarr;</a></div>
     </div>
@@ -1566,7 +1772,7 @@ text-align: center;
     <div class="b5-in">
       <div class="b5-panel">
       <p class="b5-et">Lo que vas a descubrir:</p>
-      <h2 class="b5-h">Las 7 áreas que<br class="br-mov"> <em>lo explican todo</em></h2>
+      <h2 class="b5-h">Las <span class="b5-siete">7</span> áreas que<br class="br-mov"> <em>lo explican todo</em></h2>
 
       <div class="b5-lista">
         <div class="b5-item"><h3><span class="n">01</span>Tu Identidad</h3><p>Entenderás cómo funcionas por dentro: qué muestras, qué escondes y los puntos ciegos que nunca has visto</p></div>
@@ -1581,10 +1787,11 @@ text-align: center;
       </div>
 
       <p class="b5-mas">¡Y AÚN HAY MÁS!</p>      <div class="b5-extras">
-        <div class="b5-extra"><h3>Tus fortalezas y tus desafíos</h3><p>Conocerás la fuerza que tienes y no estás usando, y lo que la vida te repite hasta que lo aprendas</p></div>
-        <div class="b5-extra"><h3>Tu mapa de origen</h3><p>Tendrás el dibujo de quién eres: toda tu programación interior en una sola imagen, única y solo tuya</p></div>
+        <div class="b5-extra"><h3><span class="b5-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 13L2 9z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg></span>Tus fortalezas y tus desafíos</h3><p>Conocerás la fuerza que tienes y no estás usando, y lo que la vida te repite hasta que lo aprendas</p></div>
+        <div class="b5-extra"><h3><span class="b5-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span>Tu mapa de origen</h3><p>Tendrás el dibujo de quién eres: toda tu programación interior en una sola imagen, única y solo tuya</p></div>
       </div>
 
+      <div class="b5-foto"><img src="images/bloque-4-tu-diseno-de-origen-natal-pdf.webp" alt="Mujer leyendo su Diseño de Origen en PDF" width="1000" height="485" loading="lazy" /></div>
       <div class="b5-siempre">
         <p class="et">Tuyo para siempre</p>
         <p class="tx">En PDF, puedes guardarlo, imprimirlo y volver a él cada vez que lo necesites.<br class="br-esc"><br class="br-movil"> No caduca ni se pierde</p>
@@ -1594,7 +1801,6 @@ text-align: center;
         <p class="b5-oferta">¡Obtén tu prueba<br class="br-mov"> en SOLO 2 MINUTOS!</p>
         <a href="#formulario" class="btn-cta">Quiero descubrirlo gratis&nbsp;→</a>
       </div>
-      <div class="b5-foto"><img src="images/bloque-4-tu-diseno-de-origen-natal-pdf.webp" alt="Mujer leyendo su Diseño de Origen en PDF" width="1000" height="485" loading="lazy" /></div>
     </div>
   </section>
 
@@ -1605,7 +1811,7 @@ text-align: center;
       <h2 class="b6-h">No, <em>no es un horóscopo</em></h2>
       <div class="b6-cols">
         <div class="b6-card b6-no">
-          <p class="b6-lab">Lo que no es</p>
+          <p class="b6-lab">Lo que <em>no</em> es</p>
           <ul>
             <li><span class="mk" aria-hidden="true"></span><span>No tiene nada que ver con tu signo del zodiaco</span></li>
             <li><span class="mk" aria-hidden="true"></span><span>No es un diagrama con símbolos o palabras que no entiendes</span></li>
@@ -1615,7 +1821,7 @@ text-align: center;
           </ul>
         </div>
         <div class="b6-card b6-si">
-          <p class="b6-lab">Lo que sí es</p>
+          <p class="b6-lab">Lo que <em>sí</em> es</p>
           <ul>
             <li><span class="mk" aria-hidden="true"></span><span>Un estudio profundo y <strong>100% personalizado</strong>, solo sobre ti</span></li>
             <li><span class="mk" aria-hidden="true"></span><span>Con tus datos de nacimiento y <strong>tu carta natal completa</strong></span></li>
@@ -1658,11 +1864,11 @@ text-align: center;
   <!-- ════════════ 7. LO QUE DICEN QUIENES YA LO TIENEN ════════════ -->
   <section class="b8">
     <div class="b8-in">
-      <h2 class="b8-h">Ellos ya han descubierto su<br class="b8-br"> <em>Diseño de Origen</em></h2>
+      <h2 class="b8-h"><span class="b8-txt"><span class="b8-l1">Ellos ya han descubierto su</span> <em>Diseño de Origen</em></span></h2>
       <div class="b8-videos">
-        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230268085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Ona — Tu Diseño de Origen"></iframe></div>
-        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230269127?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Nacho — Tu Diseño de Origen"></iframe></div>
-        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230266221?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Sara — Tu Diseño de Origen"></iframe></div>
+        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230268085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Ona — Tu Diseño de Origen"></iframe><span class="b8-nom">Ona</span></div>
+        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230269127?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Nacho — Tu Diseño de Origen"></iframe><span class="b8-nom">Nacho</span></div>
+        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230266221?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Sara — Tu Diseño de Origen"></iframe><span class="b8-nom">Sara</span></div>
       </div>
       <div class="b8-sep" aria-hidden="true"><i></i><b></b><i></i></div>
       <div class="b8-res">
@@ -1735,7 +1941,6 @@ text-align: center;
   <!-- ════════════ 9. O PUEDES SABERLO HOY ════════════ -->
   <section class="b10">
     <div class="b10-in">
-      <h2 class="b10-h">Puedes seguir<br class="b10-br"> preguntándote<br class="br-mov"> por qué…<br> <em>o puedes saberlo<br class="br-movil"> hoy</em></h2>
       <div class="b10-flecha" aria-hidden="true">
         <svg width="24" height="42" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
           <line x1="8" y1="0" x2="8" y2="18" stroke="#cfb180" stroke-width="1.5" stroke-linecap="round"/>
@@ -1957,11 +2162,14 @@ text-align: center;
     </div>
 
         </div>
+        <div class="b10-der">
+          <h2 class="b10-h">Puedes seguir<br class="b10-br"> preguntándote<br class="br-mov"><br class="b10-brpc"> por qué…<br> <em>o puedes saberlo<br class="br-movil"> hoy</em></h2>
         <figure class="b10-cita">
           <span class="com" aria-hidden="true">&ldquo;</span>
           <p>De verdad que no sé cómo lo hacéis, llevo años en terapia, leyendo, haciendo cursos, intentando entenderme y con mi diseño he sentido más claridad que en todo este tiempo junto. ¡Increíble!</p>
           <figcaption class="quien"><img src="images/R1-irene-resena-origen-natal-tu-diseno-de-origen.webp" alt="Irene, clienta de Tu Diseño de Origen" width="384" height="394" loading="lazy" /><span>&mdash; Irene</span></figcaption>
         </figure>
+        </div>
       </div>
     </div>
   </section>
@@ -2810,6 +3018,14 @@ text-align: center;
       });
     });
   })();
+</script>
+<script>
+  /* Movil: abrir y cerrar las areas y extras al tocarlas */
+  document.querySelectorAll('.b5-item, .b5-extra').forEach(function (t) {
+    t.addEventListener('click', function () {
+      if (window.matchMedia('(max-width: 680px)').matches) t.classList.toggle('abierto');
+    });
+  });
 </script>
 </body>
 </html>
