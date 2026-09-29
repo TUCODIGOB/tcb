@@ -151,7 +151,7 @@ function loQueGuarda(datos) {
 }
 
 function estaCompleto(p) {
-  return Boolean(p.nombre && p.sexo && p.email && p.fecha && p.hora
+  return Boolean(p.nombre && p.apellidos && p.sexo && p.email && p.fecha && p.hora
     && p.municipio && p.provincia && p.pais);
 }
 
