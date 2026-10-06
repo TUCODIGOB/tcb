@@ -1352,7 +1352,7 @@ text-align: center;
 
     /* ── Solo tablet vertical (681px a 850px) ── */
     @media (min-width: 681px) and (max-width: 850px) {
-      .hero-segunda { font-size: 25px; margin-bottom: 10px; }
+      .hero-segunda { font-size: 25px; margin-bottom: 30px; }
       .hero-kicker { margin: 10px 0 2px; }
       .hero-deco { margin: 0 auto 10px; }
       .p2-title { font-size: 38px; }
@@ -1583,8 +1583,9 @@ text-align: center;
     }
     /* ── Solo ordenador (1024px y mas) ── */
     @media (min-width: 1024px) {
-      .hero-foto { right: 0; width: 40vw; aspect-ratio: auto; }
+      .hero-foto { right: min(0px, calc(40vw - 576px)); width: max(40vw, 576px); aspect-ratio: auto; }
       .hero-foto img { object-position: center top; }
+      .hero-2col .hero-sub { max-width: 600px; }
     }
 
     /* ── Ajustes de tamaños por dispositivo ── */
