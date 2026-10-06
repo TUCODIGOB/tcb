@@ -665,16 +665,16 @@ text-align: center;
       max-width: 640px;
     }
 
-    .hero-home h1 { width: 100%; max-width: 700px; color: var(--teal-deep); margin-bottom: 1.5rem; line-height: 1.25; }
+    .hero-home h1 { width: 100%; max-width: 700px; color: var(--teal-deep); margin-bottom: 10px; line-height: 1.25; }
 
     .hero-sub {
       font-family: var(--font-body);
       font-weight: 400;
       font-size: 18px;
       color: #0c0c0c;
-      margin-bottom: 1.1rem;
+      margin-bottom: 10px;
     }
-    .hero-sub strong { font-weight: 700; color: #0c0c0c; }
+    .hero-sub strong { font-weight: 600; color: #0c0c0c; }
 
     .hero-home .btn-cta { box-shadow: 0 4px 12px rgba(189,144,72,.25); }
     .hero-home .btn-cta:hover { box-shadow: 0 6px 18px rgba(189,144,72,.35); }
@@ -701,7 +701,7 @@ text-align: center;
       font-family: var(--font-display);
       font-style: italic;
       font-weight: 600;
-      font-size: 29px;
+      font-size: 25px;
       line-height: 1.3;
       color: var(--teal-deep);
       margin: 0 0 36px;
@@ -712,9 +712,10 @@ text-align: center;
     }
 
     .palabra-oro { color: var(--gold-deep); font-style: italic; }
-    .hero-sub .promesa { font-weight: 700; font-style: italic; color: var(--teal-deep);
+    .hero-sub .promesa { font-weight: 600; font-style: italic; color: var(--teal-deep);
                          -webkit-text-stroke: .5px currentColor; }
     .hero-sub .oro { color: var(--gold-deep); font-weight: 700; }
+    .hero-oferta, .b5-oferta, .b10-of { font-variant-numeric: lining-nums; }
 
 
     .br-movil { display: none; }
@@ -1016,7 +1017,7 @@ text-align: center;
     .p2-tel { font-family: var(--font-display); font-style: italic; font-weight: 700;
               font-size: 28px; line-height: 1; color: var(--gold-deep); margin: 0 0 14px; }
     .p2-title { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 14px; }
-    .p2-title em { font-style: italic; color: var(--gold-deep); }
+    .p2-title em { font-style: italic; color: var(--gold-deep); margin-top: 10px; margin-bottom: 40px; }
     /* Titulo del bloque 2 en dos lineas: tamaño de cada linea y espacio entre ellas, por dispositivo */
     .p2-title .p2-l1, .p2-title em { display: block; }
     /* PC */
@@ -1078,26 +1079,23 @@ text-align: center;
                font-size: 28px; line-height: 1; color: #fffbef; margin: 0 0 24px; }
     .b3v-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.22;
              color: #fffbef; margin: 0 0 34px; }
-    .b3v-h .oro { color: #fffbef; font-weight: 500; }
+    .b3v-h .oro { color: #fffbef; }
     .b3v-h .oro .b3v-algo { color: var(--gold-light); font-weight: 700; }
     /* Titulo del bloque 3: saltos, tamaño de "algo en ti", espacio entre lineas y rayita, por dispositivo */
-    .b3v-h .b3v-algo { display: inline-block; font-style: italic; line-height: 45px; }
+    .b3v-h .b3v-algo { font-style: italic; }
     .br-b3m { display: none; }
     .b3v-h::after { content: ""; display: block; width: 60px; height: 1px; background: var(--gold-light); margin: 24px 0 0; }
     /* PC */
     @media (min-width: 1024px) {
       .b3v-h { line-height: 1.22; }
-      .b3v-h .b3v-algo { font-size: 60px; }
     }
     /* Tablet horizontal */
     @media (min-width: 851px) and (max-width: 1023px) {
       .b3v-h { line-height: 1.22; }
-      .b3v-h .b3v-algo { font-size: 60px; }
     }
     /* Tablet vertical */
     @media (min-width: 681px) and (max-width: 850px) {
       .b3v-h { line-height: 1.22; }
-      .b3v-h .b3v-algo { font-size: 60px; }
       .b3v-h::after { margin: 24px auto 0; }
       .b3v-txt > p.b3v-l:nth-of-type(2) { max-width: 560px; margin-inline: auto; }
       .b3v-clave .b3v-fin-oro { display: block; }
@@ -1106,7 +1104,6 @@ text-align: center;
     @media (max-width: 680px) {
       .br-b3m { display: inline; }
       .b3v-h { line-height: 1.22; }
-      .b3v-h .b3v-algo { font-size: 60px; }
       .b3v-h::after { margin: 24px auto 0; }
     }
     .b3v-l { font-family: var(--font-body); font-size: 16px; line-height: 1.85; color: #fffbef; margin: 0 0 22px; }
@@ -1245,12 +1242,11 @@ text-align: center;
       .hero-2col { text-align: center; padding-block: 60px 60px; }
       .hero-texto { align-items: center; }
       .h1-bloque { font-size: 38px; margin-bottom: 24px; }
-      .hero-segunda { font-size: 28px; margin-bottom: 34px; }
+      .hero-segunda { font-size: 25px; margin-bottom: 34px; }
       .hero-2col .hero-sub { max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 18px; }
       .hero-cierre { align-items: center; }
       .hero-accion { align-self: center; }
-      .hero-foto { width: 100vw; margin-inline: calc(50% - 50vw); min-height: 0; border-radius: 0; box-shadow: none;
-                    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%); }
+      .hero-foto { min-height: 0; }
       .b4 { padding: 126px 0 70px; }
       .b4-h { font-size: 38px; margin-bottom: 10px; }
       .b4-sub { font-size: 18px; line-height: 1.7; margin-bottom: 26px; }
@@ -1352,7 +1348,7 @@ text-align: center;
 
     /* ── Solo tablet vertical (681px a 850px) ── */
     @media (min-width: 681px) and (max-width: 850px) {
-      .hero-segunda { margin-bottom: 40px; }
+      .hero-segunda { font-size: 25px; margin-bottom: 30px; }
       .hero-kicker { margin: 10px 0 2px; }
       .hero-deco { margin: 0 auto 10px; }
       .p2-title { font-size: 38px; }
@@ -1403,8 +1399,8 @@ text-align: center;
       .b7 { padding: 60px 0 60px; }
       .b10 { padding: 60px 0 70px; }
       .hero-home h1 { margin-inline: auto; }
-      .hero-foto { aspect-ratio: 5 / 2; }
-      .hero-foto img { object-position: center 12%; }
+      .hero-foto { aspect-ratio: 2 / 1; width: min(560px, 80%); margin-inline: auto; align-self: center; }
+      .hero-foto img { object-position: center 60%; }
       .p2 { padding: 70px 0 60px; }
       .p2-quotes { grid-template-columns: 200px 1fr; }
       .p2-quote { grid-column: 2; }
@@ -1468,8 +1464,8 @@ text-align: center;
       .b4 { padding: 100px 0 70px; }
       .b3v-h { font-size: 38px; }
       .p2-c3 .break-mobile { display: none; }
-      .hero-foto { aspect-ratio: 4 / 5; }
-      .hero-foto img { object-position: 45% top; transform: scale(1.1); transform-origin: 42% 0%; }
+      .hero-foto { aspect-ratio: 1 / 1; }
+      .hero-foto img { object-position: 62% top; }
       .b5-foto { aspect-ratio: 1 / 1; }
       .b5-foto img { object-position: 52% 60%; }
       .p2-c1, .p2-c2 { font-size: 32px; }
@@ -1481,12 +1477,12 @@ text-align: center;
       .b5-et { font-size: 18px; }
       .b7 { padding: 70px 0 70px; }
       .p2-title { margin: 0 0 25px; }
-      .p2-quotes { grid-template-columns: 95px 1fr; gap: 16px 14px; }
+      .p2-quotes { grid-template-columns: 130px 1fr; gap: 16px 14px; }
       .p2-quote { grid-column: 2; }
       .p2-quote p { padding-left: 10px; }
       .p2-quote { grid-column: 2; }
       .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 4; border-radius: var(--r-lg); overflow: hidden; }
-      .p2-foto img { width: 100%; height: 148%; object-fit: cover; object-position: 57% top; display: block; }
+      .p2-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 62% top; display: block; }
       .p2-punto { margin-bottom: 50px; }
       .b4-h .break-mobile { display: none; }
       .b3v-fin { font-size: 24px; }
@@ -1557,32 +1553,22 @@ text-align: center;
       .hero-home { background-image: none; }
       .hero-home .container-home, .hero-cols { position: static; }
       .hero-texto { position: relative; z-index: 2; }
-      .hero-foto {
-        position: absolute; top: 0; bottom: 0; right: -12vw; width: min(62vw, 900px); z-index: 1;
-        border-radius: 0; box-shadow: none;
-        -webkit-mask-image: linear-gradient(to right, transparent 2%, rgba(0,0,0,.05) 6%, rgba(0,0,0,.2) 12%, rgba(0,0,0,.45) 18%, rgba(0,0,0,.7) 24%, rgba(0,0,0,.9) 30%, #000 36%),
-                            linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.25) 6%, rgba(0,0,0,.6) 12%, rgba(0,0,0,.9) 18%, #000 24%);
-        -webkit-mask-composite: source-in;
-        mask-image: linear-gradient(to right, transparent 2%, rgba(0,0,0,.05) 6%, rgba(0,0,0,.2) 12%, rgba(0,0,0,.45) 18%, rgba(0,0,0,.7) 24%, rgba(0,0,0,.9) 30%, #000 36%),
-                    linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.25) 6%, rgba(0,0,0,.6) 12%, rgba(0,0,0,.9) 18%, #000 24%);
-        mask-composite: intersect;
-      }
-      .hero-foto img { object-position: 50% 5%; }
+      .hero-foto img { object-position: center top; }
     }
 
     /* ── Solo tablet horizontal (851px a 1023px) ── */
     @media (min-width: 851px) and (max-width: 1023px) {
       .h1-bloque { font-size: 36px; }
-      .hero-segunda { font-size: 28px; }
+      .hero-segunda { font-size: 25px; line-height: 20px; }
       .b3v-h { font-size: 35px; }
       .b4-h { font-size: 36px; }
       .b5-h { font-size: 30px; }
-      .hero-cols { grid-template-columns: 1fr 27%; gap: 32px; }
-      .hero-foto { right: -18vw; }
+      .hero-cols { grid-template-columns: 60% 1fr; gap: 48px; }
       .b10-br2 { display: inline; }
     }
     /* ── Solo ordenador (1024px y mas) ── */
     @media (min-width: 1024px) {
+      .hero-2col .hero-sub { max-width: 600px; }
     }
 
     /* ── Ajustes de tamaños por dispositivo ── */
@@ -1673,8 +1659,7 @@ text-align: center;
         <div class="hero-texto">
           <h1 class="h1-bloque">Hay una razón<span class="br-pc"><br></span> detrás<span class="br-tab"><br></span> de <em class="palabra-oro">todo</em><span class="br-pc"><br></span> lo que te pasa</h1>
           <p class="hero-segunda">Y por fin<br class="br-mov"> vas a entender cuál es</p>
-
-          <p class="hero-sub"><strong class="oro tx-pc">Tu Diseño de Origen: </strong><span class="tx-movil">El</span><span class="tx-pc">el</span> estudio <span style="text-decoration: underline;">100% personalizado</span> con el que descubrirás <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong>, a partir de tus datos de nacimiento.</p>
+          <p class="hero-sub"><strong class="oro tx-pc">Tu Diseño de Origen: </strong>Descubre <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong>. Un estudio <strong>100% personalizado</strong> que analiza tu carta natal a partir de tus datos de nacimiento.</p>
 
           <div class="hero-cierre">
             <p class="hero-oferta">¡Obtén tu prueba<span class="br-movil"><br></span> en <strong>SOLO 2 MINUTOS</strong>!</p>
@@ -1718,8 +1703,7 @@ text-align: center;
     <div class="p2-inner">
       <p class="p2-tel">Hablemos de ti…</p>
       <h2 class="p2-title"><span class="p2-l1">Lo has intentado</span> <em>todo</em></h2>
-      <p class="p2-sub">Libros, cursos, terapia, propósitos de año nuevo…</p>
-      <p class="p2-punto">Y siempre acabas volviendo al mismo punto:</p>
+      <p class="p2-sub" style="margin-bottom: 60px;">Libros, cursos, terapia, propósitos de año nuevo… <strong style="font-weight: 700;">y siempre acabas volviendo al mismo punto:</strong></p>
 
       <div class="p2-quotes">
         <div class="p2-foto"><img src="images/bloque-2-tu-diseno-de-origen-natal-carta.webp" alt="Mujer pensativa antes de descubrir su Diseño de Origen" /></div>
@@ -1732,7 +1716,6 @@ text-align: center;
       <div class="p2-giro">
         <p class="p2-c1">No es falta de esfuerzo…</p>
         <p class="p2-c2">Es falta de <em>información sobre ti</em></p>
-        <p class="p2-c3">Llevas años intentando<br class="br-movil"> cambiar algo<br class="break-mobile"> que nadie<br class="br-movil"> te ha explicado nunca</p>
         <div class="p2-flecha" aria-hidden="true">
           <svg width="24" height="42" viewBox="0 0 16 28" fill="none" xmlns="http://www.w3.org/2000/svg">
             <line x1="8" y1="0" x2="8" y2="18" stroke="#bd9048" stroke-width="1.5" stroke-linecap="round"/>
