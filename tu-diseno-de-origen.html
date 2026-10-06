@@ -714,7 +714,7 @@ text-align: center;
     .palabra-oro { color: var(--gold-deep); font-style: italic; }
     .hero-sub .promesa { font-weight: 600; font-style: italic; color: var(--teal-deep);
                          -webkit-text-stroke: .5px currentColor; }
-    .hero-sub .oro { color: var(--gold-deep); font-weight: 700; }
+    .hero-sub .oro { color: var(--gold-deep); font-weight: 700; font-family: var(--font-display); font-size: 1.12em; }
     .hero-oferta, .b5-oferta, .b10-of { font-variant-numeric: lining-nums; }
 
 
@@ -750,10 +750,6 @@ text-align: center;
 
     .br-pc { display: none; }
     .p2-foto { display: none; }
-    .tx-movil { display: none; }
-    .hero-deco { display: none; width: 130px; height: auto; }
-    .hero-kicker { display: none; font-family: var(--font-display); font-weight: 700; font-size: 22px;
-                   color: var(--gold-deep); letter-spacing: 1px; text-transform: uppercase; margin: 0; }
     .br-tab { display: inline; }
 
     /* Cinta continua al final del hero */
@@ -1015,34 +1011,25 @@ text-align: center;
 
     .p2-inner { width: min(1100px, 92vw); margin-inline: auto; position: relative; z-index: 1; }
     .p2-tel { font-family: var(--font-display); font-style: italic; font-weight: 700;
-              font-size: 28px; line-height: 1; color: var(--gold-deep); margin: 0 0 14px; }
-    .p2-title { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 14px; }
-    .p2-title em { font-style: italic; color: var(--gold-deep); margin-top: 10px; margin-bottom: 40px; }
-    /* Titulo del bloque 2 en dos lineas: tamaño de cada linea y espacio entre ellas, por dispositivo */
-    .p2-title .p2-l1, .p2-title em { display: block; }
+              font-size: 32px; line-height: 1; color: var(--gold-deep); margin: 0 0 14px; }
+    .p2-title { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 40px; }
+    .p2-title em { font-style: italic; color: var(--gold-deep); }
+    /* Titulo del bloque 2 en una linea: tamaño por dispositivo */
     /* PC */
     @media (min-width: 1024px) {
-      .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 40px; }
-      .p2-title em { font-size: 60px; }
+      .p2-title .p2-l1, .p2-title em { font-size: 40px; }
     }
     /* Tablet horizontal */
     @media (min-width: 851px) and (max-width: 1023px) {
-      .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 40px; }
-      .p2-title em { font-size: 60px; }
+      .p2-title .p2-l1, .p2-title em { font-size: 40px; }
     }
     /* Tablet vertical */
     @media (min-width: 681px) and (max-width: 850px) {
-      .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 38px; }
-      .p2-title em { font-size: 60px; }
+      .p2-title .p2-l1, .p2-title em { font-size: 38px; }
     }
     /* Movil */
     @media (max-width: 680px) {
-      .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 40px; }
-      .p2-title em { font-size: 60px; }
+      .p2-title .p2-l1, .p2-title em { font-size: 40px; }
     }
     .p2-sub { font-size: 18px; line-height: 1.7; color: #4a4538; margin: 0 0 30px; }
     .p2-punto { font-family: var(--font-display); font-weight: 700; font-style: normal; font-size: 16px; letter-spacing: 0; text-transform: none; color: var(--teal-deep); margin: 0 0 60px; }
@@ -1098,7 +1085,6 @@ text-align: center;
       .b3v-h { line-height: 1.22; }
       .b3v-h::after { margin: 24px auto 0; }
       .b3v-txt > p.b3v-l:nth-of-type(2) { max-width: 560px; margin-inline: auto; }
-      .b3v-clave .b3v-fin-oro { display: block; }
     }
     /* Movil */
     @media (max-width: 680px) {
@@ -1109,14 +1095,13 @@ text-align: center;
     .b3v-l { font-family: var(--font-body); font-size: 16px; line-height: 1.85; color: #fffbef; margin: 0 0 22px; }
     .b3v-l strong { font-weight: 700; color: var(--gold-light); }
     .b3v-l em { font-style: italic; font-weight: 700; color: #fffbef; }
-    .b3v-l .b3v-resalta { font-weight: 700; color: #fffbef; }
     .b3v-clave .b3v-l strong { color: #fffbef; }
     .b3v-fin { font-family: var(--font-display); font-weight: 700; font-style: normal; font-size: 21px;
                line-height: 1.5; color: #fffbef; margin: 0; }
     .b3v-clave { margin-top: 30px; }
-    .b3v-clave .b3v-l { border-left: 3px solid var(--gold-light); padding-left: 24px; }
+    .b3v-clave .b3v-l { border-left: 0; padding-left: 0; }
     .b3v-clave .b3v-l { margin-bottom: 12px; }
-    .b3v-clave .b3v-fin { color: #fffbef; text-align: center; background: rgba(255,251,239,.07); border: 1px solid rgba(255,251,239,.10); border-radius: var(--r-lg); padding: 18px 24px; margin-top: 30px; }
+    .b3v-clave .b3v-fin { color: #fffbef; margin-top: 30px; }
     .b3v-fin .b3v-fin-oro { color: var(--gold-light); font-style: italic; }
 
     /* ══════════════════════════════════════════════
@@ -1291,7 +1276,7 @@ text-align: center;
       .b6-cols { grid-template-columns: 1fr; gap: 70px; }
       .b6-card { padding: 24px 22px 26px; }
       .b6-card li { font-size: 18px; padding: 10px 0; }
-      .p2-tel { font-size: 28px; }
+      .p2-tel { font-size: 32px; }
       .p2 { padding: 70px 0 80px; }
       .p2-title { font-size: 40px; }
       .p2-sub { font-size: 20px; }
@@ -1314,13 +1299,12 @@ text-align: center;
       .b3v-tel { order: 1; }
       .b3v-h { order: 2; }
       .b3v-txt p.b3v-l:nth-of-type(2) { order: 3; }
-      .b3v-txt > .b3v-fin { order: 3; margin-bottom: 40px; }
       .b3v-clave { order: 5; }
       .b3v-h { font-size: 40px; margin-bottom: 60px; }
       .b3v-l { font-size: 18px; line-height: 1.7; margin-bottom: 22px; }
       .b3v-fin { font-size: 22px; }
-      .b3v-clave { margin: 0 auto; max-width: 560px; text-align: left; }
-      .b3v-clave .b3v-l { padding-left: 18px; }
+      .b3v-clave { margin: 0 auto; max-width: 560px; text-align: center; }
+      .b3v-clave .b3v-l { padding-left: 0px; }
       .b9 { padding: 72px 0 80px; } 
       .b9-h { font-size: 31px; margin-bottom: 44px; }
       .b9-body p { font-size: 18px; }
@@ -1333,15 +1317,11 @@ text-align: center;
       .break-mobile { display: block; }
       .break-desktop { display: none; }
       .hero-home h1, .hero-sub { text-align: center; }
-      .tx-pc { display: none; }
-      .tx-movil { display: inline; }
       .hero-cols { display: flex; flex-direction: column; gap: 0; }
       .hero-texto { display: contents; }
       .h1-bloque { order: 1; }
       .hero-segunda { order: 2; }
       .hero-foto { margin-bottom: 30px; order: 3; }
-      .hero-kicker { display: block; order: 4; margin: 20px 0 2px; }
-      .hero-deco { display: block; order: 5; margin: 0 auto 30px; }
       .hero-sub { order: 6; }
       .hero-cierre { order: 7; }
     }
@@ -1349,8 +1329,6 @@ text-align: center;
     /* ── Solo tablet vertical (681px a 850px) ── */
     @media (min-width: 681px) and (max-width: 850px) {
       .hero-segunda { font-size: 25px; margin-bottom: 30px; }
-      .hero-kicker { margin: 10px 0 2px; }
-      .hero-deco { margin: 0 auto 10px; }
       .p2-title { font-size: 38px; }
       .p2-sub { font-size: 18px; }
       .p2-punto { font-size: 17px; }
@@ -1399,10 +1377,10 @@ text-align: center;
       .b7 { padding: 60px 0 60px; }
       .b10 { padding: 60px 0 70px; }
       .hero-home h1 { margin-inline: auto; }
-      .hero-foto { aspect-ratio: 2 / 1; width: min(560px, 80%); margin-inline: auto; align-self: center; }
+      .hero-foto { aspect-ratio: 2 / 1; width: min(560px, 80%); margin-inline: auto; align-self: center; margin-top: 20px; margin-bottom: 50px; }
       .hero-foto img { object-position: center 60%; }
       .p2 { padding: 70px 0 60px; }
-      .p2-quotes { grid-template-columns: 200px 1fr; }
+      .p2-quotes { grid-template-columns: 160px 1fr; }
       .p2-quote { grid-column: 2; }
       .p2-quote p { font-size: 16px; }
       .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 4; position: relative; border-radius: var(--r-lg); overflow: hidden; }
@@ -1464,7 +1442,7 @@ text-align: center;
       .b4 { padding: 100px 0 70px; }
       .b3v-h { font-size: 38px; }
       .p2-c3 .break-mobile { display: none; }
-      .hero-foto { aspect-ratio: 1 / 1; }
+      .hero-foto { aspect-ratio: 1 / 1; margin-bottom: 60px; }
       .hero-foto img { object-position: 62% top; }
       .b5-foto { aspect-ratio: 1 / 1; }
       .b5-foto img { object-position: 52% 60%; }
@@ -1476,13 +1454,12 @@ text-align: center;
       .b4-cta { margin-top: 20px; }
       .b5-et { font-size: 18px; }
       .b7 { padding: 70px 0 70px; }
-      .p2-title { margin: 0 0 25px; }
-      .p2-quotes { grid-template-columns: 130px 1fr; gap: 16px 14px; }
+      .p2-quotes { grid-template-columns: 100px 1fr; gap: 16px 14px; }
       .p2-quote { grid-column: 2; }
       .p2-quote p { padding-left: 10px; }
       .p2-quote { grid-column: 2; }
       .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 4; border-radius: var(--r-lg); overflow: hidden; }
-      .p2-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 62% top; display: block; }
+      .p2-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 60% top; display: block; }
       .p2-punto { margin-bottom: 50px; }
       .b4-h .break-mobile { display: none; }
       .b3v-fin { font-size: 24px; }
@@ -1522,7 +1499,6 @@ text-align: center;
     /* ── Tablet horizontal y ordenador (851px y mas) ── */
     @media (min-width: 851px) {
       .hero-2col .hero-oferta { margin-bottom: 20px; }
-      .hero-sub .oro { font-family: var(--font-display); font-size: 18px; }
       .b3v { padding: 20px 0; }
       .b3v-in { align-items: stretch; }
       .b3v-foto { aspect-ratio: auto; position: relative; }
@@ -1659,7 +1635,7 @@ text-align: center;
         <div class="hero-texto">
           <h1 class="h1-bloque">Hay una razón<span class="br-pc"><br></span> detrás<span class="br-tab"><br></span> de <em class="palabra-oro">todo</em><span class="br-pc"><br></span> lo que te pasa</h1>
           <p class="hero-segunda">Y por fin<br class="br-mov"> vas a entender cuál es</p>
-          <p class="hero-sub"><strong class="oro tx-pc">Tu Diseño de Origen: </strong>Descubre <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong>. Un estudio <strong>100% personalizado</strong> que analiza tu carta natal a partir de tus datos de nacimiento.</p>
+          <p class="hero-sub">Descubre <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong> con <strong class="oro">Tu Diseño de Origen</strong>, un estudio <strong>100% personalizado</strong> que analiza tu carta natal a partir de tus datos de nacimiento.</p>
 
           <div class="hero-cierre">
             <p class="hero-oferta">¡Obtén tu prueba<span class="br-movil"><br></span> en <strong>SOLO 2 MINUTOS</strong>!</p>
@@ -1671,8 +1647,6 @@ text-align: center;
         </div>
 
         <div class="hero-foto"><picture><source media="(min-width: 851px)" srcset="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" /><img src="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" alt="Mujer descubriendo su Diseño de Origen a partir de su carta natal" width="898" height="667" fetchpriority="high" /></picture></div>
-        <p class="hero-kicker">Tu Diseño de Origen</p>
-        <img class="hero-deco" src="images/deco-1.webp" alt="" width="317" height="82" />
       </div>
     </div>
   </section>
@@ -1703,7 +1677,7 @@ text-align: center;
     <div class="p2-inner">
       <p class="p2-tel">Hablemos de ti…</p>
       <h2 class="p2-title"><span class="p2-l1">Lo has intentado</span> <em>todo</em></h2>
-      <p class="p2-sub" style="margin-bottom: 60px;">Libros, cursos, terapia, propósitos de año nuevo… <strong style="font-weight: 700;">y siempre acabas volviendo al mismo punto:</strong></p>
+      <p class="p2-sub" style="margin-bottom: 60px;">Libros, cursos, terapia, propósitos de año nuevo…<br class="br-tab"> <strong style="font-weight: 700;">y siempre acabas volviendo al mismo punto:</strong></p>
 
       <div class="p2-quotes">
         <div class="p2-foto"><img src="images/bloque-2-tu-diseno-de-origen-natal-carta.webp" alt="Mujer pensativa antes de descubrir su Diseño de Origen" /></div>
@@ -1738,9 +1712,8 @@ text-align: center;
       <div class="b3v-foto"><img src="images/bloque-3-tu-diseno-de-origen-programacion-interior.webp" alt="Mujer descubriendo su programación interior" /></div>
       <div class="b3v-txt">
         <p class="b3v-tel">Te lo explicamos:</p>
-<h2 class="b3v-h">Antes de tu<br class="br-b3m"> primera<br> respiración,<br> <span class="oro">ya se había formado<br> <span class="b3v-algo">algo en ti</span></span></h2>
-        <p class="b3v-l">Una <strong>programación interior</strong> que decide <em>cómo piensas, cómo sientes y cómo te vinculas</em> <span class="b3v-resalta">con todo lo que te rodea</span>: Tus decisiones, tus relaciones, tu dinero, tus miedos…</p>
-        <p class="b3v-fin">Y está dirigiendo tu vida entera <span class="b3v-fin-oro">sin que te des cuenta</span></p>
+<h2 class="b3v-h">Antes de tu<br class="br-b3m"> primera<br class="br-b3m"> respiración,<br> <span class="oro">ya se había formado<br class="br-b3m"> <span class="b3v-algo">algo en ti</span></span></h2>
+        <p class="b3v-l">Una <strong>programación interior</strong> que dirige cómo piensas, cómo sientes, tus relaciones, tu dinero, tus miedos… <strong style="color: #fffbef; font-weight: 700;">sin que te des cuenta</strong>.</p>
         <div class="b3v-clave">
           <p class="b3v-l">La clave está en el momento exacto en el que naciste, ese instante dibujó un mapa único de ti, <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong>, descifra tu programación.</p>
           <p class="b3v-fin">Y hasta que no la descubras <span class="b3v-fin-oro">nada cambiará de verdad</span></p>
