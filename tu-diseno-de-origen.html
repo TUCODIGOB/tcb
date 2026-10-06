@@ -1011,35 +1011,9 @@ text-align: center;
 
     .p2-inner { width: min(1100px, 92vw); margin-inline: auto; position: relative; z-index: 1; }
     .p2-tel { font-family: var(--font-display); font-style: italic; font-weight: 700;
-              font-size: 28px; line-height: 1; color: var(--gold-deep); margin: 0 0 14px; }
-    .p2-title { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 14px; }
-    .p2-title em { font-style: italic; color: var(--gold-deep); margin-top: 10px; margin-bottom: 40px; }
-    /* Titulo del bloque 2 en dos lineas: tamaño de cada linea y espacio entre ellas, por dispositivo */
-    .p2-title .p2-l1, .p2-title em { display: block; }
-    /* PC */
-    @media (min-width: 1024px) {
-      .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 40px; }
-      .p2-title em { font-size: 60px; }
-    }
-    /* Tablet horizontal */
-    @media (min-width: 851px) and (max-width: 1023px) {
-      .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 40px; }
-      .p2-title em { font-size: 60px; }
-    }
-    /* Tablet vertical */
-    @media (min-width: 681px) and (max-width: 850px) {
-      .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 38px; }
-      .p2-title em { font-size: 60px; }
-    }
-    /* Movil */
-    @media (max-width: 680px) {
-      .p2-title { line-height: 35px; }
-      .p2-title .p2-l1 { font-size: 40px; }
-      .p2-title em { font-size: 60px; }
-    }
+              font-size: 32px; line-height: 1; color: var(--gold-deep); margin: 0 0 14px; }
+    .p2-title { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 40px; }
+    .p2-title em { font-style: italic; color: var(--gold-deep); }
     .p2-sub { font-size: 18px; line-height: 1.7; color: #4a4538; margin: 0 0 30px; }
     .p2-punto { font-family: var(--font-display); font-weight: 700; font-style: normal; font-size: 16px; letter-spacing: 0; text-transform: none; color: var(--teal-deep); margin: 0 0 60px; }
     .p2 .p2-punto { font-size: 25px; }
@@ -1287,7 +1261,7 @@ text-align: center;
       .b6-cols { grid-template-columns: 1fr; gap: 70px; }
       .b6-card { padding: 24px 22px 26px; }
       .b6-card li { font-size: 18px; padding: 10px 0; }
-      .p2-tel { font-size: 28px; }
+      .p2-tel { font-size: 32px; }
       .p2 { padding: 70px 0 80px; }
       .p2-title { font-size: 40px; }
       .p2-sub { font-size: 20px; }
@@ -1466,7 +1440,6 @@ text-align: center;
       .b4-cta { margin-top: 20px; }
       .b5-et { font-size: 18px; }
       .b7 { padding: 70px 0 70px; }
-      .p2-title { margin: 0 0 25px; }
       .p2-quotes { grid-template-columns: 130px 1fr; gap: 16px 14px; }
       .p2-quote { grid-column: 2; }
       .p2-quote p { padding-left: 10px; }
@@ -1690,7 +1663,7 @@ text-align: center;
     <div class="p2-inner">
       <p class="p2-tel">Hablemos de ti…</p>
       <h2 class="p2-title"><span class="p2-l1">Lo has intentado</span> <em>todo</em></h2>
-      <p class="p2-sub" style="margin-bottom: 60px;">Libros, cursos, terapia, propósitos de año nuevo… <strong style="font-weight: 700;">y siempre acabas volviendo al mismo punto:</strong></p>
+      <p class="p2-sub" style="margin-bottom: 60px;">Libros, cursos, terapia, propósitos de año nuevo…<br class="br-tab"> <strong style="font-weight: 700;">y siempre acabas volviendo al mismo punto:</strong></p>
 
       <div class="p2-quotes">
         <div class="p2-foto"><img src="images/bloque-2-tu-diseno-de-origen-natal-carta.webp" alt="Mujer pensativa antes de descubrir su Diseño de Origen" /></div>
