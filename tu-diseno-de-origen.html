@@ -714,7 +714,7 @@ text-align: center;
     .palabra-oro { color: var(--gold-deep); font-style: italic; }
     .hero-sub .promesa { font-weight: 600; font-style: italic; color: var(--teal-deep);
                          -webkit-text-stroke: .5px currentColor; }
-    .hero-sub .oro { color: var(--gold-deep); font-weight: 700; }
+    .hero-sub .oro { color: var(--gold-deep); font-weight: 700; font-family: var(--font-display); font-size: 1.12em; }
     .hero-oferta, .b5-oferta, .b10-of { font-variant-numeric: lining-nums; }
 
 
@@ -750,10 +750,6 @@ text-align: center;
 
     .br-pc { display: none; }
     .p2-foto { display: none; }
-    .tx-movil { display: none; }
-    .hero-deco { display: none; width: 130px; height: auto; }
-    .hero-kicker { display: none; font-family: var(--font-display); font-weight: 700; font-size: 22px;
-                   color: var(--gold-deep); letter-spacing: 1px; text-transform: uppercase; margin: 0; }
     .br-tab { display: inline; }
 
     /* Cinta continua al final del hero */
@@ -1333,15 +1329,11 @@ text-align: center;
       .break-mobile { display: block; }
       .break-desktop { display: none; }
       .hero-home h1, .hero-sub { text-align: center; }
-      .tx-pc { display: none; }
-      .tx-movil { display: inline; }
       .hero-cols { display: flex; flex-direction: column; gap: 0; }
       .hero-texto { display: contents; }
       .h1-bloque { order: 1; }
       .hero-segunda { order: 2; }
       .hero-foto { margin-bottom: 30px; order: 3; }
-      .hero-kicker { display: block; order: 4; margin: 20px 0 2px; }
-      .hero-deco { display: block; order: 5; margin: 0 auto 30px; }
       .hero-sub { order: 6; }
       .hero-cierre { order: 7; }
     }
@@ -1349,8 +1341,6 @@ text-align: center;
     /* ── Solo tablet vertical (681px a 850px) ── */
     @media (min-width: 681px) and (max-width: 850px) {
       .hero-segunda { font-size: 25px; margin-bottom: 30px; }
-      .hero-kicker { margin: 10px 0 2px; }
-      .hero-deco { margin: 0 auto 10px; }
       .p2-title { font-size: 38px; }
       .p2-sub { font-size: 18px; }
       .p2-punto { font-size: 17px; }
@@ -1399,7 +1389,7 @@ text-align: center;
       .b7 { padding: 60px 0 60px; }
       .b10 { padding: 60px 0 70px; }
       .hero-home h1 { margin-inline: auto; }
-      .hero-foto { aspect-ratio: 2 / 1; width: min(560px, 80%); margin-inline: auto; align-self: center; }
+      .hero-foto { aspect-ratio: 2 / 1; width: min(560px, 80%); margin-inline: auto; align-self: center; margin-top: 20px; margin-bottom: 50px; }
       .hero-foto img { object-position: center 60%; }
       .p2 { padding: 70px 0 60px; }
       .p2-quotes { grid-template-columns: 200px 1fr; }
@@ -1464,7 +1454,7 @@ text-align: center;
       .b4 { padding: 100px 0 70px; }
       .b3v-h { font-size: 38px; }
       .p2-c3 .break-mobile { display: none; }
-      .hero-foto { aspect-ratio: 1 / 1; }
+      .hero-foto { aspect-ratio: 1 / 1; margin-bottom: 60px; }
       .hero-foto img { object-position: 62% top; }
       .b5-foto { aspect-ratio: 1 / 1; }
       .b5-foto img { object-position: 52% 60%; }
@@ -1522,7 +1512,6 @@ text-align: center;
     /* ── Tablet horizontal y ordenador (851px y mas) ── */
     @media (min-width: 851px) {
       .hero-2col .hero-oferta { margin-bottom: 20px; }
-      .hero-sub .oro { font-family: var(--font-display); font-size: 18px; }
       .b3v { padding: 20px 0; }
       .b3v-in { align-items: stretch; }
       .b3v-foto { aspect-ratio: auto; position: relative; }
@@ -1659,7 +1648,7 @@ text-align: center;
         <div class="hero-texto">
           <h1 class="h1-bloque">Hay una razón<span class="br-pc"><br></span> detrás<span class="br-tab"><br></span> de <em class="palabra-oro">todo</em><span class="br-pc"><br></span> lo que te pasa</h1>
           <p class="hero-segunda">Y por fin<br class="br-mov"> vas a entender cuál es</p>
-          <p class="hero-sub"><strong class="oro tx-pc">Tu Diseño de Origen: </strong>Descubre <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong>. Un estudio <strong>100% personalizado</strong> que analiza tu carta natal a partir de tus datos de nacimiento.</p>
+          <p class="hero-sub">Descubre <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong> con <strong class="oro">Tu Diseño de Origen</strong>, un estudio <strong>100% personalizado</strong> que analiza tu carta natal a partir de tus datos de nacimiento.</p>
 
           <div class="hero-cierre">
             <p class="hero-oferta">¡Obtén tu prueba<span class="br-movil"><br></span> en <strong>SOLO 2 MINUTOS</strong>!</p>
@@ -1671,8 +1660,6 @@ text-align: center;
         </div>
 
         <div class="hero-foto"><picture><source media="(min-width: 851px)" srcset="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" /><img src="images/mujer-descubre-su-diseno-de-origen-carta-natal.webp" alt="Mujer descubriendo su Diseño de Origen a partir de su carta natal" width="898" height="667" fetchpriority="high" /></picture></div>
-        <p class="hero-kicker">Tu Diseño de Origen</p>
-        <img class="hero-deco" src="images/deco-1.webp" alt="" width="317" height="82" />
       </div>
     </div>
   </section>
