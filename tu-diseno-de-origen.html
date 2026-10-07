@@ -751,6 +751,7 @@ text-align: center;
     .br-pc { display: none; }
     .p2-foto { display: none; }
     .br-tab { display: inline; }
+    .br-tv { display: none; }
 
     /* Cinta continua al final del hero */
     .hero-ribbon {
@@ -1272,7 +1273,7 @@ text-align: center;
       .b6-lab { font-size: 20px; }
       .b6-cols { grid-template-columns: 1fr; gap: 70px; }
       .b6-card { padding: 24px 22px 26px; }
-      .b6-card li { font-size: 18px; padding: 10px 0; }
+      .b6-card li { font-size: 18px; padding: 20px 0; }
       .p2-tel { font-size: 32px; }
       .p2 { padding: 70px 0 80px; }
       .p2-title { font-size: 40px; }
@@ -1297,7 +1298,7 @@ text-align: center;
       .b3v-h { order: 2; }
       .b3v-txt p.b3v-l:nth-of-type(2) { order: 3; }
       .b3v-clave { order: 5; }
-      .b3v-h { font-size: 40px; margin-bottom: 60px; }
+      .b3v-h { font-size: 40px; margin-bottom: 40px; }
       .b3v-l { font-size: 18px; line-height: 1.7; margin-bottom: 22px; }
       .b3v-fin { font-size: 22px; }
       .b3v-clave { margin: 0 auto; max-width: 560px; text-align: center; }
@@ -1326,6 +1327,7 @@ text-align: center;
     /* ── Solo tablet vertical (681px a 850px) ── */
     @media (min-width: 681px) and (max-width: 850px) {
       .hero-segunda { font-size: 25px; margin-bottom: 30px; }
+      .br-tv { display: inline; }
       .p2-title { font-size: 38px; }
       .p2-sub { font-size: 18px; }
       .p2-punto { font-size: 17px; }
@@ -1351,7 +1353,7 @@ text-align: center;
       .b3v-foto img { object-position: center center; }
       .b6-et { font-size: 18px; }
       .b6-h { font-size: 38px; margin-bottom: 60px; }
-      .b6-cols { gap: 60px; }
+      .b6-cols { gap: 80px; }
       .b6-lab { font-size: 18px; }
       .b6-card li { font-size: 16px; }
       .b7-h { font-size: 35px; }
@@ -1363,9 +1365,9 @@ text-align: center;
       .b10-h { font-size: 32px; margin: 0 0 20px; }
       .b10-of { font-size: 22px; margin-bottom: 40px; }
       .b3v { padding: 10px 0 30px; }
-      .b3v-h { font-size: 38px; margin-bottom: 50px; }
+      .b3v-h { font-size: 38px; margin-bottom: 40px; }
       .b3v-l { font-size: 16px; }
-      .b3v-txt p.b3v-l:nth-of-type(2) { margin-bottom: 20px; }
+      .b3v-txt p.b3v-l:nth-of-type(2) { margin-bottom: 40px; }
       .b3v-foto { margin: 10px auto 30px; }
       .b3v-clave { margin-top: 20px; }
       .b4 { padding: 100px 0 70px; }
@@ -1422,7 +1424,7 @@ text-align: center;
       .b5-extras { grid-template-columns: 1fr; gap: 35px; }
       .b5-item { padding: 24px 22px; margin-bottom: 35px; }
       .b5-item:last-child { margin-bottom: 0; }
-      .b3v-l { margin-bottom: 30px; }
+      .b3v-l { margin-bottom: 40px; }
       .b3v-clave .b3v-l { margin-bottom: 20px; }
       .b3v-clave { max-width: 330px; }
       .b5-mas { font-size: 22px; }
@@ -1566,7 +1568,8 @@ text-align: center;
     }
     /* Movil */
     @media (max-width: 680px) {
-      .b6 .b6-lab { font-size: 28px; }
+      .b6 .b6-lab { font-size: 25px; }
+      .b6-cols { gap: 80px; }
       .b8-h em { font-size: 40px; }
     }
     /* Tablet vertical y movil: pasos mas separados y la raya mas larga */
@@ -1630,7 +1633,7 @@ text-align: center;
         <div class="hero-texto">
           <h1 class="h1-bloque">Hay una razón<span class="br-pc"><br></span> detrás<span class="br-tab"><br></span> de <em class="palabra-oro">todo</em><span class="br-pc"><br></span> lo que te pasa</h1>
           <p class="hero-segunda">Y por fin<br class="br-mov"> vas a entender cuál es</p>
-          <p class="hero-sub">Descubre <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong> con <strong class="oro">Tu Diseño de Origen</strong>: un estudio <strong>100% personalizado</strong> que descifra tu carta natal a partir de tus datos de nacimiento</strong></p>
+          <p class="hero-sub">Descubre <strong class="oro">Tu Diseño de Origen</strong>, un estudio <strong>100% personalizado</strong> que descifra tu carta natal a partir de tus datos de nacimiento y te revela <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong></p>
           <div class="hero-cierre">
             <p class="hero-oferta">¡Obtén tu prueba<span class="br-movil"><br></span> en <strong>SOLO 2 MINUTOS</strong>!</p>
 
@@ -1709,8 +1712,8 @@ text-align: center;
 <h2 class="b3v-h">Antes de tu<br class="br-b3m"> primera<br class="br-b3m"> respiración,<br> <span class="oro">ya se había formado<br class="br-b3m"> <span class="b3v-algo">algo en ti</span></span></h2>
         <p class="b3v-l">Una <strong>programación interior</strong> que dirige cómo piensas, cómo sientes, tus relaciones, tu dinero, tus miedos… <strong style="color: #fffbef; font-weight: 700;">sin que te des cuenta</strong>.</p>
         <div class="b3v-clave">
-          <p class="b3v-l">Nacio contigo, en el momento exacto en que llegaste a este mundo, y ese instante dibujó un mapa único de ti: <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong> descifra tu programación.</p>
-          <p class="b3v-fin">Y hasta que no la descubras <span class="b3v-fin-oro">nada cambiará de verdad</span></p>
+          <p class="b3v-l">Nacio contigo, en el momento exacto en que llegaste a este mundo, ese instante dibujó un mapa único de ti: <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong> descifra tu programación.</p>
+          <p class="b3v-fin">Y hasta que no la descubras, <span class="b3v-fin-oro">nada cambiará de verdad</span></p>
         </div>
       </div>
     </div>
@@ -1724,7 +1727,7 @@ text-align: center;
       </svg>
     </div>
     <div class="b4-in">
-      <h2 class="b4-h">¿Qué vas a descubrir con <em>Tu Diseño de Origen</em>?</h2>
+      <h2 class="b4-h">¿Qué vas a descubrir con<br class="br-tv"> <em>Tu Diseño de Origen</em>?</h2>
 <div class="b4-mock"><picture><source media="(max-width: 680px)" srcset="images/tu-diseno-de-origen-estudio-carta-natal-movil.webp" /><img src="images/tu-diseno-de-origen-estudio-carta-natal.webp" alt="Tu Diseño de Origen: el estudio de tu carta natal en PDF, en ordenador, tablet y móvil" width="1927" height="1000" loading="lazy" /></picture></div>
       <p class="b4-sub">Más de <strong>40 páginas</strong> que revelan tu <strong>programación interior</strong>, para que entiendas por fin<br class="br-esc"> <strong><em>por qué eres como eres y por qué te pasa lo que te pasa</em></strong></p>
 <p class="b4-golpes"><span>100% personalizado</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin tecnicismos</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin citas, sin esperas</span></p>
