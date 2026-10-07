@@ -160,36 +160,6 @@ button:hover{filter:brightness(.96);}
 .resultado{display:none;margin-top:26px;}
 .resultado.puesto{display:block;}
 
-.folio{
-  background:var(--papel);border:1px solid var(--borde);border-radius:2px;
-  padding:34px 24px 38px;margin-bottom:20px;
-}
-
-.portada{text-align:center;padding-block:44px 40px;}
-.portada h1{
-  font-family:'Playfair Display',Georgia,serif;
-  font-weight:700;font-size:2.1rem;line-height:1.08;
-  color:var(--tinta);margin:0;text-wrap:balance;
-}
-.portada .suya{
-  font-family:'Playfair Display',Georgia,serif;
-  font-style:italic;font-weight:400;font-size:1.3rem;
-  color:var(--oro);margin:16px 0 0;
-}
-.filete{width:56px;height:1px;background:var(--oro);margin:24px auto;border:0;}
-.datos-nac{font-size:.88rem;color:var(--suave);margin:0;}
-
-.cabecera-area{text-align:center;margin-bottom:30px;}
-.cabecera-area h2{
-  font-family:'Playfair Display',Georgia,serif;
-  font-weight:700;font-size:1.5rem;letter-spacing:.02em;
-  color:var(--tinta);margin:0;text-transform:uppercase;
-}
-.cabecera-area p{
-  font-style:italic;font-weight:700;font-size:.95rem;color:var(--oro);
-  margin:10px auto 0;line-height:1.5;
-}
-
 .area{line-height:1.62;}
 .area p{margin:0 0 1.15em;}
 .area p:last-child{margin-bottom:0;}
@@ -206,51 +176,6 @@ button:hover{filter:brightness(.96);}
   text-align:center;font-weight:700;font-size:1.14rem;color:var(--tinta);
   line-height:1.4;margin:1.9em auto;text-wrap:balance;
 }
-
-.tapado{position:relative;margin:1.4em 0 22px;overflow:hidden;}
-.tapado i{
-  display:block;height:9px;border-radius:99px;
-  background:linear-gradient(90deg,#8FA3A8,#B9C6C9);
-  margin-bottom:13px;filter:blur(4.5px);opacity:.5;
-}
-.tapado::after{
-  content:'';position:absolute;left:0;right:0;bottom:0;height:52%;
-  background:linear-gradient(180deg,rgba(255,255,255,0),var(--papel));
-}
-
-.cerrados{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;}
-.cerrados li{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;background:var(--crema);border-radius:2px;}
-.cerrados svg{flex:0 0 auto;width:17px;height:17px;margin-top:3px;color:var(--oro);}
-.cerrados b{
-  display:block;color:var(--tinta);font-weight:600;font-size:.86rem;
-  letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px;
-}
-.cerrados .que{display:block;font-size:.93rem;color:var(--suave);line-height:1.45;}
-.cerrados li.suelto b{text-transform:none;letter-spacing:0;font-size:.97rem;}
-.cerrados.dentro{margin-left:26px;}
-
-.separa{border:0;height:1px;background:var(--oro);margin:30px 0 22px;}
-
-.venta{background:var(--tinta);border-color:var(--tinta);color:#E9E2D4;text-align:center;}
-.venta .cifras{
-  font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
-  color:#8FA8AE;margin:0 0 20px;
-}
-.venta h2{
-  font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:1.4rem;
-  color:#FFFFFF;margin:0 auto 14px;max-width:20ch;line-height:1.25;text-wrap:balance;
-}
-.venta .dice{font-size:.95rem;margin:0 auto 24px;max-width:34ch;color:#C9D6D9;}
-.venta .dice b{color:var(--oro);font-weight:600;}
-.venta a.comprar{
-  display:block;background:var(--oro);color:#20323A;font-weight:700;
-  font-size:1rem;border-radius:3px;padding:16px;text-decoration:none;
-}
-.venta .letra{font-size:.78rem;color:#9FB3B8;margin:14px 0 0;}
-.venta .fallo-pago{display:none;color:#F2C4BE;margin:14px 0 0;}
-/* El enlace para arreglar sus datos. Discreto: solo lo busca quien ve que
-   algo no cuadra. */
-.portada .corregir-datos{display:block;margin:14px 0 0;font-size:14px;color:var(--tinta);font-style:italic;font-weight:600;text-decoration:underline;}
 
 /* ── LA VENTANA DE "YA LO HAS CAMBIADO DOS VECES" ───────────── */
 .aviso{display:none;position:fixed;inset:0;z-index:200;background:rgba(14,63,75,.55);padding:24px 16px;overflow-y:auto;}
@@ -341,21 +266,11 @@ button:hover{filter:brightness(.96);}
    tamano va aqui debajo con su propia regla, para poder cambiarle el suyo a
    uno sin moverle el de los demas. */
 
-.portada h1,
-.cabecera-area h2,
 .aviso h2 {
   font-size: clamp(1.8rem, 5vw, 2.4rem);
 }
 
-/* El titular del cartel de abajo, aparte de los demas titulares. Mismo
-   tamano que tenia: se encoge solo segun el ancho de la pantalla. */
-.venta h2 {
-  font-size: clamp(1.8rem, 5vw, 2.4rem);
-}
-
 body,
-.portada .suya,
-.datos-nac,
 .area p,
 .area .escena p,
 .aviso p,
@@ -365,11 +280,6 @@ body,
 
 /* EL AREA, TEXTO POR TEXTO. Esto es lo del ordenador; en el movil llevan el
    suyo, mas abajo. */
-
-/* El subtitulo, debajo del nombre del area. */
-.cabecera-area p {
-  font-size: 20px;
-}
 
 /* Los titulos de dentro del area. */
 .area h3 {
@@ -381,58 +291,13 @@ body,
   font-size: 22px;
 }
 
-/* LO DE LOS CANDADOS Y EL CARTEL DE ABAJO, CADA UNO POR SU CUENTA. Van aqui
-   con el tamano que ya tenian, pero uno por linea: asi se le puede cambiar el
-   tamano a cualquiera sin tocarle el suyo a los demas. */
-
-/* El titulo de un area cerrada. */
-.cerrados b {
-  font-size: 16px;
-}
-
-/* Y el de las que van sueltas, que se escribe distinto. */
-.cerrados li.suelto b {
-  font-size: 16px;
-}
-
-/* Lo que pone debajo de cada titulo. */
-.cerrados .que {
-  font-size: 16px;
-}
-
-/* El cartel de abajo, texto por texto: las cifras de arriba... */
-.venta .cifras {
-  font-size: 16px;
-}
-
-/* ...lo que dice debajo del titular... */
-.venta .dice {
-  font-size: 16px;
-}
-
-/* ...el boton de comprar... */
-.venta a.comprar {
-  font-size: 16px;
-}
-
-/* ...y la letra pequeña del pago. */
-.venta .letra {
-  font-size: 16px;
-}
-
 @media (max-width: 600px) {
   body,
-  .portada .suya,
-  .datos-nac,
   .area p,
   .area .escena p,
   .aviso p,
   .aviso .vale {
     font-size: 18px;
-  }
-
-  .cabecera-area p {
-    font-size: 22px;
   }
 
   .area h3 {
@@ -442,51 +307,10 @@ body,
   .area p.pregunta {
     font-size: 22px;
   }
-
-  .cerrados b {
-    font-size: 18px;
-  }
-
-  .cerrados li.suelto b {
-    font-size: 18px;
-  }
-
-  .cerrados .que {
-    font-size: 18px;
-  }
-
-  .venta .cifras {
-    font-size: 18px;
-  }
-
-  .venta .dice {
-    font-size: 18px;
-  }
-
-  .venta a.comprar {
-    font-size: 18px;
-  }
-
-  .venta .letra {
-    font-size: 18px;
-  }
 }
 </style>
-</head>
-<body>
-
-<!-- NAV -->
-<nav class="nav">
-  <div class="nav-inner">
-    <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
-      <img src="/images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" width="395" height="48" />
-    </a>
-    <a href="#comprar" class="nav-cta">Desbloquear todo mi Diseño</a>
-  </div>
-</nav>
-
-<!-- LA PAGINA DE RESULTADO NUEVA: estilos y como se pinta. -->
 <style>
+/* Las reseñas: las mismas reglas que en la landing, sin la foto de fondo. */
 .b8{
       --teal-deep:   #0e3f4b;
       --gold-deep:   #bd9048;
@@ -501,7 +325,7 @@ body,
       --r-md: 12px;
       --r-lg: 24px;
     }
-.b8{ background: var(--cream) url('/images/fondo-resenas-tu-diseno-origen-origen-natal.webp') center / cover no-repeat; padding: 60px 0 70px; text-align: center; }
+.b8{ background: var(--cream); padding: 60px 0 70px; text-align: center; }
 .b8-in{ width: min(900px, 92vw); margin-inline: auto; }
 .b8-h{ font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.3;
             color: var(--teal-deep); margin: 0 0 70px; }
@@ -552,34 +376,34 @@ body,
 @media (min-width: 681px) and (max-width: 850px){.b8-h .b8-l1{ font-size: 35px; }}
 @media (min-width: 681px) and (max-width: 850px){.b8-h em{ font-size: 45px; line-height: 40px; }}
 @media (max-width: 680px){.b8-h em{ font-size: 40px; }}
-.b8{margin:56px calc(50% - 50vw) 0;background:#fffbef!important}
-.b8-video{background:#1d2b2f}
-@media (min-width:681px) and (max-width:850px){.b8-res{grid-template-columns:repeat(3,1fr);gap:40px}}
-.fin{margin-top:64px}
-.fin-t{font-family:'Playfair Display',Georgia,serif;font-size:28px;line-height:1.35;color:#0E3F4B;margin:0 0 26px;font-weight:700}
-.fin-t em{color:#BD9048}
-.fin .btn-oro{margin:0 auto}
-.fin-s{font-size:14px;color:#6E7B7F;margin:14px 0 0}
-@media (max-width:600px){.fin-t{font-size:24px}}
 
+/* ── LA PAGINA DE RESULTADO ─────────────────────────────────── */
 @media (min-width:601px){ .hoja{max-width:860px} }
+/* Las reseñas ocupan todo el ancho; esto evita que salga una barra lateral
+   cuando el navegador cuenta la barra de desplazamiento. */
+body{overflow-x:clip}
+.nav-cta{text-decoration:none}
+
+/* Arriba: su nombre y sus datos */
 .inicio{text-align:center;padding:6px 0 30px}
 .inicio h1{font-family:'Playfair Display',Georgia,serif;color:var(--tinta);font-size:34px;line-height:1.2;margin:0 0 10px}
 .inicio h1 em{color:#b08a4f;font-style:italic}
 .inicio .datos{font-size:14px;color:var(--suave);margin:0}
 .inicio .corr{display:block;margin-top:6px;font-size:14px;color:var(--tinta);font-style:italic;font-weight:600}
+
+/* Las areas, numeradas en una linea */
 .tl{position:relative;display:flex;flex-direction:column;gap:12px}
 .tl::before{content:"";position:absolute;left:31px;top:30px;bottom:40px;width:2px;background:#e3cfa6}
 .it{position:relative;background:#fff;border:1px solid var(--borde);border-radius:10px;padding:22px 24px 22px 74px}
 .num{position:absolute;left:12px;top:20px;width:40px;height:40px;border-radius:50%;background:#BD9048;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;box-shadow:0 0 0 5px var(--crema)}
-.lab{display:block;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:#9a7a45;font-weight:700;margin-bottom:3px}
+.lab{display:block;font-size:16px;letter-spacing:.1em;text-transform:uppercase;color:#9a7a45;font-weight:700;margin-bottom:4px}
 .tit{display:block;font-family:'Playfair Display',Georgia,serif;font-size:21px;color:var(--tinta);line-height:1.25;font-weight:700}
-.des{display:block;font-size:15px;color:var(--texto);line-height:1.5;margin-top:4px}
+.des{display:block;font-size:15px;color:var(--tinta);font-weight:600;line-height:1.5;margin-top:4px}
 .it1 .tit{font-size:28px}
-.it .des{color:var(--tinta);font-weight:600;font-size:15px}
 .it1 .des{margin-bottom:18px}
-.it .lab{font-size:16px;letter-spacing:.1em;margin-bottom:4px}
 .it1 .area p:not(.pregunta){font-size:16px}
+
+/* El corte de su area, con el cuadro de desbloquear encima */
 .corte{position:relative}
 .corte .borroso{filter:blur(5px);opacity:.5;user-select:none}
 .corte .borroso p{margin:0 0 1em}
@@ -588,207 +412,128 @@ body,
 .cand-c svg{width:17px;height:17px}
 .desbloq h4{font-family:'Playfair Display',Georgia,serif;color:var(--tinta);font-size:22px;margin:0 0 8px;line-height:1.25}
 .desbloq p{margin:0 0 18px;font-size:16px}
-.btn-oro{display:block;width:100%;background:#BD9048;color:#fff;font-weight:700;border-radius:5px;padding:16px;text-decoration:none;text-align:center;font-size:17px;letter-spacing:.01em;border:0;cursor:pointer}
-.btn-oro:hover{filter:brightness(1.05)}
-.btn-oro{background:linear-gradient(135deg,#BD9048,#CFB180);text-transform:uppercase;letter-spacing:.04em;font-weight:600;box-shadow:0 6px 28px rgba(189,144,72,.35)}
+
+/* Las areas cerradas */
 .cerr{display:flex;align-items:center;gap:22px;cursor:pointer;text-align:left;width:100%;font-weight:400;letter-spacing:0;color:inherit;background:#fff;font-family:inherit}
 .cerr:hover{border-color:#BD9048;filter:none}
 .cerr .tx{flex:1;min-width:0}
-.cerr .bl{flex:0 0 150px}
-.cerr .bl i{display:block;height:7px;border-radius:9px;background:#AFC0C3;filter:blur(3px);opacity:.55;margin:7px 0}
 .cerr .ck{flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#BD9048}
 .cerr .ck svg{width:26px;height:26px;stroke-width:2.2}
-.sec-t{font-family:'Playfair Display',Georgia,serif;color:var(--tinta);text-align:center;font-size:28px;margin:44px 0 18px;line-height:1.25}
-.sec-t em{color:#b08a4f}
-.res{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.re{background:#fff;border:1px solid var(--borde);border-radius:10px;padding:20px;display:flex;gap:14px;align-items:flex-start}
-.re img{width:48px;height:48px;border-radius:50%;flex:0 0 auto}
-.re p{margin:0;font-style:italic;font-size:15px;line-height:1.5;color:#33474C}
-.re b{display:block;font-style:normal;font-size:14px;color:#9a7a45;margin-top:8px}
-.of{margin-top:44px;background:#fbf3e2;border:1px solid #ead9b7;border-top:3px solid #BD9048;border-radius:12px;padding:40px 40px 34px;display:grid;grid-template-columns:340px 1fr;gap:36px;align-items:center}
-.fan{position:relative;height:470px}
-.fan img{position:absolute;width:225px;height:auto;border-radius:4px;box-shadow:0 10px 30px rgba(14,63,75,.18);border:1px solid #eadfcb;background:#fff}
-.fan .a{left:0;top:40px;transform:rotate(-10deg)}
-.fan .b{left:115px;top:40px;transform:rotate(9deg)}
-.fan .c{left:45px;top:10px;width:250px;z-index:2}
-.eti{font-size:12.5px;font-weight:700;letter-spacing:.12em;color:#9a7a45;margin:0 0 6px}
-.of h2,.pop-caja h3{font-family:'Playfair Display',Georgia,serif;color:var(--tinta);font-size:32px;margin:0 0 8px;line-height:1.2}
-.of .ent{margin:0 0 14px;font-size:16px}
+
+/* Los botones, como los de la landing */
+.btn-oro{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-width:400px;width:auto;background:linear-gradient(135deg,#BD9048,#CFB180);color:#fff;font-weight:600;border-radius:5px;padding:10px 40px;text-decoration:none;text-align:center;font-size:16px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;border:0;cursor:pointer;box-shadow:0 6px 28px rgba(189,144,72,.35)}
+.btn-oro:hover{filter:brightness(1.05)}
+.btn-oro .flecha{font-size:1.25em;font-weight:700;line-height:1}
+.desbloq .btn-oro{min-width:0;width:100%}
+
+/* La oferta, en verde */
+.of{margin-top:44px;background:#0E3F4B;color:#E9E2D4;border:1px solid #0E3F4B;border-top-width:3px;border-radius:14px;box-shadow:0 14px 40px rgba(14,63,75,.08);padding:44px 48px 30px;display:grid;grid-template-columns:320px 1fr;gap:36px;align-items:center}
+.fan{position:relative}
+.fan img{position:absolute;height:auto;border-radius:4px;box-shadow:0 10px 30px rgba(0,0,0,.35);border:1px solid #eadfcb;background:#fff}
+.fan .a{transform:rotate(-10deg)}
+.fan .b{transform:rotate(9deg)}
+.fan .c{z-index:2}
+.eti{margin:0 0 18px;font-size:12.5px}
+.pill{display:inline-flex;align-items:center;background:rgba(207,177,128,.16);border:1px solid rgba(207,177,128,.45);color:#CFB180;border-radius:99px;padding:5px 12px;font-size:12.5px;font-weight:700;letter-spacing:.12em}
+.of h2,.pop-caja h3{font-family:'Playfair Display',Georgia,serif;color:#fff;font-size:32px;margin:0 0 16px;line-height:1.2}
+.of h2 em,.pop-caja h3 em{font-style:italic;color:#CFB180}
+.of .ent{margin:0 0 24px;font-size:16px;color:#E9E2D4}
 .incl{list-style:none;padding:0;margin:0 0 18px}
-.incl li{padding:5px 0 5px 28px;position:relative;line-height:1.45;font-size:16px}
-.incl li::before{content:"✓";position:absolute;left:0;top:5px;color:#BD9048;font-weight:700}
-.comp{background:#fff;border:1px solid #ead9b7;border-radius:8px;padding:14px 16px;margin:0 0 18px}
-.comp .q{font-weight:700;color:var(--tinta);margin:0 0 8px;font-size:15px}
-.comp .r{display:flex;justify-content:space-between;gap:12px;font-size:14.5px;padding:5px 0;border-top:1px solid #f1e6cf;color:var(--texto)}
-.comp .r span:last-child{white-space:nowrap;color:var(--suave)}
-.comp .r.tu{font-weight:700;color:var(--tinta)}
-.comp .r.tu span:last-child{color:#9a7a45}
-.precio{display:flex;align-items:baseline;gap:14px;margin:0 0 14px}
-.precio b{font-family:'Playfair Display',Georgia,serif;font-size:50px;color:var(--tinta);line-height:1;font-variant-numeric:lining-nums}
-.precio span{font-size:14px;color:var(--suave);line-height:1.4}
-.seg{font-size:13px;color:var(--suave);margin:12px 0 0;text-align:center}
+.incl li{padding:5px 0 5px 28px;position:relative;line-height:1.45;font-size:16px;color:#C9D6D9}
+.incl li b{color:#CFB180}
+.incl li::before{content:"✓";position:absolute;left:0;top:5px;color:#CFB180;font-weight:700}
+
+/* El precio y el boton, dentro de la oferta y del pop */
+.cierre{grid-column:1/-1;text-align:center;background:#164C59;border-radius:10px;padding:30px 40px 22px;margin:8px 0 0}
+.vs{font-size:17px;line-height:1.55;color:#C9D6D9;margin:0}
+.vs b{color:#fff}
+.hr-c{width:90px;border:0;height:1px;background:#CFB180;margin:22px auto}
+.tdo{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:38px;color:#fff;margin:0;line-height:1.1}
+.min{font-family:'Open Sans',sans-serif;font-weight:400;font-size:21px;color:#E9E2D4;margin:4px 0 6px}
+.pr{display:flex;align-items:center;justify-content:center;gap:18px;margin:0 0 18px}
+.pr b{font-family:'Playfair Display',Georgia,serif;font-size:76px;line-height:1;color:#fff;font-variant-numeric:lining-nums}
+.pr s{font-family:'Playfair Display',Georgia,serif;font-size:34px;color:#8FA8AE;text-decoration-color:#e07a6e;font-variant-numeric:lining-nums}
+.fallo-pago{display:none;color:#F2C4BE;margin:14px 0 0}
+.conf{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;margin:18px 0 0;font-size:15px;color:#C9D6D9}
+.hr-c2{border:0;height:1px;background:rgba(207,177,128,.35);max-width:520px;margin:18px auto 14px}
+.garan2{font-size:15px;color:#C9D6D9;margin:0}
+
+/* El pop: lo mismo que la oferta */
 .pop{display:none;position:fixed;inset:0;z-index:300;background:rgba(14,63,75,.6);align-items:center;justify-content:center;padding:16px;overflow-y:auto}
 .pop.abierta{display:flex}
-.pop-caja{background:#fff;border-radius:12px;max-width:480px;width:100%;padding:34px 34px 26px;position:relative;border-top:3px solid #BD9048}
+.pop-caja{background:#0E3F4B;color:#E9E2D4;border-radius:12px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto;padding:34px 34px 26px;position:relative;border-top:3px solid #BD9048}
 .pop-caja h3{font-size:28px;text-align:center}
-.pop-caja .ent{text-align:center;margin:0 0 16px}
-.pop-caja .precio{justify-content:center}
-.pop-caja .x{position:absolute;top:8px;right:12px;font-size:26px;color:var(--suave);background:none;border:0;width:auto;padding:4px}
-.cita{font-style:italic;font-size:14.5px;color:#33474C;border-left:2px solid #BD9048;padding-left:12px;margin:18px 0 0}
-.cita span{display:block;font-style:normal;font-size:13px;color:#9a7a45;margin-top:4px}
-@media (max-width:600px){.inicio .datos .sep{display:none}.inicio .datos .lug{display:block}}
-.nav-cta{text-decoration:none}
-.of{grid-template-columns:340px 1fr}
-.cierre{grid-column:1/-1;text-align:center;max-width:620px;margin:6px auto 0}
-.vs{font-size:17px;line-height:1.55;color:var(--texto);margin:0}
-.vs b{color:var(--tinta)}
-.hr-c{width:90px;border:0;height:1px;background:#d8c39b;margin:22px auto}
-.tdo{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:38px;color:var(--tinta);margin:0;line-height:1.1}
-.min{font-family:'Playfair Display',Georgia,serif;font-size:24px;color:var(--tinta);margin:4px 0 6px}
-.pr{display:flex;align-items:center;justify-content:center;gap:18px;margin:0 0 18px}
-.pr b{font-family:'Playfair Display',Georgia,serif;font-size:76px;line-height:1;color:var(--tinta);font-variant-numeric:lining-nums}
-.pr s{font-family:'Playfair Display',Georgia,serif;font-size:34px;color:#9aa3a5;text-decoration-color:#b3261e;font-variant-numeric:lining-nums}
-.btn-big{font-size:19px;padding:20px}
-.conf{display:flex;justify-content:center;gap:26px;flex-wrap:wrap;margin:18px 0 0;font-size:15px;color:var(--texto)}
-.hr-c2{border:0;height:1px;background:#e3cfa6;margin:18px 0 14px}
-.garan2{font-size:15px;color:var(--texto);margin:0}
-.pop-caja .cierre{margin-top:4px}.pop-caja .tdo{font-size:28px}.pop-caja .min{font-size:19px}.pop-caja .pr b{font-size:56px}.pop-caja .pr s{font-size:26px}.pop-caja .vs{font-size:15px}
-.pop-caja{max-width:560px;max-height:92vh;overflow-y:auto}
-@media (max-width:600px){.tdo{font-size:30px}.min{font-size:20px}.pr b{font-size:60px}.pr s{font-size:28px}.btn-big{font-size:16px;padding:16px 10px}.conf{gap:10px 18px}}
-.of{background:#fff;border:1px solid #ead9b7;border-top:3px solid #BD9048;border-radius:14px;box-shadow:0 14px 40px rgba(14,63,75,.08);padding:44px 48px 30px;margin-top:44px;display:grid;grid-template-columns:320px 1fr;gap:36px;align-items:center}
-.cierre{grid-column:1/-1;background:#fbf3e2;border:0;border-radius:10px;box-shadow:none;padding:30px 40px 22px;max-width:none;margin:8px 0 0;text-align:center}
-.cierre .btn-big{max-width:520px;margin:0 auto}
-.cierre .hr-c2{max-width:520px;margin-left:auto;margin-right:auto}
-.min{font-family:'Open Sans',sans-serif!important;font-weight:400;font-size:21px!important}
-.sec-t{margin-top:56px}
-@media (max-width:600px){.of{padding:28px 18px 20px}.cierre{padding:24px 14px 18px}}
+.pop-caja .x{position:absolute;top:8px;right:12px;font-size:26px;color:#C9D6D9;background:none;border:0;width:auto;padding:4px}
+.pop-caja .cierre{margin-top:4px}
+.pop-caja .vs{font-size:15px}
+.pop-caja .tdo{font-size:28px}
+.pop-caja .pr b{font-size:56px}
+.pop-caja .pr s{font-size:26px}
 
-.pill{display:inline-flex;align-items:center;background:rgba(207,177,128,.16);border:1px solid rgba(207,177,128,.45);color:#CFB180;border-radius:99px;padding:5px 12px;font-size:12.5px;letter-spacing:.12em}
-.of h2 em{font-style:italic;color:#CFB180}
-.of .incl li b{color:#CFB180!important}
-.pr{position:relative}
-.flechita{margin-right:-4px;margin-top:-30px}
-.btn-oro{display:inline-flex!important;align-items:center;justify-content:center;gap:.5em;width:auto!important;font-size:16px!important;padding:10px 40px!important;min-width:400px;text-transform:uppercase}
-.btn-oro .flecha{font-size:1.25em;font-weight:700;line-height:1}
-.desbloq .btn-oro{min-width:0;width:100%!important}
-.cierre .btn-big{max-width:none}
-@media (max-width:600px){.btn-oro{display:flex!important;width:100%!important;min-width:0;font-size:18px!important;padding:17px 4px!important}.flechita{width:54px;height:42px;margin-top:-20px}}
+/* Las reseñas, iguales que en la landing, y el cierre */
+.b8{margin:56px calc(50% - 50vw) 0}
+.fin{margin-top:64px}
+.fin-t{font-family:'Playfair Display',Georgia,serif;font-size:28px;line-height:1.35;color:#0E3F4B;margin:0 0 26px;font-weight:700}
+.fin-t em{color:#BD9048}
+.fin-s{font-size:14px;color:#6E7B7F;margin:14px 0 0}
 
-.of .eti,.pop-caja .eti{margin:0 0 18px}
-.of h2,.pop-caja h3{margin:0 0 16px!important}
-.of .ent{margin:0 0 24px!important}
-
-</style>
-<script>
-const AV = {};
-const AREAS = [
-  ['Tus patrones','Lo que repites sin poder parar','Verás por qué siempre te pasa lo mismo, qué lo desencadena y qué ganas tú sin saberlo'],
-  ['Tus miedos','Qué gobierna tu vida sin que te des cuenta','Sabrás qué lo dispara, cómo reaccionas, qué evitas y cuánto te ha costado ya'],
-  ['Tu herida','Lo que hoy sigue bloqueándote en silencio','Descubrirás qué lo reabre sin verlo venir, qué estás perdiendo y qué necesitas para soltarlo'],
-  ['Tú y el amor','Por qué amas como amas y atraes a quien atraes','Comprenderás qué necesitas para sentirte querida y qué falla siempre'],
-  ['Tus relaciones','Cómo te vinculas con los demás','Reconocerás qué rol ocupas sin haberlo decidido y de quién acabas rodeándote'],
-  ['Tú y el dinero','Tu relación con él y qué te limita','Sabrás qué significa para ti, qué haces con él y qué te impide ganar más'],
-  ['Tus fortalezas y tus desafíos','La fuerza que no estás usando','Conocerás lo que la vida te repite hasta que lo aprendas y cómo empezar a utilizar tu potencial a tu favor'],
-  ['Tu mapa de origen','Toda tu programación interior en una sola imagen','Tendrás el dibujo de quién eres, único y solo tuyo'],
-];
-const INCL = '<ul class="incl"><li><b>Tus 7 áreas completas:</b> tu identidad, patrones, miedos, herida, amor, relaciones y dinero</li><li><b>Tus fortalezas y tus desafíos:</b> la fuerza que tienes y no estás usando, y lo que la vida te repite hasta que lo aprendas</li><li><b>Tu mapa de origen:</b> toda tu programación en una sola imagen, única y solo tuya</li><li><b>Más de 40 páginas en PDF, escritas solo para ti:</b> 100% personalizado, claro y sin tecnicismos</li><li><b>Tuyo para siempre:</b> guárdalo, imprímelo y vuelve a él cuando lo necesites</li><li><b>Acceso inmediato:</b> lo recibes en minutos en tu email, sin citas y sin esperas</li></ul>';
-const CIERRE = '<div class="cierre"><p class="vs">Un informe similar cuesta desde <b>150 €</b> y una sesión con un especialista entre <b>80 €</b> y <b>400 €</b>, ambos con cita y espera</p><hr class="hr-c"><p class="tdo">Tu Diseño de Origen</p><p class="min">lo tienes en minutos, por solo</p><p class="pr"><b>47 €</b><s>67 €</s></p><a class="btn-oro btn-big" href="#" id="comprar">DESBLOQUEAR MI DISEÑO COMPLETO<span class="flecha">→</span></a><p class="fallo-pago" id="falloDelPago"></p><div class="conf"><span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#CFB180" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;margin-right:6px"><rect x="2.5" y="5.5" width="19" height="13" rx="2"/><path d="M2.5 10h19M6 15h4"/></svg>Pago único</span><span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#CFB180" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;margin-right:6px"><rect x="4" y="10.5" width="16" height="11" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>100% seguro con Stripe</span><span><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#CFB180" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;margin-right:6px"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>Lo recibes en minutos</span></div><hr class="hr-c2"><p class="garan2">'+'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#CFB180" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-4px;margin-right:6px"><path d="M12 3 4.5 6v6c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6L12 3z"/><path d="m8.8 12 2.2 2.2 4.3-4.4"/></svg>'+'Si hay un error en tu informe, lo resolvemos en 24 h</p></div>';
-function pintarElResultado(datos, salida) {
-  const [anio, mes, dia] = String(datos.fecha).split('-').map(Number);
-  const fechaNice = dia + ' de ' + MESES_NICE[mes - 1] + ' de ' + anio;
-  const lugar = [datos.municipio, datos.pais].filter(Boolean).join(', ');
-  const C = CANDADO;
-  const n2 = i => String(i).padStart(2,'0');
-  return ''
-  + '<div class="inicio"><h1>' + comoTexto(datos.nombre) + ', este es <em>Tu Diseño de Origen</em></h1>'
-  +   '<p class="datos">' + comoTexto(fechaNice + ' · ' + laHoraEnDos(datos.hora)) + '<span class="sep"> · </span><span class="lug">' + comoTexto(lugar) + '</span></p>'
-  +   (salida.puedeCorregir
-        ? '<a class="corr" href="/tu-diseno-de-origen?corregir=1#formulario">¿Hay algo mal en tus datos?</a>'
-        : '<a class="corr" href="#" id="yaNoQuedan">¿Hay algo mal en tus datos?</a>')
-  + '</div>'
-  + '<div class="tl">'
-  +   '<div class="it it1"><span class="num">01</span><span class="lab">Tu identidad</span><span class="tit">Cómo funcionas por dentro</span><span class="des">Qué muestras, qué escondes y los puntos ciegos que nunca has visto</span>'
-  +     '<div class="area">' + pintarElArea(salida.texto) + '</div>'
-  +     '<div class="corte"><div class="area borroso"><h3>Las creencias que sostienen todo esto</h3><p>Hay una frase que llevas dentro desde muy pequeña y que nunca has puesto en duda porque la das por cierta sin pensarlo.</p><p>Esa frase decide por ti más veces de las que crees, y explica por qué vuelves una y otra vez al mismo sitio aunque quieras otra cosa.</p></div>'
-  +       '<div class="desbloq"><span class="cand-c">' + C + '</span><h4>Desbloquear ahora</h4><p>Descubre las creencias que sostienen todo esto y las otras 8 partes que revelan el resto de ti</p><button class="btn-oro abre">Desbloquear mi Diseño completo</button></div>'
-  +     '</div>'
-  +   '</div>'
-  +   AREAS.map((a,i) => '<button class="it cerr abre"><span class="num">' + n2(i+2) + '</span><span class="tx"><span class="lab">' + comoTexto(a[0]) + '</span><span class="tit">' + comoTexto(a[1]) + '</span><span class="des">' + comoTexto(a[2]) + '</span></span><span class="ck">' + C + '</span></button>').join('')
-  + '</div>'
-  + '<div class="of" id="oferta"><div class="fan"><img class="a" src="/images/4-rueda-pdf.jpg" alt=""><img class="b" src="/images/5E-base-amor-pdf.jpg" alt=""><img class="c" src="/images/1-portada-pdf.jpg" alt=""></div>'
-  +   '<div><p class="eti"><span class="pill"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-2px;margin-right:6px"><rect x="4" y="10.5" width="16" height="11" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 7.6-1.7"/></svg>DESBLOQUEAR AHORA</span></p><h2>Todo tu Diseño de Origen, <em>desbloqueado</em></h2><p class="ent">Ya has descubierto una parte de ti, ahora descubre el resto:</p>' + INCL + '</div>'
-  + CIERRE + '</div>'
-  + '<section class="b8">     <div class="b8-in">       <h2 class="b8-h"><span class="b8-txt"><span class="b8-l1">Ellos ya han descubierto</span> <em>el suyo</em></span></h2>       <div class="b8-videos">         <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230268085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Ona — Tu Diseño de Origen"></iframe></div>         <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230269127?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Nacho — Tu Diseño de Origen"></iframe></div>         <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230266221?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Sara — Tu Diseño de Origen"></iframe></div>       </div>       <div class="b8-sep" aria-hidden="true"><i></i><b></b><i></i></div>       <div class="b8-res">         <img src="/images/R1-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="620" loading="lazy" />         <img src="/images/R3-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="734" loading="lazy" />         <img src="/images/R6-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="593" loading="lazy" />       </div>     </div><div class="fin"><p class="fin-t">Descubre las respuestas que llevas tanto tiempo buscando<br><em>Todo está en tu Diseño de Origen</em></p><a class="btn-oro abre" href="#oferta">DESBLOQUEAR MI DISEÑO COMPLETO · 47 €<span class="flecha">→</span></a><p class="fin-s">Pago único · <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#BD9048" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:5px"><rect x="4" y="10.5" width="16" height="11" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>100% seguro con Stripe · Lo recibes en minutos</p></div></section>'
-  + '<div class="pop" id="pop"><div class="pop-caja"><button class="x" aria-label="Cerrar">×</button>'
-  +   '<p class="eti" style="text-align:center"><span class="pill"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-2px;margin-right:6px"><rect x="4" y="10.5" width="16" height="11" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 7.6-1.7"/></svg>DESBLOQUEAR AHORA</span></p><h3>Todo tu Diseño de Origen, <em style="color:#CFB180">desbloqueado</em></h3>' + INCL.replace('id="comprar"','') + CIERRE.replace(' id="comprar"',' data-compra="pop"').replace(' id="falloDelPago"','')
-  + '</div></div>';
+/* PC y tablet horizontal: la foto del PDF a la izquierda */
+@media (min-width:601px){
+  .fan{height:420px}
+  .fan img{width:185px}
+  .fan .a{left:0;top:50px}
+  .fan .b{left:120px;top:50px}
+  .fan .c{width:205px;left:50px;top:20px}
 }
-document.addEventListener('click', e => {
-  const pop = document.getElementById('pop');
-  // EL BOTON DEL POP PAGA IGUAL QUE EL DE LA OFERTA. Se cierra el pop y se
-  // baja a la oferta, que es donde sale el aviso si el pago no arranca.
-  if (e.target.closest('[data-compra="pop"]')) {
-    pop.classList.remove('abierta');
-    document.getElementById('oferta').scrollIntoView({ block: 'center' });
-    alComprar(e);
-    return;
-  }
-  if (e.target.closest('.abre')) { pop.classList.add('abierta'); return; }
-  if (e.target.closest('.x') || e.target === pop) pop.classList.remove('abierta');
-});
-</script>
-<style>@media (max-width:600px){.nav-cta{font-size:17px;letter-spacing:.03em}}</style><style>
+/* Tablet vertical: la oferta en una columna y las 3 reseñas en una linea */
+@media (min-width:601px) and (max-width:850px){
+  .of{grid-template-columns:1fr;gap:20px}
+  .fan{width:340px;height:340px;margin:0 auto}
+}
+@media (min-width:681px) and (max-width:850px){
+  .b8-res{grid-template-columns:repeat(3,1fr);gap:40px}
+}
+/* Movil */
 @media (max-width:600px){
- .inicio h1{white-space:normal;font-size:30px}
- .it{padding:20px 16px 20px 62px}
- .num{left:10px;width:36px;height:36px;font-size:14px}
- .tl::before{left:27px}
- .cerr{gap:12px}
- .tit{font-size:20px}
- .res{grid-template-columns:1fr}
- .of{grid-template-columns:1fr;padding:28px 18px 20px;gap:10px}
- .fan{height:300px;width:290px;margin:0 auto}
- .fan img{width:150px}.fan .c{width:170px;left:60px}.fan .a{left:10px}.fan .b{left:130px}
- .of h2{font-size:28px}
- .comp .r{flex-direction:column;gap:2px}
- .desbloq{margin-top:-120px;padding:28px 18px 20px}
+  .nav-cta{font-size:17px;letter-spacing:.03em}
+  .inicio h1{font-size:30px}
+  .inicio .datos .sep{display:none}
+  .inicio .datos .lug{display:block}
+  .it{padding:20px 16px 20px 62px}
+  .num{left:10px;width:36px;height:36px;font-size:14px}
+  .tl::before{left:27px}
+  .cerr{gap:12px}
+  .tit{font-size:20px}
+  .desbloq{margin-top:-120px;padding:28px 18px 20px}
+  .btn-oro{display:flex;width:100%;min-width:0;font-size:18px;padding:17px 4px;white-space:normal}
+  .of{grid-template-columns:1fr;padding:28px 18px 20px;gap:10px}
+  .of h2{font-size:28px}
+  .fan{height:300px;width:290px;margin:0 auto}
+  .fan img{width:150px}
+  .fan .a{left:10px;top:40px}
+  .fan .b{left:130px;top:40px}
+  .fan .c{width:170px;left:60px;top:10px}
+  .cierre{padding:24px 14px 18px}
+  .tdo{font-size:30px}
+  .pr b{font-size:60px}
+  .pr s{font-size:28px}
+  .conf{gap:10px 18px}
+  .fin-t{font-size:24px}
 }
-</style><style>@media (min-width:601px){.fan{height:420px}.fan img{width:185px}.fan .a{left:0;top:50px}.fan .b{left:120px;top:50px}.fan .c{width:205px;left:50px;top:20px}}</style><style>
-.of{background:#0E3F4B;border-color:#0E3F4B;color:#E9E2D4}
-.of .eti{color:#CFB180}
-.of h2{color:#fff}
-.of .ent{color:#E9E2D4}
-.of .incl li{color:#C9D6D9}
-.of .incl li b{color:#fff}
-.of .incl li::before{color:#CFB180}
-.of .cierre{background:#164C59}
-.of .vs{color:#C9D6D9}.of .vs b{color:#fff}
-.of .hr-c{background:#CFB180}
-.of .tdo{color:#fff}.of .min{color:#E9E2D4}
-.of .pr b{color:#fff}.of .pr s{color:#8FA8AE;text-decoration-color:#e07a6e}
-.of .conf,.of .garan2{color:#C9D6D9}
-.of .hr-c2{background:rgba(207,177,128,.35)}
-.of .fan img{box-shadow:0 10px 30px rgba(0,0,0,.35)}
 </style>
-<style>.of .incl li b{color:#CFB180}.nav-cta{text-decoration:none}</style><style>@media (min-width:601px) and (max-width:850px){.of{grid-template-columns:1fr;gap:20px}.fan{width:340px;height:340px;margin:0 auto}}</style><style>
-.pop-caja{background:#0E3F4B;color:#E9E2D4}
-.pop-caja h3{color:#fff}.pop-caja .x{color:#C9D6D9}.pop-caja .incl li b{color:#CFB180!important}
-.pop-caja .eti{color:#CFB180}
-.pop-caja h2{color:#fff}
-.pop-caja .ent{color:#E9E2D4}
-.pop-caja .incl li{color:#C9D6D9}
-.pop-caja .incl li b{color:#fff}
-.pop-caja .incl li::before{color:#CFB180}
-.pop-caja .cierre{background:#164C59}
-.pop-caja .vs{color:#C9D6D9}.pop-caja .vs b{color:#fff}
-.pop-caja .hr-c{background:#CFB180}
-.pop-caja .tdo{color:#fff}.pop-caja .min{color:#E9E2D4}
-.pop-caja .pr b{color:#fff}.pop-caja .pr s{color:#8FA8AE;text-decoration-color:#e07a6e}
-.pop-caja .conf,.pop-caja .garan2{color:#C9D6D9}
-.pop-caja .hr-c2{background:rgba(207,177,128,.35)}
-.pop-caja .fan img{box-shadow:0 10px 30px rgba(0,0,0,.35)}
-</style>
-<style>.btn-oro{white-space:nowrap}@media (max-width:600px){.btn-oro{white-space:normal}}</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
+      <img src="/images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" width="395" height="48" />
+    </a>
+    <a href="#comprar" class="nav-cta">Desbloquear todo mi Diseño</a>
+  </div>
+</nav>
+
 <div class="hoja">
   <div class="resultado" id="resultado"></div>
 </div>
@@ -797,24 +542,6 @@ document.addEventListener('click', e => {
 // Todo lo que sale aquí viene del modelo. Aquí no se escribe ni una frase
 // suya a mano.
 // ═══════════════════════════════════════════════════════════════
-
-// LAS OTRAS SECCIONES DEL INFORME, tal como están escritas en el índice del
-// PDF. Es lo que no ve, y es lo único fijo de esta pantalla.
-const LO_CERRADO_DE_SU_AREA = [
-  ['Las creencias que sostienen todo esto', 'La frase que das por cierta y nunca has puesto en duda', true],
-  ['Qué se te abre el día que se caigan', 'Qué deja de pasarte y qué puedes hacer que hoy no haces', true],
-];
-const LO_CERRADO_DEL_RESTO = [
-  ['Tus patrones', 'Por qué siempre te pasa lo mismo y qué repites sin poder parar'],
-  ['Tus miedos', 'Lo que gobierna tu vida sin que te des cuenta'],
-  ['Tu herida', 'Lo que hoy sigue bloqueándote en silencio'],
-  ['Tú y el amor', 'Por qué amas como amas y por qué atraes a quien atraes'],
-  ['Tus relaciones', 'Cómo te vinculas con los demás y qué rol acabas ocupando'],
-  ['Tú y el dinero', 'Por qué el dinero no termina de fluir en tu vida'],
-  ['Tu programación inicial', 'Tu carta entera: posiciones, casas, ejes y aspectos', true],
-  ['Tu mapa de un vistazo', 'Tus fortalezas y tus desafíos, ordenados', true],
-  ['Tu próximo paso', 'Por dónde se empieza cuando ya sabes todo esto', true],
-];
 
 const CANDADO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'
   + '<rect x="4" y="10.5" width="16" height="11" rx="2"></rect>'
@@ -853,14 +580,6 @@ function pintarElArea(texto) {
   return html;
 }
 
-function listaDeCandados(filas, clase) {
-  return '<ul class="cerrados' + (clase ? ' ' + clase : '') + '">'
-    + filas.map(f => '<li' + (f[2] ? ' class="suelto"' : '') + '>' + CANDADO
-        + '<span><b>' + comoTexto(f[0]) + '</b>'
-        + '<span class="que">' + comoTexto(f[1]) + '</span></span></li>').join('')
-    + '</ul>';
-}
-
 const MESES_NICE = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
 // LA HORA EN LAS DOS FORMAS: la de siempre y, entre parentesis, la de am y
@@ -877,6 +596,181 @@ function laHoraEnDos(hora) {
   return hora + ' (' + (n % 12 === 0 ? 12 : n % 12) + ':' + m + (n < 12 ? 'am' : 'pm') + ')';
 }
 
+
+// ── LO QUE SE PINTA ────────────────────────────────────────────
+//
+// Arriba su nombre y sus datos; luego su identidad (la 01), cortada justo
+// antes de las creencias; debajo las otras areas cerradas; la oferta; las
+// reseñas, iguales que en la landing; y el cierre. Al tocar cualquier area
+// cerrada o cualquier boton que no sea el de pagar se abre el pop, que dice
+// lo mismo que la oferta.
+
+// Las areas cerradas, de la 02 a la 09: nombre, titulo y lo que descubre.
+const LAS_AREAS_CERRADAS = [
+  ['Tus patrones', 'Lo que repites sin poder parar', 'Verás por qué siempre te pasa lo mismo, qué lo desencadena y qué ganas tú sin saberlo'],
+  ['Tus miedos', 'Qué gobierna tu vida sin que te des cuenta', 'Sabrás qué lo dispara, cómo reaccionas, qué evitas y cuánto te ha costado ya'],
+  ['Tu herida', 'Lo que hoy sigue bloqueándote en silencio', 'Descubrirás qué lo reabre sin verlo venir, qué estás perdiendo y qué necesitas para soltarlo'],
+  ['Tú y el amor', 'Por qué amas como amas y atraes a quien atraes', 'Comprenderás qué necesitas para sentirte querida y qué falla siempre'],
+  ['Tus relaciones', 'Cómo te vinculas con los demás', 'Reconocerás qué rol ocupas sin haberlo decidido y de quién acabas rodeándote'],
+  ['Tú y el dinero', 'Tu relación con él y qué te limita', 'Sabrás qué significa para ti, qué haces con él y qué te impide ganar más'],
+  ['Tus fortalezas y tus desafíos', 'La fuerza que no estás usando', 'Conocerás lo que la vida te repite hasta que lo aprendas y cómo empezar a utilizar tu potencial a tu favor'],
+  ['Tu mapa de origen', 'Toda tu programación interior en una sola imagen', 'Tendrás el dibujo de quién eres, único y solo tuyo'],
+];
+
+// Los iconos dorados de la oferta.
+function icono(trazo) {
+  return '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#CFB180" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-4px;margin-right:6px">' + trazo + '</svg>';
+}
+const ICONO_TARJETA = icono('<rect x="2.5" y="5.5" width="19" height="13" rx="2"/><path d="M2.5 10h19M6 15h4"/>');
+const ICONO_CANDADO = icono('<rect x="4" y="10.5" width="16" height="11" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/>');
+const ICONO_RAYO = icono('<path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/>');
+const ICONO_ESCUDO = icono('<path d="M12 3 4.5 6v6c0 4.5 3.2 7.8 7.5 9 4.3-1.2 7.5-4.5 7.5-9V6L12 3z"/><path d="m8.8 12 2.2 2.2 4.3-4.4"/>');
+const ETIQUETA_DESBLOQUEAR = '<span class="pill"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" style="vertical-align:-2px;margin-right:6px"><rect x="4" y="10.5" width="16" height="11" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 7.6-1.7"/></svg>DESBLOQUEAR AHORA</span>';
+
+// Lo que incluye, igual en la oferta y en el pop.
+const LO_QUE_INCLUYE = '<ul class="incl">'
+  + '<li><b>Tus 7 áreas completas:</b> tu identidad, patrones, miedos, herida, amor, relaciones y dinero</li>'
+  + '<li><b>Tus fortalezas y tus desafíos:</b> la fuerza que tienes y no estás usando, y lo que la vida te repite hasta que lo aprendas</li>'
+  + '<li><b>Tu mapa de origen:</b> toda tu programación en una sola imagen, única y solo tuya</li>'
+  + '<li><b>Más de 40 páginas en PDF, escritas solo para ti:</b> 100% personalizado, claro y sin tecnicismos</li>'
+  + '<li><b>Tuyo para siempre:</b> guárdalo, imprímelo y vuelve a él cuando lo necesites</li>'
+  + '<li><b>Acceso inmediato:</b> lo recibes en minutos en tu email, sin citas y sin esperas</li>'
+  + '</ul>';
+
+// El precio y el boton de pagar. En la oferta el boton es el #comprar; en el
+// pop lleva data-compra, y el aviso de error solo esta en la oferta.
+function elPrecio(enElPop) {
+  return '<div class="cierre">'
+    + '<p class="vs">Un informe similar cuesta desde <b>150 €</b> y una sesión con un especialista entre <b>80 €</b> y <b>400 €</b>, ambos con cita y espera</p>'
+    + '<hr class="hr-c">'
+    + '<p class="tdo">Tu Diseño de Origen</p>'
+    + '<p class="min">lo tienes en minutos, por solo</p>'
+    + '<p class="pr"><b>47 €</b><s>67 €</s></p>'
+    + (enElPop
+        ? '<a class="btn-oro" href="#" data-compra="pop">DESBLOQUEAR MI DISEÑO COMPLETO<span class="flecha">→</span></a>'
+        : '<a class="btn-oro" href="#" id="comprar">DESBLOQUEAR MI DISEÑO COMPLETO<span class="flecha">→</span></a><p class="fallo-pago" id="falloDelPago"></p>')
+    + '<div class="conf"><span>' + ICONO_TARJETA + 'Pago único</span><span>' + ICONO_CANDADO + '100% seguro con Stripe</span><span>' + ICONO_RAYO + 'Lo recibes en minutos</span></div>'
+    + '<hr class="hr-c2">'
+    + '<p class="garan2">' + ICONO_ESCUDO + 'Si hay un error en tu informe, lo resolvemos en 24 h</p>'
+    + '</div>';
+}
+
+// Las reseñas: los mismos tres videos de la landing y tres capturas.
+const LAS_RESENAS = '<section class="b8"><div class="b8-in">'
+  + '<h2 class="b8-h"><span class="b8-txt"><span class="b8-l1">Ellos ya han descubierto</span> <em>el suyo</em></span></h2>'
+  + '<div class="b8-videos">'
+  +   '<div class="b8-video"><iframe src="https://player.vimeo.com/video/1230268085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Ona — Tu Diseño de Origen"></iframe></div>'
+  +   '<div class="b8-video"><iframe src="https://player.vimeo.com/video/1230269127?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Nacho — Tu Diseño de Origen"></iframe></div>'
+  +   '<div class="b8-video"><iframe src="https://player.vimeo.com/video/1230266221?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Sara — Tu Diseño de Origen"></iframe></div>'
+  + '</div>'
+  + '<div class="b8-sep" aria-hidden="true"><i></i><b></b><i></i></div>'
+  + '<div class="b8-res">'
+  +   '<img src="/images/R1-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="620" loading="lazy" />'
+  +   '<img src="/images/R3-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="734" loading="lazy" />'
+  +   '<img src="/images/R6-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="593" loading="lazy" />'
+  + '</div></div>'
+  + '<div class="fin">'
+  +   '<p class="fin-t">Descubre las respuestas que llevas tanto tiempo buscando<br><em>Todo está en tu Diseño de Origen</em></p>'
+  +   '<a class="btn-oro abre" href="#">DESBLOQUEAR MI DISEÑO COMPLETO · 47 €<span class="flecha">→</span></a>'
+  +   '<p class="fin-s">Pago único · <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#BD9048" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-right:5px"><rect x="4" y="10.5" width="16" height="11" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>100% seguro con Stripe · Lo recibes en minutos</p>'
+  + '</div>'
+  + '</section>';
+
+function pintarElResultado(datos, salida) {
+  const [anio, mes, dia] = String(datos.fecha).split('-').map(Number);
+  const fechaNice = dia + ' de ' + MESES_NICE[mes - 1] + ' de ' + anio;
+  // EL LUGAR, SIEMPRE EN MAYUSCULAS. Lo escriba como lo escriba -"ValENCIA",
+  // "valencia"-, en su portada se le enseña igual de bien, como en el aviso de
+  // comprobar sus datos. Solo cambia como se ve: lo guardado y la carta van
+  // con lo que el escribio.
+  const lugar = [datos.municipio, datos.provincia, datos.pais]
+    .filter(Boolean).map(parte => parte.toUpperCase()).join(', ');
+  const dosCifras = n => String(n).padStart(2, '0');
+
+  return ''
+    + '<div class="inicio">'
+    +   '<h1>' + comoTexto(datos.nombre) + ', este es <em>Tu Diseño de Origen</em></h1>'
+    +   '<p class="datos">' + comoTexto(fechaNice + ' · ' + laHoraEnDos(datos.hora)) + '<span class="sep"> · </span><span class="lug">' + comoTexto(lugar) + '</span></p>'
+    +   (salida.puedeCorregir
+          ? '<a class="corr" href="/tu-diseno-de-origen?corregir=1#formulario">¿Hay algo mal en tus datos?</a>'
+          : '<a class="corr" href="#" id="yaNoQuedan">¿Hay algo mal en tus datos?</a>')
+    + '</div>'
+
+    + '<div class="tl">'
+    +   '<div class="it it1"><span class="num">01</span>'
+    +     '<span class="lab">Tu identidad</span><span class="tit">Cómo funcionas por dentro</span>'
+    +     '<span class="des">Qué muestras, qué escondes y los puntos ciegos que nunca has visto</span>'
+    +     '<div class="area">' + pintarElArea(salida.texto) + '</div>'
+    +     '<div class="corte">'
+    +       '<div class="area borroso" aria-hidden="true"><h3>Las creencias que sostienen todo esto</h3>'
+    +         '<p>Hay una frase que llevas dentro desde muy pequeña y que nunca has puesto en duda porque la das por cierta sin pensarlo.</p>'
+    +         '<p>Esa frase decide por ti más veces de las que crees, y explica por qué vuelves una y otra vez al mismo sitio aunque quieras otra cosa.</p></div>'
+    +       '<div class="desbloq"><span class="cand-c">' + CANDADO + '</span><h4>Desbloquear ahora</h4>'
+    +         '<p>Descubre las creencias que sostienen todo esto y las otras 8 partes que revelan el resto de ti</p>'
+    +         '<button type="button" class="btn-oro abre">Desbloquear mi Diseño completo</button></div>'
+    +     '</div>'
+    +   '</div>'
+    +   LAS_AREAS_CERRADAS.map((a, i) => '<button type="button" class="it cerr abre"><span class="num">' + dosCifras(i + 2) + '</span>'
+          + '<span class="tx"><span class="lab">' + a[0] + '</span><span class="tit">' + a[1] + '</span><span class="des">' + a[2] + '</span></span>'
+          + '<span class="ck">' + CANDADO + '</span></button>').join('')
+    + '</div>'
+
+    + '<div class="of" id="oferta">'
+    +   '<div class="fan"><img class="a" src="/images/4-rueda-pdf.jpg" alt=""><img class="b" src="/images/5E-base-amor-pdf.jpg" alt=""><img class="c" src="/images/1-portada-pdf.jpg" alt="Tu Diseño de Origen en PDF"></div>'
+    +   '<div><p class="eti">' + ETIQUETA_DESBLOQUEAR + '</p>'
+    +     '<h2>Todo tu Diseño de Origen, <em>desbloqueado</em></h2>'
+    +     '<p class="ent">Ya has descubierto una parte de ti, ahora descubre el resto:</p>'
+    +     LO_QUE_INCLUYE
+    +   '</div>'
+    +   elPrecio(false)
+    + '</div>'
+
+    + LAS_RESENAS
+
+    + '<div class="pop" id="pop"><div class="pop-caja"><button type="button" class="x" aria-label="Cerrar">×</button>'
+    +   '<p class="eti" style="text-align:center">' + ETIQUETA_DESBLOQUEAR + '</p>'
+    +   '<h3>Todo tu Diseño de Origen, <em>desbloqueado</em></h3>'
+    +   LO_QUE_INCLUYE
+    +   elPrecio(true)
+    + '</div></div>';
+}
+
+// EL POP. Lo abren las areas cerradas y los botones con la clase "abre"; se
+// cierra con la X o tocando fuera. Su boton paga igual que el de la oferta:
+// se cierra el pop y se baja a la oferta, que es donde sale el aviso si el
+// pago no arranca.
+document.addEventListener('click', e => {
+  const pop = document.getElementById('pop');
+  if (!pop) return;
+  if (e.target.closest('[data-compra="pop"]')) {
+    pop.classList.remove('abierta');
+    document.getElementById('oferta').scrollIntoView({ block: 'center' });
+    alComprar(e);
+    return;
+  }
+  if (e.target.closest('.abre')) { e.preventDefault(); pop.classList.add('abierta'); return; }
+  if (e.target.closest('.x') || e.target === pop) pop.classList.remove('abierta');
+});
+
+// LOS VIDEOS DE LAS RESEÑAS, como en la landing: solo suena uno a la vez y al
+// terminar cada uno vuelve a su primer fotograma, parado. La libreria de Vimeo
+// se carga cuando ya estan puestos.
+function losVideos() {
+  const marcos = document.querySelectorAll('.b8-video iframe');
+  if (!marcos.length) return;
+  const empezar = () => {
+    if (!window.Vimeo) return;
+    const videos = Array.prototype.map.call(marcos, marco => new Vimeo.Player(marco));
+    videos.forEach(video => {
+      video.on('play', () => videos.forEach(otro => { if (otro !== video) otro.pause(); }));
+      video.on('ended', () => video.setCurrentTime(0).then(() => video.pause()));
+    });
+  };
+  const lib = document.createElement('script');
+  lib.src = 'https://player.vimeo.com/api/player.js';
+  lib.onload = empezar;
+  document.head.appendChild(lib);
+}
 
 // EL NAV AL BAJAR. A los 50px se quita el logo y se queda solo el boton.
 // Es el mismo que lleva el index.
@@ -910,6 +804,7 @@ function pintarTodo(datos, salida) {
   caja.innerHTML = pintarElResultado(datos, salida);
   caja.classList.add('puesto');
   document.getElementById('comprar').addEventListener('click', alComprar);
+  losVideos();
 
   // Si ya ha gastado sus dos cambios, el enlace sigue ahi pero abre la
   // ventana que se lo explica en vez de llevarle al formulario.
