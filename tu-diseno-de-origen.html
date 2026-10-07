@@ -881,7 +881,7 @@ text-align: center;
             border: 1px solid #dcc394; display: flex; align-items: center; justify-content: center;
             margin: 0 auto 22px; position: relative; z-index: 1;
             font-family: var(--font-display); font-weight: 700; font-size: 25px; color: var(--gold-deep); }
-    .b7-paso h3 { font-family: var(--font-body); font-weight: 600; font-size: 20px; line-height: 1.25;
+    .b7-paso h3 { font-family: var(--font-body); font-weight: 600; font-size: 18px; line-height: 1.25;
                   color: var(--teal-deep); margin: 0 0 12px; }
     .b7-cta { margin-top: 56px; }
     .b7-cta .btn-cta { display: inline-flex; align-items: center; justify-content: center; gap: .5em; }
@@ -891,8 +891,8 @@ text-align: center;
     @media (max-width: 850px) {
       .b7 .b7-pasos { gap: 34px; }
       .b7 .b7-paso { display: grid; grid-template-columns: 54px 1fr; column-gap: 16px; text-align: left; }
-      .b7 .b7-n { grid-row: 1 / span 2; margin: 0; }
-      .b7 .b7-paso h3 { align-self: center; }
+      .b7 .b7-n { margin: 0; }
+      .b7 .b7-paso h3 { align-self: center; margin: 0; }
       .b7 .b7-paso:not(:last-child)::after { content: ""; position: absolute; left: 27px; top: 54px; bottom: -34px; width: 1px; background: #e0cba6; }
     }
     @media (min-width: 681px) and (max-width: 850px) {
@@ -946,7 +946,7 @@ text-align: center;
                 border-radius: var(--r-md); box-shadow: 0 12px 30px rgba(14,63,75,.12); background: var(--teal-deep); }
     .b8-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
     /* Videos mas bajos: se recorta arriba y abajo, con el nombre encima */
-    .b8 .b8-video { padding-bottom: 0; height: auto; aspect-ratio: 2 / 2.9; }
+    .b8 .b8-video { padding-bottom: 0; height: auto; aspect-ratio: 2 / 2.98; }
     .b8 .b8-video iframe { inset: auto; top: 0; left: 0; width: 100%; height: auto; aspect-ratio: 9 / 16; transform: translateY(-9.5%); }
     .b8-sep { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 0 0 44px; }
     .b8-sep i { display: block; width: 64px; height: 1px; background: var(--gold-deep); opacity: .5; }
@@ -1259,7 +1259,7 @@ text-align: center;
       .b7-paso { padding: 0; }
       .b7-n { margin-bottom: 16px; }
       .b7-n { font-size: 36px; }
-      .b7-paso h3 { font-size: 22px; }
+      .b7-paso h3 { font-size: 20px; }
       .b7-cta { margin-top: 60px; }
       .b7-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
       .b8 { padding: 72px 0 80px; }
@@ -1355,7 +1355,7 @@ text-align: center;
       .b6-lab { font-size: 18px; }
       .b6-card li { font-size: 16px; }
       .b7-h { font-size: 35px; }
-      .b7-paso h3 { font-size: 20px; }
+      .b7-paso h3 { font-size: 18px; }
       .b8 { padding: 50px 0 70px; }
       .b9 { padding: 60px 0 80px; }
       .b9-h { font-size: 32px; margin-bottom: 60px; }
@@ -1451,9 +1451,8 @@ text-align: center;
       .b5-et { font-size: 18px; }
       .b7 { padding: 70px 0 70px; }
       .p2-quotes { grid-template-columns: 100px 1fr; gap: 16px 14px; }
-      .p2-quote { grid-column: 2; }
+      .p2-quote { grid-column: 2; padding: 16px 12px 16px 10px; }
       .p2-quote p { padding-left: 10px; }
-      .p2-quote { grid-column: 2; }
       .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 4; border-radius: var(--r-lg); overflow: hidden; }
       .p2-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 60% top; display: block; }
       .p2-punto { margin-bottom: 50px; }
@@ -1710,7 +1709,7 @@ text-align: center;
 <h2 class="b3v-h">Antes de tu<br class="br-b3m"> primera<br class="br-b3m"> respiración,<br> <span class="oro">ya se había formado<br class="br-b3m"> <span class="b3v-algo">algo en ti</span></span></h2>
         <p class="b3v-l">Una <strong>programación interior</strong> que dirige cómo piensas, cómo sientes, tus relaciones, tu dinero, tus miedos… <strong style="color: #fffbef; font-weight: 700;">sin que te des cuenta</strong>.</p>
         <div class="b3v-clave">
-          <p class="b3v-l">Nacio contigo, justo en el momento exacto en que llegaste a este mundo y ese instante dibujó un mapa único de ti, <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong>, descifra tu programación.</p>
+          <p class="b3v-l">Nacio contigo, en el momento exacto en que llegaste a este mundo, y ese instante dibujó un mapa único de ti: <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong> descifra tu programación.</p>
           <p class="b3v-fin">Y hasta que no la descubras <span class="b3v-fin-oro">nada cambiará de verdad</span></p>
         </div>
       </div>
@@ -1828,15 +1827,15 @@ text-align: center;
       <div class="b7-pasos">
         <div class="b7-paso">
           <span class="b7-n">1</span>
-          <h3>Rellenas el formulario con<br class="break-desktop"> tus datos de nacimiento</h3>
+          <h3>Rellenas el formulario con<br class="break-desktop"><br class="br-mov"> tus datos de nacimiento</h3>
         </div>
         <div class="b7-paso">
           <span class="b7-n">2</span>
-          <h3>Se genera<br class="break-desktop"> tu Diseño de Origen</h3>
+          <h3>Se genera<br class="break-desktop"><br class="br-mov"> tu Diseño de Origen</h3>
         </div>
         <div class="b7-paso">
           <span class="b7-n">3</span>
-          <h3>En 2 minutos,<br class="break-desktop"> lo tienes</h3>
+          <h3>Lo descubres<br class="break-desktop"> en 2 minutos</h3>
         </div>
       </div>
       <div class="b7-cta">
@@ -1864,22 +1863,6 @@ text-align: center;
           <summary>No sé si creo en esto</summary>
           <div class="b9-body">
             <p>No hace falta creer en nada, esto no es un invento ni una interpretación bonita: sale de tu carta natal real, calculada con los datos exactos del día en que naciste. Lo demás son años de trabajo para traducir eso a algo que puedas leer y reconocer. Léelo y lo sabrás.</p>
-          </div>
-        </details>
-
-        <details class="reveal reveal-delay-2" name="b9">
-          <summary>¿Y si no me identifico con lo que dice?</summary>
-          <div class="b9-body">
-            <p>Lo sabrás en <strong>dos minutos</strong> y no te habrá costado nada. Pero es raro que pase: no está escrito sobre un tipo de persona, está escrito sobre ti, con <strong>tu programación interior</strong> y no hay dos iguales.</p>
-            <p>Lo que suele pasar es lo contrario: entiendes el porqué de muchas cosas y encuentras respuestas que llevabas años buscando sobre ti y sobre tu vida.</p>
-          </div>
-        </details>
-
-        <details class="reveal reveal-delay-3" name="b9">
-          <summary>¿Esto es lo mismo que una carta natal?</summary>
-          <div class="b9-body">
-            <p>Se calcula con tu carta natal real, con los datos exactos del día que naciste, pero no es una de esas cartas llenas de símbolos y tecnicismos que no hay quien entienda.</p>
-            <p>Está traducido al lenguaje humano de la psicología y habla de ti: tus patrones, tus miedos, tu forma de querer, tu relación con el dinero… Sin cuentos.</p>
           </div>
         </details>
 
