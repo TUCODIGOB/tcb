@@ -428,6 +428,13 @@ body{overflow-x:clip}
 .cerr .tx{flex:1;min-width:0}
 .cerr .ck{flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#BD9048}
 .cerr .ck svg{width:26px;height:26px;stroke-width:2.2}
+/* Las areas cerradas, mas pequeñas en PC y tablets */
+@media (min-width:601px){
+  .cerr{padding:10px 24px 10px 74px}
+  .cerr .lab{font-size:16px}
+  .cerr .tit{font-size:20px}
+  .cerr .des{font-size:14px}
+}
 
 /* Los botones, como los de la landing */
 .btn-oro{display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-width:400px;width:auto;background:linear-gradient(135deg,#BD9048,#CFB180);color:#fff;font-weight:600;border-radius:6px;padding:10px 40px;text-decoration:none;text-align:center;font-size:16px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;border:0;cursor:pointer;box-shadow:0 6px 28px rgba(189,144,72,.35);transition:transform .2s,box-shadow .2s}
@@ -481,7 +488,9 @@ body{overflow-x:clip}
 .fin{margin-top:64px}
 .fin-t{font-family:'Playfair Display',Georgia,serif;font-size:28px;line-height:1.35;color:#0E3F4B;margin:0 0 26px;font-weight:700}
 .fin-t em{color:#BD9048}
-.fin-s{font-size:14px;color:#6E7B7F;margin:14px 0 0}
+.fin-l1{display:block;font-size:28px}
+.fin-l2{display:block;font-size:28px}
+.conf-fin{color:#0E3F4B}
 
 /* Tablet vertical: las 3 reseñas en una linea */
 @media (min-width:681px) and (max-width:850px){
@@ -501,10 +510,10 @@ body{overflow-x:clip}
   .cerr{gap:12px}
   .tit{font-size:24px}
   .corte .borroso p{margin:0 0 -50px}
-  .desbloq{margin-top:-120px;padding:28px 18px 20px}
+  .desbloq{margin-top:-300px;padding:28px 18px 20px}
   .tl{gap:30px}
   .lab{font-size:18px}
-  .des{font-size:18px}
+  .des{font-size:16px}
   .it1 .area p:not(.pregunta){font-size:18px}
   .it1 > .area,.it1 > .corte{margin-left:-52px}
   .it1{padding:50px 20px 50px 72px}
@@ -516,7 +525,7 @@ body{overflow-x:clip}
   .btn-oro{display:flex;width:100%;min-width:0;font-size:18px;padding:17px 4px;white-space:normal}
   .of{padding:28px 18px 20px}
   .mock{margin:0 -18px 24px}
-  .of h2{font-size:28px}
+  .of h2{font-size:32px}
   .cierre{padding:24px 14px 18px;margin-top:50px}
   .tdo{font-size:26px}
   .min{font-size:18px;margin-bottom:30px}
@@ -524,7 +533,10 @@ body{overflow-x:clip}
   .b8{padding:20px 0}
   .pr s{font-size:28px}
   .conf{gap:10px 18px}
+  .conf-fin{flex-direction:column;align-items:center}
   .fin-t{font-size:24px}
+  .fin-l1{font-size:24px}
+  .fin-l2{font-size:24px}
 }
 </style>
 </head>
@@ -655,7 +667,7 @@ function elPrecio(enElPop) {
     + (enElPop
         ? '<a class="btn-oro" href="#" data-compra="pop">DESBLOQUEAR MI DISEÑO COMPLETO<span class="flecha">→</span></a>'
         : '<a class="btn-oro" href="#" id="comprar">DESBLOQUEAR MI DISEÑO COMPLETO<span class="flecha">→</span></a><p class="fallo-pago" id="falloDelPago"></p>')
-    + '<div class="conf"><span>' + ICONO_TARJETA + 'Pago único</span><span>' + ICONO_CANDADO + '100% seguro con Stripe</span><span>' + ICONO_RAYO + 'Lo recibes en minutos</span></div>'
+    + '<div class="conf"><span>' + ICONO_TARJETA + 'Pago único</span><span>' + ICONO_CANDADO + '100% seguro con Stripe</span></div>'
     + '<hr class="hr-c2">'
     + '<p class="garan2">' + ICONO_ESCUDO + 'Si hay un error en tu informe, lo resolvemos en 24 h</p>'
     + '</div>';
@@ -674,13 +686,13 @@ const LAS_RESENAS = '<section class="b8"><div class="b8-in">'
   +   '<img src="/images/R1-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="620" loading="lazy" />'
   +   '<img src="/images/R3-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="734" loading="lazy" />'
   +   '<img src="/images/R6-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="593" loading="lazy" />'
-  + '</div></div>'
-  + '<div class="fin">'
-  +   '<p class="fin-t">Descubre las respuestas que llevas tanto tiempo buscando<br><em>Todo está en tu Diseño de Origen</em></p>'
-  +   '<a class="btn-oro abre" href="#">DESBLOQUEAR MI DISEÑO COMPLETO · 47 €<span class="flecha">→</span></a>'
-  +   '<p class="fin-s">Pago único · <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#BD9048" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-3px;margin-right:5px"><rect x="4" y="10.5" width="16" height="11" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></svg>100% seguro con Stripe · Lo recibes en minutos</p>'
   + '</div>'
-  + '</section>';
+  + '<div class="fin">'
+  +   '<p class="fin-t"><span class="fin-l1">Descubre las respuestas que llevas tanto tiempo buscando</span><em class="fin-l2">Todo está en tu Diseño de Origen</em></p>'
+  +   '<a class="btn-oro abre" href="#">DESBLOQUEAR MI DISEÑO COMPLETO · 47 €<span class="flecha">→</span></a>'
+  +   '<div class="conf conf-fin"><span>' + ICONO_TARJETA + 'Pago único</span><span>' + ICONO_CANDADO + '100% seguro con Stripe</span><span>' + ICONO_RAYO + 'Lo recibes en minutos</span></div>'
+  + '</div>'
+  + '</div></section>';
 
 // EL NOMBRE DE PILA, el mismo que usan el PDF y los correos (lib/nombre.js).
 // Con los apellidos aparte, la casilla del nombre tal cual la escribio:
