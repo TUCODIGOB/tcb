@@ -477,12 +477,9 @@ body{overflow-x:clip}
 /* El pop: lo mismo que la oferta */
 .pop{display:none;position:fixed;inset:0;z-index:300;background:rgba(14,63,75,.6);align-items:center;justify-content:center;padding:16px;overflow-y:auto}
 .pop.abierta{display:flex}
-.pop-caja{background:#0E3F4B;color:#fff;border-radius:12px;max-width:560px;width:100%;max-height:92vh;overflow-y:auto;padding:34px 34px 26px;position:relative;border-top:3px solid #BD9048}
-.pop-caja h3{font-size:28px;text-align:center}
-.pop-caja .x{position:absolute;top:8px;right:12px;font-size:26px;color:#fff;background:none;border:0;width:auto;padding:4px}
-.pop-caja .tdo{font-size:28px}
-.pop-caja .pr b{font-size:56px}
-.pop-caja .pr s{font-size:26px}
+.pop-caja{position:relative;max-width:860px;width:100%;max-height:92vh;overflow-y:auto;border-radius:14px}
+.pop-caja .of{margin-top:0}
+.pop-caja .x{position:absolute;top:8px;right:12px;z-index:1;font-size:26px;color:#fff;background:none;border:0;width:auto;padding:4px}
 
 /* Las reseñas, iguales que en la landing, y el cierre */
 .b8{margin:56px calc(50% - 50vw) 0;padding:10px 0}
@@ -490,7 +487,7 @@ body{overflow-x:clip}
 .fin-t{font-family:'Playfair Display',Georgia,serif;font-size:28px;line-height:1.35;color:#0E3F4B;margin:0 0 26px;font-weight:700}
 .fin-t em{color:#BD9048}
 .fin-l1{display:block;font-size:30px}
-.fin-l2{display:block;font-size:35px;padding-top:10px}
+.fin-l2{display:block;font-size:35px;padding-top:10px;padding-bottom:20px}
 .fin-t .br-tab{display:none}
 .fin-t .br-movil{display:none}
 /* Tablets: el titulo final parte despues de "Descubre las respuestas" */
@@ -502,6 +499,11 @@ body{overflow-x:clip}
   .fin-l2{font-size:32px}
 }
 .conf-fin{color:#0E3F4B}
+/* PC y tablets: las tres lineas de debajo, del ancho del boton */
+@media (min-width:601px){
+  .fin-cta{display:inline-flex;flex-direction:column}
+  .conf-fin{justify-content:space-between;gap:16px;font-size:14px}
+}
 
 /* Tablet vertical: las 3 reseñas en una linea */
 @media (min-width:681px) and (max-width:850px){
@@ -563,7 +565,7 @@ body{overflow-x:clip}
     <a href="/" class="nav-logo" aria-label="Origen Natal — Inicio">
       <img src="/images/logo-origen-natal-carta-oscuro.webp" alt="Origen Natal" width="395" height="48" />
     </a>
-    <a href="#comprar" class="nav-cta">Desbloquear todo mi Diseño</a>
+    <a href="#comprar" class="nav-cta abre">Desbloquear todo mi Diseño</a>
   </div>
 </nav>
 
@@ -703,9 +705,9 @@ const LAS_RESENAS = '<section class="b8"><div class="b8-in">'
   +   '<img src="/images/R6-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="593" loading="lazy" />'
   + '</div>'
   + '<div class="fin">'
-  +   '<p class="fin-t"><span class="fin-l1">Descubre las respuestas<br class="br-tab"> que llevas tanto tiempo buscando</span><em class="fin-l2">Todo está en<br class="br-movil"> tu Diseño de Origen</em></p>'
-  +   '<a class="btn-oro abre" href="#">DESBLOQUEAR MI DISEÑO COMPLETO · 47 €<span class="flecha">→</span></a>'
-  +   '<div class="conf conf-fin"><span>' + ICONO_TARJETA + 'Pago único</span><span>' + ICONO_CANDADO + '100% seguro con Stripe</span><span>' + ICONO_RAYO + 'Lo recibes en minutos</span></div>'
+  +   '<p class="fin-t"><span class="fin-l1">Descubre las respuestas<br class="br-tab"> que llevas tanto tiempo buscando</span><em class="fin-l2">Todo está en tu<br class="br-movil"> Diseño de Origen</em></p>'
+  +   '<div class="fin-cta"><a class="btn-oro" href="#" data-compra="pop">DESBLOQUEAR MI DISEÑO COMPLETO · 47 €<span class="flecha">→</span></a>'
+  +   '<div class="conf conf-fin"><span>' + ICONO_TARJETA + 'Pago único</span><span>' + ICONO_CANDADO + '100% seguro con Stripe</span><span>' + ICONO_RAYO + 'Lo recibes en minutos</span></div></div>'
   + '</div>'
   + '</div></section>';
 
@@ -758,23 +760,26 @@ function pintarElResultado(datos, salida) {
           + '<span class="ck">' + CANDADO + '</span></button>').join('')
     + '</div>'
 
-    + '<div class="of" id="oferta">'
+    + laOferta(false)
+
+    + LAS_RESENAS
+
+    + '<div class="pop" id="pop"><div class="pop-caja"><button type="button" class="x" aria-label="Cerrar">×</button>'
+    +   laOferta(true)
+    + '</div></div>';
+}
+
+// LA OFERTA, la caja verde. El pop es la misma caja, igual en todo; solo
+// cambia que la de la pagina lleva el id de la oferta.
+function laOferta(enElPop) {
+  return '<div class="of"' + (enElPop ? '' : ' id="oferta"') + '>'
     +   '<p class="eti">' + ETIQUETA_DESBLOQUEAR + '</p>'
     +   '<h2>Todo tu<br class="br-of"> Diseño de Origen,<br class="br-of"> <em>desbloqueado</em></h2>'
     +   '<div class="mock"><picture><source media="(max-width: 600px)" srcset="/images/tu-diseno-de-origen-estudio-carta-natal-movil-1.webp"><img src="/images/tu-diseno-de-origen-estudio-carta-natal-1.webp" alt="Tu Diseño de Origen en PDF" width="1927" height="1000" loading="lazy"></picture></div>'
     +   '<p class="ent">Ya has descubierto una parte de ti, ahora descubre el resto:</p>'
     +   LO_QUE_INCLUYE
-    +   elPrecio(false)
-    + '</div>'
-
-    + LAS_RESENAS
-
-    + '<div class="pop" id="pop"><div class="pop-caja"><button type="button" class="x" aria-label="Cerrar">×</button>'
-    +   '<p class="eti" style="text-align:center">' + ETIQUETA_DESBLOQUEAR + '</p>'
-    +   '<h3>Todo tu Diseño de Origen, <em>desbloqueado</em></h3>'
-    +   LO_QUE_INCLUYE
-    +   elPrecio(true)
-    + '</div></div>';
+    +   elPrecio(enElPop)
+    + '</div>';
 }
 
 // EL POP. Lo abren las areas cerradas y los botones con la clase "abre"; se
