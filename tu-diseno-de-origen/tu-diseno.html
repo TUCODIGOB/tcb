@@ -419,7 +419,7 @@ body{overflow-x:clip}
 .desbloq{position:relative;margin:-220px auto 0;max-width:460px;background:#fff;border-top:3px solid #BD9048;border-radius:10px;box-shadow:0 14px 40px rgba(14,63,75,.18);padding:30px 26px 24px;text-align:center}
 .cand-c{position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:#BD9048;display:flex;align-items:center;justify-content:center;color:#fff}
 .cand-c svg{width:17px;height:17px}
-.desbloq h4{font-family:'Playfair Display',Georgia,serif;color:var(--tinta);font-size:22px;margin:0 0 8px;line-height:1.25}
+.desbloq h4{font-family:'Playfair Display',Georgia,serif;color:var(--tinta);font-size:22px;margin:0 0 20px;line-height:1.25}
 .desbloq p{margin:0 0 18px;font-size:16px}
 
 /* Las areas cerradas */
@@ -452,6 +452,7 @@ body{overflow-x:clip}
 .pill{display:inline-flex;align-items:center;background:rgba(207,177,128,.16);border:1px solid rgba(207,177,128,.45);color:#CFB180;border-radius:99px;padding:5px 12px;font-size:12.5px;font-weight:700;letter-spacing:.12em}
 .of h2,.pop-caja h3{font-family:'Playfair Display',Georgia,serif;color:#fff;font-size:32px;margin:0 0 16px;line-height:1.2}
 .of h2 em,.pop-caja h3 em{font-style:italic;color:#CFB180}
+.of h2 .br-of{display:none}
 .of .ent{margin:0 0 30px;font-size:20px;font-weight:600;color:#fff}
 .incl{list-style:none;padding:0;margin:0 auto;max-width:620px;text-align:left}
 .incl li{padding:8px 0 8px 28px;position:relative;line-height:1.45;font-size:16px;color:#fff}
@@ -488,8 +489,18 @@ body{overflow-x:clip}
 .fin{margin-top:64px}
 .fin-t{font-family:'Playfair Display',Georgia,serif;font-size:28px;line-height:1.35;color:#0E3F4B;margin:0 0 26px;font-weight:700}
 .fin-t em{color:#BD9048}
-.fin-l1{display:block;font-size:28px}
-.fin-l2{display:block;font-size:28px}
+.fin-l1{display:block;font-size:30px}
+.fin-l2{display:block;font-size:35px;padding-top:10px}
+.fin-t .br-tab{display:none}
+.fin-t .br-movil{display:none}
+/* Tablets: el titulo final parte despues de "Descubre las respuestas" */
+@media (min-width:601px) and (max-width:1023px){
+  .fin-t .br-tab{display:inline}
+}
+/* Tablet vertical */
+@media (min-width:601px) and (max-width:850px){
+  .fin-l2{font-size:32px}
+}
 .conf-fin{color:#0E3F4B}
 
 /* Tablet vertical: las 3 reseñas en una linea */
@@ -510,7 +521,7 @@ body{overflow-x:clip}
   .cerr{gap:12px}
   .tit{font-size:24px}
   .corte .borroso p{margin:0 0 -50px}
-  .desbloq{margin-top:-300px;padding:28px 18px 20px}
+  .desbloq{margin-top:-320px;padding:28px 18px 20px}
   .tl{gap:30px}
   .lab{font-size:18px}
   .des{font-size:16px}
@@ -526,6 +537,9 @@ body{overflow-x:clip}
   .of{padding:28px 18px 20px}
   .mock{margin:0 -18px 24px}
   .of h2{font-size:32px}
+  .of h2 .br-of{display:inline}
+  .hr-c{margin:32px auto}
+  .cerr .lab{letter-spacing:.08em}
   .cierre{padding:24px 14px 18px;margin-top:50px}
   .tdo{font-size:26px}
   .min{font-size:18px;margin-bottom:30px}
@@ -535,8 +549,9 @@ body{overflow-x:clip}
   .conf{gap:10px 18px}
   .conf-fin{flex-direction:column;align-items:center}
   .fin-t{font-size:24px}
-  .fin-l1{font-size:24px}
-  .fin-l2{font-size:24px}
+  .fin-l1{font-size:32px}
+  .fin-l2{font-size:35px;padding-top:20px}
+  .fin-t .br-movil{display:inline}
 }
 </style>
 </head>
@@ -625,14 +640,14 @@ function laHoraEnDos(hora) {
 
 // Las areas cerradas, de la 02 a la 09: nombre, titulo y lo que descubre.
 const LAS_AREAS_CERRADAS = [
-  ['Tus patrones', 'Lo que repites sin poder parar', 'Verás por qué siempre te pasa lo mismo, qué lo desencadena y qué ganas tú sin saberlo'],
-  ['Tus miedos', 'Qué gobierna tu vida sin que te des cuenta', 'Sabrás qué lo dispara, cómo reaccionas, qué evitas y cuánto te ha costado ya'],
-  ['Tu herida', 'Lo que hoy sigue bloqueándote en silencio', 'Descubrirás qué lo reabre sin verlo venir, qué estás perdiendo y qué necesitas para soltarlo'],
-  ['Tú y el amor', 'Por qué amas como amas y atraes a quien atraes', 'Comprenderás qué necesitas para sentirte querida y qué falla siempre'],
-  ['Tus relaciones', 'Cómo te vinculas con los demás', 'Reconocerás qué rol ocupas sin haberlo decidido y de quién acabas rodeándote'],
-  ['Tú y el dinero', 'Tu relación con él y qué te limita', 'Sabrás qué significa para ti, qué haces con él y qué te impide ganar más'],
-  ['Tus fortalezas y tus desafíos', 'La fuerza que no estás usando', 'Conocerás lo que la vida te repite hasta que lo aprendas y cómo empezar a utilizar tu potencial a tu favor'],
-  ['Tu mapa de origen', 'Toda tu programación interior en una sola imagen', 'Tendrás el dibujo de quién eres, único y solo tuyo'],
+  ['Tus patrones', 'Lo que repites sin poder parar,', 'verás por qué siempre te pasa lo mismo, qué lo desencadena y qué ganas tú sin saberlo'],
+  ['Tus miedos', 'Qué gobierna tu vida sin que te des cuenta,', 'sabrás qué lo dispara, cómo reaccionas, qué evitas y cuánto te ha costado ya'],
+  ['Tu herida', 'Lo que hoy sigue bloqueándote en silencio,', 'descubrirás qué lo reabre sin verlo venir, qué estás perdiendo y qué necesitas para soltarlo'],
+  ['Tú y el amor', 'Por qué amas como amas y atraes a quien atraes,', 'comprenderás qué necesitas para sentirte querida y qué falla siempre'],
+  ['Tus relaciones', 'Cómo te vinculas con los demás,', 'qué rol ocupas sin haberlo decidido y de quién acabas rodeándote'],
+  ['Tú y el dinero', 'Tu relación con él y qué te limita,', 'sabrás qué significa para ti, qué haces con él y qué te impide ganar más'],
+  ['Tus fortalezas y tus desafíos', 'La fuerza que no estás usando,', 'cómo empezar a utilizar tu potencial a tu favor y lo que la vida te repite hasta que lo aprendas'],
+  ['Tu mapa de origen', 'El dibujo de quién eres,', 'toda tu programación interior en una sola imagen, única y solo tuya'],
 ];
 
 // Los iconos dorados de la oferta.
@@ -648,11 +663,11 @@ const ETIQUETA_DESBLOQUEAR = '<span class="pill"><svg viewBox="0 0 24 24" width=
 // Lo que incluye, igual en la oferta y en el pop.
 const LO_QUE_INCLUYE = '<ul class="incl">'
   + '<li><b>Tus 7 áreas completas:</b> tu identidad, patrones, miedos, herida, amor, relaciones y dinero</li>'
-  + '<li><b>Tus fortalezas y tus desafíos:</b> la fuerza que tienes y no estás usando, y lo que la vida te repite hasta que lo aprendas</li>'
+  + '<li><b>Tus fortalezas y tus desafíos:</b> la fuerza que tienes y lo que la vida te repite</li>'
   + '<li><b>Tu mapa de origen:</b> toda tu programación en una sola imagen, única y solo tuya</li>'
-  + '<li><b>Más de 40 páginas en PDF, escritas solo para ti:</b> 100% personalizado, claro y sin tecnicismos</li>'
+  + '<li><b>Más de 40 páginas en PDF:</b> 100% personalizado, claro y sin tecnicismos</li>'
   + '<li><b>Tuyo para siempre:</b> guárdalo, imprímelo y vuelve a él cuando lo necesites</li>'
-  + '<li><b>Acceso inmediato:</b> lo recibes en minutos en tu email, sin citas y sin esperas</li>'
+  + '<li><b>Acceso inmediato:</b> lo recibes en minutos en tu email</li>'
   + '</ul>';
 
 // El precio y el boton de pagar. En la oferta el boton es el #comprar; en el
@@ -688,7 +703,7 @@ const LAS_RESENAS = '<section class="b8"><div class="b8-in">'
   +   '<img src="/images/R6-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="593" loading="lazy" />'
   + '</div>'
   + '<div class="fin">'
-  +   '<p class="fin-t"><span class="fin-l1">Descubre las respuestas que llevas tanto tiempo buscando</span><em class="fin-l2">Todo está en tu Diseño de Origen</em></p>'
+  +   '<p class="fin-t"><span class="fin-l1">Descubre las respuestas<br class="br-tab"> que llevas tanto tiempo buscando</span><em class="fin-l2">Todo está en<br class="br-movil"> tu Diseño de Origen</em></p>'
   +   '<a class="btn-oro abre" href="#">DESBLOQUEAR MI DISEÑO COMPLETO · 47 €<span class="flecha">→</span></a>'
   +   '<div class="conf conf-fin"><span>' + ICONO_TARJETA + 'Pago único</span><span>' + ICONO_CANDADO + '100% seguro con Stripe</span><span>' + ICONO_RAYO + 'Lo recibes en minutos</span></div>'
   + '</div>'
@@ -726,15 +741,15 @@ function pintarElResultado(datos, salida) {
 
     + '<div class="tl">'
     +   '<div class="it it1"><span class="num">01</span>'
-    +     '<span class="lab">Tu identidad</span><span class="tit">Cómo funcionas por dentro</span>'
-    +     '<span class="des">Qué muestras, qué escondes y los puntos ciegos que nunca has visto</span>'
+    +     '<span class="lab">Tu identidad</span><span class="tit">Cómo funcionas por dentro,</span>'
+    +     '<span class="des">qué muestras, qué escondes y los puntos ciegos que nunca has visto</span>'
     +     '<div class="area">' + pintarElArea(salida.texto) + '</div>'
     +     '<div class="corte">'
     +       '<div class="area borroso" aria-hidden="true"><h3>Las creencias que sostienen todo esto</h3>'
     +         '<p>Hay una frase que llevas dentro desde muy pequeña y que nunca has puesto en duda porque la das por cierta sin pensarlo.</p>'
     +         '<p>Esa frase decide por ti más veces de las que crees, y explica por qué vuelves una y otra vez al mismo sitio aunque quieras otra cosa.</p></div>'
     +       '<div class="desbloq"><span class="cand-c">' + CANDADO + '</span><h4>Desbloquear ahora</h4>'
-    +         '<p>Descubre las creencias que sostienen todo esto y las otras 8 partes que revelan el resto de ti</p>'
+    +         '<p>Aún te queda lo más revelador de tu identidad y otras 8 partes de ti que todavía no conoces</p>'
     +         '<button type="button" class="btn-oro abre">Desbloquear mi Diseño completo</button></div>'
     +     '</div>'
     +   '</div>'
@@ -745,7 +760,7 @@ function pintarElResultado(datos, salida) {
 
     + '<div class="of" id="oferta">'
     +   '<p class="eti">' + ETIQUETA_DESBLOQUEAR + '</p>'
-    +   '<h2>Todo tu Diseño de Origen, <em>desbloqueado</em></h2>'
+    +   '<h2>Todo tu<br class="br-of"> Diseño de Origen,<br class="br-of"> <em>desbloqueado</em></h2>'
     +   '<div class="mock"><picture><source media="(max-width: 600px)" srcset="/images/tu-diseno-de-origen-estudio-carta-natal-movil-1.webp"><img src="/images/tu-diseno-de-origen-estudio-carta-natal-1.webp" alt="Tu Diseño de Origen en PDF" width="1927" height="1000" loading="lazy"></picture></div>'
     +   '<p class="ent">Ya has descubierto una parte de ti, ahora descubre el resto:</p>'
     +   LO_QUE_INCLUYE
