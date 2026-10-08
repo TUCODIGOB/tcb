@@ -75,7 +75,7 @@ export default async function handler(req, res) {
         gaClientId: (datos.gaClientId || '').substring(0, 50),
       },
       success_url: `${NUESTRA_WEB}/tu-diseno-de-origen/gracias?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${NUESTRA_WEB}/tu-diseno-de-origen`,
+      cancel_url: `${NUESTRA_WEB}/tu-diseno-de-origen/tu-diseno`,
     });
 
     // Devolver la URL de Stripe para que el navegador redirija
