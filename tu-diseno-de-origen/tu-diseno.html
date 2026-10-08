@@ -213,7 +213,7 @@ button:hover{filter:brightness(.96);}
 }
 .nav-logo img{height:34px;width:auto;display:block;}
 .nav-cta{
-  background:#BD9048;color:var(--papel);font-size:.82rem;font-weight:600;
+  background:linear-gradient(135deg,#BD9048,#CFB180);color:var(--papel);font-size:.82rem;font-weight:600;
   letter-spacing:.06em;text-transform:uppercase;padding:.55rem 1.2rem;
   border-radius:6px;transition:background .2s;white-space:nowrap;
   /* Esta pagina escribe mas junto que el index; al boton se le pone el
@@ -390,10 +390,10 @@ body{overflow-x:clip}
 
 /* Arriba: su nombre y sus datos */
 .inicio{text-align:center;padding:6px 0 50px}
-.inicio h1{font-family:'Playfair Display',Georgia,serif;font-weight:500;color:var(--tinta);font-size:30px;line-height:1.2;margin:0 0 30px}
+.inicio h1{font-family:'Playfair Display',Georgia,serif;font-weight:700;color:var(--tinta);font-size:30px;line-height:1.2;margin:0 0 20px}
 .inicio h1 .br-mov{display:none}
-.inicio h1 em{color:#b08a4f;font-style:italic;font-weight:700}
-.inicio .datos{font-size:16px;color:var(--suave);margin:0}
+.inicio h1 em{color:#b08a4f;font-style:normal;font-weight:700}
+.inicio .datos{font-size:14px;color:var(--suave);margin:0}
 .inicio .corr{display:block;margin-top:6px;font-size:14px;color:var(--tinta);font-style:italic;font-weight:600}
 
 /* Las areas, numeradas en una linea */
@@ -407,7 +407,10 @@ body{overflow-x:clip}
 .it1 .tit{font-size:28px}
 .it1 .des{margin-bottom:40px}
 .it1 .area p:not(.pregunta){font-size:16px}
-.it1 > .area,.it1 > .corte{margin-left:-62px}
+.it1 > .area,.it1 > .corte{margin-left:-44px;margin-right:6px}
+.it1{padding-top:50px;padding-bottom:50px}
+.it1 .num{top:48px}
+.it1 .area p:not(.pregunta){margin-bottom:1.6em}
 
 /* El corte de su area, con el cuadro de desbloquear encima */
 .corte{position:relative}
@@ -436,8 +439,8 @@ body{overflow-x:clip}
 
 /* La oferta, en verde */
 .of{margin-top:60px;background:#0E3F4B;color:#E9E2D4;border:1px solid #0E3F4B;border-top-width:3px;border-radius:14px;box-shadow:0 14px 40px rgba(14,63,75,.08);padding:44px 48px 30px;text-align:center}
-.mock{max-width:440px;margin:0 auto 24px}
-.mock img{display:block;width:100%;height:auto;border-radius:12px}
+.mock{margin:0 -48px 24px}
+.mock img{display:block;width:100%;height:auto}
 .eti{margin:0 0 18px;font-size:12.5px}
 .pill{display:inline-flex;align-items:center;background:rgba(207,177,128,.16);border:1px solid rgba(207,177,128,.45);color:#CFB180;border-radius:99px;padding:5px 12px;font-size:12.5px;font-weight:700;letter-spacing:.12em}
 .of h2,.pop-caja h3{font-family:'Playfair Display',Georgia,serif;color:#fff;font-size:32px;margin:0 0 16px;line-height:1.2}
@@ -488,29 +491,32 @@ body{overflow-x:clip}
 /* Movil */
 @media (max-width:600px){
   .nav-cta{font-size:17px;letter-spacing:.03em}
-  .inicio h1{font-size:30px}
+  .inicio h1{font-size:30px;margin-bottom:30px}
   .inicio h1 .br-mov{display:inline}
-  .inicio .datos{font-size:18px}
+  .inicio .datos{font-size:16px}
   .inicio .datos .sep{display:none}
   .inicio .datos .lug{display:block}
   .it{padding:20px 16px 20px 62px}
   .num{left:10px;width:36px;height:36px;font-size:14px}
   .tl::before{left:27px}
   .cerr{gap:12px}
-  .tit{font-size:22px}
+  .tit{font-size:24px}
+  .corte .borroso p{margin:0 0 -50px}
   .desbloq{margin-top:-120px;padding:28px 18px 20px}
   .tl{gap:30px}
-  .lab{font-size:20px}
+  .lab{font-size:18px}
   .des{font-size:18px}
   .it1 .des{margin-bottom:50px}
   .it1 .area p:not(.pregunta){font-size:18px}
-  .it1 > .area,.it1 > .corte{margin-left:-52px}
+  .it1 > .area,.it1 > .corte{margin-left:-42px;margin-right:4px}
+  .it1{padding-top:50px;padding-bottom:50px}
   .desbloq p{font-size:18px}
   .of .ent{font-size:18px}
   .incl li{font-size:18px}
   .vs{font-size:18px}
   .btn-oro{display:flex;width:100%;min-width:0;font-size:18px;padding:17px 4px;white-space:normal}
   .of{padding:28px 18px 20px}
+  .mock{margin:0 -18px 24px}
   .of h2{font-size:28px}
   .cierre{padding:24px 14px 18px;margin-top:30px}
   .tdo{font-size:26px}
@@ -729,7 +735,7 @@ function pintarElResultado(datos, salida) {
     + '<div class="of" id="oferta">'
     +   '<p class="eti">' + ETIQUETA_DESBLOQUEAR + '</p>'
     +   '<h2>Todo tu Diseño de Origen, <em>desbloqueado</em></h2>'
-    +   '<div class="mock"><img src="/images/tu-diseno-de-origen-estudio-carta-natal-movil.webp" alt="Tu Diseño de Origen en PDF" width="800" height="832" loading="lazy"></div>'
+    +   '<div class="mock"><picture><source media="(max-width: 600px)" srcset="/images/tu-diseno-de-origen-estudio-carta-natal-movil-1.webp"><img src="/images/tu-diseno-de-origen-estudio-carta-natal-1.webp" alt="Tu Diseño de Origen en PDF" width="1927" height="1000" loading="lazy"></picture></div>'
     +   '<p class="ent">Ya has descubierto una parte de ti, ahora descubre el resto:</p>'
     +   LO_QUE_INCLUYE
     +   elPrecio(false)
