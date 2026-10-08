@@ -705,8 +705,8 @@ const LAS_RESENAS = '<section class="b8"><div class="b8-in">'
   +   '<img src="/images/R6-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="593" loading="lazy" />'
   + '</div>'
   + '<div class="fin">'
-  +   '<p class="fin-t"><span class="fin-l1">Descubre las respuestas<br class="br-tab"> que llevas tanto tiempo buscando</span><em class="fin-l2">Todo está en tu<br class="br-movil"> Diseño de Origen</em></p>'
-  +   '<div class="fin-cta"><a class="btn-oro" href="#" data-compra="pop">DESBLOQUEAR MI DISEÑO COMPLETO · 47 €<span class="flecha">→</span></a>'
+  +   '<p class="fin-t"><span class="fin-l1">Descubre las respuestas<br class="br-tab"> que llevas tanto tiempo buscando...</span><em class="fin-l2">Todo está en tu<br class="br-movil"> Diseño de Origen</em></p>'
+  +   '<div class="fin-cta"><a class="btn-oro" href="#" data-compra="fin">DESBLOQUEAR MI DISEÑO COMPLETO · 47 €<span class="flecha">→</span></a>'
   +   '<div class="conf conf-fin"><span>' + ICONO_TARJETA + 'Pago único</span><span>' + ICONO_CANDADO + '100% seguro con Stripe</span><span>' + ICONO_RAYO + 'Lo recibes en minutos</span></div></div>'
   + '</div>'
   + '</div></section>';
@@ -789,10 +789,20 @@ function laOferta(enElPop) {
 document.addEventListener('click', e => {
   const pop = document.getElementById('pop');
   if (!pop) return;
-  if (e.target.closest('[data-compra="pop"]')) {
-    pop.classList.remove('abierta');
-    document.getElementById('oferta').scrollIntoView({ block: 'center' });
-    alComprar(e);
+  // LOS BOTONES DE PAGAR DEL POP Y DEL FINAL. Van al pago sin moverse de
+  // sitio; solo si el pago no arranca se cierra el pop y se sube al boton
+  // de la oferta, que es donde sale el aviso.
+  const paga = e.target.closest('[data-compra]');
+  if (paga) {
+    const dice = paga.innerHTML;
+    paga.textContent = 'Redirigiendo al pago seguro...';
+    alComprar(e).then(() => {
+      if (document.getElementById('falloDelPago').style.display === 'block') {
+        paga.innerHTML = dice;
+        pop.classList.remove('abierta');
+        document.getElementById('comprar').scrollIntoView({ block: 'center' });
+      }
+    });
     return;
   }
   if (e.target.closest('.abre')) { e.preventDefault(); pop.classList.add('abierta'); return; }
