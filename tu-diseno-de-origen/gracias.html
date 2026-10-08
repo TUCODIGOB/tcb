@@ -83,7 +83,7 @@
   /* PANTALLA */
   .screen {
     min-height: calc(100vh - 80px);
-    padding-block: 3rem;
+    padding-block: 3rem 150px;
     display: flex; align-items: center;
   }
   /* EL TITULO VA EN UNA LINEA EN EL ORDENADOR: con la letra del sitio pide
@@ -110,7 +110,7 @@
 
   .screen h1 {
     font-family: var(--font-display);
-    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    font-size: 35px;
     font-weight: 700;
     color: var(--teal-deep);
     line-height: 1.2;
@@ -144,17 +144,17 @@
   .screen p.preparando .oro { font-style: italic; }
 
   /* Y "puedes cerrar esta pantalla", lo ultimo del todo. */
-  .screen p.cerrar { margin-top: 2.5rem; }
+  .screen p.cerrar { margin-top: 20px; font-style: italic; }
 
   /* EL AVISO DEL SPAM SE PARTE COMO CUALQUIER OTRO TEXTO, y solo se le pide
      que vaya de una pieza en las pantallas anchas, que es donde cabe. Si se
      le pedia siempre, en una tablet -o en una ventana a medio abrir- se salia
      por el lado. */
   .screen p.aviso {
-    margin-top: 2.5rem;
+    margin-top: 20px;
     color: var(--ink);
     font-weight: 700;
-    font-size: 20px;
+    font-size: 18px;
     max-width: none;
   }
   @media (min-width: 1024px) {
@@ -168,17 +168,19 @@
     .salto-movil { display: inline; }
     .nav-inner { flex-direction: column; gap: 1rem; padding-block: 18px; }
     .nav-logo img { height: 34px; width: auto; }
-    .screen { align-items: flex-start; padding-top: 10vh; padding-bottom: 5rem; }
+    .screen { align-items: flex-start; padding-top: 10vh; padding-bottom: 150px; }
     .screen > .container { width: 100vw; padding-inline: 14px; }
     .screen h1 { margin-bottom: 64px; }
-    .screen p.mensaje, .screen p.aviso { font-size: 22px; }
+    .screen p.mensaje { font-size: 22px; }
+    .screen p.aviso { font-size: 20px; }
     .screen p.preparando { font-size: 26px; }
-    .screen p.aviso { white-space: normal; margin-top: 3.5rem; }
+    .screen p.aviso { white-space: normal; margin-top: 30px; }
+    .screen p.cerrar { font-size: 20px; margin-top: 30px; }
   }
 
   /* MOVILES DE PANTALLA CORTA. Se recorta el aire para que quepa sin bajar. */
   @media (max-width: 600px) and (max-height: 700px) {
-    .screen { padding-top: 8vh; padding-bottom: 4rem; }
+    .screen { padding-top: 8vh; padding-bottom: 150px; }
   }
 
   /* FOOTER */
@@ -267,15 +269,12 @@
   <div class="container">
     <div class="screen-inner">
       <div class="visto">&#10003;</div>
-      <h1>¡Ya está! Acabas de dar<br class="salto-movil"> un paso importante por ti</h1>
-      <p class="mensaje preparando">
-        Estamos preparando<br class="salto-movil"> <em class="oro">Tu Diseño de Origen</em>.
-      </p>
+      <h1>¡Ya está!<br> Tu Diseño de Origen<br class="salto-movil"> está en camino</h1>
       <p class="mensaje">
-        <strong>Te llegará directo al email en unos 5 minutos aproximadamente.</strong>
+        <strong>Lo estamos preparando, te llegará directo al email en unos 5 minutos</strong>
       </p>
-      <p class="aviso">Guarda <span class="oro">hola@origennatal.com</span> en los contactos de tu email, para que no se vaya a spam.</p>
-      <p class="mensaje cerrar">Puedes cerrar esta pantalla tranquilamente.</p>
+      <p class="aviso">Guarda <span class="oro">hola@origennatal.com</span> en los contactos de tu email, para que no se vaya a spam</p>
+      <p class="mensaje cerrar">Puedes cerrar esta pantalla tranquilamente</p>
     </div>
   </div>
 </section>
