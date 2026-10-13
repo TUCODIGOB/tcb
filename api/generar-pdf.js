@@ -985,10 +985,10 @@ export default async function handler(req, res) {
         var arribaTarjeta = ry - TARJETA_ARRIBA, altoTarjeta = alto + TARJETA_ARRIBA;
         if (i % 2 === 0) {
           doc.setFillColor(250,245,234);
-          doc.roundedRect(TARJETA_X, arribaTarjeta, TARJETA_ANCHO, altoTarjeta, 3, 3, 'F');
+          doc.roundedRect(TARJETA_X, arribaTarjeta, TARJETA_ANCHO, altoTarjeta, 2.5, 2.5, 'F');
         } else {
           doc.setFillColor(255,255,255); doc.setDrawColor(226,212,184); doc.setLineWidth(0.3);
-          doc.roundedRect(TARJETA_X, arribaTarjeta, TARJETA_ANCHO, altoTarjeta, 3, 3, 'FD');
+          doc.roundedRect(TARJETA_X, arribaTarjeta, TARJETA_ANCHO, altoTarjeta, 2.5, 2.5, 'FD');
         }
 
         // 1. El nombre del rasgo
