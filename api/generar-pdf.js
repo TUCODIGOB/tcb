@@ -906,9 +906,20 @@ export default async function handler(req, res) {
     // etiqueta solo ordena.
     var ALTO_DEL_AREA = 5;
 
+    // CADA RASGO VA EN SU TARJETA, y se alternan: una crema, sin borde, como
+    // las cajas del P2, y la siguiente blanca con un borde fino dorado. La
+    // tarjeta ocupa el ancho de siempre del texto y el texto va metido dentro.
+    // Va en el hueco que ya habia entre un rasgo y otro, asi que cada rasgo
+    // empieza donde empezaba: solo se quita la linea que los separaba.
+    var TARJETA_X = 18, TARJETA_ANCHO = 175;
+    var TARJETA_DENTRO = 6;                   // lo que se mete el texto
+    var TARJETA_ARRIBA = 7;                   // de su borde al renglon del nombre
+    var TEXTO_X = TARJETA_X + TARJETA_DENTRO;
+    var TEXTO_ANCHO = TARJETA_ANCHO - TARJETA_DENTRO * 2;
+
     function medirFicha(r) {
       doc.setFontSize(12);
-      var lDesc = doc.splitTextToSize(fx(r.descripcion), 175);
+      var lDesc = doc.splitTextToSize(fx(r.descripcion), TEXTO_ANCHO);
       var conArea = r.area ? ALTO_DEL_AREA : 0;
       return { desc: lDesc, alto: conArea + 8 + lDesc.length*5.5 };
     }
@@ -945,10 +956,10 @@ export default async function handler(req, res) {
       doc.text(fx(titulo), 18, ry);
       ry += 14;
 
-      // Entre un rasgo y el siguiente va una linea divisoria, con el mismo aire
-      // por arriba que por abajo. Solo se pinta entre dos rasgos que se vean
-      // juntos: nunca al final de una pagina, ni al final de la lista, ni justo
-      // debajo del titulo.
+      // Entre un rasgo y el siguiente queda el hueco de siempre, que es donde
+      // iba la linea divisoria. Solo entre dos rasgos que se vean juntos: nunca
+      // al final de una pagina, ni al final de la lista, ni justo debajo del
+      // titulo.
       var primeroDeLaPagina = true;
 
       for (var i = 0; i < lista.length; i++) {
@@ -966,28 +977,34 @@ export default async function handler(req, res) {
           divisor = false;
         }
 
-        // 0. La linea que separa este rasgo del de arriba.
-        if (divisor) {
-          ry += AIRE_SOBRE_LINEA;
-          doc.setDrawColor(228,228,228); doc.setLineWidth(0.2);
-          doc.line(35, ry, 175, ry);
-          ry += AIRE_BAJO_LINEA;
+        // 0. El hueco que lo separa del de arriba.
+        if (divisor) ry += AIRE_SOBRE_LINEA + AIRE_BAJO_LINEA;
+
+        // La tarjeta, debajo de todo: crema la primera de cada lista y luego
+        // alternando con la blanca de borde.
+        var arribaTarjeta = ry - TARJETA_ARRIBA, altoTarjeta = alto + TARJETA_ARRIBA;
+        if (i % 2 === 0) {
+          doc.setFillColor(250,245,234);
+          doc.roundedRect(TARJETA_X, arribaTarjeta, TARJETA_ANCHO, altoTarjeta, 3, 3, 'F');
+        } else {
+          doc.setFillColor(255,255,255); doc.setDrawColor(226,212,184); doc.setLineWidth(0.3);
+          doc.roundedRect(TARJETA_X, arribaTarjeta, TARJETA_ANCHO, altoTarjeta, 3, 3, 'FD');
         }
 
         // 1. El nombre del rasgo
         doc.setFont('Roboto','bold'); doc.setFontSize(13); doc.setTextColor(14,63,75);
-        doc.text(fx(r.nombre), 18, ry);
+        doc.text(fx(r.nombre), TEXTO_X, ry);
         ry += 8;
 
         // 2. La descripcion
         doc.setFont('Roboto','normal'); doc.setFontSize(12); doc.setTextColor(40,40,40);
-        for (var d = 0; d < lDesc.length; d++) { doc.text(lDesc[d], 18, ry); ry += 5.5; }
+        for (var d = 0; d < lDesc.length; d++) { doc.text(lDesc[d], TEXTO_X, ry); ry += 5.5; }
 
         // 3. Y debajo, de que area es
         if (r.area) {
           ry += 1;
           doc.setFont('Roboto','bold'); doc.setFontSize(12); doc.setTextColor(207,177,128);
-          doc.text(fx(r.area), 18, ry);
+          doc.text(fx(r.area), TEXTO_X, ry);
           ry += ALTO_DEL_AREA - 1;
         }
 
