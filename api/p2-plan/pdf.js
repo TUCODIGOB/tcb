@@ -435,16 +435,18 @@ export default async function handler(req, res) {
           y = arriba + T_ALTO + T_CAP;
 
           // LAS FILAS VAN EN FRANJAS, sin rayas entre ellas: una con el beige
-          // de las cajas y la siguiente sin fondo, alternando.
+          // de las cajas y la siguiente sin fondo, alternando. Con las esquinas
+          // redondeadas, como todas las cajas.
           if (n % 2 === 0) {
             doc.setFillColor(BEIGE[0], BEIGE[1], BEIGE[2]);
-            doc.rect(X, arriba, ANCHO, suyo, 'F');
+            doc.roundedRect(X, arriba, ANCHO, suyo, 2.5, 2.5, 'F');
           }
 
-          // La casilla y el numero, uno al lado del otro.
+          // La casilla y el numero, uno al lado del otro. La casilla, separada
+          // del borde de la franja y cerca de su numero.
           doc.setDrawColor(DORADO[0], DORADO[1], DORADO[2]);
           doc.setLineWidth(0.3);
-          doc.roundedRect(X + 1, y - (T_CAP + T_CASILLA) / 2, T_CASILLA, T_CASILLA, 0.6, 0.6, 'S');
+          doc.roundedRect(X + 3, y - (T_CAP + T_CASILLA) / 2, T_CASILLA, T_CASILLA, 0.6, 0.6, 'S');
           doc.setFont('Roboto', 'bold');
           doc.setFontSize(T_CUERPO);
           doc.setTextColor(VERDE[0], VERDE[1], VERDE[2]);
