@@ -255,16 +255,6 @@ export default async function handler(req, res) {
       doc.text(String(n), W - 16, H - 16, { align: 'right' });
     }
 
-    function wrapText(txt, x, y, maxW, lh) {
-      var lines = doc.splitTextToSize(txt, maxW);
-      for (var i = 0; i < lines.length; i++) {
-        if (y > H - 20) { doc.addPage(); y = 25; }
-        doc.text(fx(lines[i]), x, y);
-        y += lh;
-      }
-      return y;
-    }
-
     // ── NEGRITAS DENTRO DEL TEXTO ────────────────────────────────────────────
     // El modelo marca lo que destaca con **dos asteriscos**. jsPDF pinta cada
     // llamada a text() con una sola fuente, asi que no basta con partir el
@@ -547,57 +537,6 @@ export default async function handler(req, res) {
       }
     }
 
-    // Casa Whole Sign de un planeta, a partir de su longitud cruda y del array "casas" que
-    // calcular-carta.js ya calcula (cúspides whole-sign, en grados, indexadas 0=Casa1...11=Casa12)
-    function casaDe(raw) {
-      if (!carta.casas || raw === undefined || raw === null) return '-';
-      var signStart = Math.floor((((raw % 360) + 360) % 360) / 30) * 30;
-      var idx = carta.casas.indexOf(signStart);
-      return idx >= 0 ? String(idx + 1) : '-';
-    }
-
-    // Formato grados/minutos + N/S, mismo estilo que ya usaba la tabla (p.ej. "3 45 N")
-    function formatGradosNS(val) {
-      if (val === undefined || val === null) return '-';
-      var abs = Math.abs(val), deg = Math.floor(abs), min = Math.round((abs - deg) * 60);
-      if (min === 60) { deg += 1; min = 0; }
-      return deg + ' ' + min + ' ' + (val >= 0 ? 'N' : 'S');
-    }
-
-    function tablaPositions(sx, sy) {
-      var cols = [sx, sx+30, sx+65, sx+80, sx+96];
-      var rH = 5.5, y = sy;
-      doc.setFillColor(14,63,75); doc.rect(sx,y,110,rH,'F');
-      doc.setFont('Roboto','bold'); doc.setFontSize(7); doc.setTextColor(255,255,255);
-      var heads = ['Planeta','Longitud','Casa','Latitud','Decl.'];
-      for (var h2=0;h2<heads.length;h2++) doc.text(heads[h2],cols[h2]+1,y+3.8);
-      y += rH;
-      var rows = [
-        ['Sol',carta.sol||'-',casaDe(carta.solRaw),formatGradosNS(carta.solLatDeg),formatGradosNS(carta.solDeclDeg)],
-        ['Luna',carta.luna||'-',casaDe(carta.lunaRaw),formatGradosNS(carta.lunaLatDeg),formatGradosNS(carta.lunaDeclDeg)],
-        ['Mercurio',(carta.mercurio||'-')+(carta.mercRetro?' R':''),casaDe(carta.mercRaw),formatGradosNS(carta.mercLatDeg),formatGradosNS(carta.mercDeclDeg)],
-        ['Venus',(carta.venus||'-')+(carta.venRetro?' R':''),casaDe(carta.venRaw),formatGradosNS(carta.venLatDeg),formatGradosNS(carta.venDeclDeg)],
-        ['Marte',(carta.marte||'-')+(carta.marRetro?' R':''),casaDe(carta.marRaw),formatGradosNS(carta.marLatDeg),formatGradosNS(carta.marDeclDeg)],
-        ['Júpiter',(carta.jupiter||'-')+(carta.jupRetro?' R':''),casaDe(carta.jupRaw),formatGradosNS(carta.jupLatDeg),formatGradosNS(carta.jupDeclDeg)],
-        ['Saturno',(carta.saturno||'-')+(carta.satRetro?' R':''),casaDe(carta.satRaw),formatGradosNS(carta.satLatDeg),formatGradosNS(carta.satDeclDeg)],
-        ['Urano',(carta.urano||'-')+(carta.uraRetro?' R':''),casaDe(carta.uraRaw),formatGradosNS(carta.uraLatDeg),formatGradosNS(carta.uraDeclDeg)],
-        ['Neptuno',(carta.neptuno||'-')+(carta.nepRetro?' R':''),casaDe(carta.nepRaw),formatGradosNS(carta.nepLatDeg),formatGradosNS(carta.nepDeclDeg)],
-        ['Plutón',(carta.pluton||'-')+(carta.plutRetro?' R':''),casaDe(carta.plutRaw),formatGradosNS(carta.plutLatDeg),formatGradosNS(carta.plutDeclDeg)],
-        ['Quirón',(carta.quiron||'-')+(carta.quirRetro?' R':''),casaDe(carta.quirRaw),formatGradosNS(carta.quirLatDeg),formatGradosNS(carta.quirDeclDeg)],
-        ['Ascendente',carta.ascendente||'-','-','-','-'],
-      ];
-      for (var r3=0;r3<rows.length;r3++) {
-        var fill = r3%2===0?[252,249,240]:[255,255,255];
-        doc.setFillColor(fill[0],fill[1],fill[2]); doc.rect(sx,y,110,rH,'F');
-        doc.setFont('Roboto',r3===11?'bold':'normal'); doc.setFontSize(7);
-        doc.setTextColor(r3===11?14:40,r3===11?63:40,r3===11?75:40);
-        for (var c3=0;c3<rows[r3].length;c3++) doc.text(fx(String(rows[r3][c3])),cols[c3]+1,y+3.8);
-        doc.setDrawColor(220,210,190); doc.setLineWidth(0.1); doc.line(sx,y+rH,sx+110,y+rH);
-        y += rH;
-      }
-      return y;
-    }
-
     // ── PAG 1 PORTADA ────────────────────────────────────────────────────────
     doc.addImage(img_portada,'JPEG',0,0,W,H);
     doc.setFont('Roboto','bold'); doc.setFontSize(16); doc.setTextColor(14,63,75);
@@ -636,121 +575,11 @@ export default async function handler(req, res) {
     for(var cl2=0;cl2<captLines.length;cl2++) doc.text(fx(captLines[cl2]),W/2,textoY+cl2*4.5,{align:'center'});
     addPageNum(4);
 
-    // ── PAG 5 POSICIONES ─────────────────────────────────────────────────────
-    doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
-    doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(207,177,128);
-    doc.text(fx('POSICIONES: Configuración funcional de tu programación inicial'),18,30);
-    var py5=45; py5=tablaPositions(18,py5); py5+=5;
-    doc.setFont('Roboto','italic'); doc.setFontSize(9); doc.setTextColor(60,60,60);
-    py5=wrapText(fx('Las posiciones reflejan cómo funciona tu forma de pensar, sentir y actuar, y qué partes de ti tienen más peso en la manera en que percibes y respondes a la vida.'),18,py5,175,5.5);
-    py5+=8;
-    doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(207,177,128);
-    doc.text(fx('ASPECTOS: Dinámicas internas de tu programación inicial'),18,py5);
-    py5+=15;
-    var aspTipos=['sol','luna','mercurio','venus','marte','jupiter','saturno','urano','neptuno','pluton','quiron','asc'];
-    var aspRaws=[carta.solRaw,carta.lunaRaw,carta.mercRaw,carta.venRaw,carta.marRaw,carta.jupRaw,carta.satRaw,carta.uraRaw,carta.nepRaw,carta.plutRaw,carta.quirRaw,carta.ascRaw];
-    var aspDefs2=[{deg:0,orb:8,symbol:'=',color:[120,120,120]},{deg:60,orb:6,symbol:'S',color:[90,140,120]},{deg:90,orb:8,symbol:'C',color:[180,95,85]},{deg:120,orb:8,symbol:'T',color:[90,140,120]},{deg:180,orb:10,symbol:'O',color:[180,95,85]}];
-    function dibujarMini(tipo,cx2,cy2,sz){
-      doc.setDrawColor(14,63,75); doc.setLineWidth(0.3);
-      var x=cx2,y=cy2;
-      if(tipo==='sol'){doc.circle(x,y,sz*.55);doc.setFillColor(14,63,75);doc.circle(x,y,sz*.12,'F');}
-      else if(tipo==='luna'){doc.setFillColor(14,63,75);doc.circle(x-sz*.1,y,sz*.55,'F');doc.setFillColor(255,251,239);doc.circle(x+sz*.15,y,sz*.5,'F');}
-      else if(tipo==='mercurio'){doc.line(x-sz*.3,y-sz*.7,x-sz*.15,y-sz*.5);doc.line(x+sz*.3,y-sz*.7,x+sz*.15,y-sz*.5);doc.circle(x,y-sz*.05,sz*.3);doc.line(x,y+sz*.25,x,y+sz*.7);doc.line(x-sz*.25,y+sz*.5,x+sz*.25,y+sz*.5);}
-      else if(tipo==='venus'){doc.circle(x,y-sz*.2,sz*.35);doc.line(x,y+sz*.15,x,y+sz*.7);doc.line(x-sz*.25,y+sz*.45,x+sz*.25,y+sz*.45);}
-      else if(tipo==='marte'){doc.circle(x-sz*.1,y+sz*.15,sz*.35);doc.line(x+sz*.15,y-sz*.1,x+sz*.5,y-sz*.45);doc.line(x+sz*.5,y-sz*.45,x+sz*.25,y-sz*.45);doc.line(x+sz*.5,y-sz*.45,x+sz*.5,y-sz*.2);}
-      else if(tipo==='jupiter'){doc.line(x-sz*.5,y-sz*.15,x+sz*.1,y-sz*.15);doc.line(x-sz*.25,y-sz*.4,x-sz*.25,y+sz*.55);doc.line(x+sz*.1,y-sz*.15,x+sz*.35,y-sz*.4);doc.line(x+sz*.35,y-sz*.4,x+sz*.35,y-sz*.15);doc.line(x+sz*.35,y-sz*.15,x+sz*.45,y);}
-      else if(tipo==='saturno'){doc.line(x-sz*.25,y-sz*.5,x-sz*.25,y+sz*.4);doc.line(x-sz*.5,y-sz*.3,x,y-sz*.3);doc.line(x-sz*.25,y+sz*.4,x+sz*.1,y+sz*.55);doc.line(x+sz*.1,y+sz*.55,x+sz*.3,y+sz*.4);doc.line(x+sz*.3,y+sz*.4,x+sz*.3,y+sz*.1);}
-      else if(tipo==='urano'){doc.line(x-sz*.35,y-sz*.5,x-sz*.35,y+sz*.15);doc.line(x+sz*.35,y-sz*.5,x+sz*.35,y+sz*.15);doc.line(x-sz*.35,y-sz*.15,x+sz*.35,y-sz*.15);doc.line(x,y+sz*.15,x,y+sz*.35);doc.circle(x,y+sz*.5,sz*.15);}
-      else if(tipo==='neptuno'){doc.line(x-sz*.5,y-sz*.3,x-sz*.35,y+sz*.2);doc.line(x+sz*.5,y-sz*.3,x+sz*.35,y+sz*.2);doc.line(x,y-sz*.3,x,y+sz*.4);doc.line(x-sz*.5,y-sz*.3,x+sz*.5,y-sz*.3);doc.line(x-sz*.25,y+sz*.4,x+sz*.25,y+sz*.4);doc.line(x-sz*.5,y-sz*.3,x-sz*.3,y-sz*.55);doc.line(x-sz*.3,y-sz*.55,x+sz*.3,y-sz*.55);doc.line(x+sz*.3,y-sz*.55,x+sz*.5,y-sz*.3);}
-      else if(tipo==='pluton'){doc.line(x-sz*.25,y-sz*.55,x-sz*.25,y+sz*.5);doc.line(x-sz*.25,y-sz*.55,x+sz*.15,y-sz*.55);doc.line(x+sz*.15,y-sz*.55,x+sz*.15,y-sz*.1);doc.line(x+sz*.15,y-sz*.1,x-sz*.25,y-sz*.1);doc.line(x-sz*.25,y+sz*.5,x+sz*.35,y+sz*.5);}
-      else if(tipo==='quiron'){doc.circle(x,y+sz*.35,sz*.28);doc.line(x,y-sz*.6,x,y+sz*.07);doc.line(x,y-sz*.15,x+sz*.35,y-sz*.55);doc.line(x,y-sz*.15,x+sz*.35,y+sz*.15);}
-      else if(tipo==='asc'){doc.line(x-sz*.6,y,x+sz*.4,y);doc.line(x+sz*.4,y,x+sz*.2,y-sz*.25);doc.line(x+sz*.4,y,x+sz*.2,y+sz*.25);}
-    }
-    var cellS=100/aspTipos.length,aspX=30,aspY=py5,miniSz=2.2;   // el total sigue midiendo 100 mm
-    var nAsp=aspTipos.length;
-    for(var ai4=0;ai4<aspTipos.length;ai4++) dibujarMini(aspTipos[ai4],aspX+ai4*cellS+cellS/2,aspY-3,miniSz);
-    for(var row=0;row<nAsp;row++){
-      dibujarMini(aspTipos[row],aspX-4,aspY+row*cellS+cellS/2,miniSz);
-      for(var col=0;col<=row;col++){
-        var cx3=aspX+col*cellS,cy3=aspY+row*cellS;
-        doc.setDrawColor(210,195,165); doc.setLineWidth(0.15); doc.rect(cx3,cy3,cellS,cellS);
-        if(col<row){
-          var diffA=Math.abs(aspRaws[row]-aspRaws[col])%360;
-          if(diffA>180) diffA=360-diffA;
-          for(var ak4=0;ak4<aspDefs2.length;ak4++){
-            if(Math.abs(diffA-aspDefs2[ak4].deg)<=aspDefs2[ak4].orb){
-              var col4=aspDefs2[ak4].color;
-              doc.setFont('Roboto','bold'); doc.setFontSize(8);
-              doc.setTextColor(col4[0],col4[1],col4[2]);
-              doc.text(aspDefs2[ak4].symbol,cx3+cellS/2,cy3+cellS/2+1.5,{align:'center'});
-              doc.setFontSize(6.5); break;
-            }
-          }
-        } else {
-          doc.setFillColor(245,238,225); doc.rect(cx3,cy3,cellS,cellS,'F');
-          doc.setDrawColor(210,195,165); doc.rect(cx3,cy3,cellS,cellS);
-        }
-      }
-    }
-    py5=aspY+nAsp*cellS+6;
-    doc.setFont('Roboto','normal'); doc.setFontSize(7); doc.setTextColor(100,100,100);
-    doc.text('T = Trígono   C = Cuadratura   S = Sextil   O = Oposición   = = Conjunción',W/2,py5,{align:'center'});
-    py5+=6;
-    doc.setFont('Roboto','italic'); doc.setFontSize(9); doc.setTextColor(60,60,60);
-    wrapText(fx('Los aspectos muestran cómo se relacionan esas partes entre sí: los equilibrios, las tensiones y las conexiones que forman tu manera de vincularte, decidir y reaccionar.'),18,py5,175,5.5);
-    addPageNum(5);
-
-    // ── PAG 6 EJES, CASAS Y NODOS ────────────────────────────────────────────
-    // Datos que la carta ya calcula y que hasta ahora no salian impresos en
-    // ninguna parte: el Medio Cielo y su opuesto, el signo que rige cada una de
-    // las doce casas, y los dos Nodos con su casa. Van en pagina propia porque
-    // la 5 (posiciones + parrilla de aspectos) ya llega hasta abajo.
-    // El indice de la pagina 2 numera secciones, no paginas, asi que meter una
-    // pagina aqui no lo descuadra; lo que si hay que mover es el contador de
-    // las areas, que arranca justo debajo.
-    doc.addPage(); doc.addImage(img_base,'JPEG',0,0,W,H);
-    doc.setFont('Roboto','bold'); doc.setFontSize(11); doc.setTextColor(207,177,128);
-    doc.text(fx('EJES Y CASAS: los puntos que ordenan tu programación inicial'),18,30);
-
-    // El signo que rige cada casa sale del mismo array "casas" que ya usa la
-    // columna Casa de la tabla de posiciones.
-    var SIGNOS_CASA = ['Aries','Tauro','Géminis','Cáncer','Leo','Virgo','Libra','Escorpio','Sagitario','Capricornio','Acuario','Piscis'];
-    function signoDeCasa(i) {
-      if (!carta.casas || carta.casas[i] === undefined || carta.casas[i] === null) return '-';
-      return SIGNOS_CASA[Math.floor(((((carta.casas[i]) % 360) + 360) % 360) / 30)];
-    }
-    // Cada linea se pinta de una sola llamada, sin columnas de ancho fijo, para
-    // que una etiqueta larga no pueda montarse encima de su valor.
-    function lineaDato(etiqueta, valor, y) {
-      doc.setFont('Roboto','normal'); doc.setFontSize(9); doc.setTextColor(40,40,40);
-      doc.text(fx(etiqueta + '  ' + valor),18,y);
-    }
-
-    var py6 = 45;
-    doc.setFont('Roboto','bold'); doc.setFontSize(9); doc.setTextColor(14,63,75);
-    doc.text(fx('MEDIO CIELO E INICIO DEL CIELO'),18,py6); py6 += 7;
-    lineaDato('Medio Cielo (MC):', (carta.medioCielo||'-') + '   ·   casa ' + casaDe(carta.mcRaw), py6); py6 += 6;
-    lineaDato('Inicio del Cielo (IC):', (carta.inicioCielo||'-') + '   ·   casa ' + casaDe(carta.icRaw), py6); py6 += 12;
-
-    doc.setFont('Roboto','bold'); doc.setFontSize(9); doc.setTextColor(14,63,75);
-    doc.text(fx('CÚSPIDES DE LAS CASAS'),18,py6); py6 += 7;
-    doc.setFont('Roboto','normal'); doc.setFontSize(9); doc.setTextColor(40,40,40);
-    for (var hc = 0; hc < 6; hc++) {
-      doc.text(fx('Casa ' + (hc+1) + ': ' + signoDeCasa(hc)),18,py6 + hc*6);
-      doc.text(fx('Casa ' + (hc+7) + ': ' + signoDeCasa(hc+6)),105,py6 + hc*6);
-    }
-    py6 += 6*6 + 6;
-
-    doc.setFont('Roboto','bold'); doc.setFontSize(9); doc.setTextColor(14,63,75);
-    doc.text(fx('NODOS'),18,py6); py6 += 7;
-    lineaDato('Nodo Norte:', (carta.nodoNorte||'-') + '   ·   casa ' + casaDe(carta.nodeRaw), py6); py6 += 6;
-    lineaDato('Nodo Sur:', (carta.nodoSur||'-') + '   ·   casa ' + casaDe(carta.nodeSurRaw), py6); py6 += 12;
-
-    doc.setFont('Roboto','italic'); doc.setFontSize(9); doc.setTextColor(60,60,60);
-    wrapText(fx('Las casas de esta carta son de signo completo: cada casa ocupa un signo entero, empezando por el del Ascendente. Por eso el Medio Cielo no cae necesariamente en la casa 10, y cuando cae en otra es correcto, no un error de cálculo.'),18,py6,175,5.5);
-    addPageNum(6);
-
-    // ── PAGS 7-20 LAS 7 AREAS ────────────────────────────────────────────────
+    // LAS PAGINAS DE POSICIONES, ASPECTOS, EJES Y CASAS NO SALEN: son datos
+    // de la carta, que se guardan, pero el cliente no los ve. Despues de la
+    // rueda van directamente las areas.
+    //
+    // ── PAGS 5-18 LAS 7 AREAS ────────────────────────────────────────────────
     var areaTitles=[
       {tit:fx('IDENTIDAD'),sub:fx('Por que eres como eres y por que tu vida es como es')},
       {tit:fx('PATRONES'),sub:fx('Por que siempre te pasa lo mismo y que repites sin poder parar')},
@@ -760,7 +589,7 @@ export default async function handler(req, res) {
       {tit:fx('RELACIONES'),sub:fx('Como te vinculas con los demas y que rol ocupas sin darte cuenta')},
       {tit:fx('DINERO'),sub:fx('Por que el dinero no termina de fluir en tu vida')},
     ];
-    var pageC=7;   // la 6 la ocupa ahora la pagina de ejes, casas y nodos
+    var pageC=5;   // la 4 es la de la rueda
     // NINGUN SUBTITULO SE REPITE ENTRE AREAS. Las siete se escriben por
     // separado y ninguna sabe lo que ponen las otras, asi que el que ya haya
     // salido antes no se pinta: el parrafo empieza sin el y nadie lo echa de
