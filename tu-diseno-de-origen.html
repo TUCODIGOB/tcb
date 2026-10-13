@@ -751,6 +751,7 @@ text-align: center;
     .br-pc { display: none; }
     .p2-foto { display: none; }
     .br-tab { display: inline; }
+    .br-tv { display: none; }
 
     /* Cinta continua al final del hero */
     .hero-ribbon {
@@ -832,9 +833,8 @@ text-align: center;
     .b5-item h3 .n { color: var(--gold-deep); font-weight: 400; font-size: 32px; margin-right: 12px; }
     .b5-item p { font-family: var(--font-body); font-size: 16px; line-height: 1.75; color: #4a4538; margin: 0; }
     .b5-foto { aspect-ratio: 16 / 5; margin: 56px 0 0; overflow: hidden; border-radius: var(--r-lg); }
-    .b5-foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+    .b5-foto img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 60%; }
     @media (min-width: 851px) and (max-width: 1023px) { .b5-foto { aspect-ratio: 4 / 1; } .b5-foto img { object-position: center 45%; } }
-    @media (max-width: 680px) { .b5-foto img { transform: scale(1.2); transform-origin: 40% 60%; } }
     .b5-mas { font-family: var(--font-body); font-weight: 700; font-size: 16px; letter-spacing: 2.6px;
               text-transform: uppercase; color: var(--gold-deep); margin: 50px 0 26px; }
     .b5-extras { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; text-align: left; }
@@ -882,9 +882,8 @@ text-align: center;
             border: 1px solid #dcc394; display: flex; align-items: center; justify-content: center;
             margin: 0 auto 22px; position: relative; z-index: 1;
             font-family: var(--font-display); font-weight: 700; font-size: 25px; color: var(--gold-deep); }
-    .b7-paso h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.25;
+    .b7-paso h3 { font-family: var(--font-body); font-weight: 600; font-size: 18px; line-height: 1.25;
                   color: var(--teal-deep); margin: 0 0 12px; }
-    .b7-paso p { font-family: var(--font-body); font-size: 16px; line-height: 1.7; color: #4a4538; margin: 0; }
     .b7-cta { margin-top: 56px; }
     .b7-cta .btn-cta { display: inline-flex; align-items: center; justify-content: center; gap: .5em; }
     /* Bloque 6: titulo y pasos en vertical en tablet vertical y movil */
@@ -893,8 +892,8 @@ text-align: center;
     @media (max-width: 850px) {
       .b7 .b7-pasos { gap: 34px; }
       .b7 .b7-paso { display: grid; grid-template-columns: 54px 1fr; column-gap: 16px; text-align: left; }
-      .b7 .b7-n { grid-row: 1 / span 2; margin: 0; }
-      .b7 .b7-paso h3 { align-self: center; }
+      .b7 .b7-n { margin: 0; }
+      .b7 .b7-paso h3 { align-self: center; margin: 0; }
       .b7 .b7-paso:not(:last-child)::after { content: ""; position: absolute; left: 27px; top: 54px; bottom: -34px; width: 1px; background: #e0cba6; }
     }
     @media (min-width: 681px) and (max-width: 850px) {
@@ -948,7 +947,7 @@ text-align: center;
                 border-radius: var(--r-md); box-shadow: 0 12px 30px rgba(14,63,75,.12); background: var(--teal-deep); }
     .b8-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
     /* Videos mas bajos: se recorta arriba y abajo, con el nombre encima */
-    .b8 .b8-video { padding-bottom: 0; height: auto; aspect-ratio: 2 / 2.9; }
+    .b8 .b8-video { padding-bottom: 0; height: auto; aspect-ratio: 2 / 2.98; }
     .b8 .b8-video iframe { inset: auto; top: 0; left: 0; width: 100%; height: auto; aspect-ratio: 9 / 16; transform: translateY(-9.5%); }
     .b8-sep { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 0 0 44px; }
     .b8-sep i { display: block; width: 64px; height: 1px; background: var(--gold-deep); opacity: .5; }
@@ -1014,6 +1013,23 @@ text-align: center;
               font-size: 32px; line-height: 1; color: var(--gold-deep); margin: 0 0 14px; }
     .p2-title { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 40px; }
     .p2-title em { font-style: italic; color: var(--gold-deep); }
+    /* Titulo del bloque 2 en una linea: tamaño por dispositivo */
+    /* PC */
+    @media (min-width: 1024px) {
+      .p2-title .p2-l1, .p2-title em { font-size: 40px; }
+    }
+    /* Tablet horizontal */
+    @media (min-width: 851px) and (max-width: 1023px) {
+      .p2-title .p2-l1, .p2-title em { font-size: 40px; }
+    }
+    /* Tablet vertical */
+    @media (min-width: 681px) and (max-width: 850px) {
+      .p2-title .p2-l1, .p2-title em { font-size: 38px; }
+    }
+    /* Movil */
+    @media (max-width: 680px) {
+      .p2-title .p2-l1, .p2-title em { font-size: 40px; }
+    }
     .p2-sub { font-size: 18px; line-height: 1.7; color: #4a4538; margin: 0 0 30px; }
     .p2-punto { font-family: var(--font-display); font-weight: 700; font-style: normal; font-size: 16px; letter-spacing: 0; text-transform: none; color: var(--teal-deep); margin: 0 0 60px; }
     .p2 .p2-punto { font-size: 25px; }
@@ -1068,7 +1084,6 @@ text-align: center;
       .b3v-h { line-height: 1.22; }
       .b3v-h::after { margin: 24px auto 0; }
       .b3v-txt > p.b3v-l:nth-of-type(2) { max-width: 560px; margin-inline: auto; }
-      .b3v-clave .b3v-fin-oro { display: block; }
     }
     /* Movil */
     @media (max-width: 680px) {
@@ -1079,14 +1094,13 @@ text-align: center;
     .b3v-l { font-family: var(--font-body); font-size: 16px; line-height: 1.85; color: #fffbef; margin: 0 0 22px; }
     .b3v-l strong { font-weight: 700; color: var(--gold-light); }
     .b3v-l em { font-style: italic; font-weight: 700; color: #fffbef; }
-    .b3v-l .b3v-resalta { font-weight: 700; color: #fffbef; }
     .b3v-clave .b3v-l strong { color: #fffbef; }
     .b3v-fin { font-family: var(--font-display); font-weight: 700; font-style: normal; font-size: 21px;
                line-height: 1.5; color: #fffbef; margin: 0; }
     .b3v-clave { margin-top: 30px; }
-    .b3v-clave .b3v-l { border-left: 3px solid var(--gold-light); padding-left: 24px; }
+    .b3v-clave .b3v-l { border-left: 0; padding-left: 0; }
     .b3v-clave .b3v-l { margin-bottom: 12px; }
-    .b3v-clave .b3v-fin { color: #fffbef; text-align: center; background: rgba(255,251,239,.07); border: 1px solid rgba(255,251,239,.10); border-radius: var(--r-lg); padding: 18px 24px; margin-top: 30px; }
+    .b3v-clave .b3v-fin { color: #fffbef; margin-top: 30px; }
     .b3v-fin .b3v-fin-oro { color: var(--gold-light); font-style: italic; }
 
     /* ══════════════════════════════════════════════
@@ -1097,7 +1111,7 @@ text-align: center;
     /* ══════════════════════════════════════════════
        LO QUE ESTÁS PENSANDO AHORA MISMO (bloque 9)
     ══════════════════════════════════════════════ */
-    .b9 { background: var(--white); padding: 60px 0 70px; text-align: center; }
+    .b9 { background: var(--cream); padding: 60px 0 70px; text-align: center; }
     .b9-in { width: min(860px, 92vw); margin-inline: auto; }
     .b9-h { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.3;
             color: var(--teal-deep); margin: 0 0 52px; }
@@ -1246,8 +1260,7 @@ text-align: center;
       .b7-paso { padding: 0; }
       .b7-n { margin-bottom: 16px; }
       .b7-n { font-size: 36px; }
-      .b7-paso h3 { font-size: 25px; }
-      .b7-paso p { font-size: 18px; }
+      .b7-paso h3 { font-size: 20px; }
       .b7-cta { margin-top: 60px; }
       .b7-cta .btn-cta { display: flex; width: 100%; font-size: 18px; padding: 17px 4px; }
       .b8 { padding: 72px 0 80px; }
@@ -1260,7 +1273,7 @@ text-align: center;
       .b6-lab { font-size: 20px; }
       .b6-cols { grid-template-columns: 1fr; gap: 70px; }
       .b6-card { padding: 24px 22px 26px; }
-      .b6-card li { font-size: 18px; padding: 10px 0; }
+      .b6-card li { font-size: 18px; padding: 20px 0; }
       .p2-tel { font-size: 32px; }
       .p2 { padding: 70px 0 80px; }
       .p2-title { font-size: 40px; }
@@ -1284,13 +1297,12 @@ text-align: center;
       .b3v-tel { order: 1; }
       .b3v-h { order: 2; }
       .b3v-txt p.b3v-l:nth-of-type(2) { order: 3; }
-      .b3v-txt > .b3v-fin { order: 3; margin-bottom: 40px; }
       .b3v-clave { order: 5; }
-      .b3v-h { font-size: 40px; margin-bottom: 60px; }
+      .b3v-h { font-size: 40px; margin-bottom: 40px; }
       .b3v-l { font-size: 18px; line-height: 1.7; margin-bottom: 22px; }
       .b3v-fin { font-size: 22px; }
-      .b3v-clave { margin: 0 auto; max-width: 560px; text-align: left; }
-      .b3v-clave .b3v-l { padding-left: 18px; }
+      .b3v-clave { margin: 0 auto; max-width: 560px; text-align: center; }
+      .b3v-clave .b3v-l { padding-left: 0px; }
       .b9 { padding: 72px 0 80px; } 
       .b9-h { font-size: 31px; margin-bottom: 44px; }
       .b9-body p { font-size: 18px; }
@@ -1315,6 +1327,7 @@ text-align: center;
     /* ── Solo tablet vertical (681px a 850px) ── */
     @media (min-width: 681px) and (max-width: 850px) {
       .hero-segunda { font-size: 25px; margin-bottom: 30px; }
+      .br-tv { display: inline; }
       .p2-title { font-size: 38px; }
       .p2-sub { font-size: 18px; }
       .p2-punto { font-size: 17px; }
@@ -1337,15 +1350,14 @@ text-align: center;
       .b5-extra p, .b5-siempre p.tx { font-size: 16px; }
       .b5-siempre .br-esc { display: inline; }
       .b3v-foto { max-width: 480px; aspect-ratio: 16 / 10; }
-      .b3v-foto img { object-position: center 15%; }
+      .b3v-foto img { object-position: center center; }
       .b6-et { font-size: 18px; }
       .b6-h { font-size: 38px; margin-bottom: 60px; }
-      .b6-cols { gap: 60px; }
+      .b6-cols { gap: 80px; }
       .b6-lab { font-size: 18px; }
       .b6-card li { font-size: 16px; }
       .b7-h { font-size: 35px; }
-      .b7-paso h3 { font-size: 22px; }
-      .b7-paso p { font-size: 16px; }
+      .b7-paso h3 { font-size: 18px; }
       .b8 { padding: 50px 0 70px; }
       .b9 { padding: 60px 0 80px; }
       .b9-h { font-size: 32px; margin-bottom: 60px; }
@@ -1353,9 +1365,9 @@ text-align: center;
       .b10-h { font-size: 32px; margin: 0 0 20px; }
       .b10-of { font-size: 22px; margin-bottom: 40px; }
       .b3v { padding: 10px 0 30px; }
-      .b3v-h { font-size: 38px; margin-bottom: 50px; }
+      .b3v-h { font-size: 38px; margin-bottom: 40px; }
       .b3v-l { font-size: 16px; }
-      .b3v-txt p.b3v-l:nth-of-type(2) { margin-bottom: 20px; }
+      .b3v-txt p.b3v-l:nth-of-type(2) { margin-bottom: 40px; }
       .b3v-foto { margin: 10px auto 30px; }
       .b3v-clave { margin-top: 20px; }
       .b4 { padding: 100px 0 70px; }
@@ -1366,7 +1378,7 @@ text-align: center;
       .hero-foto { aspect-ratio: 2 / 1; width: min(560px, 80%); margin-inline: auto; align-self: center; margin-top: 20px; margin-bottom: 50px; }
       .hero-foto img { object-position: center 60%; }
       .p2 { padding: 70px 0 60px; }
-      .p2-quotes { grid-template-columns: 200px 1fr; }
+      .p2-quotes { grid-template-columns: 160px 1fr; }
       .p2-quote { grid-column: 2; }
       .p2-quote p { font-size: 16px; }
       .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 4; position: relative; border-radius: var(--r-lg); overflow: hidden; }
@@ -1412,7 +1424,7 @@ text-align: center;
       .b5-extras { grid-template-columns: 1fr; gap: 35px; }
       .b5-item { padding: 24px 22px; margin-bottom: 35px; }
       .b5-item:last-child { margin-bottom: 0; }
-      .b3v-l { margin-bottom: 30px; }
+      .b3v-l { margin-bottom: 40px; }
       .b3v-clave .b3v-l { margin-bottom: 20px; }
       .b3v-clave { max-width: 330px; }
       .b5-mas { font-size: 22px; }
@@ -1430,22 +1442,21 @@ text-align: center;
       .p2-c3 .break-mobile { display: none; }
       .hero-foto { aspect-ratio: 1 / 1; margin-bottom: 60px; }
       .hero-foto img { object-position: 62% top; }
-      .b5-foto { aspect-ratio: 1 / 1; }
-      .b5-foto img { object-position: 52% 60%; }
+      .b5-foto { aspect-ratio: 4 / 3; }
+      .b5-foto img { object-position: 38% center; }
       .p2-c1, .p2-c2 { font-size: 32px; }
       .b3v-foto { aspect-ratio: 4 / 3; }
-      .b3v-foto img { transform: scaleX(-1) scale(1.3); transform-origin: 50% 5%; }
+      .b3v-foto img { transform: scaleX(-1); }
       .b3v { padding: 30px 0 40px; }
       .b4-mock { margin: 0 auto 50px; }
       .b4-cta { margin-top: 20px; }
       .b5-et { font-size: 18px; }
       .b7 { padding: 70px 0 70px; }
-      .p2-quotes { grid-template-columns: 130px 1fr; gap: 16px 14px; }
-      .p2-quote { grid-column: 2; }
+      .p2-quotes { grid-template-columns: 100px 1fr; gap: 16px 14px; }
+      .p2-quote { grid-column: 2; padding: 16px 12px 16px 10px; }
       .p2-quote p { padding-left: 10px; }
-      .p2-quote { grid-column: 2; }
       .p2-foto { display: block; grid-column: 1; grid-row: 1 / span 4; border-radius: var(--r-lg); overflow: hidden; }
-      .p2-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 62% top; display: block; }
+      .p2-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 60% top; display: block; }
       .p2-punto { margin-bottom: 50px; }
       .b4-h .break-mobile { display: none; }
       .b3v-fin { font-size: 24px; }
@@ -1488,7 +1499,7 @@ text-align: center;
       .b3v { padding: 20px 0; }
       .b3v-in { align-items: stretch; }
       .b3v-foto { aspect-ratio: auto; position: relative; }
-      .b3v-foto img { position: absolute; inset: 0; transform: scale(1.45); transform-origin: 50% 8%; }
+      .b3v-foto img { position: absolute; inset: 0; transform: none; }
       .b4-mock { max-width: 800px; }
       .b4-golpes { font-size: 16px; margin: 0 0 30px; }
       .b4-cta { margin-top: 20px; }
@@ -1557,7 +1568,8 @@ text-align: center;
     }
     /* Movil */
     @media (max-width: 680px) {
-      .b6 .b6-lab { font-size: 28px; }
+      .b6 .b6-lab { font-size: 25px; }
+      .b6-cols { gap: 80px; }
       .b8-h em { font-size: 40px; }
     }
     /* Tablet vertical y movil: pasos mas separados y la raya mas larga */
@@ -1621,8 +1633,7 @@ text-align: center;
         <div class="hero-texto">
           <h1 class="h1-bloque">Hay una razón<span class="br-pc"><br></span> detrás<span class="br-tab"><br></span> de <em class="palabra-oro">todo</em><span class="br-pc"><br></span> lo que te pasa</h1>
           <p class="hero-segunda">Y por fin<br class="br-mov"> vas a entender cuál es</p>
-          <p class="hero-sub">Descubre <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong> con <strong class="oro">Tu Diseño de Origen</strong>, un estudio <strong>100% personalizado</strong> que analiza tu carta natal a partir de tus datos de nacimiento.</p>
-
+          <p class="hero-sub">Descubre <strong class="oro">Tu Diseño de Origen</strong>, un estudio <strong>100% personalizado</strong> que descifra tu carta natal a partir de tus datos de nacimiento y te revela <strong class="promesa">por qué eres como eres y por qué te pasa lo que te pasa</strong></p>
           <div class="hero-cierre">
             <p class="hero-oferta">¡Obtén tu prueba<span class="br-movil"><br></span> en <strong>SOLO 2 MINUTOS</strong>!</p>
 
@@ -1698,12 +1709,11 @@ text-align: center;
       <div class="b3v-foto"><img src="images/bloque-3-tu-diseno-de-origen-programacion-interior.webp" alt="Mujer descubriendo su programación interior" /></div>
       <div class="b3v-txt">
         <p class="b3v-tel">Te lo explicamos:</p>
-<h2 class="b3v-h">Antes de tu<br class="br-b3m"> primera<br> respiración,<br> <span class="oro">ya se había formado<br> <span class="b3v-algo">algo en ti</span></span></h2>
-        <p class="b3v-l">Una <strong>programación interior</strong> que decide <em>cómo piensas, cómo sientes y cómo te vinculas</em> <span class="b3v-resalta">con todo lo que te rodea</span>: Tus decisiones, tus relaciones, tu dinero, tus miedos…</p>
-        <p class="b3v-fin">Y está dirigiendo tu vida entera <span class="b3v-fin-oro">sin que te des cuenta</span></p>
+<h2 class="b3v-h">Antes de tu<br class="br-b3m"> primera<br class="br-b3m"> respiración,<br> <span class="oro">ya se había formado<br class="br-b3m"> <span class="b3v-algo">algo en ti</span></span></h2>
+        <p class="b3v-l">Una <strong>programación interior</strong> que dirige cómo piensas, cómo sientes, tus relaciones, tu dinero, tus miedos… <strong style="color: #fffbef; font-weight: 700;">sin que te des cuenta</strong>.</p>
         <div class="b3v-clave">
-          <p class="b3v-l">La clave está en el momento exacto en el que naciste, ese instante dibujó un mapa único de ti, <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong>, descifra tu programación.</p>
-          <p class="b3v-fin">Y hasta que no la descubras <span class="b3v-fin-oro">nada cambiará de verdad</span></p>
+          <p class="b3v-l">Nació contigo, en el momento exacto en que llegaste a este mundo. Ese instante dibujó un mapa único de ti, <strong>tu carta natal</strong>, que junto con <strong>la psicología</strong> descifra tu programación.</p>
+          <p class="b3v-fin">Y hasta que no la descubras, <span class="b3v-fin-oro">nada cambiará de verdad</span></p>
         </div>
       </div>
     </div>
@@ -1717,7 +1727,7 @@ text-align: center;
       </svg>
     </div>
     <div class="b4-in">
-      <h2 class="b4-h"><span class="b4-marca">Tu Diseño de Origen</span> te da<br class="break-mobile"><br class="br-movil"> <em>las respuestas</em><br class="break-desktop"><br class="br-movil"> que llevas<br class="break-mobile"> <em>toda<br class="br-movil"> la vida buscando</em></h2>
+      <h2 class="b4-h">¿Qué vas a descubrir con<br class="br-tv"> <em>Tu Diseño de Origen</em>?</h2>
 <div class="b4-mock"><picture><source media="(max-width: 680px)" srcset="images/tu-diseno-de-origen-estudio-carta-natal-movil.webp" /><img src="images/tu-diseno-de-origen-estudio-carta-natal.webp" alt="Tu Diseño de Origen: el estudio de tu carta natal en PDF, en ordenador, tablet y móvil" width="1927" height="1000" loading="lazy" /></picture></div>
       <p class="b4-sub">Más de <strong>40 páginas</strong> que revelan tu <strong>programación interior</strong>, para que entiendas por fin<br class="br-esc"> <strong><em>por qué eres como eres y por qué te pasa lo que te pasa</em></strong></p>
 <p class="b4-golpes"><span>100% personalizado</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin tecnicismos</span><span class="pt" aria-hidden="true">&#9679;</span><span>Sin citas, sin esperas</span></p>
@@ -1730,8 +1740,7 @@ text-align: center;
   <section class="b5">
     <div class="b5-in">
       <div class="b5-panel">
-      <p class="b5-et">Lo que vas a descubrir:</p>
-      <h2 class="b5-h">Las <span class="b5-siete">7</span> áreas que<br class="br-mov"> <em>lo explican todo</em></h2>
+      <h2 class="b5-h">Las <span class="b5-siete">7</span> áreas que<br class="br-mov"> <em>lo explican todo:</em></h2>
 
       <div class="b5-lista">
         <div class="b5-item"><h3><span class="n">01</span>Tu Identidad</h3><p>Entenderás cómo funcionas por dentro: qué muestras, qué escondes y los puntos ciegos que nunca has visto</p></div>
@@ -1759,6 +1768,27 @@ text-align: center;
       <div class="b5-cta">
         <p class="b5-oferta">¡Obtén tu prueba<br class="br-mov"> en SOLO 2 MINUTOS!</p>
         <a href="#formulario" class="btn-cta">Quiero descubrirlo gratis&nbsp;→</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ 7. LO QUE DICEN QUIENES YA LO TIENEN ════════════ -->
+  <section class="b8">
+    <div class="b8-in">
+      <h2 class="b8-h"><span class="b8-txt"><span class="b8-l1">Ellos ya han descubierto</span> <em>el suyo</em></span></h2>
+      <div class="b8-videos">
+        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230268085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Ona — Tu Diseño de Origen"></iframe></div>
+        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230269127?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Nacho — Tu Diseño de Origen"></iframe></div>
+        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230266221?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Sara — Tu Diseño de Origen"></iframe></div>
+      </div>
+      <div class="b8-sep" aria-hidden="true"><i></i><b></b><i></i></div>
+      <div class="b8-res">
+        <img src="images/R1-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="620" loading="lazy" />
+        <img src="images/R2-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="581" loading="lazy" />
+        <img src="images/R3-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="734" loading="lazy" />
+        <img src="images/R4-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="569" loading="lazy" />
+        <img src="images/R5-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="518" loading="lazy" />
+        <img src="images/R6-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="593" loading="lazy" />
       </div>
     </div>
   </section>
@@ -1800,18 +1830,15 @@ text-align: center;
       <div class="b7-pasos">
         <div class="b7-paso">
           <span class="b7-n">1</span>
-          <h3>Completas el formulario</h3>
-          <p>Con tus datos exactos de nacimiento: fecha, hora y lugar</p>
+          <h3>Rellenas el formulario con<br class="break-desktop"><br class="br-mov"> tus datos de nacimiento</h3>
         </div>
         <div class="b7-paso">
           <span class="b7-n">2</span>
-          <h3>Se genera tu estudio</h3>
-          <p>El sistema analiza tu carta natal y genera tu Diseño de Origen</p>
+          <h3>Se genera<br class="break-desktop"><br class="br-mov"> tu Diseño de Origen</h3>
         </div>
         <div class="b7-paso">
           <span class="b7-n">3</span>
-          <h3>Lo tienes al momento</h3>
-          <p>En solo 2 minutos y lo recibes por email, para tenerlo siempre contigo</p>
+          <h3>Lo descubres<br class="break-desktop"> en 2 minutos</h3>
         </div>
       </div>
       <div class="b7-cta">
@@ -1820,26 +1847,6 @@ text-align: center;
     </div>
   </section>
 
-  <!-- ════════════ 7. LO QUE DICEN QUIENES YA LO TIENEN ════════════ -->
-  <section class="b8">
-    <div class="b8-in">
-      <h2 class="b8-h"><span class="b8-txt"><span class="b8-l1">Ellos ya han descubierto su</span> <em>Diseño de Origen</em></span></h2>
-      <div class="b8-videos">
-        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230268085?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Ona — Tu Diseño de Origen"></iframe></div>
-        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230269127?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Nacho — Tu Diseño de Origen"></iframe></div>
-        <div class="b8-video"><iframe src="https://player.vimeo.com/video/1230266221?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479&amp;title=0&amp;byline=0&amp;portrait=0" allow="fullscreen; picture-in-picture" allowfullscreen loading="lazy" title="Testimonio Sara — Tu Diseño de Origen"></iframe></div>
-      </div>
-      <div class="b8-sep" aria-hidden="true"><i></i><b></b><i></i></div>
-      <div class="b8-res">
-        <img src="images/R1-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="620" loading="lazy" />
-        <img src="images/R2-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="581" loading="lazy" />
-        <img src="images/R3-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="734" loading="lazy" />
-        <img src="images/R4-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="569" loading="lazy" />
-        <img src="images/R5-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="518" loading="lazy" />
-        <img src="images/R6-resena-origen-natal-diseno-origen-carta-natal.webp" alt="Reseña de una clienta de Tu Diseño de Origen" width="955" height="593" loading="lazy" />
-      </div>
-    </div>
-  </section>
 
   <!-- ════════════ 8. TUS PREGUNTAS ════════════ -->
   <section class="b9">
@@ -1859,22 +1866,6 @@ text-align: center;
           <summary>No sé si creo en esto</summary>
           <div class="b9-body">
             <p>No hace falta creer en nada, esto no es un invento ni una interpretación bonita: sale de tu carta natal real, calculada con los datos exactos del día en que naciste. Lo demás son años de trabajo para traducir eso a algo que puedas leer y reconocer. Léelo y lo sabrás.</p>
-          </div>
-        </details>
-
-        <details class="reveal reveal-delay-2" name="b9">
-          <summary>¿Y si no me identifico con lo que dice?</summary>
-          <div class="b9-body">
-            <p>Lo sabrás en <strong>dos minutos</strong> y no te habrá costado nada. Pero es raro que pase: no está escrito sobre un tipo de persona, está escrito sobre ti, con <strong>tu programación interior</strong> y no hay dos iguales.</p>
-            <p>Lo que suele pasar es lo contrario: entiendes el porqué de muchas cosas y encuentras respuestas que llevabas años buscando sobre ti y sobre tu vida.</p>
-          </div>
-        </details>
-
-        <details class="reveal reveal-delay-3" name="b9">
-          <summary>¿Esto es lo mismo que una carta natal?</summary>
-          <div class="b9-body">
-            <p>Se calcula con tu carta natal real, con los datos exactos del día que naciste, pero no es una de esas cartas llenas de símbolos y tecnicismos que no hay quien entienda.</p>
-            <p>Está traducido al lenguaje humano de la psicología y habla de ti: tus patrones, tus miedos, tu forma de querer, tu relación con el dinero… Sin cuentos.</p>
           </div>
         </details>
 
