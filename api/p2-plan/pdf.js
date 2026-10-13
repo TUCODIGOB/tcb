@@ -196,6 +196,46 @@ export default async function handler(req, res) {
       }
     }
 
+    // UN TEXTO CON SU RAYA DORADA AL LADO, como las escenas del P1: el mismo
+    // dorado y el mismo grueso, y el texto metido para dejarle sitio. Lleva un
+    // poco mas de aire debajo de su titulo, porque la raya arranca por encima
+    // del texto y sin el se pegaria a el. La raya es una para todo el texto;
+    // si el texto pasa de hoja, se cierra en esta y vuelve a empezar arriba.
+    const RAYA_DENTRO = 8;
+    function conRaya(texto) {
+      y += 2;
+      const raya = (desde, ultima) => {
+        doc.setDrawColor(DORADO[0], DORADO[1], DORADO[2]);
+        doc.setLineWidth(0.8);
+        doc.line(X, desde, X, ultima + 2);
+      };
+      const letra = () => {
+        doc.setFont('Roboto', 'normal');
+        doc.setFontSize(CUERPO);
+        doc.setTextColor(TINTA[0], TINTA[1], TINTA[2]);
+      };
+      // Donde arranca la raya en esta hoja y el ultimo renglon escrito en ella.
+      let desde = y - 4.5, ultima = null;
+      letra();
+      const trozos = t(texto).split(/\n+/).map(p => p.trim()).filter(Boolean);
+      trozos.forEach((parrafo, i) => {
+        for (const linea of doc.splitTextToSize(parrafo, ANCHO - RAYA_DENTRO)) {
+          if (y > HASTA) {
+            if (ultima !== null) raya(desde, ultima);
+            hojaNueva();
+            letra();
+            desde = y - 4.5;
+            ultima = null;
+          }
+          doc.text(linea, X + RAYA_DENTRO, y);
+          ultima = y;
+          y += RENGLON;
+        }
+        if (i < trozos.length - 1) y += ENTRE_PARRAFOS;
+      });
+      if (ultima !== null) raya(desde, ultima);
+    }
+
     // LA CABECERA DE CADA PARTE, Y SIEMPRE EN HOJA NUEVA.
     //
     // Va en una sola linea: su numero y el titulo del desafio en el verde de la
@@ -579,7 +619,10 @@ export default async function handler(req, res) {
         for (const punto of PUNTOS_DE_CREENCIA) {
           if (!t(creencia?.[punto])) continue;
           subtitulo(creencia?.nombres?.[punto] || PORDEFECTO_DE_CREENCIA[punto]);
-          corrido(creencia[punto]);
+          // LO QUE ES VERDAD, CON SU RAYA: es la idea nueva con la que se
+          // queda, y asi se distingue de lo que cree hoy.
+          if (punto === 'loQueEsVerdad') conRaya(creencia[punto]);
+          else corrido(creencia[punto]);
         }
       }
       hojaFija(fraseExtra);
