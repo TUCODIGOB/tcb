@@ -10,8 +10,8 @@
 // LAS MEDIDAS SON LAS DEL P1, a proposito. Los dos documentos se leen seguidos
 // y tienen que verse del mismo sitio: mismo margen, mismo cuerpo de letra,
 // mismo renglon, mismo aire entre parrafos y el numero de pagina donde
-// siempre. Lo unico que cambia es que aqui todas las paginas van sobre la base
-// lisa, porque el P2 no tiene una ilustracion por parte.
+// siempre. Lo que cambia son los fondos: los suyos del P2, cada uno en su
+// sitio, y la base lisa en todas las paginas con texto.
 //
 // CADA SECCION EMPIEZA EN HOJA NUEVA: cada parte en la suya, y ninguna se pega
 // a la anterior.
@@ -89,7 +89,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método no permitido' });
   if (!laLlaveEsBuena(req)) return res.status(401).json({ error: 'No autorizado' });
 
-  const { nombre, partes, creencias, tablas } = req.body || {};
+  const { nombre, fecha, hora, lugar, partes, creencias, tablas } = req.body || {};
   if (!Array.isArray(partes) || !partes.length) {
     return res.status(400).json({ error: 'Falta el documento que hay que maquetar' });
   }
@@ -110,10 +110,23 @@ export default async function handler(req, res) {
       catch (e) { fallos.push(`${ruta} (${e.message})`); return null; }
     };
 
-    const [normal, negrita, base] = await Promise.all([
+    // LOS FONDOS DEL P2, en el orden en que salen. La base es la de todas las
+    // paginas con texto; las demas son paginas fijas, iguales para todos.
+    const [normal, negrita, portada, indice, bienvenido, empieza, frase,
+      reprograma, fraseExtra, hoja, base, cierre, trasera] = await Promise.all([
       fuente('/fonts/Roboto-Regular.ttf'),
       fuente('/fonts/Roboto-Bold.ttf'),
-      imagen('/images/5-base-pdf.jpg'),
+      imagen('/images/1-portada-pdf-2.jpg'),
+      imagen('/images/2-indice-pdf-2.jpg'),
+      imagen('/images/3-bienvenido-pdf-2.jpg'),
+      imagen('/images/4-empieza-pdf-2.jpg'),
+      imagen('/images/5-frase-pdf-2.jpg'),
+      imagen('/images/6-reprograma-pdf-2.jpg'),
+      imagen('/images/7-frase-extra-pdf-2.jpg'),
+      imagen('/images/8-hoja-pdf-2.jpg'),
+      imagen('/images/9-base-pdf-2.jpg'),
+      imagen('/images/10-cierre-pdf-2.jpg'),
+      imagen('/images/11-trasera-pdf-2.jpg'),
     ]);
 
     const doc = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' });
@@ -129,24 +142,25 @@ export default async function handler(req, res) {
     const t = v => String(v == null ? '' : v).trim();
 
     // ── LAS PIEZAS DE DIBUJO ──────────────────────────────────
-    // La portada no lleva numero, asi que se empieza a contar en cero y la
-    // primera pagina numerada es la del principio.
-    let pagina = 0, y = ARRIBA;
+    // COMO EN EL P1: la portada es la 1 y no lleva numero, y el primero que se
+    // ve es el 2, en el indice. La trasera tampoco lleva.
+    let pagina = 1, y = ARRIBA;
 
     function numeroDePagina() {
-      if (pagina < 1) return;
+      if (pagina < 2) return;
       doc.setFont('Roboto', 'bold');
       doc.setFontSize(9);
       doc.setTextColor(100, 100, 100);
       doc.text(String(pagina), W - 16, H - 16, { align: 'right' });
     }
 
-    // Hoja nueva, con su base puesta y el numero de la anterior ya escrito.
-    function hojaNueva() {
+    // Hoja nueva, con su fondo puesto y el numero de la anterior ya escrito.
+    // Sin decir nada, el fondo es la base.
+    function hojaNueva(fondo = base) {
       numeroDePagina();
       pagina++;
       doc.addPage();
-      doc.addImage(base, 'JPEG', 0, 0, W, H);
+      doc.addImage(fondo, 'JPEG', 0, 0, W, H);
       y = ARRIBA;
     }
 
@@ -225,7 +239,7 @@ export default async function handler(req, res) {
     }
 
     function abrirSeccion(numero, titulo, area, primera) {
-      const texto = (numero ? numero + '. ' : '') + t(titulo);
+      const texto = (numero ? numero + ' ' : '') + t(titulo);
       doc.setFont('Roboto', 'bold');
       doc.setFontSize(TAM_TITULO);
       const lineas = doc.splitTextToSize(texto, ANCHO);
@@ -464,18 +478,40 @@ export default async function handler(req, res) {
       y += 3;
     }
 
-    // ── LA PORTADA ────────────────────────────────────────────
-    doc.addImage(base, 'JPEG', 0, 0, W, H);
-    doc.setFont('Roboto', 'bold');
-    doc.setFontSize(26);
-    doc.setTextColor(VERDE[0], VERDE[1], VERDE[2]);
-    doc.text('TU PLAN DE ORIGEN', W / 2, 130, { align: 'center' });
-    if (t(nombre)) {
-      doc.setFont('Roboto', 'normal');
-      doc.setFontSize(14);
-      doc.setTextColor(DORADO[0], DORADO[1], DORADO[2]);
-      doc.text(t(nombre).toUpperCase(), W / 2, 145, { align: 'center' });
+    // Una pagina fija, de las que son iguales para todos: solo su fondo.
+    function hojaFija(fondo) {
+      hojaNueva(fondo);
     }
+
+    // LA HORA EN LAS DOS FORMAS, igual que en la portada del P1: la de siempre
+    // y, entre parentesis, la de am y pm. Si no viniera como toca, tal cual.
+    function laHoraEnDos(h) {
+      const partes = String(h == null ? '' : h).split(':');
+      if (partes.length !== 2) return String(h == null ? '' : h);
+      const hh = partes[0], mm = partes[1];
+      if (!/^\d{1,2}$/.test(hh) || !/^\d{2}$/.test(mm)) return String(h);
+      const n = Number(hh);
+      if (n > 23 || Number(mm) > 59) return String(h);
+      return h + ' (' + (n % 12 === 0 ? 12 : n % 12) + ':' + mm + (n < 12 ? 'am' : 'pm') + ')';
+    }
+
+    // ── LA PORTADA ────────────────────────────────────────────
+    //
+    // LA MISMA QUE EL P1: su fondo, y debajo su nombre, su fecha con la hora y
+    // su lugar, en el mismo sitio y con la misma letra.
+    doc.addImage(portada, 'JPEG', 0, 0, W, H);
+    doc.setFont('Roboto', 'bold'); doc.setFontSize(16); doc.setTextColor(VERDE[0], VERDE[1], VERDE[2]);
+    doc.text(t(nombre).toUpperCase(), W / 2, 250, { align: 'center' });
+    doc.setFont('Roboto', 'normal'); doc.setFontSize(11); doc.setTextColor(VERDE[0], VERDE[1], VERDE[2]);
+    if (t(fecha)) doc.text(t(fecha) + ' a las ' + laHoraEnDos(t(hora)), W / 2, 260, { align: 'center' });
+    const lugarFmt = t(lugar).split(',').map(p => p.trim().charAt(0).toUpperCase() + p.trim().slice(1).toLowerCase()).join(', ');
+    if (lugarFmt) doc.text(lugarFmt, W / 2, 270, { align: 'center' });
+
+    // ── LAS PAGINAS DEL PRINCIPIO ─────────────────────────────
+    // El indice, el antes de empezar y la entrada de las pruebas.
+    hojaFija(indice);
+    hojaFija(bienvenido);
+    hojaFija(empieza);
 
     // ── LAS PARTES ────────────────────────────────────────────
     //
@@ -495,8 +531,9 @@ export default async function handler(req, res) {
     // deja de señalar nada.
     const SOBRE_BEIGE = new Set(['queHaces']);
 
+    // LAS PRUEBAS SON EL PUNTO 2, asi que van 2.1, 2.2...
     partes.forEach((parte, i) => {
-      abrirSeccion(parte?.numero, t(parte?.titulo), parte?.area, i === 0);
+      abrirSeccion(parte?.numero ? '2.' + parte.numero : '', t(parte?.titulo), parte?.area, i === 0);
       for (const punto of PUNTOS) {
         if (!t(parte?.[punto])) continue;
         subtitulo(parte?.nombres?.[punto] || PORDEFECTO[punto]);
@@ -519,30 +556,35 @@ export default async function handler(req, res) {
     // Y SIN AREA. Una creencia sale de varios desafios a la vez, que pueden ser
     // de areas distintas: no es de ninguna.
     //
-    // Y ANTES, UNA HOJA EN BLANCO. Ahi va la explicacion de que es una creencia
-    // y como cambia, que es la misma para todos y se pone luego sobre el
-    // documento. Se deja hecha, con su fondo y su numero, como las demas.
+    // ANTES, LA FRASE QUE CIERRA LAS PRUEBAS Y LA ENTRADA DE LAS CREENCIAS, y
+    // DETRAS, LA FRASE QUE LAS CIERRA. Son paginas fijas, iguales para todos.
+    //
+    // LAS CREENCIAS SON EL PUNTO 3, asi que van 3.1, 3.2...
     const PUNTOS_DE_CREENCIA = ['loQueCreesHoy', 'loQueEsVerdad'];
     const PORDEFECTO_DE_CREENCIA = {
       loQueCreesHoy: 'Lo que crees hoy', loQueEsVerdad: 'Lo que es verdad',
     };
 
+    hojaFija(frase);
+
     if (suProgramacion.length) {
-      hojaNueva();
+      hojaFija(reprograma);
       for (const creencia of suProgramacion) {
-        abrirSeccion(creencia?.numero, t(creencia?.titulo), '', true);
+        abrirSeccion(creencia?.numero ? '3.' + creencia.numero : '', t(creencia?.titulo), '', true);
         for (const punto of PUNTOS_DE_CREENCIA) {
           if (!t(creencia?.[punto])) continue;
           subtitulo(creencia?.nombres?.[punto] || PORDEFECTO_DE_CREENCIA[punto]);
           corrido(creencia[punto]);
         }
       }
+      hojaFija(fraseExtra);
     }
 
     // ── LA HOJA DE RUTA ───────────────────────────────────────
     //
     // Las dos tablas del final, cada una en su hoja y sin titulo encima: el de
-    // la seccion va puesto en el fondo, no lo escribe esto.
+    // la seccion va puesto en el fondo, no lo escribe esto. LA PRIMERA HOJA
+    // LLEVA EL FONDO DE LA HOJA DE RUTA, con su titulo; las demas, la base.
     //
     // LAS COLUMNAS SE LLAMAN COMO EN EL DOCUMENTO. Son los mismos nombres que
     // ha ido leyendo en cada parte, asi que al llegar aqui ya sabe lo que hay
@@ -561,9 +603,11 @@ export default async function handler(req, res) {
         return suya ? { ...f, [clave]: t(f?.[clave]) + ' (' + suya + ')' } : f;
       });
 
+      let primeraTabla = true;
       const conFilas = (filas, columnas) => {
         if (!Array.isArray(filas) || !filas.length) return;
-        hojaNueva();
+        hojaNueva(primeraTabla ? hoja : base);
+        primeraTabla = false;
         pintarTabla(columnas)(filas);
       };
 
@@ -580,7 +624,12 @@ export default async function handler(req, res) {
       ]);
     }
 
+    // ── EL CIERRE Y LA TRASERA ────────────────────────────────
+    // El cierre lleva su numero, como todas; la trasera no lleva.
+    hojaFija(cierre);
     numeroDePagina();
+    doc.addPage();
+    doc.addImage(trasera, 'JPEG', 0, 0, W, H);
 
     return res.status(200).json({
       pdfBase64: doc.output('datauristring'),

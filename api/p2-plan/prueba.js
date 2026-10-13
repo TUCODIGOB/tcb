@@ -2095,20 +2095,27 @@ async function lasTablas({ partes, creencias, sexo }) {
 // Si no aparece por ningun lado, se devuelve vacio y quien llama decide: aqui
 // no se inventa un nombre.
 async function susDatos(informe) {
+  // SU FECHA, SU HORA Y SU LUGAR van en la portada, igual que en la del P1.
+  // Los informes de antes guardaban la fecha como "fechaNice".
+  const conSuNacimiento = c => ({
+    fecha: String(c.fecha || c.fechaNice || '').trim(),
+    hora: String(c.hora || '').trim(),
+    lugar: String(c.lugar || '').trim(),
+  });
   const dentro = (informe && informe.cliente) || {};
   if (dentro.nombre) {
-    return { nombre: String(dentro.nombre).trim(), apellidos: String(dentro.apellidos || '').trim(), sexo: dentro.sexo || '' };
+    return { nombre: String(dentro.nombre).trim(), apellidos: String(dentro.apellidos || '').trim(), sexo: dentro.sexo || '', ...conSuNacimiento(dentro) };
   }
   try {
     const ficha = await leerLaFicha(dentro.email || '');
     const suyo = (ficha && ficha.cliente) || null;
     if (suyo && suyo.nombre) {
-      return { nombre: String(suyo.nombre).trim(), apellidos: String(suyo.apellidos || '').trim(), sexo: suyo.sexo || '' };
+      return { nombre: String(suyo.nombre).trim(), apellidos: String(suyo.apellidos || '').trim(), sexo: suyo.sexo || '', ...conSuNacimiento(suyo) };
     }
   } catch (err) {
     console.error('[p2] No se ha podido leer la ficha del cliente:', err.message);
   }
-  return { nombre: '', apellidos: '', sexo: '' };
+  return { nombre: '', apellidos: '', sexo: '', fecha: '', hora: '', lugar: '' };
 }
 
 // Cada creencia la escribe una llamada distinta que no ve a las demas, asi que
@@ -2389,6 +2396,8 @@ async function montarloTodo({ compra }) {
       ...loDeDentro,
       documento: {
         nombre: nombreCompleto(suyo.nombre, suyo.apellidos),
+        // Y lo de debajo del nombre en la portada, como en el P1.
+        fecha: suyo.fecha, hora: suyo.hora, lugar: suyo.lugar,
         // El numero que le toca a cada parte y los nombres de sus puntos van
         // desde aqui: el que maqueta no tiene que saberselos.
         partes: completas.map((p, i) => ({ ...p, numero: i + 1, nombres: BLOQUES })),
