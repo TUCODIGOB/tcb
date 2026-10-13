@@ -409,10 +409,9 @@ export default async function handler(req, res) {
           doc.text(String(col.nombre).toUpperCase(), x + T_AIRE, y);
           x += col.ancho;
         }
-        y += 2.5;
-        doc.setDrawColor(DORADO[0], DORADO[1], DORADO[2]);
-        doc.setLineWidth(0.3);
-        doc.line(X, y, X + ANCHO, y);
+        // SIN RAYA DEBAJO: las filas van en franjas, y la cabecera se separa
+        // de la primera con aire.
+        y += 5;
       };
 
       const alto = fila => {
@@ -427,13 +426,20 @@ export default async function handler(req, res) {
 
       return filas => {
         cabecera();
-        // ARRIBA ES EL BORDE DE LA FILA, que es la raya de la de antes -o la de
-        // la cabecera-, y de ahi se cuelga todo lo demas.
+        // ARRIBA ES EL BORDE DE LA FILA, que es donde acaba la de antes -o la
+        // cabecera-, y de ahi se cuelga todo lo demas.
         let arriba = y;
-        for (const fila of filas) {
+        filas.forEach((fila, n) => {
           const suyo = alto(fila);
           if (arriba + suyo > HASTA) { hojaNueva(); cabecera(); arriba = y; }
           y = arriba + T_ALTO + T_CAP;
+
+          // LAS FILAS VAN EN FRANJAS, sin rayas entre ellas: una con el beige
+          // de las cajas y la siguiente sin fondo, alternando.
+          if (n % 2 === 0) {
+            doc.setFillColor(BEIGE[0], BEIGE[1], BEIGE[2]);
+            doc.rect(X, arriba, ANCHO, suyo, 'F');
+          }
 
           // La casilla y el numero, uno al lado del otro.
           doc.setDrawColor(DORADO[0], DORADO[1], DORADO[2]);
@@ -458,12 +464,9 @@ export default async function handler(req, res) {
           }
 
           const abajo = arriba + suyo;
-          doc.setDrawColor(230, 224, 210);
-          doc.setLineWidth(0.2);
-          doc.line(X, abajo, X + ANCHO, abajo);
           arriba = abajo;
           y = abajo;
-        }
+        });
       };
     }
 
