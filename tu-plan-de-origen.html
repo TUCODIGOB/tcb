@@ -278,6 +278,164 @@
     }
   </style>
 
+  <!-- ════════════ CABECERA ════════════
+       Los tamanos, margenes y el boton son los de la cabecera del P1
+       (tu-diseno-de-origen.html), copiados tal cual y metidos dentro de .hp2
+       para que no toquen nada del resto de esta pagina. Debajo, lo que la hace
+       del P2: su fondo, su foto, la pastilla y el peso de cada frase. -->
+  <style>
+    @keyframes btnAgita {
+      0%   { transform: translateX(0); }
+      15%  { transform: translateX(-8px); }
+      30%  { transform: translateX(8px); }
+      45%  { transform: translateX(-6px); }
+      60%  { transform: translateX(6px); }
+      75%  { transform: translateX(-3px); }
+      100% { transform: translateX(0); }
+    }
+    .hp2 .container-home { width: min(1100px, 92vw); margin-inline: auto; }
+.hp2 .btn-cta{display: inline-block;
+text-align: center;
+      background: linear-gradient(135deg, var(--gold-deep), var(--gold-light));
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      padding: 1rem 2.2rem;
+      border-radius: var(--r-sm);
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 28px rgba(189,144,72,.35);
+      transition: transform .2s, box-shadow .2s;}
+.hp2 .btn-cta.saluda{animation: btnAgita .7s ease;}
+.hp2 .btn-cta:hover{animation: btnAgita .7s ease; box-shadow: 0 10px 36px rgba(189,144,72,.5);}
+.hp2 .btn-cta:active{animation: btnAgita .7s ease; box-shadow: 0 10px 36px rgba(189,144,72,.5);}
+.hp2.hero-home{position: relative;
+      overflow: hidden;
+      background-color: #fffbef;
+      background-image: linear-gradient(to bottom, #fffbef 0, rgba(255,251,239,0) 200px),
+                        url('images/fondo-hear-origen-natal-carta-4.webp');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      padding-block: 35px 0;
+      text-align: center;}
+.hp2.hero-home .container-home{position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;}
+.hp2 .hero-sub{width: 100%;
+      max-width: 640px;}
+.hp2.hero-home h1{width: 100%; max-width: 700px; color: var(--teal-deep); margin-bottom: 10px; line-height: 1.25;}
+.hp2 .hero-sub{font-family: var(--font-body);
+      font-weight: 400;
+      font-size: 18px;
+      color: #0c0c0c;
+      margin-bottom: 10px;}
+.hp2 .hero-sub strong{font-weight: 600; color: #0c0c0c;}
+.hp2.hero-home .btn-cta{box-shadow: 0 4px 12px rgba(189,144,72,.25);}
+.hp2.hero-home .btn-cta:hover{box-shadow: 0 6px 18px rgba(189,144,72,.35);}
+.hp2.hero-2col{text-align: left; padding-block: 72px 72px;}
+.hp2.hero-2col .container-home{display: block; width: min(1100px, 92vw);}
+.hp2 .hero-cols{display: grid; grid-template-columns: 60% 1fr; gap: 56px; align-items: stretch;}
+.hp2 .hero-texto{display: flex; flex-direction: column; justify-content: space-between;}
+.hp2 .hero-cierre{display: flex; flex-direction: column; align-items: flex-start; width: 100%;}
+.hp2 .h1-bloque{font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 40px;
+      line-height: 1.18;
+      color: var(--teal-deep);
+      text-transform: uppercase;
+      margin: 0 0 22px;}
+.hp2 .hero-segunda{font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 600;
+      font-size: 25px;
+      line-height: 1.3;
+      color: var(--teal-deep);
+      margin: 0 0 36px;}
+.hp2.hero-2col .hero-sub{max-width: 500px; margin: 0 0 34px; text-align: left;
+      font-size: 16px; line-height: 1.66; color: #0c0c0c;}
+.hp2 .palabra-oro{color: var(--gold-deep); font-style: italic;}
+.hp2 .hero-sub .promesa{font-weight: 600; font-style: italic; color: var(--teal-deep);
+                         -webkit-text-stroke: .5px currentColor;}
+.hp2 .hero-sub .oro{color: var(--gold-deep); font-weight: 700; font-family: var(--font-display); font-size: 1.12em;}
+.hp2 .br-movil{display: none;}
+.hp2 .br-mov{display: none;}
+.hp2 .hero-accion{display: inline-block; align-self: flex-start;}
+.hp2 .btn-hero{display: flex; align-items: center; justify-content: center; gap: .5em;
+      min-width: 0;
+      padding: 16px 30px;
+      line-height: 1.2;}
+.hp2 .btn-hero .flecha{font-size: 1.25em; font-weight: 700; line-height: 1;}
+.hp2 .hero-foto{position: relative;
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      box-shadow: 0 18px 44px rgba(14,63,75,.14);}
+.hp2 .hero-foto img{position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;}
+.hp2 .br-pc{display: none;}
+.hp2 .br-tab{display: inline;}
+.hp2 .b7-cta .btn-cta{display: inline-flex; align-items: center; justify-content: center; gap: .5em;}
+.hp2 .b3v-h .oro{color: #fffbef;}
+.hp2 .b3v-h .oro .b3v-algo{color: var(--gold-light); font-weight: 700;}
+@media (max-width: 850px){.hp2.hero-2col{text-align: center; padding-block: 60px 60px;}.hp2 .hero-texto{align-items: center;}.hp2 .h1-bloque{font-size: 38px; margin-bottom: 24px;}.hp2 .hero-segunda{font-size: 25px; margin-bottom: 34px;}.hp2.hero-2col .hero-sub{max-width: 600px; margin: 0 auto 34px; text-align: center; font-size: 18px;}.hp2 .hero-cierre{align-items: center;}.hp2 .hero-accion{align-self: center;}.hp2 .hero-foto{min-height: 0;}.hp2 .b7-cta .btn-cta{display: flex; width: 100%; font-size: 18px; padding: 17px 4px;}.hp2.hero-home h1,.hp2 .hero-sub{text-align: center;}.hp2 .hero-cols{display: flex; flex-direction: column; gap: 0;}.hp2 .hero-texto{display: contents;}.hp2 .h1-bloque{order: 1;}.hp2 .hero-segunda{order: 2;}.hp2 .hero-foto{margin-bottom: 30px; order: 3;}.hp2 .hero-sub{order: 6;}.hp2 .hero-cierre{order: 7;}}
+@media (min-width: 681px) and (max-width: 850px){.hp2 .hero-segunda{font-size: 25px; margin-bottom: 30px;}.hp2 .btn-hero,.hp2 .b7-cta .btn-cta{font-size: 16px; padding: 10px 40px;}.hp2 .b7-cta .btn-cta{display: inline-flex; width: auto; min-width: 400px;}.hp2.hero-home h1{margin-inline: auto;}.hp2 .hero-foto{aspect-ratio: 2 / 1; width: min(560px, 80%); margin-inline: auto; align-self: center; margin-top: 20px; margin-bottom: 50px;}.hp2 .hero-foto img{object-position: center 60%;}}
+@media (max-width: 680px){.hp2 .br-mov{display: inline;}.hp2 .br-movil{display: inline;}.hp2.hero-2col{padding-block: 40px 60px;}.hp2 .br-pc{display: inline;}.hp2 .br-tab{display: none;}.hp2 .h1-bloque{font-size: 30px; line-height: 1.24; margin-bottom: 16px;}.hp2 .hero-segunda{font-size: 30px; margin-bottom: 50px;}.hp2.hero-2col .hero-sub{font-size: 20px; margin-bottom: 40px;}.hp2 .hero-accion{display: block; width: 100%;}.hp2.hero-2col .btn-hero{width: 100%; font-size: 18px; padding: 17px 4px;}.hp2 .hero-foto{aspect-ratio: 1 / 1; margin-bottom: 60px;}.hp2 .hero-foto img{object-position: 62% top;}.hp2 .btn-cta{width: 100%; font-size: 20px; padding: 12px 1rem;}.hp2.hero-home{background-image: linear-gradient(to bottom, #fffbef 0, rgba(255,251,239,0) 140px),
+      url('images/fondo-hear-origen-natal-carta-movil-4.webp');}.hp2.hero-home h1{font-size: 36px; margin-bottom: 20px; line-height: 1.40;}.hp2 .hero-sub{margin-bottom: 2rem; font-size: 20px;}}
+@media (min-width: 851px){.hp2.hero-2col .hero-oferta{margin-bottom: 20px;}.hp2 .hero-cierre{align-items: stretch; width: max-content; max-width: 100%;}.hp2 .hero-cierre .hero-accion{align-self: stretch; display: block;}.hp2 .hero-cierre .btn-hero{width: 100%; min-width: 0;}.hp2 .btn-cta{padding: 10px 40px; min-width: 400px;}.hp2 .btn-cta{font-size: 16px;}.hp2.hero-home{background-image: none;}.hp2.hero-home .container-home,.hp2 .hero-cols{position: static;}.hp2 .hero-texto{position: relative; z-index: 2;}.hp2 .hero-foto img{object-position: center top;}}
+@media (min-width: 851px) and (max-width: 1023px){.hp2 .h1-bloque{font-size: 36px;}.hp2 .hero-segunda{font-size: 25px; line-height: 20px;}.hp2 .hero-cols{grid-template-columns: 60% 1fr; gap: 48px;}}
+@media (min-width: 1024px){.hp2.hero-2col .hero-sub{max-width: 600px;}}
+
+
+    /* ── Lo propio del P2 ── */
+    .hp2.hero-home {
+      background-color: #fffbef;
+      background-image: linear-gradient(to bottom, #fffbef 0, rgba(255,251,239,0) 200px),
+                        url('images/tu-plan-de-origen-natal-carta-fondo-web-2.webp');
+    }
+    @media (max-width: 680px) {
+      .hp2.hero-home {
+        background-image: linear-gradient(to bottom, #fffbef 0, rgba(255,251,239,0) 140px),
+                          url('images/tu-plan-de-origen-natal-carta-fondo-movil-2.webp');
+      }
+    }
+    .hp2.hero-home .h1-bloque { text-transform: none; font-size: 30px; margin-bottom: 14px; }
+    .hp2.hero-home .hp2-seg { color: var(--gold-deep); font-size: clamp(32px, 3.1vw, 40px); line-height: 1.2; margin-bottom: 30px; }
+    .hp2-pill {
+      display: inline-flex; align-items: center; width: fit-content; align-self: flex-start;
+      background: rgba(207,177,128,.16); border: 1px solid rgba(189,144,72,.45);
+      color: var(--gold-deep); border-radius: 99px; padding: 6px 14px;
+      font-size: 12.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      margin: 0 0 20px;
+    }
+    .hp2 .br-pc2 { display: inline; }
+    @media (max-width: 1023px) { .hp2 .br-pc2 { display: none; } }
+    .hp2 .br-seg { display: inline; }
+    @media (max-width: 680px) { .hp2 .br-seg { display: none; } }
+    @media (min-width: 851px) and (max-width: 1023px) {
+      .hp2.hero-home .h1-bloque { font-size: 24px; }
+      .hp2.hero-home .hp2-seg { font-size: clamp(27px, 3.15vw, 30px); }
+    }
+    @media (max-width: 850px) {
+      .hp2-pill { order: 0; align-self: center; margin: 0 auto 22px; }
+      .hp2 .hero-foto img { object-position: center 22%; }
+    }
+    @media (min-width: 681px) and (max-width: 850px) {
+      .hp2.hero-home .hp2-seg { font-size: 38px; }
+    }
+    @media (max-width: 680px) {
+      .hp2-pill { font-size: 11px; letter-spacing: .06em; padding: 6px 12px; }
+      .hp2.hero-home .h1-bloque { font-size: 24px; }
+      .hp2.hero-home .hp2-seg { font-size: 32px; margin-bottom: 34px; }
+    }
+    @media (max-width: 380px) {
+      .hp2.hero-home .hp2-seg { font-size: 28px; }
+    }
+  </style>
+
 <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJSDFDFZ3G"></script>
   <script>
@@ -303,6 +461,26 @@
       <a href="/tu-diseno-de-origen" class="nav-cta">Quiero descubrirlo</a>
     </div>
   </nav>
+
+  <!-- ════════════ CABECERA ════════════ -->
+  <section class="hero-home hero-2col hp2">
+    <div class="container-home">
+      <div class="hero-cols">
+        <div class="hero-texto">
+          <p class="hp2-pill">Solo para quien ya tiene su Diseño de Origen</p>
+          <h1 class="h1-bloque"><span id="heroNombre"></span><span id="heroYa">Ya</span> sabes por qué eres<br class="br-pc2"><br class="br-mov"> como eres y por qué<br class="br-pc2"><br class="br-mov"> te pasa lo que te pasa</h1>
+          <p class="hero-segunda hp2-seg">Ahora descubre<br class="br-mov"> qué hacer<br class="br-seg"> para empezar<br class="br-mov"> a vivir como quieres</p>
+          <p class="hero-sub"><strong class="oro">Tu Plan de Origen</strong> es <strong class="promesa">tu guía para saber qué hacer</strong> con todo lo que has descubierto sobre ti: qué cambiar, qué pasos dar, qué creencias te frenan, cómo reconocer cuándo vas a caer… <strong class="promesa">Y empezar a convertirte en la versión de ti que quieres ser</strong></p>
+          <div class="hero-cierre">
+            <div class="hero-accion">
+              <a href="#planComprar" class="btn-cta btn-hero">Quiero mi Plan de Origen<span class="flecha">→</span></a>
+            </div>
+          </div>
+        </div>
+        <div class="hero-foto"><img src="images/tu-plan-de-origen-natal-carta-header.webp" alt="Mujer que empieza a vivir como quiere" width="1000" height="827" fetchpriority="high" /></div>
+      </div>
+    </div>
+  </section>
 
   <!-- ════════════ TU PLAN DE ORIGEN ════════════ -->
   <section class="plan">
@@ -377,6 +555,10 @@
       if (!hueco) return;
       hueco.textContent = nombre + ', tu Plan de Origen está listo para hacerse.';
       hueco.classList.add('se-ve');
+      // Y SU NOMBRE AL PRINCIPIO DEL TITULO DE LA CABECERA.
+      const enElTitulo = document.getElementById('heroNombre');
+      const ya = document.getElementById('heroYa');
+      if (enElTitulo && ya) { enElTitulo.textContent = nombre + ', '; ya.textContent = 'ya'; }
     } catch (err) {
       // Un fallo aqui no puede romper la pagina: se queda sin saludo y ya.
     }
