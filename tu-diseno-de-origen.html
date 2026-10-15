@@ -2653,7 +2653,7 @@ text-align: center;
 
         // Se le va a escribir un diseño con estos datos: ahora si se guardan.
         guardarloTodo();
-        window.location.href = '/preparando-tu-diseno?v=' + encodeURIComponent(permiso.vale);
+        window.location.href = '/tu-diseno-de-origen/preparando?v=' + encodeURIComponent(permiso.vale);
       } catch (err) {
         console.error('Error vale:', err);
         const banner = document.getElementById('errorBanner');
