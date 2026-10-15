@@ -323,7 +323,7 @@
         </div>
 
         <div class="plan-resena" id="planResena" hidden>
-          <a id="planResenaEnlace" href="/resena">O cuéntanos tu experiencia en vídeo y te lo regalamos</a>
+          <a id="planResenaEnlace" href="/tu-diseno-de-origen/resena">O cuéntanos tu experiencia en vídeo y te lo regalamos</a>
         </div>
 
       </div>
@@ -398,7 +398,7 @@
     const suyo = new URLSearchParams(location.search).get('p1');
     if (!suyo) return;
 
-    enlace.href = '/resena?p1=' + encodeURIComponent(suyo);
+    enlace.href = '/tu-diseno-de-origen/resena?p1=' + encodeURIComponent(suyo);
     hueco.hidden = false;
   })();
 

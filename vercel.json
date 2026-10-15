@@ -57,6 +57,7 @@
     { "source": "/Aviso-Legal", "destination": "/aviso-legal", "permanent": true },
     { "source": "/Politica-De-Privacidad", "destination": "/politica-de-privacidad", "permanent": true },
     { "source": "/Politica-De-Cookies", "destination": "/politica-de-cookies", "permanent": true },
-    { "source": "/Terminos-Y-Condiciones", "destination": "/terminos-y-condiciones", "permanent": true }
+    { "source": "/Terminos-Y-Condiciones", "destination": "/terminos-y-condiciones", "permanent": true },
+    { "source": "/resena", "destination": "/tu-diseno-de-origen/resena", "permanent": true }
   ]
 }
