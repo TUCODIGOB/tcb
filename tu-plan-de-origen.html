@@ -300,16 +300,24 @@ text-align: center;
 
 
     /* ── Lo propio del P2 ── */
+    /* El nav va sobre el mismo fondo que la cabecera, todo unido. */
+    :root { --navh: 53px; }
+    @media (max-width: 600px) { :root { --navh: 139px; } }
+    .nav:not(.scrolled) { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom-color: transparent; }
     .hp2.hero-home {
+      margin-top: calc(-1 * var(--navh));
       background-color: #fffbef;
-      background-image: linear-gradient(to bottom, #fffbef 0, rgba(255,251,239,0) 200px),
-                        url('images/tu-plan-de-origen-natal-carta-fondo-web.webp');
+      background-image: url('images/tu-plan-de-origen-natal-carta-fondo-web.webp');
+    }
+    .hp2.hero-2col { padding-top: calc(72px + var(--navh)); }
+    @media (max-width: 850px) {
+      .hp2.hero-2col { padding-top: calc(60px + var(--navh)); }
     }
     @media (max-width: 680px) {
       .hp2.hero-home {
-        background-image: linear-gradient(to bottom, #fffbef 0, rgba(255,251,239,0) 140px),
-                          url('images/tu-plan-de-origen-natal-carta-fondo-movil.webp');
+        background-image: url('images/tu-plan-de-origen-natal-carta-fondo-movil.webp');
       }
+      .hp2.hero-2col { padding-top: calc(40px + var(--navh)); }
     }
     .hp2.hero-home .h1-bloque { text-transform: none; font-size: 30px; margin-bottom: 14px; }
     .hp2.hero-home .hp2-seg { color: var(--gold-deep); font-size: clamp(32px, 3.1vw, 40px); line-height: 1.2; margin-bottom: 30px; }
@@ -412,13 +420,31 @@ text-align: center;
     /* ── Lo propio del P2 ── */
     .bp2 .br-mov { display: none; }
     @media (max-width: 680px) { .bp2 .br-mov { display: inline; } }
-    .bp2-tres { display: grid; gap: 24px; text-align: left; margin-top: 46px; }
-    .bp2 .b5-item { background: var(--cream); }
+    .bp2-tres { display: grid; gap: 24px; text-align: left; margin-top: 46px; position: relative; isolation: isolate; }
+    .bp2 .b5-item { background: #edf6f2; }
     .bp2 .b5-item::after { display: none; }
     .bp2 .b5-item ul { list-style: none; margin: 8px 0 0; padding: 0; }
     .bp2 .b5-item li { display: flex; gap: 12px; font-size: 16px; line-height: 1.75; color: #4a4538; padding: 6px 0; }
     .bp2 .b5-item li::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: #729790; margin-top: 11px; }
     .bp2 .b5-item li b { color: var(--teal-deep); font-weight: 700; }
+    /* Ondas suaves de fondo detras de las tarjetas. */
+    .bp2.b4 { overflow: hidden; }
+    .bp2 .b4-sub { position: relative; z-index: 1; }
+    .bp2-tres::before {
+      content: ""; position: absolute; z-index: -1; top: -24px; bottom: -90px; left: 50%; width: 100vw; transform: translateX(-50%);
+      background: url('images/base-bloque-2-p2.webp') center / cover no-repeat; opacity: .5;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 160px); mask-image: linear-gradient(to bottom, transparent 0, #000 160px);
+    }
+    @media (min-width: 851px) {
+      .bp2-tres::before { background-size: 100% auto; background-position: center bottom; }
+    }
+    /* Tamaños de texto de las tarjetas igual que en el P1. */
+    @media (max-width: 850px) {
+      .bp2 .b5-item li { font-size: 18px; }
+    }
+    @media (min-width: 681px) and (max-width: 850px) {
+      .bp2 .b5-item li { font-size: 16px; }
+    }
   </style>
 
   <!-- ════════════ ELIGE COMO CONSEGUIRLO ════════════
