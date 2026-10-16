@@ -90,6 +90,7 @@
     /* ══════════════════════════════════════════════
        NAV (logo y boton)
     ══════════════════════════════════════════════ */
+    html { overflow-anchor: none; }
     .nav {
       position: sticky; top: 0; z-index: 100;
       background: rgba(255,251,239,.92);
@@ -339,7 +340,7 @@ text-align: center;
       .hp2 .hero-foto img { object-position: center 22%; }
     }
     @media (max-width: 680px) {
-      .hp2-pill { font-size: 11px; letter-spacing: .06em; padding: 6px 12px; }
+      .hp2-pill { font-size: 14px; letter-spacing: .06em; padding: 6px 12px; }
       .hp2 .h1-bloque .br-mov { display: none; }
     }
 
@@ -356,7 +357,7 @@ text-align: center;
     }
     .hp2.hero-home .hp2-verde { color: var(--teal-deep); font-style: normal; }
     @media (min-width: 851px) {
-      .hp2.hero-2col { padding-top: calc(40px + var(--navh)); padding-bottom: 40px; }
+      .hp2.hero-2col { padding-top: calc(40px + var(--navh)); padding-bottom: 60px; }
       .hp2.hero-home .hero-segunda { margin-bottom: 24px; }
       .hp2.hero-2col .hero-sub { margin-bottom: 24px; }
     }
@@ -372,7 +373,7 @@ text-align: center;
        Debajo, lo propio de este bloque: las tres tarjetas con su lista. -->
   <style>
     .bp2 { --r-lg: 24px; }
-    .bp2.b4 { position: relative; background: var(--white); padding: 60px 0 0; text-align: center; }
+    .bp2.b4 { position: relative; background: var(--white); padding: 60px 0 60px; text-align: center; }
     .bp2 .b4-in { width: min(900px, 92vw); margin-inline: auto; }
     .bp2 .b4-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 0px; }
     .bp2 .b4-h em { font-style: italic; color: var(--gold-deep); }
@@ -429,7 +430,7 @@ text-align: center;
     /* ── Lo propio del P2 ── */
     .bp2 .br-mov { display: none; }
     @media (max-width: 680px) { .bp2 .br-mov { display: inline; } }
-    .bp2-tres { display: grid; gap: 24px; text-align: left; margin-top: 46px; position: relative; isolation: isolate; padding-inline: 40px; }
+    .bp2-tres { display: grid; gap: 40px; text-align: left; margin-top: 46px; position: relative; isolation: isolate; padding-inline: 40px; }
     @media (max-width: 850px) { .bp2-tres { padding-inline: 24px; } }
     @media (max-width: 680px) { .bp2-tres { display: block; padding-inline: 14px; } .bp2 .b5-item { padding-right: 40px; } }
     @media (max-width: 300px) { .bp2-tres { padding-inline: 0; } .bp2 .b5-item { padding-right: 22px; } }
@@ -465,15 +466,15 @@ text-align: center;
        .op2 para que no toquen el resto de esta pagina. -->
   <style>
     .op2 { --r-md: 12px; }
-    .op2.b6 { background: var(--teal-deep); padding: 70px 0 100px; text-align: center; }
+    .op2.b6 { background: var(--teal-deep); padding: 70px 0 70px; text-align: center; }
     .op2 .b6-in { width: min(1100px, 92vw); margin-inline: auto; }
     .op2 .b6-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--cream); margin: 0 0 70px; }
     .op2 .b6-h em { font-style: italic; font-weight: 400; color: var(--gold-light); }
     .op2 .b6-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; text-align: left; align-items: stretch; }
     .op2 .b6-card { border-radius: var(--r-md); padding: 30px 30px 32px; }
-    .op2.b6 .b6-card { position: relative; padding-top: 44px; }
+    .op2.b6 .b6-card { position: relative; padding-top: 60px; }
     @media (max-width: 850px) {
-      .op2.b6 { padding: 70px 0 100px; }
+      .op2.b6 { padding: 70px 0 70px; }
       .op2 .b6-h { font-size: 40px; margin-bottom: 70px; }
       .op2 .b6-cols { grid-template-columns: 1fr; gap: 70px; }
       .op2 .b6-card { padding: 24px 22px 26px; }
@@ -484,10 +485,10 @@ text-align: center;
       .op2.b6 { padding: 70px 0 80px; }
     }
     @media (min-width: 1024px) {
-      .op2.b6 .b6-h { margin: 0 0 90px; }
+      .op2.b6 .b6-h { margin: 0 0 50px; }
     }
     @media (max-width: 1023px) {
-      .op2.b6 .b6-h { margin: 0 0 80px; }
+      .op2.b6 .b6-h { margin: 0 0 70px; }
     }
     @media (max-width: 680px) {
       .op2 .b6-cols { gap: 80px; }
@@ -502,7 +503,7 @@ text-align: center;
     .op2-opc { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); margin: 0; white-space: nowrap;
       padding: 12px 30px; border-radius: var(--r-md); background: #f3e4c6; color: var(--teal-deep);
       font-family: var(--font-display); font-weight: 700; font-size: 22px; }
-    .op2-t { font-family: var(--font-display); font-weight: 700; font-size: 52px; line-height: 1.1; color: var(--teal-deep); margin: 0 0 18px; white-space: nowrap; }
+    .op2-t { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.1; color: var(--teal-deep); margin: 0 0 18px; white-space: nowrap; }
     .op2-t .cifra { margin-left: 10px; }
     .op2-tira { width: 100%; background: var(--gold-light); color: var(--teal-deep); font-family: var(--font-body); font-weight: 700;
       font-size: 14px; letter-spacing: 1.6px; text-transform: uppercase; padding: 8px 12px; border-radius: 6px; margin: 0 0 24px; }
@@ -638,9 +639,14 @@ text-align: center;
     .ci2 .fin-cta { display: inline-flex; flex-direction: column; align-items: center; }
     .ci2-nota { margin: 16px 0 0; font-family: var(--font-body); font-size: 15px; color: #fff; }
     @media (max-width: 600px) { .ci2 { padding: 64px 0 70px; } .ci2 .fin-cta { display: flex; } .ci2-nota { font-size: 16px; } }
-    /* Sobre el verde del cierre, el boton va en crema. */
-    .ci2 .btn-oro { background: var(--cream); color: var(--teal-deep); box-shadow: 0 6px 20px rgba(0,0,0,.25); }
-    .ci2 .btn-oro:hover, .ci2 .btn-oro:active { box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    /* Los botones del P2 con degradado y el mismo movimiento que en el P1. */
+    .hp2 .btn-cta, .op2-verde, .nav-cta, .nav-cta:hover { background: linear-gradient(135deg, #0e3f4b, #2a6b78); }
+    .nav-cta { display: inline-block; }
+    .nav-cta:hover, .nav-cta:active { animation: btnAgita .7s ease; }
+    .op2-claro { background: linear-gradient(135deg, #5f8580, #93b3ac); }
+    .op2-btn:hover { transform: none; }
+    .op2-btn:hover, .op2-btn:active { animation: btnAgita .7s ease; }
+    .saluda { animation: btnAgita .7s ease; }
     .ci2-br { display: none; }
     @media (max-width: 600px) { .ci2-br { display: inline; } }
   </style>
@@ -748,7 +754,7 @@ text-align: center;
   <!-- ════════════ PREGUNTAS FRECUENTES ════════════ -->
   <section class="b9 fq2">
     <div class="b9-in">
-      <h2 class="b9-h">¿Todavía tienes<br class="b9-br"> <em>dudas</em>?</h2>
+      <h2 class="b9-h">¿Tienes<br class="b9-br"> <em>dudas</em>?</h2>
       <div class="b9-list">
 
         <details name="fq2">
@@ -798,7 +804,7 @@ text-align: center;
         <p class="fin-t"><span class="fin-l1">Puedes quedarte en el porqué…</span><em class="fin-l2">o puedes empezar a convertirte<br> en quien quieres ser</em></p>
         <div class="fin-cta">
           <a class="btn-oro" href="#opciones">Quiero mi Plan de Origen<span class="flecha">→</span></a>
-          <p class="ci2-nota">Gratis con tu reseña en vídeo<br class="ci2-br"> o 37 € de pago único</p>
+          <p class="ci2-nota">Gratis con tu reseña en vídeo<br class="ci2-br"> o 37 € pago único</p>
         </div>
       </div>
     </div>
@@ -924,6 +930,15 @@ text-align: center;
     };
     conectar(document.getElementById('op2Pagar'), document.getElementById('op2Aviso'));
   })();
+    // LOS BOTONES SE AGITAN cada vez que vuelven a aparecer en pantalla, como en el P1.
+    (function(){
+      if (!('IntersectionObserver' in window)) return;
+      const io = new IntersectionObserver(entradas => entradas.forEach(e => {
+        e.target.classList.remove('saluda');
+        if (e.isIntersecting) { void e.target.offsetWidth; e.target.classList.add('saluda'); }
+      }), { threshold: 0.9 });
+      document.querySelectorAll('.btn-cta, .op2-btn, .btn-oro, .nav-cta').forEach(b => io.observe(b));
+    })();
     // EL NAV AL BAJAR. A los 50px se quita el logo y se queda solo el boton.
     // Es el mismo que lleva el index.
     (function(){
