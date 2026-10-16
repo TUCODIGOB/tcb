@@ -102,6 +102,9 @@
     .container { width: min(760px, 92vw); margin-inline: auto; }
 
     /* ─── NAV ─── */
+    /* Sin esto el nav tiembla al empezar a bajar: al encogerse, el navegador
+       mueve la pagina y el nav vuelve a crecer. */
+    html { overflow-anchor: none; }
     .nav {
       position: sticky; top: 0; z-index: 100;
       background: rgba(255,251,239,.92);

@@ -196,6 +196,9 @@ button:hover{filter:brightness(.96);}
 /* ── EL NAV, EL MISMO DEL RESTO ──────────────────────────────
    Esta pagina lleva un margen a los lados y otro arriba en todo el cuerpo;
    el nav los anula con margenes negativos para ocupar el ancho entero. */
+/* Sin esto el nav tiembla al empezar a bajar: al encogerse, el navegador
+   mueve la pagina y el nav vuelve a crecer. */
+html{ overflow-anchor:none; }
 .nav{
   position:sticky; top:0; z-index:100;
   margin:-40px -16px 40px;
