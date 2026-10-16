@@ -241,7 +241,7 @@
        FOOTER
     ══════════════════════════════════════════════ */
     .footer {
-      background: var(--teal-deep);
+      background: var(--ink);
       color: rgba(255,251,239,.6);
       padding-block: 2.5rem;
       font-size: .82rem;
@@ -657,6 +657,45 @@ text-align: center;
 
   </style>
 
+  <!-- ════════════ EL CIERRE ════════════
+       Como el final de la pagina del resultado del P1 (tu-diseno.html):
+       misma letra, tamanos y boton, aqui sobre el verde de la marca. Todo
+       dentro de .ci2 para que no toque el resto de esta pagina. -->
+  <style>
+    .ci2 .btn-oro { display:inline-flex;align-items:center;justify-content:center;gap:.5em;min-width:400px;width:auto;background:linear-gradient(135deg,#BD9048,#CFB180);color:#fff;font-weight:600;border-radius:6px;padding:10px 40px;text-decoration:none;text-align:center;font-size:16px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;border:0;cursor:pointer;box-shadow:0 6px 28px rgba(189,144,72,.35);transition:transform .2s,box-shadow .2s }
+    .ci2 .btn-oro:hover, .ci2 .btn-oro:active { animation:btnAgita .7s ease;box-shadow:0 10px 36px rgba(189,144,72,.5) }
+    .ci2 .btn-oro .flecha { font-size:1.25em;font-weight:700;line-height:1 }
+    .ci2 .fin { margin-top:64px }
+    .ci2 .fin-t { font-family:'Playfair Display',Georgia,serif;font-size:28px;line-height:1.35;color:#0E3F4B;margin:0 0 26px;font-weight:700 }
+    .ci2 .fin-t em { color:#BD9048 }
+    .ci2 .fin-l1 { display:block;font-size:30px }
+    .ci2 .fin-l2 { display:block;font-size:35px;padding-top:10px;padding-bottom:20px }
+    @media (min-width:601px) and (max-width:850px) {
+      .ci2 .fin-l2 { font-size:32px }
+    }
+    @media (min-width:601px) {
+      .ci2 .fin-cta { display:inline-flex;flex-direction:column }
+    }
+    @media (max-width:600px) {
+      .ci2 .btn-oro { display:flex;width:100%;min-width:0;font-size:18px;padding:17px 4px;white-space:normal }
+      .ci2 .fin-t { font-size:24px }
+      .ci2 .fin-l1 { font-size:32px }
+      .ci2 .fin-l2 { font-size:35px;padding-top:20px }
+    }
+
+    /* ── Lo propio del P2 ── */
+    .ci2 { background: var(--teal-deep); padding: 80px 0 90px; text-align: center; }
+    .ci2-in { width: min(860px, 92vw); margin-inline: auto; }
+    .ci2 .fin { margin-top: 0; }
+    .ci2 .fin-t { color: var(--cream); }
+    .ci2 .fin-t em { color: var(--gold-light); }
+    .ci2 .fin-cta { display: inline-flex; flex-direction: column; align-items: center; }
+    .ci2-nota { margin: 16px 0 0; font-family: var(--font-body); font-size: 15px; color: #fff; }
+    @media (max-width: 600px) { .ci2 { padding: 64px 0 70px; } .ci2 .fin-cta { display: flex; } .ci2-nota { font-size: 16px; } }
+    .ci2-br { display: none; }
+    @media (max-width: 600px) { .ci2-br { display: inline; } }
+  </style>
+
 <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJSDFDFZ3G"></script>
   <script>
@@ -825,6 +864,19 @@ text-align: center;
           <a id="planResenaEnlace" href="/tu-plan-de-origen/resena">O cuéntanos tu experiencia en vídeo y te lo regalamos</a>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ EL CIERRE ════════════ -->
+  <section class="ci2">
+    <div class="ci2-in">
+      <div class="fin">
+        <p class="fin-t"><span class="fin-l1">Puedes quedarte en el porqué…</span><em class="fin-l2">o puedes empezar a convertirte<br> en quien quieres ser</em></p>
+        <div class="fin-cta">
+          <a class="btn-oro" href="#opciones">Quiero mi Plan de Origen<span class="flecha">→</span></a>
+          <p class="ci2-nota">Gratis con tu reseña en vídeo<br class="ci2-br"> o 37 € de pago único</p>
+        </div>
       </div>
     </div>
   </section>
