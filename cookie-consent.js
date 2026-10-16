@@ -80,7 +80,9 @@
       "#cookie-consent-banner p{margin:0;font-size:.68rem !important;flex:1 1 260px;max-width:460px;}" +
       "#cookie-consent-banner button{font-family:'Open Sans',sans-serif;}" +
       "@media (max-width:640px){#cookie-consent-banner{padding:1.1rem 0 !important;}" +
-      "#cookie-consent-banner p{font-size:.92rem !important;}}";
+      "#cookie-consent-banner p{font-size:.92rem !important;}}" +
+      "@media (max-width:380px){#cookie-consent-banner .cc-wrap>div{flex:1 1 100% !important;}" +
+      "#cookie-consent-banner button{flex:1 1 0;padding-inline:.4rem !important;}}";
     document.head.appendChild(style);
 
     banner.innerHTML =
