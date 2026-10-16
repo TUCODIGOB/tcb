@@ -504,6 +504,100 @@ text-align: center;
     .bp2 .b5-item li b { color: var(--teal-deep); font-weight: 700; }
   </style>
 
+  <!-- ════════════ ELIGE COMO CONSEGUIRLO ════════════
+       Sobre el verde de la marca, con las medidas del bloque "No es un
+       horoscopo" del P1 (tarjetas, etiquetas y botones), metidas dentro de
+       .op2 para que no toquen el resto de esta pagina. -->
+  <style>
+    .op2 { --r-md: 12px; }
+    .op2.b6 { background: var(--teal-deep); padding: 70px 0 100px; text-align: center; }
+    .op2 .b6-in { width: min(1100px, 92vw); margin-inline: auto; }
+    .op2 .b6-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--cream); margin: 0 0 70px; }
+    .op2 .b6-h em { font-style: italic; font-weight: 400; color: var(--gold-light); }
+    .op2 .b6-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; text-align: left; align-items: stretch; }
+    .op2 .b6-card { border-radius: var(--r-md); padding: 30px 30px 32px; }
+    .op2.b6 .b6-card { position: relative; padding-top: 44px; }
+    @media (max-width: 850px) {
+      .op2.b6 { padding: 70px 0 100px; }
+      .op2 .b6-h { font-size: 40px; margin-bottom: 70px; }
+      .op2 .b6-cols { grid-template-columns: 1fr; gap: 70px; }
+      .op2 .b6-card { padding: 24px 22px 26px; }
+    }
+    @media (min-width: 681px) and (max-width: 850px) {
+      .op2 .b6-h { font-size: 38px; margin-bottom: 60px; }
+      .op2 .b6-cols { gap: 80px; }
+      .op2.b6 { padding: 70px 0 80px; }
+    }
+    @media (min-width: 1024px) {
+      .op2.b6 .b6-h { margin: 0 0 90px; }
+    }
+    @media (max-width: 1023px) {
+      .op2.b6 .b6-h { margin: 0 0 80px; }
+    }
+    @media (max-width: 680px) {
+      .op2 .b6-cols { gap: 80px; }
+    }
+
+    /* ── Lo propio del P2 ── */
+    .op2 .b6-h::after { content: ""; display: block; width: 60px; height: 1px; background: var(--gold-light); margin: 24px auto 0; }
+    .op2 .b6-card { display: flex; flex-direction: column; align-items: center; text-align: center;
+      background: var(--cream); box-shadow: 0 10px 28px rgba(0,0,0,.20); }
+    .op2 .op2-gratis { border: 2px solid var(--gold-deep); }
+    /* La etiqueta de arriba, como "Lo que si es" del P1 */
+    .op2-opc { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); margin: 0; white-space: nowrap;
+      padding: 12px 30px; border-radius: var(--r-md); background: #f3e4c6; color: var(--teal-deep);
+      font-family: var(--font-display); font-weight: 700; font-size: 22px; }
+    .op2-t { font-family: var(--font-display); font-weight: 700; font-size: 52px; line-height: 1.1; color: var(--teal-deep); margin: 0 0 18px; white-space: nowrap; }
+    .op2-t .cifra { margin-left: 10px; }
+    .op2-tira { width: 100%; background: var(--gold-light); color: var(--teal-deep); font-family: var(--font-body); font-weight: 700;
+      font-size: 14px; letter-spacing: 1.6px; text-transform: uppercase; padding: 8px 12px; border-radius: 6px; margin: 0 0 24px; }
+    .op2-x { display: flex; gap: 14px; align-items: center; text-align: left; font-family: var(--font-body); font-size: 16px; line-height: 1.7;
+      color: #3a3f3d; margin: 0 0 28px; flex: 1; }
+    .op2-x b { color: var(--teal-deep); }
+    .op2-opc, .op2-t { font-variant-numeric: lining-nums; }
+    .op2-ic { flex: none; width: 50px; height: 50px; border-radius: 50%; background: #e3ebe8; color: #729790; display: flex; align-items: center; justify-content: center; }
+    .op2-ic svg { width: 24px; height: 24px; }
+    /* Los botones, los del P1 */
+    .op2-btn { display: flex; align-items: center; justify-content: center; gap: .5em; width: 100%; font-family: var(--font-body);
+      font-weight: 600; font-size: 16px; letter-spacing: .04em; text-transform: uppercase; padding: 10px 20px; border-radius: 6px;
+      transition: transform .2s, box-shadow .2s; }
+    .op2-btn .flecha { font-size: 1.25em; font-weight: 700; line-height: 1; }
+    .op2-oro { background: linear-gradient(135deg, var(--gold-deep), var(--gold-light)); color: #fff; box-shadow: 0 6px 28px rgba(189,144,72,.35); }
+    .op2-verde { background: var(--teal-deep); color: #fff; box-shadow: 0 6px 20px rgba(14,63,75,.30); }
+    .op2-btn { border: 0; cursor: pointer; line-height: inherit; }
+    .op2-btn:disabled { opacity: .7; cursor: default; }
+    .op2-btn:hover { transform: translateY(-2px); }
+    .op2-aviso { min-height: 1.5em; margin: 14px 0 0; font-size: 15px; color: #fff; }
+    .op2-aviso:empty { display: none; }
+    @media (min-width: 681px) and (max-width: 850px) {
+      .op2 .b6-cols { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .op2 .b6-card { padding: 44px 20px 26px; }
+      .op2-opc { font-size: 24px; }
+    }
+    @media (min-width: 681px) and (max-width: 1023px) {
+      .op2-t { font-size: 40px; }
+      .op2-tira { font-size: 12px; letter-spacing: 1px; }
+      .op2-x { gap: 12px; }
+      .op2-btn { font-size: 14px; padding: 10px 8px; }
+    }
+    @media (max-width: 680px) {
+      .op2 .b6-cols { gap: 70px; }
+      .op2 .b6-card { padding: 46px 22px 26px; }
+      .op2-opc { font-size: 25px; }
+      .op2-t { font-size: 44px; }
+      .op2-tira { font-size: 12px; letter-spacing: 1px; }
+      .op2-x { font-size: 18px; }
+      .op2-btn { font-size: 18px; padding: 17px 4px; }
+    }
+    .op2-t { position: relative; }
+    .op2-rayos { position: absolute; width: 40px; height: 40px; right: -34px; top: -14px; color: var(--gold-deep); }
+    .op2-hueco { visibility: hidden; }
+    .op2-x { flex: none; }
+    .op2-btn { margin-top: auto; }
+    @media (max-width: 680px) { .op2-hueco { display: none; } .op2-rayos { width: 34px; height: 34px; right: -28px; top: -12px; } }
+    .op2-opc { border: 0.5px solid var(--gold-deep); }
+  </style>
+
 <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJSDFDFZ3G"></script>
   <script>
@@ -575,6 +669,30 @@ text-align: center;
             <li><span><b>Tu hoja de ruta:</b> para seguir avanzando, sin volver a empezar de cero</span></li>
             <li><span><b>Lo que necesitas recordar:</b> de un vistazo, para cuando dudes</span></li>
           </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ ELIGE COMO CONSEGUIRLO ════════════ -->
+  <section class="b6 op2" id="opciones">
+    <div class="b6-in">
+      <h2 class="b6-h">Elige cómo conseguir<br> <em>tu Plan de Origen</em></h2>
+      <div class="b6-cols">
+        <div class="b6-card op2-gratis">
+          <p class="op2-opc">Opción 1</p>
+          <p class="op2-t">Gratis<svg class="op2-rayos" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><path d="M3.1 26.0L1.9 12.1M8.1 24.7L14.3 7.8M12.5 27.5L22.4 17.6M15.3 31.9L32.2 25.7M16.0 37.0L25.9 37.9"/></svg></p>
+          <p class="op2-tira">Solo para las 50 primeras reseñas</p>
+          <p class="op2-x"><span class="op2-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="M15.5 10.5 21 7.5v9l-5.5-3"/></svg></span><span>Cuéntanos en un vídeo corto qué sentiste al leer tu Diseño de Origen y recíbelo <b>en menos de 24 horas</b>.</span></p>
+          <a href="/tu-plan-de-origen/resena" class="op2-btn op2-oro" id="op2Gratis">Quiero mi plan gratis<span class="flecha">→</span></a>
+        </div>
+        <div class="b6-card op2-pago">
+          <p class="op2-opc">Opción 2</p>
+          <p class="op2-t">Pago único<span class="cifra">37 €</span></p>
+          <p class="op2-tira op2-hueco" aria-hidden="true">&nbsp;</p>
+          <p class="op2-x"><span class="op2-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></span><span>Consigue tu Plan de Origen sin enviar ninguna reseña y recíbelo por email <b>en unos minutos</b>.</span></p>
+          <button type="button" class="op2-btn op2-verde" id="op2Pagar">Quiero mi Plan de Origen<span class="flecha">→</span></button>
+          <p class="op2-aviso" id="op2Aviso"></p>
         </div>
       </div>
     </div>
@@ -682,6 +800,20 @@ text-align: center;
     hueco.hidden = false;
   })();
 
+  // EL BOTON GRATIS DE LAS OPCIONES. Lleva a la resena con su numero, igual
+  // que el enlace de arriba. Sin numero no se va: se le dice como entrar.
+  (function elBotonGratis(){
+    const boton = document.getElementById('op2Gratis');
+    const aviso = document.getElementById('op2Aviso');
+    if (!boton) return;
+    const suyo = new URLSearchParams(location.search).get('p1');
+    if (suyo) { boton.href = '/tu-plan-de-origen/resena?p1=' + encodeURIComponent(suyo); return; }
+    boton.addEventListener('click', e => {
+      e.preventDefault();
+      if (aviso) aviso.textContent = 'Tu plan se hace con tu informe. Entra desde el botón de tu PDF para pedirlo.';
+    });
+  })();
+
   // ── EL BOTON DE COMPRAR ─────────────────────────────────────
   //
   // Abre el cobro del P2 llevando dentro el numero de su compra del P1, que es
@@ -689,11 +821,10 @@ text-align: center;
   //
   // SIN ESE NUMERO NO SE PUEDE COMPRAR: no habria informe del que sacarlo. Se
   // le dice, en vez de dejar el boton haciendo nada.
+  //
+  // ES EL MISMO PARA LOS DOS BOTONES DE PAGAR: el de siempre y el de las
+  // opciones. Cada uno dice lo que pase debajo de si mismo.
   (function elBotonDeComprar(){
-    const boton = document.getElementById('planComprar');
-    const aviso = document.getElementById('planAviso');
-    if (!boton) return;
-    const decir = txt => { if (aviso) aviso.textContent = txt || ''; };
 
     // QUIEN ES ESTA VISITA PARA GOOGLE. Analytics le pone un numero a cada
     // visitante y lo deja en su propia galleta. Se lee de ahi y viaja con el
@@ -706,31 +837,37 @@ text-align: center;
       return partes.length >= 4 ? partes[2] + '.' + partes[3] : '';
     };
 
-    boton.addEventListener('click', async () => {
-      const suyo = new URLSearchParams(location.search).get('p1');
-      if (!suyo) {
-        return decir('Tu plan se hace con tu informe. Entra desde el botón de tu PDF para pedirlo.');
-      }
-      decir('');
-      boton.disabled = true;
-      try {
-        const resp = await fetch('/api/p2-plan/pagar', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ p1: suyo, visita: deQuienEsLaVisita() }),
-        });
-        const datos = await resp.json().catch(() => ({}));
-        if (!resp.ok || !datos.url) {
-          boton.disabled = false;
-          return decir(datos.error || 'No se ha podido abrir el pago. Inténtalo de nuevo.');
+    const conectar = (boton, aviso) => {
+      if (!boton) return;
+      const decir = txt => { if (aviso) aviso.textContent = txt || ''; };
+      boton.addEventListener('click', async () => {
+        const suyo = new URLSearchParams(location.search).get('p1');
+        if (!suyo) {
+          return decir('Tu plan se hace con tu informe. Entra desde el botón de tu PDF para pedirlo.');
         }
-        // Y a pagar. El boton se queda apagado: ya nos vamos de aqui.
-        location.href = datos.url;
-      } catch (err) {
-        boton.disabled = false;
-        decir('No se ha podido abrir el pago. Inténtalo de nuevo.');
-      }
-    });
+        decir('');
+        boton.disabled = true;
+        try {
+          const resp = await fetch('/api/p2-plan/pagar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ p1: suyo, visita: deQuienEsLaVisita() }),
+          });
+          const datos = await resp.json().catch(() => ({}));
+          if (!resp.ok || !datos.url) {
+            boton.disabled = false;
+            return decir(datos.error || 'No se ha podido abrir el pago. Inténtalo de nuevo.');
+          }
+          // Y a pagar. El boton se queda apagado: ya nos vamos de aqui.
+          location.href = datos.url;
+        } catch (err) {
+          boton.disabled = false;
+          decir('No se ha podido abrir el pago. Inténtalo de nuevo.');
+        }
+      });
+    };
+    conectar(document.getElementById('planComprar'), document.getElementById('planAviso'));
+    conectar(document.getElementById('op2Pagar'), document.getElementById('op2Aviso'));
   })();
     // EL NAV AL BAJAR. A los 50px se quita el logo y se queda solo el boton.
     // Es el mismo que lleva el index.
