@@ -328,15 +328,15 @@ text-align: center;
       display: inline-flex; align-items: center; width: fit-content; align-self: flex-start;
       background: rgba(207,177,128,.16); border: 1px solid rgba(189,144,72,.45);
       color: var(--gold-deep); border-radius: 99px; padding: 6px 14px;
-      font-size: 12.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-      margin: 0 0 20px;
+      font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      margin: 0 0 30px;
     }
     .hp2 .br-pc2 { display: inline; }
     @media (max-width: 1023px) { .hp2 .br-pc2 { display: none; } }
     .hp2 .br-seg { display: inline; }
     @media (max-width: 680px) { .hp2 .br-seg { display: none; } }
     @media (max-width: 850px) {
-      .hp2-pill { order: 0; align-self: center; margin: 0 auto 22px; }
+      .hp2-pill { order: 0; align-self: center; margin: 0 auto 40px; }
       .hp2 .hero-foto img { object-position: center 22%; }
     }
     @media (max-width: 680px) {
@@ -356,6 +356,9 @@ text-align: center;
       .hp2.hero-home .hero-segunda { font-size: 36px; line-height: 46px; }
     }
     .hp2.hero-home .hp2-verde { color: var(--teal-deep); font-style: normal; }
+    @media (min-width: 681px) and (max-width: 850px) {
+      .hp2.hero-2col .hero-sub { font-size: 16px; }
+    }
     @media (min-width: 851px) {
       .hp2.hero-2col { padding-top: calc(40px + var(--navh)); padding-bottom: 60px; }
       .hp2.hero-home .hero-segunda { margin-bottom: 24px; }
@@ -373,7 +376,7 @@ text-align: center;
        Debajo, lo propio de este bloque: las tres tarjetas con su lista. -->
   <style>
     .bp2 { --r-lg: 24px; }
-    .bp2.b4 { position: relative; background: var(--white); padding: 60px 0 60px; text-align: center; }
+    .bp2.b4 { position: relative; background: var(--white); padding: 60px 0 70px; text-align: center; }
     .bp2 .b4-in { width: min(900px, 92vw); margin-inline: auto; }
     .bp2 .b4-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 0px; }
     .bp2 .b4-h em { font-style: italic; color: var(--gold-deep); }
@@ -414,7 +417,7 @@ text-align: center;
   .bp2 .b5-item:last-child { margin-bottom: 0; }
   .bp2 .b4-sub { font-size: 20px; }
   .bp2.b4 { padding: 70px 0 70px; }
-  .bp2.b4 .b4-mock { margin: 0 0 50px -9%; width: 118%; }
+  .bp2.b4 .b4-mock { margin: 0 0 0 -9%; width: 118%; }
     }
     @media (min-width: 851px) {
   .bp2 .b4-mock { max-width: 640px; }
@@ -501,7 +504,7 @@ text-align: center;
     .op2 .op2-gratis { border: 2px solid var(--gold-deep); }
     /* La etiqueta de arriba, como "Lo que si es" del P1 */
     .op2-opc { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); margin: 0; white-space: nowrap;
-      padding: 12px 30px; border-radius: var(--r-md); background: #f3e4c6; color: var(--teal-deep);
+      padding: 5px 30px; border-radius: var(--r-md); background: #f3e4c6; color: var(--teal-deep);
       font-family: var(--font-display); font-weight: 700; font-size: 22px; }
     .op2-t { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.1; color: var(--teal-deep); margin: 0 0 18px; white-space: nowrap; }
     .op2-t .cifra { margin-left: 10px; }
@@ -557,6 +560,16 @@ text-align: center;
     @media (max-width: 850px) { .op2-hueco { display: none; } }
     @media (max-width: 680px) { .op2-rayos { width: 34px; height: 34px; right: -28px; top: -12px; } }
     .op2-opc { border: 0.5px solid var(--gold-deep); }
+    /* Tablet vertical: las dos opciones una al lado de la otra. */
+    @media (min-width: 681px) and (max-width: 850px) {
+      .op2 .b6-cols { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .op2-t { font-size: 32px; }
+      .op2-tira { font-size: 11px; letter-spacing: .6px; }
+      .op2-hueco { display: block; }
+      .op2-x { font-size: 15px; gap: 10px; }
+      .op2-btn { font-size: 14px; padding: 10px 8px; }
+    }
+
   </style>
 
   <!-- ════════════ PREGUNTAS FRECUENTES ════════════
@@ -565,7 +578,7 @@ text-align: center;
   <style>
     .fq2.b9 { background: var(--cream); padding: 60px 0 70px; text-align: center; }
     .fq2 .b9-in { width: min(860px, 92vw); margin-inline: auto; }
-    .fq2 .b9-h { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.3; color: var(--teal-deep); margin: 0 0 52px; }
+    .fq2 .b9-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.3; color: var(--teal-deep); margin: 0 0 52px; }
     .fq2 .b9-h { font-weight: 500; }
     .fq2 .b9-h::before { content: ""; display: block; width: 60px; height: 1px; background: var(--gold-deep); margin: 0 auto 24px; }
     .fq2 .b9-h em { font-style: italic; font-weight: 700; color: var(--gold-deep); }
@@ -589,8 +602,9 @@ text-align: center;
     }
     @media (min-width: 681px) and (max-width: 850px) {
       .fq2.b9 { padding: 60px 0 80px; }
-      .fq2 .b9-h { font-size: 32px; margin-bottom: 60px; }
+      .fq2 .b9-h { font-size: 38px; margin-bottom: 60px; }
       .fq2 .b9-body p { font-size: 16px; }
+      .fq2 .b9-list summary { font-size: 16px; }
     }
     @media (max-width: 680px) {
       .fq2.b9 { padding: 54px 0 62px; }
@@ -618,7 +632,7 @@ text-align: center;
     .ci2 .fin-l1 { display:block;font-size:30px }
     .ci2 .fin-l2 { display:block;font-size:35px;padding-top:10px;padding-bottom:20px }
     @media (min-width:601px) and (max-width:850px) {
-      .ci2 .fin-l2 { font-size:32px }
+      .ci2 .fin-l2 { font-size:38px }
     }
     @media (min-width:601px) {
       .ci2 .fin-cta { display:inline-flex;flex-direction:column }
@@ -730,7 +744,7 @@ text-align: center;
   <!-- ════════════ ELIGE COMO CONSEGUIRLO ════════════ -->
   <section class="b6 op2" id="opciones">
     <div class="b6-in">
-      <h2 class="b6-h">Elige cómo conseguir<br> <em>tu Plan de Origen</em></h2>
+      <h2 class="b6-h">Elige cómo conseguir<br> <em>Tu Plan de Origen</em></h2>
       <div class="b6-cols">
         <div class="b6-card op2-gratis">
           <p class="op2-opc">Opción 1</p>
@@ -741,7 +755,7 @@ text-align: center;
         </div>
         <div class="b6-card op2-pago">
           <p class="op2-opc">Opción 2</p>
-          <p class="op2-t">Pago único<span class="cifra">37 €</span></p>
+          <p class="op2-t">37 € · Pago único</p>
           <p class="op2-tira op2-hueco" aria-hidden="true">&nbsp;</p>
           <p class="op2-x"><span class="op2-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></span><span>Consigue tu Plan de Origen sin enviar ninguna reseña y recíbelo por email <b>en unos minutos</b>.</span></p>
           <button type="button" class="op2-btn op2-claro" id="op2Pagar">Quiero mi Plan de Origen<span class="flecha">→</span></button>
@@ -754,7 +768,7 @@ text-align: center;
   <!-- ════════════ PREGUNTAS FRECUENTES ════════════ -->
   <section class="b9 fq2">
     <div class="b9-in">
-      <h2 class="b9-h">¿Tienes<br class="b9-br"> <em>dudas</em>?</h2>
+      <h2 class="b9-h">¿Tienes <em>dudas</em>?</h2>
       <div class="b9-list">
 
         <details name="fq2">
