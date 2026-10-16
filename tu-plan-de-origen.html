@@ -438,6 +438,81 @@ text-align: center;
     }
   </style>
 
+  <!-- ════════════ ESTO ES LO QUE VAS A RECIBIR ════════════
+       Las medidas son las del bloque "¿Que vas a descubrir...?" y las tarjetas
+       de las 7 areas del P1 (tu-diseno-de-origen.html), copiadas tal cual y
+       metidas dentro de .bp2 para que no toquen el resto de esta pagina.
+       Debajo, lo propio de este bloque: las tres tarjetas con su lista. -->
+  <style>
+    .bp2 { --r-lg: 24px; }
+    .bp2.b4 { position: relative; background: var(--white); padding: 150px 0 0; text-align: center; }
+    .bp2 .b4-in { width: min(900px, 92vw); margin-inline: auto; }
+    .bp2 .b4-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 0px; }
+    .bp2 .b4-h em { font-style: italic; color: var(--gold-deep); }
+    .bp2 .b4-h { font-weight: 500; }
+    .bp2 .b4-h .b4-marca, .bp2 .b4-h em { font-weight: 700; }
+    .bp2 .b4-h::after { content: ""; display: block; width: 60px; height: 1px; background: var(--gold-deep); margin: 24px auto 0; }
+    .bp2 .b4-sub { font-family: var(--font-body); font-size: 16.8px; line-height: 1.7; color: #4a4538; max-width: 720px; margin: 0 auto 26px; }
+    .bp2 .b4-sub strong em { color: var(--gold-deep); font-style: italic; }
+    .bp2 .b4-mock { margin: 0 auto 40px; width: 100%; max-width: 860px; aspect-ratio: 16 / 10; border: 2px dashed var(--gold-light); background: var(--cream); display: flex; align-items: center; justify-content: center; border-radius: var(--r-lg); box-shadow: 0 18px 40px rgba(14,63,75,.10); }
+    .bp2 .b4-mock span { font-family: var(--font-body); font-size: 15px; letter-spacing: 4px; color: var(--gold-deep); }
+    .bp2.b4 .b4-mock { aspect-ratio: auto; border: 0; background: none; box-shadow: none; border-radius: 0; display: block; margin: 0 auto 20px; }
+    .bp2 .b4-mock img { display: block; width: 100%; height: auto; }
+    .bp2 .b5-item { background: #fff; border-radius: var(--r-lg); padding: 26px 30px; box-shadow: 0 4px 18px rgba(14,63,75,.08); }
+    .bp2 .b5-item:nth-child(7) { grid-column: 1 / -1; }
+    .bp2 .b5-item h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.2; color: var(--teal-deep); margin: 0 0 10px; }
+    .bp2 .b5-item h3 .n { color: var(--gold-deep); font-weight: 400; font-size: 32px; margin-right: 12px; }
+    @media (max-width: 680px) {
+  .bp2 .b5-item::after { content: ""; position: absolute; right: 18px; top: 50%; width: 10px; height: 10px; border-right: 1.5px solid var(--gold-deep); border-bottom: 1.5px solid var(--gold-deep); transform: translateY(-75%) rotate(45deg); transition: transform .2s; }
+  .bp2 .b5-item.abierto::after { transform: translateY(-25%) rotate(-135deg); }
+    }
+    @media (max-width: 850px) {
+  .bp2.b4 { padding: 126px 0 70px; }
+  .bp2 .b4-h { font-size: 38px; margin-bottom: 10px; }
+  .bp2 .b4-sub { font-size: 18px; line-height: 1.7; margin-bottom: 26px; }
+  .bp2 .b4-mock { aspect-ratio: 4 / 3; }
+  .bp2 .b5-item { padding: 24px 24px; }
+  .bp2 .b5-item h3 { font-size: 25px; }
+  .bp2 .b5-item h3 .n { font-size: 40px; }
+    }
+    @media (min-width: 681px) and (max-width: 850px) {
+  .bp2 .b4-mock { width: 100%; margin: 0 auto 60px; }
+  .bp2 .b4-sub { font-size: 17px; }
+  .bp2 .b5-item h3 { font-size: 22px; }
+  .bp2 .b5-item h3 .n { font-size: 32px; }
+  .bp2.b4 { padding: 100px 0 70px; }
+    }
+    @media (max-width: 680px) {
+  .bp2 .b5-item { padding: 24px 22px; margin-bottom: 35px; }
+  .bp2 .b5-item:last-child { margin-bottom: 0; }
+  .bp2 .b4-sub { font-size: 20px; }
+  .bp2.b4 { padding: 100px 0 70px; }
+  .bp2 .b4-mock { margin: 0 auto 50px; }
+  .bp2 .b4-h .break-mobile { display: none; }
+    }
+    @media (min-width: 851px) {
+  .bp2 .b4-mock { max-width: 800px; }
+    }
+    @media (min-width: 851px) and (max-width: 1023px) {
+  .bp2 .b4-h { font-size: 36px; }
+    }
+    @media (min-width: 1024px) {
+  .bp2 .b4-mock { max-width: 900px; }
+    }
+
+
+    /* ── Lo propio del P2 ── */
+    .bp2 .br-mov { display: none; }
+    @media (max-width: 680px) { .bp2 .br-mov { display: inline; } }
+    .bp2-tres { display: grid; gap: 24px; text-align: left; margin-top: 46px; }
+    .bp2 .b5-item { background: var(--cream); }
+    .bp2 .b5-item::after { display: none; }
+    .bp2 .b5-item ul { list-style: none; margin: 8px 0 0; padding: 0; }
+    .bp2 .b5-item li { display: flex; gap: 12px; font-size: 16px; line-height: 1.75; color: #4a4538; padding: 6px 0; }
+    .bp2 .b5-item li::before { content: ""; flex: none; width: 7px; height: 7px; border-radius: 50%; background: #729790; margin-top: 11px; }
+    .bp2 .b5-item li b { color: var(--teal-deep); font-weight: 700; }
+  </style>
+
 <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-EJSDFDFZ3G"></script>
   <script>
@@ -480,6 +555,36 @@ text-align: center;
           </div>
         </div>
         <div class="hero-foto"><img src="images/tu-plan-de-origen-natal-carta-header.webp" alt="Mujer que empieza a vivir como quiere" width="1000" height="827" fetchpriority="high" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ ESTO ES LO QUE VAS A RECIBIR ════════════ -->
+  <section class="b4 bp2">
+    <div class="b4-in">
+      <h2 class="b4-h">Esto es lo que<br class="br-mov"> <em>vas a recibir</em></h2>
+      <div class="b4-mock"><picture><source media="(max-width: 680px)" srcset="images/tu-diseno-de-origen-estudio-carta-natal-movil-2.webp" /><img src="images/tu-diseno-de-origen-estudio-carta-natal-2.webp" alt="Tu Plan de Origen en PDF, en ordenador, tablet y móvil" width="1000" height="557" loading="lazy" /></picture></div>
+      <p class="b4-sub">Más de <strong>40 páginas</strong>, <strong>100% personalizadas</strong> a partir de tu <strong>Diseño de Origen</strong> · En PDF</p>
+      <div class="bp2-tres">
+        <div class="b5-item"><h3><span class="n">01</span>Empieza a ser quien quieres ser</h3>
+          <ul>
+            <li><span><b>Tus pruebas:</b> las situaciones que se repiten en tu vida y en quién te conviertes cuando las superas</span></li>
+            <li><span><b>Qué hacer:</b> un paso concreto para cada prueba, para que empieces hoy</span></li>
+            <li><span><b>Dónde te vas a caer:</b> cómo vas a intentar sabotearte, para que lo veas venir</span></li>
+          </ul>
+        </div>
+        <div class="b5-item"><h3><span class="n">02</span>Reprograma lo que crees</h3>
+          <ul>
+            <li><span><b>Lo que crees hoy:</b> las creencias que tienes instaladas y cómo te frenan sin que lo notes</span></li>
+            <li><span><b>Lo que es verdad:</b> tus nuevas creencias, para que empieces a verte y actuar de otra manera</span></li>
+          </ul>
+        </div>
+        <div class="b5-item"><h3><span class="n">03</span>Haz que tu cambio dure</h3>
+          <ul>
+            <li><span><b>Tu hoja de ruta:</b> para seguir avanzando, sin volver a empezar de cero</span></li>
+            <li><span><b>Lo que necesitas recordar:</b> de un vistazo, para cuando dudes</span></li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
