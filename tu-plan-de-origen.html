@@ -278,7 +278,7 @@ text-align: center;
       font-size: 16px; line-height: 1.66; color: #0c0c0c;}
 .hp2 .hero-sub .promesa{font-weight: 600; font-style: italic; color: var(--teal-deep);
                          -webkit-text-stroke: .5px currentColor;}
-.hp2 .hero-sub .oro{color: var(--gold-deep); font-weight: 700; font-family: var(--font-display); font-size: 1.12em;}
+.hp2 .hero-sub .oro{color: var(--gold-deep); font-weight: 700; font-family: var(--font-display); font-size: 20px;}
 .hp2 .br-mov{display: none;}
 .hp2 .hero-accion{display: inline-block; align-self: flex-start;}
 .hp2 .btn-hero{display: flex; align-items: center; justify-content: center; gap: .5em;
@@ -324,13 +324,13 @@ text-align: center;
     }
     .hp2.hero-home .h1-bloque { text-transform: none; }
     @media (min-width: 851px) {
-    .hp2.hero-home { background-image: linear-gradient(rgba(237,246,242,.55), rgba(237,246,242,.55)), url('images/tu-plan-de-origen-natal-carta-fondo-web.webp'); }
+    .hp2.hero-home { background-image: linear-gradient(rgba(237,246,242,.25), rgba(237,246,242,.25)), url('images/tu-plan-de-origen-natal-carta-fondo-web.webp'); }
     }
     .hp2.hero-home .hp2-seg { color: var(--gold-deep); }
     .hp2-pill {
       display: inline-flex; align-items: center; width: fit-content; align-self: flex-start;
       background: rgba(207,177,128,.16); border: 1px solid rgba(189,144,72,.45);
-      color: var(--gold-deep); border-radius: 99px; padding: 6px 14px;
+      color: var(--gold-deep); border-radius: 6px; padding: 6px 14px;
       font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
       margin: 0 0 30px;
     }
@@ -355,8 +355,8 @@ text-align: center;
       .hp2.hero-home .hero-segunda { font-size: 38px; line-height: 50px; }
     }
     @media (max-width: 680px) {
-      .hp2.hero-home .h1-bloque { font-size: 26px; line-height: 39px; margin-bottom: 0; }
-      .hp2.hero-home .hero-segunda { font-size: 36px; line-height: 46px; }
+      .hp2.hero-home .h1-bloque { font-size: 30px; line-height: 39px; margin-bottom: 0; }
+      .hp2.hero-home .hero-segunda { font-size: 38px; line-height: 46px; }
     }
     .hp2.hero-home .hp2-verde { color: var(--teal-deep); font-style: normal; }
     .hp2 .br-para { display: none; }
@@ -395,7 +395,7 @@ text-align: center;
     .bp2 .b4-mock span { font-family: var(--font-body); font-size: 15px; letter-spacing: 4px; color: var(--gold-deep); }
     .bp2.b4 .b4-mock { aspect-ratio: auto; border: 0; background: none; box-shadow: none; border-radius: 0; display: block; margin: 0 auto 20px; }
     .bp2 .b4-mock img { display: block; width: 100%; height: auto; }
-    .bp2 .b5-item { background: #fff; border-radius: var(--r-lg); padding: 26px 30px; box-shadow: 0 4px 18px rgba(14,63,75,.08); }
+    .bp2 .b5-item { background: #fff; border-radius: var(--r-lg); padding: 26px 30px; box-shadow: none; }
     .bp2 .b5-item:nth-child(7) { grid-column: 1 / -1; }
     .bp2 .b5-item h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.2; color: var(--teal-deep); margin: 0 0 30px; }
     .bp2 .b5-item h3 .n { color: var(--gold-deep); font-weight: 400; font-size: 32px; margin-right: 12px; }
@@ -517,7 +517,7 @@ text-align: center;
     .op2-t { font-family: var(--font-display); font-weight: 700; font-size: 36px; line-height: 1.1; color: var(--teal-deep); margin: 0 0 18px; white-space: nowrap; }
     .op2-t .cifra { margin-left: 10px; }
     .op2-tira { width: 100%; background: var(--gold-light); color: var(--teal-deep); font-family: var(--font-body); font-weight: 700;
-      font-size: 14px; letter-spacing: 1.6px; text-transform: uppercase; padding: 8px 12px; border-radius: 6px; margin: 0 0 24px; }
+      font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase; padding: 8px 12px; border-radius: 6px; margin: 0 0 24px; }
     .op2-x { display: flex; gap: 14px; align-items: center; text-align: left; font-family: var(--font-body); font-size: 16px; line-height: 1.7;
       color: #3a3f3d; margin: 0 0 28px; flex: 1; }
     .op2-x b { color: var(--teal-deep); }
@@ -546,7 +546,7 @@ text-align: center;
       .op2-opc { font-size: 25px; }
       .op2-t { font-size: 40px; }
       .op2-tira { font-size: 15px; letter-spacing: 1px; }
-      .op2-x { font-size: 16px; }
+      .op2-x { font-size: 16px; text-align: center; justify-content: center; }
       .op2-btn { font-size: 18px; padding: 17px 4px; }
     }
     /* Moviles estrechos: el precio en una linea sin salirse de la tarjeta. */
@@ -568,6 +568,9 @@ text-align: center;
     @media (max-width: 850px) { .op2-hueco { display: none; } }
     @media (max-width: 680px) { .op2-rayos { width: 34px; height: 34px; right: -28px; top: -12px; } }
     .op2-opc { border: 0.5px solid var(--gold-deep); }
+    @media (min-width: 681px) {
+      .op2 .b6-card { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; align-items: start; justify-items: center; }
+    }
     /* Tablet vertical: las dos opciones una al lado de la otra. */
     @media (min-width: 681px) and (max-width: 850px) {
       .op2 .b6-cols { grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -671,6 +674,7 @@ text-align: center;
     .saluda { animation: btnAgita .7s ease; }
     .ci2-br { display: none; }
     @media (max-width: 600px) { .ci2-br { display: inline; } }
+    @media (max-width: 600px) { .ci2-pc { display: none; } }
   </style>
 
 <!-- Google Analytics -->
@@ -759,14 +763,14 @@ text-align: center;
           <p class="op2-t">Gratis<svg class="op2-rayos" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><path d="M3.1 26.0L1.9 12.1M8.1 24.7L14.3 7.8M12.5 27.5L22.4 17.6M15.3 31.9L32.2 25.7M16.0 37.0L25.9 37.9"/></svg></p>
           <p class="op2-tira">Solo para las 50 primeras reseñas</p>
           <p class="op2-x"><span>Cuéntanos en un vídeo corto qué sentiste al leer tu Diseño de Origen y recíbelo <b>en menos de 24 horas</b>.</span></p>
-          <a href="/tu-plan-de-origen/resena" class="op2-btn op2-verde" id="op2Gratis">Quiero mi plan gratis<span class="flecha">→</span></a>
+          <a href="/tu-plan-de-origen/resena" class="op2-btn op2-verde" id="op2Gratis">Quiero mi plan gratis</a>
         </div>
         <div class="b6-card op2-pago">
           <p class="op2-opc">Opción 2</p>
-          <p class="op2-t">37 € · Pago único</p>
+          <p class="op2-t">37 €</p>
           <p class="op2-tira op2-hueco" aria-hidden="true">&nbsp;</p>
           <p class="op2-x"><span>Consigue tu Plan de Origen sin enviar ninguna reseña y recíbelo por email <b>en unos minutos</b>.</span></p>
-          <button type="button" class="op2-btn op2-claro" id="op2Pagar">Quiero mi Plan de Origen<span class="flecha">→</span></button>
+          <button type="button" class="op2-btn op2-claro" id="op2Pagar">Quiero mi Plan de Origen</button>
           <p class="op2-aviso" id="op2Aviso"></p>
         </div>
       </div>
@@ -780,24 +784,24 @@ text-align: center;
       <div class="b9-list">
 
         <details name="fq2">
-          <summary>Ya sé por qué me pasa lo que me pasa. ¿Para qué necesito un plan?</summary>
+          <summary>¿Para qué necesito un plan?</summary>
           <div class="b9-body">
-            <p>Porque Tu Diseño de Origen te ayuda a entenderte, pero no te dice qué hacer cuando vuelve a pasar. Puedes entenderlo perfectamente y aun así repetirlo. Tu Plan de Origen te muestra qué cambiar, qué pasos dar, qué creencias te frenan, cómo reconocer cuándo vas a caer… Y empezar a convertirte en la versión de ti que quieres ser</p>
+            <p>Porque Tu Diseño de Origen te ayuda a entenderte, pero <strong>no te dice qué hacer cuando vuelve a pasar</strong>, puedes entenderlo perfectamente y aun así repetirlo. Tu Plan de Origen te muestra <strong>qué cambiar, qué pasos dar, qué creencias te frenan, cómo reconocer cuándo vas a caer</strong>… Y empezar a convertirte en la versión de ti que quieres ser</p>
           </div>
         </details>
 
         <details name="fq2">
-          <summary>¿Necesito haber leído mi Diseño de Origen?</summary>
+          <summary>¿Tengo que haber leído mi Diseño de Origen?</summary>
           <div class="b9-body">
-            <p>Sí, porque Tu Plan de Origen se crea a partir de él. Tu Diseño de Origen te ayuda a entender por qué eres como eres y porque te pasa lo que te pasa, Tu Plan de Origen te muestra qué hacer para cambiarlo.</p>
+            <p>Sí, porque Tu Plan de Origen se crea a partir de él. Tu Diseño de Origen te ayuda a entender por qué eres como eres y porque te pasa lo que te pasa, <strong>Tu Plan de Origen te muestra qué hacer para cambiarlo</strong>.</p>
           </div>
         </details>
 
         <details name="fq2">
           <summary>¿Cómo funciona la opción gratis con vídeo?</summary>
           <div class="b9-body">
-            <p>Muy fácil, solo tienes que grabar una reseña desde tu móvil respondiendo a las 3 preguntas que encontrarás en la página de envío. No necesitas preparar nada ni hacer un vídeo perfecto, solo contar tu experiencia con Tu Diseño de Origen.</p>
-            <p>Una vez que envíes tu vídeo y lo verifiquemos, recibirás Tu Plan de Origen gratis por email en menos de 24 horas.</p>
+            <p>Muy fácil, solo tienes que grabar una reseña desde tu móvil respondiendo a las 3 preguntas que encontrarás en la página de envío. No necesitas preparar nada ni hacer un vídeo perfecto, <strong>solo contar tu experiencia con Tu Diseño de Origen</strong>.</p>
+            <p>Una vez que envíes tu vídeo y lo verifiquemos, <strong>recibirás Tu Plan de Origen gratis por email en menos de 24 horas</strong>.</p>
           </div>
         </details>
 
@@ -822,7 +826,8 @@ text-align: center;
   <section class="ci2">
     <div class="ci2-in">
       <div class="fin">
-        <p class="fin-t"><span class="fin-l1">Puedes quedarte en el porqué…</span><em class="fin-l2">o puedes empezar a convertirte<br> en quien quieres ser</em></p>
+        <p class="fin-t"><span class="fin-l1">Puedes quedarte<br class="ci2-br"> en el porqué…</span><em class="fin-l2">o puedes empezar<br class="ci2-br"> a convertirte<br class="ci2-pc"> en<br class="ci2-br"> quien quieres ser</em>
+</p>
         <div class="fin-cta">
           <a class="btn-oro" href="#opciones">Quiero mi Plan de Origen<span class="flecha">→</span></a>
           <p class="ci2-nota">Gratis con tu reseña en vídeo<br class="ci2-br"> o 37 € pago único</p>
