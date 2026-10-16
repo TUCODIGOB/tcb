@@ -303,7 +303,9 @@ text-align: center;
     /* El nav va sobre el mismo fondo que la cabecera, todo unido. */
     :root { --navh: 53px; }
     @media (max-width: 600px) { :root { --navh: 139px; } }
-    .nav:not(.scrolled) { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; border-bottom-color: transparent; }
+    .nav:not(.scrolled) { background: transparent; backdrop-filter: none; -webkit-backdrop-filter: none; }
+    .nav.scrolled { background: url('images/tu-plan-de-origen-natal-carta-fondo-web.webp') center / cover; backdrop-filter: none; -webkit-backdrop-filter: none; }
+    @media (max-width: 680px) { .nav.scrolled { background-image: url('images/tu-plan-de-origen-natal-carta-fondo-movil.webp'); } }
     .hp2.hero-home {
       margin-top: calc(-1 * var(--navh));
       background-color: #fffbef;
@@ -319,8 +321,8 @@ text-align: center;
       }
       .hp2.hero-2col { padding-top: calc(40px + var(--navh)); }
     }
-    .hp2.hero-home .h1-bloque { text-transform: none; font-size: 30px; margin-bottom: 14px; }
-    .hp2.hero-home .hp2-seg { color: var(--gold-deep); font-size: clamp(32px, 3.1vw, 40px); line-height: 1.2; margin-bottom: 30px; }
+    .hp2.hero-home .h1-bloque { text-transform: none; }
+    .hp2.hero-home .hp2-seg { color: var(--gold-deep); }
     .hp2-pill {
       display: inline-flex; align-items: center; width: fit-content; align-self: flex-start;
       background: rgba(207,177,128,.16); border: 1px solid rgba(189,144,72,.45);
@@ -332,24 +334,20 @@ text-align: center;
     @media (max-width: 1023px) { .hp2 .br-pc2 { display: none; } }
     .hp2 .br-seg { display: inline; }
     @media (max-width: 680px) { .hp2 .br-seg { display: none; } }
-    @media (min-width: 851px) and (max-width: 1023px) {
-      .hp2.hero-home .h1-bloque { font-size: 24px; }
-      .hp2.hero-home .hp2-seg { font-size: clamp(27px, 3.15vw, 30px); }
-    }
     @media (max-width: 850px) {
       .hp2-pill { order: 0; align-self: center; margin: 0 auto 22px; }
       .hp2 .hero-foto img { object-position: center 22%; }
     }
-    @media (min-width: 681px) and (max-width: 850px) {
-      .hp2.hero-home .hp2-seg { font-size: 38px; }
-    }
     @media (max-width: 680px) {
       .hp2-pill { font-size: 11px; letter-spacing: .06em; padding: 6px 12px; }
-      .hp2.hero-home .h1-bloque { font-size: 24px; }
-      .hp2.hero-home .hp2-seg { font-size: 32px; margin-bottom: 34px; }
+      .hp2 .h1-bloque .br-mov { display: none; }
     }
-    @media (max-width: 380px) {
-      .hp2.hero-home .hp2-seg { font-size: 28px; }
+    /* La foto del mismo tamaño que en el P1. */
+    @media (min-width: 851px) {
+      .hp2 .hero-foto { align-self: center; height: 389px; }
+    }
+    @media (min-width: 851px) and (max-width: 1023px) {
+      .hp2 .hero-foto { height: 367px; }
     }
     /* Los botones del P2 van en el verde oscuro de la marca. */
     .hp2 .btn-cta { background: var(--teal-deep); color: #fff; box-shadow: 0 6px 20px rgba(14,63,75,.30); }
@@ -420,7 +418,10 @@ text-align: center;
     /* ── Lo propio del P2 ── */
     .bp2 .br-mov { display: none; }
     @media (max-width: 680px) { .bp2 .br-mov { display: inline; } }
-    .bp2-tres { display: grid; gap: 24px; text-align: left; margin-top: 46px; position: relative; isolation: isolate; }
+    .bp2-tres { display: grid; gap: 24px; text-align: left; margin-top: 46px; position: relative; isolation: isolate; padding-inline: 40px; }
+    @media (max-width: 850px) { .bp2-tres { padding-inline: 24px; } }
+    @media (max-width: 680px) { .bp2-tres { display: block; padding-inline: 14px; } .bp2 .b5-item { padding-right: 40px; } }
+    @media (max-width: 300px) { .bp2-tres { padding-inline: 0; } .bp2 .b5-item { padding-right: 22px; } }
     .bp2 .b5-item { background: #edf6f2; }
     .bp2 .b5-item::after { display: none; }
     .bp2 .b5-item ul { list-style: none; margin: 8px 0 0; padding: 0; }
@@ -512,22 +513,15 @@ text-align: center;
     .op2-btn:hover { transform: translateY(-2px); }
     .op2-aviso { min-height: 1.5em; margin: 14px 0 0; font-size: 15px; color: #fff; }
     .op2-aviso:empty { display: none; }
-    @media (min-width: 681px) and (max-width: 850px) {
-      .op2 .b6-cols { grid-template-columns: 1fr 1fr; gap: 24px; }
-      .op2 .b6-card { padding: 44px 20px 26px; }
-      .op2-opc { font-size: 24px; }
-    }
-    @media (min-width: 681px) and (max-width: 1023px) {
+    @media (min-width: 851px) and (max-width: 1023px) {
       .op2-t { font-size: 40px; }
       .op2-tira { font-size: 12px; letter-spacing: 1px; }
       .op2-x { gap: 12px; }
       .op2-btn { font-size: 14px; padding: 10px 8px; }
     }
     @media (max-width: 680px) {
-      .op2 .b6-cols { gap: 70px; }
-      .op2 .b6-card { padding: 46px 22px 26px; }
       .op2-opc { font-size: 25px; }
-      .op2-t { font-size: 44px; }
+      .op2-t { font-size: 40px; }
       .op2-tira { font-size: 12px; letter-spacing: 1px; }
       .op2-x { font-size: 18px; }
       .op2-btn { font-size: 18px; padding: 17px 4px; }
@@ -548,7 +542,8 @@ text-align: center;
     .op2-hueco { visibility: hidden; }
     .op2-x { flex: none; }
     .op2-btn { margin-top: auto; }
-    @media (max-width: 680px) { .op2-hueco { display: none; } .op2-rayos { width: 34px; height: 34px; right: -28px; top: -12px; } }
+    @media (max-width: 850px) { .op2-hueco { display: none; } }
+    @media (max-width: 680px) { .op2-rayos { width: 34px; height: 34px; right: -28px; top: -12px; } }
     .op2-opc { border: 0.5px solid var(--gold-deep); }
   </style>
 
