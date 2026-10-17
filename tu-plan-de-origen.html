@@ -412,7 +412,7 @@ text-align: center;
   .bp2 .b5-item h3 .n { font-size: 40px; }
     }
     @media (min-width: 681px) and (max-width: 850px) {
-  .bp2 .b4-mock { width: 100%; margin: 0 auto 60px; }
+  .bp2 .b4-mock { width: 100%; max-width: 500px; margin: 0 auto 60px; }
   .bp2 .b4-sub { font-size: 16px; }
   .bp2 .b5-item h3 { font-size: 22px; }
   .bp2 .b5-item h3 .n { font-size: 32px; }
@@ -493,7 +493,7 @@ text-align: center;
     @media (min-width: 681px) and (max-width: 850px) {
       .op2 .b6-h { font-size: 38px; margin-bottom: 60px; }
       .op2 .b6-cols { gap: 80px; }
-      .op2.b6 { padding: 70px 0 80px; }
+      .op2.b6 { padding: 50px 0 80px; }
     }
     @media (min-width: 1024px) {
       .op2.b6 .b6-h { margin: 0 0 50px; }
@@ -519,7 +519,7 @@ text-align: center;
     .op2-t .op2-pu { font-size: 16px; margin-left: 10px; }
     .op2-tira { width: 100%; background: var(--gold-light); color: var(--teal-deep); font-family: var(--font-body); font-weight: 700;
       font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase; padding: 8px 12px; border-radius: 6px; margin: 0 0 24px; }
-    .op2-x { display: flex; gap: 14px; align-items: center; text-align: left; font-family: var(--font-body); font-size: 16px; line-height: 1.7;
+    .op2-x { display: flex; gap: 14px; align-items: center; justify-content: center; text-align: center; font-family: var(--font-body); font-size: 16px; line-height: 1.7;
       color: #3a3f3d; margin: 0 0 28px; flex: 1; }
     .op2-x b { color: var(--teal-deep); }
     .op2-opc, .op2-t { font-variant-numeric: lining-nums; }
@@ -536,6 +536,8 @@ text-align: center;
     .op2-btn:disabled { opacity: .7; cursor: default; }
     .op2-btn:hover { transform: translateY(-2px); }
     .op2-aviso { min-height: 1.5em; margin: 14px 0 0; font-size: 15px; color: #fff; }
+    #opciones { scroll-margin-top: 100px; }
+    @media (max-width: 600px) { #opciones { scroll-margin-top: 175px; } }
     .op2-aviso:empty { display: none; }
     @media (min-width: 851px) and (max-width: 1023px) {
       .op2-t { font-size: 36px; }
@@ -553,7 +555,6 @@ text-align: center;
     /* Moviles estrechos: el precio en una linea sin salirse de la tarjeta. */
     @media (max-width: 380px) {
       .op2-t { font-size: 38px; }
-      .op2-tira { font-size: 11px; letter-spacing: .6px; }
     }
     @media (max-width: 340px) {
       .op2-t { font-size: 33px; }
@@ -573,10 +574,12 @@ text-align: center;
       .op2 .b6-card { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; align-items: start; justify-items: center; }
     }
     /* Tablet vertical: las dos opciones una al lado de la otra. */
+    .op2-tira .br-tv { display: none; }
     @media (min-width: 681px) and (max-width: 850px) {
       .op2 .b6-cols { grid-template-columns: 1fr 1fr; gap: 24px; }
-      .op2-t { font-size: 32px; }
+      .op2-t { font-size: 36px; }
       .op2-tira { font-size: 11px; letter-spacing: .6px; }
+      .op2-tira .br-tv { display: inline; }
       .op2-hueco { display: block; }
       .op2-x { font-size: 15px; gap: 10px; }
       .op2-btn { font-size: 14px; padding: 10px 8px; }
@@ -642,7 +645,7 @@ text-align: center;
     .ci2 .fin-t { font-family:'Playfair Display',Georgia,serif;font-size:28px;line-height:1.35;color:#0E3F4B;margin:0 0 26px;font-weight:700 }
     .ci2 .fin-t em { color:#BD9048 }
     .ci2 .fin-l1 { display:block;font-size:30px }
-    .ci2 .fin-l2 { display:block;font-size:35px;padding-top:10px;padding-bottom:20px }
+    .ci2 .fin-l2 { display:block;font-size:35px;padding-top:10px;padding-bottom:0px }
     @media (min-width:601px) and (max-width:850px) {
       .ci2 .fin-l2 { font-size:38px }
     }
@@ -657,7 +660,7 @@ text-align: center;
     }
 
     /* ── Lo propio del P2 ── */
-    .ci2 { background: var(--teal-deep); padding: 80px 0 90px; text-align: center; }
+    .ci2 { background: var(--teal-deep); padding: 60px 0 90px; text-align: center; }
     .ci2-in { width: min(860px, 92vw); margin-inline: auto; }
     .ci2 .fin { margin-top: 0; }
     .ci2 .fin-t { color: var(--cream); }
@@ -677,8 +680,16 @@ text-align: center;
     .ci2-mock { width: 100%; max-width: 600px; margin: 0 auto 20px; }
     .ci2-mock img { display: block; width: 100%; height: auto; }
     @media (max-width: 680px) { .ci2 { overflow: hidden; } .ci2-mock { width: 118%; margin: 0 0 0 -9%; } }
+    @media (min-width: 681px) and (max-width: 850px) { .ci2-mock { max-width: 500px; } }
     @media (max-width: 600px) { .ci2-br { display: inline; } }
     @media (max-width: 600px) { .ci2-pc { display: none; } }
+    @media (min-width: 851px) {
+      .ci2-in { width: min(1100px, 92vw); }
+      .ci2 .fin { display: grid; grid-template-columns: 55% 1fr; grid-template-areas: "texto foto" "boton foto"; column-gap: 0; align-items: center; text-align: left; }
+      .ci2 .fin-t { grid-area: texto; align-self: end; }
+      .ci2-mock { grid-area: foto; margin: 0 0 0 -20px; width: auto; max-width: none; }
+      .ci2 .fin-cta { grid-area: boton; align-self: start; justify-self: start; align-items: center; }
+    }
   </style>
 
 <!-- Google Analytics -->
@@ -738,7 +749,7 @@ text-align: center;
           <ul>
             <li><span><b>Tus pruebas:</b> las situaciones que la vida te pone delante una y otra vez para que aprendas, y en quién te conviertes cuando las superas</span></li>
             <li><span><b>Qué hacer:</b> un paso concreto para afrontar cada prueba y empezar a cambiar desde hoy</span></li>
-            <li><span><b>Dónde te vas a caer:</b> cómo vas a intentar sabotearte y reconocerlo antes de volver a caer en lo mismo</span></li>
+            <li><span><b>Dónde te vas a caer:</b> cómo vas a intentar sabotearte, para reconocerlo antes de volver a repetir lo mismo</span></li>
           </ul>
         </div>
         <div class="b5-item"><h3><span class="n">02</span>Reprograma lo que crees</h3>
@@ -758,14 +769,14 @@ text-align: center;
   </section>
 
   <!-- ════════════ ELIGE COMO CONSEGUIRLO ════════════ -->
-  <section class="b6 op2" id="opciones">
+  <section class="b6 op2">
     <div class="b6-in">
       <h2 class="b6-h">Elige cómo conseguir<br> <em>Tu Plan de Origen</em></h2>
-      <div class="b6-cols">
+      <div class="b6-cols" id="opciones">
         <div class="b6-card op2-gratis">
           <p class="op2-opc">Opción 1</p>
           <p class="op2-t">Gratis<svg class="op2-rayos" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><path d="M3.1 26.0L1.9 12.1M8.1 24.7L14.3 7.8M12.5 27.5L22.4 17.6M15.3 31.9L32.2 25.7M16.0 37.0L25.9 37.9"/></svg></p>
-          <p class="op2-tira">Solo para las 50 primeras reseñas</p>
+          <p class="op2-tira">Solo para las<br class="br-tv"> 50 primeras reseñas</p>
           <p class="op2-x"><span>Cuéntanos en un vídeo corto qué sentiste al leer tu Diseño de Origen y recíbelo <b>en menos de 24 horas</b>.</span></p>
           <a href="/tu-plan-de-origen/resena" class="op2-btn op2-verde" id="op2Gratis">Quiero mi plan gratis</a>
         </div>
@@ -775,9 +786,9 @@ text-align: center;
           <p class="op2-tira op2-hueco" aria-hidden="true">&nbsp;</p>
           <p class="op2-x"><span>Consigue tu Plan de Origen sin enviar ninguna reseña y recíbelo por email <b>en unos minutos</b>.</span></p>
           <button type="button" class="op2-btn op2-claro" id="op2Pagar">Quiero mi Plan de Origen</button>
-          <p class="op2-aviso" id="op2Aviso"></p>
         </div>
       </div>
+      <p class="op2-aviso" id="op2Aviso"></p>
     </div>
   </section>
 
@@ -832,7 +843,7 @@ text-align: center;
       <div class="fin">
         <p class="fin-t"><span class="fin-l1">Puedes quedarte<br class="ci2-br"> en el porqué…</span><em class="fin-l2">o puedes empezar<br class="ci2-br"> a convertirte<br class="ci2-pc"> en<br class="ci2-br"> quien quieres ser</em>
 </p>
-        <div class="ci2-mock"><picture><source media="(max-width: 680px)" srcset="images/tu-diseno-de-origen-estudio-carta-natal-movil-3.webp" /><img src="images/tu-diseno-de-origen-estudio-carta-natal-3.webp" alt="Tu Plan de Origen en PDF, en ordenador, tablet y móvil" width="1000" height="557" loading="lazy" /></picture></div>
+        <div class="ci2-mock"><picture><source media="(max-width: 680px), (min-width: 851px)" srcset="images/tu-diseno-de-origen-estudio-carta-natal-movil-3.webp" /><img src="images/tu-diseno-de-origen-estudio-carta-natal-3.webp" alt="Tu Plan de Origen en PDF, en ordenador, tablet y móvil" width="1000" height="557" loading="lazy" /></picture></div>
         <div class="fin-cta">
           <a class="btn-oro" href="#opciones">Quiero mi Plan de Origen<span class="flecha">→</span></a>
           <p class="ci2-nota">Gratis con tu reseña en vídeo<br class="ci2-br"> o 37 € pago único</p>
@@ -887,7 +898,8 @@ text-align: center;
       if (!nombre) return;
       const enElTitulo = document.getElementById('heroNombre');
       const ya = document.getElementById('heroYa');
-      if (enElTitulo && ya) { enElTitulo.textContent = nombre + ', '; ya.textContent = 'ya'; }
+      const bonito = nombre.toLowerCase().split(/\s+/).map((p, i) => (i > 0 && ['de', 'del', 'la', 'las', 'los', 'y'].includes(p)) ? p : p.replace(/(^|-)(\p{L})/gu, (m, a, b) => a + b.toUpperCase())).join(' ');
+      if (enElTitulo && ya) { enElTitulo.textContent = bonito + ' '; ya.textContent = 'ya'; }
     } catch (err) {
       // Un fallo aqui no puede romper la pagina: se queda sin saludo y ya.
     }
@@ -904,10 +916,7 @@ text-align: center;
     if (!boton) return;
     const suyo = new URLSearchParams(location.search).get('p1');
     if (suyo) { boton.href = '/tu-plan-de-origen/resena?p1=' + encodeURIComponent(suyo); return; }
-    boton.addEventListener('click', e => {
-      e.preventDefault();
-      if (aviso) aviso.textContent = 'Tu plan se hace con tu informe. Entra desde el botón de tu PDF para pedirlo.';
-    });
+    boton.href = '/tu-plan-de-origen/sin-diseno';
   })();
 
   // ── EL BOTON DE COMPRAR ─────────────────────────────────────
@@ -936,7 +945,8 @@ text-align: center;
       boton.addEventListener('click', async () => {
         const suyo = new URLSearchParams(location.search).get('p1');
         if (!suyo) {
-          return decir('Tu plan se hace con tu informe. Entra desde el botón de tu PDF para pedirlo.');
+          location.href = '/tu-plan-de-origen/sin-diseno';
+          return;
         }
         decir('');
         boton.disabled = true;
