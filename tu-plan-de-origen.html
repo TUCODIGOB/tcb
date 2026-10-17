@@ -329,17 +329,17 @@ text-align: center;
     .hp2.hero-home .hp2-seg { color: var(--gold-deep); }
     .hp2-pill {
       display: inline-flex; align-items: center; width: fit-content; align-self: flex-start;
-      background: rgba(207,177,128,.16); border: 1px solid rgba(189,144,72,.45);
+      background: none; border: 0;
       color: var(--gold-deep); border-radius: 6px; padding: 6px 14px;
       font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-      margin: 0 0 30px;
+      margin: 14px 0 0;
     }
     .hp2 .br-pc2 { display: inline; }
     @media (max-width: 1023px) { .hp2 .br-pc2 { display: none; } }
     .hp2 .br-seg { display: inline; }
     @media (max-width: 680px) { .hp2 .br-seg { display: none; } }
     @media (max-width: 850px) {
-      .hp2-pill { order: 0; align-self: center; margin: 0 auto 40px; }
+      .hp2-pill { order: 0; align-self: center; margin: 14px auto 0; }
       .hp2 .hero-foto img { object-position: center 22%; }
     }
     @media (max-width: 680px) {
@@ -366,7 +366,7 @@ text-align: center;
       .hp2.hero-2col .hero-sub { font-size: 16px; }
     }
     @media (min-width: 851px) {
-      .hp2.hero-2col { padding-top: calc(40px + var(--navh)); padding-bottom: 60px; }
+      .hp2.hero-2col { padding-top: calc(72px + var(--navh)); padding-bottom: 60px; }
       .hp2.hero-home .hero-segunda { margin-bottom: 24px; }
       .hp2.hero-2col .hero-sub { margin-bottom: 24px; }
     }
@@ -712,7 +712,6 @@ text-align: center;
     <div class="container-home">
       <div class="hero-cols">
         <div class="hero-texto">
-          <p class="hp2-pill">Solo para quien ya tiene<br class="br-mov"> su Diseño de Origen</p>
           <h1 class="h1-bloque"><span id="heroNombre"></span><span id="heroYa">Ya</span> sabes el porqué…</h1>
           <p class="hero-segunda hp2-seg"><span class="hp2-verde">Ahora descubre<br class="br-mov"> qué hacer<br class="br-seg"> para<br class="br-para"></span> empezar a vivir<br class="br-mov"> como quieres</p>
           <p class="hero-sub"><strong class="oro">Tu Plan de Origen</strong> es <strong class="promesa">tu guía para saber qué hacer</strong> con todo lo que has descubierto sobre ti: qué cambiar, qué pasos dar, qué creencias te frenan, cómo reconocer cuándo vas a caer… <strong class="promesa">Y empezar a convertirte en la versión de ti que quieres ser</strong></p>
@@ -720,6 +719,7 @@ text-align: center;
             <div class="hero-accion">
               <a href="#opciones" class="btn-cta btn-hero">Quiero mi Plan de Origen<span class="flecha">→</span></a>
             </div>
+          <p class="hp2-pill">· Solo para quien ya tiene<br class="br-mov"> su Diseño de Origen ·</p>
           </div>
         </div>
         <div class="hero-foto"><img src="images/tu-plan-de-origen-natal-carta-header.webp" alt="Mujer que empieza a vivir como quiere" width="1000" height="827" fetchpriority="high" /></div>
