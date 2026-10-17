@@ -90,6 +90,7 @@
     /* ══════════════════════════════════════════════
        NAV (logo y boton)
     ══════════════════════════════════════════════ */
+    html { overflow-anchor: none; }
     .nav {
       position: sticky; top: 0; z-index: 100;
       background: rgba(255,251,239,.92);
@@ -277,7 +278,7 @@ text-align: center;
       font-size: 16px; line-height: 1.66; color: #0c0c0c;}
 .hp2 .hero-sub .promesa{font-weight: 600; font-style: italic; color: var(--teal-deep);
                          -webkit-text-stroke: .5px currentColor;}
-.hp2 .hero-sub .oro{color: var(--gold-deep); font-weight: 700; font-family: var(--font-display); font-size: 1.12em;}
+.hp2 .hero-sub .oro{color: var(--gold-deep); font-weight: 700; font-family: var(--font-display); font-size: 20px;}
 .hp2 .br-mov{display: none;}
 .hp2 .hero-accion{display: inline-block; align-self: flex-start;}
 .hp2 .btn-hero{display: flex; align-items: center; justify-content: center; gap: .5em;
@@ -322,36 +323,56 @@ text-align: center;
       .hp2.hero-2col { padding-top: calc(40px + var(--navh)); }
     }
     .hp2.hero-home .h1-bloque { text-transform: none; }
+    @media (min-width: 851px) {
+    .hp2.hero-home { background-image: linear-gradient(rgba(237,246,242,.25), rgba(237,246,242,.25)), url('images/tu-plan-de-origen-natal-carta-fondo-web.webp'); }
+    }
     .hp2.hero-home .hp2-seg { color: var(--gold-deep); }
     .hp2-pill {
       display: inline-flex; align-items: center; width: fit-content; align-self: flex-start;
-      background: rgba(207,177,128,.16); border: 1px solid rgba(189,144,72,.45);
-      color: var(--gold-deep); border-radius: 99px; padding: 6px 14px;
-      font-size: 12.5px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-      margin: 0 0 20px;
+      background: none; border: 0;
+      color: var(--gold-deep); border-radius: 6px; padding: 6px 14px;
+      font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      margin: 14px 0 0;
     }
     .hp2 .br-pc2 { display: inline; }
     @media (max-width: 1023px) { .hp2 .br-pc2 { display: none; } }
     .hp2 .br-seg { display: inline; }
     @media (max-width: 680px) { .hp2 .br-seg { display: none; } }
     @media (max-width: 850px) {
-      .hp2-pill { order: 0; align-self: center; margin: 0 auto 22px; }
+      .hp2-pill { order: 0; align-self: center; margin: 14px auto 0; }
       .hp2 .hero-foto img { object-position: center 22%; }
     }
     @media (max-width: 680px) {
-      .hp2-pill { font-size: 11px; letter-spacing: .06em; padding: 6px 12px; }
+      .hp2-pill { font-size: 14px; letter-spacing: .06em; padding: 6px 12px; }
       .hp2 .h1-bloque .br-mov { display: none; }
     }
-    /* La foto del mismo tamaño que en el P1. */
-    @media (min-width: 851px) {
-      .hp2 .hero-foto { align-self: center; height: 389px; }
-    }
-    @media (min-width: 851px) and (max-width: 1023px) {
-      .hp2 .hero-foto { height: 367px; }
-    }
+
     /* Los botones del P2 van en el verde oscuro de la marca. */
     .hp2 .btn-cta { background: var(--teal-deep); color: #fff; box-shadow: 0 6px 20px rgba(14,63,75,.30); }
     .hp2 .btn-cta:hover, .hp2 .btn-cta:active { box-shadow: 0 10px 30px rgba(14,63,75,.40); }
+    @media (min-width: 681px) {
+      .hp2.hero-home .h1-bloque { font-size: 28px; line-height: 43px; margin-bottom: 0; }
+      .hp2.hero-home .hero-segunda { font-size: 38px; line-height: 50px; }
+    }
+    @media (max-width: 680px) {
+      .hp2.hero-home .h1-bloque { font-size: 30px; line-height: 39px; margin-bottom: 20px; }
+      .hp2.hero-home .hero-segunda { font-size: 38px; line-height: 46px; }
+    }
+    .hp2.hero-home .hp2-verde { color: var(--teal-deep); font-style: normal; }
+    .hp2 .br-para { display: none; }
+    @media (max-width: 680px) { .hp2 .br-para { display: inline; } .hp2-pill { display: inline-block; text-align: center; } .hp2 .hero-sub .oro { font-size: 24px; } }
+    @media (min-width: 851px) and (max-width: 1023px) { .hp2 .br-para { display: inline; } .hp2 .br-seg { display: none; } }
+    @media (min-width: 681px) and (max-width: 850px) {
+      .hp2.hero-2col .hero-sub { font-size: 16px; }
+    }
+    @media (min-width: 851px) {
+      .hp2.hero-2col { padding-top: calc(72px + var(--navh)); padding-bottom: 60px; }
+      .hp2.hero-home .hero-segunda { margin-bottom: 24px; }
+      .hp2.hero-2col .hero-sub { margin-bottom: 24px; }
+    }
+    @media (min-width: 851px) and (max-width: 1099px) {
+      .hp2.hero-home .hero-segunda { font-size: 32px; line-height: 44px; }
+    }
   </style>
 
   <!-- ════════════ ESTO ES LO QUE VAS A RECIBIR ════════════
@@ -361,22 +382,22 @@ text-align: center;
        Debajo, lo propio de este bloque: las tres tarjetas con su lista. -->
   <style>
     .bp2 { --r-lg: 24px; }
-    .bp2.b4 { position: relative; background: var(--white); padding: 150px 0 0; text-align: center; }
+    .bp2.b4 { position: relative; background: var(--white); padding: 60px 0 70px; text-align: center; }
     .bp2 .b4-in { width: min(900px, 92vw); margin-inline: auto; }
     .bp2 .b4-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--teal-deep); margin: 0 0 0px; }
     .bp2 .b4-h em { font-style: italic; color: var(--gold-deep); }
     .bp2 .b4-h { font-weight: 500; }
     .bp2 .b4-h em { font-weight: 700; }
     .bp2 .b4-h::after { content: ""; display: block; width: 60px; height: 1px; background: var(--gold-deep); margin: 24px auto 0; }
-    .bp2 .b4-sub { font-family: var(--font-body); font-size: 16.8px; line-height: 1.7; color: #4a4538; max-width: 720px; margin: 0 auto 26px; }
+    .bp2 .b4-sub { font-family: var(--font-body); font-size: 16px; line-height: 1.7; color: #4a4538; max-width: 720px; margin: 0 auto 26px; }
     .bp2 .b4-sub strong em { color: var(--gold-deep); font-style: italic; }
-    .bp2 .b4-mock { margin: 0 auto 40px; width: 100%; max-width: 860px; aspect-ratio: 16 / 10; border: 2px dashed var(--gold-light); background: var(--cream); display: flex; align-items: center; justify-content: center; border-radius: var(--r-lg); box-shadow: 0 18px 40px rgba(14,63,75,.10); }
+    .bp2 .b4-mock { margin: 0 auto 40px; width: 100%; max-width: 600px; aspect-ratio: 16 / 10; border: 2px dashed var(--gold-light); background: var(--cream); display: flex; align-items: center; justify-content: center; border-radius: var(--r-lg); box-shadow: 0 18px 40px rgba(14,63,75,.10); }
     .bp2 .b4-mock span { font-family: var(--font-body); font-size: 15px; letter-spacing: 4px; color: var(--gold-deep); }
     .bp2.b4 .b4-mock { aspect-ratio: auto; border: 0; background: none; box-shadow: none; border-radius: 0; display: block; margin: 0 auto 20px; }
     .bp2 .b4-mock img { display: block; width: 100%; height: auto; }
-    .bp2 .b5-item { background: #fff; border-radius: var(--r-lg); padding: 26px 30px; box-shadow: 0 4px 18px rgba(14,63,75,.08); }
+    .bp2 .b5-item { background: #fff; border-radius: var(--r-lg); padding: 26px 30px; box-shadow: none; }
     .bp2 .b5-item:nth-child(7) { grid-column: 1 / -1; }
-    .bp2 .b5-item h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.2; color: var(--teal-deep); margin: 0 0 10px; }
+    .bp2 .b5-item h3 { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1.2; color: var(--teal-deep); margin: 0 0 30px; }
     .bp2 .b5-item h3 .n { color: var(--gold-deep); font-weight: 400; font-size: 32px; margin-right: 12px; }
     @media (max-width: 680px) {
   .bp2 .b5-item::after { content: ""; position: absolute; right: 18px; top: 50%; width: 10px; height: 10px; border-right: 1.5px solid var(--gold-deep); border-bottom: 1.5px solid var(--gold-deep); transform: translateY(-75%) rotate(45deg); transition: transform .2s; }
@@ -384,7 +405,7 @@ text-align: center;
     @media (max-width: 850px) {
   .bp2.b4 { padding: 126px 0 70px; }
   .bp2 .b4-h { font-size: 38px; margin-bottom: 10px; }
-  .bp2 .b4-sub { font-size: 18px; line-height: 1.7; margin-bottom: 26px; }
+  .bp2 .b4-sub { font-size: 16px; line-height: 1.7; margin-bottom: 26px; }
   .bp2 .b4-mock { aspect-ratio: 4 / 3; }
   .bp2 .b5-item { padding: 24px 24px; }
   .bp2 .b5-item h3 { font-size: 25px; }
@@ -392,33 +413,33 @@ text-align: center;
     }
     @media (min-width: 681px) and (max-width: 850px) {
   .bp2 .b4-mock { width: 100%; margin: 0 auto 60px; }
-  .bp2 .b4-sub { font-size: 17px; }
+  .bp2 .b4-sub { font-size: 16px; }
   .bp2 .b5-item h3 { font-size: 22px; }
   .bp2 .b5-item h3 .n { font-size: 32px; }
-  .bp2.b4 { padding: 100px 0 70px; }
+  .bp2.b4 { padding: 60px 0 70px; }
     }
     @media (max-width: 680px) {
   .bp2 .b5-item { padding: 24px 22px; margin-bottom: 35px; }
   .bp2 .b5-item:last-child { margin-bottom: 0; }
   .bp2 .b4-sub { font-size: 20px; }
-  .bp2.b4 { padding: 100px 0 70px; }
-  .bp2 .b4-mock { margin: 0 auto 50px; }
+  .bp2.b4 { padding: 70px 0 70px; }
+  .bp2.b4 .b4-mock { margin: 0 0 0 -9%; width: 118%; }
     }
     @media (min-width: 851px) {
-  .bp2 .b4-mock { max-width: 800px; }
+  .bp2 .b4-mock { max-width: 600px; }
     }
     @media (min-width: 851px) and (max-width: 1023px) {
   .bp2 .b4-h { font-size: 36px; }
     }
     @media (min-width: 1024px) {
-  .bp2 .b4-mock { max-width: 900px; }
+  .bp2 .b4-mock { max-width: 600px; }
     }
 
 
     /* ── Lo propio del P2 ── */
     .bp2 .br-mov { display: none; }
     @media (max-width: 680px) { .bp2 .br-mov { display: inline; } }
-    .bp2-tres { display: grid; gap: 24px; text-align: left; margin-top: 46px; position: relative; isolation: isolate; padding-inline: 40px; }
+    .bp2-tres { display: grid; gap: 40px; text-align: left; margin-top: 46px; position: relative; isolation: isolate; padding-inline: 40px; }
     @media (max-width: 850px) { .bp2-tres { padding-inline: 24px; } }
     @media (max-width: 680px) { .bp2-tres { display: block; padding-inline: 14px; } .bp2 .b5-item { padding-right: 40px; } }
     @media (max-width: 300px) { .bp2-tres { padding-inline: 0; } .bp2 .b5-item { padding-right: 22px; } }
@@ -454,15 +475,17 @@ text-align: center;
        .op2 para que no toquen el resto de esta pagina. -->
   <style>
     .op2 { --r-md: 12px; }
-    .op2.b6 { background: var(--teal-deep); padding: 70px 0 100px; text-align: center; }
-    .op2 .b6-in { width: min(1100px, 92vw); margin-inline: auto; }
+    .op2.b6 { background: var(--teal-deep); padding: 70px 0 70px; text-align: center; }
+    .op2 .b6-in { width: min(900px, 92vw); margin-inline: auto; padding-inline: 40px; }
+    @media (max-width: 850px) { .op2 .b6-in { padding-inline: 24px; } }
+    @media (max-width: 680px) { .op2 .b6-in { padding-inline: 0; } }
     .op2 .b6-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.25; color: var(--cream); margin: 0 0 70px; }
     .op2 .b6-h em { font-style: italic; font-weight: 400; color: var(--gold-light); }
     .op2 .b6-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; text-align: left; align-items: stretch; }
     .op2 .b6-card { border-radius: var(--r-md); padding: 30px 30px 32px; }
-    .op2.b6 .b6-card { position: relative; padding-top: 44px; }
+    .op2.b6 .b6-card { position: relative; padding-top: 60px; }
     @media (max-width: 850px) {
-      .op2.b6 { padding: 70px 0 100px; }
+      .op2.b6 { padding: 70px 0 70px; }
       .op2 .b6-h { font-size: 40px; margin-bottom: 70px; }
       .op2 .b6-cols { grid-template-columns: 1fr; gap: 70px; }
       .op2 .b6-card { padding: 24px 22px 26px; }
@@ -473,10 +496,10 @@ text-align: center;
       .op2.b6 { padding: 70px 0 80px; }
     }
     @media (min-width: 1024px) {
-      .op2.b6 .b6-h { margin: 0 0 90px; }
+      .op2.b6 .b6-h { margin: 0 0 50px; }
     }
     @media (max-width: 1023px) {
-      .op2.b6 .b6-h { margin: 0 0 80px; }
+      .op2.b6 .b6-h { margin: 0 0 70px; }
     }
     @media (max-width: 680px) {
       .op2 .b6-cols { gap: 80px; }
@@ -489,12 +512,13 @@ text-align: center;
     .op2 .op2-gratis { border: 2px solid var(--gold-deep); }
     /* La etiqueta de arriba, como "Lo que si es" del P1 */
     .op2-opc { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%); margin: 0; white-space: nowrap;
-      padding: 12px 30px; border-radius: var(--r-md); background: #f3e4c6; color: var(--teal-deep);
+      padding: 5px 30px; border-radius: var(--r-md); background: #f3e4c6; color: var(--teal-deep);
       font-family: var(--font-display); font-weight: 700; font-size: 22px; }
-    .op2-t { font-family: var(--font-display); font-weight: 700; font-size: 52px; line-height: 1.1; color: var(--teal-deep); margin: 0 0 18px; white-space: nowrap; }
+    .op2-t { font-family: var(--font-display); font-weight: 700; font-size: 36px; line-height: 1.1; color: var(--teal-deep); margin: 0 0 18px; white-space: nowrap; }
     .op2-t .cifra { margin-left: 10px; }
+    .op2-t .op2-pu { font-size: 16px; margin-left: 10px; }
     .op2-tira { width: 100%; background: var(--gold-light); color: var(--teal-deep); font-family: var(--font-body); font-weight: 700;
-      font-size: 14px; letter-spacing: 1.6px; text-transform: uppercase; padding: 8px 12px; border-radius: 6px; margin: 0 0 24px; }
+      font-size: 12px; letter-spacing: 1.6px; text-transform: uppercase; padding: 8px 12px; border-radius: 6px; margin: 0 0 24px; }
     .op2-x { display: flex; gap: 14px; align-items: center; text-align: left; font-family: var(--font-body); font-size: 16px; line-height: 1.7;
       color: #3a3f3d; margin: 0 0 28px; flex: 1; }
     .op2-x b { color: var(--teal-deep); }
@@ -514,7 +538,7 @@ text-align: center;
     .op2-aviso { min-height: 1.5em; margin: 14px 0 0; font-size: 15px; color: #fff; }
     .op2-aviso:empty { display: none; }
     @media (min-width: 851px) and (max-width: 1023px) {
-      .op2-t { font-size: 40px; }
+      .op2-t { font-size: 36px; }
       .op2-tira { font-size: 12px; letter-spacing: 1px; }
       .op2-x { gap: 12px; }
       .op2-btn { font-size: 14px; padding: 10px 8px; }
@@ -522,8 +546,8 @@ text-align: center;
     @media (max-width: 680px) {
       .op2-opc { font-size: 25px; }
       .op2-t { font-size: 40px; }
-      .op2-tira { font-size: 12px; letter-spacing: 1px; }
-      .op2-x { font-size: 18px; }
+      .op2-tira { font-size: 18px; letter-spacing: 1px; }
+      .op2-x { font-size: 16px; text-align: center; justify-content: center; }
       .op2-btn { font-size: 18px; padding: 17px 4px; }
     }
     /* Moviles estrechos: el precio en una linea sin salirse de la tarjeta. */
@@ -545,6 +569,19 @@ text-align: center;
     @media (max-width: 850px) { .op2-hueco { display: none; } }
     @media (max-width: 680px) { .op2-rayos { width: 34px; height: 34px; right: -28px; top: -12px; } }
     .op2-opc { border: 0.5px solid var(--gold-deep); }
+    @media (min-width: 681px) {
+      .op2 .b6-card { display: grid; grid-row: span 4; grid-template-rows: subgrid; row-gap: 0; align-items: start; justify-items: center; }
+    }
+    /* Tablet vertical: las dos opciones una al lado de la otra. */
+    @media (min-width: 681px) and (max-width: 850px) {
+      .op2 .b6-cols { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .op2-t { font-size: 32px; }
+      .op2-tira { font-size: 11px; letter-spacing: .6px; }
+      .op2-hueco { display: block; }
+      .op2-x { font-size: 15px; gap: 10px; }
+      .op2-btn { font-size: 14px; padding: 10px 8px; }
+    }
+
   </style>
 
   <!-- ════════════ PREGUNTAS FRECUENTES ════════════
@@ -553,7 +590,7 @@ text-align: center;
   <style>
     .fq2.b9 { background: var(--cream); padding: 60px 0 70px; text-align: center; }
     .fq2 .b9-in { width: min(860px, 92vw); margin-inline: auto; }
-    .fq2 .b9-h { font-family: var(--font-display); font-weight: 700; font-size: 34px; line-height: 1.3; color: var(--teal-deep); margin: 0 0 52px; }
+    .fq2 .b9-h { font-family: var(--font-display); font-weight: 700; font-size: 40px; line-height: 1.3; color: var(--teal-deep); margin: 0 0 52px; }
     .fq2 .b9-h { font-weight: 500; }
     .fq2 .b9-h::before { content: ""; display: block; width: 60px; height: 1px; background: var(--gold-deep); margin: 0 auto 24px; }
     .fq2 .b9-h em { font-style: italic; font-weight: 700; color: var(--gold-deep); }
@@ -577,8 +614,9 @@ text-align: center;
     }
     @media (min-width: 681px) and (max-width: 850px) {
       .fq2.b9 { padding: 60px 0 80px; }
-      .fq2 .b9-h { font-size: 32px; margin-bottom: 60px; }
+      .fq2 .b9-h { font-size: 38px; margin-bottom: 60px; }
       .fq2 .b9-body p { font-size: 16px; }
+      .fq2 .b9-list summary { font-size: 16px; }
     }
     @media (max-width: 680px) {
       .fq2.b9 { padding: 54px 0 62px; }
@@ -606,7 +644,7 @@ text-align: center;
     .ci2 .fin-l1 { display:block;font-size:30px }
     .ci2 .fin-l2 { display:block;font-size:35px;padding-top:10px;padding-bottom:20px }
     @media (min-width:601px) and (max-width:850px) {
-      .ci2 .fin-l2 { font-size:32px }
+      .ci2 .fin-l2 { font-size:38px }
     }
     @media (min-width:601px) {
       .ci2 .fin-cta { display:inline-flex;flex-direction:column }
@@ -627,11 +665,20 @@ text-align: center;
     .ci2 .fin-cta { display: inline-flex; flex-direction: column; align-items: center; }
     .ci2-nota { margin: 16px 0 0; font-family: var(--font-body); font-size: 15px; color: #fff; }
     @media (max-width: 600px) { .ci2 { padding: 64px 0 70px; } .ci2 .fin-cta { display: flex; } .ci2-nota { font-size: 16px; } }
-    /* Sobre el verde del cierre, el boton va en crema. */
-    .ci2 .btn-oro { background: var(--cream); color: var(--teal-deep); box-shadow: 0 6px 20px rgba(0,0,0,.25); }
-    .ci2 .btn-oro:hover, .ci2 .btn-oro:active { box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    /* Los botones del P2 con degradado y el mismo movimiento que en el P1. */
+    .hp2 .btn-cta, .op2-verde, .nav-cta, .nav-cta:hover { background: linear-gradient(135deg, #0e3f4b, #2a6b78); }
+    .nav-cta { display: inline-block; }
+    .nav-cta:hover, .nav-cta:active { animation: btnAgita .7s ease; }
+    .op2-claro { background: linear-gradient(135deg, #5f8580, #93b3ac); }
+    .op2-btn:hover { transform: none; }
+    .op2-btn:hover, .op2-btn:active { animation: btnAgita .7s ease; }
+    .saluda { animation: btnAgita .7s ease; }
     .ci2-br { display: none; }
+    .ci2-mock { width: 100%; max-width: 600px; margin: 0 auto 20px; }
+    .ci2-mock img { display: block; width: 100%; height: auto; }
+    @media (max-width: 680px) { .ci2 { overflow: hidden; } .ci2-mock { width: 118%; margin: 0 0 0 -9%; } }
     @media (max-width: 600px) { .ci2-br { display: inline; } }
+    @media (max-width: 600px) { .ci2-pc { display: none; } }
   </style>
 
 <!-- Google Analytics -->
@@ -665,14 +712,14 @@ text-align: center;
     <div class="container-home">
       <div class="hero-cols">
         <div class="hero-texto">
-          <p class="hp2-pill">Solo para quien ya tiene su Diseño de Origen</p>
-          <h1 class="h1-bloque"><span id="heroNombre"></span><span id="heroYa">Ya</span> sabes por qué eres<br class="br-pc2"><br class="br-mov"> como eres y por qué<br class="br-pc2"><br class="br-mov"> te pasa lo que te pasa</h1>
-          <p class="hero-segunda hp2-seg">Ahora descubre<br class="br-mov"> qué hacer<br class="br-seg"> para empezar<br class="br-mov"> a vivir como quieres</p>
+          <h1 class="h1-bloque"><span id="heroNombre"></span><span id="heroYa">Ya</span> sabes el porqué…</h1>
+          <p class="hero-segunda hp2-seg"><span class="hp2-verde">Ahora descubre<br class="br-mov"> qué hacer<br class="br-seg"> para<br class="br-para"></span> empezar a vivir<br class="br-mov"> como quieres</p>
           <p class="hero-sub"><strong class="oro">Tu Plan de Origen</strong> es <strong class="promesa">tu guía para saber qué hacer</strong> con todo lo que has descubierto sobre ti: qué cambiar, qué pasos dar, qué creencias te frenan, cómo reconocer cuándo vas a caer… <strong class="promesa">Y empezar a convertirte en la versión de ti que quieres ser</strong></p>
           <div class="hero-cierre">
             <div class="hero-accion">
               <a href="#opciones" class="btn-cta btn-hero">Quiero mi Plan de Origen<span class="flecha">→</span></a>
             </div>
+          <p class="hp2-pill">· Solo para quien ya tiene<br class="br-mov"> su Diseño de Origen ·</p>
           </div>
         </div>
         <div class="hero-foto"><img src="images/tu-plan-de-origen-natal-carta-header.webp" alt="Mujer que empieza a vivir como quiere" width="1000" height="827" fetchpriority="high" /></div>
@@ -685,25 +732,25 @@ text-align: center;
     <div class="b4-in">
       <h2 class="b4-h">Esto es lo que<br class="br-mov"> <em>vas a recibir</em></h2>
       <div class="b4-mock"><picture><source media="(max-width: 680px)" srcset="images/tu-plan-de-origen-estudio-carta-natal-movil-2.webp" /><img src="images/tu-plan-de-origen-estudio-carta-natal-2.webp" alt="Tu Plan de Origen en PDF, en ordenador, tablet y móvil" width="1000" height="557" loading="lazy" /></picture></div>
-      <p class="b4-sub">Más de <strong>40 páginas</strong>, <strong>100% personalizadas</strong> a partir de tu <strong>Diseño de Origen</strong> · En PDF</p>
+      <p class="b4-sub">Más de <strong>40 páginas</strong>, <strong>100% personalizado</strong> a partir de tu <strong>Diseño de Origen</strong> · En PDF</p>
       <div class="bp2-tres">
         <div class="b5-item"><h3><span class="n">01</span>Empieza a ser quien quieres ser</h3>
           <ul>
-            <li><span><b>Tus pruebas:</b> las situaciones que se repiten en tu vida y en quién te conviertes cuando las superas</span></li>
-            <li><span><b>Qué hacer:</b> un paso concreto para cada prueba, para que empieces hoy</span></li>
-            <li><span><b>Dónde te vas a caer:</b> cómo vas a intentar sabotearte, para que lo veas venir</span></li>
+            <li><span><b>Tus pruebas:</b> las situaciones que la vida te pone delante una y otra vez para que aprendas, y en quién te conviertes cuando las superas</span></li>
+            <li><span><b>Qué hacer:</b> un paso concreto para afrontar cada prueba y empezar a cambiar desde hoy</span></li>
+            <li><span><b>Dónde te vas a caer:</b> cómo vas a intentar sabotearte y reconocerlo antes de volver a caer en lo mismo</span></li>
           </ul>
         </div>
         <div class="b5-item"><h3><span class="n">02</span>Reprograma lo que crees</h3>
           <ul>
-            <li><span><b>Lo que crees hoy:</b> las creencias que tienes instaladas y cómo te frenan sin que lo notes</span></li>
-            <li><span><b>Lo que es verdad:</b> tus nuevas creencias, para que empieces a verte y actuar de otra manera</span></li>
+            <li><span><b>Lo que piensas hoy:</b> las creencias que tienes instaladas y cómo te están frenando sin que lo notes</span></li>
+            <li><span><b>Lo que es verdad:</b> tus nuevas creencias, para dejar de limitarte y empezar a vivir como realmente quieres</span></li>
           </ul>
         </div>
         <div class="b5-item"><h3><span class="n">03</span>Haz que tu cambio dure</h3>
           <ul>
             <li><span><b>Tu hoja de ruta:</b> para seguir avanzando, sin volver a empezar de cero</span></li>
-            <li><span><b>Lo que necesitas recordar:</b> de un vistazo, para cuando dudes</span></li>
+            <li><span><b>Lo que necesitas recordar:</b> de un vistazo, para recuperar la claridad cuando dudes</span></li>
           </ul>
         </div>
       </div>
@@ -713,21 +760,21 @@ text-align: center;
   <!-- ════════════ ELIGE COMO CONSEGUIRLO ════════════ -->
   <section class="b6 op2" id="opciones">
     <div class="b6-in">
-      <h2 class="b6-h">Elige cómo conseguir<br> <em>tu Plan de Origen</em></h2>
+      <h2 class="b6-h">Elige cómo conseguir<br> <em>Tu Plan de Origen</em></h2>
       <div class="b6-cols">
         <div class="b6-card op2-gratis">
           <p class="op2-opc">Opción 1</p>
           <p class="op2-t">Gratis<svg class="op2-rayos" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" aria-hidden="true"><path d="M3.1 26.0L1.9 12.1M8.1 24.7L14.3 7.8M12.5 27.5L22.4 17.6M15.3 31.9L32.2 25.7M16.0 37.0L25.9 37.9"/></svg></p>
           <p class="op2-tira">Solo para las 50 primeras reseñas</p>
-          <p class="op2-x"><span class="op2-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="M15.5 10.5 21 7.5v9l-5.5-3"/></svg></span><span>Cuéntanos en un vídeo corto qué sentiste al leer tu Diseño de Origen y recíbelo <b>en menos de 24 horas</b>.</span></p>
-          <a href="/tu-plan-de-origen/resena" class="op2-btn op2-verde" id="op2Gratis">Quiero mi plan gratis<span class="flecha">→</span></a>
+          <p class="op2-x"><span>Cuéntanos en un vídeo corto qué sentiste al leer tu Diseño de Origen y recíbelo <b>en menos de 24 horas</b>.</span></p>
+          <a href="/tu-plan-de-origen/resena" class="op2-btn op2-verde" id="op2Gratis">Quiero mi plan gratis</a>
         </div>
         <div class="b6-card op2-pago">
           <p class="op2-opc">Opción 2</p>
-          <p class="op2-t">Pago único<span class="cifra">37 €</span></p>
+          <p class="op2-t">37 €<span class="op2-pu">pago único</span></p>
           <p class="op2-tira op2-hueco" aria-hidden="true">&nbsp;</p>
-          <p class="op2-x"><span class="op2-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></svg></span><span>Consigue tu Plan de Origen sin enviar ninguna reseña y recíbelo por email <b>en unos minutos</b>.</span></p>
-          <button type="button" class="op2-btn op2-claro" id="op2Pagar">Quiero mi Plan de Origen<span class="flecha">→</span></button>
+          <p class="op2-x"><span>Consigue tu Plan de Origen sin enviar ninguna reseña y recíbelo por email <b>en unos minutos</b>.</span></p>
+          <button type="button" class="op2-btn op2-claro" id="op2Pagar">Quiero mi Plan de Origen</button>
           <p class="op2-aviso" id="op2Aviso"></p>
         </div>
       </div>
@@ -737,28 +784,28 @@ text-align: center;
   <!-- ════════════ PREGUNTAS FRECUENTES ════════════ -->
   <section class="b9 fq2">
     <div class="b9-in">
-      <h2 class="b9-h">¿Todavía tienes<br class="b9-br"> <em>dudas</em>?</h2>
+      <h2 class="b9-h">¿Tienes <em>dudas</em>?</h2>
       <div class="b9-list">
 
         <details name="fq2">
-          <summary>Ya sé por qué me pasa lo que me pasa. ¿Para qué necesito un plan?</summary>
+          <summary>¿Para qué necesito un plan?</summary>
           <div class="b9-body">
-            <p>Porque Tu Diseño de Origen te ayuda a entenderte, pero no te dice qué hacer cuando vuelve a pasar. Puedes entenderlo perfectamente y aun así repetirlo. Tu Plan de Origen te muestra qué cambiar, qué pasos dar, qué creencias te frenan, cómo reconocer cuándo vas a caer… Y empezar a convertirte en la versión de ti que quieres ser</p>
+            <p>Porque Tu Diseño de Origen te ayuda a entenderte, pero <strong>no te dice qué hacer cuando vuelve a pasar</strong>, puedes entenderlo perfectamente y aun así repetirlo. Tu Plan de Origen te muestra <strong>qué cambiar, qué pasos dar, qué creencias te frenan, cómo reconocer cuándo vas a caer</strong>… Y empezar a convertirte en la versión de ti que quieres ser</p>
           </div>
         </details>
 
         <details name="fq2">
-          <summary>¿Necesito haber leído mi Diseño de Origen?</summary>
+          <summary>¿Tengo que haber leído mi Diseño de Origen?</summary>
           <div class="b9-body">
-            <p>Sí, porque Tu Plan de Origen se crea a partir de él. Tu Diseño de Origen te ayuda a entender por qué eres como eres y porque te pasa lo que te pasa, Tu Plan de Origen te muestra qué hacer para cambiarlo.</p>
+            <p>Sí, porque Tu Plan de Origen se crea a partir de él. Tu Diseño de Origen te ayuda a entender por qué eres como eres y porque te pasa lo que te pasa, <strong>Tu Plan de Origen te muestra qué hacer para cambiarlo</strong>.</p>
           </div>
         </details>
 
         <details name="fq2">
-          <summary>¿Cómo funciona la opción gratis con vídeo?</summary>
+          <summary>¿Cómo funciona la opción gratis con reseña?</summary>
           <div class="b9-body">
-            <p>Muy fácil, solo tienes que grabar una reseña desde tu móvil respondiendo a las 3 preguntas que encontrarás en la página de envío. No necesitas preparar nada ni hacer un vídeo perfecto, solo contar tu experiencia con Tu Diseño de Origen.</p>
-            <p>Una vez que envíes tu vídeo y lo verifiquemos, recibirás Tu Plan de Origen gratis por email en menos de 24 horas.</p>
+            <p>Muy fácil, solo tienes que grabar una reseña desde tu móvil respondiendo a las 3 preguntas que encontrarás en la página de envío. No necesitas preparar nada ni hacer un vídeo perfecto, <strong>solo contar tu experiencia con Tu Diseño de Origen</strong>.</p>
+            <p>Una vez que envíes tu vídeo y lo verifiquemos, <strong>recibirás Tu Plan de Origen gratis por email en menos de 24 horas</strong>.</p>
           </div>
         </details>
 
@@ -766,7 +813,6 @@ text-align: center;
           <summary>¿Dónde vais a usar mi vídeo?</summary>
           <div class="b9-body">
             <p>Usamos tu reseña para ayudar a otras personas que todavía tienen dudas sobre Tu Diseño de Origen. Por eso, compartiremos algunos videos en nuestros canales, para que puedan conocer experiencias reales de quienes ya han descubierto el suyo.</p>
-            <p>Podemos compartir tu reseña en nuestra web y en nuestros canales para que otras personas conozcan tu experiencia con Tu Diseño de Origen. No publicamos todos los vídeos, pero el tuyo podría ser uno de ellos.</p>
           </div>
         </details>
 
@@ -784,10 +830,12 @@ text-align: center;
   <section class="ci2">
     <div class="ci2-in">
       <div class="fin">
-        <p class="fin-t"><span class="fin-l1">Puedes quedarte en el porqué…</span><em class="fin-l2">o puedes empezar a convertirte<br> en quien quieres ser</em></p>
+        <p class="fin-t"><span class="fin-l1">Puedes quedarte<br class="ci2-br"> en el porqué…</span><em class="fin-l2">o puedes empezar<br class="ci2-br"> a convertirte<br class="ci2-pc"> en<br class="ci2-br"> quien quieres ser</em>
+</p>
+        <div class="ci2-mock"><picture><source media="(max-width: 680px)" srcset="images/tu-diseno-de-origen-estudio-carta-natal-movil-3.webp" /><img src="images/tu-diseno-de-origen-estudio-carta-natal-3.webp" alt="Tu Plan de Origen en PDF, en ordenador, tablet y móvil" width="1000" height="557" loading="lazy" /></picture></div>
         <div class="fin-cta">
           <a class="btn-oro" href="#opciones">Quiero mi Plan de Origen<span class="flecha">→</span></a>
-          <p class="ci2-nota">Gratis con tu reseña en vídeo<br class="ci2-br"> o 37 € de pago único</p>
+          <p class="ci2-nota">Gratis con tu reseña en vídeo<br class="ci2-br"> o 37 € pago único</p>
         </div>
       </div>
     </div>
@@ -913,6 +961,15 @@ text-align: center;
     };
     conectar(document.getElementById('op2Pagar'), document.getElementById('op2Aviso'));
   })();
+    // LOS BOTONES SE AGITAN cada vez que vuelven a aparecer en pantalla, como en el P1.
+    (function(){
+      if (!('IntersectionObserver' in window)) return;
+      const io = new IntersectionObserver(entradas => entradas.forEach(e => {
+        e.target.classList.remove('saluda');
+        if (e.isIntersecting) { void e.target.offsetWidth; e.target.classList.add('saluda'); }
+      }), { threshold: 0.9 });
+      document.querySelectorAll('.btn-cta, .op2-btn, .btn-oro, .nav-cta').forEach(b => io.observe(b));
+    })();
     // EL NAV AL BAJAR. A los 50px se quita el logo y se queda solo el boton.
     // Es el mismo que lleva el index.
     (function(){
