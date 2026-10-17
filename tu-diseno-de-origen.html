@@ -165,6 +165,8 @@
       grid-template-columns: 1fr 1fr;
       gap: 1rem;      
     }
+    /* Nombre y apellidos, uno al lado del otro: el nombre mas corto. */
+    @media (min-width: 681px) { .field-row-nombre { grid-template-columns: 2fr 3fr; } }
     .field label {
       display: flex;
       align-items: center;
@@ -1928,16 +1930,18 @@ text-align: center;
           <p class="b10-of">¡Obtén tu prueba GRATIS<br class="b10-br2"> en SOLO 2 MINUTOS!</p>
           <div class="form-step" data-form-step="1">
 
+          <div class="field-row field-row-nombre">
           <div class="field">
-            <label for="nombre">Nombre *</label>
+            <label for="nombre">Tu nombre *</label>
             <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" autocomplete="given-name" required>
             <div class="field-error" id="err-nombre">Por favor, introduce tu nombre.</div>
           </div>
 
           <div class="field">
-            <label for="apellidos">Apellidos *</label>
+            <label for="apellidos">Tus apellidos *</label>
             <input type="text" id="apellidos" name="apellidos" placeholder="Tus apellidos" autocomplete="family-name" required>
             <div class="field-error" id="err-apellidos">Por favor, introduce tus apellidos.</div>
+          </div>
           </div>
 
           <div class="field">
