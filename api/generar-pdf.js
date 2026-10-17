@@ -215,9 +215,11 @@ export default async function handler(req, res) {
 
     // EL BOTON DEL SIGUIENTE PRODUCTO.
     //
-    // Va en la pagina del proximo paso, centrado y abajo, por encima del numero
-    // de pagina. Se dibuja encima del fondo, asi que el fondo tiene que dejarle
-    // ese hueco libre.
+    // El boton ya viene dibujado en el fondo de la pagina del proximo paso
+    // (8a-proximo-paso-pdf.jpg, de 1414 x 2000 px). Aqui solo se le pone el
+    // enlace encima, en el mismo sitio: de 292 a 1192 px de ancho y de 1630 a
+    // 1714 px de alto. Si se cambia esa imagen y el boton se mueve, hay que
+    // cambiar estos numeros.
     //
     // El enlace lleva dentro el numero de la compra, que es el nombre con el que
     // se ha guardado este informe. Asi, al pulsarlo, la pagina del siguiente
@@ -227,25 +229,9 @@ export default async function handler(req, res) {
     // a una clienta le salgan los datos de otra.
     function botonProximoPaso() {
       const enlace = `${BASE_URL}/tu-plan-de-origen?p1=${encodeURIComponent(session_id)}`;
-      const texto = 'QUIERO MI PLAN DE ORIGEN';
-      const alto = 12, radio = 6;
-      const abajo = H - 16 - 5;            // 5 mm por encima del numero de pagina
-      const y = abajo - alto;
-
-      doc.setFont('Roboto', 'bold');
-      doc.setFontSize(11);
-      const ancho = Math.min(W - 50, doc.getTextWidth(texto) + 24);
-      const x = (W - ancho) / 2;
-
-      doc.setFillColor(14, 63, 75);        // el mismo verde de los titulos
-      doc.roundedRect(x, y, ancho, alto, radio, radio, 'F');
-      doc.setTextColor(255, 251, 239);     // el mismo crema del fondo
-      doc.text(texto, W / 2, y + alto / 2 + 1.2, { align: 'center' });
-
-      // Lo que lo hace pulsable. Va sobre todo el boton, no solo sobre la letra.
+      const x = 292 * W / 1414, ancho = (1192 - 292) * W / 1414;
+      const y = 1630 * H / 2000, alto = (1714 - 1630) * H / 2000;
       doc.link(x, y, ancho, alto, { url: enlace });
-
-      doc.setTextColor(0, 0, 0);           // se deja como estaba para lo de despues
     }
 
     function addPageNum(n) {
